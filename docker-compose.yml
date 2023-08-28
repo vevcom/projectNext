@@ -7,5 +7,5 @@ services:
     build:
       dockerfile: ./Dockerfile
     environment:
-      DB: ${DB}
+      PROXY_URL: ${PROXY_URL}
     
