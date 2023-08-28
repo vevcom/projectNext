@@ -2,10 +2,11 @@ version: '3.8'
 
 services:
   projectnext:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
     ports:
       - 3000:3000
-    build:
-      dockerfile: ./Dockerfile
     environment:
       PROXY_URL: ${PROXY_URL}
     
