@@ -9,7 +9,7 @@ docker-compose -f docker-compose.dev.yml up --build
 ## Production
 This project is not meant to be deployed, but a build can be made by running
 ```bash
-docker-compose --build
+docker-compose up --build
 ```
 
 ## Lint
