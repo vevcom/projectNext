@@ -18,13 +18,15 @@ export default function RootLayout({ children }) {
         <meta key={uuid()} name="viewport" content="width=device-width, initial-scale=1" />
 
         <meta key={uuid()} property="og:title" content="Sanctus Omega Broderskab" />
-        <meta key={uuid()} property="og:image" content="@image('/Omegamai.jpeg')" />
+        <meta key={uuid()} property="og:image" content="../images/Omegamai.jpeg" />
         <meta key={uuid()} property="og:description" content="Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)" />
         <meta key={uuid()} property="twitter:title" content="Sanctus Omega Broderskab" />
-        <meta key={uuid()} property="twitter:image" content="@image('/Omegamai.jpeg')" />
+        <meta key={uuid()} property="twitter:image" content="../images/Omegamai.jpeg" />
         <meta key={uuid()} property="twitter:description" content="Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)" />
       </Head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
 }

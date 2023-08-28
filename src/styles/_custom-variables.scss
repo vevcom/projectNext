@@ -1,0 +1,275 @@
+/** This is the file where we change the bootstrap variables found in bootstrap/_variables.scss.
+*/
+
+// Color system
+$white:  #fff;
+$gray-100: #F7F8FA;
+$gray-150: #F3F4F6;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-650: #67696d;
+$gray-700: #495057;
+$gray-750: #323A3E;
+$gray-800: #212529;
+$gray-850: #1F2326;
+$gray-900: #1c1c1c;
+$black:  #000;
+
+$grays: (
+    100: $gray-100,
+    150: $gray-150,
+    200: $gray-200,
+    300: $gray-300,
+    400: $gray-400,
+    500: $gray-500,
+    600: $gray-600,
+    650: $gray-650,
+    700: $gray-700,
+    750: $gray-750,
+    800: $gray-800,
+    850: $gray-850,
+    900: $gray-900
+);
+
+$blue:    #007bff;
+$slate:   #556a82;
+$indigo:  #6610f2;
+$purple:  #9C27B0;
+$pink:    #e83e8c;
+$red:     #E53935;
+$orange:  #fd7e14;
+$yellow:  #ffd600;
+$green:   #28a745;
+$teal:    #009688;
+$cyan:    #00BCD4;
+
+$colors: (
+    blue: $blue,
+    slate: $slate,
+    indigo: $indigo,
+    purple: $purple,
+    pink: $pink,
+    red: $red,
+    orange: $orange,
+    yellow: $yellow,
+    green: $green,
+    teal: $teal,
+    cyan: $cyan,
+    white: $white,
+    gray: $gray-600,
+    gray-dark: $gray-800
+);
+
+$theme-colors: (
+    primary: $yellow,
+    secondary: $slate,
+    warning: $orange,
+    dark: $gray-900,
+    success: $green,
+    info: #7694B5,
+    danger: $red,
+    light: $white,
+);
+
+// Options
+$enable-shadows:            true;
+$enable-gradients:          false;
+$enable-rounded:            false;
+
+//Spacing:
+$spacer: 1rem;
+
+// Body
+$body-bg:       $gray-100;
+
+// Links
+$link-color:            $gray-900;
+$link-hover-color:      $link-color;
+$link-hover-decoration: none;
+
+// Grid columns
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+//Components
+$border-width: 1px;
+
+// Fonts
+$font-family-sans-serif:  "Open Sans", sans-serif;
+$font-family-head:        "Open Sans", sans-serif;
+
+$h1-font-size: 1.5rem;
+$h2-font-size: 1.1rem;
+$h3-font-size: 1rem;
+$h4-font-size: 1.5rem;
+$h5-font-size: 1.25rem;
+$h6-font-size: 1rem;
+
+$display1-size: 6rem;
+$display2-size: 4rem;
+$display3-size: 3rem;
+$display4-size: 2rem;
+
+$font-size-base:              1rem;
+$font-size-xs:                ($font-size-base * 0.75);
+$font-size-sm:                ($font-size-base * 0.9);
+$font-size-md:                ($font-size-base * 1);
+$font-size-lg:                ($font-size-base * 1.25);
+$font-size-xl:                ($font-size-base * 1.5);
+
+$font-size: (
+    xs: $font-size-xs,
+    sm: $font-size-sm,
+    md: $font-size-md,
+    lg: $font-size-lg,
+    xl: $font-size-xl
+);
+
+$font-weight-light:           300;
+$font-weight-normal:          400;
+$font-weight-bold:            700;
+$font-weight-extra-bold:      900;
+
+$font-weight-base:            $font-weight-normal;
+$line-height-base:            1.5;
+
+// Buttons
+$btn-box-shadow:                 none;
+
+//Table
+$table-cell-padding:            .6rem;
+$table-hover-bg:                 $gray-200;
+
+// Forms
+$input-bg:                       inherit;
+
+$input-border-color:             rgba($black,0.15);
+
+$input-color:                    $gray-600;
+$input-box-shadow:               none;
+
+$input-focus-border-color:       none;
+$input-focus-box-shadow:         $input-box-shadow;
+$input-focus-color:              $gray-700;
+
+$input-placeholder-color:        $gray-500;
+
+$form-text-margin-top:     0.5rem;
+
+$custom-control-gutter:   2rem;
+$custom-control-spacer-y: 0.5rem;
+$custom-control-spacer-x: 2rem;
+
+$custom-select-focus-border-color: $input-border-color;
+$custom-select-focus-box-shadow:   $input-box-shadow;
+
+$custom-file-color:         $gray-800;
+$custom-file-bg:            $gray-200;
+$custom-file-border-width:  0;
+$custom-file-box-shadow:    none;
+$custom-file-button-bg:     $yellow;
+
+$custom-file-text: (
+    en: "Velg en fil...",
+    no: "Velg en fil..."
+);
+
+
+
+// Dropdowns
+$dropdown-min-width:             15rem;
+$dropdown-padding-y:             0;
+$dropdown-spacer:                0;
+$dropdown-bg:                    $gray-800;
+$dropdown-border-color:          $gray-800;
+$dropdown-border-width:          0;
+$dropdown-divider-bg:            $gray-800;
+$dropdown-box-shadow:            0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+$dropdown-link-color:            $white;
+$dropdown-link-hover-color:      $gray-900;
+$dropdown-link-hover-bg:         $yellow;
+
+$dropdown-item-padding-y:        0rem;
+$dropdown-item-padding-x:        0rem;
+
+$dropdown-header-color:          $gray-600;
+
+
+// Navbar
+
+$navbar-padding-y:                  ($spacer / 2);
+$navbar-padding-x:                  $spacer * 6.5;
+
+$navbar-dark-color:                 $white;
+$navbar-dark-hover-color:           $navbar-dark-color;
+$navbar-dark-active-color:          theme-color("primary");
+
+// Pagination
+
+$pagination-color:                     $gray-850;
+$pagination-bg:                        $yellow;
+$pagination-border-color:              $gray-850;
+$pagination-border-width:              0;
+
+$pagination-hover-color:               $gray-900;
+$pagination-hover-bg:                  darken($pagination-bg, 3%);
+$pagination-hover-border-color:        $pagination-border-color;
+
+$pagination-active-color:              $gray-900;
+$pagination-active-bg:                 darken($pagination-bg, 3%);
+$pagination-active-border-color:       $pagination-border-color;
+
+$pagination-disabled-color:            $gray-850;
+$pagination-disabled-bg:               $pagination-bg;
+$pagination-disabled-border-color:     $pagination-border-color;
+
+
+// Cards
+
+$card-spacer-y:            1rem;
+$card-spacer-x:            1.25rem;
+$card-border-width:        0;
+$card-bg:                  $white;
+
+$card-deck-margin:          ($grid-gutter-width / 2);
+
+$card-columns-count:        3;
+$card-columns-gap:          1.25rem;
+$card-columns-margin:       $card-spacer-y;
+
+
+// Modals
+$modal-inner-padding:         15px;
+
+$modal-dialog-margin:         10px;
+$modal-dialog-margin-y-sm-up: 30px;
+
+$modal-content-bg:               $white;
+$modal-content-border-color:     rgba($black,0.2) !default;
+$modal-content-border-width:     $border-width !default;
+$modal-content-box-shadow-xs:    0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+$modal-content-box-shadow-sm-up: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+
+$modal-backdrop-bg:           $black !default;
+$modal-backdrop-opacity:      0.5 !default;
+$modal-header-border-color:   $gray-200 !default;
+$modal-footer-border-color:   $modal-header-border-color !default;
+$modal-header-border-width:   $modal-content-border-width !default;
+$modal-footer-border-width:   $modal-header-border-width !default;
+$modal-header-padding:        15px !default;
+
+$modal-lg:                    800px !default;
+$modal-md:                    500px !default;
+$modal-sm:                    300px !default;
+
+$modal-transition:            transform 0.3s ease-out !default;
+
+
+// Alerts
+$alert-padding-y:             0.25rem ;
+$alert-padding-x:             1.25rem !default;
+$alert-margin-bottom:         0;
