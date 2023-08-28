@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  projectnext:
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/usr/src/app/src
+    environment:
+      DB: ${DB}
