@@ -90,10 +90,10 @@ input {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-bottom: solid 1px gray(500) !important;
+    border-bottom: solid 1px gray(50%) !important;
 
     &:focus {
-        border-bottom: solid 2px gray(800) !important;
+        border-bottom: solid 2px gray(80%) !important;
         margin-bottom: -1px;
     }
 }
@@ -102,13 +102,13 @@ select {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
-    border-bottom: solid 1px gray(500) !important;
+    border-bottom: solid 1px gray(50%) !important;
     border-radius: 0;
     -webkit-appearance: none;
     -webkit-border-radius: 0px;
 
     &:focus {
-        border-bottom: solid 2px gray(800) !important;
+        border-bottom: solid 2px gray(80%) !important;
     }
 }
 
@@ -162,9 +162,9 @@ select {
 }
 
 .file-drop-container {
-    border: dashed 4px gray(400);
+    border: dashed 4px gray(40%);
     height: 400px;
-    background-color: gray(150);
+    background-color: gray(15%);
 
     .no-pointer-event {
         pointer-events: none;
@@ -185,14 +185,14 @@ table {
 
     th {
         font-weight: $font-weight-base;
-        border-bottom: solid 1px gray(500) !important;
+        border-bottom: solid 1px gray(50%) !important;
         border-top: none !important;
     }
 
     td {
         font-weight: $font-weight-light !important;
-        color: gray(600);
-        border-top: solid 1px gray(300) !important;
+        color: gray(60%);
+        border-top: solid 1px gray(30%) !important;
         font-size: font-size(sm);
     }
 }
@@ -204,16 +204,16 @@ table {
 }
 
 .table-users {
-     border: solid 1px gray(200);
+     border: solid 1px gray(20%);
 
     thead {
-        background-color: gray(150);
+        background-color: gray(15%);
     }
 }
 
 .table-filter {
-    background-color: gray(150);
-    border: solid 1px gray(200);
+    background-color: gray(15%);
+    border: solid 1px gray(20%);
     label, input {
         font-size: font-size(sm) !important;
     }
@@ -224,7 +224,7 @@ table {
 }
 
 .table-row-selected {
-    background-color: gray(200);
+    background-color: gray(20%);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -278,7 +278,7 @@ table {
     display: block;
     text-align: left;
     padding: 2rem 3rem;
-    color: gray(700);
+    color: gray(70%);
     font-family: $font-family-sans-serif;
     font-weight: 400;
     font-style: italic;
@@ -436,12 +436,12 @@ table {
 
 .front-title {
     p {
-        color: gray(500);
+        color: gray(50%);
     }
 
     a:hover {
         p {
-            color: gray(700);
+            color: gray(70%);
         }
     }
 }
@@ -461,7 +461,7 @@ table {
 .front-contact {
     #front-contact-inner {
         @include media-breakpoint-up(md) {
-            border-left: solid 1px gray(800);
+            border-left: solid 1px gray(80%);
         }
 
         p {
@@ -486,7 +486,7 @@ table {
     h1 {
         text-align: center;
         padding-top: 10px;
-        color: gray(800);
+        color: gray(80%);
     }
 
     hr {
@@ -512,7 +512,7 @@ table {
         h2 {
             font-size: 20px;
             font-weight: 700 !important;
-            color: gray(600);
+            color: gray(60%);
             text-transform: uppercase;
             text-align: center;
         }
@@ -523,14 +523,14 @@ table {
         .week-number {
             font-size: 20px;
             font-weight: 700 !important;
-            color: gray(600);
+            color: gray(60%);
         }
 
         .col {
             .date-back {
                 padding-bottom: 100%;
                 width: 100%;
-                border: solid 1px gray(150);
+                border: solid 1px gray(15%);
             }
 
             .date-front {
@@ -539,7 +539,7 @@ table {
                 padding-bottom: 5px;
                 padding-top: 5px;
                 width: 100%;
-                color: gray(850);
+                color: gray(85%);
 
                 .calendar-event {
                     width: 100%;
@@ -571,7 +571,7 @@ table {
                     padding-right: 10px;
                     font-size: 25px;
                     font-weight: 700 !important;
-                    color: gray(700);
+                    color: gray(70%);
 
                     @include media-breakpoint-down(md) {
                         font-size: 20px;
@@ -730,7 +730,7 @@ table {
 
 
 .program-edit-container {
-    border: solid 1px gray(400);
+    border: solid 1px gray(40%);
 }
 
 .expand{
@@ -758,30 +758,30 @@ table {
     }
 
     p {
-        color: gray(700);
+        color: gray(70%);
     }
 
     .form-check {
-        color: gray(600);
+        color: gray(60%);
         font-weight: $font-weight-light;
     }
 
     .progress {
         height: 35px;
-        border: solid 1px gray(200);
+        border: solid 1px gray(20%);
 
         .progress-bar {
             transition-duration: 0.5s;
         }
 
         p {
-            color: gray(500);
+            color: gray(50%);
         }
     }
 }
 
 .container-card {
-    border: solid 1px gray(300);
+    border: solid 1px gray(30%);
     border-radius: 15px;
 }
 
@@ -790,8 +790,8 @@ table {
 }
 
 .container-transfer {
-    background-color: gray(150);
-    border: solid 1px gray(300);
+    background-color: gray(15%);
+    border: solid 1px gray(30%);
 
     input {
         border: none !important;
@@ -829,7 +829,7 @@ table {
 }
 
 #html-preview {
-    border: solid 1px gray(300);
+    border: solid 1px gray(30%);
 }
 
 .pwa-link {

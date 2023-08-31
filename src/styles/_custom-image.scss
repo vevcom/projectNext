@@ -16,7 +16,7 @@
 
 .hover-effect {
     overflow:hidden;
-    background-color: gray(900);
+    background-color: gray(90%);
 
     div {
         -webkit-transition:all .14s ease-in-out;
@@ -55,7 +55,7 @@
     }
 
     .gallery-img-text {
-        background: rgba(gray(900), .6);
+        background: rgba(gray(90%), .6);
         position: absolute;
         bottom: 0;
         margin-bottom: 0;

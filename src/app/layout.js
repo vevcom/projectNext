@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { v4 as uuid } from 'uuid'
 
+import '../styles/omega-style.scss'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {

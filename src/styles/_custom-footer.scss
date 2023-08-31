@@ -3,7 +3,7 @@
     text-align: center;
     position: relative;
     width: 100%;
-    background-color: gray(800);
+    background-color: gray(80%);
     color: color(white);
     height: 350px;
     padding: 75px 100px;
@@ -24,7 +24,7 @@
     }
 
     hr {
-        border-color: gray(700);
+        border-color: gray(70%);
         margin: 1rem 20%;
 
         @include media-breakpoint-down(md) {
@@ -33,10 +33,10 @@
     }
 
     a {
-        color: gray(300);
+        color: gray(30%);
 
         &:hover {
-            color: gray(300);
+            color: gray(30%);
         }
     }
 
@@ -46,16 +46,16 @@
 
     p {
         font-size: 14px;
-        color: gray(300);
+        color: gray(30%);
     }
 
     .small {
-        color: gray(400);
+        color: gray(40%);
         line-height: 1.7;
     }
 
     #footer-hr-vertical {
-        border-right: solid 1px gray(700);
+        border-right: solid 1px gray(70%);
 
         @include media-breakpoint-down(sm) {
             border-right: none !important;

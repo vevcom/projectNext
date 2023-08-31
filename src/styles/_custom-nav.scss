@@ -89,7 +89,7 @@ $navbar-height: $spacer * 2.8;
     }
 
     .nav-mobile-border {
-        border-left: solid 1px gray(600) !important;
+        border-left: solid 1px gray(60%) !important;
     }
 
     img {
@@ -110,7 +110,7 @@ $navbar-height: $spacer * 2.8;
 
 .nav-hamburger {
     padding: 0;
-    background-color: gray(800);
+    background-color: gray(80%);
 }
 
 .dropdown-menu {
@@ -120,8 +120,8 @@ $navbar-height: $spacer * 2.8;
 
 .dropdown-icon {
     height: 5rem;
-    border-right: solid 1px gray(700);
-    border-bottom: solid 1px gray(700);
+    border-right: solid 1px gray(70%);
+    border-bottom: solid 1px gray(70%);
 
     h2 {
         font-weight: 300 !important;
@@ -130,7 +130,7 @@ $navbar-height: $spacer * 2.8;
 
     &:hover {
         background-color: theme-color(primary);
-        color: gray(900) !important;
+        color: gray(90%) !important;
     }
 }
 

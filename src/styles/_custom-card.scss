@@ -6,7 +6,7 @@
         padding: 0.5rem 1.5rem;
         z-index: 2;
         height: 3rem;
-        background-color: gray(900);
+        background-color: gray(0.9);
 
         a {
             color: color(white);
@@ -20,7 +20,7 @@
     .card-group {
 
         h1 {
-            color: gray(900);
+            color: gray(0.9);
         }
     }
 
@@ -48,7 +48,7 @@
 }
 
 .card-img-title {
-    background: rgba(gray(900), 0.6);
+    background: rgba(gray(0.9), 0.6);
     position: absolute;
     bottom: 0;
     padding: 1rem 5rem;
@@ -63,7 +63,7 @@
         font-family: $font-family-sans-serif;
         font-weight: $font-weight-light;
         font-size: font-size(md);
-        color: gray(300);
+        color: gray(0.3);
         margin: 0;
     }
 
@@ -111,7 +111,7 @@
     }
 
     p {
-        color: gray(750);
+        color: gray(0.75);
         font-weight: $font-weight-light;
     }
 
@@ -137,7 +137,7 @@
 
             .col {
                 border-left: solid 1px darken(theme-color(primary), 10%);
-                color: gray(750);
+                color: gray(75%);
                 font-size: font-size(md);
             }
         }
@@ -155,7 +155,7 @@
     h2 {
         font-size: 45px;
         font-weight: $font-weight-bold !important;
-        color: gray(800);
+        color: gray(80%);
     }
 
     p {
@@ -163,12 +163,12 @@
         margin-bottom: 0;
         font-size: 25px;
         font-weight: $font-weight-light;
-        color: gray(750);
+        color: gray(75%);
     }
 }
 
 .card-event-full {
-    background-color: gray(100) !important;
+    background-color: gray(100%) !important;
 
     hr {
         margin: 1rem;
@@ -179,7 +179,7 @@
         @include shadow(1);
 
         .event-countdown {
-            background: rgba(gray(900), 0.6);
+            background: rgba(gray(90%), 0.6);
             position: absolute;
             bottom: 0;
             padding: 1rem 8rem;
@@ -198,7 +198,7 @@
                 font-family: $font-family-sans-serif;
                 font-weight: 300;
                 font-size: $font-size-sm;
-                color: gray(300);
+                color: gray(30%);
                 margin: 0;
             }
 
@@ -252,11 +252,11 @@
     }
 
     #event-info-list {
-        color: gray(700);
+        color: gray(70%);
 
         li {
             padding: 1.2rem 1.5rem;
-            border-top: solid 1px gray(200);
+            border-top: solid 1px gray(20%);
         }
 
         @include media-breakpoint-down(md) {
@@ -274,7 +274,7 @@
 
     .front-event-title {
         @include ellipsis(20px, 1.4, 1);
-        color: gray(900);
+        color: gray(90%);
 
         h1 {
             font-weight: $font-weight-light !important;
@@ -282,7 +282,7 @@
     }
 
     .front-event-subtitle {
-        color: gray(700);
+        color: gray(70%);
     }
 }
 
@@ -303,13 +303,13 @@
     h2 {
         font-size: 40px;
         font-weight: 700 !important;
-        color: gray(800);
+        color: gray(80%);
     }
 
     p {
         font-size: 22px;
         font-weight: 300;
-        color: gray(750);
+        color: gray(75%);
     }
 }
 
@@ -345,7 +345,7 @@
     }
 
     p {
-        color: gray(700);
+        color: gray(70%);
         font-weight: 400;
     }
 
@@ -353,7 +353,7 @@
         margin-bottom: 4rem;
 
         .card-text {
-            color: gray(650) !important;
+            color: gray(65%) !important;
             //font-weight: $font-weight-light !important;
             @include ellipsis(font-size(sm), 1.4, 3);
         }
@@ -372,7 +372,7 @@
     }
 
     .card-title {
-        color: gray(900) !important;
+        color: gray(90%) !important;
         font-weight: $font-weight-normal !important;
         text-align: center;
         @include ellipsis(font-size(lg), 1.4, 2);
@@ -405,7 +405,7 @@
 
     .card-title {
         font-size: 35px;
-        color: gray(750) !important;
+        color: gray(75%) !important;
         font-weight: $font-weight-normal !important;
     }
 
@@ -428,7 +428,7 @@
         padding: 0 2rem;
         text-align: left;
         line-height: 138%;
-        border-left: solid 1px gray(300);
+        border-left: solid 1px gray(30%);
 
         .badge {
             border-radius: 10px;
@@ -469,7 +469,7 @@
 }
 
 .card-profile-tool {
-    color: gray(800);
+    color: gray(80%);
     background-color: theme-color(primary);
 
     &:hover {
@@ -499,12 +499,12 @@
     }
 
     label {
-        color: gray(700);
+        color: gray(70%);
     }
 }
 
 .card-application-general {
-    border: solid 1px gray(200) !important;
+    border: solid 1px gray(20%) !important;
     box-shadow: none !important;
 
     .card-title {
@@ -512,7 +512,7 @@
     }
 
     .card-text {
-        color: gray(700);
+        color: gray(70%);
     }
 }
 
@@ -526,7 +526,7 @@
 }
 
 #application-accordion {
-    border-top: solid 1px gray(200) !important;
+    border-top: solid 1px gray(20%) !important;
 }
 
 .card-ombul {
@@ -534,7 +534,7 @@
 
     small {
         font-weight: $font-weight-light;
-        color: gray(800);
+        color: gray(80%);
     }
 
     .card-img{
@@ -550,7 +550,7 @@
         }
     }
 
-    background-color: gray(100) !important;
+    background-color: gray(10%) !important;
 
     .card-body {
         .card-text {
@@ -559,7 +559,7 @@
     }
 
     .card-footer {
-        background-color: gray(200);
+        background-color: gray(20%);
     }
 
     h2 {

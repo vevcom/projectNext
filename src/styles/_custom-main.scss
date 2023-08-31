@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700|Playfair+Display:700,700i,900i');
-@import "../bootstrap/mixins/breakpoints";
 
 //General:
 
@@ -89,7 +88,7 @@ body {
 }
 
 .b-l {
-  border-left: solid 1px gray(400);
+  border-left: solid 1px gray(40%);
 
   @include media-breakpoint-down(sm) {
     border: none;
