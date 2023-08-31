@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { v4 as uuid } from 'uuid'
 
+import NavBar from "@/components/NavBar/NavBar"
+
 import '../styles/omega-style.scss'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -27,6 +29,7 @@ export default function RootLayout({ children }) {
         <meta key={uuid()} property="twitter:description" content="Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)" />
       </Head>
       <body className={inter.className}>
+      <NavBar />
         {children}
       </body>
     </html>

@@ -1,5 +1,6 @@
 import Image from "next/image"
-import magiskHatt from "../images/magisk_hatt.png"
+import magiskHatt from "../../images/magisk_hatt.png"
+import Item from "./Item"
 
 function NavBar() {
     const isLoggedIn = true
@@ -19,46 +20,25 @@ function NavBar() {
                         </a>
                     </li>
                     {isLoggedIn && 
-                    <>
-                        <li class="nav-item">
-                            <a class="nav-link pl-0" href="/events"><div class="link-animation">Hvad der hender</div></a>
-                        </li>
-                    </>   
+                        <Item href="/events" name="hvad der hender" pl0/> 
                     }
-                    <li class="nav-item">
-                        <a class="nav-link" href="/news"><div class="link-animation">Artikler</div></a>
-                    </li>
+                    <Item href="/news" name="Artikler"/> 
+                    {!isLoggedIn && 
+                        <Item href="/ombul" name="OmBul" pl0/> 
+                    }
+                    <Item href="/infopages/about" name="Om Omega"/> 
+                    <Item href="/infopages/interessegrupper" name="Interessegrupper"/> 
+                    <Item href="/infopages/committees" name="Komitéer"/> 
                     {!isLoggedIn && 
                     <>
-                        <li class="nav-item">
-                            <a class="nav-link pl-0" href="/ombul"><div class="link-animation">OmBul</div></a>
-                        </li>
+                        <Item href="/infopages/contactor" name="For bedrifter"/> 
+                        <Item href="/infopages/nystudent" name="Ny Student?"/> 
                     </>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link" href="/infopages/about"><div class="link-animation">Om Omega</div></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/infopages/interessegrupper"><div class="link-animation">Interessegrupper</div></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/infopages/committees"><div class="link-animation">Komitéer</div></a>
-                    </li>
-                    {!isLoggedIn && 
-                    <>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/infopages/contactor"><div class="link-animation">For bedrifter</div></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/infopages/nystudent"><div class="link-animation">Ny Student?</div></a>
-                        </li>
-                    </>  
                     }
                     {isLoggedIn && 
                     <>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/infopages/jobbannonser"><div class="link-animation">Jobbannonser</div></a>
-                        </li>
+                        <Item href="/infopages/jobbannonser" name="Jobbannonser"/> 
+
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="#" data-bypass="1" id="nav-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div>OmBul<i class="fas fa-caret-down ml-2"></i></div>
