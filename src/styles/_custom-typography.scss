@@ -36,11 +36,11 @@ p {
 }
 
 .font-size-sm {
-    font-size: font-size(sm);
+    font-size: get-font-size(sm);
 }
 
 .font-size-lg {
-    font-size: font-size(lg);
+    font-size: get-font-size(lg);
 }
 
 

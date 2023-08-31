@@ -123,13 +123,13 @@
         z-index: 1001;
 
         @include shadow(2);
-        background-color: theme-color(primary);
+        background-color: get-theme-color(primary);
 
         height: 70px;
         width: 70px;
 
         &:hover {
-            background-color: darken(theme-color(primary), 2%);
+            background-color: darken(get-theme-color(primary), 2%);
         }
 
     }

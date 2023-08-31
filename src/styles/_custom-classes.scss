@@ -49,7 +49,7 @@
 }
 
 .btn-sm {
-    font-size: font-size(sm) !important;
+    font-size: get-font-size(sm) !important;
     padding: 0.3rem 1rem !important;
 }
 
@@ -76,10 +76,10 @@
 }
 
 .btn-link-secondary {
-    color: theme-color(secondary) !important;
+    color: get-theme-color(secondary) !important;
 
     &:hover {
-        color: darken(theme-color(secondary), 15%) !important;
+        color: darken(get-theme-color(secondary), 15%) !important;
     }
 }
 
@@ -119,20 +119,20 @@ select {
 // Validation:
 
 .invalid {
-    border-bottom: solid 2px theme-color(danger) !important;
+    border-bottom: solid 2px get-theme-color(danger) !important;
 
     &:focus {
-        border-bottom: solid 3px theme-color(danger) !important;
+        border-bottom: solid 3px get-theme-color(danger) !important;
         margin-bottom: -1px;
     }
 }
 
 .label-invalid {
-    color: theme-color(danger) !important;
+    color: get-theme-color(danger) !important;
 }
 
 .response {
-    color: theme-color(danger);
+    color: get-theme-color(danger);
     text-align: left;
     @extend .mt-2;
 }
@@ -193,13 +193,13 @@ table {
         font-weight: $font-weight-light !important;
         color: gray(60%);
         border-top: solid 1px gray(30%) !important;
-        font-size: font-size(sm);
+        font-size: get-font-size(sm);
     }
 }
 
 .table-membership {
     td {
-        font-size: font-size(md) !important;
+        font-size: get-font-size(md) !important;
     }
 }
 
@@ -215,12 +215,12 @@ table {
     background-color: gray(15%);
     border: solid 1px gray(20%);
     label, input {
-        font-size: font-size(sm) !important;
+        font-size: get-font-size(sm) !important;
     }
 }
 
 .table-sm {
-    font-size: font-size(xs);
+    font-size: get-font-size(xs);
 }
 
 .table-row-selected {
@@ -309,7 +309,7 @@ table {
     overflow: hidden;
 
     hr {
-        border-color: darken(theme-color(primary), 10%);
+        border-color: darken(get-theme-color(primary), 10%);
     }
 }
 
@@ -417,7 +417,7 @@ table {
 #map{
     height: 400px;
     width: 100%;
-    background-color: theme-color(primary);
+    background-color: get-theme-color(primary);
 }
 
 .header-icons {
@@ -447,7 +447,7 @@ table {
 }
 
 .front-title-colored {
-    background-color: darken(theme-color(primary), 4%);
+    background-color: darken(get-theme-color(primary), 4%);
 }
 
 .front-icons {
@@ -543,7 +543,7 @@ table {
 
                 .calendar-event {
                     width: 100%;
-                    background-color: theme-color(primary);
+                    background-color: get-theme-color(primary);
                     //@include shadow(0);
                     padding: 5px 15px;
 
@@ -554,7 +554,7 @@ table {
 
                 .calendar-simple-event {
                     @extend .calendar-event;
-                    background-color: theme-color(secondary);
+                    background-color: get-theme-color(secondary);
                     color: color(white);
 
                     button {
@@ -754,7 +754,7 @@ table {
 
 .poll-container {
     h2 {
-        font-size: font-size(lg);
+        font-size: get-font-size(lg);
     }
 
     p {
@@ -786,7 +786,7 @@ table {
 }
 
 .list-group-sm {
-    font-size: font-size(sm);
+    font-size: get-font-size(sm);
 }
 
 .container-transfer {

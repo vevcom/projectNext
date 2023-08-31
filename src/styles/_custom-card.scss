@@ -6,7 +6,7 @@
         padding: 0.5rem 1.5rem;
         z-index: 2;
         height: 3rem;
-        background-color: gray(0.9);
+        background-color: gray(90%);
 
         a {
             color: color(white);
@@ -20,7 +20,7 @@
     .card-group {
 
         h1 {
-            color: gray(0.9);
+            color: gray(90%);
         }
     }
 
@@ -28,14 +28,14 @@
         text-align: center;
 
         .card-text {
-            font-size: font-size(sm);
+            font-size: get-font-size(sm);
         }
     }
 
     .card-subtitle {
         font-family: $font-family-sans-serif;
         font-weight: $font-weight-base;
-        font-size: font-size(lg);
+        font-size: get-font-size(lg);
         line-height: 140%;
     }
 }
@@ -48,7 +48,7 @@
 }
 
 .card-img-title {
-    background: rgba(gray(0.9), 0.6);
+    background: rgba(gray(90%), 0.6);
     position: absolute;
     bottom: 0;
     padding: 1rem 5rem;
@@ -62,8 +62,8 @@
     p {
         font-family: $font-family-sans-serif;
         font-weight: $font-weight-light;
-        font-size: font-size(md);
-        color: gray(0.3);
+        font-size: get-font-size(md);
+        color: gray(30%);
         margin: 0;
     }
 
@@ -73,19 +73,19 @@
         font-weight: $font-weight-light !important;
 
         .badge {
-            font-size: font-size(lg);
+            font-size: get-font-size(lg);
             position: absolute;
             margin-top: 8px;
             padding: 5rem 1rem;
 
             @include media-breakpoint-down(sm) {
                 margin-top: 2px;
-                font-size: font-size(md);
+                font-size: get-font-size(md);
             }
         }
 
         @include media-breakpoint-down(sm) {
-            font-size: font-size(xl);
+            font-size: get-font-size(xl);
         }
     }
 }
@@ -102,16 +102,16 @@
     }
 
     .card-title {
-        color: gray(750) !important;
+        color: gray(75%) !important;
         font-weight: $font-weight-normal !important;
-        font-size: font-size(xl);
+        font-size: get-font-size(xl);
         text-align: center;
-        @include ellipsis(font-size(xl), 1.4, 2);
+        @include ellipsis(get-font-size(xl), 1.4, 2);
         height: inherit;
     }
 
     p {
-        color: gray(0.75);
+        color: gray(75%);
         font-weight: $font-weight-light;
     }
 
@@ -121,7 +121,7 @@
         margin-bottom: 4rem;
 
         .card-text {
-            @include ellipsis(font-size(md), 1.4, 4);
+            @include ellipsis(get-font-size(md), 1.4, 4);
         }
     }
 
@@ -132,20 +132,20 @@
         text-align: center;
 
         .row {
-            background-color: theme-color(primary);
+            background-color: get-theme-color(primary);
             padding: 0.8rem 0;
 
             .col {
-                border-left: solid 1px darken(theme-color(primary), 10%);
+                border-left: solid 1px darken(get-theme-color(primary), 10%);
                 color: gray(75%);
-                font-size: font-size(md);
+                font-size: get-font-size(md);
             }
         }
     }
 }
 
 .card-event-date {
-    background-color: theme-color(primary);
+    background-color: get-theme-color(primary);
     @include shadow(1);
     width: 6rem;
     height: 6rem;
@@ -241,7 +241,7 @@
             font-size: $font-size-sm;
 
             a {
-                @extend .font-weight-normal;
+                @extend .font-weight-normal !optional;
                 color: color(black);
             }
         }
@@ -297,7 +297,7 @@
     left: 0;
     right: 0;
 
-    background-color: theme-color(primary);
+    background-color: get-theme-color(primary);
     text-transform: uppercase;
 
     h2 {
@@ -321,7 +321,7 @@
 }
 
 .front-event-simple-date {
-    background-color: theme-color(secondary);
+    background-color: get-theme-color(secondary);
     font-size: 22px;
     color: color(white);
     font-weight: 300;
@@ -355,7 +355,7 @@
         .card-text {
             color: gray(65%) !important;
             //font-weight: $font-weight-light !important;
-            @include ellipsis(font-size(sm), 1.4, 3);
+            @include ellipsis(get-font-size(sm), 1.4, 3);
         }
     }
 
@@ -375,7 +375,7 @@
         color: gray(90%) !important;
         font-weight: $font-weight-normal !important;
         text-align: center;
-        @include ellipsis(font-size(lg), 1.4, 2);
+        @include ellipsis(get-font-size(lg), 1.4, 2);
         height: inherit;
     }
 }
@@ -470,10 +470,10 @@
 
 .card-profile-tool {
     color: gray(80%);
-    background-color: theme-color(primary);
+    background-color: get-theme-color(primary);
 
     &:hover {
-        background-color: darken(theme-color(primary), 2%);
+        background-color: darken(get-theme-color(primary), 2%);
     }
 
 }
@@ -495,7 +495,7 @@
 .card-form {
     .card-title {
         font-weight: 600;
-        font-size: font-size(lg) !important;
+        font-size: get-font-size(lg) !important;
     }
 
     label {
@@ -508,7 +508,7 @@
     box-shadow: none !important;
 
     .card-title {
-        font-size: font-size(lg);
+        font-size: get-font-size(lg);
     }
 
     .card-text {
@@ -521,7 +521,7 @@
     border-top: none !important;
 
     .card-text {
-        @include ellipsis(font-size(sm), 1.4, 4);
+        @include ellipsis(get-font-size(sm), 1.4, 4);
     }
 }
 

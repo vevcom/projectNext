@@ -73,10 +73,10 @@
 
 .footer-icons{
     a {
-        color: theme-color(primary);
+        color: get-theme-color(primary);
 
         &:hover {
-            color: darken(theme-color(primary), 3%);
+            color: darken(get-theme-color(primary), 3%);
         }
 
         i {
