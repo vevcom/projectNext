@@ -1,0 +1,12 @@
+.imageContainer {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    .image {
+        position: absolute;
+        width: 100%;
+    }
+    > div {
+        position: unset !important;
+    }
+}
