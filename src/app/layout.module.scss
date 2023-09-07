@@ -1,0 +1,18 @@
+@use "@/styles/ohma";
+
+.wrapper {
+    position: relative;
+}
+
+.navBar {
+    position: sticky;
+    background-color: ohma.$blue;
+}
+
+.content {
+    background-color: ohma.$yellow;
+}
+
+.footer {
+    background-color: ohma.$slate;
+}

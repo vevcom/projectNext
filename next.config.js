@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-
+const path = require('path')
 
 const nextConfig = { 
     //Add some random config because of some issue with hot reload of next in docker
@@ -10,6 +10,9 @@ const nextConfig = {
         aggregateTimeout: 300,
       }
       return config
+    },
+    sassOptions: {
+      includePaths: [path.join(__dirname, 'src/styles')],
     },
 }
 

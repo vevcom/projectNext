@@ -1,11 +1,12 @@
 import Link from "next/link"
 
-function Item({ href, name, pl0 }) {
-    pl0 = !!pl0
+import styles from "./Item.module.scss"
+
+function Item({ href, name }) {
     return (
-        <li class="nav-item">
-            <Link class={pl0 ? "nav-link" : "nav-link pl0"} href={href}>
-                <div class="link-animation">{name}</div>
+        <li>
+            <Link href={href} className={styles.link}>
+                <div>{name}</div>
             </Link>
         </li>
     )

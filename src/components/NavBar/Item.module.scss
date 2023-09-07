@@ -1,0 +1,7 @@
+@use "@/styles/ohma";
+
+.link {
+    text-decoration: none;
+    color: ohma.$white;
+    font-size: ohma.$mFont;
+}

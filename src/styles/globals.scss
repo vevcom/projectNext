@@ -1,0 +1,14 @@
+@use "ohma";
+
+*, html, body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: ohma.$primaryFont;
+}
+
+body {
+    font-size: ohma.$sFont;
+    font-weight: ohma.$sFontWeight;
+    overflow-x: hidden;
+}

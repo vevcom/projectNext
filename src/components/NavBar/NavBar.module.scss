@@ -1,0 +1,16 @@
+@use "@/styles/ohma";
+
+.navBar {
+    padding: ohma.$gap;
+    background-color: ohma.$gray-900;
+    > ul {
+        display: flex;
+        flex-flow: row;
+        justify-content: space-between;
+        list-style: none;
+    }
+}
+
+.magicHat {
+    background-color: ohma.$yellow;
+}
