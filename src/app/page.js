@@ -1,5 +1,11 @@
+import styles from "./page.module.scss"
+
 export default function Home() {
   return (
-    <>projectnext</>
+    <>
+    <div className="constent">
+      projectnext 
+    </div>
+    </>
   )
 }
