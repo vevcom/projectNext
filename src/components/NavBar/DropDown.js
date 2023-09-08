@@ -1,6 +1,7 @@
 import Link from "next/link"
 import styles from "./DropDown.module.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { v4 as uuid } from 'uuid'
 
 function DropDown({ name, items }) {
     return (
@@ -8,7 +9,7 @@ function DropDown({ name, items }) {
             <div className={styles.name}>{ name }</div>
             <div name={name}>
                 {items.map(item => 
-                    <div>
+                    <div key ={uuid()}>
                         <Link href={item.href}>
                             <div>   
                                 <FontAwesomeIcon icon={item.icon} />    
