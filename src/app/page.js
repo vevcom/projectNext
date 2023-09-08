@@ -1,14 +1,10 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import styles from "./page.module.scss"
 
 export default function Home() {
   return (
     <>
     <div className="constent">
-    projectnext
-    <FontAwesomeIcon icon={faSearch} />    
-
-    
+      projectnext 
     </div>
     </>
   )

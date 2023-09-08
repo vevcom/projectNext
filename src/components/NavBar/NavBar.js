@@ -7,6 +7,18 @@ import magiskHatt from "@/images/magisk_hatt.png"
 import simpleLogo from "@/images/logo_simple.png"
 
 import styles from "./NavBar.module.scss"
+import {
+    faNewspaper,
+    faPoo,
+    faShoppingCart,
+    faComment,
+    faQuestionCircle,
+    faCamera,
+    faChartBar,
+    faList,
+    faUser,
+    faU,
+} from "@fortawesome/free-solid-svg-icons"
 
 function NavBar() {
     const isLoggedIn = true
@@ -44,41 +56,50 @@ function NavBar() {
                     <DropDown name="OmBul" items={[
                         {
                             name: "Utgivelser",
-                            href: "/ombul"
+                            href: "/ombul",
+                            icon: faNewspaper,
                         },
                         {
                             name: "Bulshit",
-                            href: "/bulshit"
+                            href: "/bulshit",
+                            icon: faPoo,
                         },
                     ]} />
                     <DropDown name="Omegating" items={[
                         {
                             name: "Omegashop",
                             href: "/money/shop",
+                            icon: faShoppingCart,
                         },
                         {
                             name: "Omegaquotes",
                             href: "/omegaquotes",
+                            icon: faComment,
                         },
                         {
                             name: "Guider",
                             href: "infopages/guides",
+                            icon: faQuestionCircle,
                         },
                         {  
                             name: "Bilder",
                             href: "/images",
+                            icon: faCamera,
                         },
                         /*{   //what happend to polls :(
                             name: "Polls",
                             href: "/",
+                            icon: faChartBar,
                         },*/
                         {  
                             name: "Klasselister",
                             href: "/userlist",
+                            icon: faList,
                         },
                         {
                             name: "Komité-<br />medlemmer",
                             href: "/committees",
+                            icon: faUser,
                         },
                     ]}/>
                     {applicationPeriod && 
