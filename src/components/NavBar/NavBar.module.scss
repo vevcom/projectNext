@@ -1,6 +1,8 @@
 @use "@/styles/ohma";
 
 .NavBar {
+    color: ohma.$white;
+    font-size: ohma.$mFont;
     padding: ohma.$gap;
     background-color: ohma.$gray-900;
     > ul {

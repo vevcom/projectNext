@@ -1,5 +1,7 @@
-.name {
+@use "@/styles/ohma";
 
+.name {
+    color: ohma.$white;
 }
 
 .DropDown {

@@ -8,14 +8,14 @@ function DropDown({ name, items }) {
             <div className={styles.name}>{ name }</div>
             <div name={name}>
                 {items.map(item => 
-                    <option>
+                    <div>
                         <Link href={item.href}>
                             <div>   
                                 <FontAwesomeIcon icon={item.icon} />    
                                 <h2>{item.name}</h2>
                             </div>
                         </Link>
-                    </option>
+                    </div>
                 )}
             </div>
         </li>
