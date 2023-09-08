@@ -16,7 +16,7 @@ function NavBar() {
     const order = 103
 
     return (
-        <nav className={styles.navBar}>
+        <nav className={styles.NavBar}>
             <ul>
                 <li>
                     <Link href="/frontpage">

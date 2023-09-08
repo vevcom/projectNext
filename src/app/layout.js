@@ -2,11 +2,15 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { v4 as uuid } from 'uuid'
 
+import NavBar from "@/components/NavBar/NavBar"
+import Footer from "@/components/Footer/Footer"
+
 import '@/styles/globals.scss'
 import styles from './layout.module.scss'
 
-import NavBar from "@/components/NavBar/NavBar"
-import Footer from "@/components/Footer/Footer"
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +41,6 @@ export default function RootLayout({ children }) {
             <NavBar />
           </div>
           <div className={styles.content}>
-            jefi
             {children}
           </div>
           <div className={styles.footer}>
