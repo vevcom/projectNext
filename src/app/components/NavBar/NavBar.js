@@ -17,7 +17,6 @@ import {
     faChartBar,
     faList,
     faUser,
-    faU,
 } from "@fortawesome/free-solid-svg-icons"
 
 function NavBar() {
@@ -39,7 +38,7 @@ function NavBar() {
                         />
                     </Link>
                 </li>
-                {isLoggedIn && <Item href="/events" name="hvad der hender"/>}
+                {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
                 <Item href="/news" name="Artikler"/> 
                 {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
                 <Item href="/infopages/about" name="Om Omega"/> 
