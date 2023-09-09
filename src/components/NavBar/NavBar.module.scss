@@ -9,10 +9,14 @@
         display: flex;
         flex-flow: row;
         justify-content: space-between;
+        align-items: center;
         list-style: none;
+    }
+    .logo {
+        margin: ohma.$gap;
+    }
+    .magicHat {
+        background-color: ohma.$yellow;
     }
 }
 
-.magicHat {
-    background-color: ohma.$yellow;
-}

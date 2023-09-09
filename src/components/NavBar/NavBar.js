@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 import Item from "./Item"
-import DropDown from "./DropDown"
+import DropDown from "./Dropdown"
 import Link from "next/link"
 import magiskHatt from "@/images/magisk_hatt.png"
 import simpleLogo from "@/images/logo_simple.png"
@@ -31,7 +31,7 @@ function NavBar() {
         <nav className={styles.NavBar}>
             <ul>
                 <li>
-                    <Link href="/frontpage">
+                    <Link className={styles.logo} href="/frontpage">
                         <Image 
                             src={simpleLogo}
                             width={30}
