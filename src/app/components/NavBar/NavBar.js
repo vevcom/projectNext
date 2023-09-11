@@ -96,7 +96,7 @@ function NavBar() {
                             icon: faList,
                         },
                         {
-                            name: "Komité-<br />medlemmer",
+                            name: "Komitémedlemmer",
                             href: "/committees",
                             icon: faUser,
                         },
@@ -108,7 +108,7 @@ function NavBar() {
                 }
                 <li className={styles.magicHat}>
                     <Link href={isLoggedIn ? `/user/profile/${username}${order}` : "/user/login"}>
-                        <Image src={magiskHatt} width={20} alt="log in button"/>
+                        <Image src={magiskHatt} width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>
             </ul>

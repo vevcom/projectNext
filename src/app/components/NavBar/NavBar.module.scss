@@ -3,7 +3,6 @@
 .NavBar {
     color: ohma.$white;
     font-size: ohma.$mFont;
-    padding: ohma.$gap;
     background-color: ohma.$gray-900;
     > ul {
         display: flex;
@@ -14,9 +13,15 @@
     }
     .logo {
         margin: ohma.$gap;
+        margin-left: 2*ohma.$gap;
     }
     .magicHat {
         background-color: ohma.$yellow;
+        padding: ohma.$gap;
+        margin-right: 2*ohma.$gap;
+        &:hover {
+            background-color: darken(ohma.$yellow, 5%);
+        }
     }
 }
 

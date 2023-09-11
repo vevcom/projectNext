@@ -9,12 +9,10 @@ function DropDown({ name, items }) {
             <div className={styles.name}>{ name }</div>
             <div className={styles.dropdownContent} name={name}>
                 {items.map(item => 
-                    <div key ={uuid()}>
-                        <Link href={item.href}>
-                            <div>   
-                                <FontAwesomeIcon icon={item.icon} />    
-                                <h2>{item.name}</h2>
-                            </div>
+                    <div className={styles.dropdownItem} key={uuid()}>
+                        <Link href={item.href}> 
+                            <FontAwesomeIcon className={styles.icon} icon={item.icon} />    
+                            <h2 className={styles.linkName}>{item.name}</h2>
                         </Link>
                     </div>
                 )}
