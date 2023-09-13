@@ -2,8 +2,8 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { v4 as uuid } from 'uuid'
 
-import NavBar from "@/app/components/NavBar/NavBar"
-import Footer from "@/app/components/Footer/Footer"
+import NavBar from '@/components/NavBar/NavBar'
+import Footer from '@/components/Footer/Footer'
 
 import '@/styles/globals.scss'
 import styles from './layout.module.scss'

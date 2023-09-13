@@ -16,12 +16,8 @@
         margin-left: 2*ohma.$gap;
     }
     .magicHat {
-        background-color: ohma.$yellow;
-        padding: ohma.$gap;
+        @include ohma.yellowBtn;
         margin-right: 2*ohma.$gap;
-        &:hover {
-            background-color: darken(ohma.$yellow, 5%);
-        }
     }
 }
 

@@ -1,5 +1,9 @@
 @use "@/styles/ohma";
 
 .Footer {
+    background-color: ohma.$gray-800;
+    color: ohma.$white;
+    > .footerPart {
 
+    }
 }
