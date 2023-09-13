@@ -4,6 +4,7 @@
     color: ohma.$white;
     font-size: ohma.$mFont;
     background-color: ohma.$gray-900;
+    padding: 0 3*ohma.$gap;
     > ul {
         display: flex;
         flex-flow: row;
@@ -17,7 +18,7 @@
     }
     .magicHat {
         @include ohma.yellowBtn;
-        margin-right: 2*ohma.$gap;
+        padding: 2*ohma.$gap;
     }
 }
 
