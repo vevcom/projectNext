@@ -3,7 +3,6 @@ import Link from "next/link"
 
 import Item from "./Item"
 import DropDown from "./Dropdown"
-import MobileNavBar from "./MobileNavBar"
 
 import magiskHatt from "@/images/magisk_hatt.png"
 import simpleLogo from "@/images/logo_simple.png"

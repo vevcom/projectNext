@@ -26,3 +26,9 @@
     }
 }
 
+@media (max-width: ohma.$mobileBreakpoint) {
+    .NavBar {
+        display: none;
+    }
+}
+

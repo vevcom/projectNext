@@ -16,5 +16,16 @@
     padding: ohma.$gap;
 }
 
-.footer {
+.mobileNavBar {
+    width: 100%;
+    position: sticky;
+    bottom: 0;
+    display: none;
 }
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .mobileNavBar {
+        display: block;
+    }
+}
+

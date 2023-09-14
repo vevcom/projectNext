@@ -1,0 +1,18 @@
+@use "@/styles/ohma";
+
+.MobileNavBar {
+    display: none;
+    background-color: ohma.$black;
+    width: 100%;
+    color: ohma.$white;
+
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .MobileNavBar {
+        display: flex;
+    }
+}
+
