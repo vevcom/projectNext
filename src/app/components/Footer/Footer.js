@@ -17,7 +17,7 @@ import {
 function Footer() {
   return (
     <footer className={styles.Footer}>
-      <div className={styles.footerPart}>
+      <div>
         <Image src={logo} width={300} alt="sct. omega broderskab" />
         <p>
           Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og 
@@ -40,24 +40,24 @@ function Footer() {
             </div>
         </div>
       </div>
-      <div className={styles.footerPart}>
-        <h2 class="text-primary">Kontakt:</h2>
-        <p class="mb-0">Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
-        <p class="mb-0">Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
-        <p class="mb-0">PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
-        <p class="mb-0">Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
-        <p class="mb-0">Tlf: 73 59 42 11</p>
+      <div className={styles.info}>
+        <p>Kontakt:</p>
+        <p>Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
+        <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
+        <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
+        <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
+        <p>Tlf: 73 59 42 11</p>
       </div>
-      <div class="col-lg-3 col-md-3 text-md-left text-center px-3">
-        <h2 class="text-primary">Adresse:</h2>
-        <p class="mb-0">Sct.Omega Broderskab</p>
-        <p class="mb-0">NTNU Gløshaugen</p>
-        <p class="mb-0">Elektro-bygget</p>
-        <p class="mb-0">7491 Trondheim</p>
+      <div className={styles.info}>
+        <p>Adresse:</p>
+        <p>Sct.Omega Broderskab</p>
+        <p>NTNU Gløshaugen</p>
+        <p>Elektro-bygget</p>
+        <p>7491 Trondheim</p>
       </div>
-      <div className={styles.footerPart}>
+      <div>
           <Link href="http://www.nordicsemi.com" target="_blank">
-            <Image src={nordic}/>
+            <Image src={nordic} width={150}/>
           </Link>
       </div>
   </footer>

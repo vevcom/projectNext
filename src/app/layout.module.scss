@@ -1,18 +1,18 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .navBar {
     position: sticky;
-    background-color: ohma.$blue;
 }
 
 .content {
-    background-color: ohma.$yellow;
+    flex: 1; 
 }
 
 .footer {
-
 }

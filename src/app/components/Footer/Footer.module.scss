@@ -6,18 +6,43 @@
     color: ohma.$white;
     display: flex;
     flex-flow: row;
-    padding: 5*ohma.$gap 10*ohma.$gap;
-    > .footerPart {
-
+    justify-content: space-between;
+    align-items: center;
+    padding: 10*ohma.$gap 20*ohma.$gap;
+    > * {
+        max-width: 35%;
+        p {
+            margin-bottom: ohma.$gap;
+        }
+    }
+    > .info {
+        > *:first-child {
+            color: ohma.$yellow;
+            font-weight: ohma.$mFontWeight;
+            font-size: ohma.$lFont
+        }
+        border-left: solid 1px ohma.$gray-700;
+        padding: 10*ohma.$gap;
+        a {
+            text-decoration: none;
+            color: ohma.$white;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
     .pwa {
         @include ohma.yellowIconLink;
+        padding-left: 0;
     }
     .icons {
         display: flex;
         justify-content: flex-start;
         > a > * {
             @include ohma.yellowIconLink;
+            > *:first-child {
+                padding-left: 0;
+            }
         }
 
     }
