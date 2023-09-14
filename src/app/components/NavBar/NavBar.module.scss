@@ -15,9 +15,7 @@
         > li {
             margin-left: 5*ohma.$gap;
             &.logo {
-                margin: ohma.$gap;
                 margin-left: 2*ohma.$gap;
-                place-self: flex-end;
             }
             &.magicHat {
                 @include ohma.yellowBtn;

@@ -1,8 +1,10 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import Item from "./Item"
 import DropDown from "./Dropdown"
-import Link from "next/link"
+import MobileNavBar from "./MobileNavBar"
+
 import magiskHatt from "@/images/magisk_hatt.png"
 import simpleLogo from "@/images/logo_simple.png"
 
@@ -23,7 +25,7 @@ import {
 
 function NavBar() {
     const isLoggedIn = true
-    const applicationPeriod = false
+    const applicationPeriod = true
 
     const username = "johanhst"
     const order = 103

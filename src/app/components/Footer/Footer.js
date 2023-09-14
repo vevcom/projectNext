@@ -18,7 +18,7 @@ function Footer() {
   return (
     <footer className={styles.Footer}>
       <div>
-        <Image src={logo} width={300} alt="sct. omega broderskab" />
+        <Image src={logo} width={350} alt="sct. omega broderskab" />
         <p>
           Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og 
           Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
@@ -55,9 +55,9 @@ function Footer() {
         <p>Elektro-bygget</p>
         <p>7491 Trondheim</p>
       </div>
-      <div>
+      <div className={styles.nordic}>
           <Link href="http://www.nordicsemi.com" target="_blank">
-            <Image src={nordic} width={150}/>
+            <Image src={nordic} width={170}/>
           </Link>
       </div>
   </footer>
