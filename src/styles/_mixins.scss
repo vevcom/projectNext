@@ -10,3 +10,14 @@
         cursor: pointer;
     }
 }
+
+@mixin yellowIconLink {
+    color: colors.$yellow;
+    padding: variables.$gap;
+    width: 30px;
+    height: 30px;
+    &:hover {
+        color: darken(colors.$yellow, 5%);
+        cursor: pointer;
+    }
+}

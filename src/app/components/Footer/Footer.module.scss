@@ -1,9 +1,24 @@
 @use "@/styles/ohma";
 
 .Footer {
+    font-weight: ohma.$sFontWeight;
     background-color: ohma.$gray-800;
     color: ohma.$white;
+    display: flex;
+    flex-flow: row;
+    padding: 5*ohma.$gap 10*ohma.$gap;
     > .footerPart {
+
+    }
+    .pwa {
+        @include ohma.yellowIconLink;
+    }
+    .icons {
+        display: flex;
+        justify-content: flex-start;
+        > a > * {
+            @include ohma.yellowIconLink;
+        }
 
     }
 }
