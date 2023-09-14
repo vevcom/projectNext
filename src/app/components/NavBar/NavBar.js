@@ -14,14 +14,16 @@ import {
     faComment,
     faQuestionCircle,
     faCamera,
-    faChartBar,
+    faBook,
     faList,
-    faUser,
+    faUsers,
+    faCircleInfo,
+    faGamepad
 } from "@fortawesome/free-solid-svg-icons"
 
 function NavBar() {
     const isLoggedIn = true
-    const applicationPeriod = true
+    const applicationPeriod = false
 
     const username = "johanhst"
     const order = 103
@@ -29,8 +31,8 @@ function NavBar() {
     return (
         <nav className={styles.NavBar}>
             <ul>
-                <li>
-                    <Link className={styles.logo} href="/">
+                <li className={styles.logo}>
+                    <Link href="/">
                         <Image 
                             src={simpleLogo}
                             width={30}
@@ -39,10 +41,7 @@ function NavBar() {
                     </Link>
                 </li>
                 {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
-                <Item href="/news" name="Artikler"/> 
-                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
-                <Item href="/infopages/about" name="Om Omega"/> 
-                <Item href="/infopages/interessegrupper" name="Interessegrupper"/> 
+                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>} 
                 <Item href="/infopages/committees" name="Komitéer"/> 
                 {!isLoggedIn && 
                 <>
@@ -52,19 +51,35 @@ function NavBar() {
                 {isLoggedIn && 
                 <>
                     <Item href="/infopages/jobbannonser" name="Jobbannonser"/> 
-                    <DropDown name="OmBul" items={[
+                    {applicationPeriod && 
+                        <Item href="/applications" name="Søknader"/> 
+                    }
+                    <DropDown name="Mer" items={[
                         {
-                            name: "Utgivelser",
+                            name: "Om Omega",
+                            href: "ingopages/about",
+                            icon: faCircleInfo,
+                        },
+                        {
+                            name: "Intressegrupper",
+                            href: "ingopages/interessegrupper",
+                            icon: faGamepad,
+                        },
+                        {
+                            name: "Artikler",
+                            href: "news",
+                            icon: faNewspaper
+                        },
+                        {
+                            name: "Ombul",
                             href: "/ombul",
-                            icon: faNewspaper,
+                            icon: faBook,
                         },
                         {
                             name: "Bulshit",
                             href: "/bulshit",
                             icon: faPoo,
                         },
-                    ]} />
-                    <DropDown name="Omegating" items={[
                         {
                             name: "Omegashop",
                             href: "/money/shop",
@@ -85,11 +100,6 @@ function NavBar() {
                             href: "/images",
                             icon: faCamera,
                         },
-                        /*{   //what happend to polls :(
-                            name: "Polls",
-                            href: "/",
-                            icon: faChartBar,
-                        },*/
                         {  
                             name: "Klasselister",
                             href: "/userlist",
@@ -98,12 +108,9 @@ function NavBar() {
                         {
                             name: "Komitémedlemmer",
                             href: "/committees",
-                            icon: faUser,
+                            icon: faUsers,
                         },
                     ]}/>
-                    {applicationPeriod && 
-                    <Item href="/applications" name="Søknader"/> 
-                    }
                 </>
                 }
                 <li className={styles.magicHat}>

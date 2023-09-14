@@ -5,20 +5,26 @@
     font-size: ohma.$mFont;
     background-color: ohma.$gray-900;
     padding: 0 3*ohma.$gap;
+    width: 100%;
     > ul {
         display: flex;
         flex-flow: row;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         list-style: none;
-    }
-    .logo {
-        margin: ohma.$gap;
-        margin-left: 2*ohma.$gap;
-    }
-    .magicHat {
-        @include ohma.yellowBtn;
-        padding: 2*ohma.$gap;
+        > li {
+            margin-left: 5*ohma.$gap;
+            &.logo {
+                margin: ohma.$gap;
+                margin-left: 2*ohma.$gap;
+                place-self: flex-end;
+            }
+            &.magicHat {
+                @include ohma.yellowBtn;
+                padding: 2*ohma.$gap;
+                margin-left: auto;
+            }
+        }
     }
 }
 
