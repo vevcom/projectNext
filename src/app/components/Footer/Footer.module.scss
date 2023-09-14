@@ -86,6 +86,7 @@
 @media (max-width: ohma.$mobileBreakpoint) {
     .Footer {
         padding: ohma.$gap 2*ohma.$gap;
+        padding-bottom: 4*ohma.$gap;
         grid-template-rows: repeat(auto, 4);
         grid-template-areas: 
             "logos"
@@ -115,5 +116,4 @@
             max-width: 400px;
         }
     }
-    
 }
