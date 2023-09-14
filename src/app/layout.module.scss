@@ -8,10 +8,12 @@
 
 .navBar {
     position: sticky;
+    top: 0;
 }
 
 .content {
     flex: 1; 
+    padding: ohma.$gap;
 }
 
 .footer {

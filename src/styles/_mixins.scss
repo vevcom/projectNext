@@ -6,7 +6,7 @@
     background-color: colors.$yellow;
     padding: variables.$gap;
     &:hover {
-        background-color: darken(colors.$yellow, 5%);
+        background-color: darken(colors.$yellow, 10%);
         cursor: pointer;
     }
 }
@@ -17,7 +17,7 @@
     width: 30px;
     height: 30px;
     &:hover {
-        color: darken(colors.$yellow, 5%);
+        color: darken(colors.$yellow, 10%);
         cursor: pointer;
     }
 }
