@@ -30,7 +30,7 @@ function NavBar() {
         <nav className={styles.NavBar}>
             <ul>
                 <li>
-                    <Link className={styles.logo} href="/frontpage">
+                    <Link className={styles.logo} href="/">
                         <Image 
                             src={simpleLogo}
                             width={30}

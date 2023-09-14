@@ -6,6 +6,11 @@ import styles from './Footer.module.scss'
 import addToHomeScreen from '@/images/add_to_home_screen.png'
 import logo from '@/images/omega_logo_white.png'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faXTwitter
+} from '@fortawesome/free-brands-svg-icons'
+
 function Footer() {
   return (
     <footer className={styles.Footer}>
@@ -17,15 +22,15 @@ function Footer() {
               <Image src={addToHomeScreen} />
             </Link>
             <div>
-              <a href="https://twitter.com/OmegaVevcom" target="_blank">
-                <i class="fab fa-x-twitter fa-2x"></i>
-              </a>
-              <a href="https://www.facebook.com/SctOmegaBroderskab/" target="_blank" class="ml-1">
+              <Link href="https://twitter.com/OmegaVevcom" target="_blank">
+                <FontAwesomeIcon icon={faXTwitter} />
+              </Link>
+              <Link href="https://www.facebook.com/SctOmegaBroderskab/" target="_blank" class="ml-1">
                 <i class="fab fa-facebook fa-2x"></i>
-              </a>
-              <a href="https://www.instagram.com/sctomega/" target="_blank" class="ml-1">
+              </Link>
+              <Link href="https://www.instagram.com/sctomega/" target="_blank" class="ml-1">
                 <i class="fab fa-instagram fa-2x"></i>
-              </a>
+              </Link>
             </div>
         </div>
       </div>
