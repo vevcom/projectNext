@@ -1,8 +1,13 @@
+"use client"
+
 import Image from 'next/image'
 import Link from 'next/link'
+import BurgerMenu from './BurgerMenu'
 
-import magiskHatt from "@/images/magisk_hatt.png"
+import magiskHatt from '@/images/magisk_hatt.png'
 import simpleLogo from '@/images/logo_simple.png'
+
+import { useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -15,6 +20,8 @@ import {
 import styles from './MobileNavBar.module.scss'
 
 function MobileNavBar() {
+    const [burgerOpen, setBurgerOpen] = useState(false)
+
     const isLoggedIn = true
     const applicationPeriod = true
 
@@ -55,10 +62,14 @@ function MobileNavBar() {
                     </Link>
                 }
             </div>
-            <div className={styles.item}>
-                <FontAwesomeIcon icon={faBars} />
-                <button></button>
+            <div className={styles.item} onClick={() => setBurgerOpen(!burgerOpen)}>
+                <button>
+                    <FontAwesomeIcon icon={faBars} />
+                </button>
             </div>
+            {
+                burgerOpen && <BurgerMenu isLoggedIn applicationPeriod/>
+            }
         </nav>
     )
 }
