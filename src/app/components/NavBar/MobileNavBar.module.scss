@@ -8,6 +8,27 @@
 
     flex-direction: row;
     justify-content: space-around;
+    padding: 2*ohma.$gap;
+    > .item {
+        border-left: solid .5px ohma.$white;
+        width: 100%;
+        display: grid;
+        place-items: center;
+        &:first-child {
+            border-left: none;
+        }
+        svg {
+            color: ohma.$white;
+            width: 25px;
+            height: 25px;
+        }
+        .magiskHatt {
+            filter: invert(1);
+        }
+        button {
+            visibility: hidden;
+        }
+    }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {

@@ -41,7 +41,7 @@ function MobileNavBar() {
             </div>
             <div className={styles.item}>
                 <Link href="/">
-                    <Image src={simpleLogo} width={25}/>
+                    <Image src={simpleLogo} width={30}/>
                 </Link>
             </div>
             <div className={styles.item}>
@@ -56,9 +56,8 @@ function MobileNavBar() {
                 }
             </div>
             <div className={styles.item}>
-                <button>
-                    <FontAwesomeIcon icon={faBars} />
-                </button>
+                <FontAwesomeIcon icon={faBars} />
+                <button></button>
             </div>
         </nav>
     )
