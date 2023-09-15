@@ -22,7 +22,7 @@ import styles from './MobileNavBar.module.scss'
 function MobileNavBar() {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
-    const isLoggedIn = true
+    const isLoggedIn = false
     const applicationPeriod = true
 
     const username = "johanhst"
@@ -48,17 +48,17 @@ function MobileNavBar() {
             </div>
             <div className={styles.item}>
                 <Link href="/">
-                    <Image src={simpleLogo} width={30}/>
+                    <Image src={simpleLogo} width={30} alt="omega logo"/>
                 </Link>
             </div>
             <div className={styles.item}>
                 {
                     isLoggedIn ? 
                     <Link href={`/user/profile/${username}${order}`}> 
-                        <Image width={25} src={magiskHatt} className={styles.magiskHatt}/>
+                        <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link> :
                     <Link href="/user/login">
-                        <Image width={25} src={magiskHatt} className={styles.magiskHatt}/>
+                        <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link>
                 }
             </div>
@@ -69,7 +69,7 @@ function MobileNavBar() {
             </div>
             <div className={styles.burgerMenu}>
             {
-                burgerOpen && <BurgerMenu isLoggedIn applicationPeriod/>
+                burgerOpen && <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
             }
             </div>
         </nav>

@@ -25,7 +25,7 @@ function Footer() {
         </p>
         <div>
             <Link className={styles.pwa} href="/infopages/pwa">
-              <Image src={addToHomeScreen} width={200} />
+              <Image src={addToHomeScreen} width={200} alt="add to homescreen" />
             </Link>
             <div className={styles.icons}>
               <Link href="https://twitter.com/OmegaVevcom" target="_blank">
@@ -57,7 +57,7 @@ function Footer() {
       </div>
       <div className={styles.nordic}>
           <Link href="http://www.nordicsemi.com" target="_blank">
-            <Image src={nordic} width={170}/>
+            <Image src={nordic} width={170} alt="nordic logo"/>
           </Link>
       </div>
   </footer>

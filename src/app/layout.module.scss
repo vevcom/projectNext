@@ -12,8 +12,10 @@
 }
 
 .content {
+    max-width: 100vw;
     flex: 1; 
     padding: ohma.$gap;
+    overflow-x: hidden;
 }
 
 .mobileNavBar {
