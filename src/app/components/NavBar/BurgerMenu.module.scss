@@ -1,1 +1,14 @@
-@use "@/styles/ohma"
+@use "@/styles/ohma";
+
+.BurgerMenu {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2*ohma.$gap;
+    padding: 3*ohma.$gap ohma.$gap  ohma.$gap ohma.$gap;
+}
+
+@media (max-width: 500px) {
+    .BurgerMenu {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
