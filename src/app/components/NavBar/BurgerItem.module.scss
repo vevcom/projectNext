@@ -14,9 +14,27 @@
         height: 25px;
     }
     text-decoration: none;
-    > .name {
+    > .name, .shortName {
         color: ohma.$white;
         text-decoration: none;
-        font-size: .7em;
+        font-size: .65em;
+        word-break: break-all;
+    }
+    > .name {
+        display: block;
+    }
+    > .shortName {
+        display: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .BurgerItem {
+        > .name {
+            display: none;
+        }
+        > .shortName {
+            display: block;
+        }
     }
 }

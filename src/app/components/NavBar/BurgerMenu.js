@@ -37,8 +37,8 @@ function BurgerMenu({ isLoggedIn, applicationPeriod }) {
                 <BurgerItem href="/images" name="Bilder" icon={faCamera}/>
                 <BurgerItem href="/infopages/jobbannonser" name="Jobbannonser" icon={faBriefcase}/>
                 <BurgerItem href="/userlist" name="Klasselister" icon={faList}/>
-                <BurgerItem href="/committees" name="Komitémedlemmer" icon={faUsers}/>
-                <BurgerItem href="/infopages/interessegrupper" name="Interessegrupper" icon={faGamepad}/>
+                <BurgerItem href="/committees" name="Komitémedlemmer" shortName="Kom.med." icon={faUsers}/>
+                <BurgerItem href="/infopages/interessegrupper" name="Interessegrupper" shortName="Interessegr." icon={faGamepad}/>
                 {applicationPeriod &&
                     <BurgerItem href="/applications" name="Søknad" icon={faAddressCard}/>
                 }
