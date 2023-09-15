@@ -67,9 +67,11 @@ function MobileNavBar() {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
             </div>
+            <div className={styles.burgerMenu}>
             {
                 burgerOpen && <BurgerMenu isLoggedIn applicationPeriod/>
             }
+            </div>
         </nav>
     )
 }

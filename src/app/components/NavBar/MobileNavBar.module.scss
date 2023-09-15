@@ -1,17 +1,20 @@
 @use "@/styles/ohma";
 
 .MobileNavBar {
-    display: none;
     background-color: ohma.$black;
     width: 100%;
     color: ohma.$white;
-
-    flex-direction: row;
-    justify-content: space-around;
     padding: 2*ohma.$gap;
+
+    display: none;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+        ". . . . ."
+        "b b b b b";
     > .item {
+  
         border-left: solid .5px ohma.$white;
-        width: 100%;
         display: grid;
         place-items: center;
         &:first-child {
@@ -35,11 +38,17 @@
             outline: inherit;
         }
     }
+    > .burgerMenu {
+        grid-area: b;
+        width: 100%;
+        display: grid;
+        place-items: center;
+    }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
     .MobileNavBar {
-        display: flex;
+        display: grid;
     }
 }
 
