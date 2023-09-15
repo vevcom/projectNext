@@ -1,15 +1,27 @@
 @use "@/styles/ohma";
 
+
+
 .link {
-    text-decoration: none;
+    display: inline-block;
+    position: relative;
     color: ohma.$white;
-    font-size: ohma.$mFont;
+    text-decoration:  none;
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: ohma.$yellow;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+    &:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
 }
 
-.link:hover {
-    text-decoration: underline;
-    text-decoration-color: ohma.$yellow;
-    text-decoration-thickness: 2px;
-    text-underline-position: under;
-    text-decoration-skip-ink: none;
-}
