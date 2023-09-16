@@ -1,0 +1,40 @@
+@use "@/styles/ohma";
+
+.BurgerItem {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    &:active {
+        background-color: ohma.$yellow;
+    }
+    > .icon {
+        color: ohma.$white;
+        width: 25px;
+        height: 25px;
+    }
+    text-decoration: none;
+    > .name, .shortName {
+        color: ohma.$white;
+        text-decoration: none;
+        font-size: .65em;
+        word-break: break-all;
+    }
+    > .name {
+        display: block;
+    }
+    > .shortName {
+        display: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .BurgerItem {
+        > .name {
+            display: none;
+        }
+        > .shortName {
+            display: block;
+        }
+    }
+}

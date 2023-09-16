@@ -2,8 +2,9 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head'
 import { v4 as uuid } from 'uuid'
 
-import NavBar from "@/components/NavBar/NavBar"
-import Footer from "@/components/Footer/Footer"
+import NavBar from '@/components/NavBar/NavBar'
+import MobileNavBar from '@/components/NavBar/MobileNavBar'
+import Footer from '@/components/Footer/Footer'
 
 import '@/styles/globals.scss'
 import styles from './layout.module.scss'
@@ -45,6 +46,9 @@ export default function RootLayout({ children }) {
           </div>
           <div className={styles.footer}>
             <Footer />
+          </div>
+          <div className={styles.mobileNavBar}>
+            <MobileNavBar />
           </div>
         </div>
       </body>

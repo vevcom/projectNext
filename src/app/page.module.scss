@@ -1,2 +1,8 @@
-@use "@/styles/ohma"
+@use "@/styles/ohma";
 
+.wrapper {
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

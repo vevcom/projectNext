@@ -1,0 +1,23 @@
+@use "_colors";
+@use "_variables";
+
+
+@mixin yellowBtn {
+    background-color: colors.$yellow;
+    padding: variables.$gap;
+    &:hover {
+        background-color: darken(colors.$yellow, 10%);
+        cursor: pointer;
+    }
+}
+
+@mixin yellowIconLink {
+    color: colors.$yellow;
+    padding: variables.$gap;
+    width: 30px;
+    height: 30px;
+    &:hover {
+        color: darken(colors.$yellow, 10%);
+        cursor: pointer;
+    }
+}

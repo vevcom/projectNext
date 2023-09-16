@@ -1,18 +1,33 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .navBar {
     position: sticky;
-    background-color: ohma.$blue;
+    top: 0;
 }
 
 .content {
-    background-color: ohma.$yellow;
+    max-width: 100vw;
+    flex: 1; 
+    padding: ohma.$gap;
+    overflow-x: hidden;
 }
 
-.footer {
-    background-color: ohma.$slate;
+.mobileNavBar {
+    width: 100%;
+    position: sticky;
+    bottom: 0;
+    display: none;
 }
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .mobileNavBar {
+        display: block;
+    }
+}
+
