@@ -28,22 +28,26 @@ $omegamai: url("../images/Omegamai.jpeg");
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding-bottom: 30px; //compansate a little for nav size 
+                padding-bottom: 20px; //compansate a little for nav size 
                 > img {
                     animation: popIn 1s ease-in-out;
                     margin-bottom: 2*ohma.$gap;
                 }
-                .socials > a {
-                    margin: ohma.$gap;
-                    color: ohma.$white;
-                    transition: color .3s;
-                    &:hover {
-                        color: ohma.$gray-300;
+                > .socials {
+                    margin: 3*ohma.$gap;
+                    > a {
+                        margin: ohma.$gap;
+                        color: ohma.$white;
+                        transition: color .3s;
+                        &:hover {
+                            color: ohma.$gray-300;
+                        }
                     }
                 }
-               
                 > a {
                     @include ohma.borderBtn();
+                }
+                > a, .socials {
                     animation: popIn 1s ease-in-out forwards;
                     animation-delay: .7s;
                     transform: scale(0);
