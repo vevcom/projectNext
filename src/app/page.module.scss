@@ -55,6 +55,34 @@ $omegamai: url("../images/Omegamai.jpeg");
             }
         }
     }
+    > .section {
+        display: flex;
+        > img {
+            grid-area: img;
+        }
+        > div {
+            padding: 15*ohma.$gap;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            > h3 {
+                font-size: ohma.$xlFont;
+                font-weight: ohma.$lFontWeight;
+                margin-bottom: ohma.$gap;
+            }
+            > p {
+                font-size: ohma.$mFont;
+                line-height: 1.7em;
+                margin-bottom: ohma.$gap;
+            }
+            > a {
+                @include ohma.borderBtn(ohma.$slate);
+                width: 15%;
+                margin: 0;
+            }
+        }
+    }
 }
 
 @keyframes popIn {
