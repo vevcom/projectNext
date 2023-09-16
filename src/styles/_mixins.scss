@@ -1,5 +1,6 @@
 @use "_colors";
 @use "_variables";
+@use "_fonts";
 
 
 @mixin yellowBtn {
@@ -19,5 +20,21 @@
     &:hover {
         color: darken(colors.$yellow, 10%);
         cursor: pointer;
+    }
+}
+
+@mixin borderBtn($color: colors.$white) {
+    font-size: fonts.$mFont;
+    padding: 2*variables.$gap;
+    background: transparent;
+    border: solid $color 2px;
+    margin: variables.$gap;
+    color: $color;
+    width: 100%;
+    transition: .5s background;
+    &:hover {
+        cursor: pointer;
+        background: $color;
+        color: invert($color);
     }
 }
