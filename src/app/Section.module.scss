@@ -23,7 +23,16 @@
         }
         > a {
             @include ohma.borderBtn(ohma.$slate);
-            width: 15%;
+            width: 120px;
+            margin: 0;
+        }
+    }
+    &.blue {
+        background-color: ohma.$slate;
+        color: ohma.$white;
+        a {
+            @include ohma.borderBtn(ohma.$yellow);
+            width: 120px;
             margin: 0;
         }
     }

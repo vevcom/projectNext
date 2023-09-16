@@ -1,22 +1,21 @@
+import Image from 'next/image'
+import Link from 'next/link'
 import styles from './Section.module.scss'
 
-function Section({}) {
+function Section({children, img, name, lesMer, right, imgWidth}) {
   return (
-    <div className={styles.section}>
-        <Image width={400} src={kappemann}/>
+    <div className={`${styles.section} ${right && styles.blue}`}>
+        {!right && <Image width={imgWidth} src={img}/>}
         <div>
-          <h3>Om Omega</h3>
+          <h3>{name}</h3>
           <p>
-            Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter 
-            som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en 
-            eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn 
-            en fyldig søknad. Dette har endret seg gjennom årene, og i dag blir medlemmene tatt 
-            opp automatisk fra 1. klasse.
+            {children}
           </p>
-          <Link href="infopages/about">Les mer</Link>
+          <Link href={lesMer}>Les mer</Link>
         </div>
+        {right && <Image width={imgWidth} src={img}/>}
     </div>
   )
 }
 
-export default Section{}
+export default Section
