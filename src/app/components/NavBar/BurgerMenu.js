@@ -19,7 +19,6 @@ import {
 import styles from './BurgerMenu.module.scss'
 
 function BurgerMenu({ isLoggedIn, applicationPeriod }) {
-    console.log(isLoggedIn)
     return (
         <div className={styles.BurgerMenu}>
             <BurgerItem href="/ombul" name="OmBul" icon={faNewspaper}/>

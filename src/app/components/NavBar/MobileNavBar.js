@@ -22,7 +22,7 @@ import styles from './MobileNavBar.module.scss'
 function MobileNavBar() {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
-    const isLoggedIn = true
+    const isLoggedIn = true;
     const applicationPeriod = true
 
     const username = "johanhst"

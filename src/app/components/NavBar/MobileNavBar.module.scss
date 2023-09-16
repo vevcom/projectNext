@@ -42,6 +42,7 @@
         grid-area: b;
         width: 100%;
     }
+    overflow: hidden;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
