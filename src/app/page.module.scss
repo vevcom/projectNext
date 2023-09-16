@@ -6,11 +6,13 @@ $omegamai: url("../images/Omegamai.jpeg");
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     > .frontImage {
         display: grid;
         place-items: center;
         width: 100%;
-        min-height: calc(100vh - 50px);
+        min-height: 100vh;
+        height: 100%;
 
         background-image: $omegamai;
         background-size: cover;
@@ -23,14 +25,24 @@ $omegamai: url("../images/Omegamai.jpeg");
             place-items: center;
             background: radial-gradient(ohma.$black, transparent);
             > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-bottom: 30px; //compansate a little for nav size 
                 > img {
                     animation: popIn 1s ease-in-out;
                     margin-bottom: 2*ohma.$gap;
                 }
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                button {
+                .socials > a {
+                    margin: ohma.$gap;
+                    color: ohma.$white;
+                    transition: color .3s;
+                    &:hover {
+                        color: ohma.$gray-300;
+                    }
+                }
+               
+                > a {
                     @include ohma.borderBtn();
                     animation: popIn 1s ease-in-out forwards;
                     animation-delay: .7s;

@@ -48,7 +48,7 @@
     .icons {
         display: flex;
         justify-content: flex-start;
-        > a > * {
+        a > * {
             @include ohma.yellowIconLink;
             > *:first-child {
                 padding-left: 0;

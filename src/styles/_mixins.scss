@@ -23,7 +23,10 @@
     }
 }
 
-@mixin borderBtn($color: colors.$white) {
+//NOTE: also made to work for <Link /> (<a> tag)
+@mixin borderBtn($color: colors.$white) { 
+    text-align: center;
+    text-decoration: none;
     font-size: fonts.$mFont;
     padding: 2*variables.$gap;
     background: transparent;
