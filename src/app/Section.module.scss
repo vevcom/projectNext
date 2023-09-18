@@ -2,9 +2,7 @@
 
 .section {
     display: flex;
-    > img {
-        grid-area: img;
-    }
+  
     > div {
         padding: 15*ohma.$gap;
         height: 100%;

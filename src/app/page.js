@@ -7,6 +7,7 @@ import styles from './page.module.scss'
 import logo from '@/images/logo_white.png'
 import kappemann from '@/images/kappemann.jpeg'
 import ohma from '@/images/ohma.jpeg'
+import ov from '@/images/ov.jpeg'
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
       <div className={styles.frontImage}>
         <div className={styles.front}>
           <div>
-            <Image loading="eager" src={logo} width={300}/>
+            <Image alt="omega logo" loading="eager" src={logo} width={300}/>
             <Link href="user/login">Logg inn</Link>
             <Link href="infopages/nystudent">Ny student</Link>
             <div className={styles.socials}>
@@ -36,6 +37,13 @@ export default function Home() {
         gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget. 
         Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er 
         heldig får du kanskje bli med på en kjøretur.
+      </Section>
+      <Section img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={500}>
+        Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved 
+        Norges Teknisk-Naturvitenskapelige Universitet (NTNU) stiftet i 1971. Omega Verksted holder 
+        til i kjelleren i det gamle elektrobygget på Gløshaugen (G 016 A). Verkstedet inneholder 
+        det meste av verktøy for små og store prosjekter, i tillegg til et knippe 
+        datamaskiner samt et solid utvalg av brus og sjokolade.
       </Section>
     </div>
   )

@@ -48,9 +48,7 @@ $omegamai: url("../images/Omegamai.jpeg");
                     @include ohma.borderBtn();
                 }
                 > a, .socials {
-                    animation: popIn 1s ease-in-out forwards;
-                    animation-delay: .7s;
-                    transform: scale(0);
+                    animation: popIn 1.2s ease-in-out;
                 }
             }
         }
