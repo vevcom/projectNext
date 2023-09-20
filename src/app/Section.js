@@ -6,7 +6,11 @@ function Section({children, img, name, lesMer, right, imgWidth}) {
     const alt = "image of " + name
     const imgContainer = (
         <div style={{width: imgWidth}} className={styles.imgContainer}>
-            <Image alt={alt} width={200} src={img}/>
+            <Image 
+                src={img}
+                alt={alt}
+                width={imgWidth}
+                />
         </div>
     )
     return (

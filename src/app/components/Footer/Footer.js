@@ -32,7 +32,7 @@ function Footer() {
         <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
         <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
         <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
-        <p>Tlf: 73 59 42 11</p>
+        <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
       </div>
       <div className={styles.info}>
         <p>Adresse:</p>
