@@ -17,11 +17,11 @@ function Section({children, img, name, lesMer, right, imgWidth}) {
         <div className={`${styles.section} ${right && styles.blue}`}>
             {!right && imgContainer}
             <div>
-            <h3>{name}</h3>
-            <p>
-                {children}
-            </p>
-            <Link href={lesMer}>Les mer</Link>
+                <h3>{name}</h3>
+                <p>
+                    {children}
+                </p>
+                <Link href={lesMer}>Les mer</Link>
             </div>
             {right && imgContainer}
         </div>

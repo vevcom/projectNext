@@ -1,7 +1,11 @@
 @use "@/styles/ohma";
 
 .section {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto;
+    > .imgContainer {
+
+    }
   
     > div:not(.imgContainer) {
         padding: 15*ohma.$gap;
