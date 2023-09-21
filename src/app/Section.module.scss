@@ -20,7 +20,6 @@
             margin-bottom: ohma.$gap;
         }
         > a {
-            @include ohma.borderBtn(ohma.$slate);
             width: 120px;
             margin: 0;
         }
@@ -30,11 +29,13 @@
         color: ohma.$white;
         a {
             @include ohma.borderBtn(ohma.$yellow);
-            width: 120px;
-            margin: 0;
         }
     }
-    > .imgContainer {
-       
+    &:not(.blue) {
+        background-color: ohma.$white;
+        color: ohma.$black;
+        a {
+            @include ohma.borderBtn(ohma.$slate);
+        }
     }
 }

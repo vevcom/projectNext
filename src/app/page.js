@@ -12,9 +12,9 @@ import ov from '@/images/ov.jpeg'
 export default function Home() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.parallax}>
-        <div className={styles.image}>
-          <div className={styles.content}>
+      <div className={styles.part}>
+        <div className={styles.image}></div>
+        <div className={styles.frontInfo}>
             <div>
               <Image alt="omega logo" loading="eager" src={logo} width={300}/>
               <Link href="user/login">Logg inn</Link>
@@ -23,7 +23,6 @@ export default function Home() {
                 <SocialIcons />
               </div>
             </div>
-          </div>
         </div>
         <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={400}>
           Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter 
