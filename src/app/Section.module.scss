@@ -4,7 +4,12 @@
     display: grid;
     grid-template-columns: auto auto;
     > .imgContainer {
-
+        padding: 0;
+        margin: 0;
+        border: 0;
+        > img {
+            padding: 0;
+        }
     }
   
     > div:not(.imgContainer) {

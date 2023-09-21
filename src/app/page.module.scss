@@ -52,8 +52,11 @@ $frontImg: url("../images/frontImg.jpeg");
                         }
                     }
                 }
-                > a {
+                > a:not(.scrollDown) {
                     @include ohma.borderBtn();
+                }
+                > .scrollDown {
+                    color: ohma.$white;
                 }
                 > a, .socials {
                     animation: popIn 1.2s ease-in-out;

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './Section.module.scss'
 
-function Section({children, img, name, lesMer, right, imgWidth}) {
+function Section({children, img, name, lesMer, right, imgWidth, id}) {
     const alt = "image of " + name
     const imgContainer = (
         <div style={{width: imgWidth}} className={styles.imgContainer}>
@@ -14,7 +14,7 @@ function Section({children, img, name, lesMer, right, imgWidth}) {
         </div>
     )
     return (
-        <div className={`${styles.section} ${right && styles.blue}`}>
+        <div id={id} className={`${styles.section} ${right && styles.blue}`}>
             {!right && imgContainer}
             <div>
                 <h3>{name}</h3>

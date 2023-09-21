@@ -9,6 +9,9 @@ import kappemann from '@/images/kappemann.jpeg'
 import ohma from '@/images/ohma.jpeg'
 import ov from '@/images/ov.jpeg'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+
 export default function Home() {
   return (
     <div className={styles.wrapper}>
@@ -22,9 +25,12 @@ export default function Home() {
               <div className={styles.socials}>
                 <SocialIcons />
               </div>
+              <Link className={styles.scrollDown} href="#firstSection">
+                <FontAwesomeIcon icon={faAngleDown} />
+              </Link>
             </div>
         </div>
-        <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={400}>
+        <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={400} id="firstSection">
           Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter 
           som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en 
           eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn 
