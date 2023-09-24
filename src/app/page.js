@@ -19,7 +19,7 @@ export default function Home() {
         <div className={styles.image}></div>
         <div className={styles.frontInfo}>
             <div>
-              <Image alt="omega logo" loading="eager" src={logo} width={300}/>
+              <Image alt="omega logo" priority={true} src={logo} width={300}/>
               <Link href="user/login">Logg inn</Link>
               <Link href="infopages/nystudent">Ny student</Link>
               <div className={styles.socials}>
@@ -30,21 +30,21 @@ export default function Home() {
               </Link>
             </div>
         </div>
-        <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={400} id="firstSection">
+        <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
           Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter 
           som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en 
           eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn 
           en fyldig søknad. Dette har endret seg gjennom årene, og i dag blir medlemmene tatt 
           opp automatisk fra 1. klasse.
         </Section>
-        <Section img={ohma} name="Ohma Electra" lesMer="infopages/loccom" right imgWidth={700}>
+        <Section img={ohma} name="Ohma Electra" lesMer="infopages/loccom" right imgWidth={750}>
           Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
           Ohma er verdens første(!) fungerende vekselstrøm-lokomotiv, og har en lang historie fra både 
           gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget. 
           Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er 
           heldig får du kanskje bli med på en kjøretur.
         </Section>
-        <Section img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={500}>
+        <Section img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
           Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved 
           Norges Teknisk-Naturvitenskapelige Universitet (NTNU) stiftet i 1971. Omega Verksted holder 
           til i kjelleren i det gamle elektrobygget på Gløshaugen (G 016 A). Verkstedet inneholder 

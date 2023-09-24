@@ -1,14 +1,18 @@
 @use "@/styles/ohma";
 
 .section {
-    display: grid;
-    grid-template-columns: auto auto;
+    display: flex;
+    overflow: hidden;
     > .imgContainer {
-        padding: 0;
-        margin: 0;
-        border: 0;
+        position: relative;
+        overflow: hidden;
         > img {
-            padding: 0;
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            right: -9999px;
+            bottom: -9999px;
+            margin: auto;
         }
     }
   
