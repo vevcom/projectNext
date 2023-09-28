@@ -9,22 +9,17 @@ $frontImg: url("../images/frontImg.jpeg");
     justify-content: center;
     flex-direction: column;
     > .part {
-        > .image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-
-            display: grid;
-            place-items: center;
-            width: 100%;
-            min-height: 100vh;
-            height: 100%;
+        &.frontImg {
             background-image: $frontImg;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: top center;
         }
+        &.omegamai {
+            background-image: $omegamai;
+        }
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-attachment: fixed;
+        width: 100%;
         > .frontInfo {
             width: 100%;
             min-height: 100vh;

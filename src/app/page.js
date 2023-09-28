@@ -15,8 +15,7 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 export default function Home() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.part}>
-        <div className={styles.image}></div>
+      <div className={`${styles.part} ${styles.frontImg}`}>
         <div className={styles.frontInfo}>
             <div>
               <Image alt="omega logo" priority={true} src={logo} width={300}/>
@@ -51,6 +50,11 @@ export default function Home() {
           det meste av verktøy for små og store prosjekter, i tillegg til et knippe 
           datamaskiner samt et solid utvalg av brus og sjokolade.
         </Section>
+      </div>
+      <div className={`${styles.part} ${styles.omegamai}`}>
+        <div className={styles.frontInfo}>
+
+        </div>
       </div>
     </div>
   )
