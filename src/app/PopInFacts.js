@@ -9,24 +9,38 @@ function PopInFacts() {
     const [currentFact, setCurrentFact] = useState(0)
     const [intervalRef, setIntervalRef] = useState()
     const element = useRef()
+    const text = useRef()
     const lightning = useRef()
     useEffect(() => {
         setIntervalRef(
             setInterval(() => {
-                element.current.style.transform = "scale(0)"
+                flash()
                 setTimeout(() => {
-                    element.current.style.transform = "scale(1)"
-                    setCurrentFact(current => current >= facts.length - 1 ? 0 : ++current)
-                }
-                , 500)  
+                    makeLightning()
+                    text.current.style.transform = "scale(0)"
+                    setTimeout(() => {
+                        text.current.style.transform = "scale(1)"
+                        setCurrentFact(current => current >= facts.length - 1 ? 0 : ++current)
+                    }
+                    , 300)  
+                })
             }, intervalDuration)
         )
         return () => clearInterval(intervalRef)
     }, [element])
+
+    const makeLightning = () => {
+
+    }
+    const flash = () => {
+        element.current.classList.add(styles.yellow)
+        setTimeout(() => element.current.classList.remove(styles.yellow), 100)
+    }
+
     return (
         <div ref={element} className={styles.PopInFacts}>
             <canvas ref={lightning} className={styles.lightning} />
-            <div className={styles.text}>{facts[currentFact]}</div>
+            <div ref={text} className={styles.text}>{facts[currentFact]}</div>
         </div>
     )
 }
