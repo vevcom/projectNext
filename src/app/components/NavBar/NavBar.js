@@ -23,7 +23,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 function NavBar() {
-    const isLoggedIn = false
+    const isLoggedIn = true
     const applicationPeriod = true
 
     const username = "johanhst"

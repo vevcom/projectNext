@@ -11,6 +11,7 @@ import ov from '@/images/ov.jpeg'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import InfoBubbles from './InfoBubbles'
 
 export default function Home() {
   return (
@@ -53,8 +54,8 @@ export default function Home() {
       </div>
       <div className={`${styles.part} ${styles.omegamai}`}>
         <div className={styles.frontInfo}>
-
         </div>
+        <InfoBubbles />
       </div>
     </div>
   )
