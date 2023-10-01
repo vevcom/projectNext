@@ -1,26 +1,28 @@
 @use "@/styles/ohma";
 
+$iconSize: 150px;
+
 .InfoBubbles {
     width: 100%;
     background-color: ohma.$yellow;
-    padding: 3*ohma.$gap;
+    padding: 20*ohma.$gap  10vw;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-start;
     > .bubble {
-        width: 25vw;
+        margin: 5*ohma.$gap; 
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
         > .icon {
-            width: 25vw;
-            height: 25vw;
+            width: $iconSize;
+            height: $iconSize;
             position: relative;
             > svg {
-                width: calc(25vw /2);
-                height: calc(25vw /2);
+                width: calc($iconSize /2);
+                height: calc($iconSize /2);
                 position: absolute;
                 top: 0;
                 left: 50%;
@@ -28,11 +30,12 @@
                 color: ohma.$yellow;
                 &:first-child {
                     color: ohma.$black;
-                    width: 25vw;
-                    height: 25vw;
+                    width: $iconSize;
+                    height: $iconSize;
                     transform: translate(-50%, 0);
                 }
             }
+            margin-bottom: 2*ohma.$gap;
         }
         > .heading {
             font-size: ohma.$xlFont;
@@ -41,6 +44,8 @@
         > .text {
             font-size: ohma.$mFont;
             font-weight: ohma.$sFontWeight;
+            line-height: ohma.$mLineHeight;
+            text-align: center;
         }
     }
 

@@ -1,0 +1,24 @@
+@use "@/styles/ohma";
+
+.PopInFacts {
+    color: ohma.$white;
+    transition: transform .5s;
+    position: relative;
+    > .text {
+        font-size: 3em;
+        text-align: center;
+    }
+    > .lightning {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .PopInFacts > .text {
+        font-size: 2*ohma.$xlFont;
+    }
+}

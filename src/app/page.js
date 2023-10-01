@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import SocialIcons from './components/SocialIcons/SocialIcons'
+import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import Section from './Section'
 import styles from './page.module.scss'
 
@@ -12,6 +12,7 @@ import ov from '@/images/ov.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import InfoBubbles from './InfoBubbles'
+import PopInFacts from './PopInFacts'
 
 export default function Home() {
   return (
@@ -54,6 +55,7 @@ export default function Home() {
       </div>
       <div className={`${styles.part} ${styles.omegamai}`}>
         <div className={styles.frontInfo}>
+          <PopInFacts />
         </div>
         <InfoBubbles />
       </div>
