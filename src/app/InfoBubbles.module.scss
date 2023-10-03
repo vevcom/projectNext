@@ -48,5 +48,10 @@ $iconSize: 150px;
             text-align: center;
         }
     }
+}
 
+@media (max-width: ohma.$mobileBreakpoint) {
+    .InfoBubbles {
+        flex-direction: column;
+    }
 }

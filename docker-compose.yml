@@ -9,4 +9,5 @@ services:
       - 3000:3000
     environment:
       PROXY_URL: ${PROXY_URL}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
     

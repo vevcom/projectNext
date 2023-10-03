@@ -12,7 +12,8 @@ import ov from '@/images/ov.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import InfoBubbles from './InfoBubbles'
-import PopInFacts from './PopInFacts'
+import GoogleMap from './components/GoogleMap/GoogleMap'
+import YouTube from './components/YouTube/YouTube'
 
 export default function Home() {
   return (
@@ -38,14 +39,8 @@ export default function Home() {
           en fyldig søknad. Dette har endret seg gjennom årene, og i dag blir medlemmene tatt 
           opp automatisk fra 1. klasse.
         </Section>
-        <Section img={ohma} name="Ohma Electra" lesMer="infopages/loccom" right imgWidth={750}>
-          Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
-          Ohma er verdens første(!) fungerende vekselstrøm-lokomotiv, og har en lang historie fra både 
-          gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget. 
-          Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er 
-          heldig får du kanskje bli med på en kjøretur.
-        </Section>
-        <Section img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
+        <InfoBubbles />
+        <Section right img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
           Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved 
           Norges Teknisk-Naturvitenskapelige Universitet (NTNU) stiftet i 1971. Omega Verksted holder 
           til i kjelleren i det gamle elektrobygget på Gløshaugen (G 016 A). Verkstedet inneholder 
@@ -54,10 +49,29 @@ export default function Home() {
         </Section>
       </div>
       <div className={`${styles.part} ${styles.omegamai}`}>
-        <div className={styles.frontInfo}>
-          <PopInFacts />
-        </div>
-        <InfoBubbles />
+        <div className={styles.emptyPart} />
+        <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
+        <Section img={ov} name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
+          Altså omega er helt fantastisk for bedrifter.... tro meg 100%. Bare å ta kontakt
+          med contactor ellerno... Lorem ipsium bla lofrgin fofkewivj irjvioer
+          firegjoireg g jfirejgergo  rjgijgoieg jgirejgioe geroigjkoiegoekg kogkpeogkg
+          rgierg
+        </Section>
+        <Section right img={ohma} name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
+          Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
+          Ohma er verdens første(!) fungerende vekselstrøm-lokomotiv, og har en lang historie fra både 
+          gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget. 
+          Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er 
+          heldig får du kanskje bli med på en kjøretur.
+        </Section>
+      </div>
+      <div className={`${styles.part} ${styles.taktlause}`}>
+        <div className={styles.emptyPart} />
+        <GoogleMap  location = {{
+          address: '1600 Amphitheatre Parkway, Mountain View, california.',
+          lat: 37.42216,
+          lng: -122.08427,
+        }}/>
       </div>
     </div>
   )
