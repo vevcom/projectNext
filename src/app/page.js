@@ -7,7 +7,7 @@ import styles from './page.module.scss'
 import logo from '@/images/logo_white.png'
 import kappemann from '@/images/kappemann.jpeg'
 import ohma from '@/images/ohma.jpeg'
-import ov from '@/images/ov.jpeg'
+import ov from '@/images/OV.jpeg'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
