@@ -9,7 +9,7 @@
     > * {
         p {
             margin-bottom: ohma.$gap;
-            line-height: 1.7em;
+            line-height: ohma.$mLineHeight;
         }
         padding: 0 5*ohma.$gap 0 2*ohma.$gap;
         &:nth-child(1) {
@@ -48,7 +48,7 @@
     .icons {
         display: flex;
         justify-content: flex-start;
-        > a > * {
+        a > * {
             @include ohma.yellowIconLink;
             > *:first-child {
                 padding-left: 0;

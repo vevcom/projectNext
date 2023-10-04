@@ -1,5 +1,8 @@
+## Config
+You need a .env file (this file is gitignored). You can fined default values in default.env
+
 ## Development
-You have to run veven repo alongside this project to get access to the api and database. So have veven running in its docker-containers.
+You have to run veven alongside this project to get access to the api and database. So have veven running in its docker-containers.
 
 Then run:
 ```bash

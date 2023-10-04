@@ -11,3 +11,4 @@ services:
       - ./src:/usr/src/app/src
     environment:
       PROXY_URL: ${PROXY_URL}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}

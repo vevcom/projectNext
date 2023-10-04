@@ -7,6 +7,10 @@
     font-family: ohma.$primaryFont;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-size: ohma.$sFont;
     font-weight: ohma.$sFontWeight;
