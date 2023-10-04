@@ -10,5 +10,14 @@ services:
     volumes:
       - ./src:/usr/src/app/src
     environment:
-      PROXY_URL: ${PROXY_URL}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+    
+  database:
+    image: postgres:16.0-alpine
+    ports:
+      - '5432:5432' # Connect directly to db on port 5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+          
