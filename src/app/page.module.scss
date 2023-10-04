@@ -1,8 +1,80 @@
 @use "@/styles/ohma";
+$omegamai: url("../images/Omegamai.jpeg");
+$frontImg: url("../images/frontImg.jpeg");
+$taktlause: url("../images/taktlause.jpeg");
 
 .wrapper {
     font-size: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    > .part {
+        &.frontImg {
+            background-image: $frontImg;
+        }
+        &.omegamai {
+            background-image: $omegamai;
+        }
+        &.taktlause {
+            background-image: $taktlause;
+        }
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-attachment: fixed;
+        width: 100%;
+    }
+}
+
+.frontInfo {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(ohma.$black, transparent);
+    > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 20px; //compansate a little for nav size 
+        > img {
+            animation: popIn 1s ease-in-out;
+            margin-bottom: 2*ohma.$gap;
+        }
+        > .socials {
+            margin: 3*ohma.$gap;
+            > a {
+                margin: ohma.$gap;
+                color: ohma.$white;
+                transition: color .3s;
+                &:hover {
+                    color: ohma.$gray-300;
+                }
+            }
+        }
+        > a:not(.scrollDown) {
+            @include ohma.borderBtn();
+        }
+        > .scrollDown {
+            color: ohma.$white;
+        }
+        > a, .socials {
+            animation: popIn 1.2s ease-in-out;
+        }
+    }
+}
+
+.emptyPart {
+    height: 60vh;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

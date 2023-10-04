@@ -1,18 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import SocialIcons from '../SocialIcons/SocialIcons'
 
 import styles from './Footer.module.scss'
 
 import addToHomeScreen from '@/images/add_to_home_screen.png'
 import logo from '@/images/omega_logo_white.png'
 import nordic from '@/images/nordic.png'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faXTwitter,
-  faFacebookSquare,
-  faInstagram
-} from '@fortawesome/free-brands-svg-icons'
 
 function Footer() {
   return (
@@ -28,15 +22,7 @@ function Footer() {
               <Image src={addToHomeScreen} width={200} alt="add to homescreen" />
             </Link>
             <div className={styles.icons}>
-              <Link href="https://twitter.com/OmegaVevcom" target="_blank">
-                <FontAwesomeIcon icon={faXTwitter} />
-              </Link>
-              <Link href="https://www.facebook.com/SctOmegaBroderskab/" target="_blank">
-                <FontAwesomeIcon icon={faFacebookSquare} />
-              </Link>
-              <Link href="https://www.instagram.com/sctomega/" target="_blank">
-                <FontAwesomeIcon icon={faInstagram} />
-              </Link>
+              <SocialIcons />
             </div>
         </div>
       </div>
@@ -46,7 +32,7 @@ function Footer() {
         <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
         <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
         <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
-        <p>Tlf: 73 59 42 11</p>
+        <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
       </div>
       <div className={styles.info}>
         <p>Adresse:</p>
