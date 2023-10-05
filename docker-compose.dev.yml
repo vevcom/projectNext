@@ -26,10 +26,10 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - devDB:/var/lib/postgresql/data
+      - devdb:/var/lib/postgresql/data
       - ./sql/create_tables_dev.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
 volumes:
-  devDB:
+  devdb:
     driver: local
           

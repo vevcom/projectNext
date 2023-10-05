@@ -10,12 +10,20 @@ services:
     environment:
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
 
-  database:
-        image: postgres:16.0-alpine
-        ports:
-            - 5432:5432 # Connect directly to db on port 5432
-        environment:
-            POSTGRES_DB: ${DB_NAME}
-            POSTGRES_USER: ${DB_USERNAME}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
+  db:
+    image: postgres:16.0-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - proddb:/var/lib/postgresql/data
+      - ./sql/create_tables_dev.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+volumes:
+  proddb:
+    driver: local
     
