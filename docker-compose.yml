@@ -8,7 +8,9 @@ services:
     ports:
       - 3000:3000
     environment:
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      NODE_ENV: production
 
   db:
     image: postgres:16.0-alpine

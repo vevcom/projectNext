@@ -4,6 +4,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 
+#Migrate database and generate client library
+COPY src/prisma/schema.prisma ./src/prisma/schema.prisma
+RUN npx prisma db push
+RUN npx prisma generate
+
 COPY ./ ./
 
 CMD ["npm", "run", "dev"]
