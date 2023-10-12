@@ -12,8 +12,8 @@ import ov from '@/images/OV.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import InfoBubbles from './InfoBubbles'
-import GoogleMap from './components/GoogleMap/GoogleMap'
-import YouTube from './components/YouTube/YouTube'
+import GoogleMap from '@/components/GoogleMap/GoogleMap'
+import YouTube from '@/components/YouTube/YouTube'
 
 export default function Home() {
   return (

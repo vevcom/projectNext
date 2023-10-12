@@ -21,7 +21,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - proddb:/var/lib/postgresql/data
-      - ./sql/create_tables_dev.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
 volumes:
   proddb:
