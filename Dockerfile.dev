@@ -6,4 +6,4 @@ RUN npm ci
 
 COPY ./ ./
 
-CMD ["npx", "prisma", "migrate", "dev", "&&", "npm", "run", "dev"]
+CMD ./scripts/start.dev.sh
