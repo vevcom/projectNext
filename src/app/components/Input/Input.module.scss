@@ -1,0 +1,38 @@
+@use "@/styles/ohma";
+
+.Input {
+    position: relative;
+
+    > label {
+        position: absolute;
+        top: 0;
+        left: 1em;
+        transform: translate(0%, 50%);
+        color: ohma.$black;
+        font-size: ohma.$mFont;
+        pointer-events: none;
+        transition: 200ms;
+        font-weight: 130;
+        padding: 0 3px 0 3px;
+    }
+
+    > input {
+        border-width: 0;
+        border-bottom-width: 2px;
+        border-bottom-color: ohma.$gray-650;
+        border-radius: 0;
+        padding: 0.4em;
+        font-size: ohma.$lFont;
+        box-sizing: border-box;
+    }
+
+    > input:focus {
+        outline: none;
+    }
+
+    > input:focus ~ label,
+    > input:valid ~ label {
+        transform: translate(-2%, -100%);
+        font-size: ohma.$sFont;
+    }
+}
