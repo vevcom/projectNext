@@ -4,6 +4,8 @@ $animation_time: 200ms;
 
 .Input {
     position: relative;
+    width: 100%;
+    margin: 1.3em 0.2em 0.6em 0.2em;
 
     > label {
         position: absolute;
@@ -29,6 +31,7 @@ $animation_time: 200ms;
         font-size: ohma.$lFont;
         box-sizing: border-box;
         transition: $animation_time / 2;
+        width: 100%;
     }
 
     > input:focus {
