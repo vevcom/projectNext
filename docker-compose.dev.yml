@@ -10,7 +10,7 @@ services:
     volumes:
       - ./src:/usr/src/app/src
     environment:
-      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      DB_URI: ${DB_URI}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: production
     depends_on:

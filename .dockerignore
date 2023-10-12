@@ -5,3 +5,4 @@ build
 
 /src/prisma
 !/src/prisma/schema.prisma
+!/src/prisma/index.js
