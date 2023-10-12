@@ -1,5 +1,7 @@
 @use "@/styles/ohma";
 
+$animation_time: 200ms;
+
 .Input {
     position: relative;
 
@@ -11,23 +13,28 @@
         color: ohma.$black;
         font-size: ohma.$mFont;
         pointer-events: none;
-        transition: 200ms;
+        transition: $animation_time;
         font-weight: 130;
         padding: 0 3px 0 3px;
     }
 
     > input {
         border-width: 0;
-        border-bottom-width: 2px;
-        border-bottom-color: ohma.$gray-650;
+        border-bottom-width: 1px;
+        border-style: solid;
+        border-color: ohma.$gray-850;
         border-radius: 0;
         padding: 0.4em;
+        background-color: transparent;
         font-size: ohma.$lFont;
         box-sizing: border-box;
+        transition: $animation_time / 2;
     }
 
     > input:focus {
         outline: none;
+        border-bottom-width: 2px;
+        border-color: ohma.$black;
     }
 
     > input:focus ~ label,
