@@ -12,7 +12,7 @@ services:
     environment:
       DB_URI: ${DB_URI}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
-      NODE_ENV: production
+      NODE_ENV: development
     depends_on:
       - db
     links:
@@ -29,11 +29,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - devdb:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"] # kopier fra nettet
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
 volumes:
   devdb:
