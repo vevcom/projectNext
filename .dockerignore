@@ -3,6 +3,5 @@ npm-debug.log
 build
 .next
 
-/src/prisma
-!/src/prisma/schema.prisma
-!/src/prisma/index.js
+# prisma
+src/prisma/migrations
