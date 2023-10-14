@@ -1,0 +1,18 @@
+@use "@/styles/ohma";
+
+.Button {
+    width: 100%;
+    border-radius: 0;
+    font-size: ohma.$lFont;
+    padding: 0.5rem;
+    border-width: 0px;
+    background-color: ohma.$yellow;
+    color: ohma.$black;
+    transition: filter 100ms;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    &:hover {
+        filter: brightness(80%);
+    } 
+}
