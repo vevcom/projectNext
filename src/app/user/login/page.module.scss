@@ -14,14 +14,14 @@
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
         background-color: ohma.$slate;
-        > * {
-            display: grid;
-            place-items: center;
-        }
         > form {
             grid-column: 1/2;
+            max-width: 250px;
+            margin: auto;
         }
         > .image {
+            display: grid;
+            place-items: center;
             grid-column: 2/3;
         }
     }

@@ -9,6 +9,8 @@
     background-color: ohma.$yellow;
     color: ohma.$black;
     transition: filter 100ms;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 
     &:hover {
         filter: brightness(80%);
