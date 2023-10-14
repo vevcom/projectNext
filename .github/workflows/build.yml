@@ -15,4 +15,4 @@ jobs:
     - name: build
       run: docker-compose build --env-file default.env
     - name: up
-      run: docker-compose up -d
+      run: docker-compose up -d --env-file default.env
