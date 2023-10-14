@@ -9,4 +9,4 @@ RUN npm ci
 COPY ./ ./
 
 RUN npm run build
-CMD ["./scripts/start.sh"]
+CMD ["npm", "run", "docker:migrate:dev"]
