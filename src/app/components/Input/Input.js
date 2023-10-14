@@ -7,7 +7,7 @@ function Input({label, type, id}) {
     type  = (type  !== undefined) ? type  : 'text'
     id    = (id    !== undefined) ? id    : "id_input_" + uuid()
 
-    return <div class={styles.Input}>
+    return <div className={styles.Input}>
         <input type={type} id={id} required/>
         <label for={id}>{label}</label>
     </div>
