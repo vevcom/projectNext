@@ -1,5 +1,6 @@
 ## Config
-You need a .env file (this file is gitignored). You can fined default values in default.env
+You need a .env file (this file is gitignored). You can find default values in default.env.
+Either copy theese to ./.env file or use the --env-file default.env flag when building
 
 ## Development
 You have to run veven alongside this project to get access to the api and database. So have veven running in its docker-containers.

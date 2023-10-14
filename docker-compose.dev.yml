@@ -10,5 +10,27 @@ services:
     volumes:
       - ./src:/usr/src/app/src
     environment:
-      PROXY_URL: ${PROXY_URL}
+      DB_URI: ${DB_URI}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      NODE_ENV: development
+    depends_on:
+      - db
+    links:
+      - db
+    
+  db:
+    image: postgres:16.0-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - devdb:/var/lib/postgresql/data
+
+volumes:
+  devdb:
+    driver: local
+          

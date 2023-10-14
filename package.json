@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:migrate:dev": "npx prisma migrate dev --name init && next dev"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -22,5 +26,9 @@
     "react-fontawesome": "^1.7.1",
     "sass": "^1.66.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.4.2",
+    "prisma": "^5.4.2"
   }
 }

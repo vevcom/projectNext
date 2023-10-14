@@ -12,8 +12,8 @@ import ov from '@/images/OV.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import InfoBubbles from './InfoBubbles'
-import GoogleMap from './components/GoogleMap/GoogleMap'
-import YouTube from './components/YouTube/YouTube'
+import GoogleMap from '@/components/GoogleMap/GoogleMap'
+import YouTube from '@/components/YouTube/YouTube'
 
 export default function Home() {
   return (
@@ -67,7 +67,7 @@ export default function Home() {
       </div>
       <div className={`${styles.part} ${styles.taktlause}`}>
         <div className={styles.emptyPart} />
-        <GoogleMap  location = {{
+        <GoogleMap height={500} location = {{
           address: '1600 Amphitheatre Parkway, Mountain View, california.',
           lat: 37.42216,
           lng: -122.08427,
