@@ -6,4 +6,4 @@ RUN npm ci
 
 COPY ./ ./
 
-CMD ["npm", "run", "docker:migrate:dev"]
+CMD ["npm", "run", "migrate:dev"]
