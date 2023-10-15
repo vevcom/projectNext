@@ -8,5 +8,4 @@ RUN npm ci
 
 COPY ./ ./
 
-RUN npm run build
-CMD ["npm", "run", "docker:migrate:dev"]
+CMD ["npm", "run", "migrate:build:start"]
