@@ -57,7 +57,7 @@ function MobileNavBar() {
                     <Link href={`/user/profile/${username}${order}`}> 
                         <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link> :
-                    <Link href="/user/login">
+                    <Link href="/login">
                         <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link>
                 }

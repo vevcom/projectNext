@@ -22,7 +22,7 @@ export default function Home() {
         <div className={styles.frontInfo}>
             <div>
               <Image alt="omega logo" priority={true} src={logo} width={300}/>
-              <Link href="user/login">Logg inn</Link>
+              <Link href="login">Logg inn</Link>
               <Link href="infopages/nystudent">Ny student</Link>
               <div className={styles.socials}>
                 <SocialIcons />

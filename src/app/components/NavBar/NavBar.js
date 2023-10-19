@@ -115,7 +115,7 @@ function NavBar() {
                 </>
                 }
                 <li className={styles.magicHat}>
-                    <Link href={isLoggedIn ? `/user/profile/${username}${order}` : "/user/login"}>
+                    <Link href={isLoggedIn ? `/user/profile/${username}${order}` : "/login"}>
                         <Image src={magiskHatt} width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>
