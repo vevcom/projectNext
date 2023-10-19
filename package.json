@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "docker:migrate:dev": "npx prisma migrate dev --name init && next dev"
+    "lint": "next lint"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma"

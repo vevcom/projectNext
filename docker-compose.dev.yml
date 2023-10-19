@@ -4,7 +4,8 @@ services:
   projectnext:
     build: 
       context: ./
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile
+      target: dev
     ports:
       - 3000:3000
     volumes:

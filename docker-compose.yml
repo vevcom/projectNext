@@ -5,12 +5,17 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+      target: prod
     ports:
       - 3000:3000
     environment:
       DB_URI: ${DB_URI}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: production
+    depends_on:
+      - db
+    links:
+      - db
 
   db:
     image: postgres:16.0-alpine
