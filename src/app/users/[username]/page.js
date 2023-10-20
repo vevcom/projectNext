@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import authOptions from '@/auth';
 
 import prisma from "@/prisma"
+import Link from 'next/link';
 
 async function AuthTest({ params }) {
     const session = await getServerSession(authOptions)
@@ -29,6 +30,7 @@ async function AuthTest({ params }) {
         <>
             <h1>{`${user.firstname} ${user.lastname}`}</h1>
             <p>{`E-post: '${user.email}'`}<br/>{`Passord: '${user.password}'`}</p>
+            {me && <Link href="/logout">Logg ut</Link>}
         </>
     )
 }
