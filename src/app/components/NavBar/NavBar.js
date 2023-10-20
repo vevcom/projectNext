@@ -1,3 +1,7 @@
+import { getServerSession } from "next-auth";
+
+import authOptions from "@/auth";
+
 import Image from "next/image"
 import Link from "next/link"
 
@@ -22,12 +26,11 @@ import {
     faGamepad
 } from "@fortawesome/free-solid-svg-icons"
 
-function NavBar() {
-    const isLoggedIn = true
-    const applicationPeriod = true
+async function NavBar() {
+    const session = await getServerSession(authOptions)
 
-    const username = "johanhst"
-    const order = 103
+    const isLoggedIn = Boolean(session?.user)
+    const applicationPeriod = false
 
     return (
         <nav className={styles.NavBar}>
@@ -115,7 +118,7 @@ function NavBar() {
                 </>
                 }
                 <li className={styles.magicHat}>
-                    <Link href={isLoggedIn ? `/user/profile/${username}${order}` : "/login"}>
+                    <Link href={isLoggedIn ? `/users/me` : "/login"}>
                         <Image src={magiskHatt} width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>

@@ -7,7 +7,7 @@ function Checkbox({ label }) {
 
     return <div className={styles.Checkbox}>
         <input type="checkbox" id={id}></input>
-        <label for={id}>{ label }</label>
+        <label htmlFor={id}>{ label }</label>
     </div>
 }
 
