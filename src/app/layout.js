@@ -11,6 +11,10 @@ import styles from './layout.module.scss'
 
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+
+import { getServerSession } from 'next-auth'
+import authOptions from '@/auth'
+
 config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,7 +24,8 @@ export const metadata = {
   description: '',
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const session = await getServerSession(authOptions)
 
   return (
     <html lang="en">
@@ -48,7 +53,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </div>
           <div className={styles.mobileNavBar}>
-            <MobileNavBar />
+            <MobileNavBar session={session} />
           </div>
         </div>
       </body>
