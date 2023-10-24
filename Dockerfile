@@ -9,8 +9,8 @@ WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/ .
 
 RUN npx prisma generate
-RUN npm run build
 
+RUN npm run build
 CMD ["npm", "run", "start"]
 ############################################################
 FROM node:18-alpine AS dev
@@ -18,4 +18,5 @@ WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/ .
 
 RUN npx prisma generate
+
 CMD ["npm", "run", "dev"]

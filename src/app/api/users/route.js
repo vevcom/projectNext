@@ -32,8 +32,11 @@ export async function POST(req) {
         if (
             error instanceof Prisma.PrismaClientKnownRequestError &&
             error.code === 'P2002'
-        ) {
+        ) 
+        {
             return Response.json({}, { status: 409 })
-        }       
+        }
+        
+        throw error
     }   
 }

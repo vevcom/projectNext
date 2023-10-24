@@ -10,12 +10,15 @@ services:
       - 3000:3000
     volumes:
       - ./src:/usr/src/app/src
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
     environment:
-      DB_URI: ${DB_URI}
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: development
     depends_on:
       - db
+      - prisma
     links:
       - db
     
@@ -30,6 +33,24 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - devdb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  prisma:
+    build: 
+      context: ./src/prisma
+      dockerfile: ./Dockerfile
+      target: dev
+    environment:
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
 
 volumes:
   devdb:
