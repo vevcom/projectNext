@@ -9,11 +9,12 @@ services:
     ports:
       - 3000:3000
     environment:
-      DB_URI: ${DB_URI}
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: production
     depends_on:
       - db
+      - prisma
     links:
       - db
 
@@ -34,18 +35,18 @@ services:
       timeout: 3s
       retries: 10
 
-    prisma:
-      build: 
-        context: ./src/prisma
-        dockerfile: ./Dockerfile
-        target: prod
-      environment:
-        DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      depends_on:
-        db:
-          condition: service_healthy
-      links:
-        - db
+  prisma:
+    build: 
+      context: ./src/prisma
+      dockerfile: ./Dockerfile
+      target: prod
+    environment:
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
 
 volumes:
   proddb:

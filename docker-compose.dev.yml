@@ -12,8 +12,9 @@ services:
       - ./src:/usr/src/app/src
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
     environment:
-      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@localhost:5432/${DB_NAME}
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: development
     depends_on:
@@ -46,6 +47,8 @@ services:
       target: dev
     environment:
       DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    volumes:
+      - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
     depends_on:
       db:
         condition: service_healthy
