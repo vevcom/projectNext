@@ -38,7 +38,7 @@ services:
       build: 
         context: ./src/prisma
         dockerfile: ./Dockerfile
-        target: dev
+        target: prod
       environment:
         DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
       depends_on:
