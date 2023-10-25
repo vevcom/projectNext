@@ -10,7 +10,8 @@ FROM node:18-alpine AS prod
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 
-CMD ["npx", "prisma", "migrate", "deploy", "--name", "docker-migration", "--skip-generate"]
+#DEPLOY NOT IMPLEMENTED YET: should be npy prisma migrate deploy.
+CMD ["npx", "prisma", "migrate", "dev", "--name" , "docker-migration", "--skip-generate"]
 
 ########################################################
 FROM node:18-alpine AS dev
