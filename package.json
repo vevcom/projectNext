@@ -6,11 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "docker:migrate:dev": "npx prisma migrate dev --name init && next dev"
+    "lint": "next lint"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma",
+    "seed": "node src/prisma/seed.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
