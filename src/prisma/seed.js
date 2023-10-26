@@ -14,7 +14,8 @@ async function main() {
         firstname: 'Harambe',
         lastname: 'Harambesen',
         email: 'harambe@harambesen.io',
-        password: 'password'
+        password: 'password',
+        username: 'Harambe104',
     },
   })
   console.log({ harambe })
