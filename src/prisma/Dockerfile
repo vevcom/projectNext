@@ -23,4 +23,4 @@ RUN npm install @prisma/client
 RUN npx prisma generate
 COPY seed.js ./
 
-CMD ["/bin/sh", "-c", "npx prisma migrate dev --name docker-migration --skip-generate; node seed.js"]
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; node seed.js"]
