@@ -14,9 +14,12 @@ services:
       - ./package-lock.json:/usr/src/app/package-lock.json
       - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
     environment:
+      NODE_ENV: development
       DB_URI: ${DB_URI}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
-      NODE_ENV: development
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
     depends_on:
       - db
       - prisma
