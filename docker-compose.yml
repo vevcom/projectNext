@@ -5,12 +5,18 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+      target: prod
     ports:
       - 3000:3000
     environment:
-      DB_URI: ${DB_URI}
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NODE_ENV: production
+    depends_on:
+      - db
+      - prisma
+    links:
+      - db
 
   db:
     image: postgres:16.0-alpine
@@ -23,6 +29,24 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - proddb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  prisma:
+    build: 
+      context: ./src/prisma
+      dockerfile: ./Dockerfile
+      target: prod
+    environment:
+      DB_URI: postgresql://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
 
 volumes:
   proddb:

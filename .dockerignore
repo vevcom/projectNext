@@ -3,6 +3,9 @@ npm-debug.log
 build
 .next
 
-/src/prisma
-!/src/prisma/schema.prisma
-!/src/prisma/index.js
+#you should be explicit in docker-compose about what env-vars should be loaded into a container
+.env 
+default.env
+
+# prisma
+src/prisma/migrations

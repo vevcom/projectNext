@@ -6,12 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "migrate:dev": "npx prisma migrate deploy && next dev",
-    "migrate:build:start": "npx prisma migrate deploy && next build && next start"
+    "lint": "next lint"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma",
+    "seed": "node src/prisma/seed.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
