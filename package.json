@@ -30,6 +30,10 @@
   },
   "devDependencies": {
     "@prisma/client": "^5.4.2",
-    "prisma": "^5.4.2"
+    "@types/node": "^20.8.9",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
+    "prisma": "^5.4.2",
+    "typescript": "^5.2.2"
   }
 }
