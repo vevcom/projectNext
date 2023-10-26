@@ -11,8 +11,6 @@ const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                console.log("AUTORIZE!!")
-
                 const user = await prisma.user.findUnique({
                     where: {
                         username: credentials.username
@@ -29,12 +27,10 @@ const authOptions = {
     },
     callbacks: {
         async session({ session, token }) {
-            console.log("SESSION")
             session.user = token.user;
             return session;
         },
         async jwt({ token, user }) {
-            console.log("JWT")
             if (user) {
                 token.user = user;
             }
