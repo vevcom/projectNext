@@ -1,0 +1,49 @@
+@use "@/styles/ohma";
+
+$animation_time: 200ms;
+
+.Input {
+    position: relative;
+    width: 100%;
+    margin: 1.3em 0.2em 0.6em 0.2em;
+    box-sizing: border-box;
+
+    > label {
+        position: absolute;
+        top: 0;
+        left: 1em;
+        transform: translate(0%, 50%);
+        color: ohma.$black;
+        font-size: ohma.$mFont;
+        pointer-events: none;
+        transition: $animation_time;
+        font-weight: 130;
+        padding: 0 3px 0 3px;
+    }
+
+    > input {
+        border-width: 0;
+        border-bottom-width: 1px;
+        border-style: solid;
+        border-color: ohma.$gray-850;
+        border-radius: 0;
+        padding: 0.4em;
+        background-color: transparent;
+        font-size: ohma.$lFont;
+        box-sizing: border-box;
+        transition: $animation_time / 2;
+        width: 100%;
+    }
+
+    > input:focus {
+        outline: none;
+        border-bottom-width: 2px;
+        border-color: ohma.$black;
+    }
+
+    > input:focus ~ label,
+    > input:valid ~ label {
+        transform: translate(-2%, -100%);
+        font-size: ohma.$sFont;
+    }
+}

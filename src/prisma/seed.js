@@ -11,9 +11,11 @@ async function main() {
 
     },
     create: {
-        firstname: "Harambe",
-        lastname: "Harambesen",
+        firstname: 'Harambe',
+        lastname: 'Harambesen',
         email: 'harambe@harambesen.io',
+        password: 'password',
+        username: 'Harambe104',
     },
   })
   console.log({ harambe })

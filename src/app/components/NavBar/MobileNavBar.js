@@ -8,6 +8,7 @@ import magiskHatt from '@/images/magisk_hatt.png'
 import simpleLogo from '@/images/logo_simple.png'
 
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -19,14 +20,11 @@ import {
 
 import styles from './MobileNavBar.module.scss'
 
-function MobileNavBar() {
+function MobileNavBar({ session }) {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
-    const isLoggedIn = true;
+    const isLoggedIn = Boolean(session?.user);
     const applicationPeriod = true
-
-    const username = "johanhst"
-    const order = 103
 
     return (
         <nav className={styles.MobileNavBar}>
@@ -54,10 +52,10 @@ function MobileNavBar() {
             <div className={styles.item}>
                 {
                     isLoggedIn ? 
-                    <Link href={`/user/profile/${username}${order}`}> 
+                    <Link href={'/user/profile/me'}> 
                         <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link> :
-                    <Link href="/user/login">
+                    <Link href="/login">
                         <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                     </Link>
                 }

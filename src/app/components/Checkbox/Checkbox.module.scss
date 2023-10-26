@@ -1,0 +1,16 @@
+@use "@/styles/ohma";
+
+.Checkbox {
+    font-size: ohma.$lFont;
+    margin: 0.5em 5px 0.5em 5px;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+
+    > input[type=checkbox] {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 4px;
+    }
+
+}
