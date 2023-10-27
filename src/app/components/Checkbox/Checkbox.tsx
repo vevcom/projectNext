@@ -1,11 +1,11 @@
 import { v4 as uuid } from 'uuid'
 import styles from "./Checkbox.module.scss";
 
-type propTypes = {
+type PropTypes = {
     label: string
 }
 
-function Checkbox({ label }: propTypes) {
+function Checkbox({ label }: PropTypes) {
     const id = "id_input_" + uuid();
 
     return <div className={styles.Checkbox}>

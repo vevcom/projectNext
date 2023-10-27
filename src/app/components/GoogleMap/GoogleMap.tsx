@@ -3,12 +3,12 @@ import styles from './GoogleMap.module.scss'
 import GoogleMapReact from "google-map-react";
 import { Coords } from 'google-map-react';
 
-type propTypes = {
+type PropTypes = {
     location: Coords,
     height: number,
 }
 
-function GoogleMap({ location, height } : propTypes) {
+function GoogleMap({ location, height } : PropTypes) {
     return (
         <div style={{height: height+'px'}} className={styles.GoogleMap}>
             <GoogleMapReact 
