@@ -2,7 +2,6 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { AuthOptions, User } from "next-auth"
 
 import prisma from "@/prisma"
-import { use } from "react"
 
 const authOptions : AuthOptions = {
     providers: [
