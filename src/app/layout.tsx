@@ -1,10 +1,7 @@
 import { Inter } from 'next/font/google'
 
-// @ts-ignore  
 import NavBar from '@/components/NavBar/NavBar'
-// @ts-ignore  
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
-// @ts-ignore  
 import Footer from '@/components/Footer/Footer'
 
 import '@/styles/globals.scss'
