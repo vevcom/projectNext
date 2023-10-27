@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 
 import prisma from "@/prisma"
 
@@ -8,7 +8,7 @@ export async function GET() {
     return Response.json(users)
 }
 
-export async function POST(req) {  
+export async function POST(req: Request) {  
     const body = await req.json()
     
     const { username, password, email, firstname, lastname } = body;
