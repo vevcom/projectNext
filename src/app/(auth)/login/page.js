@@ -1,4 +1,4 @@
-import Input from '@/app/components/Input/Input'
+import FormInput from '@/app/components/FormInput/FormInput'
 import styles from './page.module.scss'
 import magiskHatt from "@/images/magisk_hatt.png"
 import Image from 'next/image'
@@ -11,8 +11,8 @@ export default async function LogIn() {
         <div className={styles.card}>
             <form className={styles.form} method="post" action="/api/auth/callback/credentials">
                 <CsrfToken />
-                <Input name="username" label="E-post"/>
-                <Input name="password" label="Passord" type="password"/>
+                <FormInput name="username" label="E-post"/>
+                <FormInput name="password" label="Passord" type="password"/>
 
                 <PrimaryButton text="Logg inn"></PrimaryButton>
             </form>
