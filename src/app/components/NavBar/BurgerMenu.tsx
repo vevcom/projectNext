@@ -18,7 +18,12 @@ import {
 
 import styles from './BurgerMenu.module.scss'
 
-function BurgerMenu({ isLoggedIn, applicationPeriod }) {
+type PropTypes = {
+    isLoggedIn: string,
+    applicationPeriod: boolean
+}
+
+function BurgerMenu({ isLoggedIn, applicationPeriod }:PropTypes) {
     return (
         <div className={styles.BurgerMenu}>
             <BurgerItem href="/ombul" name="OmBul" icon={faNewspaper}/>
