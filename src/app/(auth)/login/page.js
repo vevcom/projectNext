@@ -1,4 +1,4 @@
-import FormInput from '@/app/components/FormInput/FormInput'
+import FormInput from '@/components/FormInput/FormInput'
 import styles from './page.module.scss'
 import magiskHatt from "@/images/magisk_hatt.png"
 import Image from 'next/image'
