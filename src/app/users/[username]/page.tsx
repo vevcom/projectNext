@@ -6,7 +6,16 @@ import authOptions from '@/auth';
 import prisma from "@/prisma"
 import Link from 'next/link';
 
-async function AuthTest({ params }) {
+type PropTypes = {
+    params: {
+        username: string
+    },
+}
+
+async function AuthTest({ params }: PropTypes) {
+    if (!params?.username) {
+        redirect('/login')
+    }
     const session = await getServerSession(authOptions)
 
     if (!session) {
