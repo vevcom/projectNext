@@ -17,7 +17,7 @@ export default async function LogIn() {
                 <PrimaryButton text="Logg inn"></PrimaryButton>
             </form>
             <div className={styles.image}>
-                <Image width={200} src={magiskHatt} />
+                <Image alt='en kappemann sin hatt' width={200} src={magiskHatt} />
             </div>
         </div>
     </div>
