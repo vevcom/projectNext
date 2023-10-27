@@ -19,7 +19,7 @@ import {
 import styles from './BurgerMenu.module.scss'
 
 type PropTypes = {
-    isLoggedIn: string,
+    isLoggedIn: boolean,
     applicationPeriod: boolean
 }
 

@@ -34,7 +34,7 @@ export default async function RootLayout({ children } : { children: React.ReactN
       <body className={inter.className}>
         <div className={styles.wrapper}>
           <div className={styles.navBar}>
-            <NavBar />
+            <NavBar session={session} />
           </div>
           <div className={styles.content}>
             {children}
