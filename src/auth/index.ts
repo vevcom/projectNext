@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { AuthOptions, User } from "next-auth"
 
 import prisma from "@/prisma"
+import { use } from "react"
 
 const authOptions : AuthOptions = {
     providers: [
@@ -19,9 +20,9 @@ const authOptions : AuthOptions = {
                 })
                 // TODO - faktisk gjør encryption, legg til hashing på POST
                 if (user?.password === credentials?.password) {
-                    return {
-                        ...user
-                    } as User
+                    if (typeof user?.id == 'number') {
+                        return {...user}
+                    }
                 }
                 return null
             }
