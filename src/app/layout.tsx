@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 
-import NavBar from '@/components/NavBar/NavBar'
+import NavBar from '@/app/components/NavBar/NavBar'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import Footer from '@/components/Footer/Footer'
 
