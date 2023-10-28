@@ -124,4 +124,5 @@ async function NavBar({session}: PropTypes) {
     )
 }
 
+
 export default NavBar
