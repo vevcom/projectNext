@@ -23,4 +23,4 @@ RUN npm install @prisma/client
 RUN npx prisma generate
 COPY seed.ts ./
 
-CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; node seed.ts"]
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seed.ts"]
