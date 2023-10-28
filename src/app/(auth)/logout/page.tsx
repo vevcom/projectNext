@@ -3,7 +3,7 @@ import { getCsrfToken } from "next-auth/react"
 import styles from './page.module.scss'
 import magiskHatt from "@/images/magisk_hatt.png"
 import Image from 'next/image'
-import PrimaryButton from '@/app/components/PrimaryButton/PrimaryButton'
+import PrimaryButton from '@/components/PrimaryButton/PrimaryButton'
 import CsrfToken from '../CsrfToken'
 
 export default async function LogOut() {
