@@ -6,14 +6,14 @@ type ParamType = {
     }
 }
 
-export async function GET(request: Request, { params }: ParamType) {   
-    if (!params.id) return new Response("needs a user id", {
-        status: 400
-    })
+export async function GET(request: Request, { params }: ParamType) {
     const user = await prisma.user.findUnique({
         where: {
             id: Number(params.id)
         }
+    })
+    if (!user) return new Response("user not found", {
+        status: 404,
     })
     return Response.json(user)
 }
