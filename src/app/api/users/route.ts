@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const { username, password, email, firstname, lastname } = body;
     
     if (!username || !password || !email || !firstname || !lastname) {
-        return Response.json({}, { status: 400 })
+        return NextResponse.json({}, { status: 400 })
     }
 
     try {
