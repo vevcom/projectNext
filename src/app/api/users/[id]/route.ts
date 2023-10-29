@@ -1,4 +1,5 @@
 import prisma from "@/prisma"
+import { NextRequest, NextResponse } from "next/server"
 
 type ParamType = {
     params: {
@@ -6,14 +7,14 @@ type ParamType = {
     }
 }
 
-export async function GET(request: Request, { params }: ParamType) {
+export async function GET(request: NextRequest, { params }: ParamType) {
     const user = await prisma.user.findUnique({
         where: {
             id: Number(params.id)
         }
     })
-    if (!user) return new Response("user not found", {
+    if (!user) return new NextResponse("user not found", {
         status: 404,
     })
-    return Response.json(user)
+    return NextResponse.json(user)
 }
