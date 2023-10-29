@@ -1,8 +1,12 @@
 import Link from "next/link"
-
 import styles from "./Item.module.scss"
 
-function Item({ href, name }) {
+type PropTypes = {
+    href: string,
+    name: string,
+}
+
+function Item({ href, name }: PropTypes) {
     return (
         <li>
             <Link href={href} className={styles.link}>

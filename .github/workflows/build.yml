@@ -13,6 +13,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v3
     - name: build
-      run: docker-compose build --env-file default.env
+      run: docker-compose --env-file default.env build
     - name: up
-      run: docker-compose up -d --env-file default.env
+      run: docker-compose --env-file default.env up -d
+ 

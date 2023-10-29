@@ -1,15 +1,10 @@
 "use client"
-
 import Image from 'next/image'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
-
 import magiskHatt from '@/images/magisk_hatt.png'
 import simpleLogo from '@/images/logo_simple.png'
-
 import { useState } from 'react'
-import { useSession } from 'next-auth/react'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faBars,
@@ -17,10 +12,14 @@ import {
     faSuitcase,
     faCalendar
 } from "@fortawesome/free-solid-svg-icons"
-
 import styles from './MobileNavBar.module.scss'
+import { Session } from "next-auth"
 
-function MobileNavBar({ session }) {
+type PropTypes = {
+    session: Session | null
+}
+
+function MobileNavBar({ session } : PropTypes) {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
     const isLoggedIn = Boolean(session?.user);

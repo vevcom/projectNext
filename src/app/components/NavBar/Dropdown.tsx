@@ -2,12 +2,22 @@ import Link from "next/link"
 import styles from "./Dropdown.module.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { v4 as uuid } from 'uuid'
+import { IconProp } from "@fortawesome/fontawesome-svg-core"
 
-function DropDown({ name, items }) {
+type PropTypes = {
+    name: string,
+    items: {
+        href: string,
+        name: string,
+        icon: IconProp,
+    }[],
+}
+
+function DropDown({ name, items } : PropTypes) {
     return (
         <li className={styles.Dropdown}>
             <div className={styles.name}>{ name }</div>
-            <div className={styles.dropdownContent} name={name}>
+            <div className={styles.dropdownContent}>
                 {items.map(item => 
                     <div className={styles.dropdownItem} key={uuid()}>
                         <Link href={item.href}> 
