@@ -29,7 +29,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@prisma/client": "^5.4.2",
+    "@prisma/client": "^5.5.2",
     "@types/google-map-react": "^2.1.9",
     "@types/node": "^20.8.9",
     "@types/react": "^18.2.33",
