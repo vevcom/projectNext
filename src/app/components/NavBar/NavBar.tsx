@@ -1,16 +1,9 @@
-import { getServerSession } from "next-auth";
-
-import authOptions from "@/auth";
-
 import Image from "next/image"
 import Link from "next/link"
-
 import Item from "./Item"
 import DropDown from "./Dropdown"
-
 import magiskHatt from "@/images/magisk_hatt.png"
 import simpleLogo from "@/images/logo_simple.png"
-
 import styles from "./NavBar.module.scss"
 import {
     faNewspaper,
@@ -25,9 +18,13 @@ import {
     faCircleInfo,
     faGamepad
 } from "@fortawesome/free-solid-svg-icons"
+import { Session } from "next-auth"
 
-async function NavBar() {
-    const session = await getServerSession(authOptions)
+type PropTypes = {
+    session: Session | null
+}
+
+async function NavBar({session}: PropTypes) {
 
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
@@ -126,5 +123,6 @@ async function NavBar() {
         </nav>
     )
 }
+
 
 export default NavBar

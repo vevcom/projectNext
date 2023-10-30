@@ -68,7 +68,6 @@ export default function Home() {
       <div className={`${styles.part} ${styles.taktlause}`}>
         <div className={styles.emptyPart} />
         <GoogleMap height={500} location = {{
-          address: '1600 Amphitheatre Parkway, Mountain View, california.',
           lat: 37.42216,
           lng: -122.08427,
         }}/>

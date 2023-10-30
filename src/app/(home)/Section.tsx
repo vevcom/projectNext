@@ -1,8 +1,18 @@
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
 import styles from './Section.module.scss'
 
-function Section({children, img, name, lesMer, right, imgWidth, id}) {
+type PropTypes = {
+    children: React.ReactNode,
+    img: StaticImageData,
+    name: string,
+    lesMer: string,
+    right?: boolean,
+    imgWidth: number,
+    id?: string,
+}
+
+function Section({children, img, name, lesMer, right, imgWidth, id}: PropTypes) {
     const alt = "image of " + name
     const imgContainer = (
         <div style={{width: imgWidth}} className={styles.imgContainer}>

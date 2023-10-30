@@ -1,8 +1,9 @@
 import CredentialsProvider from "next-auth/providers/credentials"
+import { AuthOptions, User } from "next-auth"
 
 import prisma from "@/prisma"
 
-const authOptions = {
+const authOptions : AuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -10,15 +11,19 @@ const authOptions = {
                 username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
+            authorize: async (credentials, req) => {
                 const user = await prisma.user.findUnique({
                     where: {
-                        username: credentials.username
+                        username: credentials?.username
                     }
                 })
-                
-                // TODO - faktisk gjør encryption
-                return user?.password === credentials.password ? user : null
+                // TODO - faktisk gjør encryption, legg til hashing på POST
+                if (user?.password === credentials?.password) {
+                    if (typeof user?.id == 'number') {
+                        return {...user}
+                    }
+                }
+                return null
             }
         })        
     ],
@@ -32,7 +37,7 @@ const authOptions = {
         },
         async jwt({ token, user }) {
             if (user) {
-                token.user = user;
+                token.user = user
             }
             return token;
         },

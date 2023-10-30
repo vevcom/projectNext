@@ -5,7 +5,7 @@ import Image from 'next/image'
 function Loader() {
     return (
         <div className={styles.Loader}>
-            <Image src={logo} />
+            <Image alt='omega-logo' src={logo} />
         </div>
     )
 }

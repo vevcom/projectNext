@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 
-import NavBar from '@/components/NavBar/NavBar'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
+import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
 
 import '@/styles/globals.scss'
@@ -23,7 +23,7 @@ export const metadata = {
   charset: 'utf-8',
 }
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children } : { children: React.ReactNode}) {
   const session = await getServerSession(authOptions)
 
   return (
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }) {
       <body className={inter.className}>
         <div className={styles.wrapper}>
           <div className={styles.navBar}>
-            <NavBar />
+            <NavBar session={session} />
           </div>
           <div className={styles.content}>
             {children}

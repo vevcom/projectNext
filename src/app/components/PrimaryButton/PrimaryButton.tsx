@@ -1,6 +1,9 @@
 import styles from "./PrimaryButton.module.scss"
 
-function PrimaryButton({ text }) {
+type PropTypes = {
+    text: string,
+}
+function PrimaryButton({ text }:PropTypes) {
 
     return <button className={styles.Button}>{ text }</button>
 }

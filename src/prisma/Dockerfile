@@ -1,7 +1,6 @@
 #This container is responisble for running migrations
 FROM node:18-alpine AS base
 WORKDIR /usr/src/app
-RUN npm init es6
 RUN npm i prisma
 RUN npx prisma init
 COPY schema.prisma ./
@@ -21,6 +20,7 @@ COPY --from=base /usr/src/app .
 
 RUN npm install @prisma/client
 RUN npx prisma generate
-COPY seed.js ./
+COPY seed.ts ./
+RUN npm i ts-node
 
-CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; node seed.js"]
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seed.ts"]

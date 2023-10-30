@@ -1,20 +1,21 @@
 import { Prisma } from '@prisma/client'
 
 import prisma from "@/prisma"
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
     const users = await prisma.user.findMany()
 
-    return Response.json(users)
+    return NextResponse.json(users)
 }
 
-export async function POST(req) {  
+export async function POST(req: NextRequest) {  
     const body = await req.json()
     
     const { username, password, email, firstname, lastname } = body;
     
     if (!username || !password || !email || !firstname || !lastname) {
-        return Response.json({}, { status: 400 })
+        return NextResponse.json({}, { status: 400 })
     }
 
     try {
@@ -28,7 +29,7 @@ export async function POST(req) {
             }
         })
 
-        return Response.json(user)
+        return NextResponse.json(user)
     } catch (error) {  
         // synes dette er en veldig stygg måte å håndtere feil på
         if (
@@ -36,9 +37,9 @@ export async function POST(req) {
             error.code === 'P2002'
         ) 
         {
-            return Response.json({}, { status: 409 })
+            return NextResponse.json({}, { status: 409 })
         }   
         
-        return Response.json({}, { status: 500 })
+        return NextResponse.json({}, { status: 500 })
     }   
 }
