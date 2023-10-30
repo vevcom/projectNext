@@ -26,10 +26,11 @@
     "react-dom": "18.2.0",
     "react-fontawesome": "^1.7.1",
     "sass": "^1.69.5",
+    "sharp": "^0.32.6",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@prisma/client": "^5.4.2",
+    "@prisma/client": "^5.5.2",
     "@types/google-map-react": "^2.1.9",
     "@types/node": "^20.8.9",
     "@types/react": "^18.2.33",
