@@ -23,7 +23,7 @@ async function AuthTest({ params }: PropTypes) {
     }
 
     const me = params.username === "me"
-    let username = me ? session.user.username : params.username
+    const username = me ? session.user.username : params.username
 
     const user = await prisma.user.findUnique({
         where: {

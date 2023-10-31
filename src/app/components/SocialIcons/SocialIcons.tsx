@@ -1,4 +1,3 @@
-import styles from './SocialIcons.module.scss'
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

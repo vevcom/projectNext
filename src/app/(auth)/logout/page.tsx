@@ -1,5 +1,3 @@
-import { getCsrfToken } from "next-auth/react"
-
 import styles from './page.module.scss'
 import magiskHatt from "@/images/magisk_hatt.png"
 import Image from 'next/image'
@@ -7,8 +5,6 @@ import PrimaryButton from '@/components/PrimaryButton/PrimaryButton'
 import CsrfToken from '../CsrfToken'
 
 export default async function LogOut() {
-  const csrfToken = await getCsrfToken()
-
   return (
     <div className={styles.wrapper}>
         <div className={styles.card}>

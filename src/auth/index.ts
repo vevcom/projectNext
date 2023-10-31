@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials"
-import { AuthOptions, User } from "next-auth"
+import { AuthOptions } from "next-auth"
 
 import prisma from "@/prisma"
 
@@ -11,7 +11,7 @@ const authOptions : AuthOptions = {
                 username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            authorize: async (credentials, req) => {
+            authorize: async (credentials) => {
                 const user = await prisma.user.findUnique({
                     where: {
                         username: credentials?.username
