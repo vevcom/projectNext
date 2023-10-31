@@ -13,7 +13,7 @@ type PropTypes = {
 }
 
 function Section({children, img, name, lesMer, right, imgWidth, id}: PropTypes) {
-    const alt = "image of " + name
+    const alt = `image of ${name}`
     const imgContainer = (
         <div style={{width: imgWidth}} className={styles.imgContainer}>
             <Image 

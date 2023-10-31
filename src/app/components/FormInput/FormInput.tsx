@@ -11,7 +11,7 @@ type PropTypes = {
 function FormInput({label, type, id, name} : PropTypes) {
     label ??=  ''
     type  ??= (type  !== undefined) ? type  : 'text'
-    id    ??= "id_input_" + uuid()
+    id    ??= `id_input_${uuid()}`
 
     return <div className={styles.Input}>
         <input type={type} id={id} name={name} required/>

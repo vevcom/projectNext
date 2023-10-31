@@ -10,7 +10,7 @@ type PropTypes = {
 
 function GoogleMap({ location, height } : PropTypes) {
     return (
-        <div style={{height: height+'px'}} className={styles.GoogleMap}>
+        <div style={{height: `${height}px`}} className={styles.GoogleMap}>
             <GoogleMapReact 
                 defaultCenter={location} 
                 defaultZoom={15}  

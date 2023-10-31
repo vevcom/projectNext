@@ -6,7 +6,7 @@ type PropTypes = {
 }
 
 function Checkbox({ label }: PropTypes) {
-    const id = "id_input_" + uuid();
+    const id = `id_input_${uuid()}`
 
     return <div className={styles.Checkbox}>
         <input type="checkbox" id={id}></input>
