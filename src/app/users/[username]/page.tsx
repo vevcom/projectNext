@@ -27,7 +27,7 @@ async function AuthTest({ params }: PropTypes) {
 
     const user = await prisma.user.findUnique({
         where: {
-            username: username
+            username
         }
     })
 
