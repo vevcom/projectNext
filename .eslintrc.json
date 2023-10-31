@@ -33,6 +33,21 @@
     "prefer-arrow-callback": "error",
     // suggest using template literals instead of string concatenation
     "prefer-template": "error",
+    // disallow modifying variables that are declared using const
+    "no-const-assign": "error",
+    // disallow symbol constructor
+    "no-new-symbol": "error",
+    // disallow to use this/super before super() calling in constructors.
+    "no-this-before-super": "error",
+    // require let or const instead of var
+    "no-var": "error",
+    // disallow unnecessary constructor
+    "no-useless-constructor": "error",
+    // require method and property shorthand syntax for object literals
+    "object-shorthand": [
+        "error",
+        "always"
+    ],
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()
