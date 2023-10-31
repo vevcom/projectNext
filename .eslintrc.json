@@ -49,6 +49,52 @@
         "error",
         "always"
     ],
+    // disallow deletion of variables
+    "no-delete-var": "error",
+    // disallow labels that share a name with a variable
+    "no-label-var": "error",
+    // disallow self assignment
+    "no-self-assign": "error",
+    // disallow shadowing of names such as arguments
+    "no-shadow-restricted-names": "error",
+    // disallow declaration of variables already declared in the outer scope
+    "no-shadow": "error",
+    // disallow use of undeclared variables unless mentioned in a /*global */ block
+    "no-undef": "error",
+    // disallow declaration of variables that are not used in the code
+    "no-unused-vars": [
+        "error",
+        {
+            "vars": "local",
+            "args": "after-used"
+        }
+    ],
+    // disallow use of variables before they are defined
+    "no-use-before-define": "error",
+    // enforces no braces where they can be omitted
+    "arrow-body-style": [
+        "error",
+        "as-needed"
+    ],
+    // require space before/after arrow function"s arrow
+    "arrow-spacing": [
+        "error",
+        {
+            "before": true,
+            "after": true
+        }
+    ],
+    // verify super() callings in constructors
+    "constructor-super": "error",
+    // disallow modifying variables of class declarations
+    "no-class-assign": "error",
+    // disallow arrow functions where they could be confused with comparisons
+    "no-confusing-arrow": [
+        "error",
+        {
+            "allowParens": true
+        }
+    ],
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()

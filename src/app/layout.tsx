@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-
+import React from 'react'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
