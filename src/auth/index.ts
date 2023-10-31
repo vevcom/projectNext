@@ -19,7 +19,7 @@ const authOptions : AuthOptions = {
                 })
                 // TODO - faktisk gjør encryption, legg til hashing på POST
                 if (user?.password === credentials?.password) {
-                    if (typeof user?.id == 'number') {
+                    if (typeof user?.id === 'number') {
                         return { ...user }
                     }
                 }

@@ -25,5 +25,5 @@ main().then(async () => {
 }).catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
-    throw Error("seeding failed.... container closing")
+    throw Error('seeding failed.... container closing')
 })
