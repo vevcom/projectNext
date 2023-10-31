@@ -9,11 +9,6 @@ declare module 'next-auth' {
         user: prismaUser;
     }
 }
-
-declare module 'next-auth/adapters' {
-    interface AdapterUser extends prismaUser {id: number}
-}
-
 declare module 'next-auth/jwt' {
     interface JWT {
         user: prismaUser
