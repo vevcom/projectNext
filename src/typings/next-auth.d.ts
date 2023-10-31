@@ -1,5 +1,6 @@
 import type { User as prismaUser } from '@prisma/client'
 import 'next-auth'
+import 'next-auth/adapters';
 
 declare module 'next-auth' {
     interface User extends prismaUser {id: number}
@@ -7,6 +8,10 @@ declare module 'next-auth' {
     interface Session {
         user: prismaUser;
     }
+}
+
+declare module 'next-auth/adapters' {
+    interface AdapterUser extends prismaUser {id: number}
 }
 
 declare module 'next-auth/jwt' {

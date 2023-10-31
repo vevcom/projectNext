@@ -36,8 +36,15 @@ const authOptions : AuthOptions = {
             return session
         },
         async jwt({ token, user }) {
-            if (user) {
-                token.user = user
+            if (typeof user?.id === 'number' && user?.email) {
+                token.user = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    password: user.password,
+                    firstname: user.firstname,
+                    lastname: user.lastname
+                }
             }
             return token
         },
