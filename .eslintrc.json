@@ -107,7 +107,8 @@
       "error",
       "single",
       "avoid-escape"
-  ],
+    ],
+    "jsx-quotes": ["error", "prefer-double"],
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()
