@@ -44,6 +44,7 @@
     // disallow unnecessary constructor
     "no-useless-constructor": "error",
     // require method and property shorthand syntax for object literals
+    // ie write obj = { x }, not obj = {x: x}
     "object-shorthand": [
         "error",
         "always"
