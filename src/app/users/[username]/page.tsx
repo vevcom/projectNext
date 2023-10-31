@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth'
 
-import authOptions from '@/auth';
+import authOptions from '@/auth'
 
 import prisma from '@/prisma'
-import Link from 'next/link';
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
@@ -44,4 +44,4 @@ async function AuthTest({ params }: PropTypes) {
     )
 }
 
-export default AuthTest 
+export default AuthTest

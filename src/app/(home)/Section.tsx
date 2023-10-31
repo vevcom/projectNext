@@ -13,11 +13,11 @@ type PropTypes = {
     id?: string,
 }
 
-function Section({children, img, name, lesMer, right, imgWidth, id}: PropTypes) {
+function Section({ children, img, name, lesMer, right, imgWidth, id }: PropTypes) {
     const alt = `image of ${name}`
     const imgContainer = (
-        <div style={{width: imgWidth}} className={styles.imgContainer}>
-            <Image 
+        <div style={{ width: imgWidth }} className={styles.imgContainer}>
+            <Image
                 src={img}
                 alt={alt}
                 width={imgWidth}

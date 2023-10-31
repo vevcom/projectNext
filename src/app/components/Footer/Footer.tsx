@@ -14,7 +14,8 @@ function Footer() {
             <div>
                 <Image src={logo} width={350} alt="sct. omega broderskab" />
                 <p>
-                Linjeforeningen for Elektronisk Systemdesign og Innovasjon (MTELSYS) og Kybernetikk og 
+                Linjeforeningen for Elektronisk Systemdesign
+                og Innovasjon (MTELSYS) og Kybernetikk og
                 Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
                 </p>
                 <div>

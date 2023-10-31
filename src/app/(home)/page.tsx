@@ -33,18 +33,20 @@ export default function Home() {
                     </div>
                 </div>
                 <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
-          Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter 
-          som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en 
-          eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn 
-          en fyldig søknad. Dette har endret seg gjennom årene, og i dag blir medlemmene tatt 
+          Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter
+          som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en
+          eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn
+          en fyldig søknad. Dette har endret seg gjennom årene, og i dag blir medlemmene tatt
           opp automatisk fra 1. klasse.
                 </Section>
                 <InfoBubbles />
                 <Section right img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
-          Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved 
-          Norges Teknisk-Naturvitenskapelige Universitet (NTNU) stiftet i 1971. Omega Verksted holder 
-          til i kjelleren i det gamle elektrobygget på Gløshaugen (G 016 A). Verkstedet inneholder 
-          det meste av verktøy for små og store prosjekter, i tillegg til et knippe 
+          Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved
+          Norges Teknisk-Naturvitenskapelige
+          Universitet (NTNU) stiftet i 1971. Omega Verksted holder
+          til i kjelleren i det gamle elektrobygget på Gløshaugen (G 016 A).
+          Verkstedet inneholder
+          det meste av verktøy for små og store prosjekter, i tillegg til et knippe
           datamaskiner samt et solid utvalg av brus og sjokolade.
                 </Section>
             </div>
@@ -59,9 +61,11 @@ export default function Home() {
                 </Section>
                 <Section right img={ohma} name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
           Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
-          Ohma er verdens første(!) fungerende vekselstrøm-lokomotiv, og har en lang historie fra både 
-          gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget. 
-          Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er 
+          Ohma er verdens første(!) fungerende
+          vekselstrøm-lokomotiv, og har en lang historie fra både
+          gruvedrift, sabotasje under 2. verdenskrig, og som
+          glamourmodell på utsiden av elektrobygget.
+          Det er ingen hemmelighet at Ohma er det fineste lokomotivet i hele Norge, og hvis du er
           heldig får du kanskje bli med på en kjøretur.
                 </Section>
             </div>

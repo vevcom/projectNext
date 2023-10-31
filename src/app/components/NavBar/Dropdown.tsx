@@ -18,10 +18,10 @@ function DropDown({ name, items } : PropTypes) {
         <li className={styles.Dropdown}>
             <div className={styles.name}>{ name }</div>
             <div className={styles.dropdownContent}>
-                {items.map(item => 
+                {items.map(item =>
                     <div className={styles.dropdownItem} key={uuid()}>
-                        <Link href={item.href}> 
-                            <FontAwesomeIcon className={styles.icon} icon={item.icon} />    
+                        <Link href={item.href}>
+                            <FontAwesomeIcon className={styles.icon} icon={item.icon} />
                             <h2 className={styles.linkName}>{item.name}</h2>
                         </Link>
                     </div>

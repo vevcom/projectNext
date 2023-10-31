@@ -242,18 +242,10 @@
         }
     ],
     // specify whether double or single quotes should be used
-    // enforce spacing before and after semicolons
-    "semi-spacing": [
-        "error",
-        {
-            "before": false,
-            "after": true
-        }
-    ],
     // require or disallow use of semicolons instead of ASI
     "semi": [
         "error",
-        "always"
+        "never"
     ],
     // require or disallow space before blocks
     "space-before-blocks": "error",

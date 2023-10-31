@@ -24,8 +24,7 @@ type PropTypes = {
     session: Session | null
 }
 
-async function NavBar({session}: PropTypes) {
-
+async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
 
@@ -34,7 +33,7 @@ async function NavBar({session}: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <Link href="/">
-                        <Image 
+                        <Image
                             src={simpleLogo}
                             width={30}
                             alt="omega logo"
@@ -42,18 +41,18 @@ async function NavBar({session}: PropTypes) {
                     </Link>
                 </li>
                 {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
-                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>} 
-                <Item href="/infopages/committees" name="Komitéer"/> 
-                {!isLoggedIn && 
+                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
+                <Item href="/infopages/committees" name="Komitéer"/>
+                {!isLoggedIn &&
                 <>
-                    <Item href="/infopages/contactor" name="For bedrifter"/> 
-                    <Item href="/infopages/nystudent" name="Ny Student?"/> 
+                    <Item href="/infopages/contactor" name="For bedrifter"/>
+                    <Item href="/infopages/nystudent" name="Ny Student?"/>
                 </>}
-                {isLoggedIn && 
+                {isLoggedIn &&
                 <>
-                    <Item href="/infopages/jobbannonser" name="Jobbannonser"/> 
-                    {applicationPeriod && 
-                        <Item href="/applications" name="Søknader"/> 
+                    <Item href="/infopages/jobbannonser" name="Jobbannonser"/>
+                    {applicationPeriod &&
+                        <Item href="/applications" name="Søknader"/>
                     }
                     <DropDown name="Mer" items={[
                         {
@@ -96,12 +95,12 @@ async function NavBar({session}: PropTypes) {
                             href: 'infopages/guides',
                             icon: faQuestionCircle,
                         },
-                        {  
+                        {
                             name: 'Bilder',
                             href: '/images',
                             icon: faCamera,
                         },
-                        {  
+                        {
                             name: 'Klasselister',
                             href: '/userlist',
                             icon: faList,

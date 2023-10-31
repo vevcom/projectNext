@@ -8,7 +8,7 @@ type PropTypes = {
     name: string,
 }
 
-function FormInput({label, type, id, name} : PropTypes) {
+function FormInput({ label, type, id, name } : PropTypes) {
     label ??=  ''
     type  ??= (type  !== undefined) ? type  : 'text'
     id    ??= `id_input_${uuid()}`
@@ -17,7 +17,6 @@ function FormInput({label, type, id, name} : PropTypes) {
         <input type={type} id={id} name={name} required/>
         <label htmlFor={id}>{label}</label>
     </div>
-
 }
 
 export default FormInput

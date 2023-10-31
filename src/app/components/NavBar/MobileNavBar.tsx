@@ -22,14 +22,14 @@ type PropTypes = {
 function MobileNavBar({ session } : PropTypes) {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
-    const isLoggedIn = Boolean(session?.user);
+    const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = true
 
     return (
         <nav className={styles.MobileNavBar}>
             <div className={styles.item}>
                 {
-                    isLoggedIn ? 
+                    isLoggedIn ?
                         <Link href="/events">
                             <FontAwesomeIcon icon={faCalendar} />
                         </Link> :
@@ -50,8 +50,8 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div className={styles.item}>
                 {
-                    isLoggedIn ? 
-                        <Link href={'/user/profile/me'}> 
+                    isLoggedIn ?
+                        <Link href={'/user/profile/me'}>
                             <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
                         </Link> :
                         <Link href="/login">
@@ -65,7 +65,7 @@ function MobileNavBar({ session } : PropTypes) {
                 </button>
             </div>
             <div className={styles.burgerMenu}>
-                {burgerOpen 
+                {burgerOpen
                     && <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
                 }
             </div>

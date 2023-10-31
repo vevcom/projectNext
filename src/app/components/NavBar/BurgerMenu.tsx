@@ -33,7 +33,7 @@ function BurgerMenu({ isLoggedIn, applicationPeriod }:PropTypes) {
             {!isLoggedIn &&
                 <BurgerItem href="/infopages/nystudent" name="Ny Student?" icon={faGraduationCap}/>
             }
-            {isLoggedIn && 
+            {isLoggedIn &&
             <>
                 <BurgerItem href="/money/shop" name="Omegashop" icon={faShoppingCart}/>
                 <BurgerItem href="/omegaquotes" name="Omegaquotes" icon={faComment}/>
