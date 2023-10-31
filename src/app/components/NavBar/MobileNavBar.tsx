@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import Image from 'next/image'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
@@ -11,9 +11,9 @@ import {
     faNewspaper,
     faSuitcase,
     faCalendar
-} from "@fortawesome/free-solid-svg-icons"
+} from '@fortawesome/free-solid-svg-icons'
 import styles from './MobileNavBar.module.scss'
-import { Session } from "next-auth"
+import { Session } from 'next-auth'
 
 type PropTypes = {
     session: Session | null

@@ -1,6 +1,6 @@
 'use client'
 import styles from './GoogleMap.module.scss'
-import GoogleMapReact from "google-map-react";
+import GoogleMapReact from 'google-map-react';
 import { Coords } from 'google-map-react';
 
 type PropTypes = {

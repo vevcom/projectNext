@@ -1,8 +1,8 @@
-import Link from "next/link"
-import styles from "./Dropdown.module.scss"
+import Link from 'next/link'
+import styles from './Dropdown.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { v4 as uuid } from 'uuid'
-import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type PropTypes = {
     name: string,

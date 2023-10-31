@@ -1,5 +1,5 @@
-import prisma from "@/prisma"
-import { NextRequest, NextResponse } from "next/server"
+import prisma from '@/prisma'
+import { NextRequest, NextResponse } from 'next/server'
 
 type ParamType = {
     params: {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest, { params }: ParamType) {
             id: Number(params.id)
         }
     })
-    if (!user) return new NextResponse("user not found", {
+    if (!user) return new NextResponse('user not found', {
         status: 404,
     })
     return NextResponse.json(user)

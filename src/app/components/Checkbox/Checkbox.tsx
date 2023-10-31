@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import styles from "./Checkbox.module.scss";
+import styles from './Checkbox.module.scss';
 
 type PropTypes = {
     label: string

@@ -1,4 +1,4 @@
-import styles from "./PrimaryButton.module.scss"
+import styles from './PrimaryButton.module.scss'
 
 type PropTypes = {
     text: string,

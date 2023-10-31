@@ -14,7 +14,7 @@ import {
     faQuestionCircle,
     faAddressCard,
     faGraduationCap,
-} from "@fortawesome/free-solid-svg-icons"
+} from '@fortawesome/free-solid-svg-icons'
 
 import styles from './BurgerMenu.module.scss'
 

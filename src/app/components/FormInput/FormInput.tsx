@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import styles from "./FormInput.module.scss"
+import styles from './FormInput.module.scss'
 
 type PropTypes = {
     label?: string,
