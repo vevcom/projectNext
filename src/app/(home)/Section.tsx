@@ -20,7 +20,7 @@ function Section({children, img, name, lesMer, right, imgWidth, id}: PropTypes) 
                 src={img}
                 alt={alt}
                 width={imgWidth}
-                />
+            />
         </div>
     )
     return (

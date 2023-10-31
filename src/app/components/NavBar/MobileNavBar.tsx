@@ -29,12 +29,12 @@ function MobileNavBar({ session } : PropTypes) {
         <nav className={styles.MobileNavBar}>
             <div className={styles.item}>
                 {
-                    isLoggedIn ? 
+                isLoggedIn ? 
                     <Link href="/events">
-                         <FontAwesomeIcon icon={faCalendar} />
+                        <FontAwesomeIcon icon={faCalendar} />
                     </Link> :
                     <Link href="/infopages/contactor">
-                         <FontAwesomeIcon icon={faSuitcase} />
+                        <FontAwesomeIcon icon={faSuitcase} />
                     </Link>
                 }
             </div>
@@ -50,24 +50,24 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div className={styles.item}>
                 {
-                    isLoggedIn ? 
-                    <Link href={'/user/profile/me'}> 
-                        <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
-                    </Link> :
-                    <Link href="/login">
-                        <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
-                    </Link>
+                isLoggedIn ? 
+                <Link href={'/user/profile/me'}> 
+                    <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
+                </Link> :
+                <Link href="/login">
+                    <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
+                </Link>
                 }
             </div>
-            <div className={styles.item} onClick={() => setBurgerOpen(!burgerOpen)}>
-                <button>
+            <div className={styles.item}>
+                <button onClick={() => setBurgerOpen(!burgerOpen)}>
                     <FontAwesomeIcon icon={faBars} />
                 </button>
             </div>
             <div className={styles.burgerMenu}>
-            {
-                burgerOpen && <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
-            }
+                {burgerOpen 
+                    && <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
+                }
             </div>
         </nav>
     )
