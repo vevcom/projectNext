@@ -15,6 +15,19 @@
           "SwitchCase": 1,
           "VariableDeclarator": 1
       }
+    ],
+    // require function expressions to have a name
+    "func-names": "warn",
+    // enforce newline at the end of file, with no multiple empty lines
+    "eol-last": "error",  
+    // disallow padding inside computed properties, ie. obj[ "fjie"] not allowed
+    "computed-property-spacing": [ 
+      "error",
+      "never"
+    ],
+    "comma-style": [
+      "error",
+      "last"
     ]
   }
 }
