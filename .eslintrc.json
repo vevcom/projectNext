@@ -95,6 +95,19 @@
             "allowParens": true
         }
     ],
+    // Require or disallow spaces before/after unary operators
+    "space-unary-ops": [
+      "error",
+      {
+          "words": true,
+          "nonwords": false
+      }
+    ],
+    "quotes": [
+      "error",
+      "single",
+      "avoid-escape"
+  ],
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()
