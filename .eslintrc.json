@@ -109,6 +109,169 @@
       "avoid-escape"
     ],
     "jsx-quotes": ["error", "prefer-double"],
+    // require camel case names
+    "camelcase": [
+      "error",
+      { 
+          "properties": "never" 
+      }
+    ],
+    // enforce spacing before and after comma
+    "comma-spacing": [
+        "error",
+        { 
+            "before": false, 
+            "after": true 
+        }
+    ],
+    // enforce one true comma style
+    "comma-style": [
+        "error",
+        "last"
+    ],
+    "key-spacing": [
+        "error",
+        {
+            "beforeColon": false,
+            "afterColon": true
+        }
+    ],
+    // require a space before & after certain keywords
+    "keyword-spacing": [
+        "error",
+        {
+            "before": true,
+            "after": true,
+            "overrides": {
+                "return": { "after": true },
+                "throw": { "after": true },
+                "case": { "after": true }
+            }
+        }
+    ],
+    // disallow mixed "LF" and "CRLF" as linebreaks
+    "linebreak-style": [
+        "error",
+        "unix"
+    ],
+    // specify the maximum length of a line in your program
+    "max-len": [
+        "error",
+        100,
+        4,
+        {
+            "ignoreUrls": true,
+            "ignoreComments": false,
+            "ignoreTemplateLiterals": true,
+            "ignoreStrings": true,
+            "ignoreRegExpLiterals": true
+        }
+    ],
+    // specify the maximum depth callbacks can be nested
+    "max-nested-callbacks": [
+        "error",
+        3
+    ],
+    // disallow the omission of parentheses when invoking a constructor with no arguments
+    "new-parens": "error",
+    // enforces new line after each method call in the chain to make it
+    // more readable and easy to maintain
+    "newline-per-chained-call": [
+        "error",
+        { 
+            "ignoreChainWithDepth": 4
+        }
+    ],
+    // disallow use of the Array constructor
+    "no-array-constructor": "error",
+    // disallow use of the continue statement
+    "no-continue": "warn",
+    // disallow if as the only statement in an else block
+    "no-lonely-if": "error",
+    // disallow mixed spaces and tabs for indentation
+    "no-mixed-spaces-and-tabs": "error",
+    // disallow multiple empty lines and only one newline at the end
+    "no-multiple-empty-lines": [
+        "error",
+        {
+            "max": 2,
+            "maxEOF": 1
+        }
+    ],
+    // disallow nested ternary expressions
+    "no-nested-ternary": "error",
+    // disallow use of the Object constructor
+    "no-new-object": "error",
+    // disallow space between function identifier and application
+    "no-spaced-func": "error",
+    // disallow trailing whitespace at the end of lines
+    "no-trailing-spaces": "error",
+    // disallow the use of Boolean literals in conditional expressions
+    // also, prefer `a || b` over `a ? a : b`
+    "no-unneeded-ternary": [
+        "error",
+        {
+            "defaultAssignment": true
+        }
+    ],
+    // disallow whitespace before properties
+    "no-whitespace-before-property": "error",
+    // require padding inside curly braces
+    "object-curly-spacing": [
+        "error",
+        "always"
+    ],
+    // require a newline around variable declaration
+    "one-var-declaration-per-line": [
+        "error",
+        "always"
+    ],
+    // enforce padding within blocks
+    "padded-blocks": [
+        "error",
+        "never"
+    ],
+    // require quotes around object literal property names
+    "quote-props": [
+        "warn",
+        "as-needed",
+        {
+            "keywords": false,
+            "unnecessary": true,
+            "numbers": false
+        }
+    ],
+    // specify whether double or single quotes should be used
+    // enforce spacing before and after semicolons
+    "semi-spacing": [
+        "error",
+        {
+            "before": false,
+            "after": true
+        }
+    ],
+    // require or disallow use of semicolons instead of ASI
+    "semi": [
+        "error",
+        "always"
+    ],
+    // require or disallow space before blocks
+    "space-before-blocks": "error",
+    // require or disallow space before function opening parenthesis
+    "space-before-function-paren": [
+        "error",
+        {
+            "anonymous": "always",
+            "named": "never"
+        }
+    ],
+    // require or disallow spaces inside parentheses
+    "space-in-parens": [
+        "error",
+        "never"
+    ],
+    // require spaces around operators
+    "space-infix-ops": "error",
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()
