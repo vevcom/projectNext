@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
-import { getServerSession } from "next-auth";
+import { getServerSession } from 'next-auth'
 
-import authOptions from '@/auth';
+import authOptions from '@/auth'
 
-import prisma from "@/prisma"
-import Link from 'next/link';
+import prisma from '@/prisma'
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
@@ -22,12 +22,12 @@ async function AuthTest({ params }: PropTypes) {
         redirect('/login')
     }
 
-    const me = params.username === "me"
-    let username = me ? session.user.username : params.username
+    const me = params.username === 'me'
+    const username = me ? session.user.username : params.username
 
     const user = await prisma.user.findUnique({
         where: {
-            username: username
+            username
         }
     })
 
@@ -44,4 +44,4 @@ async function AuthTest({ params }: PropTypes) {
     )
 }
 
-export default AuthTest 
+export default AuthTest

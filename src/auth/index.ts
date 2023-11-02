@@ -1,17 +1,17 @@
-import CredentialsProvider from "next-auth/providers/credentials"
-import { AuthOptions, User } from "next-auth"
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { AuthOptions } from 'next-auth'
 
-import prisma from "@/prisma"
+import prisma from '@/prisma'
 
 const authOptions : AuthOptions = {
     providers: [
         CredentialsProvider({
-            name: "Credentials",
+            name: 'Credentials',
             credentials: {
-                username: { label: "Username", type: "text" },
-                password: { label: "Password", type: "password" }
+                username: { label: 'Username', type: 'text' },
+                password: { label: 'Password', type: 'password' }
             },
-            authorize: async (credentials, req) => {
+            authorize: async (credentials) => {
                 const user = await prisma.user.findUnique({
                     where: {
                         username: credentials?.username
@@ -19,32 +19,39 @@ const authOptions : AuthOptions = {
                 })
                 // TODO - faktisk gjør encryption, legg til hashing på POST
                 if (user?.password === credentials?.password) {
-                    if (typeof user?.id == 'number') {
-                        return {...user}
+                    if (typeof user?.id === 'number') {
+                        return { ...user }
                     }
                 }
                 return null
             }
-        })        
+        })
     ],
     session: {
-        strategy: "jwt"
+        strategy: 'jwt'
     },
     callbacks: {
         async session({ session, token }) {
-            session.user = token.user;
-            return session;
+            session.user = token.user
+            return session
         },
         async jwt({ token, user }) {
-            if (user) {
-                token.user = user
+            if (typeof user?.id === 'number' && user?.email) {
+                token.user = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    password: user.password,
+                    firstname: user.firstname,
+                    lastname: user.lastname
+                }
             }
-            return token;
+            return token
         },
     },
     pages: {
         signIn: '/login',
-        signOut: '/logout'   
+        signOut: '/logout'
     }
 }
 

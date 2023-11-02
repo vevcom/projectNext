@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { getCsrfToken } from "next-auth/react"
+import { getCsrfToken } from 'next-auth/react'
 
 async function CsrfToken() {
     // getCsrfToken må kjøres på klientsiden*

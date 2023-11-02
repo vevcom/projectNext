@@ -1,10 +1,10 @@
-import Image from "next/image"
-import Link from "next/link"
-import Item from "./Item"
-import DropDown from "./Dropdown"
-import magiskHatt from "@/images/magisk_hatt.png"
-import simpleLogo from "@/images/logo_simple.png"
-import styles from "./NavBar.module.scss"
+import Image from 'next/image'
+import Link from 'next/link'
+import Item from './Item'
+import DropDown from './Dropdown'
+import magiskHatt from '@/images/magisk_hatt.png'
+import simpleLogo from '@/images/logo_simple.png'
+import styles from './NavBar.module.scss'
 import {
     faNewspaper,
     faPoo,
@@ -17,15 +17,14 @@ import {
     faUsers,
     faCircleInfo,
     faGamepad
-} from "@fortawesome/free-solid-svg-icons"
-import { Session } from "next-auth"
+} from '@fortawesome/free-solid-svg-icons'
+import { Session } from 'next-auth'
 
 type PropTypes = {
     session: Session | null
 }
 
-async function NavBar({session}: PropTypes) {
-
+async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
 
@@ -34,7 +33,7 @@ async function NavBar({session}: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <Link href="/">
-                        <Image 
+                        <Image
                             src={simpleLogo}
                             width={30}
                             alt="omega logo"
@@ -42,80 +41,80 @@ async function NavBar({session}: PropTypes) {
                     </Link>
                 </li>
                 {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
-                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>} 
-                <Item href="/infopages/committees" name="Komitéer"/> 
-                {!isLoggedIn && 
+                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
+                <Item href="/infopages/committees" name="Komitéer"/>
+                {!isLoggedIn &&
                 <>
-                    <Item href="/infopages/contactor" name="For bedrifter"/> 
-                    <Item href="/infopages/nystudent" name="Ny Student?"/> 
+                    <Item href="/infopages/contactor" name="For bedrifter"/>
+                    <Item href="/infopages/nystudent" name="Ny Student?"/>
                 </>}
-                {isLoggedIn && 
+                {isLoggedIn &&
                 <>
-                    <Item href="/infopages/jobbannonser" name="Jobbannonser"/> 
-                    {applicationPeriod && 
-                        <Item href="/applications" name="Søknader"/> 
+                    <Item href="/infopages/jobbannonser" name="Jobbannonser"/>
+                    {applicationPeriod &&
+                        <Item href="/applications" name="Søknader"/>
                     }
                     <DropDown name="Mer" items={[
                         {
-                            name: "Om Omega",
-                            href: "ingopages/about",
+                            name: 'Om Omega',
+                            href: 'ingopages/about',
                             icon: faCircleInfo,
                         },
                         {
-                            name: "Intressegrupper",
-                            href: "ingopages/interessegrupper",
+                            name: 'Intressegrupper',
+                            href: 'ingopages/interessegrupper',
                             icon: faGamepad,
                         },
                         {
-                            name: "Artikler",
-                            href: "news",
+                            name: 'Artikler',
+                            href: 'news',
                             icon: faNewspaper
                         },
                         {
-                            name: "Ombul",
-                            href: "/ombul",
+                            name: 'Ombul',
+                            href: '/ombul',
                             icon: faBook,
                         },
                         {
-                            name: "Bulshit",
-                            href: "/bulshit",
+                            name: 'Bulshit',
+                            href: '/bulshit',
                             icon: faPoo,
                         },
                         {
-                            name: "Omegashop",
-                            href: "/money/shop",
+                            name: 'Omegashop',
+                            href: '/money/shop',
                             icon: faShoppingCart,
                         },
                         {
-                            name: "Omegaquotes",
-                            href: "/omegaquotes",
+                            name: 'Omegaquotes',
+                            href: '/omegaquotes',
                             icon: faComment,
                         },
                         {
-                            name: "Guider",
-                            href: "infopages/guides",
+                            name: 'Guider',
+                            href: 'infopages/guides',
                             icon: faQuestionCircle,
                         },
-                        {  
-                            name: "Bilder",
-                            href: "/images",
+                        {
+                            name: 'Bilder',
+                            href: '/images',
                             icon: faCamera,
                         },
-                        {  
-                            name: "Klasselister",
-                            href: "/userlist",
+                        {
+                            name: 'Klasselister',
+                            href: '/userlist',
                             icon: faList,
                         },
                         {
-                            name: "Komitémedlemmer",
-                            href: "/committees",
+                            name: 'Komitémedlemmer',
+                            href: '/committees',
                             icon: faUsers,
                         },
                     ]}/>
                 </>
                 }
                 <li className={styles.magicHat}>
-                    <Link href={isLoggedIn ? `/users/me` : "/login"}>
+                    <Link href={isLoggedIn ? '/users/me' : '/login'}>
                         <Image src={magiskHatt} width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>

@@ -1,15 +1,14 @@
-import styles from './SocialIcons.module.scss'
 import Link from 'next/link'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faXTwitter,
-  faFacebookSquare,
-  faInstagram
+    faXTwitter,
+    faFacebookSquare,
+    faInstagram
 } from '@fortawesome/free-brands-svg-icons'
 
 function SocialIcons() {
-  return (
+    return (
         <>
             <Link href="https://twitter.com/OmegaVevcom" target="_blank">
                 <FontAwesomeIcon icon={faXTwitter} />
@@ -21,7 +20,7 @@ function SocialIcons() {
                 <FontAwesomeIcon icon={faInstagram} />
             </Link>
         </>
-  )
+    )
 }
 
 export default SocialIcons

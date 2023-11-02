@@ -14,7 +14,7 @@ import {
     faQuestionCircle,
     faAddressCard,
     faGraduationCap,
-} from "@fortawesome/free-solid-svg-icons"
+} from '@fortawesome/free-solid-svg-icons'
 
 import styles from './BurgerMenu.module.scss'
 
@@ -33,7 +33,7 @@ function BurgerMenu({ isLoggedIn, applicationPeriod }:PropTypes) {
             {!isLoggedIn &&
                 <BurgerItem href="/infopages/nystudent" name="Ny Student?" icon={faGraduationCap}/>
             }
-            {isLoggedIn && 
+            {isLoggedIn &&
             <>
                 <BurgerItem href="/money/shop" name="Omegashop" icon={faShoppingCart}/>
                 <BurgerItem href="/omegaquotes" name="Omegaquotes" icon={faComment}/>

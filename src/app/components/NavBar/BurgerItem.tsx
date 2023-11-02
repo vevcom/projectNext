@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 function BurgerItem({ href, name, icon, shortName } : PropTypes) {
-    shortName ??= name;
+    shortName ??= name
     return (
         <Link href={href} className={styles.BurgerItem}>
             <FontAwesomeIcon icon={icon} className={styles.icon}/>

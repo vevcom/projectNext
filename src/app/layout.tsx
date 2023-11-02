@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-
+import React from 'react'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
@@ -18,32 +18,32 @@ config.autoAddCss = false
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'projectnext',
-  description: '',
-  charset: 'utf-8',
+    title: 'projectnext',
+    description: '',
+    charset: 'utf-8',
 }
 
 export default async function RootLayout({ children } : { children: React.ReactNode}) {
-  const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions)
 
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className={styles.wrapper}>
-          <div className={styles.navBar}>
-            <NavBar session={session} />
-          </div>
-          <div className={styles.content}>
-            {children}
-          </div>
-          <div className={styles.footer}>
-            <Footer />
-          </div>
-          <div className={styles.mobileNavBar}>
-            <MobileNavBar session={session} />
-          </div>
-        </div>
-      </body>
-    </html>
-  )
+    return (
+        <html lang="en">
+            <body className={inter.className}>
+                <div className={styles.wrapper}>
+                    <div className={styles.navBar}>
+                        <NavBar session={session} />
+                    </div>
+                    <div className={styles.content}>
+                        {children}
+                    </div>
+                    <div className={styles.footer}>
+                        <Footer />
+                    </div>
+                    <div className={styles.mobileNavBar}>
+                        <MobileNavBar session={session} />
+                    </div>
+                </div>
+            </body>
+        </html>
+    )
 }
