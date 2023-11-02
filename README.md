@@ -3,6 +3,8 @@
 You need a .env file (this file is gitignored). You can find default values in default.env.
 Either copy theese to ./.env file or use the --env-file default.env flag when building
 
+You will also need to copy next-env.default.d.ts into a new file next-env.d.ts (gitignored)
+
 ## Development
 
 Have the docker deamon running, then run:
@@ -46,4 +48,10 @@ To lint the project run
 
 ```bash
 npm run lint
+```
+
+To auto-fix linting errors run
+
+```bash
+npm run lint -- --fix
 ```
