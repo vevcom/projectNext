@@ -8,12 +8,17 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
-  password  String    // Dette er kun for testing
-  firstname String    @default("[Fjernet]")
-  lastname  String    @default("[Fjernet]")
+  id        Int    @id @default(autoincrement())
+  username  String @unique
+  email     String @unique
+  password  String // Dette er kun for testing
+  firstname String @default("[Fjernet]")
+  lastname  String @default("[Fjernet]")
 
   @@map("users")
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+  fsLocation String @default(cuid()) @unique
 }
