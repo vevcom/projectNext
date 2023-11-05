@@ -1,7 +1,8 @@
 'use server'
 import { join } from 'path'
-import { writeFile } from 'fs/promises'
+import { writeFile, mkdir } from 'fs/promises'
 import prisma from '@/prisma'
+import { Prisma } from '@prisma/client'
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import { File } from 'buffer'
@@ -24,10 +25,13 @@ export default async function create(rawdata: FormData) {
             fsLocation: uuid(),
         }
     }).catch(err => {
-        console.log(err)
+        console.error(err)
+        return null
     })
     if (!image) return { success: false }
 
-    await writeFile(join(__dirname, 'images', image.fsLocation), buffer)
+    const destination = join('./', 'store', 'images')
+    await mkdir(destination, { recursive: true })
+    await writeFile(join(destination, image.fsLocation), buffer)
     return { success: true }
 }
