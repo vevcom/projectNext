@@ -1,3 +1,5 @@
+'use client'
+
 import BurgerItem from './BurgerItem'
 import {
     faBars,
@@ -29,23 +31,22 @@ function BurgerMenu({ isLoggedIn, applicationPeriod }:PropTypes) {
     const [burgerOpen, setBurgerOpen] = useState(false)
 
     return (
-    <>
-        <div className={styles.item}>
-            <button onClick={() => setBurgerOpen(!burgerOpen)}>
-                <FontAwesomeIcon icon={faBars} />
-            </button>
-        </div>
-        <div className={styles.burgerMenu}>
-            {burgerOpen && (
+        <>
+            <div className={styles.item}>
+                <button onClick={() => setBurgerOpen(!burgerOpen)}>
+                    <FontAwesomeIcon icon={faBars} />
+                </button>
+            </div>
+            {burgerOpen ? (
                 <div className={styles.BurgerMenu}>
-                <BurgerItem href="/ombul" name="OmBul" icon={faNewspaper}/>
-                <BurgerItem href="/infopages/about" name="Om Omega" icon={faCircleInfo}/>
-                <BurgerItem href="/infopages/committees" name="Komitéer" icon={faBeer}/>
-                <BurgerItem href="/infopages/guides" name="Guider" icon={faQuestionCircle}/>
-                {!isLoggedIn &&
+                    <BurgerItem href="/ombul" name="OmBul" icon={faNewspaper}/>
+                    <BurgerItem href="/infopages/about" name="Om Omega" icon={faCircleInfo}/>
+                    <BurgerItem href="/infopages/committees" name="Komitéer" icon={faBeer}/>
+                    <BurgerItem href="/infopages/guides" name="Guider" icon={faQuestionCircle}/>
+                    {!isLoggedIn &&
                     <BurgerItem href="/infopages/nystudent" name="Ny Student?" icon={faGraduationCap}/>
-                }
-                {isLoggedIn &&
+                    }
+                    {isLoggedIn &&
                 <>
                     <BurgerItem href="/money/shop" name="Omegashop" icon={faShoppingCart}/>
                     <BurgerItem href="/omegaquotes" name="Omegaquotes" icon={faComment}/>
@@ -59,11 +60,10 @@ function BurgerMenu({ isLoggedIn, applicationPeriod }:PropTypes) {
                         <BurgerItem href="/applications" name="Søknad" icon={faAddressCard}/>
                     }
                 </>
-                }
+                    }
                 </div>
-            )}
-        </div>
-    </>
+            ) : (<div></div>)}
+        </>
     )
 }
 

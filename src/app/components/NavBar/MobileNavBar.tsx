@@ -20,7 +20,7 @@ function MobileNavBar({ session } : PropTypes) {
 
     return (
         <nav className={styles.MobileNavBar}>
-            <div className={styles.item}>
+            <div>
                 {
                     isLoggedIn ?
                         <Link href="/events">
@@ -31,17 +31,17 @@ function MobileNavBar({ session } : PropTypes) {
                         </Link>
                 }
             </div>
-            <div className={styles.item}>
+            <div>
                 <Link href="/news">
                     <FontAwesomeIcon icon={faNewspaper} />
                 </Link>
             </div>
-            <div className={styles.item}>
+            <div>
                 <Link href="/">
                     <Image name="simple_logo" width={30}/>
                 </Link>
             </div>
-            <div className={styles.item}>
+            <div>
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>

@@ -1,4 +1,4 @@
-import create from '@/app/actions/images/create'
+import create from '@/actions/images/create'
 
 export default function ImageUploader() {
     return (

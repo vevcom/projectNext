@@ -23,8 +23,8 @@
       "@/*": ["./src/*"],
       "@/components/*": ["src/app/components/*"],
       "@/styles/*": ["src/styles/*"],
-      "@/images/*": ["src/images/*"],
-      "@/actions/*": ["src/app/actions/*"],
+      "@/images/*": ["src/actions/images/*"],
+      "@/actions/*": ["src/actions/*"],
       "@/prisma/*": ["src/prisma/*"]
 
     }
