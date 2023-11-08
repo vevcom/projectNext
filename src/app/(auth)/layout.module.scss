@@ -14,7 +14,7 @@
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
         background-color: ohma.$slate;
-        > form {
+        > .input {
             grid-column: 1/2;
             max-width: 250px;
             margin: auto;

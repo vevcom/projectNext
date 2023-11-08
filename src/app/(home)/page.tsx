@@ -71,10 +71,10 @@ export default function Home() {
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
-                <GoogleMap height={500} location = {{
+                {/* <GoogleMap height={500} location = {{
                     lat: 37.42216,
                     lng: -122.08427,
-                }}/>
+                }}/> */}
             </div>
         </div>
     )
