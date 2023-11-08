@@ -43,5 +43,4 @@ export default async function create(rawdata: FormData) {
         //stor sjangs for at dette er en duplicate name field error.
         return { success: false }
     }
-    
 }

@@ -1,13 +1,8 @@
-'use client'
-import Image from 'next/image'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
-import magiskHatt from '@/images/magisk_hatt.png'
-import simpleLogo from '@/images/logo_simple.png'
-import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faBars,
     faNewspaper,
     faSuitcase,
     faCalendar
@@ -20,8 +15,6 @@ type PropTypes = {
 }
 
 function MobileNavBar({ session } : PropTypes) {
-    const [burgerOpen, setBurgerOpen] = useState(false)
-
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = true
 
@@ -45,30 +38,21 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div className={styles.item}>
                 <Link href="/">
-                    <Image src={simpleLogo} width={30} alt="omega logo"/>
+                    <Image name="simple_logo" width={30}/>
                 </Link>
             </div>
             <div className={styles.item}>
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>
-                            <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
+                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link> :
                         <Link href="/login">
-                            <Image width={25} src={magiskHatt} className={styles.magiskHatt} alt="log in button"/>
+                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link>
                 }
             </div>
-            <div className={styles.item}>
-                <button onClick={() => setBurgerOpen(!burgerOpen)}>
-                    <FontAwesomeIcon icon={faBars} />
-                </button>
-            </div>
-            <div className={styles.burgerMenu}>
-                {burgerOpen
-                    && <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
-                }
-            </div>
+            <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
         </nav>
     )
 }
