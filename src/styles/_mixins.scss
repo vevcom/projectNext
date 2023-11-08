@@ -27,7 +27,7 @@
 @mixin borderBtn($color: colors.$white) { 
     text-align: center;
     text-decoration: none;
-    font-size: fonts.$mFont;
+    font-size: fonts.$m;
     padding: 2*variables.$gap;
     background: transparent;
     border: solid $color 2px;

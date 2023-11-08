@@ -14,7 +14,7 @@ $animation_time: 200ms;
         left: 1em;
         transform: translate(0%, 50%);
         color: ohma.$colors-black;
-        font-size: ohma.$mFont;
+        font-size: ohma.$fonts-m;
         pointer-events: none;
         transition: $animation_time;
         font-weight: 130;
@@ -29,7 +29,7 @@ $animation_time: 200ms;
         border-radius: 0;
         padding: 0.4em;
         background-color: transparent;
-        font-size: ohma.$lFont;
+        font-size: ohma.$fonts-l;
         box-sizing: border-box;
         transition: $animation_time / 2;
         width: 100%;
@@ -44,6 +44,6 @@ $animation_time: 200ms;
     > input:focus ~ label,
     > input:valid ~ label {
         transform: translate(-2%, -100%);
-        font-size: ohma.$sFont;
+        font-size: ohma.$fonts-s;
     }
 }

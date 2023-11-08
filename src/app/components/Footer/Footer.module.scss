@@ -1,7 +1,7 @@
 @use "@/styles/ohma";
 
 .Footer {
-    font-weight: ohma.$sFontWeight;
+    font-weight: ohma.$fonts-weight-s;
     background-color: ohma.$colors-gray-800;
     color: ohma.$colors-white;
     display: grid;
@@ -9,7 +9,7 @@
     > * {
         p {
             margin-bottom: ohma.$gap;
-            line-height: ohma.$mLineHeight;
+            line-height: ohma.$fonts-line-height-m;
         }
         padding: 0 5*ohma.$gap 0 2*ohma.$gap;
         &:nth-child(1) {
@@ -29,8 +29,8 @@
     > .info {
         > *:first-child {
             color: ohma.$colors-primary;
-            font-weight: ohma.$mFontWeight;
-            font-size: ohma.$lFont
+            font-weight: ohma.$fonts-weight-m;
+            font-size: ohma.$fonts-l
         }
         border-left: solid 1px ohma.$colors-gray-700;
         a {
