@@ -1,10 +1,12 @@
+import React from 'react'
+import { ButtonHTMLAttributes } from 'react'
+
 import styles from './PrimaryButton.module.scss'
 
-type PropTypes = {
-    text: string,
-}
-function PrimaryButton({ text }:PropTypes) {
-    return <button className={styles.Button}>{ text }</button>
+type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: React.ReactNode,
 }
 
-export default PrimaryButton
+export default function PrimaryButton({ children, ...props }:PropTypes) {
+    return <button className={styles.Button} {...props}>{ children }</button>
+}
