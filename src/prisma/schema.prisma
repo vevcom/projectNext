@@ -22,4 +22,8 @@ model Image {
   id         Int    @id @default(autoincrement())
   fsLocation String @unique @default(cuid())
   name       String @unique
+  ext        String
+  alt        String
+
+  @@map("images")
 }

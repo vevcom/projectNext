@@ -24,7 +24,8 @@
       "@/components/*": ["src/app/components/*"],
       "@/styles/*": ["src/styles/*"],
       "@/images/*": ["src/images/*"],
-      "@/actions/*": ["src/app/actions/*"]
+      "@/actions/*": ["src/app/actions/*"],
+      "@/prisma/*": ["src/prisma/*"]
 
     }
   },
