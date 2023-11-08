@@ -27,7 +27,7 @@ export default function LogIn() {
 
     return <>
         <form onSubmit={handleSignIn}>
-            <TextInput label='Brukernavn' name="username" type="text"/>
+            <TextInput label="Brukernavn" name="username" type="text"/>
             <TextInput label="Passord" name="password" type="password"/>
             <PrimaryButton>Logg inn</PrimaryButton>
             <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
