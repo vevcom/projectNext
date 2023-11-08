@@ -5,6 +5,7 @@
 
 @mixin round {
     border-radius: 10px;
+    padding: 10px;
 }
 
 @mixin btn($color: colors.$white) {
