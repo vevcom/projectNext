@@ -5,7 +5,7 @@
 .link {
     display: inline-block;
     position: relative;
-    color: ohma.$white;
+    color: ohma.$colors-white;
     text-decoration:  none;
     &::after {
         content: '';
@@ -15,7 +15,7 @@
         height: 2px;
         bottom: 0;
         left: 0;
-        background-color: ohma.$yellow;
+        background-color: ohma.$colors-primary;
         transform-origin: bottom right;
         transition: transform 0.25s ease-out;
     }

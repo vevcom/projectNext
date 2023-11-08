@@ -1,4 +1,4 @@
-@forward "_colors.scss";
-@forward "_fonts.scss";
-@forward "_variables.scss";
-@forward "_mixins.scss";
+@forward "_colors" as colors-*;
+@forward "_fonts"; 
+@forward "_variables";
+@forward "_mixins";

@@ -4,7 +4,7 @@ $iconSize: 150px;
 
 .InfoBubbles {
     width: 100%;
-    background-color: ohma.$yellow;
+    background-color: ohma.$colors-primary;
     padding: 20*ohma.$gap  10vw;
     display: flex;
     flex-direction: row;
@@ -27,9 +27,9 @@ $iconSize: 150px;
                 top: 0;
                 left: 50%;
                 transform: translate(-50%, 50%);
-                color: ohma.$yellow;
+                color: ohma.$colors-yellow;
                 &:first-child {
-                    color: ohma.$black;
+                    color: ohma.$colors-black;
                     width: $iconSize;
                     height: $iconSize;
                     transform: translate(-50%, 0);

@@ -25,17 +25,17 @@
         }
     }
     &.blue {
-        background-color: ohma.$slate;
-        color: ohma.$white;
+        background-color: ohma.$colors-secondary;
+        color: ohma.$colors-white;
         a {
-            @include ohma.borderBtn(ohma.$yellow);
+            @include ohma.borderBtn(ohma.$colors-primary);
         }
     }
     &:not(.blue) {
-        background-color: ohma.$white;
-        color: ohma.$black;
+        background-color: ohma.$colors-white;
+        color: ohma.$colors-black;
         a {
-            @include ohma.borderBtn(ohma.$slate);
+            @include ohma.borderBtn(ohma.$colors-secondary);
         }
     }
 }

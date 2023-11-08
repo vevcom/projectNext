@@ -6,16 +6,16 @@
     display: grid;
     place-items: center;
     &:active {
-        background-color: ohma.$yellow;
+        background-color: ohma.$colors-primary;
     }
     > .icon {
-        color: ohma.$white;
+        color: ohma.$colors-white;
         width: 25px;
         height: 25px;
     }
     text-decoration: none;
     > .name, .shortName {
-        color: ohma.$white;
+        color: ohma.$colors-white;
         text-decoration: none;
         font-size: .65em;
         word-break: break-all;

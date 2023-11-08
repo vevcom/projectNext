@@ -13,7 +13,7 @@ $animation_time: 200ms;
         top: 0;
         left: 1em;
         transform: translate(0%, 50%);
-        color: ohma.$black;
+        color: ohma.$colors-black;
         font-size: ohma.$mFont;
         pointer-events: none;
         transition: $animation_time;
@@ -25,7 +25,7 @@ $animation_time: 200ms;
         border-width: 0;
         border-bottom-width: 1px;
         border-style: solid;
-        border-color: ohma.$gray-850;
+        border-color: ohma.$colors-gray-850;
         border-radius: 0;
         padding: 0.4em;
         background-color: transparent;
@@ -38,7 +38,7 @@ $animation_time: 200ms;
     > input:focus {
         outline: none;
         border-bottom-width: 2px;
-        border-color: ohma.$black;
+        border-color: ohma.$colors-black;
     }
 
     > input:focus ~ label,

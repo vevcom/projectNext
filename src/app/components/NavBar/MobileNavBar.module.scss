@@ -1,9 +1,9 @@
 @use "@/styles/ohma";
 
 .MobileNavBar {
-    background-color: ohma.$black;
+    background-color: ohma.$colors-black;
     width: 100%;
-    color: ohma.$white;
+    color: ohma.$colors-white;
     padding: 2*ohma.$gap;
 
     display: none;
@@ -14,14 +14,14 @@
         "b b b b b";
     > *:not(:last-child) {
   
-        border-left: solid .5px ohma.$white;
+        border-left: solid .5px ohma.$colors-white;
         display: grid;
         place-items: center;
         &:first-child {
             border-left: none;
         }
         svg {
-            color: ohma.$white;
+            color: ohma.$colors-white;
             width: 25px;
             height: 25px;
         }

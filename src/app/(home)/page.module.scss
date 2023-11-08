@@ -33,7 +33,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
     height: 100%;
     display: grid;
     place-items: center;
-    background: radial-gradient(ohma.$black, transparent);
+    background: radial-gradient(ohma.$colors-black, transparent);
     > div {
         display: flex;
         flex-direction: column;
@@ -47,10 +47,10 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             margin: 3*ohma.$gap;
             > a {
                 margin: ohma.$gap;
-                color: ohma.$white;
+                color: ohma.$colors-white;
                 transition: color .3s;
                 &:hover {
-                    color: ohma.$gray-300;
+                    color: ohma.$colors-gray-300;
                 }
             }
         }
@@ -58,7 +58,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             @include ohma.borderBtn();
         }
         > .scrollDown {
-            color: ohma.$white;
+            color: ohma.$colors-white;
         }
         > a, .socials {
             animation: popIn 1.2s ease-in-out;

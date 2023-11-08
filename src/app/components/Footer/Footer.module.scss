@@ -2,8 +2,8 @@
 
 .Footer {
     font-weight: ohma.$sFontWeight;
-    background-color: ohma.$gray-800;
-    color: ohma.$white;
+    background-color: ohma.$colors-gray-800;
+    color: ohma.$colors-white;
     display: grid;
     padding: 10*ohma.$gap 20*ohma.$gap;
     > * {
@@ -28,14 +28,14 @@
     }
     > .info {
         > *:first-child {
-            color: ohma.$yellow;
+            color: ohma.$colors-primary;
             font-weight: ohma.$mFontWeight;
             font-size: ohma.$lFont
         }
-        border-left: solid 1px ohma.$gray-700;
+        border-left: solid 1px ohma.$colors-gray-700;
         a {
             text-decoration: none;
-            color: ohma.$white;
+            color: ohma.$colors-white;
             &:hover {
                 text-decoration: underline;
             }
