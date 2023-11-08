@@ -1,5 +1,20 @@
 @use '@/styles/ohma';
 
 .Loader {
-    
+    filter: invert(1);
+    display: grid;
+    place-items: center;
+    place-content: center;
+    min-height: 100%;
+    width: 100vw;
+    position: absolute;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

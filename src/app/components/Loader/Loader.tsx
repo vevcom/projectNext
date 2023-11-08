@@ -4,7 +4,7 @@ import Image from '@/components/Image/Image'
 function Loader() {
     return (
         <div className={styles.Loader}>
-            <Image name="logo" width={350} />
+            <Image name="logo_simple" width={150} />
         </div>
     )
 }
