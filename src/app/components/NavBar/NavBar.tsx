@@ -1,9 +1,7 @@
-import Image from 'next/image'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import Item from './Item'
 import DropDown from './Dropdown'
-import magiskHatt from '@/images/magisk_hatt.png'
-import simpleLogo from '@/images/logo_simple.png'
 import styles from './NavBar.module.scss'
 import {
     faNewspaper,
@@ -34,7 +32,7 @@ async function NavBar({ session }: PropTypes) {
                 <li className={styles.logo}>
                     <Link href="/">
                         <Image
-                            src={simpleLogo}
+                            name="logo_simple"
                             width={30}
                             alt="omega logo"
                         />
@@ -115,7 +113,7 @@ async function NavBar({ session }: PropTypes) {
                 }
                 <li className={styles.magicHat}>
                     <Link href={isLoggedIn ? '/users/me' : '/login'}>
-                        <Image src={magiskHatt} width={25} height={25} alt="log in button"/>
+                        <Image name="magisk_hatt" width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>
             </ul>

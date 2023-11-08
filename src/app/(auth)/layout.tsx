@@ -1,9 +1,7 @@
 import React from 'react'
-import Image from 'next/image'
+import Image from '@/components/Image/Image'
 
 import styles from './layout.module.scss'
-
-import magiskHatt from '@/images/magisk_hatt.png'
 
 export default function AuthLayout({ children } : { children: React.ReactNode}) {
     return (
@@ -13,7 +11,7 @@ export default function AuthLayout({ children } : { children: React.ReactNode}) 
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <Image alt="en kappemann sin hatt" width={200} src={magiskHatt} />
+                    <Image name="magisk_hatt" alt="en kappemann sin hatt" width={200}/>
                 </div>
             </div>
         </div>

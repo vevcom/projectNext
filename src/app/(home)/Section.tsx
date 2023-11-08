@@ -1,11 +1,11 @@
 import React from 'react'
-import Image, { StaticImageData } from 'next/image'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import styles from './Section.module.scss'
 
 type PropTypes = {
     children: React.ReactNode,
-    img: StaticImageData,
+    imagename: string,
     name: string,
     lesMer: string,
     right?: boolean,
@@ -13,15 +13,10 @@ type PropTypes = {
     id?: string,
 }
 
-function Section({ children, img, name, lesMer, right, imgWidth, id }: PropTypes) {
-    const alt = `image of ${name}`
+function Section({ children, imagename, name, lesMer, right, imgWidth, id }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
-            <Image
-                src={img}
-                alt={alt}
-                width={imgWidth}
-            />
+            <Image name={imagename} width={imgWidth} />
         </div>
     )
     return (

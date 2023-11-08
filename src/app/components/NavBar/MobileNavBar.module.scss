@@ -12,7 +12,7 @@
     grid-template-areas: 
         ". . . . ."
         "b b b b b";
-    > .item {
+    > *:not(:last-child) {
   
         border-left: solid .5px ohma.$white;
         display: grid;
@@ -37,10 +37,6 @@
             cursor: pointer;
             outline: inherit;
         }
-    }
-    > .burgerMenu {
-        grid-area: b;
-        width: 100%;
     }
     overflow: hidden;
 }

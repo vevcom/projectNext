@@ -1,4 +1,6 @@
 import { PrismaClient } from '@prisma/client'
+import fs from 'fs'
+import { join } from 'path'
 const prisma = new PrismaClient()
 
 console.log('seed starting...')
@@ -17,6 +19,27 @@ async function main() {
             password: 'password',
             username: 'Harambe104',
         },
+    })
+    fs.readdir(join(__dirname, 'standard_images'), (err, files) => {
+        if (err) throw err
+        files.forEach(async (file) => {
+            const ext = file.split('.')[1]
+            const name = file.split('.')[0]
+            await prisma.image.upsert({
+                where: {
+                    name
+                },
+                update: {
+
+                },
+                create: {
+                    name,
+                    alt: name.split('_').join(' '),
+                    fsLocation: `${name}.${ext}`,
+                    ext,
+                }
+            })
+        })
     })
     console.log({ harambe })
 }

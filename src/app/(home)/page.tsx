@@ -1,13 +1,8 @@
-import Image from 'next/image'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import Section from './Section'
 import styles from './page.module.scss'
-
-import logo from '@/images/logo_white.png'
-import kappemann from '@/images/kappemann.jpeg'
-import ohma from '@/images/ohma.jpeg'
-import ov from '@/images/OV.jpeg'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +16,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <Image alt="omega logo" priority={true} src={logo} width={300}/>
+                        <Image name="logo_white" priority={true} width={300}/>
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>
@@ -32,7 +27,7 @@ export default function Home() {
                         </Link>
                     </div>
                 </div>
-                <Section img={kappemann} name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
+                <Section imagename="kappemann" name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
           Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter
           som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en
           eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn
@@ -40,7 +35,7 @@ export default function Home() {
           opp automatisk fra 1. klasse.
                 </Section>
                 <InfoBubbles />
-                <Section right img={ov} name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
+                <Section right imagename="ov" name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
           Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved
           Norges Teknisk-Naturvitenskapelige
           Universitet (NTNU) stiftet i 1971. Omega Verksted holder
@@ -53,13 +48,13 @@ export default function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <Section img={ov} name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
+                <Section imagename="ov" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
           Altså omega er helt fantastisk for bedrifter.... tro meg 100%. Bare å ta kontakt
           med contactor ellerno... Lorem ipsium bla lofrgin fofkewivj irjvioer
           firegjoireg g jfirejgergo  rjgijgoieg jgirejgioe geroigjkoiegoekg kogkpeogkg
           rgierg
                 </Section>
-                <Section right img={ohma} name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
+                <Section right imagename="ohma" name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
           Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
           Ohma er verdens første(!) fungerende
           vekselstrøm-lokomotiv, og har en lang historie fra både

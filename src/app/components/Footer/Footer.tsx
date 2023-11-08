@@ -1,18 +1,13 @@
-import Image from 'next/image'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import SocialIcons from '../SocialIcons/SocialIcons'
 
 import styles from './Footer.module.scss'
-
-import addToHomeScreen from '@/images/add_to_home_screen.png'
-import logo from '@/images/omega_logo_white.png'
-import nordic from '@/images/nordic.png'
-
 function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <Image src={logo} width={350} alt="sct. omega broderskab" />
+                <Image name="omega_logo_white" width={350} />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og
@@ -20,7 +15,7 @@ function Footer() {
                 </p>
                 <div>
                     <Link className={styles.pwa} href="/infopages/pwa">
-                        <Image src={addToHomeScreen} width={200} alt="add to homescreen" />
+                        <Image name="pwa" width={200}/>
                     </Link>
                     <div className={styles.icons}>
                         <SocialIcons />
@@ -44,7 +39,7 @@ function Footer() {
             </div>
             <div className={styles.nordic}>
                 <Link href="http://www.nordicsemi.com" target="_blank">
-                    <Image src={nordic} width={170} alt="nordic logo"/>
+                    <Image name="nordic" width={170} />
                 </Link>
             </div>
         </footer>
