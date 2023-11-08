@@ -4,7 +4,7 @@ import { InputHTMLAttributes } from 'react'
 import styles from './TextInput.module.scss'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
-    label?: string
+    label: string
 }
 
 export default function TextInput({ label = 'default', ...props } : PropTypes) {

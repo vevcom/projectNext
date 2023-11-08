@@ -16,3 +16,29 @@ body {
     font-weight: ohma.$fonts-weight-s;
     overflow-x: hidden;
 }
+
+h1 {
+    font-size: ohma.$fonts-xl;
+    font-weight: ohma.$fonts-weight-l;
+}
+
+h2 {
+    font-size: ohma.$fonts-l;
+    font-weight: ohma.$fonts-weight-l;
+}
+
+h3 {
+    font-size: ohma.$fonts-l;
+    font-weight: ohma.$fonts-weight-m;
+}
+
+h4, p {
+    font-size: ohma.$fonts-m;
+    font-weight: ohma.$fonts-weight-m;
+
+}
+
+h5 {
+    font-size: ohma.$fonts-s;
+    font-weight: ohma.$fonts-weight-s;
+}
