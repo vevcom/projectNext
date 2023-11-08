@@ -1,0 +1,21 @@
+@use '@/styles/ohma';
+
+$iconSize: 30px;
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: ohma.$gap;
+    > .backLink {
+        > .icon {
+            margin: ohma.$gap;
+            color: ohma.$gray-600;
+            width: $iconSize;
+            height: $iconSize;
+        }
+    }
+    > .content {
+        
+    }
+}
