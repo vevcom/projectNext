@@ -1,3 +1,4 @@
+import React from 'react'
 import Image from 'next/image'
 
 import styles from './layout.module.scss'
@@ -9,7 +10,7 @@ export default function AuthLayout({ children } : { children: React.ReactNode}) 
         <div className={styles.wrapper}>
             <div className={styles.card}>
                 <div className={styles.input}>
-                {children}
+                    {children}
                 </div>
                 <div className={styles.image}>
                     <Image alt="en kappemann sin hatt" width={200} src={magiskHatt} />

@@ -1,10 +1,9 @@
-"use client"
+'use client'
 
-import { FormEvent } from 'react'
 import { signOut } from 'next-auth/react'
 import PrimaryButton from '@/app/components/PrimaryButton/PrimaryButton'
 
-export default async function LogOut() {
+export default function LogOut() {
     async function handleSignOut() {
         await signOut({
             redirect: true,
@@ -13,6 +12,6 @@ export default async function LogOut() {
     }
 
     return (
-        <PrimaryButton type='button' onClick={handleSignOut}>Logg ut</PrimaryButton>
+        <PrimaryButton type="button" onClick={handleSignOut}>Logg ut</PrimaryButton>
     )
 }
