@@ -3,12 +3,11 @@ import { InputHTMLAttributes } from 'react'
 
 import styles from './TextInput.module.scss'
 
-type PropTypes = InputHTMLAttributes<HTMLInputElement> & {
+type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label?: string
 }
 
 export default function TextInput({ label = 'default', ...props } : PropTypes) {
-    if (props.type && props.type !== 'text') throw new Error('TextInput only supports type="text"')
     props.id ??= `id_input_${uuid()}`
 
     return (

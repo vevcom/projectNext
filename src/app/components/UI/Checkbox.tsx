@@ -3,12 +3,11 @@ import styles from './Checkbox.module.scss'
 import { InputHTMLAttributes } from 'react'
 
 
-type PropTypes = InputHTMLAttributes<HTMLInputElement> & {
+type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label: string
 }
 
 function Checkbox({ label, ...props }: PropTypes) {
-    if (props.type && props.type !== 'checkbox') throw new Error('Checkbox only supports type="checkbox"')
     props.id ??= `id_input_${uuid()}`
 
     return <div className={styles.Checkbox}>
