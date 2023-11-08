@@ -7,7 +7,7 @@ function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <Image name="logo" width={350} />
+                <Image name="omega_logo_white" width={350} />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og

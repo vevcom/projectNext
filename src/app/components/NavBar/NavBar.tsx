@@ -32,7 +32,7 @@ async function NavBar({ session }: PropTypes) {
                 <li className={styles.logo}>
                     <Link href="/">
                         <Image
-                            name="simple_logo"
+                            name="logo_simple"
                             width={30}
                             alt="omega logo"
                         />

@@ -16,7 +16,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <Image name="omega_logo" priority={true} width={300}/>
+                        <Image name="logo_white" priority={true} width={300}/>
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>
@@ -48,7 +48,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <Section imagename="bedrifter" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
+                <Section imagename="ov" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
           Altså omega er helt fantastisk for bedrifter.... tro meg 100%. Bare å ta kontakt
           med contactor ellerno... Lorem ipsium bla lofrgin fofkewivj irjvioer
           firegjoireg g jfirejgergo  rjgijgoieg jgirejgioe geroigjkoiegoekg kogkpeogkg

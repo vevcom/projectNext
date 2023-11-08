@@ -38,7 +38,7 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div>
                 <Link href="/">
-                    <Image name="simple_logo" width={30}/>
+                    <Image name="logo_simple" width={30}/>
                 </Link>
             </div>
             <div>
