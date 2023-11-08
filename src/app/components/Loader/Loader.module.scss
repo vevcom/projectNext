@@ -1,20 +1,21 @@
 @use '@/styles/ohma';
 
 .Loader {
-    filter: invert(1);
     display: grid;
     place-items: center;
     place-content: center;
     min-height: 100%;
     width: 100vw;
     position: absolute;
+    filter: invert(1);
+    animation: rotate 1.3s cubic-bezier(0.99, 0.33, 0.82, 0.97) infinite;
 }
 
-@keyframes spinner {
-    0% {
-        transform: rotate(0deg);
+@keyframes rotate {
+    from {
+        transform: rotateY(0deg);
     }
-    100% {
-        transform: rotate(360deg);
+    to {
+        transform: rotateY(0.5turn);
     }
 }
