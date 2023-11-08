@@ -1,25 +1,36 @@
-import FormInput from '@/components/FormInput/FormInput'
-import styles from './page.module.scss'
-import magiskHatt from '@/images/magisk_hatt.png'
-import Image from 'next/image'
-import PrimaryButton from '@/components/PrimaryButton/PrimaryButton'
-import CsrfToken from '../CsrfToken'
+'use client'
 
-export default async function LogIn() {
-    return (
-        <div className={styles.wrapper}>
-            <div className={styles.card}>
-                <form className={styles.form} method="post" action="/api/auth/callback/credentials">
-                    <CsrfToken />
-                    <FormInput name="username" label="E-post"/>
-                    <FormInput name="password" label="Passord" type="password"/>
+import { FormEvent } from 'react'
+import { signIn } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 
-                    <PrimaryButton text="Logg inn"></PrimaryButton>
-                </form>
-                <div className={styles.image}>
-                    <Image alt="en kappemann sin hatt" width={200} src={magiskHatt} />
-                </div>
-            </div>
-        </div>
-    )
+import TextInput from '@/components/TextInput/TextInput'
+import PrimaryButton from '@/app/components/PrimaryButton/PrimaryButton'
+
+export default function LogIn() {
+    const searchParams = useSearchParams()
+
+    const error = searchParams.get('error')
+
+    async function handleSignIn(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+
+        const formData = new FormData(event.currentTarget)
+
+        await signIn('credentials', {
+            username: formData.get('username'),
+            password: formData.get('password'),
+            redirect: true,
+            callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+        })
+    }
+
+    return <>
+        <form onSubmit={handleSignIn}>
+            <TextInput label="Brukernavn" name="username" type="text"/>
+            <TextInput label="Passord" name="password" type="password"/>
+            <PrimaryButton>Logg inn</PrimaryButton>
+            <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
+        </form>
+    </>
 }
