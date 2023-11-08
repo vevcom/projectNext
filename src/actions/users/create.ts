@@ -13,7 +13,7 @@ export default async function create(rawdata: FormData) {
         lastname: z.string().max(50).min(2),
         confirmPassword: z.string().max(50).min(2),
     }).refine((data) => data.password === data.confirmPassword, 'password must match confirmPassword')
-    const data = schema.parse({
+    const parse = schema.safeParse({
         username: rawdata.get('username'),
         password: rawdata.get('password'),
         email: rawdata.get('email'),
@@ -21,8 +21,11 @@ export default async function create(rawdata: FormData) {
         lastname: rawdata.get('lastname'),
         confirmPassword: rawdata.get('confirmPassword'),
     })
-
-    const { username, password, email, firstname, lastname } = data
+    if (!parse.success) {
+        return { success: false, error: parse.error.issues }
+    }
+    
+    const { username, password, email, firstname, lastname } = parse.data
 
     try {
         const user = await prisma.user.create({

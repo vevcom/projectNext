@@ -13,11 +13,15 @@ export default async function create(rawdata: FormData) {
         name: z.string().max(50).min(2),
         alt: z.string().max(100).min(2),
     })
-    const data = schema.parse({
+    const parse = schema.safeParse({
         file: rawdata.get('file'),
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
     })
+    if (!parse.success) {
+        return { success: false, error: parse.error.issues }
+    }
+    const data = parse.data
 
     const ext = data.file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg'].includes(ext)) return { success: false, error: 'Invalid file type' }
