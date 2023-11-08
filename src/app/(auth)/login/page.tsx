@@ -2,7 +2,7 @@
 import { FormEvent } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
-import TextInput from '@/components/TextInput/TextInput'
+import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
 
 export default function LogIn() {

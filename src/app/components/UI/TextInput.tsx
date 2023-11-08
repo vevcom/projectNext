@@ -8,12 +8,12 @@ type PropTypes = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export default function TextInput({ label = 'default', ...props } : PropTypes) {
-    props.type ??= 'text'
+    if (props.type && props.type !== 'text') throw new Error('TextInput only supports type="text"')
     props.id ??= `id_input_${uuid()}`
 
     return (
         <div className={styles.Input}>
-            <input {...props}/>
+            <input type="text" {...props}/>
             <label htmlFor={props.id}>{label}</label>
         </div>
     )
