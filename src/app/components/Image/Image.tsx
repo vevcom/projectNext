@@ -21,12 +21,12 @@ export default async function Image({ name, ...props } : PropTypes) {
     }
 
     return (
-        image ? (
+        imagesrc ? (
             <div>
-                <NextImage alt={image.alt} src={imagesrc} {...props} />
+                <NextImage alt={image?.alt || 'default image'} src={imagesrc} {...props} />
             </div>
         ) : (
-            <div>Image not found</div>
+            <div>error</div>
         )
     )
 }
