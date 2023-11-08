@@ -9,6 +9,7 @@ COPY src/prisma/schema.prisma ./src/prisma/
 RUN npx prisma generate
 
 COPY . .
+COPY ./src/prisma/standard_images ./store/images
 ############################################################
 FROM node:18-alpine AS prod
 WORKDIR /usr/src/app
