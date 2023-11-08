@@ -24,7 +24,7 @@ export default async function create(rawdata: FormData) {
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
     }
-    
+
     const { username, password, email, firstname, lastname } = parse.data
 
     try {

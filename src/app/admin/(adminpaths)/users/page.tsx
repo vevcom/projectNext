@@ -1,6 +1,6 @@
-import create from "@/actions/users/create"
-import TextInput from "@/app/components/UI/TextInput"
-import Button from "@/UI/Button"
+import create from '@/actions/users/create'
+import TextInput from '@/app/components/UI/TextInput'
+import Button from '@/UI/Button'
 
 export default function Users() {
     return (
