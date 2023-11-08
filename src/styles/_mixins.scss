@@ -3,12 +3,38 @@
 @use "_fonts";
 
 
-@mixin yellowBtn {
-    background-color: colors.$yellow;
+@mixin round {
+    border-radius: 10px;
+}
+
+@mixin btn($color: colors.$white) {
+    text-align: center;
+    text-decoration: none;
+    font-size: fonts.$m;
+    background: $color;
     padding: variables.$gap;
+    padding: 2*variables.$gap;
+    margin: variables.$gap;
+    color: colors.$black;
+    border: none;
+    width: 100%;
+    transition: .5s background;
     &:hover {
         background-color: darken(colors.$yellow, 10%);
         cursor: pointer;
+    }
+    @include round;
+}
+
+//NOTE: also made to work for <Link /> (<a> tag)
+@mixin borderBtn($color: colors.$white) { 
+    @include btn($color);
+    background: transparent;
+    border: solid $color 2px;
+    color: $color;
+    &:hover {
+        background: $color;
+        color: invert($color);
     }
 }
 
@@ -20,24 +46,5 @@
     &:hover {
         color: darken(colors.$yellow, 10%);
         cursor: pointer;
-    }
-}
-
-//NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white) { 
-    text-align: center;
-    text-decoration: none;
-    font-size: fonts.$m;
-    padding: 2*variables.$gap;
-    background: transparent;
-    border: solid $color 2px;
-    margin: variables.$gap;
-    color: $color;
-    width: 100%;
-    transition: .5s background;
-    &:hover {
-        cursor: pointer;
-        background: $color;
-        color: invert($color);
     }
 }

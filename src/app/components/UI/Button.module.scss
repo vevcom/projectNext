@@ -1,0 +1,9 @@
+@use "@/styles/ohma";
+
+.primary {
+    @include ohma.btn(ohma.$colors-primary);
+}
+
+.secondary {
+    @include ohma.btn(ohma.$colors-secondary);
+}
