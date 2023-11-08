@@ -10,7 +10,7 @@
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
-    "seed": "node src/prisma/seed.js"
+    "seed": "node src/prisma/seed.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
