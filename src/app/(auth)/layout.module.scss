@@ -1,17 +1,19 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100%;
+    height: 100%;
     width: 100vw;
-    position: absolute;
+
+    display: table-cell;
+    vertical-align: middle;
     > .card {
+        margin: auto;
+
         width: 60%;
         @include ohma.card;
         padding: 4*ohma.$gap; 
-    
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
