@@ -44,7 +44,8 @@ export const authOptions : AuthOptions = {
                     email: user.email,
                     password: user.password,
                     firstname: user.firstname,
-                    lastname: user.lastname
+                    lastname: user.lastname,
+                    roles: user.roles
                 }
             }
             return token
@@ -88,6 +89,12 @@ export async function requireAuth(authLevel: authLevelType, redirectUrl = authOp
     const user = await getUser()
 
     if(!user) {
+        redirect(redirectUrl ?? notFound())
+    }
+
+    const authorized = user.roles.some(role => authLevel.roles.includes(role))
+
+    if(!authorized) {
         redirect(redirectUrl ?? notFound())
     }
 }

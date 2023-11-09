@@ -15,8 +15,52 @@ model User {
   firstname String @default("[Fjernet]")
   lastname  String @default("[Fjernet]")
 
+  roles String[] // Placeholder for development purposes
+
   @@map("users")
 }
+
+// TODO
+// model Commitee {
+//   id Int @id @default(autoincrement())
+//   shortname String @unique
+//   name String
+
+//   members CommiteeMembers[] @relation("CommiteeMembers")
+// }
+
+// model CommiteeOrder {
+//   id Int @id @default(autoincrement())
+
+//   order Int
+
+//   commitee Commitee @relation(fields: [commiteeId], references: [id])
+//   commiteeId Int
+
+//   members CommiteeMembership[] @relation("CommiteeMembers")
+// }
+
+// model CommiteeMembership {
+//   id Int @id @default(autoincrement())
+
+//   user User @relation(fields: [userId], references: [id])
+//   userId Int
+
+//   commitee Commitee @relation(fields: [commiteeId], references: [id])
+//   commiteeId Int
+
+//   role Role @relation(fields: [roleId], references: [id])
+//   roleId String
+
+//   @@map("commitee_members")
+// }
+
+// model Role {
+//   id      String     @id
+//   name    String     @unique
+
+//   @@map("roles")
+// }
 
 model Image {
   id         Int    @id @default(autoincrement())
