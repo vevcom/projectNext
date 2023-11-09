@@ -1,11 +1,9 @@
 'use client'
-
 import { FormEvent } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
-
-import TextInput from '@/components/TextInput/TextInput'
-import PrimaryButton from '@/app/components/PrimaryButton/PrimaryButton'
+import TextInput from '@/UI/TextInput'
+import BorderButton from '@/UI/BorderButton'
 
 export default function LogIn() {
     const searchParams = useSearchParams()
@@ -29,7 +27,7 @@ export default function LogIn() {
         <form onSubmit={handleSignIn}>
             <TextInput label="Brukernavn" name="username" type="text"/>
             <TextInput label="Passord" name="password" type="password"/>
-            <PrimaryButton>Logg inn</PrimaryButton>
+            <BorderButton>Logg inn</BorderButton>
             <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
         </form>
     </>

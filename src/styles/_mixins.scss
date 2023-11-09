@@ -3,12 +3,44 @@
 @use "_fonts";
 
 
-@mixin yellowBtn {
-    background-color: colors.$yellow;
+@mixin round {
+    border-radius: variables.$rounding;
+    padding: variables.$rounding;
+}
+
+@mixin card {
+    border-radius: 3*variables.$rounding;
+    padding: 5*variables.$rounding;
+}
+
+@mixin btn($color: colors.$white) {
+    text-align: center;
+    text-decoration: none;
+    font-size: fonts.$m;
+    background: $color;
     padding: variables.$gap;
+    padding: 2*variables.$gap;
+    margin: variables.$gap;
+    color: colors.$black;
+    border: none;
+    width: 100%;
+    transition: .5s background;
     &:hover {
         background-color: darken(colors.$yellow, 10%);
         cursor: pointer;
+    }
+    @include round;
+}
+
+//NOTE: also made to work for <Link /> (<a> tag)
+@mixin borderBtn($color: colors.$white) { 
+    @include btn($color);
+    background: transparent;
+    border: solid $color 2px;
+    color: $color;
+    &:hover {
+        background: $color;
+        color: invert($color);
     }
 }
 
@@ -20,24 +52,5 @@
     &:hover {
         color: darken(colors.$yellow, 10%);
         cursor: pointer;
-    }
-}
-
-//NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white) { 
-    text-align: center;
-    text-decoration: none;
-    font-size: fonts.$mFont;
-    padding: 2*variables.$gap;
-    background: transparent;
-    border: solid $color 2px;
-    margin: variables.$gap;
-    color: $color;
-    width: 100%;
-    transition: .5s background;
-    &:hover {
-        cursor: pointer;
-        background: $color;
-        color: invert($color);
     }
 }

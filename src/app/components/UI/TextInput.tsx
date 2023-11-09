@@ -3,13 +3,14 @@ import { InputHTMLAttributes } from 'react'
 
 import styles from './TextInput.module.scss'
 
-type PropTypes = InputHTMLAttributes<HTMLInputElement> & {
-    label?: string
+type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+    label: string,
+    type?: 'text' | 'password',
 }
 
 export default function TextInput({ label = 'default', ...props } : PropTypes) {
-    props.type ??= 'text'
     props.id ??= `id_input_${uuid()}`
+    props.type ??= 'text'
 
     return (
         <div className={styles.Input}>

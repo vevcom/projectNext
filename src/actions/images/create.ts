@@ -5,6 +5,7 @@ import prisma from '@/prisma'
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import { File } from 'buffer'
+import errorHandeler from '@/prisma/errorHandler'
 
 export default async function create(rawdata: FormData) {
     const schema = z.object({
@@ -12,11 +13,15 @@ export default async function create(rawdata: FormData) {
         name: z.string().max(50).min(2),
         alt: z.string().max(100).min(2),
     })
-    const data = schema.parse({
+    const parse = schema.safeParse({
         file: rawdata.get('file'),
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
     })
+    if (!parse.success) {
+        return { success: false, error: parse.error.issues }
+    }
+    const data = parse.data
 
     const ext = data.file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg'].includes(ext)) return { success: false, error: 'Invalid file type' }
@@ -39,8 +44,6 @@ export default async function create(rawdata: FormData) {
         if (!image) return { success: false }
         return { success: true }
     } catch (err) {
-        console.error(err)
-        //stor sjangs for at dette er en duplicate name field error.
-        return { success: false }
+        return errorHandeler(err)
     }
 }

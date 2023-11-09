@@ -1,7 +1,7 @@
 @use "@/styles/ohma";
 
 .name {
-    color: ohma.$white;
+    color: ohma.$colors-white;
 }
 
 .Dropdown {
@@ -19,12 +19,12 @@
     z-index: 1;
     padding: 0;
     > .dropdownItem {
-        background-color: ohma.$gray-700;
+        background-color: ohma.$colors-gray-700;
         padding: ohma.$gap;
         &:hover {
-            background-color: ohma.$yellow;
+            background-color: ohma.$colors-primary;
             .linkName, .icon {
-                color: ohma.$black
+                color: ohma.$colors-black
             }
         }
         > a {
@@ -32,13 +32,13 @@
             flex-flow: row;
             text-decoration: none;
             .icon {
-                color: ohma.$white;
+                color: ohma.$colors-white;
                 margin-right: 3px;
             }
             .linkName {
                 text-decoration: none;
-                color: ohma.$white;
-                font-size: ohma.$mFont;
+                color: ohma.$colors-white;
+                font-size: ohma.$fonts-m;
             }
         }
     }

@@ -10,13 +10,13 @@
         flex-direction: column;
         justify-content: center;
         > h3 {
-            font-size: ohma.$xlFont;
-            font-weight: ohma.$lFontWeight;
+            font-size: ohma.$fonts-xl;
+            font-weight: ohma.$fonts-weight-l;
             margin-bottom: ohma.$gap;
         }
         > p {
-            font-size: ohma.$mFont;
-            line-height: ohma.$mLineHeight;
+            font-size: ohma.$fonts-m;
+            line-height: ohma.$fonts-line-height-m;
             margin-bottom: ohma.$gap;
         }
         > a {
@@ -25,17 +25,17 @@
         }
     }
     &.blue {
-        background-color: ohma.$slate;
-        color: ohma.$white;
+        background-color: ohma.$colors-secondary;
+        color: ohma.$colors-white;
         a {
-            @include ohma.borderBtn(ohma.$yellow);
+            @include ohma.borderBtn(ohma.$colors-primary);
         }
     }
     &:not(.blue) {
-        background-color: ohma.$white;
-        color: ohma.$black;
+        background-color: ohma.$colors-white;
+        color: ohma.$colors-black;
         a {
-            @include ohma.borderBtn(ohma.$slate);
+            @include ohma.borderBtn(ohma.$colors-secondary);
         }
     }
 }

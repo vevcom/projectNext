@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import PrimaryButton from '@/app/components/PrimaryButton/PrimaryButton'
+import BorderButton from '@/UI/BorderButton'
 
 export default function LogOut() {
     async function handleSignOut() {
@@ -12,6 +12,6 @@ export default function LogOut() {
     }
 
     return (
-        <PrimaryButton type="button" onClick={handleSignOut}>Logg ut</PrimaryButton>
+        <BorderButton type="button" onClick={handleSignOut}>Logg ut</BorderButton>
     )
 }

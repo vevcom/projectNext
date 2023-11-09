@@ -4,7 +4,7 @@ $iconSize: 150px;
 
 .InfoBubbles {
     width: 100%;
-    background-color: ohma.$yellow;
+    background-color: ohma.$colors-primary;
     padding: 20*ohma.$gap  10vw;
     display: flex;
     flex-direction: row;
@@ -27,9 +27,9 @@ $iconSize: 150px;
                 top: 0;
                 left: 50%;
                 transform: translate(-50%, 50%);
-                color: ohma.$yellow;
+                color: ohma.$colors-primary;
                 &:first-child {
-                    color: ohma.$black;
+                    color: ohma.$colors-black;
                     width: $iconSize;
                     height: $iconSize;
                     transform: translate(-50%, 0);
@@ -38,13 +38,13 @@ $iconSize: 150px;
             margin-bottom: 2*ohma.$gap;
         }
         > .heading {
-            font-size: ohma.$xlFont;
-            font-weight: ohma.$lFontWeight;
+            font-size: ohma.$fonts-xl;
+            font-weight: ohma.$fonts-weight-l;
         }
         > .text {
-            font-size: ohma.$mFont;
-            font-weight: ohma.$sFontWeight;
-            line-height: ohma.$mLineHeight;
+            font-size: ohma.$fonts-m;
+            font-weight: ohma.$fonts-weight-s;
+            line-height: ohma.$fonts-line-height-m;
             text-align: center;
         }
     }

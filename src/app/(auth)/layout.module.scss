@@ -1,19 +1,21 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    width: 100vw;
+    position: absolute;
     > .card {
         width: 60%;
+        @include ohma.card;
         padding: 4*ohma.$gap; 
-        border-radius: 3em;
     
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr;
-        background-color: ohma.$slate;
+        background-color: ohma.$colors-secondary;
         > .input {
             grid-column: 1/2;
             max-width: 250px;

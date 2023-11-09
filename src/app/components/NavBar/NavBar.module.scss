@@ -1,9 +1,9 @@
 @use "@/styles/ohma";
 
 .NavBar {
-    color: ohma.$white;
-    font-size: ohma.$mFont;
-    background-color: ohma.$gray-900;
+    color: ohma.$colors-white;
+    font-size: ohma.$fonts-m;
+    background-color: ohma.$colors-gray-900;
     padding: 0 3*ohma.$gap;
     width: 100%;
     > ul {
@@ -18,7 +18,9 @@
                 margin-left: 2*ohma.$gap;
             }
             &.magicHat {
-                @include ohma.yellowBtn;
+                @include ohma.btn(ohma.$colors-primary);
+                @include ohma.round;
+                width: auto;
                 padding: 2*ohma.$gap;
                 margin-left: auto;
             }
