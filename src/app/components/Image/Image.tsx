@@ -18,7 +18,7 @@ export default async function Image({ alt, name, ...props } : PropTypes) {
             <NextImage alt={alt ?? image.alt} src={imagesrc} {...props} />
         )
     } catch (err) {
-        const imagesrc = await import('./../../../../public/default_image.jpeg')
+        const imagesrc = await import('./../../../../store/images/default_image.jpeg')
         return (
             <div>
                 <div>Could not find image {name}</div>
