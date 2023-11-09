@@ -67,34 +67,41 @@ export async function getUser() {
 
 import { getCsrfToken } from 'next-auth/react'
 export async function updateSession(newSession: Record<string, any>) {
-  await fetch(`/api/auth/session`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      csrfToken: await getCsrfToken(),
-      data: newSession,
-    }),
-  })
+    await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            csrfToken: await getCsrfToken(),
+            data: newSession,
+        }),
+    })
 }
 
 type authLevelType = {
-    roles: string[], 
-    permissions: string[],
-    commitiees: string[]
+    roles: string[] | undefined | null,
+    permissions: string[] | undefined | null,
+    commitiees: string[] | undefined | null
 }
 
-export async function requireAuth(authLevel: authLevelType, redirectUrl = authOptions.pages?.signIn) {
+type redirectType = { // need better names
+    noSessionRedirect: string | undefined | null,
+    notAuthorizedRedirect: string | undefined | null
+}
+
+export async function requireAuth(authLevel: authLevelType,
+                                  { noSessionRedirect = authOptions.pages?.signIn,
+                                    notAuthorizedRedirect = "/"}: redirectType) {
     const user = await getUser()
 
-    if(!user) {
-        redirect(redirectUrl ?? notFound())
+    if (!user) {
+        redirect(noSessionRedirect ?? notFound())
     }
 
-    const authorized = user.roles.some(role => authLevel.roles.includes(role))
+    const authorized = user.roles.some(role => authLevel.roles?.includes(role))
 
-    if(!authorized) {
-        redirect(redirectUrl ?? notFound())
+    if (!authorized) {
+        redirect(notAuthorizedRedirect ?? notFound())
     }
 }
