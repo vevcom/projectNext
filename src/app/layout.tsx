@@ -10,8 +10,7 @@ import styles from './layout.module.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
-import { getServerSession } from 'next-auth'
-import authOptions from '@/auth'
+import { getSession } from '@/auth'
 
 config.autoAddCss = false
 
@@ -24,8 +23,7 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children } : { children: React.ReactNode}) {
-    const session = await getServerSession(authOptions)
-
+    const session = await getSession()
     return (
         <html lang="en">
             <body className={inter.className}>

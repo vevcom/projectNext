@@ -1,9 +1,10 @@
+import { notFound, redirect } from 'next/navigation'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { AuthOptions } from 'next-auth'
+import { AuthOptions, getServerSession } from 'next-auth'
 
 import prisma from '@/prisma'
 
-const authOptions : AuthOptions = {
+export const authOptions : AuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -55,4 +56,38 @@ const authOptions : AuthOptions = {
     }
 }
 
-export default authOptions
+export async function getSession() {
+    return await getServerSession(authOptions)
+}
+
+export async function getUser() {
+    return (await getSession())?.user
+}
+
+import { getCsrfToken } from 'next-auth/react'
+export async function updateSession(newSession: Record<string, any>) {
+  await fetch(`/api/auth/session`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      csrfToken: await getCsrfToken(),
+      data: newSession,
+    }),
+  })
+}
+
+type authLevelType = {
+    roles: string[], 
+    permissions: string[],
+    commitiees: string[]
+}
+
+export async function requireAuth(authLevel: authLevelType, redirectUrl = authOptions.pages?.signIn) {
+    const user = await getUser()
+
+    if(!user) {
+        redirect(redirectUrl ?? notFound())
+    }
+}

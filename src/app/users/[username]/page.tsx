@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 
-import authOptions from '@/auth'
+import { getSession } from '@/auth'
 
 import prisma from '@/prisma'
 import Link from 'next/link'
@@ -16,7 +16,7 @@ async function AuthTest({ params }: PropTypes) {
     if (!params?.username) {
         redirect('/login')
     }
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
 
     if (!session) {
         redirect('/login')
