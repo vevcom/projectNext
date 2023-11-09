@@ -3,14 +3,18 @@ import { default as NextImage, ImageProps } from 'next/image'
 import styles from './Image.module.scss'
 import PopUp from '../Popup/Popup'
 import ImageEditor from '../ImageEditor/ImageEditor'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     name: string,
     width: number,
     alt?: string
+    showEditOption?: boolean,
 }
 
-export default async function Image({ alt, name, ...props } : PropTypes) {
+export default async function Image({ alt, name, showEditOption, ...props } : PropTypes) {
+    showEditOption = showEditOption ?? true
+
     const image = await prisma.image.findUnique({
         where: { name }
     })
@@ -20,9 +24,12 @@ export default async function Image({ alt, name, ...props } : PropTypes) {
         return (
         <div className={styles.Image}>
             <NextImage alt={alt ?? image.alt} src={imagesrc} {...props} />
-            <PopUp>
-                <ImageEditor />
-            </PopUp>
+            { showEditOption && (
+                <PopUp showButtonIcon={faEdit}>
+                    <ImageEditor name={name}/>
+                </PopUp>
+            )
+            }
         </div>
         )
     } catch (err) {
