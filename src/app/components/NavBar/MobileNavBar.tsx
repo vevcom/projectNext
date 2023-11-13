@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import Image from '@/app/components/Image/Image/Image'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

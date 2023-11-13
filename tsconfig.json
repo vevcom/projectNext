@@ -27,7 +27,6 @@
       "@/images/*": ["src/actions/images/*"],
       "@/actions/*": ["src/actions/*"],
       "@/prisma/*": ["src/prisma/*"]
-
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

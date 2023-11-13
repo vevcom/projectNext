@@ -1,0 +1,14 @@
+@use "@/styles/ohma";
+
+.Image {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    > button {
+        @include ohma.roundBtn;
+        position: absolute;
+        z-index: 2;
+        top: 2%;
+        right: 2%;
+    }
+}

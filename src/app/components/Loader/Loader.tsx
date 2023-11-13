@@ -1,5 +1,5 @@
 import styles from './Loader.module.scss'
-import Image from '@/components/Image/Image'
+import Image from '@/app/components/Image/Image/Image'
 
 function Loader() {
     return (

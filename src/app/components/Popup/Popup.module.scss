@@ -1,14 +1,14 @@
 @use '@/styles/ohma';
 
 .Popup {
+    @include ohma.card;
     position: fixed;
-    z-index: 3;
+    z-index: 9;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: ohma.$colors-white;
-    button {
-        width: 20px;
+    > button {
+        @include ohma.roundBtn(ohma.$colors-red);
     }
 }
-
