@@ -2,6 +2,17 @@
 
 .wrapper {
     width: 100%;
+    > .header {
+        display: flex;
+        justify-content: space-between;
+        button {
+            margin: ohma.$gap;
+            border: none;
+            background-color: transparent;
+            width: 20px;
+            height: 20px;
+        }
+    }
 }
 
 $collection-size: 250px;

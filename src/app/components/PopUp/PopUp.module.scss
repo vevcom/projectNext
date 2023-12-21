@@ -1,6 +1,6 @@
 @use '@/styles/ohma';
 
-.Popup {
+.PopUp {
     @include ohma.card;
     position: fixed;
     z-index: 9;
@@ -10,5 +10,11 @@
     background-color: ohma.$colors-white;
     > button {
         @include ohma.roundBtn(ohma.$colors-red);
+    }
+}
+
+.openBtn {
+    &:hover {
+        cursor: pointer;
     }
 }

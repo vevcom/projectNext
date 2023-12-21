@@ -21,7 +21,7 @@ export default async function Images() {
         coverImage: {name: string} | null,
         images: {name: string}[]
     }) => {
-        console.log(collection)
+        console.log(collection.images)
         if (collection.coverImage) return collection.coverImage.name
         if (collection.images.length > 0) return collection.images[0].name
         return "lens_camera"
@@ -30,11 +30,11 @@ export default async function Images() {
     return (
         <>
             <div className={styles.wrapper}>
-                <span>
+                <span className={styles.header}>
                     <h1>Fotogalleri</h1>
                     {isAdmin &&
                         <PopUp showButtonIcon={faPlus}> 
-                            
+                            <h2>Make a collection</h2>
                         </PopUp>
                     }
                 </span>
