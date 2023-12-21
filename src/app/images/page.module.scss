@@ -8,7 +8,7 @@ $collection-size: 250px;
         padding: 3*ohma.$gap;
         display: flex;
         justify-content: space-between;
-        button {
+        > button {
             margin: ohma.$gap;
             border: none;
             background-color: transparent;

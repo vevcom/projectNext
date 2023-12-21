@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import styles from './Popup.module.scss'
+import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
