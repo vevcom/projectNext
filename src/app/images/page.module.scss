@@ -1,8 +1,10 @@
 @use '@/styles/ohma';
 
+$collection-size: 250px;
+
 .wrapper {
-    width: 100%;
     > .header {
+        width: 100%;
         padding: 3*ohma.$gap;
         display: flex;
         justify-content: space-between;
@@ -14,14 +16,10 @@
             height: 30px;
         }
     }
-}
-
-$collection-size: 250px;
-
-.collections {
-    width: 100%;
     display: flex;
     flex-flow: row wrap;
+    place-content: center;
+    place-content: flex-start;
     > .collection {
         width: $collection-size;
         height: $collection-size;

@@ -15,8 +15,15 @@ type PropTypes = {
 
 export default function PopUp({ children, showButtonIcon } : PropTypes) {
     const [show, setShow] = useState(false)
+
+    const showBtn = (
+        <button className={styles.openBtn} onClick={() => setShow(true)}>
+            <FontAwesomeIcon icon={showButtonIcon} />
+        </button>   
+    )
     return (
         show ? (
+            <>
             <div className={styles.PopUp}>
                 <Button onClick={() => setShow(false)}>
                     <FontAwesomeIcon icon={faX} />
@@ -25,10 +32,10 @@ export default function PopUp({ children, showButtonIcon } : PropTypes) {
                     { children }
                 </div>
             </div>
+            {showBtn}
+            </>
         ) : (
-            <button className={styles.openBtn} onClick={() => setShow(true)}>
-                <FontAwesomeIcon icon={showButtonIcon} />
-            </button>
+            showBtn
         )
 
     )

@@ -38,7 +38,6 @@ export default async function Images() {
                         </PopUp>
                     }
                 </span>
-                <span className={styles.collections}>
                 {
                     collections.map(collection => (
                         <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
@@ -50,7 +49,6 @@ export default async function Images() {
                         </Link>
                     ))
                 }
-                </span>
             </div>
         </>
     )
