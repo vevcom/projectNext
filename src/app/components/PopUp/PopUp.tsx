@@ -1,0 +1,35 @@
+'use client'
+
+import { useState } from 'react'
+import styles from './Popup.module.scss'
+import Button from '../UI/Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { faX } from '@fortawesome/free-solid-svg-icons'
+import React from 'react'
+
+type PropTypes = {
+    children: React.ReactNode,
+    showButtonIcon: IconProp,
+}
+
+export default function PopUp({ children, showButtonIcon } : PropTypes) {
+    const [show, setShow] = useState(false)
+    return (
+        show ? (
+            <div className={styles.Popup}>
+                <Button onClick={() => setShow(false)}>
+                    <FontAwesomeIcon icon={faX} />
+                </Button>
+                <div className={styles.content}>
+                    { children }
+                </div>
+            </div>
+        ) : (
+            <button onClick={() => setShow(true)}>
+                <FontAwesomeIcon icon={showButtonIcon} />
+            </button>
+        )
+
+    )
+}

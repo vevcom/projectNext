@@ -2,8 +2,12 @@ import prisma from '@/prisma'
 import styles from './page.module.scss'
 import Link from 'next/link'
 import Image from '@/components/Image/Image'
+import PopUp from '../components/PopUp/PopUp'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default async function Images() {
+    const isAdmin = true //temp
+
     const collections = await prisma.imageCollection.findMany({
         include: {
             coverImage: true,
@@ -20,13 +24,20 @@ export default async function Images() {
         console.log(collection)
         if (collection.coverImage) return collection.coverImage.name
         if (collection.images.length > 0) return collection.images[0].name
-        return "camera"
+        return "lens_camera"
     }
 
     return (
         <>
             <div className={styles.wrapper}>
-                <h1>Fotogalleri</h1>
+                <span>
+                    <h1>Fotogalleri</h1>
+                    {isAdmin &&
+                        <PopUp showButtonIcon={faPlus}> 
+                            
+                        </PopUp>
+                    }
+                </span>
                 <span className={styles.collections}>
                 {
                     collections.map(collection => (
