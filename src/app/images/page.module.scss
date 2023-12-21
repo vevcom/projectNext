@@ -1,0 +1,19 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    width: 100%;
+}
+
+$collection-size: 150px;
+
+.collections {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    > .collection {
+        width: $collection-size;
+        height: $collection-size;
+        margin: ohma.$gap;
+
+    }
+}
