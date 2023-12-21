@@ -2,6 +2,8 @@ import prisma from '@/prisma'
 import { notFound } from 'next/navigation';
 import styles from './page.module.scss'
 import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/ImageUploader/ImageUploader'
+
 
 type PropTypes = {
     params: {
@@ -22,6 +24,7 @@ export default async function Collection({ params } : PropTypes) {
     
     return (
         <div className={styles.wrapper}>
+            <ImageUploader />
             <h2>collection {collection.name}</h2>
             <span className={styles.images}>
                 {

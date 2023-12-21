@@ -19,22 +19,25 @@ model User {
 }
 
 model Image {
-  id           Int             @id @default(autoincrement())
-  fsLocation   String          @unique @default(cuid())
-  name         String          @unique
-  ext          String
-  alt          String
-  collection   ImageCollection @relation(fields: [collectionId], references: [id])
-  collectionId Int
+  id            Int              @id @default(autoincrement())
+  fsLocation    String           @unique @default(cuid())
+  name          String           @unique
+  ext           String
+  alt           String
+  collection    ImageCollection  @relation(fields: [collectionId], references: [id])
+  coverImageFor ImageCollection? @relation(name: "coverImage")
+  collectionId  Int
 
   @@map("images")
 }
 
 model ImageCollection {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  description String?
-  images      Image[]
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  description  String?
+  images       Image[]
+  coverImage   Image?  @relation(fields: [coverImageId], references: [id], name: "coverImage")
+  coverImageId Int?    @unique
 
   @@map("image_collections")
 }
