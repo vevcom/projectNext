@@ -1,8 +1,6 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    justify-content: center;
-    align-items: center;
     height: 100%;
     width: 100vw;
 
@@ -10,7 +8,6 @@
     vertical-align: middle;
     > .card {
         margin: auto;
-
         width: 60%;
         @include ohma.card;
         padding: 4*ohma.$gap; 
