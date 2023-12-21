@@ -49,6 +49,7 @@ services:
       dockerfile: ./Dockerfile
       target: dev
     environment:
+      NODE_ENV: development
       DB_URI: ${DB_URI}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma

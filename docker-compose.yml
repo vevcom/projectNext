@@ -44,6 +44,7 @@ services:
       dockerfile: ./Dockerfile
       target: prod
     environment:
+      NODE_ENV: production
       DB_URI: ${DB_URI}
     depends_on:
       db:

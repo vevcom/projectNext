@@ -5,22 +5,6 @@ const prisma = new PrismaClient()
 
 console.log('seed starting...')
 async function main() {
-    const harambe = await prisma.user.upsert({
-        where: {
-            email: 'harambe@harambesen.io'
-        },
-        update: {
-
-        },
-        create: {
-            firstname: 'Harambe',
-            lastname: 'Harambesen',
-            email: 'harambe@harambesen.io',
-            password: 'password',
-            username: 'Harambe104',
-        },
-    })
-
     const standardCollection = await prisma.imageCollection.upsert({
         where: {
             name: 'standard_images'
@@ -59,7 +43,38 @@ async function main() {
             })
         })
     })
-    console.log({ harambe })
+    
+    //seeding test data
+    if (process.env.NODE_ENV !== 'development') return
+    const harambe = await prisma.user.upsert({
+        where: {
+            email: 'harambe@harambesen.io'
+        },
+        update: {
+
+        },
+        create: {
+            firstname: 'Harambe',
+            lastname: 'Harambesen',
+            email: 'harambe@harambesen.io',
+            password: 'password',
+            username: 'Harambe104',
+        },
+    })
+    for (let i = 0; i < 10; i++) {
+        await prisma.imageCollection.upsert({
+            where: {
+                name: `test_collection_${i}`
+            },
+            update: {
+    
+            },
+            create: {
+                name: `test_collection_${i}`,
+                description: 'just a test',
+            }
+        })
+    }
 }
 main().then(async () => {
     await prisma.$disconnect()
