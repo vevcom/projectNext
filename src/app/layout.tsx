@@ -23,7 +23,11 @@ export const metadata = {
     charset: 'utf-8',
 }
 
-export default async function RootLayout({ children } : { children: React.ReactNode}) {
+type PropTypes = {
+    children: React.ReactNode
+}
+
+export default async function RootLayout({ children } : PropTypes) {
     const session = await getServerSession(authOptions)
 
     return (
