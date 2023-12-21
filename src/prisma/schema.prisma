@@ -24,6 +24,17 @@ model Image {
   name       String @unique
   ext        String
   alt        String
+  collection ImageCollection @relation(fields: [collectionId], references: [id])
+  collectionId Int
 
   @@map("images")
+}
+
+model ImageCollection {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+  images      Image[]
+
+  @@map("image_collections")
 }
