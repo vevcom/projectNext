@@ -20,6 +20,19 @@ async function main() {
             username: 'Harambe104',
         },
     })
+
+    const standardCollection = await prisma.imageCollection.upsert({
+        where: {
+            name: 'standard_images'
+        },
+        update: {
+
+        },
+        create: {
+            name: 'standard_images',
+            description: 'standard images for the website',
+        }
+    })
     fs.readdir(join(__dirname, 'standard_images'), (err, files) => {
         if (err) throw err
         files.forEach(async (file) => {
@@ -37,6 +50,11 @@ async function main() {
                     alt: name.split('_').join(' '),
                     fsLocation: `${name}.${ext}`,
                     ext,
+                    collection: {
+                        connect: {
+                            id: standardCollection.id
+                        }
+                    }
                 }
             })
         })
