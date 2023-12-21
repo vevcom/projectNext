@@ -16,7 +16,10 @@ export default async function Images() {
                     collections.map((collection) => (
                         <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
                             <Image width={100} name="kappemann"></Image>
-                            <h3>{collection.name}</h3>            
+                            <div className={styles.info}>
+                                <h2>{collection.name}</h2>
+                                <h4>{collection.description}</h4>
+                            </div>            
                         </Link>
                     ))
                 }
