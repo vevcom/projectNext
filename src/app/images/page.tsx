@@ -2,6 +2,7 @@ import ImageUploader from '@/components/ImageUploader/ImageUploader'
 import prisma from '@/prisma'
 import styles from './page.module.scss'
 import Link from 'next/link'
+import Image from '@/components/Image/Image'
 
 export default async function Images() {
     const collections = await prisma.imageCollection.findMany()
@@ -9,12 +10,13 @@ export default async function Images() {
         <>
             <ImageUploader />
             <div className={styles.wrapper}>
-                <h3>Hvad der har blivet fotografert</h3>
+                <h1>Fotogalleri</h1>
                 <span className={styles.collections}>
                 {
                     collections.map((collection) => (
                         <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
-                            <h4>{collection.name}</h4>            
+                            <Image width={100} name="kappemann"></Image>
+                            <h3>{collection.name}</h3>            
                         </Link>
                     ))
                 }
