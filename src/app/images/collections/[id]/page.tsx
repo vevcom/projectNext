@@ -1,4 +1,7 @@
-import React from 'react'
+import prisma from '@/prisma'
+import { notFound } from 'next/navigation';
+import styles from './page.module.scss'
+import Image from '@/components/Image/Image'
 
 type PropTypes = {
     params: {
@@ -6,8 +9,27 @@ type PropTypes = {
     }
 }
 
-export default function Collection({ params } : PropTypes) {
+export default async function Collection({ params } : PropTypes) {
+    const collection = await prisma.imageCollection.findUnique({
+        where: {
+            id: Number(params.id)
+        },
+        include: {
+            images: true
+        }
+    })
+    if (!collection) notFound()
+    
     return (
-        <div>collection {params.id}</div>
+        <div className={styles.wrapper}>
+            <h2>collection {collection.name}</h2>
+            <span className={styles.images}>
+                {
+                    collection.images.map(image => 
+                        <Image width={200} key={image.id} name={image.name} />
+                    )
+                }
+            </span>
+        </div>
     )
 }
