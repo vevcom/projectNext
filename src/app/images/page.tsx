@@ -34,6 +34,15 @@ export default async function Images() {
                     {isAdmin &&
                         <PopUp showButtonIcon={faPlus}> 
                             <h2>Make a collection</h2>
+                            <form>
+                                <label htmlFor="name">Name</label>
+                                <input type="text" name="name" />
+                                <label htmlFor="description">Description</label>
+                                <input type="text" name="description" />
+                                <label htmlFor="coverImage">Cover image</label>
+                                <input type="file" name="coverImage" />
+                                <button type="submit">Create</button>
+                            </form>
                         </PopUp>
                     }
                 </span>

@@ -25,7 +25,7 @@ export default function PopUp({ children, showButtonIcon } : PropTypes) {
         show ? (
             <>
             <div className={styles.PopUp}>
-                <Button onClick={() => setShow(false)}>
+                <Button className={styles.closeBtn} onClick={() => setShow(false)}>
                     <FontAwesomeIcon icon={faX} />
                 </Button>
                 <div className={styles.content}>

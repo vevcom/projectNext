@@ -7,12 +7,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: ohma.$colors-white;x
-    > button {
+    background-color: ohma.$colors-white;
+    .closeBtn {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: -10px;
+        left: -10px;
         @include ohma.roundBtn(ohma.$colors-red);
+        width: 40px;
+        height: 40px;
     }
 }
 
