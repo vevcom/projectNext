@@ -4,6 +4,9 @@ import Link from 'next/link'
 import Image from '@/components/Image/Image'
 import PopUp from '../components/PopUp/PopUp'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import TextInput from '@/components/UI/TextInput'
+import Button from '@/components/UI/Button'
+import create from '@/actions/images/create'
 
 export default async function Images() {
     const isAdmin = true //temp
@@ -34,14 +37,10 @@ export default async function Images() {
                     {isAdmin &&
                         <PopUp showButtonIcon={faPlus}> 
                             <h2>Make a collection</h2>
-                            <form>
-                                <label htmlFor="name">Name</label>
-                                <input type="text" name="name" />
-                                <label htmlFor="description">Description</label>
-                                <input type="text" name="description" />
-                                <label htmlFor="coverImage">Cover image</label>
-                                <input type="file" name="coverImage" />
-                                <button type="submit">Create</button>
+                            <form action={create}>
+                                <TextInput label="username" name="username" />
+                                <TextInput label="description" name="description" />
+                                <Button type="submit" value="Upload">Create collection</Button>
                             </form>
                         </PopUp>
                     }
