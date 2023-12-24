@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -11,14 +11,14 @@ RUN npx prisma generate
 COPY . .
 COPY ./src/prisma/standard_images ./store/images
 ############################################################
-FROM node:18-alpine AS prod
+FROM node:20-alpine AS prod
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/ .
 
 RUN npm run build
 CMD ["npm", "run", "start"]
 ############################################################
-FROM node:18-alpine AS dev
+FROM node:20-alpine AS dev
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/ .
 
