@@ -47,7 +47,7 @@ async function main() {
     
     //seeding test data
     if (process.env.NODE_ENV !== 'development') return
-    const harambe = await prisma.user.upsert({
+    await prisma.user.upsert({
         where: {
             email: 'harambe@harambesen.io'
         },
@@ -79,6 +79,7 @@ async function main() {
 }
 main().then(async () => {
     await prisma.$disconnect()
+    console.log('seed finished')
 }).catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()
