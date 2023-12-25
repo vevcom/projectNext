@@ -8,7 +8,7 @@ import styles from './Form.module.scss'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 
-type PropTypes = Exclude<Form, 'action'> & {
+type PropTypes = Omit<Form, 'action'> & {
     children: React.ReactNode,
     title?: string,
     createText?: string,
@@ -19,14 +19,18 @@ type PropTypes = Exclude<Form, 'action'> & {
     }>,
 }
 
-export default function Form({children, title, createText = "create", ...props}: PropTypes) {
+export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
     const { pending } = useFormStatus()
-    const [error, setError] = useState<string>('')
+    const [error, setError] = useState('')
 
-    props.action
+    const actionWithError = async (formData: FormData) => { 
+        const { success, data, error } = await action(formData)
+        if (!success) setError(error)
+        return data
+    }
 
     return (
-        <form className={styles.Form} {...props}>
+        <form className={styles.Form} action={actionWithError}  {...props}>
             <h3>{title}</h3>
             {children}
             <p aria-live="polite" className="sr-only">
