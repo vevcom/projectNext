@@ -5,6 +5,7 @@ import Button from '../UI/Button'
 import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
+import type { Action } from '@/actions/type'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 
@@ -12,11 +13,7 @@ type PropTypes = Omit<Form, 'action'> & {
     children: React.ReactNode,
     title?: string,
     createText?: string,
-    action: (formData: FormData) => Promise<{
-        success: boolean,
-        data: object,
-        error: any,
-    }>,
+    action: Action
 }
 
 export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
@@ -25,7 +22,7 @@ export default function Form({children, title, createText = "create", action, ..
 
     const actionWithError = async (formData: FormData) => { 
         const { success, data, error } = await action(formData)
-        if (!success) setError(error)
+        if (!success) setError(error ? error : 'An error occured')
         return data
     }
 

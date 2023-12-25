@@ -3,8 +3,9 @@
 import prisma from '@/prisma'
 import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
 
-export default async function create(rawdata: FormData) {
+export default async function create(rawdata: FormData) : Promise<ActionReturn> {
     const schema = z.object({
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
@@ -12,7 +13,7 @@ export default async function create(rawdata: FormData) {
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         confirmPassword: z.string().max(50).min(2),
-    }).refine((data) => data.password === data.confirmPassword, 'password must match confirmPassword')
+    }).refine((data) => data.password === data.confirmPassword, 'password must match confirm password')
     const parse = schema.safeParse({
         username: rawdata.get('username'),
         password: rawdata.get('password'),
@@ -22,7 +23,7 @@ export default async function create(rawdata: FormData) {
         confirmPassword: rawdata.get('confirmPassword'),
     })
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return { success: false, error: parse.error.message }
     }
 
     const { username, password, email, firstname, lastname } = parse.data
@@ -38,7 +39,7 @@ export default async function create(rawdata: FormData) {
             }
         })
 
-        return { success: true, data: user }
+        return Promise.resolve({ success: true, data: user })
     } catch (error) {
         return errorHandeler(error)
     }
