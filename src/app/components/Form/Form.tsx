@@ -6,6 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
+import { z } from 'zod'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 
@@ -21,8 +22,18 @@ export default function Form({children, title, createText = "create", action, ..
     const [error, setError] = useState('')
 
     const actionWithError = async (formData: FormData) => { 
-        const { success, data, error } = await action(formData)
-        if (!success) setError(error ? error : 'An error occured')
+        const { success, data, error: errorFromAction } = await action(formData)
+        if (success) {
+
+        } else {
+            if (!errorFromAction) return setError('An error occured')
+            const errorSchema = z.array(z.object({
+                path: z.array(z.string()),
+                message: z.string(),
+            }))
+            const parsedError = errorSchema.parse(JSON.parse(errorFromAction)).map(x => ({...x, path: x.path[0]}))
+            console.log(parsedError)
+        }
         return data
     }
 
