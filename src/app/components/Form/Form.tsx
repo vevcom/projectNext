@@ -30,7 +30,7 @@ export default function Form({children, title, createText = "create", action, ..
         <form className={styles.Form} action={actionWithError}  {...props}>
             <h3>{title}</h3>
             {children}
-            <p aria-live="polite" className="sr-only">
+            <p>
                 {error}
             </p>
             <Button type="submit" aria-disabled={pending}> {createText} </Button>
