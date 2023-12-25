@@ -1,6 +1,6 @@
 'use client'
 
-import { FormHTMLAttributes } from 'react'
+import { Children, FormHTMLAttributes } from 'react'
 import Button from '../UI/Button'
 import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
@@ -26,13 +26,20 @@ export default function Form({children, title, createText = "create", action, ..
         return data
     }
 
+    const childArray = Children.toArray(children)
+
     return (
         <form className={styles.Form} action={actionWithError}  {...props}>
             <h3>{title}</h3>
-            {children}
-            <p>
-                {error}
-            </p>
+            {
+                childArray.map((child, i) => (
+                    <div key={i}>
+                        {child}
+                        <p className={styles.error}></p>
+                    </div>
+                ))
+            }
+            <p className={styles.error}>{error}</p>
             <Button type="submit" aria-disabled={pending}> {createText} </Button>
         </form>
     )

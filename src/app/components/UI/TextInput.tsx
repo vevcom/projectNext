@@ -13,7 +13,7 @@ export default function TextInput({ label = 'default', ...props } : PropTypes) {
     props.type ??= 'text'
 
     return (
-        <div className={styles.Input}>
+        <div id={props.name} className={styles.Input}>
             <input {...props}/>
             <label htmlFor={props.id}>{label}</label>
         </div>

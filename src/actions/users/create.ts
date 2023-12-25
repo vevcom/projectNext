@@ -6,7 +6,12 @@ import errorHandeler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn> {
-    console.log('jfieh')
+    console.log('create')
+    await(new Promise ((resolve, reject) => {
+        setTimeout(() => {
+            resolve('resolved')
+        }, 5000)
+    }))
     const schema = z.object({
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
@@ -23,7 +28,6 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn> 
         lastname: rawdata.get('lastname'),
         confirmPassword: rawdata.get('confirmPassword'),
     })
-    console.log(parse)
     if (!parse.success) {
         return { success: false, error: parse.error.message }
     }
