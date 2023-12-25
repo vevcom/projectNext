@@ -5,9 +5,8 @@ import Image from '@/components/Image/Image'
 import PopUp from '@/components/PopUp/PopUp'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TextInput from '@/components/UI/TextInput'
-import Button from '@/components/UI/Button'
 import create from '@/actions/images/collections/create'
-import Form from '../components/UI/Form'
+import Form from '../components/Form/Form'
 
 export default async function Images() {
     const isAdmin = true //temp
