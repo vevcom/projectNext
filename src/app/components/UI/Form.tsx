@@ -1,29 +1,32 @@
+'use client'
+
 import { FormHTMLAttributes } from 'react'
 import Button from './Button'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useFormStatus } from 'react-dom'
+import { DetailedHTMLProps, useState } from 'react'
 
-type PropTypes =  Required<Pick<FormHTMLAttributes<HTMLFormElement>, 'action'>>
-    & FormHTMLAttributes<HTMLFormElement> & {
+type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
+
+type PropTypes = Form & {
     children: React.ReactNode,
+    title?: string,
     createText?: string,
 }
 
-const initialState = {
-    error: null,
-}
-
-export default function Form({children, createText = "create", ...props}: PropTypes) {
+export default function Form({children, title, createText = "create", ...props}: PropTypes) {
     const { pending } = useFormStatus()
-    const [state, formAction] = useFormState(props.action, initialState)
-    
+    const [error, setError] = useState<string>('')
+
+    const action = props.action
+    if (!action) throw new Error('Form must have an action prop')
+    if (typeof action !== 'function') throw new Error('Form action prop must be a function')
+
     return (
-        <form {{
-            ...props,
-            action: formAction,
-        }}>
+        <form {...props}>
+            <h3>{title}</h3>
             {children}
             <p aria-live="polite" className="sr-only">
-                {state?.error}
+                {error}
             </p>
             <Button type="submit" aria-disabled={pending}> {createText} </Button>
         </form>
