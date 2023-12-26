@@ -1,12 +1,13 @@
 'use client'
 
-import { Children, FormHTMLAttributes, ReactNode } from 'react'
+import { Children, FormHTMLAttributes,ButtonHTMLAttributes, ReactNode } from 'react'
 import Button from '../UI/Button'
 import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
 import { set, z } from 'zod'
+import Loader from '@/components/Loader/Loader'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 
@@ -39,13 +40,30 @@ const makeInputArray = (children: ReactNode) : Inputs =>
     })
 
 
-export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
+function SubmitButton({children}: {children: ReactNode}) {
     const { pending } = useFormStatus()
+    return (
+        <>
+        <Button color="primary" type="submit">
+            {children}
+        </Button>
+        <div className={styles.loader}>
+            {
+                pending && <Loader />
+            }                
+        </div>
+        </>
+    )
+}
+
+export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
     const [generalErrors, setGeneralErrors] = useState<Errors>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     
 
     const actionWithError = async (formData: FormData) => { 
+        const inputs_ = makeInputArray(children)
+
         const { success, data, error: errorFromAction } = await action(formData)
         if (success) {
 
@@ -61,8 +79,6 @@ export default function Form({children, title, createText = "create", action, ..
                 message: z.string(),
             }))
             const parsedError : Errors = errorSchema.parse(JSON.parse(errorFromAction)).map(x => ({...x, path: x.path[0]}))
-            
-            const inputs_ = makeInputArray(children)
             parsedError.forEach(error => {
                 const inputWithError = inputs_.find((input) => input.input.label === error.path)
                 if (inputWithError) {
@@ -90,7 +106,7 @@ export default function Form({children, title, createText = "create", action, ..
                 ))
             }
             <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
-            <Button type="submit" aria-disabled={pending}> {createText} </Button>
+            <SubmitButton>{createText}</SubmitButton>
         </form>
     )
 }
