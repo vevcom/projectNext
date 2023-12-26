@@ -12,6 +12,7 @@
         color: ohma.$colors-red;
         display: flex;
         flex-direction: column; 
+        height: 1em;
         &.pending {
             visibility: hidden;
         }
@@ -20,6 +21,7 @@
         > button {
             width: 150px;
             margin: 0;
+            color: ohma.$colors-black;
         }
     }
 }
@@ -29,7 +31,7 @@
     justify-content: space-between;
     padding: 0 20px;
     > div {
-        background-color: ohma.$colors-white;
+        background-color: ohma.$colors-black;
         width: 1em;
         height: 1em;
         border-radius: 50%;

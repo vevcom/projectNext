@@ -101,9 +101,11 @@ function SubmitButton({children, generalErrors}: {children: ReactNode, generalEr
                     children
                 }
             </Button>
-            <div className={pending ? `${styles.error} ${styles.pending}` : styles.error }>
-                {generalErrors?.map(({message}) => <p>{message}</p>)}
-            </div>
+            <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>
+                {
+                    generalErrors && generalErrors[0]?.message
+                }
+            </p>
         </div>
     )
 }
@@ -115,13 +117,11 @@ function Input({input, errors}: Input) {
             <div className={styles.input}>
                 {input}
             </div>
-            {!pending && 
-                <div className={pending ? `${styles.error} ${styles.pending}` : styles.error }>
+                <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>
                 {
-                    errors.map(({message}) => <p>{message}</p>)
+                    errors && errors[0]?.message
                 }
-                </div>
-            }
+                </p>
         </span>
     )
 }
