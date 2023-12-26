@@ -1,49 +1,55 @@
 @use "@/styles/ohma";
 
-$animation_time: 200ms;
+.TextInput {
+  position: relative;
+  padding: 2*ohma.$gap 0 0;
+  margin-top: ohma.$gap;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-.Input {
-    position: relative;
-    width: 100%;
-    margin: 1.3em 0.2em 0.6em 0.2em;
-    box-sizing: border-box;
+.field {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid ohma.$colors-black;
+  outline: 0;
+  font-size: ohma.$fonts-s;
+  color: ohma.$colors-black;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
 
-    > label {
-        position: absolute;
-        top: 0;
-        left: 1em;
-        transform: translate(0%, 50%);
-        color: ohma.$colors-black;
-        font-size: ohma.$fonts-m;
-        pointer-events: none;
-        transition: $animation_time;
-        font-weight: 130;
-        padding: 0 3px 0 3px;
-    }
+  &::placeholder {
+    visibility: hidden;
+  }
 
-    > input {
-        border-width: 0;
-        border-bottom-width: 1px;
-        border-style: solid;
-        border-color: ohma.$colors-gray-850;
-        border-radius: 0;
-        padding: 0.4em;
-        background-color: transparent;
-        font-size: ohma.$fonts-l;
-        box-sizing: border-box;
-        transition: $animation_time / 2;
-        width: 100%;
-    }
+  &:placeholder-shown ~ .labe {
+    font-size: ohma.$fonts-s;
+    cursor: text;
+    top: 20px;
+  }
+}
 
-    > input:focus {
-        outline: none;
-        border-bottom-width: 2px;
-        border-color: ohma.$colors-black;
-    }
+.labe {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  z-index: -1;
+}
 
-    > input:focus ~ label,
-    > input:valid ~ label {
-        transform: translate(-2%, -100%);
-        font-size: ohma.$fonts-s;
-    }
+.field:focus {
+  ~ .labe {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: calc(ohma.$fonts-s * 0.8);
+    color: ohma.$colors-black;   
+  }
+  padding-bottom: 6px;  
+  border-width: 3px;
+  border-image-slice: 1;
 }

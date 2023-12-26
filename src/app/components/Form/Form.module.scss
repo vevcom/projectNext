@@ -5,6 +5,9 @@
     .error {
         color: ohma.$colors-red; 
     }
-
-
 }
+
+.pendingInput {
+    > *:not(.error) {
+        filter: brightness(0.5);
+    }}
