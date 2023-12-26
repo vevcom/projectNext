@@ -104,7 +104,7 @@ function SubmitButton({children, generalErrors}: {children: ReactNode, generalEr
 function Input({input, errors}: Input) {
     const { pending } = useFormStatus()
     return (
-        <div className={pending ? styles.pendingInput : ""}>
+        <div>
             {input}
             {!pending && 
                 <p className={styles.error}>

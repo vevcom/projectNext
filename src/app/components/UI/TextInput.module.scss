@@ -53,3 +53,23 @@
   border-width: 3px;
   border-image-slice: 1;
 }
+
+.primary :matches(.labe, .field, .field:focus ~ .labe) {
+  color: ohma.$colors-primary;
+  border-color: ohma.$colors-primary;
+}
+
+.red :matches(.labe, .field, .field:focus ~ .labe) {
+  color: ohma.$colors-secondary;
+  border-color: ohma.$colors-secondary;
+}
+
+.red :matches(.labe, .field, .field:focus ~ .labe) {
+  color: ohma.$colors-red;
+  border-color: ohma.$colors-red;
+}
+
+.black :matches(.labe, .field, .field:focus ~ .labe) {
+  color: ohma.$colors-black;
+  border-color: ohma.$colors-black;
+}
