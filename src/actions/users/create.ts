@@ -6,12 +6,14 @@ import errorHandeler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn> {
-    console.log('create')
+    //TEST FOR WAIT
     await(new Promise ((resolve, reject) => {
         setTimeout(() => {
             resolve('resolved')
         }, 5000)
     }))
+    //TEST FOR WAIT
+
     const schema = z.object({
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
