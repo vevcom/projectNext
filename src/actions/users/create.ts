@@ -19,7 +19,7 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn> 
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         confirmPassword: z.string().max(50).min(2),
-    }).refine((data) => data.password === data.confirmPassword, 'password must match confirm password')
+    }).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
     const parse = schema.safeParse({
         username: rawdata.get('username'),
         password: rawdata.get('password'),

@@ -90,29 +90,38 @@ export default function Form({children, title, createText = "create", action, ..
 function SubmitButton({children, generalErrors}: {children: ReactNode, generalErrors?: Errors}) {
     const { pending } = useFormStatus()
     return (
-        <>
-        {!pending && 
-            <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
-        }
-        <Button aria-disabled={pending} color="primary" type="submit">
-            {pending ? <div className={styles.loader}>
-                <div></div>
-            </div> : children}
-        </Button>
-        </>
+        <div className={styles.submit}>
+            <Button aria-disabled={pending} color="primary" type="submit">
+                {pending ? (
+                    <div className={styles.loader}>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>) : 
+                    children
+                }
+            </Button>
+            <div className={pending ? `${styles.error} ${styles.pending}` : styles.error }>
+                {generalErrors?.map(({message}) => <p>{message}</p>)}
+            </div>
+        </div>
     )
 }
 
 function Input({input, errors}: Input) {
     const { pending } = useFormStatus()
     return (
-        <div>
-            {input}
+        <span>
+            <div className={styles.input}>
+                {input}
+            </div>
             {!pending && 
-                <p className={styles.error}>
-                    {errors.map(({message}) => message)}
-                </p>
+                <div className={pending ? `${styles.error} ${styles.pending}` : styles.error }>
+                {
+                    errors.map(({message}) => <p>{message}</p>)
+                }
+                </div>
             }
-        </div>
+        </span>
     )
 }
