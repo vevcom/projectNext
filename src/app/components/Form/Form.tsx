@@ -43,6 +43,7 @@ export default function Form({children, title, createText = "create", action, ..
 
     const actionWithError = async (formData: FormData) => { 
         const inputs_ = makeInputArray(children)
+        setGeneralErrors(() => undefined)
 
         const { success, data, error: errorFromAction } = await action(formData)
         if (success) {
@@ -80,19 +81,23 @@ export default function Form({children, title, createText = "create", action, ..
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
-            <SubmitButton>{createText}</SubmitButton>
+            <SubmitButton generalErrors={generalErrors}>{createText}</SubmitButton>
         </form>
     )
 }
 
 
-function SubmitButton({children}: {children: ReactNode}) {
+function SubmitButton({children, generalErrors}: {children: ReactNode, generalErrors?: Errors}) {
     const { pending } = useFormStatus()
     return (
+        <>
+        {!pending && 
+            <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
+        }
         <Button aria-disabled={pending} color="primary" type="submit">
             {pending ? "loading" : children}
         </Button>
+        </>
     )
 }
 
