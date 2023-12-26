@@ -6,8 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
-import { set, z } from 'zod'
-import Loader from '@/components/Loader/Loader'
+import { z } from 'zod'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 
@@ -21,10 +20,12 @@ type Errors = {
     path: string,
     message: string
 }[]
-type Inputs = {
+type Input = {
     input: ReactNode & { label?: string },
     errors: Errors
-}[]
+}
+
+type Inputs = Input[]
 
 
 const makeInputArray = (children: ReactNode) : Inputs => 
@@ -43,15 +44,22 @@ const makeInputArray = (children: ReactNode) : Inputs =>
 function SubmitButton({children}: {children: ReactNode}) {
     const { pending } = useFormStatus()
     return (
-        <>
         <Button color="primary" type="submit">
-            {children}
+            {pending ? "loading" : children}
         </Button>
-        <div className={styles.loader}>
-            {
-                pending && <Loader />
-            }                
-        </div>
+    )
+}
+
+function Input({input, errors}: Input) {
+    const { pending } = useFormStatus()
+    return (
+        <>
+            {input}
+            {!pending && 
+                <p className={styles.error}>
+                    {errors.map(({message}) => message)}
+                </p>
+        }
         </>
     )
 }
@@ -97,12 +105,7 @@ export default function Form({children, title, createText = "create", action, ..
             <h3>{title}</h3>
             {
                 inputs.map(({input, errors}, i) => (
-                    <div key={i}>
-                        {input}
-                        <p className={styles.error}>
-                            {errors.map(({message}) => message)}
-                        </p>
-                    </div>
+                    <Input input={input} errors={errors} key={i} />
                 ))
             }
             <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
