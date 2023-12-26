@@ -95,7 +95,9 @@ function SubmitButton({children, generalErrors}: {children: ReactNode, generalEr
             <p className={styles.error}>{generalErrors?.map(({message}) => message)}</p>
         }
         <Button aria-disabled={pending} color="primary" type="submit">
-            {pending ? "loading" : children}
+            {pending ? <div className={styles.loader}>
+                <div></div>
+            </div> : children}
         </Button>
         </>
     )
