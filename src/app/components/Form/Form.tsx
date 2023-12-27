@@ -76,9 +76,14 @@ export default function Form<GiveActionReturn>({ children, title, createText = '
                 message: z.string(),
             }))
 
+            console.log({errorFromAction, inputs_})
+
+        
+
             try {
-                const parse = errorSchema.parse(JSON.parse(errorFromAction))
+                const parse = errorSchema.parse(errorFromAction)
                 //Error was of type zod
+                console.log(parse)
                 const parsedError : Errors = parse.map(x => ({ ...x, path: x.path[0] }))
 
                 parsedError.forEach(error => {
@@ -90,7 +95,7 @@ export default function Form<GiveActionReturn>({ children, title, createText = '
                     }
                 })
                 setInputs(inputs_)
-            } catch {
+            } catch (e){
                 //Error was not of type zod. for example prisma
                 return setGeneralErrors([
                     {

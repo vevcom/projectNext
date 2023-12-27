@@ -24,7 +24,7 @@ export default async function Collection({ params } : PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <ImageUploader collection={collection.id} />
+            <ImageUploader collectionId={collection.id} />
             <h2>collection {collection.name}</h2>
             <span className={styles.images}>
                 {

@@ -5,6 +5,7 @@ import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
 import type { User } from '@prisma/client'
+import type { ZodIssue } from 'zod'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
     //TEST FOR WAIT
@@ -31,8 +32,10 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<U
         lastname: rawdata.get('lastname'),
         confirmPassword: rawdata.get('confirmPassword'),
     })
+    
     if (!parse.success) {
-        return { success: false, error: parse.error.message }
+      
+        return { success: false, error: parse.error.issues }
     }
 
     const { username, password, email, firstname, lastname } = parse.data

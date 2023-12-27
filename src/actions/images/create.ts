@@ -6,8 +6,10 @@ import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import { File } from 'buffer'
 import errorHandeler from '@/prisma/errorHandler'
+import { Image } from '@prisma/client'
+import { ActionReturn } from '../type'
 
-export default async function create(collection: number, rawdata: FormData) {
+export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
         file: z.instanceof(File).refine((file) => file.size < 1024 * 1024, 'File size must be less than 1mb'),
         name: z.string().max(50).min(2),
@@ -24,7 +26,14 @@ export default async function create(collection: number, rawdata: FormData) {
     const data = parse.data
 
     const ext = data.file.type.split('/')[1]
-    if (!['png', 'jpg', 'jpeg'].includes(ext)) return { success: false, error: 'Invalid file type' }
+    if (!['png', 'jpg', 'jpeg'].includes(ext)) return { 
+        success: false, error: [
+            {
+                path: ['file'],
+                message: 'Invalid file type'
+            }
+        ] 
+    }
 
     const bytes = await data.file.arrayBuffer()
     const buffer = Buffer.from(bytes)
@@ -41,13 +50,13 @@ export default async function create(collection: number, rawdata: FormData) {
                 ext,
                 collection: {
                     connect: {
-                        id: collection,
+                        id: collectionId,
                     }
                 }
             }
         })
         if (!image) return { success: false }
-        return { success: true }
+        return { success: true, data: image }
     } catch (err) {
         return errorHandeler(err)
     }

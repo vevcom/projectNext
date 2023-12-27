@@ -15,7 +15,7 @@ export default async function create(rawdata: FormData): Promise<ActionReturn<Im
         description: rawdata.get('description'),
     })
     if (!parse.success) {
-        return { success: false, error: parse.error.message }
+        return { success: false, error: parse.error.issues }
     }
     const data = parse.data
 
