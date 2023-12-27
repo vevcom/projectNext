@@ -16,11 +16,14 @@
 
     .label {
         min-width: 30%;
-        margin-right: ohma.$gap;
         padding: 0.5em;
         text-align: center;
         cursor: pointer;
         @include ohma.round;
+    }
+
+    .fileName {
+        margin: ohma.$gap;
     }
 
     &.primary {

@@ -3,6 +3,9 @@
 .Form {
     position: relative;
     width: 100%;
+    > h2 {
+        margin-bottom: ohma.$gap;
+    }
     > span {
         > .input {
             max-width: 200px;
