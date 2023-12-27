@@ -25,7 +25,11 @@ export default async function Collection({ params } : PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            {isAdmin && <CollectionAdmin collectionId={collection.id} />}
+            {isAdmin && 
+            <div className={styles.admin}>
+                <CollectionAdmin collectionId={collection.id} />
+            </div>
+            }
             <div className={styles.images}>
                 <h2>{collection.name}</h2>
                 {

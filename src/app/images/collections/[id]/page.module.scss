@@ -2,4 +2,11 @@
 
 .wrapper {
     padding: ohma.$gap;
+    display: flex;
+    > .admin {
+        width: 300px;
+    }
+    > .images {
+        @include ohma.card;
+    }
 }

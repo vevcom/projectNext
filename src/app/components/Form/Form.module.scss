@@ -15,7 +15,7 @@
         color: ohma.$colors-red;
         display: flex;
         flex-direction: column; 
-        height: 1em;
+        min-height: 1em;
         &.pending {
             visibility: hidden;
         }
