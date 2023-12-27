@@ -14,7 +14,8 @@ type PropTypes = Omit<Form, 'action' | 'children'> & {
     children: ReactNode,
     title?: string,
     createText?: string,
-    action: Action
+    action: Action,
+    successCallback?: () => void,  
 }
 type Errors = {
     path: string | false,
@@ -38,7 +39,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }  
     })
 
-export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
+export default function Form({children, title, createText = "create", action, successCallback, ...props}: PropTypes) {
     const [generalErrors, setGeneralErrors] = useState<Errors>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
@@ -46,11 +47,15 @@ export default function Form({children, title, createText = "create", action, ..
     const actionWithError = async (formData: FormData) => { 
         const inputs_ = makeInputArray(children)
         setGeneralErrors(() => undefined)
+        setInputs(() => inputs_)
 
         const { success: successFromAction, data, error: errorFromAction } = await action(formData)
         if (successFromAction) {
             setSuccess(true)
-            setTimeout(() => setSuccess(false), 3000)
+            setTimeout(() => {
+                setSuccess(false)
+                successCallback?.()
+            }, 3000)
         } else {
             //No error provided
             if (!errorFromAction) return setGeneralErrors([
