@@ -2,8 +2,10 @@
 import { z } from 'zod'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
+import { ImageCollection } from '@prisma/client'
 
-export default async function create(rawdata: FormData) {
+export default async function create(rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
     const schema = z.object({
         name: z.string().max(40).min(2).trim(),
         description: z.string().max(500).min(2).trim(),

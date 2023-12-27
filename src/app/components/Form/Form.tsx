@@ -10,12 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-type PropTypes = Omit<Form, 'action' | 'children'> & {
+type PropTypes<ReturnType> = Omit<Form, 'action' | 'children'> & {
     children: ReactNode,
     title?: string,
     createText?: string,
-    action: Action,
-    successCallback?: (data?: object) => void,  
+    action: Action<ReturnType>,
+    successCallback?: (data?: ReturnType) => void,  
 }
 type Errors = {
     path: string | false,
@@ -39,7 +39,8 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }  
     })
 
-export default function Form({children, title, createText = "create", action, successCallback, ...props}: PropTypes) {
+export default function Form<GiveActionReturn>
+        ({children, title, createText = "create", action, successCallback, ...props}: PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<Errors>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)

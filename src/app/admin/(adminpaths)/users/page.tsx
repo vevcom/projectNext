@@ -4,9 +4,6 @@ import Form from '@/app/components/Form/Form'
 import styles from './page.module.scss'
 
 export default function Users() {
-    const onSuccessCallback = (data?: object) => {
-        console.log(data)
-    }
     
     return (
         <div className={styles.wrapper}>

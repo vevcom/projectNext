@@ -1,9 +1,9 @@
 
 
-export type ActionReturn = {
+export type ActionReturn<ReturnType> = {
     success: boolean,
-    data?: object,
+    data?: ReturnType,
     error?: string,
 }
 
-export type Action = (formData: FormData) => Promise<ActionReturn>
+export type Action<ReturnType> = (formData: FormData) => Promise<ActionReturn<ReturnType>>

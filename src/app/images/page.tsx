@@ -7,6 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TextInput from '@/components/UI/TextInput'
 import create from '@/actions/images/collections/create'
 import Form from '../components/Form/Form'
+import type { ImageCollection } from '@prisma/client'
 
 export default async function Images() {
     const isAdmin = true //temp
@@ -29,6 +30,10 @@ export default async function Images() {
         return "lens_camera"
     }
 
+    const collectionCreatedCallback = (collection?: object) => {
+       
+    }
+
     return (
         <>
             <div className={styles.wrapper}>
@@ -36,7 +41,8 @@ export default async function Images() {
                     <h1>Fotogalleri</h1>
                     {isAdmin &&
                         <PopUp showButtonIcon={faPlus}> 
-                            <Form title='Make a collection' createText='Create collection' action={create}>
+                            <Form successCallback={collectionCreatedCallback} 
+                                title='Make a collection' createText='Create collection' action={create}>
                                 <TextInput label="name" name="name" />
                                 <TextInput label="description" name="description" />
                             </Form>

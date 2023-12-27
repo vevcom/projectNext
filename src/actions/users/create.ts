@@ -4,10 +4,11 @@ import prisma from '@/prisma'
 import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
+import type { User } from '@prisma/client'
 
-export default async function create(rawdata: FormData) : Promise<ActionReturn> {
+export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
     //TEST FOR WAIT
-    await(new Promise ((resolve, reject) => {
+    await(new Promise ((resolve) => {
         setTimeout(() => {
             resolve('resolved')
         }, 5000)
