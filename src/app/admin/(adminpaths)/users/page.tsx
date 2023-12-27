@@ -4,7 +4,6 @@ import Form from '@/app/components/Form/Form'
 import styles from './page.module.scss'
 
 export default function Users() {
-    
     return (
         <div className={styles.wrapper}>
             <div className={styles.createUser}>
@@ -19,6 +18,6 @@ export default function Users() {
             </div>
         </div>
 
-      
+
     )
 }

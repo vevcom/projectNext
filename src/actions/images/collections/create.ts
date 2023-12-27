@@ -27,7 +27,6 @@ export default async function create(rawdata: FormData): Promise<ActionReturn<Im
             }
         })
         return { success: true, data: collection }
-    
     } catch (error) {
         return errorHandeler(error)
     }

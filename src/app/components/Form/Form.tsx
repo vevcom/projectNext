@@ -1,5 +1,5 @@
 'use client'
-import { Children, FormHTMLAttributes,ButtonHTMLAttributes, ReactNode } from 'react'
+import { Children, FormHTMLAttributes, ReactNode } from 'react'
 import Button from '../UI/Button'
 import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
@@ -9,49 +9,50 @@ import { z } from 'zod'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
-type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-type PropTypes<ReturnType> = Omit<Form, 'action' | 'children'> & {
+type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
+type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     children: ReactNode,
     title?: string,
     createText?: string,
     action: Action<ReturnType>,
-    successCallback?: (data?: ReturnType) => void,  
+    successCallback?: (data?: ReturnType) => void,
 }
 type Errors = {
     path: string | false,
     message: string
 }[]
-type Input = {
+type InputType = {
     input: ReactNode & { label?: string },
     errors: Errors
 }
-type Inputs = Input[]
+type Inputs = InputType[]
 
-const makeInputArray = (children: ReactNode) : Inputs => 
+const makeInputArray = (children: ReactNode) : Inputs =>
     Children.toArray(children).map((child : ReactNode & { props?: {id?: string} }) => {
-        if (typeof child !== "object") return {
-            input: child,
-            errors: [],
+        if (typeof child !== 'object') {
+            return {
+                input: child,
+                errors: [],
+            }
         }
         return {
-            input: {...child, label: child.props.name ||child.props.id },
+            input: { ...child, label: child.props.name || child.props.id },
             errors: [],
-        }  
+        }
     })
 
-export default function Form<GiveActionReturn>
-        ({children, title, createText = "create", action, successCallback, ...props}: PropTypes<GiveActionReturn>) {
+export default function Form<GiveActionReturn>({ children, title, createText = 'create', action, successCallback, ...props }: PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<Errors>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
 
-    const actionWithError = async (formData: FormData) => { 
+    const actionWithError = async (formData: FormData) => {
         const inputs_ = makeInputArray(children)
         setGeneralErrors(() => undefined)
         setInputs(() => inputs_)
 
         const { success: successFromAction, data, error: errorFromAction } = await action(formData)
-        
+
         if (successFromAction) {
             setSuccess(true)
             successCallback?.(data)
@@ -60,12 +61,14 @@ export default function Form<GiveActionReturn>
             }, 3000)
         } else {
             //No error provided
-            if (!errorFromAction) return setGeneralErrors([
-                {
-                    path: false,
-                    message: "error with input"
-                }
-            ])
+            if (!errorFromAction) {
+                return setGeneralErrors([
+                    {
+                        path: false,
+                        message: 'error with input'
+                    }
+                ])
+            }
 
             //Check for zod error
             const errorSchema = z.array(z.object({
@@ -76,14 +79,14 @@ export default function Form<GiveActionReturn>
             try {
                 const parse = errorSchema.parse(JSON.parse(errorFromAction))
                 //Error was of type zod
-                const parsedError : Errors = parse.map(x => ({...x, path: x.path[0]}))
+                const parsedError : Errors = parse.map(x => ({ ...x, path: x.path[0] }))
 
                 parsedError.forEach(error => {
                     const inputWithError = inputs_.find((input) => input.input.label === error.path)
                     if (inputWithError) {
                         inputWithError.errors.push(error)
                     } else {
-                        setGeneralErrors((prev) => prev ? [...prev, error] : [error])
+                        setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
                     }
                 })
                 setInputs(inputs_)
@@ -95,16 +98,16 @@ export default function Form<GiveActionReturn>
                         message: errorFromAction
                     }
                 ])
-            }            
-        }   
+            }
+        }
         return data
     }
 
     return (
-        <form className={styles.Form} action={actionWithError}  {...props}>
+        <form className={styles.Form} action={actionWithError} {...props}>
             <h2>{title}</h2>
             {
-                inputs.map(({input, errors}, i) => (
+                inputs.map(({ input, errors }, i) => (
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
@@ -114,19 +117,23 @@ export default function Form<GiveActionReturn>
 }
 
 
-function SubmitButton({children, generalErrors, success}: {children: ReactNode, generalErrors?: Errors, success: boolean}) {
+function SubmitButton({ children, generalErrors, success }: {children: ReactNode, generalErrors?: Errors, success: boolean}) {
     const { pending } = useFormStatus()
     const btnContent = () => {
-        if (pending) return (
-            <div className={styles.loader}>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        )
-        if (success) return (
-            <FontAwesomeIcon icon={faCircleCheck} />
-        )
+        if (pending) {
+            return (
+                <div className={styles.loader}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            )
+        }
+        if (success) {
+            return (
+                <FontAwesomeIcon icon={faCircleCheck} />
+            )
+        }
         return children
     }
 
@@ -135,7 +142,7 @@ function SubmitButton({children, generalErrors, success}: {children: ReactNode, 
             <Button aria-disabled={pending || success} color={success ? 'green' : 'primary'} type="submit">
                 {btnContent()}
             </Button>
-            <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>
+            <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>
                 {
                     generalErrors && generalErrors[0]?.message
                 }
@@ -144,18 +151,18 @@ function SubmitButton({children, generalErrors, success}: {children: ReactNode, 
     )
 }
 
-function Input({input, errors}: Input) {
+function Input({ input, errors }: InputType) {
     const { pending } = useFormStatus()
     return (
         <span>
             <div className={styles.input}>
                 {input}
             </div>
-                <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>
+            <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>
                 {
                     errors && errors[0]?.message
                 }
-                </p>
+            </p>
         </span>
     )
 }

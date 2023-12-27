@@ -21,9 +21,9 @@ async function main() {
         if (err) throw err
         files.forEach(async (file) => {
             const ext = file.split('.')[1]
-            if (![ 'jpg', 'jpeg', 'png', 'gif' ].includes(ext)) return console.log(`skipping image ${file}`)
+            if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) return console.log(`skipping image ${file}`)
             const name = file.split('.')[0]
-            await prisma.image.upsert({
+            return await prisma.image.upsert({
                 where: {
                     name
                 },
@@ -44,7 +44,7 @@ async function main() {
             })
         })
     })
-    
+
     //seeding test data
     if (process.env.NODE_ENV !== 'development') return
     await prisma.user.upsert({
@@ -68,7 +68,7 @@ async function main() {
                 name: `test_collection_${i}`
             },
             update: {
-    
+
             },
             create: {
                 name: `test_collection_${i}`,

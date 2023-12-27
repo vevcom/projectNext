@@ -11,10 +11,10 @@ function Checkbox({ label, ...props }: PropTypes) {
     props.id ??= `id_input_${uuid()}`
 
     return (
-    <div id={props.name} className={styles.Checkbox}>
-        <input type="checkbox" {...props} ></input>
-        <label htmlFor={props.id}>{ label }</label>
-    </div>
+        <div id={props.name} className={styles.Checkbox}>
+            <input type="checkbox" {...props} ></input>
+            <label htmlFor={props.id}>{ label }</label>
+        </div>
     )
 }
 

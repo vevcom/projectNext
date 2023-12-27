@@ -8,7 +8,7 @@ import type { User } from '@prisma/client'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
     //TEST FOR WAIT
-    await(new Promise ((resolve) => {
+    await (new Promise((resolve) => {
         setTimeout(() => {
             resolve('resolved')
         }, 5000)

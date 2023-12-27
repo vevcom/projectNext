@@ -15,9 +15,9 @@ export default function MakeNewCollection() {
         if (collection) router.push(`/images/collections/${collection.id}`)
     }
     return (
-        <PopUp showButtonIcon={faPlus}> 
-            <Form successCallback={collectionCreatedCallback} 
-                title='Make a collection' createText='Create collection' action={create}>
+        <PopUp showButtonIcon={faPlus}>
+            <Form successCallback={collectionCreatedCallback}
+                title="Make a collection" createText="Create collection" action={create}>
                 <TextInput label="name" name="name" />
                 <TextInput label="description" name="description" />
             </Form>

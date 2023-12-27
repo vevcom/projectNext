@@ -22,7 +22,7 @@ export default async function Images() {
     }) => {
         if (collection.coverImage) return collection.coverImage.name
         if (collection.images.length > 0) return collection.images[0].name
-        return "lens_camera"
+        return 'lens_camera'
     }
 
     return (
@@ -39,7 +39,7 @@ export default async function Images() {
                             <div className={styles.info}>
                                 <h2>{collection.name}</h2>
                                 <h4>{collection.description}</h4>
-                            </div>            
+                            </div>
                         </Link>
                     ))
                 }

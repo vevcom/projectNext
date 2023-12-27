@@ -15,7 +15,7 @@ export default function TextInput({ label = 'default', type, color, ...props } :
     color ??= 'black'
     return (
         <div id={props.name} className={`${styles.TextInput} ${styles[color]}`}>
-            <input {...props} type={type} className={styles.field} placeholder={label}/> 
+            <input {...props} type={type} className={styles.field} placeholder={label}/>
             <label className={styles.labe}>{label}</label>
         </div>
     )
