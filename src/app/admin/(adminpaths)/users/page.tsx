@@ -1,9 +1,15 @@
+'use client'
+
 import create from '@/actions/users/create'
 import TextInput from '@/app/components/UI/TextInput'
 import Form from '@/app/components/Form/Form'
 import styles from './page.module.scss'
 
 export default function Users() {
+    const onSuccessCallback = (data?: object) => {
+        console.log(data)
+    }
+    
     return (
         <div className={styles.wrapper}>
             <div className={styles.createUser}>

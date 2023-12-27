@@ -34,7 +34,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
             errors: [],
         }
         return {
-            input: {...child, label: child.props.id },
+            input: {...child, label: child.props.name ||child.props.id },
             errors: [],
         }  
     })
@@ -50,6 +50,7 @@ export default function Form({children, title, createText = "create", action, su
         setInputs(() => inputs_)
 
         const { success: successFromAction, data, error: errorFromAction } = await action(formData)
+        
         if (successFromAction) {
             setSuccess(true)
             setTimeout(() => {
