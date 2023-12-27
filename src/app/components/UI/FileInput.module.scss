@@ -2,8 +2,8 @@
 
 .FileInput {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 1em;
+    flex-direction: row;
+    align-items: center;
 
     .field {
         width: 0.1px;
@@ -15,23 +15,12 @@
     }
 
     .label {
+        min-width: 30%;
+        margin-right: ohma.$gap;
         padding: 0.5em;
         text-align: center;
         cursor: pointer;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .label::after {
-        content: 'Upload file';
-    }
-
-    .field:valid + .label {
-        border-color: green;
-    }
-
-    .field:valid + .label::after {
-        content: 'File uploaded';
+        @include ohma.round;
     }
 
     &.primary {
