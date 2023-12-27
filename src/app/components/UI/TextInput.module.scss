@@ -12,16 +12,15 @@
 .field {
     width: 100%;
     border: 0;
-    border-bottom: 2px solid ohma.$colors-black;
+    border-bottom: 2px solid;
     outline: 0;
     font-size: ohma.$fonts-s;
-    color: ohma.$colors-black;
     padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
 
     &::placeholder {
-    visibility: hidden;
+        visibility: hidden;
     }
 
     &:placeholder-shown ~ .labe {
@@ -31,17 +30,16 @@
     }
 
     &:focus, &:not(:placeholder-shown) {
-    ~ .labe {
-        position: absolute;
-        top: 0;
-        display: block;
-        transition: 0.2s;
-        font-size: calc(ohma.$fonts-s * 0.8);
-        color: ohma.$colors-black;   
-    }
-    padding-bottom: 6px;  
-    border-width: 3px;
-    border-image-slice: 1;
+        ~ .labe {
+            position: absolute;
+            top: 0;
+            display: block;
+            transition: 0.2s;
+            font-size: calc(ohma.$fonts-s * 0.8);
+        }
+        padding-bottom: 6px;  
+        border-width: 3px;
+        border-image-slice: 1;
     }
 }
 
@@ -51,25 +49,28 @@
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    z-index: -1;
 }
 
-.primary .labe,.primary .field,.primary .field:focus ~ .labe {
+.primary .labe,.primary .field,.primary:focus ~ .labe, 
+.primary:not(:placeholder-shown) ~ .labe {
     color: ohma.$colors-primary;
     border-color: ohma.$colors-primary;
 }
 
-.secondary .labe,.secondary .field,.secondary .field:focus ~ .labe {
+.secondary .labe,.secondary .field,.secondary:focus ~ .labe, 
+.secondary:not(:placeholder-shown) ~ .labe {
     color: ohma.$colors-secondary;
     border-color: ohma.$colors-secondary;
 }
 
-.red .labe,.red .field,.red .field:focus ~ .labe {
-    color: ohma.$colors-red;
-    border-color: ohma.$colors-red;
-}
-
-.black .labe,.black .field,.black .field:focus ~ .labe {
+.black .labe,.black .field,.black:focus ~ .labe,
+.black:not(:placeholder-shown) ~ .labe {
     color: ohma.$colors-black;
     border-color: ohma.$colors-black;
+}
+
+.red .labe,.red .field,.red:focus ~ .labe,
+.red:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-red;
+    border-color: ohma.$colors-red;
 }
