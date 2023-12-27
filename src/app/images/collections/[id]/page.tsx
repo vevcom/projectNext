@@ -25,7 +25,7 @@ export default async function Collection({ params } : PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            {isAdmin && 
+            {isAdmin &&
             <div className={styles.admin}>
                 <CollectionAdmin collectionId={collection.id} />
             </div>
@@ -34,15 +34,15 @@ export default async function Collection({ params } : PropTypes) {
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
                 <span>
-                {
-                    collection.images.map(image =>
-                        <div className={styles.image}>
-                            <Image width={200} key={image.id} name={image.name} />
-                        </div>
-                    )
-                }
+                    {
+                        collection.images.map(image =>
+                            <div className={styles.image}>
+                                <Image width={200} key={image.id} name={image.name} />
+                            </div>
+                        )
+                    }
                 </span>
-            
+
             </div>
         </div>
     )

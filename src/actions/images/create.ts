@@ -26,13 +26,15 @@ export default async function create(collectionId: number, rawdata: FormData): P
     const data = parse.data
 
     const ext = data.file.type.split('/')[1]
-    if (!['png', 'jpg', 'jpeg'].includes(ext)) return { 
-        success: false, error: [
-            {
-                path: ['file'],
-                message: 'Invalid file type'
-            }
-        ] 
+    if (!['png', 'jpg', 'jpeg'].includes(ext)) {
+        return {
+            success: false, error: [
+                {
+                    path: ['file'],
+                    message: 'Invalid file type'
+                }
+            ]
+        }
     }
 
     const bytes = await data.file.arrayBuffer()

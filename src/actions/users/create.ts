@@ -32,9 +32,8 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<U
         lastname: rawdata.get('lastname'),
         confirmPassword: rawdata.get('confirmPassword'),
     })
-    
+
     if (!parse.success) {
-      
         return { success: false, error: parse.error.issues }
     }
 

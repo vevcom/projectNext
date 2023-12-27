@@ -11,7 +11,6 @@ import type { ImageCollection } from '@prisma/client'
 export default function MakeNewCollection() {
     const router = useRouter()
     const collectionCreatedCallback = (collection?: ImageCollection) => {
-        console.log(collection)
         if (collection) router.push(`/images/collections/${collection.id}`)
     }
     return (

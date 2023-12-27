@@ -7,8 +7,10 @@ import { ImageCollection } from '@prisma/client'
 
 export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
     const schema = z.object({
-        name: z.string().max(40).min(2).trim().or(z.literal('')),
-        description: z.string().max(500).min(2).trim().or(z.literal('')),
+        name: z.string().max(40).min(2).trim()
+            .or(z.literal('')),
+        description: z.string().max(500).min(2).trim()
+            .or(z.literal('')),
     }).transform(data => ({
         name: data.name || undefined,
         description: data.description || undefined,
