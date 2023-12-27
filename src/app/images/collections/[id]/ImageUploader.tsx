@@ -1,5 +1,6 @@
 import create from '@/actions/images/create'
 import Form from '@/app/components/Form/Form'
+import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 
 type PropTypes = {
@@ -9,7 +10,7 @@ type PropTypes = {
 export default function ImageUploader({collectionId}: PropTypes) {
     return (
         <Form action={create.bind(null, collectionId)}>
-            <input type="file" name="file" />
+            <FileInput label="file" name="file" />
             <TextInput label="name" name="name" />
             <TextInput label="alt" name="alt" />
         </Form>
