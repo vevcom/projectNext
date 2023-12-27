@@ -3,4 +3,8 @@
 .CollectionAdmin {
     @include ohma.card;
     background-color: ohma.$colors-secondary;
+    > form:first-child {
+        border-bottom: solid 5px ohma.$colors-gray-800;
+        margin-bottom: 1em;
+    }
 }

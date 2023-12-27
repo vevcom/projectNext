@@ -5,15 +5,18 @@ $image-size: 150px;
 .wrapper {
     padding: ohma.$gap;
     display: flex;
+    position: relative;
     > .admin {
         width: 300px;
+        position: relative
     }
     > .images {
+        max-width: 85vw;
         padding: 3*ohma.$gap;
         > span {
             display: flex;
             flex-flow: row wrap;
-            justify-content: space-between;
+            
             > .image {
                 width: $image-size;
                 height: $image-size;

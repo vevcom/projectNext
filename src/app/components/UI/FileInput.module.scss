@@ -16,14 +16,15 @@
 
     .label {
         min-width: 30%;
-        padding: 0.5em 0.1em;
         text-align: center;
         cursor: pointer;
         @include ohma.round;
+        padding: .1em .5em
     }
 
     .fileName {
         margin: ohma.$gap;
+        overflow-y: hidden;
     }
 
     &.primary {
