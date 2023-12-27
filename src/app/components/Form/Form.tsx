@@ -54,9 +54,9 @@ export default function Form<GiveActionReturn>
         
         if (successFromAction) {
             setSuccess(true)
+            successCallback?.(data)
             setTimeout(() => {
                 setSuccess(false)
-                successCallback?.(data)
             }, 3000)
         } else {
             //No error provided
