@@ -10,7 +10,7 @@ type PropTypes = {
 export default function ImageUploader({collectionId}: PropTypes) {
     return (
         <Form action={create.bind(null, collectionId)}>
-            <FileInput label="file" name="file" />
+            <FileInput label="file" name="file" color='secondary' />
             <TextInput label="name" name="name" />
             <TextInput label="alt" name="alt" />
         </Form>

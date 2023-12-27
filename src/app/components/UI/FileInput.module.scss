@@ -1,0 +1,64 @@
+@use '@/styles/ohma';
+
+.FileInput {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1em;
+
+    .field {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .label {
+        padding: 0.5em;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .label::after {
+        content: 'Upload file';
+    }
+
+    .field:valid + .label {
+        border-color: green;
+    }
+
+    .field:valid + .label::after {
+        content: 'File uploaded';
+    }
+
+    &.primary {
+        .label {
+            background-color: ohma.$colors-primary;
+            color: ohma.$colors-black;
+        }
+    }
+
+    &.secondary {
+        .label {
+            background-color: ohma.$colors-secondary;
+            color: ohma.$colors-white;
+        }
+    }
+
+    &.red {
+        .label {
+            background-color: ohma.$colors-red;
+            color: ohma.$colors-black;
+        }
+    }
+
+    &.black {
+        .label {
+            background-color: ohma.$colors-black;
+            color: ohma.$colors-white;
+        }
+    }
+}
