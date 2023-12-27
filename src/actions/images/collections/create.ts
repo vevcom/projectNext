@@ -1,6 +1,7 @@
 'use server'
 import { z } from 'zod'
 import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
 
 export default async function create(rawdata: FormData) {
     const schema = z.object({
@@ -9,19 +10,23 @@ export default async function create(rawdata: FormData) {
     })
     const parse = schema.safeParse({
         name: rawdata.get('name'),
-        alt: rawdata.get('alt'),
+        description: rawdata.get('description'),
     })
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return { success: false, error: parse.error.message }
     }
     const data = parse.data
 
-    const collection = await prisma.imageCollection.create({
-        data: {
-            name: data.name,
-            description: data.description,
-        }
-    })
-
-    return { success: true, data: collection }
+    try {
+        const collection = await prisma.imageCollection.create({
+            data: {
+                name: data.name,
+                description: data.description,
+            }
+        })
+        return { success: true, data: collection }
+    
+    } catch (error) {
+        return errorHandeler(error)
+    }
 }
