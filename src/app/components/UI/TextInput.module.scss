@@ -1,75 +1,75 @@
 @use "@/styles/ohma";
 
 .TextInput {
-  position: relative;
-  padding: 2*ohma.$gap 0 0;
-  margin-top: ohma.$gap;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    padding: 2*ohma.$gap 0 0;
+    margin-top: ohma.$gap;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .field {
-  width: 100%;
-  border: 0;
-  border-bottom: 2px solid ohma.$colors-black;
-  outline: 0;
-  font-size: ohma.$fonts-s;
-  color: ohma.$colors-black;
-  padding: 7px 0;
-  background: transparent;
-  transition: border-color 0.2s;
-
-  &::placeholder {
-    visibility: hidden;
-  }
-
-  &:placeholder-shown ~ .labe {
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid ohma.$colors-black;
+    outline: 0;
     font-size: ohma.$fonts-s;
-    cursor: text;
-    top: 20px;
-  }
+    color: ohma.$colors-black;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
 
-  &:focus, &:not(:placeholder-shown) {
+    &::placeholder {
+    visibility: hidden;
+    }
+
+    &:placeholder-shown ~ .labe {
+        font-size: ohma.$fonts-s;
+        cursor: text;
+        top: 20px;
+    }
+
+    &:focus, &:not(:placeholder-shown) {
     ~ .labe {
-      position: absolute;
-      top: 0;
-      display: block;
-      transition: 0.2s;
-      font-size: calc(ohma.$fonts-s * 0.8);
-      color: ohma.$colors-black;   
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: calc(ohma.$fonts-s * 0.8);
+        color: ohma.$colors-black;   
     }
     padding-bottom: 6px;  
     border-width: 3px;
     border-image-slice: 1;
-  }
+    }
 }
 
 .labe {
-  position: absolute;
-  top: 0;
-  display: block;
-  transition: 0.2s;
-  font-size: 1rem;
-  z-index: -1;
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    z-index: -1;
 }
 
-.primary :matches(.labe, .field, .field:focus ~ .labe) {
-  color: ohma.$colors-primary;
-  border-color: ohma.$colors-primary;
+.primary .labe,.primary .field,.primary .field:focus ~ .labe {
+    color: ohma.$colors-primary;
+    border-color: ohma.$colors-primary;
 }
 
-.red :matches(.labe, .field, .field:focus ~ .labe) {
-  color: ohma.$colors-secondary;
-  border-color: ohma.$colors-secondary;
+.secondary .labe,.secondary .field,.secondary .field:focus ~ .labe {
+    color: ohma.$colors-secondary;
+    border-color: ohma.$colors-secondary;
 }
 
-.red :matches(.labe, .field, .field:focus ~ .labe) {
-  color: ohma.$colors-red;
-  border-color: ohma.$colors-red;
+.red .labe,.red .field,.red .field:focus ~ .labe {
+    color: ohma.$colors-red;
+    border-color: ohma.$colors-red;
 }
 
-.black :matches(.labe, .field, .field:focus ~ .labe) {
-  color: ohma.$colors-black;
-  border-color: ohma.$colors-black;
+.black .labe,.black .field,.black .field:focus ~ .labe {
+    color: ohma.$colors-black;
+    border-color: ohma.$colors-black;
 }

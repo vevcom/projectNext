@@ -12,11 +12,11 @@ export default function CollectionAdmin({collectionId}: PropTypes) {
     return (
         <div className={styles.CollectionAdmin}>
             <Form title='upload image' createText='upload' action={create.bind(null, collectionId)}>
-                <FileInput label="file" name="file" color='secondary' />
-                <TextInput label="name" name="name" />
-                <TextInput label="alt" name="alt" />
+                <FileInput label="file" name="file" color="primary" />
+                <TextInput color="red" label="name" name="name" />
+                <TextInput color="red" label="alt" name="alt" />
             </Form>
-            <Form title='upload image' createText='upload' action={create.bind(null, collectionId)}>
+            <Form title='Edit collection' createText='update' action={create.bind(null, collectionId)}>
                 hei
             </Form>
         </div>
