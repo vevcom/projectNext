@@ -1,0 +1,6 @@
+@use '@/styles/ohma';
+
+.CollectionAdmin {
+    background-color: ohma.$colors-secondary;
+    @include ohma.card;
+}

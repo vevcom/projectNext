@@ -2,7 +2,7 @@ import prisma from '@/prisma'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import Image from '@/components/Image/Image'
-import ImageUploader from '@/app/images/collections/[id]/ImageUploader'
+import CollectionAdmin from './CollectionAdmin'
 
 
 type PropTypes = {
@@ -21,18 +21,19 @@ export default async function Collection({ params } : PropTypes) {
         },
     })
     if (!collection) notFound()
+    const isAdmin = true //temp
 
     return (
         <div className={styles.wrapper}>
-            <ImageUploader collectionId={collection.id} />
-            <h2>collection {collection.name}</h2>
-            <span className={styles.images}>
+            {isAdmin && <CollectionAdmin collectionId={collection.id} />}
+            <div className={styles.images}>
+                <h2>{collection.name}</h2>
                 {
                     collection.images.map(image =>
                         <Image width={200} key={image.id} name={image.name} />
                     )
                 }
-            </span>
+            </div>
         </div>
     )
 }
