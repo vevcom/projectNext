@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+$image-size: 150px;
+
 .wrapper {
     padding: ohma.$gap;
     display: flex;
@@ -7,6 +9,27 @@
         width: 300px;
     }
     > .images {
-        @include ohma.card;
+        padding: 3*ohma.$gap;
+        > span {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            > .image {
+                width: $image-size;
+                height: $image-size;
+                margin: ohma.$gap;
+                overflow: hidden;
+                @include ohma.round;
+                position: relative;
+                > img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
     }
 }

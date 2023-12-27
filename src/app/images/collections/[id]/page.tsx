@@ -31,12 +31,18 @@ export default async function Collection({ params } : PropTypes) {
             </div>
             }
             <div className={styles.images}>
-                <h2>{collection.name}</h2>
+                <h1>{collection.name}</h1>
+                <i>{collection.description}</i>
+                <span>
                 {
                     collection.images.map(image =>
-                        <Image width={200} key={image.id} name={image.name} />
+                        <div className={styles.image}>
+                            <Image width={200} key={image.id} name={image.name} />
+                        </div>
                     )
                 }
+                </span>
+            
             </div>
         </div>
     )
