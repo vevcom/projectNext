@@ -7,9 +7,12 @@ import { ImageCollection } from '@prisma/client'
 
 export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
     const schema = z.object({
-        name: z.string().max(40).min(2).trim().optional(),
-        description: z.string().max(500).min(2).trim().optional(),
-    })
+        name: z.string().max(40).min(2).trim().or(z.literal('')),
+        description: z.string().max(500).min(2).trim().or(z.literal('')),
+    }).transform(data => ({
+        name: data.name || undefined,
+        description: data.description || undefined,
+    }))
     const parse = schema.safeParse({
         name: rawdata.get('name'),
         description: rawdata.get('description'),
@@ -18,7 +21,6 @@ export default async function create(collectionId: number, rawdata: FormData): P
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
     }
-
     const data = parse.data
 
     try {
@@ -26,7 +28,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
             where: {
                 id: collectionId,
             },
-            data,
+            data
         })
         return { success: true, data: collection }
     } catch (error) {
