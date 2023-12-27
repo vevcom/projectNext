@@ -6,6 +6,8 @@ import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
 import { z } from 'zod'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
 type Form = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 type PropTypes = Omit<Form, 'action' | 'children'> & {
@@ -39,15 +41,17 @@ const makeInputArray = (children: ReactNode) : Inputs =>
 export default function Form({children, title, createText = "create", action, ...props}: PropTypes) {
     const [generalErrors, setGeneralErrors] = useState<Errors>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
-    
+    const [success, setSuccess] = useState(false)
 
     const actionWithError = async (formData: FormData) => { 
         const inputs_ = makeInputArray(children)
         setGeneralErrors(() => undefined)
 
-        const { success, data, error: errorFromAction } = await action(formData)
-        if (success) {
-
+        const { success: successFromAction, data, error: errorFromAction } = await action(formData)
+        console.log(errorFromAction)
+        if (successFromAction) {
+            setSuccess(true)
+            setTimeout(() => setSuccess(false), 3000)
         } else {
             if (!errorFromAction) return setGeneralErrors([
                 {
@@ -81,25 +85,32 @@ export default function Form({children, title, createText = "create", action, ..
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <SubmitButton generalErrors={generalErrors}>{createText}</SubmitButton>
+            <SubmitButton success={success} generalErrors={generalErrors}>{createText}</SubmitButton>
         </form>
     )
 }
 
 
-function SubmitButton({children, generalErrors}: {children: ReactNode, generalErrors?: Errors}) {
+function SubmitButton({children, generalErrors, success}: {children: ReactNode, generalErrors?: Errors, success: boolean}) {
     const { pending } = useFormStatus()
+    const btnContent = () => {
+        if (pending) return (
+            <div className={styles.loader}>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        )
+        if (success) return (
+            <FontAwesomeIcon icon={faCircleCheck} />
+        )
+        return children
+    }
+
     return (
         <div className={styles.submit}>
-            <Button aria-disabled={pending} color="primary" type="submit">
-                {pending ? (
-                    <div className={styles.loader}>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>) : 
-                    children
-                }
+            <Button aria-disabled={pending || success} color="primary" type="submit">
+                {btnContent()}
             </Button>
             <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>
                 {
