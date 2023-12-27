@@ -1,12 +1,16 @@
 import create from '@/actions/images/create'
+import Form from '@/app/components/Form/Form'
 
-export default function ImageUploader() {
+type PropTypes = {
+    collection: number
+}   
+
+export default function ImageUploader({collection}: PropTypes) {
     return (
-        <form action={create}>
+        <Form action={create.bind(null, collection)}>
             <input type="file" name="file" />
             <input type="text" placeholder="name" name="name" />
             <input type="text" placeholder="alt" name="alt" />
-            <button type="submit" value="Upload">Upload</button>
-        </form>
+        </Form>
     )
 }

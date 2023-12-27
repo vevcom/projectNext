@@ -7,18 +7,16 @@ import { v4 as uuid } from 'uuid'
 import { File } from 'buffer'
 import errorHandeler from '@/prisma/errorHandler'
 
-export default async function create(rawdata: FormData) {
+export default async function create(collection: number, rawdata: FormData) {
     const schema = z.object({
         file: z.instanceof(File).refine((file) => file.size < 1024 * 1024, 'File size must be less than 1mb'),
         name: z.string().max(50).min(2),
-        collection: z.number().int().positive(),
         alt: z.string().max(100).min(2),
     })
     const parse = schema.safeParse({
         file: rawdata.get('file'),
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
-        collection: rawdata.get('collection'),
     })
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
@@ -43,7 +41,7 @@ export default async function create(rawdata: FormData) {
                 ext,
                 collection: {
                     connect: {
-                        id: data.collection,
+                        id: collection,
                     }
                 }
             }

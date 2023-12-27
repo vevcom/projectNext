@@ -2,7 +2,7 @@ import prisma from '@/prisma'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import Image from '@/components/Image/Image'
-import ImageUploader from '@/components/ImageUploader/ImageUploader'
+import ImageUploader from '@/app/images/collections/[id]/ImageUploader'
 
 
 type PropTypes = {
@@ -14,17 +14,17 @@ type PropTypes = {
 export default async function Collection({ params } : PropTypes) {
     const collection = await prisma.imageCollection.findUnique({
         where: {
-            id: Number(params.id)
+            id: Number(params.id),
         },
         include: {
-            images: true
-        }
+            images: true,
+        },
     })
     if (!collection) notFound()
 
     return (
         <div className={styles.wrapper}>
-            <ImageUploader />
+            <ImageUploader collection={collection.id} />
             <h2>collection {collection.name}</h2>
             <span className={styles.images}>
                 {
