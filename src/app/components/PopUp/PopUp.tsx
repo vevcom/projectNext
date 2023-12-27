@@ -4,21 +4,20 @@ import { useState } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
-    showButtonIcon: IconProp,
+    showButtonContent: React.ReactNode,
 }
 
-export default function PopUp({ children, showButtonIcon } : PropTypes) {
+export default function PopUp({ children, showButtonContent } : PropTypes) {
     const [show, setShow] = useState(false)
 
     const showBtn = (
         <button className={styles.openBtn} onClick={() => setShow(true)}>
-            <FontAwesomeIcon icon={showButtonIcon} />
+            {showButtonContent}
         </button>
     )
     return (

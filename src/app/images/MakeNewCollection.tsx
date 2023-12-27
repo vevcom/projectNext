@@ -7,6 +7,7 @@ import create from '@/actions/images/collections/create'
 import Form from '../components/Form/Form'
 import { useRouter } from 'next/navigation'
 import type { ImageCollection } from '@prisma/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default function MakeNewCollection() {
     const router = useRouter()
@@ -14,7 +15,7 @@ export default function MakeNewCollection() {
         if (collection) router.push(`/images/collections/${collection.id}`)
     }
     return (
-        <PopUp showButtonIcon={faPlus}>
+        <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <Form successCallback={collectionCreatedCallback}
                 title="Make a collection" createText="Create collection" action={create}>
                 <TextInput label="name" name="name" />

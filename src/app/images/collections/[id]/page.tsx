@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import Image from '@/components/Image/Image'
 import CollectionAdmin from './CollectionAdmin'
+import PopUp from '@/app/components/PopUp/PopUp'
 
 
 type PropTypes = {
@@ -36,8 +37,11 @@ export default async function Collection({ params } : PropTypes) {
                 <span>
                     {
                         collection.images.map(image =>
-                            <div className={styles.image}>
-                                <Image width={200} key={image.id} name={image.name} />
+                            <div key={image.id} className={styles.image}>
+                                <Image width={200} name={image.name} />
+                                <PopUp showButtonContent={<>gyftft</>}>
+                                    <Image width={300} name={image.name}></Image>
+                                </PopUp>
                             </div>
                         )
                     }
