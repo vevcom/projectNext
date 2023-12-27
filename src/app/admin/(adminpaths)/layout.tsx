@@ -13,9 +13,7 @@ type PropTypes = {
 export default function RootLayout({ children } : PropTypes) {
     //go back one layer in url
     const pathname = usePathname()
-    console.log(pathname?.split('/'))
     const href = `/${pathname?.split('/').slice(1, -1).join('/')}` ?? '/admin'
-    console.log(href)
 
     return (
         <div className={styles.wrapper}>
