@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
 import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
-import { z } from 'zod'
+import type { ActionError } from '@/actions/type'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -17,13 +17,9 @@ type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
 }
-type Errors = {
-    path: string | false,
-    message: string
-}[]
 type InputType = {
     input: ReactNode & { label?: string },
-    errors: Errors
+    errors: ActionError[],
 }
 type Inputs = InputType[]
 
@@ -42,7 +38,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
     })
 
 export default function Form<GiveActionReturn>({ children, title, createText = 'create', action, successCallback, ...props }: PropTypes<GiveActionReturn>) {
-    const [generalErrors, setGeneralErrors] = useState<Errors>()
+    const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
 
@@ -64,48 +60,24 @@ export default function Form<GiveActionReturn>({ children, title, createText = '
             if (!errorFromAction) {
                 return setGeneralErrors([
                     {
-                        path: false,
+                        path: [],
                         message: 'error with input'
                     }
                 ])
             }
 
             //Check for zod error
-            const errorSchema = z.array(z.object({
-                path: z.array(z.string()),
-                message: z.string(),
-            }))
-
-            console.log({errorFromAction, inputs_})
-
-        
-
-            try {
-                const parse = errorSchema.parse(errorFromAction)
-                //Error was of type zod
-                console.log(parse)
-                const parsedError : Errors = parse.map(x => ({ ...x, path: x.path[0] }))
-
-                parsedError.forEach(error => {
-                    const inputWithError = inputs_.find((input) => input.input.label === error.path)
-                    if (inputWithError) {
-                        inputWithError.errors.push(error)
-                    } else {
-                        setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
-                    }
-                })
-                setInputs(inputs_)
-            } catch (e){
-                //Error was not of type zod. for example prisma
-                return setGeneralErrors([
-                    {
-                        path: false,
-                        message: errorFromAction
-                    }
-                ])
-            }
+            errorFromAction.forEach(error => {
+                if (error.path === undefined) return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
+                const inputWithError = inputs_.find((input) => input.input.label === (error.path ?? [])[0])
+                if (inputWithError) {
+                    inputWithError.errors.push(error)
+                } else {
+                    return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
+                }
+            })
+            setInputs(inputs_)
         }
-        return data
     }
 
     return (
@@ -122,7 +94,7 @@ export default function Form<GiveActionReturn>({ children, title, createText = '
 }
 
 
-function SubmitButton({ children, generalErrors, success }: {children: ReactNode, generalErrors?: Errors, success: boolean}) {
+function SubmitButton({ children, generalErrors, success }: {children: ReactNode, generalErrors?: ActionError[], success: boolean}) {
     const { pending } = useFormStatus()
     const btnContent = () => {
         if (pending) {
