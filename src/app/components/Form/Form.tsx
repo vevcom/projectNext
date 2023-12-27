@@ -95,7 +95,7 @@ export default function Form({children, title, createText = "create", action, ..
 
     return (
         <form className={styles.Form} action={actionWithError}  {...props}>
-            <h3>{title}</h3>
+            <h2>{title}</h2>
             {
                 inputs.map(({input, errors}, i) => (
                     <Input input={input} errors={errors} key={i} />
