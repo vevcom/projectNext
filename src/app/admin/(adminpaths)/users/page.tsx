@@ -1,5 +1,3 @@
-'use client'
-
 import create from '@/actions/users/create'
 import TextInput from '@/app/components/UI/TextInput'
 import Form from '@/app/components/Form/Form'
