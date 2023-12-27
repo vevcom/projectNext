@@ -17,7 +17,7 @@ type PropTypes = Omit<Form, 'action' | 'children'> & {
     action: Action
 }
 type Errors = {
-    path: string,
+    path: string | false,
     message: string
 }[]
 type Input = {
@@ -53,26 +53,43 @@ export default function Form({children, title, createText = "create", action, ..
             setSuccess(true)
             setTimeout(() => setSuccess(false), 3000)
         } else {
+            //No error provided
             if (!errorFromAction) return setGeneralErrors([
                 {
-                    path: "unknown",
+                    path: false,
                     message: "error with input"
                 }
             ])
+
+            //Check for zod error
             const errorSchema = z.array(z.object({
                 path: z.array(z.string()),
                 message: z.string(),
             }))
-            const parsedError : Errors = errorSchema.parse(JSON.parse(errorFromAction)).map(x => ({...x, path: x.path[0]}))
-            parsedError.forEach(error => {
-                const inputWithError = inputs_.find((input) => input.input.label === error.path)
-                if (inputWithError) {
-                    inputWithError.errors.push(error)
-                } else {
-                    setGeneralErrors((prev) => prev ? [...prev, error] : [error])
-                }
-            })
-            setInputs(inputs_)
+
+            try {
+                const parse = errorSchema.parse(JSON.parse(errorFromAction))
+                //Error was of type zod
+                const parsedError : Errors = parse.map(x => ({...x, path: x.path[0]}))
+
+                parsedError.forEach(error => {
+                    const inputWithError = inputs_.find((input) => input.input.label === error.path)
+                    if (inputWithError) {
+                        inputWithError.errors.push(error)
+                    } else {
+                        setGeneralErrors((prev) => prev ? [...prev, error] : [error])
+                    }
+                })
+                setInputs(inputs_)
+            } catch {
+                //Error was not of type zod. for example prisma
+                return setGeneralErrors([
+                    {
+                        path: false,
+                        message: errorFromAction
+                    }
+                ])
+            }            
         }   
         return data
     }
