@@ -15,7 +15,7 @@ type PropTypes = Omit<Form, 'action' | 'children'> & {
     title?: string,
     createText?: string,
     action: Action,
-    successCallback?: () => void,  
+    successCallback?: (data?: object) => void,  
 }
 type Errors = {
     path: string | false,
@@ -54,7 +54,7 @@ export default function Form({children, title, createText = "create", action, su
             setSuccess(true)
             setTimeout(() => {
                 setSuccess(false)
-                successCallback?.()
+                successCallback?.(data)
             }, 3000)
         } else {
             //No error provided
