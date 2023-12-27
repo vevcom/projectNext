@@ -48,7 +48,6 @@ export default function Form({children, title, createText = "create", action, ..
         setGeneralErrors(() => undefined)
 
         const { success: successFromAction, data, error: errorFromAction } = await action(formData)
-        console.log(errorFromAction)
         if (successFromAction) {
             setSuccess(true)
             setTimeout(() => setSuccess(false), 3000)
@@ -126,7 +125,7 @@ function SubmitButton({children, generalErrors, success}: {children: ReactNode, 
 
     return (
         <div className={styles.submit}>
-            <Button aria-disabled={pending || success} color="primary" type="submit">
+            <Button aria-disabled={pending || success} color={success ? 'green' : 'primary'} type="submit">
                 {btnContent()}
             </Button>
             <p className={[pending ? styles.pending : " ",  styles.error].join(' ')}>

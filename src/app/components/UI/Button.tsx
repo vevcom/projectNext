@@ -4,7 +4,7 @@ import styles from './Button.module.scss'
 
 type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode,
-    color?: 'primary' | 'secondary',
+    color?: 'primary' | 'secondary' | 'green',
 }
 
 export default function Button({ color = 'primary', children, ...props } : PropTypes) {

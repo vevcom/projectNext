@@ -7,3 +7,7 @@
 .secondary {
     @include ohma.btn(ohma.$colors-secondary);
 }
+
+.green {
+    @include ohma.btn(ohma.$colors-green);
+}
