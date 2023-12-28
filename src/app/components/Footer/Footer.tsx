@@ -37,9 +37,12 @@ function Footer() {
                 <p>Elektro-bygget</p>
                 <p>7491 Trondheim</p>
             </div>
-            <div className={styles.nordic}>
+            <div className={styles.sponsors}>
                 <Link href="http://www.nordicsemi.com" target="_blank">
                     <ImageLink name="nordic" width={170} />
+                </Link>
+                <Link href="http://www.kongsberg.com" target="_blank">
+                    <ImageLink name="kongsberg" width={100} />
                 </Link>
             </div>
         </footer>
