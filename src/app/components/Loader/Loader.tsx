@@ -1,10 +1,10 @@
 import styles from './Loader.module.scss'
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 
 function Loader() {
     return (
         <div className={styles.Loader}>
-            <Image name="logo_simple" width={100} />
+            <ImageLink name="logo_simple" width={100} />
         </div>
     )
 }

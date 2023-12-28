@@ -1,9 +1,12 @@
 import React from 'react'
-import Image from '@/components/Image/Image'
-
+import ImageLink from '@/components/Image/ImageLink'
 import styles from './layout.module.scss'
 
-export default function AuthLayout({ children } : { children: React.ReactNode}) {
+type PropTypes = {
+    children: React.ReactNode
+}   
+
+export default function AuthLayout({ children } : PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -11,7 +14,7 @@ export default function AuthLayout({ children } : { children: React.ReactNode}) 
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <Image name="magisk_hatt" alt="en kappemann sin hatt" width={200}/>
+                    <ImageLink name="magisk_hatt" alt="en kappemann sin hatt" width={200}/>
                 </div>
             </div>
         </div>

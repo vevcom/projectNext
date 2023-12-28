@@ -3,8 +3,8 @@ import fs from 'fs'
 import { join } from 'path'
 const prisma = new PrismaClient()
 
-console.log('seed starting...')
 async function main() {
+    console.log('seed starting...')
     const standardCollection = await prisma.imageCollection.upsert({
         where: {
             name: 'standard_images'

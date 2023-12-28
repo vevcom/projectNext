@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import { File } from 'buffer'
 import errorHandeler from '@/prisma/errorHandler'
-import { Image } from '@prisma/client'
+import type { Image } from '@prisma/client'
 import { ActionReturn } from '../type'
 
 export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
@@ -41,7 +41,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
     const buffer = Buffer.from(bytes)
     try {
         const fsLocation = `${uuid()}.${ext}`
-        const destination = join('./', 'store', 'images')
+        const destination = join('./', 'public', 'store', 'images')
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
         const image = await prisma.image.create({

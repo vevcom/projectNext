@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -38,17 +38,17 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div>
                 <Link href="/">
-                    <Image name="logo_simple" width={30}/>
+                    <ImageLink name="logo_simple" width={30}/>
                 </Link>
             </div>
             <div>
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>
-                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link> :
                         <Link href="/login">
-                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link>
                 }
             </div>

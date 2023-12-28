@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import SocialIcons from '../SocialIcons/SocialIcons'
 
@@ -7,7 +7,7 @@ function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <Image name="omega_logo_white" width={350} />
+                <ImageLink name="omega_logo_white" width={350} />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og
@@ -15,7 +15,7 @@ function Footer() {
                 </p>
                 <div>
                     <Link className={styles.pwa} href="/infopages/pwa">
-                        <Image name="pwa" width={200}/>
+                        <ImageLink name="pwa" width={200}/>
                     </Link>
                     <div className={styles.icons}>
                         <SocialIcons />
@@ -39,7 +39,7 @@ function Footer() {
             </div>
             <div className={styles.nordic}>
                 <Link href="http://www.nordicsemi.com" target="_blank">
-                    <Image name="nordic" width={170} />
+                    <ImageLink name="nordic" width={170} />
                 </Link>
             </div>
         </footer>

@@ -1,5 +1,3 @@
-
-
 export type ActionReturn<ReturnType> = {
     success: boolean,
     data?: ReturnType,

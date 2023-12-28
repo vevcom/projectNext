@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import Item from './Item'
 import DropDown from './Dropdown'
@@ -31,7 +31,7 @@ async function NavBar({ session }: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <Link href="/">
-                        <Image
+                        <ImageLink
                             name="logo_simple"
                             width={30}
                             alt="omega logo"
@@ -113,7 +113,7 @@ async function NavBar({ session }: PropTypes) {
                 }
                 <li className={styles.magicHat}>
                     <Link href={isLoggedIn ? '/users/me' : '/login'}>
-                        <Image name="magisk_hatt" width={25} height={25} alt="log in button"/>
+                        <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button"/>
                     </Link>
                 </li>
             </ul>

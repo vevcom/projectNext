@@ -17,7 +17,7 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
 
     return (
         <div className={styles.ImageCollectionDisplay}>
-            <Image width={200} name={startImageName || collection.images[0].name} />
+            <Image width={200} image={collection.images[currentId]} />
         </div>
     )
 }

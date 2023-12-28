@@ -39,7 +39,7 @@ export default async function Collection({ params } : PropTypes) {
                     {
                         collection.images.map(image =>
                             <div key={image.id} className={styles.image}>
-                                <Image width={200} name={image.name} />
+                                <Image width={200} image={image} />
                                 <PopUp showButtonContent={<></>}>
                                     <ImageCollectionDisplay startImageName={image.name} collection={collection} />
                                 </PopUp>

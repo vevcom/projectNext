@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import Section from './Section'
@@ -16,7 +16,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <Image name="logo_white" priority={true} width={300}/>
+                        <ImageLink name="logo_white" priority={true} width={300}/>
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>
