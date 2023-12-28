@@ -17,11 +17,14 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
 
     return (
         <div className={styles.ImageCollectionDisplay}>
-            <Suspense fallback={
-                <>loading</>
-            }>
-                <Image width={200} image={collection.images[currentId]} />
-            </Suspense>
+            <div className={styles.currentImage}>
+                <Suspense fallback={
+                    <>loading</>
+                }>
+                    <Image width={200} image={collection.images[currentId]} />
+                </Suspense>
+            </div>
+            
         </div>
     )
 }
