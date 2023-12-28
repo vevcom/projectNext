@@ -4,6 +4,8 @@ import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
 import type { ImageCollection, Image as ImageT } from '@prisma/client'
 import { Suspense, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -25,6 +27,14 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
                 </Suspense>
             </div>
             
+            <div className={styles.controls}>
+                <button onClick={() => setCurrentId(currentId - 1 === -1 ? collection.images.length - 1 : currentId - 1)}>
+                    <FontAwesomeIcon icon={faChevronLeft}/>
+                </button>
+                <button onClick={() => setCurrentId((currentId + 1) % collection.images.length)}>
+                    <FontAwesomeIcon icon={faChevronRight}/>
+                </button>
+            </div>
         </div>
     )
 }
