@@ -17,8 +17,8 @@ export default async function Images() {
         }
     })
 
-    const default_image = await prisma.image.findUnique({
-        where: { name: "default_image" }
+    const lens_camera = await prisma.image.findUnique({
+        where: { name: "lens_camera" }
     })
 
     type Collection = {
@@ -26,16 +26,10 @@ export default async function Images() {
         images?: ImageT[]
     }
 
-    const findCoverImageToUse = (collection : Collection) : ImageT | null => {
-        if (collection.coverImage) return collection.coverImage
-        if (collection.images && collection.images.length > 0) return collection.images[0]
-        return default_image
-    }
-
-    const coverImage = (collection : Collection) => {
+    const chooseCoverImage = (collection : Collection) => {
         if (collection.coverImage) return <Image width={100} image={collection.coverImage} />
         if (collection.images && collection.images.length > 0) return <Image width={100} image={collection.images[0]} />
-        if (default_image) return <Image width={100} image={default_image} />
+        if (lens_camera) return <Image width={100} image={lens_camera} />
         return <h3>Something went wrong</h3>
     }
 
@@ -50,7 +44,7 @@ export default async function Images() {
                     collections.map(collection => (
                         <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
                             {  
-                                coverImage(collection)
+                                chooseCoverImage(collection)
                             }
                             <div className={styles.info}>
                                 <h2>{collection.name}</h2>
