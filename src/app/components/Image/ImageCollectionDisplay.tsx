@@ -3,7 +3,7 @@
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
 import type { ImageCollection, Image as ImageT } from '@prisma/client'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -17,7 +17,11 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
 
     return (
         <div className={styles.ImageCollectionDisplay}>
-            <Image width={200} image={collection.images[currentId]} />
+            <Suspense fallback={
+                <>loading</>
+            }>
+                <Image width={200} image={collection.images[currentId]} />
+            </Suspense>
         </div>
     )
 }
