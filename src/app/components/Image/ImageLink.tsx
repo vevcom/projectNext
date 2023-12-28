@@ -11,13 +11,17 @@ export default async function ImageLink({name, width, alt, ...props}: PropTypes)
     const image = await prisma.image.findUnique({
         where: { name }
     })
+    const default_image = await prisma.image.findUnique({
+        where: { name: "default_image" }
+    })
+    if (!default_image) throw new Error("No default image found")
     return (
         <div>
             {
                 image ? (
                     <Image image={image} width={width} {...props}/>
                 ) : (
-                    <NextImage src="/store/images/default_image.jpeg" width={width} alt="default image" {...props}/>
+                    <Image image={default_image} width={width} {...props}/>
                 )
             }
         </div>
