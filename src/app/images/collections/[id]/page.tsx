@@ -4,6 +4,7 @@ import styles from './page.module.scss'
 import Image from '@/components/Image/Image'
 import CollectionAdmin from './CollectionAdmin'
 import PopUp from '@/app/components/PopUp/PopUp'
+import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
 
 
 type PropTypes = {
@@ -40,7 +41,7 @@ export default async function Collection({ params } : PropTypes) {
                             <div key={image.id} className={styles.image}>
                                 <Image width={200} name={image.name} />
                                 <PopUp showButtonContent={<></>}>
-                                    <Image width={300} name={image.name}></Image>
+                                    <ImageCollectionDisplay startImageName={image.name} collectionId={Number(params.id)} />
                                 </PopUp>
                             </div>
                         )
