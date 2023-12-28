@@ -19,7 +19,7 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
         <div className={styles.ImageCollectionDisplay}>
             <div className={styles.currentImage}>
                 <Suspense fallback={
-                    <>loading</>
+                    <div className={styles.loading}></div>
                 }>
                     <Image width={200} image={collection.images[currentId]} />
                 </Suspense>
