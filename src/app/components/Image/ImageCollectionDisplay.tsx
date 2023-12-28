@@ -1,32 +1,23 @@
+'use client'
+
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
-import prisma from '@/prisma'
+import type { ImageCollection, Image as ImageT } from '@prisma/client'
+import { useState } from 'react'
 
 type PropTypes = {
-    collectionId: number,
+    collection: ImageCollection & {
+        images: ImageT[],
+    },
     startImageName?: string,
 }
 
-export default async function ImageCollectionDisplay({collectionId, startImageName}: PropTypes) {
-    const collection = await prisma.imageCollection.findUnique({
-        where: {
-            id: collectionId,
-        },
-        include: {
-            images: true,
-        },
-    })
+export default function ImageCollectionDisplay({collection, startImageName}: PropTypes) {
+    const [currentId, setCurrentId] = useState(collection.images.findIndex(image => image.name === startImageName))
 
     return (
-        collection ? (
-            <div className={styles.ImageCollectionDisplay}>
-                <Image width={200} name={startImageName || collection.images[0].name} />
-            </div>
-        ) : (
-            <div className={styles.ImageCollectionDisplay}>
-                <h1>Collection {collectionId} was not found</h1>
-            </div>
-        )
-        
+        <div className={styles.ImageCollectionDisplay}>
+            <Image width={200} name={startImageName || collection.images[0].name} />
+        </div>
     )
 }
