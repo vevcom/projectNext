@@ -9,6 +9,7 @@
     left: 0;
     z-index: 8;
     > div {
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 25px 25px;
         @include ohma.card;
         position: absolute;
         z-index: 9;
