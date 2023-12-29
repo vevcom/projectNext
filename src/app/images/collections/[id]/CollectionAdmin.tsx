@@ -4,6 +4,7 @@ import Form from '@/app/components/Form/Form'
 import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 import styles from './CollectionAdmin.module.scss'
+import Dropzone from '@/app/components/UI/Dropzone'
 
 type PropTypes = {
     collectionId: number
@@ -17,6 +18,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <TextInput color="black" label="alt" name="alt" />
                 <FileInput label="file" name="file" color="primary" />
             </Form>
+            <Dropzone />
             <Form title="Edit collection" createText="update" action={update.bind(null, collectionId)}>
                 <TextInput color="black" label="collection name" name="name" />
                 <TextInput color="black" label="description" name="description" />
