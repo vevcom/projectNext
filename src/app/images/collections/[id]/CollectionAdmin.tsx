@@ -18,7 +18,9 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <TextInput color="black" label="alt" name="alt" />
                 <FileInput label="file" name="file" color="primary" />
             </Form>
-            <Dropzone />
+            <Form title="Upload multiple" createText="upload" action={create.bind(null, collectionId)}>
+                <Dropzone label="upload images" name="images"/>
+            </Form>
             <Form title="Edit collection" createText="update" action={update.bind(null, collectionId)}>
                 <TextInput color="black" label="collection name" name="name" />
                 <TextInput color="black" label="description" name="description" />
