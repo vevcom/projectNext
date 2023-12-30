@@ -45,9 +45,11 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
 
     return (
         <div onDrop={onDrop} onDragOver={onDragOver} className={styles.Dropzone}>
-            <input name={name} onChange={filesUpdated} type="file" multiple {...props} />
-            <p>{label}</p>
-            <FontAwesomeIcon icon={faUpload} />
+            <div className={styles.uploader}>
+                <input name={name} onChange={filesUpdated} type="file" multiple {...props} />
+                <p>{label}</p>
+                <FontAwesomeIcon icon={faUpload} />
+            </div>
             <ul>
                 {files.map((file, index) => (
                     <li key={index}>{file.name}</li>

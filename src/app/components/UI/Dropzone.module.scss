@@ -1,5 +1,15 @@
 @use '@/styles/ohma';
 
 .Dropzone {
-    border: 2px dashed ohma.$colors-primary;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    > .uploader {
+        border: 2px dashed ohma.$colors-primary;
+    }
+    > ul {
+        height: 100px;
+        overflow-y: scroll;
+    }
 }
