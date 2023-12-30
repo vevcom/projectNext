@@ -6,7 +6,6 @@ import {
     useState, 
     ChangeEvent, 
     DragEvent, 
-    useEffect,
     useRef,
 } from 'react'
 import styles from './Dropzone.module.scss'
