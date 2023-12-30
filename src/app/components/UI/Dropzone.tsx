@@ -44,8 +44,8 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
     const onDragOver = (event: DragEvent<HTMLDivElement>) => event.preventDefault()
 
     return (
-        <div onDrop={onDrop} onDragOver={onDragOver} className={styles.Dropzone}>
-            <div className={styles.uploader}>
+        <div className={styles.Dropzone}>
+            <div onDrop={onDrop} onDragOver={onDragOver} className={styles.uploader}>
                 <input name={name} onChange={filesUpdated} type="file" multiple {...props} />
                 <p>{label}</p>
                 <FontAwesomeIcon icon={faUpload} />
