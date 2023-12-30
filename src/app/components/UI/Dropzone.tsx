@@ -7,10 +7,11 @@ import {
     ChangeEvent, 
     DragEvent, 
     useRef,
+    useEffect,
 } from 'react'
 import styles from './Dropzone.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'multiple'> & {
     label: string,
@@ -24,15 +25,21 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
 
     color ??= 'black'
 
+    //Databindes the file state to the input value
+    useEffect(() => {
+        if (input.current) {
+            const dataTransfer = new DataTransfer()
+            files.forEach(file => dataTransfer.items.add(file))
+            input.current.files = dataTransfer.files
+        }
+    }, [files])
+
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault();
-        const droppedFiles = Array.from(event.dataTransfer.files) as File[];
+        const droppedFiles = Array.from(event.dataTransfer.files);
         setFiles(prev => [...prev, ...droppedFiles]);
 
         if (input.current) {
-            const dataTransfer = new DataTransfer();
-            droppedFiles.forEach(file => dataTransfer.items.add(file));
-            input.current.files = dataTransfer.files;
             input.current.blur();
         }
     }, []);
@@ -55,6 +62,14 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
         }
     }
 
+    const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault()
+    }
+    const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault()
+        setFiles([])  
+    }
+
     return (
         <div className={styles.Dropzone}>
             <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={styles.uploader}>
@@ -62,11 +77,25 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
                 <p>{label}</p>
                 <FontAwesomeIcon icon={faUpload} />
             </div>
-            <ul>
-                {files.map((file, index) => (
-                    <li key={index}>{file.name}</li>
-                ))}
-            </ul>
+            <span>
+                <div className={styles.general}>
+                    <p>uploaded {files.length} {files.length === 1 ? 'file' : 'files'}</p>
+                    <p>total size: {files.reduce((acc, file) => acc + file.size, 0)}</p>
+                    <button onClick={handleRemoveAll}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                </div>
+                <ul>
+                    {files.map((file, index) => (
+                        <li key={index}>
+                            <p>{file.name}</p>
+                            <p>{file.size}</p>
+                            <button onClick={handleRemove}></button>
+                        </li>
+                    ))}
+                </ul>
+            </span>
+            
         </div>
     )
 }
