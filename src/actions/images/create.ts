@@ -20,12 +20,38 @@ export default async function create(collectionId: number, rawdata: FormData): P
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
     })
-    if (!parse.success) {
-        return { success: false, error: parse.error.issues }
-    }
+    if (!parse.success) return { success: false, error: parse.error.issues }
+    const {file, ...data } = parse.data
+    return await createOne(file, { ...data, collectionId })
+}
+
+export async function createMany(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
+    const schema = z.object({
+        files: z.array(z.instanceof(File)).length(100, 'can upload a maximum of 100 files').refine((files) => files.every((file) => file.size < 1024 * 1024), 'File size must be less than 1mb'),
+    })
+    const parse = schema.safeParse({
+        files: rawdata.getAll('files'),
+    })
+
+    if (!parse.success) return { success: false, error: parse.error.issues }
+
     const data = parse.data
 
-    const ext = data.file.type.split('/')[1]
+    let finalReturn : ActionReturn<Image[]> = { success: true, error: [], data: [] }
+    for (const file of data.files) {
+        const ret = await createOne(file, {name: file.name, alt: file.name, collectionId})
+        finalReturn  = {
+            success: ret.success,
+            error: ret.error,
+        }
+        if (ret.data) finalReturn.data?.push(ret.data)
+        if (!finalReturn.success) return finalReturn
+    }
+    return finalReturn
+}
+
+async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'id'>) : Promise<ActionReturn<Image>> {
+    const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg'].includes(ext)) {
         return {
             success: false, error: [
@@ -37,7 +63,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
         }
     }
 
-    const bytes = await data.file.arrayBuffer()
+    const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
     try {
         const fsLocation = `${uuid()}.${ext}`
@@ -46,13 +72,13 @@ export default async function create(collectionId: number, rawdata: FormData): P
         await writeFile(join(destination, fsLocation), buffer)
         const image = await prisma.image.create({
             data: {
-                name: data.name,
-                alt: data.alt,
+                name: meta.name,
+                alt: meta.alt,
                 fsLocation,
                 ext,
                 collection: {
                     connect: {
-                        id: collectionId,
+                        id: meta.collectionId,
                     }
                 }
             }

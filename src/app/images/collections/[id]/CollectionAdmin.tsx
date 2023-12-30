@@ -29,7 +29,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                     </>
                 }>
                     <Form title="Upload images" createText="upload" action={create.bind(null, collectionId)}>
-                        <Dropzone label="upload images" name="images"/>
+                        <Dropzone label="upload images" name="fikes"/>
                     </Form>
                 </PopUp>
             </div>
