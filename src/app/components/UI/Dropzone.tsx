@@ -77,6 +77,7 @@ const Dropzone = ({ label, color, name, ...props } : PropTypes) => {
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
+        setFiles(prev => prev.filter(f => f !== file))
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
