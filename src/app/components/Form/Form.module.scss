@@ -6,11 +6,6 @@
     > h2 {
         margin-bottom: ohma.$gap;
     }
-    > span {
-        > .input {
-            max-width: 200px;
-        }
-    }
     .error {
         color: ohma.$colors-red;
         display: flex;

@@ -19,5 +19,8 @@
                 margin: 0 .2em;
             }
         }
+        > * form {
+            min-width: 50vw; 
+        }
     }
 }
