@@ -7,6 +7,9 @@ import { Suspense, useCallback, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '@/hooks/useKeyPress'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import update from '@/actions/images/update'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -16,36 +19,50 @@ type PropTypes = {
 }
 
 export default function ImageCollectionDisplay({ collection, startImageName }: PropTypes) {
-    const [currentId, setCurrentId] = useState(collection.images.findIndex(image => image.name === startImageName))
+    const [currentIndex, setcurrentIndex] = useState(collection.images.findIndex(image => image.name === startImageName))
     const goRight = useCallback(() => {
-        setCurrentId(prev => (prev + 1) % collection.images.length)
-    }, [currentId])
+        setcurrentIndex(prev => (prev + 1) % collection.images.length)
+    }, [currentIndex])
     const goLeft = useCallback(() => {
-        setCurrentId(prev => (prev - 1 === -1 ? collection.images.length - 1 : prev - 1))
-    }, [currentId])
+        setcurrentIndex(prev => (prev - 1 === -1 ? collection.images.length - 1 : prev - 1))
+    }, [currentIndex])
 
     useKeyPress('ArrowRight', goRight)
     useKeyPress('ArrowLeft', goLeft)
+
+    const isAdmin = true //temp
+
     return (
         <div className={styles.ImageCollectionDisplay}>
-            <div className={styles.currentImage}>
-                <h2>{collection.images[currentId].name}</h2>
-                <i>{collection.images[currentId].alt}</i>
-                <Suspense fallback={
-                    <div className={styles.loading}></div>
-                }>
-                    <Image width={200} image={collection.images[currentId]} />
-                </Suspense>
-            </div>
+            <div>
+                <div className={styles.currentImage}>
+                    <h2>{collection.images[currentIndex].name}</h2>
+                    <i>{collection.images[currentIndex].alt}</i>
+                    <Suspense fallback={
+                        <div className={styles.loading}></div>
+                    }>
+                        <Image width={200} image={collection.images[currentIndex]} />
+                    </Suspense>
+                </div>
 
-            <div className={styles.controls}>
-                <button onClick={goLeft}>
-                    <FontAwesomeIcon icon={faChevronLeft}/>
-                </button>
-                <button onClick={goRight}>
-                    <FontAwesomeIcon icon={faChevronRight}/>
-                </button>
+                <div className={styles.controls}>
+                    <button onClick={goLeft}>
+                        <FontAwesomeIcon icon={faChevronLeft}/>
+                    </button>
+                    <button onClick={goRight}>
+                        <FontAwesomeIcon icon={faChevronRight}/>
+                    </button>
+                </div>
             </div>
+            {
+                isAdmin && (
+                    <div className={styles.admin}>
+                        <Form title='Make' action={update.bind(null, collection.images[currentIndex].id)}>
+                            <TextInput name='name' label='name' />
+                        </Form>
+                    </div>
+                )
+            }
         </div>
     )
 }

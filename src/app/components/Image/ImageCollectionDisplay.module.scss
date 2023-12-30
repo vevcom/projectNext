@@ -1,6 +1,6 @@
 @use "@/styles/ohma";
 
-.ImageCollectionDisplay {
+.ImageCollectionDisplay > div {
     > .currentImage {
         padding: 0;
         width: 50vw;
@@ -66,6 +66,20 @@
         }
     }
 }
+
+.ImageCollectionDisplay {
+    position: relative;
+    .admin {
+        @include ohma.card;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        background-color: ohma.$colors-secondary;
+        translate: 100%;
+    }
+}
+
 
 @keyframes rotate {
     0% {
