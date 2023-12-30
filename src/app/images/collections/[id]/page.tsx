@@ -21,7 +21,7 @@ export default async function Collection({ params } : PropTypes) {
         include: {
             images: {
                 orderBy: {
-                    createdAt: 'asc'
+                    id: 'asc'
                 }
             },
         },
