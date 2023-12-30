@@ -15,7 +15,6 @@ import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'multiple'> & {
     label: string,
-    color?: 'primary' | 'secondary' | 'red' | 'black',
     name: string,
 }
 
@@ -29,11 +28,10 @@ const byteToUnderstandable = (bytes: number) : string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-const Dropzone = ({ label, color, name, ...props } : PropTypes) => {
+const Dropzone = ({ label, name, ...props } : PropTypes) => {
     const [files, setFiles] = useState<File[]>([])
     const input = useRef<HTMLInputElement>(null)
 
-    color ??= 'black'
 
     //Databindes the file state to the input value
     useEffect(() => {

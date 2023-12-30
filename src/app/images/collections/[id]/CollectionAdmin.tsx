@@ -1,3 +1,5 @@
+'use client'
+
 import create, { createMany } from '@/actions/images/create'
 import update from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
@@ -8,16 +10,24 @@ import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'next/navigation';
 
 type PropTypes = {
     collectionId: number
 }
 
 export default function CollectionAdmin({ collectionId }: PropTypes) {
+    const router = useRouter()
+
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
-                <Form title="Upload image" createText="upload" action={create.bind(null, collectionId)}>
+                <Form 
+                    successCallback={() => router.refresh()}
+                    title="Upload image" 
+                    createText="upload" 
+                    action={create.bind(null, collectionId)}
+                >
                     <TextInput color="black" label="name" name="name" />
                     <TextInput color="black" label="alt" name="alt" />
                     <FileInput label="file" name="file" color="primary" />
@@ -28,12 +38,22 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         <FontAwesomeIcon icon={faUpload} />
                     </>
                 }>
-                    <Form title="Upload images" createText="upload" action={createMany.bind(null, collectionId)}>
+                    <Form 
+                        successCallback={() => router.refresh()}
+                        title="Upload images" 
+                        createText="upload" 
+                        action={createMany.bind(null, collectionId)}
+                    >
                         <Dropzone label="upload images" name="files"/>
                     </Form>
                 </PopUp>
             </div>
-            <Form title="Edit collection" createText="update" action={update.bind(null, collectionId)}>
+            <Form 
+                successCallback={() => router.refresh()}
+                title="Edit collection" 
+                createText="update" 
+                action={update.bind(null, collectionId)}
+            >
                 <TextInput color="black" label="collection name" name="name" />
                 <TextInput color="black" label="description" name="description" />
             </Form>
