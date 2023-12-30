@@ -4,7 +4,7 @@ import styles from './layout.module.scss'
 
 type PropTypes = {
     children: React.ReactNode
-}   
+}
 
 export default function AuthLayout({ children } : PropTypes) {
     return (

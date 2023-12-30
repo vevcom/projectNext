@@ -1,20 +1,20 @@
-import Image from "./Image"
-import { default as NextImage, ImageProps } from "next/image"
+import Image from './Image'
+import { default as NextImage, ImageProps } from 'next/image'
 
-type PropTypes = Omit<ImageProps, 'src' | 'alt'> & { 
+type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     name: string,
     width: number,
     alt?: string
 }
 
-export default async function ImageLink({name, width, alt, ...props}: PropTypes) {
+export default async function ImageLink({ name, width, alt, ...props }: PropTypes) {
     const image = await prisma.image.findUnique({
         where: { name }
     })
     const default_image = await prisma.image.findUnique({
-        where: { name: "default_image" }
+        where: { name: 'default_image' }
     })
-    if (!default_image) throw new Error("No default image found")
+    if (!default_image) throw new Error('No default image found')
     return (
         <div>
             {

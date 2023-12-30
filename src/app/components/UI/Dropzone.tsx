@@ -1,11 +1,11 @@
 'use client'
 
-import { 
-    InputHTMLAttributes, 
-    useCallback, 
-    useState, 
-    ChangeEvent, 
-    DragEvent, 
+import {
+    InputHTMLAttributes,
+    useCallback,
+    useState,
+    ChangeEvent,
+    DragEvent,
     useRef,
     useEffect,
 } from 'react'
@@ -29,7 +29,7 @@ const byteToUnderstandable = (bytes: number) : string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-const Dropzone = ({label, color, name, ...props } : PropTypes) => {
+const Dropzone = ({ label, color, name, ...props } : PropTypes) => {
     const [files, setFiles] = useState<File[]>([])
     const input = useRef<HTMLInputElement>(null)
 
@@ -45,20 +45,20 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
     }, [files])
 
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        const droppedFiles = Array.from(event.dataTransfer.files);
-        setFiles(prev => [...prev, ...droppedFiles]);
+        event.preventDefault()
+        const droppedFiles = Array.from(event.dataTransfer.files)
+        setFiles(prev => [...prev, ...droppedFiles])
 
         if (input.current) {
-            input.current.blur();
+            input.current.blur()
         }
-    }, []);
+    }, [])
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
         const newFiles = Array.from(event.target.files ?? [])
         setFiles(prev => [...prev, ...newFiles])
         if (input.current) {
-            input.current.blur();
+            input.current.blur()
         }
     }, [])
 
@@ -69,19 +69,18 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
     }
 
     const onDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
+        event.preventDefault()
         if (input.current) {
-            input.current.blur();
+            input.current.blur()
         }
     }
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
-
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
-        setFiles([])  
+        setFiles([])
     }
 
     return (
@@ -117,4 +116,4 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
     )
 }
 
-export default Dropzone;
+export default Dropzone

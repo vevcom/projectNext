@@ -15,15 +15,15 @@ type PropTypes = {
     startImageName?: string,
 }
 
-export default function ImageCollectionDisplay({collection, startImageName}: PropTypes) {
+export default function ImageCollectionDisplay({ collection, startImageName }: PropTypes) {
     const [currentId, setCurrentId] = useState(collection.images.findIndex(image => image.name === startImageName))
     const goRight = useCallback(() => {
         setCurrentId(prev => (prev + 1) % collection.images.length)
     }, [currentId])
     const goLeft = useCallback(() => {
-        setCurrentId(prev => prev- 1 === -1 ? collection.images.length - 1 : prev - 1)
+        setCurrentId(prev => (prev - 1 === -1 ? collection.images.length - 1 : prev - 1))
     }, [currentId])
-    
+
     useKeyPress('ArrowRight', goRight)
     useKeyPress('ArrowLeft', goLeft)
     return (
@@ -35,7 +35,7 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
                     <Image width={200} image={collection.images[currentId]} />
                 </Suspense>
             </div>
-            
+
             <div className={styles.controls}>
                 <button onClick={goLeft}>
                     <FontAwesomeIcon icon={faChevronLeft}/>
