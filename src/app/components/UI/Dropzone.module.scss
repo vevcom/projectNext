@@ -40,20 +40,55 @@
             margin: 2*ohma.$gap;
         }
     }
-    > ul {
-        height: 200px;
-        overflow-y: scroll;
-    }
+    > span {
+        margin-top: 2*ohma.$gap;
+        padding: .5em;
+        background-color: lighten(ohma.$colors-primary, 40%);
+        > .general {
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
+            > p {
+                width: 100%;
+                text-align: center;
+                &:first-child {
+                    text-align: left;
+                }
+                &:last-child {
+                    text-align: right;
+                }
+                > button {
+                    background-color: transparent;
+                    border: none;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                    > svg {
+                        width: 20px;
+                        height: 20px;
+                        color: ohma.$colors-red;
+                    }
+                }
+            }
+        }
+        ul {
+            height: 200px;
+            overflow-y: scroll;
+            > li {
+                
+            }
+        }
+    } 
 }
 
 @keyframes pulse {
     0% {
-        background-color: rgba(ohma.$colors-primary, .6);
-    }
-    50% {
         background-color: rgba(ohma.$colors-primary, 0);
     }
-    100% {
+    50% {
         background-color: rgba(ohma.$colors-primary, .6);
+    }
+    100% {
+        background-color: rgba(ohma.$colors-primary, 0);
     }
 }

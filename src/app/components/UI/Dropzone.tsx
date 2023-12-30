@@ -47,6 +47,9 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
         event.preventDefault()
         const newFiles = Array.from(event.target.files ?? [])
         setFiles(prev => [...prev, ...newFiles])
+        if (input.current) {
+            input.current.blur();
+        }
     }, [])
 
     const onDragOver = (event: DragEvent<HTMLDivElement>) => {
@@ -81,9 +84,11 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
                 <div className={styles.general}>
                     <p>uploaded {files.length} {files.length === 1 ? 'file' : 'files'}</p>
                     <p>total size: {files.reduce((acc, file) => acc + file.size, 0)}</p>
-                    <button onClick={handleRemoveAll}>
-                        <FontAwesomeIcon icon={faTrash} />
-                    </button>
+                    <p>
+                        <button onClick={handleRemoveAll}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                    </p>
                 </div>
                 <ul>
                     {files.map((file, index) => (

@@ -28,7 +28,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         <FontAwesomeIcon icon={faUpload} />
                     </>
                 }>
-                    <Form title="Upload multiple" createText="upload" action={create.bind(null, collectionId)}>
+                    <Form title="Upload images" createText="upload" action={create.bind(null, collectionId)}>
                         <Dropzone label="upload images" name="images"/>
                     </Form>
                 </PopUp>
