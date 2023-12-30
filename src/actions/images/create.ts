@@ -26,14 +26,12 @@ export default async function create(collectionId: number, rawdata: FormData): P
 }
 
 export async function createMany(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
-    console.log('fefij')
     const schema = z.object({
         files: z.array(z.instanceof(File)).refine((files) => files.every((file) => file.size < 1024 * 1024), 'File size must be less than 1mb'),
     }).refine((data) => data.files.length < 100, 'Max 100 files').refine((data) => data.files.length > 0, 'You must add a file!')
     const parse = schema.safeParse({
         files: rawdata.getAll('files'),
     })
-    console.log(parse)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
@@ -41,7 +39,7 @@ export async function createMany(collectionId: number, rawdata: FormData): Promi
 
     let finalReturn : ActionReturn<Image[]> = { success: true, error: [], data: [] }
     for (const file of data.files) {
-        const ret = await createOne(file, {name: file.name, alt: file.name, collectionId})
+        const ret = await createOne(file, {name: file.name.split('.')[0], alt: file.name, collectionId})
         finalReturn  = {
             success: ret.success,
             error: ret.error,
