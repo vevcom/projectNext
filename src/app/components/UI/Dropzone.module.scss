@@ -43,11 +43,12 @@
     > span {
         margin-top: 2*ohma.$gap;
         padding: .5em;
-        background-color: lighten(ohma.$colors-primary, 40%);
+        background-color: lighten(ohma.$colors-primary, 20%);
         > .general {
             display: flex;
             justify-content: space-between;
             align-content: center;
+            padding: .5em;
             > p {
                 width: 100%;
                 text-align: center;
@@ -75,7 +76,23 @@
             height: 200px;
             overflow-y: scroll;
             > li {
-
+                display: flex;
+                justify-content: space-between;
+                > img {
+                    width: 40px;
+                    height: 40px;
+                    min-width: 40px;
+                    min-height: 40px;
+                    object-fit: contain;
+                }
+                > p {
+                    width: 100%;
+                    margin: 0 ohma.$gap;
+                }
+                @include ohma.round;
+                background-color: lighten(ohma.$colors-primary, 40%);;
+                padding: .5em;
+                margin: .3em 0;
             }
         }
     } 

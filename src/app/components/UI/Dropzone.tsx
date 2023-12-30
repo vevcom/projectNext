@@ -103,6 +103,7 @@ const Dropzone = ({ label, color, name, ...props } : PropTypes) => {
                 <ul>
                     {files.map((file, index) => (
                         <li key={index}>
+                            <img src={URL.createObjectURL(file)} alt={file.name} />
                             <p>{file.name}</p>
                             <p>{byteToUnderstandable(file.size)}</p>
                             <button className={styles.trash} onClick={(e) => handleRemove(e, file)}>
