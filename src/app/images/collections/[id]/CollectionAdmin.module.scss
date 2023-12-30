@@ -7,4 +7,17 @@
         border-bottom: solid 5px ohma.$colors-gray-800;
         margin-bottom: 1em;
     }
+    .upload {
+        > button {
+            background-color: transparent;
+            border: none;
+            color: ohma.$colors-black;
+            margin-bottom: 1em;
+            > svg {
+                width: 1.5em;
+                height: 1.5em;
+                margin: 0 .2em;
+            }
+        }
+    }
 }
