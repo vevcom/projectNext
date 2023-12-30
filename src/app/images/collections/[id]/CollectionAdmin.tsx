@@ -1,4 +1,4 @@
-import create from '@/actions/images/create'
+import create, { createMany } from '@/actions/images/create'
 import update from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
 import FileInput from '@/app/components/UI/FileInput'
@@ -28,8 +28,8 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         <FontAwesomeIcon icon={faUpload} />
                     </>
                 }>
-                    <Form title="Upload images" createText="upload" action={create.bind(null, collectionId)}>
-                        <Dropzone label="upload images" name="fikes"/>
+                    <Form title="Upload images" createText="upload" action={createMany.bind(null, collectionId)}>
+                        <Dropzone label="upload images" name="files"/>
                     </Form>
                 </PopUp>
             </div>
