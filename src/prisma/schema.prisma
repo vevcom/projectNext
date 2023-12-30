@@ -27,6 +27,8 @@ model Image {
   collection    ImageCollection  @relation(fields: [collectionId], references: [id])
   coverImageFor ImageCollection? @relation(name: "coverImage")
   collectionId  Int
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 
   @@map("images")
 }
@@ -38,6 +40,8 @@ model ImageCollection {
   images       Image[]
   coverImage   Image?  @relation(fields: [coverImageId], references: [id], name: "coverImage")
   coverImageId Int?    @unique
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 
   @@map("image_collections")
 }
