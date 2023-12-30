@@ -5,6 +5,8 @@
         padding: 0;
         width: 50vw;
         height: 50vh;
+        display: flex;
+        flex-direction: column;
         > .loading {
             @include ohma.card;
             overflow: hidden;
@@ -23,23 +25,25 @@
                 scale: 3;
             }
         }
-        > * {
+        //loading paceholder and image-container
+        > .loading, > *:last-child { 
+            margin-top: 1em;
             position: relative;
             width: 100% !important;
             height: 100%;
-            img {
-                position: absolute;
-                width: auto;
-                height: auto;
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                @include ohma.round;
-                padding: 0;
-            }
+        }
+        img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            @include ohma.round;
+            padding: 0;
         }
     }
     > .controls {

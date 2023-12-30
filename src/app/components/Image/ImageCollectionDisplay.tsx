@@ -29,6 +29,8 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
     return (
         <div className={styles.ImageCollectionDisplay}>
             <div className={styles.currentImage}>
+                <h2>{collection.images[currentId].name}</h2>
+                <i>{collection.images[currentId].alt}</i>
                 <Suspense fallback={
                     <div className={styles.loading}></div>
                 }>
