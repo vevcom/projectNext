@@ -3,9 +3,10 @@
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
 import type { ImageCollection, Image as ImageT } from '@prisma/client'
-import { Suspense, useState } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import useKeyPress from '@/hooks/useKeyPress'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -16,7 +17,15 @@ type PropTypes = {
 
 export default function ImageCollectionDisplay({collection, startImageName}: PropTypes) {
     const [currentId, setCurrentId] = useState(collection.images.findIndex(image => image.name === startImageName))
-
+    const goRight = useCallback(() => {
+        setCurrentId(prev => (prev + 1) % collection.images.length)
+    }, [currentId])
+    const goLeft = useCallback(() => {
+        setCurrentId(prev => prev- 1 === -1 ? collection.images.length - 1 : prev - 1)
+    }, [currentId])
+    
+    useKeyPress('ArrowRight', goRight)
+    useKeyPress('ArrowLeft', goLeft)
     return (
         <div className={styles.ImageCollectionDisplay}>
             <div className={styles.currentImage}>
@@ -28,10 +37,10 @@ export default function ImageCollectionDisplay({collection, startImageName}: Pro
             </div>
             
             <div className={styles.controls}>
-                <button onClick={() => setCurrentId(currentId - 1 === -1 ? collection.images.length - 1 : currentId - 1)}>
+                <button onClick={goLeft}>
                     <FontAwesomeIcon icon={faChevronLeft}/>
                 </button>
-                <button onClick={() => setCurrentId((currentId + 1) % collection.images.length)}>
+                <button onClick={goRight}>
                     <FontAwesomeIcon icon={faChevronRight}/>
                 </button>
             </div>
