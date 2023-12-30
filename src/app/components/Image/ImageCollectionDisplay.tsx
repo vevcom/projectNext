@@ -10,6 +10,7 @@ import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import update from '@/actions/images/update'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -31,6 +32,8 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
     useKeyPress('ArrowLeft', goLeft)
 
     const isAdmin = true //temp
+
+    const { refresh } = useRouter()
 
     return (
         <div className={styles.ImageCollectionDisplay}>
@@ -57,8 +60,13 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
             {
                 isAdmin && (
                     <div className={styles.admin}>
-                        <Form title='Make' action={update.bind(null, collection.images[currentIndex].id)}>
+                        <Form 
+                            title='Edit metadata' 
+                            successCallback={refresh} 
+                            action={update.bind(null, collection.images[currentIndex].id)}
+                        >
                             <TextInput name='name' label='name' />
+                            <TextInput name='alt' label='alt' />
                         </Form>
                     </div>
                 )
