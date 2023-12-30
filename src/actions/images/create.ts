@@ -12,8 +12,8 @@ import { ActionReturn } from '../type'
 export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
         file: z.instanceof(File).refine((file) => file.size < 1024 * 1024, 'File size must be less than 1mb'),
-        name: z.string().max(50).min(2),
-        alt: z.string().max(100).min(2),
+        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
+        alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
     })
     const parse = schema.safeParse({
         file: rawdata.get('file'),
