@@ -19,6 +19,16 @@ type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | '
     name: string,
 }
 
+const byteToUnderstandable = (bytes: number) : string => {
+    if (bytes < 1024) {
+        return `${bytes} bytes`
+    }
+    if (bytes < 1024 ** 2) {
+        return `${(bytes / 1024).toFixed(2)} KB`
+    }
+    return `${(bytes / 1024 ** 2).toFixed(2)} MB`
+}
+
 const Dropzone = ({label, color, name, ...props } : PropTypes) => {
     const [files, setFiles] = useState<File[]>([])
     const input = useRef<HTMLInputElement>(null)
@@ -65,8 +75,9 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
         }
     }
 
-    const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
+
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
@@ -83,9 +94,9 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
             <span>
                 <div className={styles.general}>
                     <p>uploaded {files.length} {files.length === 1 ? 'file' : 'files'}</p>
-                    <p>total size: {files.reduce((acc, file) => acc + file.size, 0)}</p>
+                    <p>total size: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
                     <p>
-                        <button onClick={handleRemoveAll}>
+                        <button className={styles.trash} onClick={handleRemoveAll}>
                             <FontAwesomeIcon icon={faTrash} />
                         </button>
                     </p>
@@ -94,13 +105,14 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
                     {files.map((file, index) => (
                         <li key={index}>
                             <p>{file.name}</p>
-                            <p>{file.size}</p>
-                            <button onClick={handleRemove}></button>
+                            <p>{byteToUnderstandable(file.size)}</p>
+                            <button className={styles.trash} onClick={(e) => handleRemove(e, file)}>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </button>
                         </li>
                     ))}
                 </ul>
             </span>
-            
         </div>
     )
 }
