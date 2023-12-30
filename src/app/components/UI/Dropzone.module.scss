@@ -26,6 +26,9 @@
                     scale: 1.05;
                 }
             }
+            &:focus {
+                opacity: 1;
+            }
         }
         > svg, p {
             z-index: -1;
