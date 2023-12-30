@@ -19,7 +19,11 @@ export default async function Collection({ params } : PropTypes) {
             id: Number(params.id),
         },
         include: {
-            images: true,
+            images: {
+                orderBy: {
+                    createdAt: 'asc'
+                }
+            },
         },
     })
     if (!collection) notFound()
