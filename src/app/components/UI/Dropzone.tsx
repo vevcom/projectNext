@@ -33,6 +33,7 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
             const dataTransfer = new DataTransfer();
             droppedFiles.forEach(file => dataTransfer.items.add(file));
             input.current.files = dataTransfer.files;
+            input.current.blur();
         }
     }, []);
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +48,16 @@ const Dropzone = ({label, color, name, ...props } : PropTypes) => {
         input.current?.focus()
     }
 
+    const onDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        if (input.current) {
+            input.current.blur();
+        }
+    }
+
     return (
         <div className={styles.Dropzone}>
-            <div onDrop={onDrop} onDragOver={onDragOver} className={styles.uploader}>
+            <div onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave} className={styles.uploader}>
                 <input ref={input} name={name} onChange={filesUpdated} type="file" multiple {...props} />
                 <p>{label}</p>
                 <FontAwesomeIcon icon={faUpload} />

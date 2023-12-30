@@ -13,6 +13,9 @@
         display: flex;
         justify-content: center;
         align-items: center;    
+        &:has(> input:focus) {
+            animation: pulse 1s infinite;
+        }
         > input {
             position: absolute;
             top: 0;
@@ -25,9 +28,6 @@
                 ~ p, ~ svg {
                     scale: 1.05;
                 }
-            }
-            &:focus {
-                opacity: 1;
             }
         }
         > svg, p {
@@ -43,5 +43,17 @@
     > ul {
         height: 200px;
         overflow-y: scroll;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        background-color: rgba(ohma.$colors-primary, .6);
+    }
+    50% {
+        background-color: rgba(ohma.$colors-primary, 0);
+    }
+    100% {
+        background-color: rgba(ohma.$colors-primary, .6);
     }
 }
