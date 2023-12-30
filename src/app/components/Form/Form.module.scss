@@ -15,10 +15,11 @@
         color: ohma.$colors-red;
         display: flex;
         flex-direction: column; 
-        min-height: 1em;
+        height: 1em;
         &.pending {
             visibility: hidden;
         }
+        margin-bottom: 3px;
     }
     .submit {
         margin-top: ohma.$gap;
