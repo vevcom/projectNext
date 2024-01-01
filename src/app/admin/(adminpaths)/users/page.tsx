@@ -8,7 +8,7 @@ export default function Users() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.createUser}>
-                <Form title="Create a user" createText="Create user" action={create}>
+                <Form title="Create a user" submitText="Create user" action={create}>
                     <TextInput label="username" name="username" key={uuid()}/>
                     <TextInput label="password" name="password" key={uuid()}/>
                     <TextInput label="confirm password" name="confirmPassword" key={uuid()}/>

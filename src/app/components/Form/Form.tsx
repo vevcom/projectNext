@@ -11,9 +11,9 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
-    children: ReactNode,
+    children?: ReactNode,
     title?: string,
-    createText?: string,
+    submitText?: string,
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
 }
@@ -37,7 +37,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }
     })
 
-export default function Form<GiveActionReturn>({ children, title, createText = 'create', action, successCallback, ...props }: PropTypes<GiveActionReturn>) {
+export default function Form<GiveActionReturn>({ children, title, submitText = 'create', action, successCallback, ...props }: PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
@@ -82,13 +82,13 @@ export default function Form<GiveActionReturn>({ children, title, createText = '
 
     return (
         <form className={styles.Form} action={actionWithError} {...props}>
-            <h2>{title}</h2>
+            {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <SubmitButton success={success} generalErrors={generalErrors}>{createText}</SubmitButton>
+            <SubmitButton success={success} generalErrors={generalErrors}>{submitText}</SubmitButton>
         </form>
     )
 }

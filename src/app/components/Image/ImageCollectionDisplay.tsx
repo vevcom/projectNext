@@ -1,5 +1,4 @@
 'use client'
-
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
 import type { ImageCollection, Image as ImageT } from '@prisma/client'
@@ -11,6 +10,7 @@ import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
+import destroy from '@/actions/images/destroy'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -67,6 +67,12 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
                         >
                             <TextInput name='name' label='name' />
                             <TextInput name='alt' label='alt' />
+                        </Form>
+                        <Form
+                            successCallback={refresh}
+                            action={destroy.bind(null, collection.images[currentIndex].id)}
+                            submitText='delete'
+                        >
                         </Form>
                     </div>
                 )

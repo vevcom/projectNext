@@ -25,7 +25,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <Form 
                     successCallback={() => router.refresh()}
                     title="Upload image" 
-                    createText="upload" 
+                    submitText="upload" 
                     action={create.bind(null, collectionId)}
                 >
                     <TextInput color="black" label="name" name="name" />
@@ -41,7 +41,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                     <Form 
                         successCallback={() => router.refresh()}
                         title="Upload images" 
-                        createText="upload" 
+                        submitText="upload" 
                         action={createMany.bind(null, collectionId)}
                     >
                         <Dropzone label="upload images" name="files"/>
@@ -51,7 +51,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
             <Form 
                 successCallback={() => router.refresh()}
                 title="Edit collection" 
-                createText="update" 
+                submitText="update" 
                 action={update.bind(null, collectionId)}
             >
                 <TextInput color="black" label="collection name" name="name" />
