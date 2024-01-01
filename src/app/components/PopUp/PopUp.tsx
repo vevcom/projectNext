@@ -6,6 +6,7 @@ import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
+import useKeyPress from '@/hooks/useKeyPress'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -14,6 +15,7 @@ type PropTypes = {
 
 export default function PopUp({ children, showButtonContent } : PropTypes) {
     const [show, setShow] = useState(false)
+    useKeyPress('Escape', () => setShow(false))
 
     const showBtn = (
         <button className={styles.openBtn} onClick={() => setShow(true)}>
