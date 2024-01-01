@@ -26,7 +26,7 @@ export default async function Collection({ params } : PropTypes) {
         },
     })
     if (!collection) notFound()
-    const isAdmin = false //temp
+    const isAdmin = true //temp
 
     return (
         <div className={styles.wrapper}>

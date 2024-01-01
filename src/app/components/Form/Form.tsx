@@ -166,7 +166,7 @@ function SubmitButton({
                 confirmation.confirm ? (
                     confirmedOpen ? (
                         <div className={styles.confirm}> 
-                            <p>{confirmation.text}</p>
+                            <p>{confirmation.text || 'Are you sure?'}</p>
                             <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
                                 <FontAwesomeIcon icon={faX} />
                             </button>
