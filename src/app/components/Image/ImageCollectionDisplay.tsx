@@ -72,6 +72,7 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
                             successCallback={refresh}
                             action={destroy.bind(null, collection.images[currentIndex].id)}
                             submitText='delete'
+                            submitColor='red'
                         >
                         </Form>
                     </div>
