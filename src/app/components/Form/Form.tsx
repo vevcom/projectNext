@@ -8,12 +8,16 @@ import type { Action } from '@/actions/type'
 import type { ActionError } from '@/actions/type'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import type { PropTypes as ButtonPropTypes } from '../UI/Button'
+
+type Colors = ButtonPropTypes['color'] 
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,
+    submitColor?: Colors
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
 }
@@ -37,7 +41,15 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }
     })
 
-export default function Form<GiveActionReturn>({ children, title, submitText = 'create', action, successCallback, ...props }: PropTypes<GiveActionReturn>) {
+export default function Form<GiveActionReturn>({ 
+    children, 
+    title, 
+    submitText = 'create', 
+    submitColor = 'primary',
+    action, 
+    successCallback, 
+    ...props 
+} : PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
@@ -88,13 +100,23 @@ export default function Form<GiveActionReturn>({ children, title, submitText = '
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <SubmitButton success={success} generalErrors={generalErrors}>{submitText}</SubmitButton>
+            <SubmitButton color={submitColor} success={success} generalErrors={generalErrors}>{submitText}</SubmitButton>
         </form>
     )
 }
 
 
-function SubmitButton({ children, generalErrors, success }: {children: ReactNode, generalErrors?: ActionError[], success: boolean}) {
+function SubmitButton({ 
+    children, 
+    generalErrors, 
+    success,
+    color,
+} : {
+    children: ReactNode, generalErrors?: 
+    ActionError[], 
+    success: boolean,
+    color: Colors,
+}) {
     const { pending } = useFormStatus()
     const btnContent = () => {
         if (pending) {
@@ -116,7 +138,7 @@ function SubmitButton({ children, generalErrors, success }: {children: ReactNode
 
     return (
         <div className={styles.submit}>
-            <Button aria-disabled={pending || success} color={success ? 'green' : 'primary'} type="submit">
+            <Button aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
                 {btnContent()}
             </Button>
             <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>

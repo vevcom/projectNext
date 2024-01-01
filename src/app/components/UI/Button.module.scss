@@ -11,3 +11,7 @@
 .green {
     @include ohma.btn(ohma.$colors-green);
 }
+
+.red {
+    @include ohma.btn(ohma.$colors-red);
+}
