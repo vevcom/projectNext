@@ -73,6 +73,10 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
                             action={destroy.bind(null, collection.images[currentIndex].id)}
                             submitText='delete'
                             submitColor='red'
+                            confirmation={{
+                                confirm: true,
+                                text: 'Are you sure you want to delete this image?'
+                            }}
                         >
                         </Form>
                     </div>

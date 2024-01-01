@@ -7,17 +7,22 @@ import styles from './Form.module.scss'
 import type { Action } from '@/actions/type'
 import type { ActionError } from '@/actions/type'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as ButtonPropTypes } from '../UI/Button'
 
 type Colors = ButtonPropTypes['color'] 
+type Confirmation = {
+    confirm: boolean,
+    text?: string,
+}
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,
-    submitColor?: Colors
+    submitColor?: Colors,
+    confirmation?: Confirmation,
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
 }
@@ -46,6 +51,9 @@ export default function Form<GiveActionReturn>({
     title, 
     submitText = 'create', 
     submitColor = 'primary',
+    confirmation = {
+        confirm: false,
+    },
     action, 
     successCallback, 
     ...props 
@@ -100,7 +108,14 @@ export default function Form<GiveActionReturn>({
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <SubmitButton color={submitColor} success={success} generalErrors={generalErrors}>{submitText}</SubmitButton>
+            <SubmitButton 
+                color={submitColor} 
+                success={success} 
+                generalErrors={generalErrors}
+                confirmation={confirmation}
+            >
+                {submitText}
+            </SubmitButton>
         </form>
     )
 }
@@ -111,13 +126,17 @@ function SubmitButton({
     generalErrors, 
     success,
     color,
+    confirmation,
 } : {
     children: ReactNode, generalErrors?: 
     ActionError[], 
     success: boolean,
     color: Colors,
+    confirmation: Confirmation,
 }) {
     const { pending } = useFormStatus()
+    const [confirmedOpen, setConfirmedOpen] = useState(false)
+
     const btnContent = () => {
         if (pending) {
             return (
@@ -135,12 +154,34 @@ function SubmitButton({
         }
         return children
     }
+    const button = (
+        <Button aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
+            {btnContent()}
+        </Button>
+    )
 
     return (
         <div className={styles.submit}>
-            <Button aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
-                {btnContent()}
-            </Button>
+            {
+                confirmation.confirm ? (
+                    confirmedOpen ? (
+                        <div className={styles.confirm}> 
+                            <p>{confirmation.text}</p>
+                            <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
+                                <FontAwesomeIcon icon={faX} />
+                            </button>
+                            {button}
+                        </div>
+                    ) : (
+                        <Button color={color} onClick={() => setConfirmedOpen(true)}>
+                            {children}
+                        </Button>
+                    )
+                ) : (
+                    button
+                )
+            }
+            
             <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>
                 {
                     generalErrors && generalErrors[0]?.message
