@@ -1,7 +1,7 @@
 'use server'
 import { z } from 'zod'
 import type { Image } from '@prisma/client'
-import { ActionReturn } from '../type'
+import type { ActionReturn } from '../type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 
@@ -21,13 +21,13 @@ export default async function update(imageId: number, rawdata: FormData): Promis
     if (!parse.success) return { success: false, error: parse.error.issues }
     const data = parse.data
     try {
-        const collection = await prisma.image.update({
+        const image = await prisma.image.update({
             where: {
                 id: imageId,
             },
             data
         })
-        return { success: true, data: collection }
+        return { success: true, data: image }
     } catch (error) {
         return errorHandeler(error)
     }
