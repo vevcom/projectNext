@@ -24,7 +24,7 @@ model Image {
   name          String           @unique
   ext           String
   alt           String
-  collection    ImageCollection  @relation(fields: [collectionId], references: [id])
+  collection    ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageFor ImageCollection? @relation(name: "coverImage")
   collectionId  Int
   createdAt     DateTime         @default(now()) @map("created_at")
