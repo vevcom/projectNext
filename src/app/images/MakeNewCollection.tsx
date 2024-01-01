@@ -17,7 +17,7 @@ export default function MakeNewCollection() {
     return (
         <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <Form successCallback={collectionCreatedCallback}
-                title="Make a collection" createText="Create collection" action={create}>
+                title="Make a collection" submitText="Create collection" action={create}>
                 <TextInput label="name" name="name" />
                 <TextInput label="description" name="description" />
             </Form>
