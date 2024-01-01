@@ -6,7 +6,6 @@ import CollectionAdmin from './CollectionAdmin'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
 
-
 type PropTypes = {
     params: {
         id: string
@@ -27,7 +26,7 @@ export default async function Collection({ params } : PropTypes) {
         },
     })
     if (!collection) notFound()
-    const isAdmin = true //temp
+    const isAdmin = false //temp
 
     return (
         <div className={styles.wrapper}>

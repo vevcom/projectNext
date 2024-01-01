@@ -11,19 +11,19 @@ $image-size: 150px;
         position: relative
     }
     > .images {
-        max-width: 85vw;
         padding: 3*ohma.$gap;
         > span {
+            margin-top: ohma.$gap;
             display: flex;
             flex-flow: row wrap;
-            
             > .imageAndBtn {
                 width: $image-size;
                 height: $image-size;
-                margin: ohma.$gap;
+                margin: 0.5*ohma.$gap;
                 overflow: hidden;
                 @include ohma.round;
                 position: relative;
+                border: 3px solid ohma.$colors-primary;
                 > *:first-child {
                     position: absolute;
                     top: 0;
@@ -42,8 +42,11 @@ $image-size: 150px;
                     }
                     
                 }
-                &:hover > *:first-child > img {
-                    transform: scale(1.1);
+                &:hover {
+                    margin: solid 10px ohma.$colors-primary;
+                    > *:first-child > img {
+                        transform: scale(1.1);
+                    }
                 }
                 > button {
                     z-index: 1;
