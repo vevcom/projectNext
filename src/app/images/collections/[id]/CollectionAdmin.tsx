@@ -10,7 +10,8 @@ import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import destroy from '@/actions/images/collections/destroy'
 
 type PropTypes = {
     collectionId: number
@@ -57,6 +58,16 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <TextInput color="black" label="collection name" name="name" />
                 <TextInput color="black" label="description" name="description" />
             </Form>
+            <Form
+                submitText='Delete collection'
+                successCallback={() => router.push('/images')}
+                action={destroy.bind(null, collectionId)}
+                submitColor='red'
+                confirmation={{
+                    confirm: true,
+                    text: 'Are you sure you want to delete this collection? Rhis will also delete all the images in this collection.'
+                }}
+            />
         </div>
     )
 }
