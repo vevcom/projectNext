@@ -46,7 +46,14 @@ export default function ImageCollectionList({collection, pageSize}: PropTypes) {
     }, [inView])
 
     const imageComponents = useMemo(() => 
-        images.map(image => <ImageWithFallback key={image.id} image={image} collection={collection} />),
+        images.map(image => 
+        <ImageWithFallback 
+            loadMoreImages={loadMoreImages} 
+            allLoaded={allLoaded}
+            key={image.id} 
+            image={image} 
+            collection={collection} 
+        />),
     [images, collection])
 
     return (
@@ -58,7 +65,7 @@ export default function ImageCollectionList({collection, pageSize}: PropTypes) {
                     allLoaded ? (
                         <i>No more images to load</i>
                     ) : 
-                        <div>
+                        <div ref={ref}>
                             <Button onClick={loadMoreImages}>Load more</Button>
                         </div>
                     }       
@@ -70,12 +77,16 @@ export default function ImageCollectionList({collection, pageSize}: PropTypes) {
 
 function ImageWithFallback({ 
     image, 
-    collection 
+    collection,
+    loadMoreImages,
+    allLoaded,
 }: { 
     image: Image, 
     collection: ImageCollection & {
         images: Image[],
     },
+    loadMoreImages: () => Promise<void>,
+    allLoaded: boolean,
 }) {
     return (
         <div className={styles.imageAndBtn}>
@@ -86,6 +97,8 @@ function ImageWithFallback({
                 <ImageCollectionDisplay 
                     startImageName={image.name} 
                     collection={collection} 
+                    loadMoreImages={loadMoreImages}
+                    allLoaded={allLoaded}
                 />
             </PopUp>
         </div>

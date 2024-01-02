@@ -17,12 +17,31 @@ type PropTypes = {
         images: ImageT[],
     },
     startImageName?: string,
+    loadMoreImages?: () => Promise<void>,
+    allLoaded?: boolean,
 }
 
-export default function ImageCollectionDisplay({ collection, startImageName }: PropTypes) {
+export default function ImageCollectionDisplay({ collection, startImageName, loadMoreImages, allLoaded }: PropTypes) {
     const [currentIndex, setcurrentIndex] = useState(collection.images.findIndex(image => image.name === startImageName))
-    const goRight = useCallback(() => {
+    allLoaded ??= true
+
+    const naiveGoRight = useCallback(() => {
         setcurrentIndex(prev => (prev + 1) % collection.images.length)
+    }, [currentIndex])
+    const goRight = useCallback(async () => {
+        if (allLoaded) {
+            naiveGoRight()
+        } else {
+            if (currentIndex === collection.images.length - 1) {
+                if (!loadMoreImages) {
+                    allLoaded = true
+                    return naiveGoRight()
+                }
+                await loadMoreImages()
+                return naiveGoRight()
+            }
+            setcurrentIndex(prev => (prev + 1) % collection.images.length)
+        }
     }, [currentIndex])
     const goLeft = useCallback(() => {
         setcurrentIndex(prev => (prev - 1 === -1 ? collection.images.length - 1 : prev - 1))
