@@ -5,6 +5,8 @@ import Image from '@/components/Image/Image'
 import CollectionAdmin from './CollectionAdmin'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
+import Button from '@/app/components/UI/Button'
+import read from '@/actions/images/collections/read'
 
 type PropTypes = {
     params: {
@@ -13,20 +15,8 @@ type PropTypes = {
 }
 
 export default async function Collection({ params } : PropTypes) {
-    const collection = await prisma.imageCollection.findUnique({
-        where: {
-            id: Number(params.id),
-        },
-        include: {
-            images: {
-                orderBy: {
-                    id: 'asc'
-                },
-                take: 20,
-            },
-        },
-    })
-    if (!collection) notFound()
+    const { success, data: collection } = await read(Number(params.id), 20)
+    if (!success || !collection) notFound()
     const isAdmin = true //temp
 
     return (
@@ -54,7 +44,7 @@ export default async function Collection({ params } : PropTypes) {
                         )
                     }
                 </span>
-
+                <Button>Load more</Button>
             </div>
         </div>
     )
