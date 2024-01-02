@@ -5,6 +5,8 @@ import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
 import Button from '@/app/components/UI/Button'
 import { default as ImageComponent } from '@/components/Image/Image'
+import { useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 type PropTypes = {
     collection: ImageCollection & {
@@ -14,6 +16,10 @@ type PropTypes = {
 
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageCollectionList({collection}: PropTypes) {
+    const [images, setImages] =  useState<Image[]>(collection.images)
+    const [page, setPage] = useState(0)
+    const [ref, inView] = useInView()
+
     return (
         <div className={styles.ImageCollectionList}>
             {
