@@ -59,7 +59,7 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
             </div>
             {
                 isAdmin && (
-                    <div className={styles.admin}>
+                    <aside className={styles.admin}>
                         <Form 
                             title='Edit metadata' 
                             successCallback={refresh} 
@@ -79,7 +79,7 @@ export default function ImageCollectionDisplay({ collection, startImageName }: P
                             }}
                         >
                         </Form>
-                    </div>
+                    </aside>
                 )
             }
         </div>
