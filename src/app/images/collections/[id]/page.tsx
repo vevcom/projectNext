@@ -11,7 +11,9 @@ type PropTypes = {
 }
 
 export default async function Collection({ params } : PropTypes) {
-    const { success, data: collection } = await read(Number(params.id), 20, 0)
+    const pageSize = 20;
+
+    const { success, data: collection } = await read(Number(params.id), pageSize, 0)
     if (!success || !collection) notFound()
     const isAdmin = true //temp
 
@@ -26,7 +28,7 @@ export default async function Collection({ params } : PropTypes) {
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
                 <main>
-                    <ImageCollectionList collection={collection} />
+                    <ImageCollectionList collection={collection} pageSize={pageSize} />
                 </main>
             </div>
         </div>
