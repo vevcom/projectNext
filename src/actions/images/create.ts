@@ -50,9 +50,9 @@ export async function createMany(collectionId: number, rawdata: FormData): Promi
     return finalReturn
 }
 
-async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'id'>) : Promise<ActionReturn<Image>> {
+async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
-    if (!['png', 'jpg', 'jpeg'].includes(ext)) {
+    if (!['png', 'jpg', 'jpeg', 'HEIC'].includes(ext)) {
         return {
             success: false, error: [
                 {

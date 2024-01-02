@@ -21,7 +21,8 @@ export default async function Collection({ params } : PropTypes) {
             images: {
                 orderBy: {
                     id: 'asc'
-                }
+                },
+                take: 20,
             },
         },
     })
