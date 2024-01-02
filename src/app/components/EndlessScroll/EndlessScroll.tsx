@@ -2,12 +2,19 @@
 
 import { ActionReturn, Page } from '@/actions/type'
 import React, { createContext, useReducer } from 'react'
+import type { Context } from 'react'
+
+type ContextType<Data, PageSize extends number> = Context<{
+    state: StateTypes<Data, PageSize>,
+    loadMore: () => Promise<void>,
+} | null>
 
 export type PropTypes<Data, PageSize extends number> = {
     fetcher: (page: Page<PageSize>) => Promise<ActionReturn<Data[]>>,
     initialData: Data[],
     startPage: Page<PageSize>,
     children: React.ReactNode,
+    Context: ContextType<Data, PageSize>,
 }
 
 export type StateTypes<Data, PageSize extends number> = {
@@ -23,10 +30,6 @@ type ActionTypes<Data> = {
     type: 'loadMoreSuccess' | 'loadMoreFailure',
     fetchReturn: ActionReturn<Data[]>,
 }
-
-const EndlessScrollContext = createContext({
- 
-})
 
 function endlessScrollReducer<Data, const PageSize extends number>
 (state: StateTypes<Data, PageSize>, action: ActionTypes<Data>) : StateTypes<Data, PageSize> {
@@ -45,7 +48,7 @@ function endlessScrollReducer<Data, const PageSize extends number>
 }
 
 export default function EndlessScroll<Data, const PageSize extends number>
-    ({ fetcher, initialData, startPage, children }: PropTypes<Data, PageSize>) {
+    ({ fetcher, initialData, startPage, children, Context }: PropTypes<Data, PageSize>) {
     const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false });
 
     const loadMore = async () => {
@@ -59,8 +62,15 @@ export default function EndlessScroll<Data, const PageSize extends number>
     }
 
     return (
-        <EndlessScrollContext.Provider value={{ state , loadMore }}>
+        <Context.Provider value={{ state , loadMore }}>
             {children}
-        </EndlessScrollContext.Provider>
+        </Context.Provider>
     );
+}
+
+export function createEndlessScrollContext<Data, const PageSize extends number>() : ContextType<Data, PageSize> {
+    return createContext<{
+        state: StateTypes<Data, PageSize>,
+        loadMore: () => Promise<void>,
+    } | null>(null)
 }
