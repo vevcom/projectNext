@@ -2,7 +2,7 @@
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
 import type { ImageCollection, Image as ImageT } from '@prisma/client'
-import { Suspense, useCallback, useState } from 'react'
+import { Suspense, useRef, useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '@/hooks/useKeyPress'
@@ -12,40 +12,59 @@ import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 
+type ColletionWithImage = ImageCollection & {
+    images: ImageT[],
+}
+
 type PropTypes = {
-    collection: ImageCollection & {
-        images: ImageT[],
-    },
+    collection: ColletionWithImage,
     startImageName?: string,
-    loadMoreImages?: () => Promise<void>,
+    loadMoreImages: () => Promise<ColletionWithImage | null>,
     allLoaded?: boolean,
 }
 
 export default function ImageCollectionDisplay({ collection, startImageName, loadMoreImages, allLoaded }: PropTypes) {
-    const [currentIndex, setcurrentIndex] = useState(collection.images.findIndex(image => image.name === startImageName))
-    allLoaded ??= true
+    const [currentIndex, setcurrentIndex] = useState(() => collection.images.findIndex(image => image.name === startImageName))
+    const currentIndexRef = useRef(currentIndex)
+    const collectionLength = useRef(collection.images.length)
+    const loop = useRef(allLoaded ?? true)
 
-    const naiveGoRight = useCallback(() => {
-        setcurrentIndex(prev => (prev + 1) % collection.images.length)
+    useEffect(() => {
+        currentIndexRef.current = currentIndex
     }, [currentIndex])
-    const goRight = useCallback(async () => {
-        if (allLoaded) {
-            naiveGoRight()
-        } else {
-            if (currentIndex === collection.images.length - 1) {
-                if (!loadMoreImages) {
-                    allLoaded = true
-                    return naiveGoRight()
-                }
-                await loadMoreImages()
+
+    useEffect(() => {
+        collectionLength.current = collection.images.length
+    }, [collection])
+
+    useEffect(() => {
+        loop.current = allLoaded ?? true
+    }, [allLoaded])
+
+    const goLeft = () => {
+        setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? collectionLength.current - 1 : prevIndex - 1))
+    }
+
+    const naiveGoRight = () => {
+        setcurrentIndex(prevIndex => (prevIndex + 1) % collectionLength.current)
+    }
+    
+    const goRight = async () => {
+        if (currentIndexRef.current + 1 === collectionLength.current) {
+            if (loop.current) {
                 return naiveGoRight()
+            } 
+            if (!loadMoreImages) {
+                loop.current = true
+                return naiveGoRight() 
             }
-            setcurrentIndex(prev => (prev + 1) % collection.images.length)
+            const data = await loadMoreImages()
+            if (!data) return naiveGoRight()
+            collectionLength.current += data.images.length
+            return naiveGoRight()
         }
-    }, [currentIndex])
-    const goLeft = useCallback(() => {
-        setcurrentIndex(prev => (prev - 1 === -1 ? collection.images.length - 1 : prev - 1))
-    }, [currentIndex])
+        return naiveGoRight()
+    }
 
     useKeyPress('ArrowRight', goRight)
     useKeyPress('ArrowLeft', goLeft)
@@ -60,6 +79,7 @@ export default function ImageCollectionDisplay({ collection, startImageName, loa
                 <div className={styles.currentImage}>
                     <h2>{collection.images[currentIndex].name}</h2>
                     <i>{collection.images[currentIndex].alt}</i>
+                    <i>{currentIndex}</i>
                     <Suspense fallback={
                         <div className={styles.loading}></div>
                     }>

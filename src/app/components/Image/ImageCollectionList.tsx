@@ -14,29 +14,40 @@ import {
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import read from '@/actions/images/collections/read'
-import { set } from 'zod'
+
+type ColletionWithImage = ImageCollection & {
+    images: Image[],
+}
 
 type PropTypes = {
-    collection: ImageCollection & {
-        images: Image[],
-    },
+    collection: ColletionWithImage
     pageSize: number,
 }
 
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageCollectionList({collection, pageSize}: PropTypes) {
-    const [images, setImages] =  useState<Image[]>(collection.images)
+export default function ImageCollectionList({collection: initial, pageSize}: PropTypes) {
+    const [collection, setCollection] =  useState<ColletionWithImage>(initial)
     const [page, setPage] = useState(0)
     const [ref, inView] = useInView()
     const [allLoaded, setAllLoaded] = useState(false)
 
     const loadMoreImages = useCallback(async () => {
         const next = page + 1
-        const {success, data, error} = await read(collection.id, pageSize, next)
-        if (!(success && data)) return console.log(error)
-        if (data.images.length === 0) return setAllLoaded(true)
-        setImages(x => [...x, ...data.images])
+        const {success, data, error} = await read(collection.id, {pageSize, page: next})
+        if (!(success && data)) {
+            console.log(error)
+            return null
+        }
+        if (data.images.length === 0) {
+            setAllLoaded(true)
+            return data
+        }
+        setCollection(x => ({
+            ...x,
+            images: [...x.images, ...data.images]
+        }))
         setPage(next)
+        return data
     }, [page])
 
     useEffect(() => {
@@ -45,20 +56,18 @@ export default function ImageCollectionList({collection, pageSize}: PropTypes) {
         }
     }, [inView])
 
-    const imageComponents = useMemo(() => 
-        images.map(image => 
-        <ImageWithFallback 
-            loadMoreImages={loadMoreImages} 
-            allLoaded={allLoaded}
-            key={image.id} 
-            image={image} 
-            collection={collection} 
-        />),
-    [images, collection])
-
     return (
         <div className={styles.ImageCollectionList}>
-            {imageComponents}
+            {
+                collection.images.map(image => 
+                    <ImageWithFallback 
+                        loadMoreImages={loadMoreImages} 
+                        allLoaded={allLoaded}
+                        key={image.id} 
+                        image={image} 
+                        collection={collection} 
+                    />)
+            }
             <span className={styles.loadingControl}>
                 <Suspense fallback={<div>Loading...</div>}>
                     {
@@ -82,10 +91,8 @@ function ImageWithFallback({
     allLoaded,
 }: { 
     image: Image, 
-    collection: ImageCollection & {
-        images: Image[],
-    },
-    loadMoreImages: () => Promise<void>,
+    collection: ColletionWithImage,
+    loadMoreImages: () => Promise<ColletionWithImage | null>,
     allLoaded: boolean,
 }) {
     return (

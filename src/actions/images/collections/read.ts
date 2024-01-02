@@ -1,10 +1,9 @@
 'use server'
 import prisma from "@/prisma"
 import type { ImageCollection, Image } from "@prisma/client"
-import type { ActionReturn } from "@/actions/type"
+import type { ActionReturn, Page } from "@/actions/type"
 
-
-export default async function read(id: number, amount: number, page: number)
+export default async function read<const PageSize extends number>(id: number, {pageSize, page}: Page<PageSize>)
     : Promise<ActionReturn<ImageCollection & {images: Image[]}>> {
     const collection = await prisma.imageCollection.findUnique({
         where: {
@@ -15,8 +14,8 @@ export default async function read(id: number, amount: number, page: number)
                 orderBy: {
                     id: 'asc'
                 },
-                skip: page * amount,
-                take: amount,
+                skip: page * pageSize,
+                take: pageSize,
             },
         },
     })
