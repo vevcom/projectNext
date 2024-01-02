@@ -1,20 +1,23 @@
 'use client'
 
-import { ActionReturn, Page } from '@/actions/type'
+import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import React, { createContext, useReducer } from 'react'
 import type { Context } from 'react'
 
-type ContextType<Data, PageSize extends number> = Context<{
+type ContextType<Data, PageSize extends number, FetcherDetails> = Context<{
     state: StateTypes<Data, PageSize>,
-    loadMore: () => Promise<void>,
+    loadMore: (details: FetcherDetails) => Promise<void>,
 } | null>
 
 export type PropTypes<Data, PageSize extends number> = {
-    fetcher: (page: Page<PageSize>) => Promise<ActionReturn<Data[]>>,
     initialData: Data[],
     startPage: Page<PageSize>,
     children: React.ReactNode,
-    Context: ContextType<Data, PageSize>,
+}
+
+export type PropTypesHOF<Data, PageSize extends number, FetcherDetails> = {
+    fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
+    Context: ContextType<Data, PageSize, FetcherDetails>,
 }
 
 export type StateTypes<Data, PageSize extends number> = {
@@ -31,7 +34,7 @@ type ActionTypes<Data> = {
     fetchReturn: ActionReturn<Data[]>,
 }
 
-function endlessScrollReducer<Data, const PageSize extends number>
+function endlessScrollReducer<Data, const PageSize extends number, FetcherDetails>
 (state: StateTypes<Data, PageSize>, action: ActionTypes<Data>) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
@@ -50,35 +53,43 @@ function endlessScrollReducer<Data, const PageSize extends number>
                 }
             }
         case 'loadMoreFailure':
-            console.error(action.fetchReturn.error);
+            console.error(action.fetchReturn.error)
             return {...state, allLoaded: true, loading: false}
     }
 }
 
-export default function EndlessScroll<Data, const PageSize extends number>
-    ({ fetcher, initialData, startPage, children, Context }: PropTypes<Data, PageSize>) {
-    const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false });
+const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: PropTypesHOF<Data, PageSize, FetcherDetails>) =>
+    ({initialData, startPage, children}: PropTypes<Data, PageSize>) => {
+        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize, FetcherDetails>, { data: initialData, page: startPage, loading: false, allLoaded: false });
 
-    const loadMore = async () => {
-        dispatch({ type: 'loadMoreStart' });
-        const fetchReturn = await fetcher(state.page)
-        if (!fetchReturn.success || !fetchReturn.data) {
-            dispatch({ type: 'loadMoreFailure', fetchReturn });
-        } else {
-            dispatch({ type: 'loadMoreSuccess', fetchReturn });
+        const loadMore = async (details: FetcherDetails) => {
+            dispatch({ type: 'loadMoreStart' });
+            const fetchReturn = await fetcher({
+                page: state.page,
+                details: details,
+            })
+            if (!fetchReturn.success || !fetchReturn.data) {
+                dispatch({ type: 'loadMoreFailure', fetchReturn });
+            } else {
+                dispatch({ type: 'loadMoreSuccess', fetchReturn });
+            }
         }
+
+        if (initialData.length % startPage.pageSize !== 0) throw new Error('initialData.length must be a multiple of pageSize')
+
+        return (
+            <Context.Provider value={{ state , loadMore }}>
+                {children}
+            </Context.Provider>
+        );
     }
 
-    return (
-        <Context.Provider value={{ state , loadMore }}>
-            {children}
-        </Context.Provider>
-    );
-}
 
-export function createEndlessScrollContext<Data, const PageSize extends number>() : ContextType<Data, PageSize> {
+export default EndlessScroll
+
+export function createEndlessScrollContext<Data, const PageSize extends number, FetcherDetails>() : ContextType<Data, PageSize, FetcherDetails> {
     return createContext<{
         state: StateTypes<Data, PageSize>,
-        loadMore: () => Promise<void>,
+        loadMore: (details: FetcherDetails) => Promise<void>,
     } | null>(null)
 }

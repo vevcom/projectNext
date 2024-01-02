@@ -14,4 +14,9 @@ export type Page<PageSize extends number> = {
     page: number,
 }
 
+export type ReadPageInput<PageSize extends number, InputDetailType = undefined> = {
+    page: Page<PageSize>,
+    details: InputDetailType,
+}
+
 export type Action<ReturnType> = (formData: FormData) => Promise<ActionReturn<ReturnType>>
