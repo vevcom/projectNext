@@ -13,17 +13,7 @@
             width: 100%;
             height: 100%;
             position: relative;
-            &::after {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-                background-image:linear-gradient(-45deg, ohma.$colors-white 0px, ohma.$colors-white 20%, ohma.$colors-gray-500 60%, ohma.$colors-white 80%, ohma.$colors-white 100%);
-                animation: rotate .3s linear infinite;
-                scale: 3;
-            }
+            @include ohma.loadImage;
         }
         //loading paceholder and image-container
         > .loading, > *:last-child { 
@@ -78,15 +68,5 @@
         background-color: ohma.$colors-secondary;
         translate: 100%;
         width: 300px;
-    }
-}
-
-
-@keyframes rotate {
-    0% {
-        transform: translate(0) rotate(0deg);
-    }
-    100% {
-        transform: translate(20%) rotate(5deg);
     }
 }
