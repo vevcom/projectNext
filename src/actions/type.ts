@@ -10,7 +10,7 @@ export type ActionError = {
 }
 
 export type Page<PageSize extends number> = {
-    pageSize: PageSize,
+    readonly pageSize: PageSize,
     page: number,
 }
 

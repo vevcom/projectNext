@@ -34,7 +34,7 @@ type ActionTypes<Data> = {
     fetchReturn: ActionReturn<Data[]>,
 }
 
-function endlessScrollReducer<Data, const PageSize extends number, FetcherDetails>
+function endlessScrollReducer<Data, const PageSize extends number>
 (state: StateTypes<Data, PageSize>, action: ActionTypes<Data>) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
@@ -60,7 +60,7 @@ function endlessScrollReducer<Data, const PageSize extends number, FetcherDetail
 
 const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: PropTypesHOF<Data, PageSize, FetcherDetails>) =>
     ({initialData, startPage, children}: PropTypes<Data, PageSize>) => {
-        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize, FetcherDetails>, { data: initialData, page: startPage, loading: false, allLoaded: false });
+        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false });
 
         const loadMore = async (details: FetcherDetails) => {
             dispatch({ type: 'loadMoreStart' });
@@ -83,7 +83,6 @@ const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher,
             </Context.Provider>
         );
     }
-
 
 export default EndlessScroll
 

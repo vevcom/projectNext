@@ -7,13 +7,12 @@ import Button from '@/app/components/UI/Button'
 import { default as ImageComponent } from '@/components/Image/Image'
 import { 
     useEffect, 
-    useState, 
+    useContext,
     useMemo,
     useCallback, 
     Suspense,
 } from 'react'
 import { useInView } from 'react-intersection-observer'
-import read from '@/actions/images/collections/read'
 
 type ColletionWithImage = ImageCollection & {
     images: Image[],
@@ -26,35 +25,6 @@ type PropTypes = {
 
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageCollectionList({collection: initial, pageSize}: PropTypes) {
-    const [collection, setCollection] =  useState<ColletionWithImage>(initial)
-    const [page, setPage] = useState(0)
-    const [ref, inView] = useInView()
-    const [allLoaded, setAllLoaded] = useState(false)
-
-    const loadMoreImages = useCallback(async () => {
-        const next = page + 1
-        const {success, data, error} = await read({page: {pageSize, page: 0}, details: {id: Number(collection.id)}})
-        if (!(success && data)) {
-            console.log(error)
-            return null
-        }
-        if (data.images.length === 0) {
-            setAllLoaded(true)
-            return data
-        }
-        setCollection(x => ({
-            ...x,
-            images: [...x.images, ...data.images]
-        }))
-        setPage(next)
-        return data
-    }, [page])
-
-    useEffect(() => {
-        if (inView) {
-            loadMoreImages()
-        }
-    }, [inView])
 
     return (
         <div className={styles.ImageCollectionList}>
