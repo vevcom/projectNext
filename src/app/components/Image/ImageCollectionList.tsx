@@ -53,14 +53,16 @@ export default function ImageCollectionList({collection, pageSize}: PropTypes) {
         <div className={styles.ImageCollectionList}>
             {imageComponents}
             <span className={styles.loadingControl}>
-            <Suspense fallback={<div>Loading...</div>}>
-                {
-                allLoaded ? (
-                    <i>No more images to load</i>
-                ) : 
-                    <Button onClick={loadMoreImages}>Load more</Button>
-                }       
-            </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                    {
+                    allLoaded ? (
+                        <i>No more images to load</i>
+                    ) : 
+                        <div>
+                            <Button onClick={loadMoreImages}>Load more</Button>
+                        </div>
+                    }       
+                </Suspense>
             </span>
         </div>
     )

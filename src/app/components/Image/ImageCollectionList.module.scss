@@ -53,5 +53,9 @@ $image-size: 150px;
 
     .loadingControl {
         width: 100%;
+        padding: ohma.$gap;
+        button {
+            width: auto;
+        }
     }
 }
