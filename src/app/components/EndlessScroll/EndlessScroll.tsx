@@ -40,7 +40,15 @@ function endlessScrollReducer<Data, const PageSize extends number>
             if (!action.fetchReturn.data || action.fetchReturn.data.length === 0) {
                 return {...state, allLoaded: true, loading: false}
             }
-            return { ...state, data: [...state.data, ...action.fetchReturn.data], loading: false }
+            return { 
+                ...state, 
+                data: [...state.data, ...action.fetchReturn.data], 
+                loading: false, 
+                page: {
+                    ...state.page,
+                    page: state.page.page + 1,
+                }
+            }
         case 'loadMoreFailure':
             console.error(action.fetchReturn.error);
             return {...state, allLoaded: true, loading: false}
