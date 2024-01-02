@@ -13,7 +13,7 @@ type PropTypes = {
 export default async function Collection({ params } : PropTypes) {
     const pageSize = 30;
 
-    const { success, data: collection } = await read(Number(params.id), {pageSize, page: 0})
+    const { success, data: collection } = await read({page: {pageSize, page: 0}, details: {id: Number(params.id)}})
     if (!success || !collection) notFound()
     const isAdmin = true //temp
 

@@ -33,7 +33,7 @@ export default function ImageCollectionList({collection: initial, pageSize}: Pro
 
     const loadMoreImages = useCallback(async () => {
         const next = page + 1
-        const {success, data, error} = await read(collection.id, {pageSize, page: next})
+        const {success, data, error} = await read({page: {pageSize, page: 0}, details: {id: Number(collection.id)}})
         if (!(success && data)) {
             console.log(error)
             return null
