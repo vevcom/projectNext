@@ -1,12 +1,8 @@
-import prisma from '@/prisma'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
-import Image from '@/components/Image/Image'
 import CollectionAdmin from './CollectionAdmin'
-import PopUp from '@/app/components/PopUp/PopUp'
-import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
-import Button from '@/app/components/UI/Button'
 import read from '@/actions/images/collections/read'
+import ImageCollectionList from '@/components/Image/ImageCollectionList'
 
 type PropTypes = {
     params: {
@@ -22,17 +18,16 @@ export default async function Collection({ params } : PropTypes) {
     return (
         <div className={styles.wrapper}>
             {isAdmin &&
-            <aside className={styles.admin}>
-                <CollectionAdmin collectionId={collection.id} />
-            </aside>
+                <aside className={styles.admin}>
+                    <CollectionAdmin collectionId={collection.id} />
+                </aside>
             }
-            <div className={styles.image}>
+            <div className={styles.images}>
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
-                <span>
-                    
-                </span>
-                <Button>Load more</Button>
+                <main>
+                    <ImageCollectionList collection={collection} />
+                </main>
             </div>
         </div>
     )
