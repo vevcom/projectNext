@@ -26,7 +26,26 @@ export async function readPage<const PageSize extends number>({page, details}: R
     return { success: true, data: collection }
 }
 
-export default async function read(name: string) : Promise<ActionReturn<Image>> {
+export default async function read(nameOrId: string | number) : Promise<ActionReturn<Image>> {
+    if (typeof nameOrId === 'number') return readById(nameOrId)
+    return readByName(nameOrId)
+}
+
+export async function readById(id: number) : Promise<ActionReturn<Image>> {
+    try {
+        const image = await prisma.image.findUnique({
+            where: {
+                id: id,
+            },
+        })
+        if (!image) return { success: false, error: [{ message: 'Image not found' }] }
+        return { success: true, data: image }
+    } catch (error) {
+        return errorHandeler(error)
+    }
+}
+
+export async function readByName(name: string) : Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
