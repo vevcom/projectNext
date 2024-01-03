@@ -28,11 +28,10 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
         }
     }, [inView])
 
-
     return (
         <div className={styles.EndlessScroll}>
             <RenderPageData data={context.state.data} renderer={renderer} />
-            <span className={styles.loadingControl} ref={ref}>
+            <span className={styles.loadingControl}>
                 {
                     context.state.allLoaded ? (
                         <i>No more images to load</i>
