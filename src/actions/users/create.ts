@@ -5,7 +5,6 @@ import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
 import type { User } from '@prisma/client'
-import type { ZodIssue } from 'zod'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
     //TEST FOR WAIT

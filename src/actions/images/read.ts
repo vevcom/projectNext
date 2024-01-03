@@ -26,10 +26,6 @@ export async function readPage<const PageSize extends number>({ page, details }:
     return { success: true, data: collection }
 }
 
-export default async function read(nameOrId: string | number) : Promise<ActionReturn<Image>> {
-    if (typeof nameOrId === 'number') return readById(nameOrId)
-    return readByName(nameOrId)
-}
 
 export async function readById(id: number) : Promise<ActionReturn<Image>> {
     try {
@@ -58,3 +54,9 @@ export async function readByName(name: string) : Promise<ActionReturn<Image>> {
         return errorHandeler(error)
     }
 }
+
+export default async function read(nameOrId: string | number) : Promise<ActionReturn<Image>> {
+    if (typeof nameOrId === 'number') return readById(nameOrId)
+    return readByName(nameOrId)
+}
+

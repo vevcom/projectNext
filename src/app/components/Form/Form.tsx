@@ -184,7 +184,6 @@ export default function Form<GiveActionReturn>({
             return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
         })
         return setInputs(inputs_)
-        
     }
 
     return (
