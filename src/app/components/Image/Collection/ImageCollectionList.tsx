@@ -2,7 +2,7 @@
 import styles from './ImageCollectionList.module.scss'
 import type { ImageCollection, Image } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
-import ImageCollectionDisplay from '@/app/components/Image/ImageCollectionDisplay'
+import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
 import Button from '@/app/components/UI/Button'
 import { default as ImageComponent } from '@/components/Image/Image'
 import { 

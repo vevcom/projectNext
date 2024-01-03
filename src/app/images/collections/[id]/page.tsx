@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import read from '@/actions/images/read'
-import ImageCollectionList from '@/components/Image/ImageCollectionList'
+import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
 import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
