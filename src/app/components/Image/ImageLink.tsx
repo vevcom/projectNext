@@ -1,5 +1,6 @@
 import Image from './Image'
 import { default as NextImage, ImageProps } from 'next/image'
+import read from '@/actions/images/read'
 
 type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     name: string,
@@ -8,22 +9,12 @@ type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
 }
 
 export default async function ImageLink({ name, width, alt, ...props }: PropTypes) {
-    const image = await prisma.image.findUnique({
-        where: { name }
-    })
-    const default_image = await prisma.image.findUnique({
-        where: { name: 'default_image' }
-    })
-    if (!default_image) throw new Error('No default image found')
+    let { success, error, data: image } = await read(name)
+    if (!success || !image) image =  (await read('default_image')).data
+    if (!image) throw new Error('No default image found. To fix add a image called: default_image')
     return (
         <div>
-            {
-                image ? (
-                    <Image image={image} width={width} {...props}/>
-                ) : (
-                    <Image image={default_image} width={width} {...props}/>
-                )
-            }
+            <Image image={image} width={width} {...props}/>
         </div>
     )
 }
