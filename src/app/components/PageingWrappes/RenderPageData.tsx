@@ -1,4 +1,4 @@
-import type { JSX } from 'react'
+import React from 'react'
 
 type PropTypes<Data> = {
     data: Data[],

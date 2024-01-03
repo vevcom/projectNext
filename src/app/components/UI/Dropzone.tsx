@@ -1,6 +1,6 @@
 'use client'
 
-import React, {
+import {
     InputHTMLAttributes,
     useCallback,
     useState,
