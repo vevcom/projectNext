@@ -2,7 +2,7 @@
 
 import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import React, { createContext, useReducer, useRef, useEffect } from 'react'
-import type { Context } from 'react'
+import type { Context as ReactContextType } from 'react'
 
 export type StateTypes<Data, PageSize extends number> = {
     page: Page<PageSize>,
@@ -11,7 +11,7 @@ export type StateTypes<Data, PageSize extends number> = {
     loading: boolean,
 }
 
-export type PagingContextType<Data, PageSize extends number, FetcherDetails> = Context<{
+export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
     state: StateTypes<Data, PageSize>,
     loadMore: (details: FetcherDetails) => Promise<Data[]>,
 } | null>
@@ -59,8 +59,8 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
     }
 }
 
-const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) =>
-    ({ initialData, startPage, children }: PropTypes<Data, PageSize>) => {
+function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) {
+    return function PagingProvider({ initialData, startPage, children }: PropTypes<Data, PageSize>) {
         const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false })
 
         const stateRef = useRef(state)
@@ -90,8 +90,7 @@ const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({
             </Context.Provider>
         )
     }
-
-
+}
 function generatePagingContext<Data, const PageSize extends number, FetcherDetails>()
 : PagingContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
