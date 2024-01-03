@@ -74,9 +74,6 @@ const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher,
                 dispatch({ type: 'loadMoreSuccess', fetchReturn });
             }
         }
-
-        if (initialData.length % startPage.pageSize !== 0) throw new Error('initialData.length must be a multiple of pageSize')
-
         return (
             <Context.Provider value={{ state , loadMore }}>
                 {children}
@@ -84,11 +81,14 @@ const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher,
         );
     }
 
-export default EndlessScroll
 
-export function createEndlessScrollContext<Data, const PageSize extends number, FetcherDetails>() : ContextType<Data, PageSize, FetcherDetails> {
-    return createContext<{
+function createEndlessScrollContext<Data, const PageSize extends number, FetcherDetails> () : ContextType<Data, PageSize, FetcherDetails> {
+    const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: (details: FetcherDetails) => Promise<void>,
     } | null>(null)
+    return context
 }
+
+export default EndlessScroll
+export { createEndlessScrollContext }

@@ -1,3 +1,5 @@
+'use client'
+
 import { Image } from '@prisma/client'
 import read from '@/actions/images/collections/read'
 import EndlessScroll, { createEndlessScrollContext } from './EndlessScroll'
@@ -12,6 +14,6 @@ const fetcher = async (x: ReadPageInput<PageSizeImageCollection, {id: number}>) 
     }
 }
 
-export const ImageCollectionContext = createEndlessScrollContext<Image, PageSizeImageCollection, {id: number}>()
+export const ImageCollectionContext = createEndlessScrollContext<Image, PageSizeImageCollection, {id: number}>();
 const ScrollImageProvider = EndlessScroll({Context: ImageCollectionContext, fetcher})
 export default ScrollImageProvider
