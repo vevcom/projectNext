@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 import { useInView } from 'react-intersection-observer'
 import Button from '@/components/UI/Button'
@@ -28,9 +28,11 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
         }
     }, [inView])
 
+    const renderedPageData = useMemo(() => <RenderPageData data={context.state.data} renderer={renderer} />, [context.state.data, renderer]);
+
     return (
         <div className={styles.EndlessScroll}>
-            <RenderPageData data={context.state.data} renderer={renderer} />
+            {renderedPageData}
             <span className={styles.loadingControl}>
                 {
                     context.state.allLoaded ? (
