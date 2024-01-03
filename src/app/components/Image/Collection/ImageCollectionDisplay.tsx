@@ -65,11 +65,13 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                 <div className={styles.currentImage}>
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>
-                    <Suspense fallback={
-                        <div className={styles.loading}></div>
-                    }>
-                        <Image width={200} image={currentImage.current} />
-                    </Suspense>
+                    {
+                        context?.state.loading ? (
+                            <div className={styles.loading}></div>
+                        ) : (
+                            <Image width={200} image={currentImage.current} />
+                        )
+                    }
                 </div>
 
                 <div className={styles.controls}>
