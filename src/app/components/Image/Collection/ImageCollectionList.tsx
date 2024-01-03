@@ -4,18 +4,20 @@ import type { ImageCollection, Image } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
 import { default as ImageComponent } from '@/components/Image/Image'
-import {
-    useEffect,
-    useContext,
-    useState,
-    use,
-    useCallback
-} from 'react'
-import { useInView } from 'react-intersection-observer'
+import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '../../PageingWrappes/EndlessScroll'
-import { set } from 'zod'
 
+function ImageWithFallback({ image }: { image: Image }) {
+    return (
+        <div className={styles.imageAndBtn}>
+            <ImageComponent width={200} image={image} />
+            <PopUp showButtonContent={<></>}>
+                <ImageCollectionDisplay startImageName={image.name} />
+            </PopUp>
+        </div>
+    )
+}
 
 type PropTypes = {
     collection: ImageCollection,
@@ -27,15 +29,6 @@ export default function ImageCollectionList({ collection }: PropTypes) {
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
-    const [ref, inView] = useInView({
-        threshold: 0,
-    })
-
-    useEffect(() => {
-        if (inView) {
-            context?.loadMore({ id: collection.id })
-        }
-    }, [inView])
 
     return (
         <div className={styles.ImageCollectionList}>
@@ -47,12 +40,3 @@ export default function ImageCollectionList({ collection }: PropTypes) {
         </div>
     )
 }
-
-const ImageWithFallback = ({ image }: { image: Image}) => (
-    <div className={styles.imageAndBtn}>
-        <ImageComponent width={200} image={image} />
-        <PopUp showButtonContent={<></>}>
-            <ImageCollectionDisplay startImageName={image.name} />
-        </PopUp>
-    </div>
-)

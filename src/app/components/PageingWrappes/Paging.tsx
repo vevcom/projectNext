@@ -3,6 +3,6 @@ import styles from './Paging.module.scss'
 
 export default function Paging() {
     return (
-        <div>Paging</div>
+        <div className={styles.Paging}>Paging</div>
     )
 }
