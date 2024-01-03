@@ -7,8 +7,10 @@ import errorHandeler from '@/prisma/errorHandler'
 
 export default async function update(imageId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
-        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2').trim().or(z.literal('')),
-        alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2').trim().or(z.literal('')),
+        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2').trim()
+            .or(z.literal('')),
+        alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2').trim()
+            .or(z.literal('')),
     }).transform(data => ({
         name: data.name || undefined,
         alt: data.alt || undefined,

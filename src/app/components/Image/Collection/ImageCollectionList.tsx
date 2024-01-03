@@ -4,14 +4,17 @@ import type { ImageCollection, Image } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
 import { default as ImageComponent } from '@/components/Image/Image'
-import { 
-    useEffect, 
+import {
+    useEffect,
     useContext,
-    Suspense,
+    useState,
+    use,
+    useCallback
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '../../PageingWrappes/EndlessScroll'
+import { set } from 'zod'
 
 
 type PropTypes = {
@@ -19,7 +22,7 @@ type PropTypes = {
 }
 
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageCollectionList({collection}: PropTypes) {
+export default function ImageCollectionList({ collection }: PropTypes) {
     const context = useContext(ImagePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider
@@ -30,30 +33,26 @@ export default function ImageCollectionList({collection}: PropTypes) {
 
     useEffect(() => {
         if (inView) {
-            context?.loadMore({id: collection.id})
+            context?.loadMore({ id: collection.id })
         }
     }, [inView])
-    
+
     return (
         <div className={styles.ImageCollectionList}>
-            <EndlessScroll 
+            <EndlessScroll
                 pageingContext={ImagePagingContext}
-                details={{id: collection.id}}
-                renderer={image => <ImageWithFallback image={image} />}
+                details={{ id: collection.id }}
+                renderer={image => <ImageWithFallback key={image.id} image={image} />}
             />
         </div>
     )
 }
 
-function ImageWithFallback({ image }: { image: Image}) {
-    return (
-        <div className={styles.imageAndBtn}>
-            <Suspense fallback={<div className={styles.skeleton}></div>}>
-                <ImageComponent width={200} image={image} />
-            </Suspense>
-            <PopUp showButtonContent={<></>}>
-                <ImageCollectionDisplay startImageName={image.name} />
-            </PopUp>
-        </div>
-    )
-}
+const ImageWithFallback = ({ image }: { image: Image}) => (
+    <div className={styles.imageAndBtn}>
+        <ImageComponent width={200} image={image} />
+        <PopUp showButtonContent={<></>}>
+            <ImageCollectionDisplay startImageName={image.name} />
+        </PopUp>
+    </div>
+)

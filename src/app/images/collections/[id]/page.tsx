@@ -12,9 +12,9 @@ type PropTypes = {
 }
 
 export default async function Collection({ params } : PropTypes) {
-    const pageSize : PageSizeImage = 30;
+    const pageSize : PageSizeImage = 30
 
-    const { success, data: collection } = await readPage({page: {pageSize, page: 0}, details: {id: Number(params.id)}})
+    const { success, data: collection } = await readPage({ page: { pageSize, page: 0 }, details: { id: Number(params.id) } })
     if (!success || !collection) notFound()
     const isAdmin = true //temp
 
@@ -31,11 +31,11 @@ export default async function Collection({ params } : PropTypes) {
                 <main>
                     <ImageContextProvider
                         startPage={{
-                            pageSize: pageSize,
+                            pageSize,
                             page: 1,
-                        }} 
+                        }}
                         initialData={collection.images}>
-                            <ImageCollectionList collection={collection} />
+                        <ImageCollectionList collection={collection} />
                     </ImageContextProvider>
                 </main>
             </div>

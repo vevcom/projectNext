@@ -46,7 +46,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const goRight = async () => {
         if (currentImage.current.id !== images.current[images.current.length - 1].id) return naiveGoRight()
         if (context?.state.allLoaded) return naiveGoRight()
-        const newImages = await context.loadMore({id: images.current[0].collectionId})
+        const newImages = await context.loadMore({ id: images.current[0].collectionId })
         if (!newImages.length) return naiveGoRight()
         currentImage.current = newImages[0]
         setcurrentIndex(x => x + 1)
@@ -86,19 +86,19 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
             {
                 isAdmin && (
                     <aside className={styles.admin}>
-                        <Form 
-                            title='Edit metadata' 
-                            successCallback={refresh} 
+                        <Form
+                            title="Edit metadata"
+                            successCallback={refresh}
                             action={update.bind(null, currentImage.current.id)}
                         >
-                            <TextInput name='name' label='name' />
-                            <TextInput name='alt' label='alt' />
+                            <TextInput name="name" label="name" />
+                            <TextInput name="alt" label="alt" />
                         </Form>
                         <Form
                             successCallback={refresh}
                             action={destroy.bind(null, currentImage.current.id)}
-                            submitText='delete'
-                            submitColor='red'
+                            submitText="delete"
+                            submitColor="red"
                             confirmation={{
                                 confirm: true,
                                 text: 'Are you sure you want to delete this image?'

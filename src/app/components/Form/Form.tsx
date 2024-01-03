@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as ButtonPropTypes } from '../UI/Button'
 
-type Colors = ButtonPropTypes['color'] 
+type Colors = ButtonPropTypes['color']
 type Confirmation = {
     confirm: boolean,
     text?: string,
@@ -46,17 +46,17 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }
     })
 
-export default function Form<GiveActionReturn>({ 
-    children, 
-    title, 
-    submitText = 'create', 
+export default function Form<GiveActionReturn>({
+    children,
+    title,
+    submitText = 'create',
     submitColor = 'primary',
     confirmation = {
         confirm: false,
     },
-    action, 
-    successCallback, 
-    ...props 
+    action,
+    successCallback,
+    ...props
 } : PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
@@ -108,9 +108,9 @@ export default function Form<GiveActionReturn>({
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            <SubmitButton 
-                color={submitColor} 
-                success={success} 
+            <SubmitButton
+                color={submitColor}
+                success={success}
                 generalErrors={generalErrors}
                 confirmation={confirmation}
             >
@@ -121,15 +121,15 @@ export default function Form<GiveActionReturn>({
 }
 
 
-function SubmitButton({ 
-    children, 
-    generalErrors, 
+function SubmitButton({
+    children,
+    generalErrors,
     success,
     color,
     confirmation,
 } : {
-    children: ReactNode, generalErrors?: 
-    ActionError[], 
+    children: ReactNode, generalErrors?:
+    ActionError[],
     success: boolean,
     color: Colors,
     confirmation: Confirmation,
@@ -165,7 +165,7 @@ function SubmitButton({
             {
                 confirmation.confirm ? (
                     confirmedOpen ? (
-                        <div className={styles.confirm}> 
+                        <div className={styles.confirm}>
                             <p>{confirmation.text || 'Are you sure?'}</p>
                             <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
                                 <FontAwesomeIcon icon={faX} />
@@ -181,7 +181,7 @@ function SubmitButton({
                     button
                 )
             }
-            
+
             <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>
                 {
                     generalErrors && generalErrors[0]?.message

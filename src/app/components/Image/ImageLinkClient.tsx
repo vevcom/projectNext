@@ -5,15 +5,14 @@ import read from '@/actions/images/read'
 import Image from './Image'
 import type { PropTypes } from './ImageLink'
 
-export default function ImageLinkClient({name, width, alt, ...props}: PropTypes) {
+export default function ImageLinkClient({ name, width, alt, ...props }: PropTypes) {
     const [image, setImage] = useState<ImageT | null>()
     useEffect(() => {
-        read(name).then(({success, data}) => {
+        read(name).then(({ success, data }) => {
             if (success && data) return setImage(data)
-            read('default_image').then(({success, data}) => {
+            read('default_image').then(({ success, data }) => {
                 if (success && data) return setImage(data)
                 if (!image) throw new Error('No default image found. To fix add a image called: default_image')
-    
             })
         })
     }, [])

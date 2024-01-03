@@ -12,9 +12,9 @@ $image-size: 150px;
         @include ohma.round;
         position: relative;
         border: 3px solid ohma.$colors-primary;
-        > .skeleton {
-           @include ohma.loadImage;
-        }
+        padding: 0;
+        
+        // img container (component):
         > *:first-child {
             position: absolute;
             top: 0;

@@ -2,7 +2,7 @@
 import styles from './Paging.module.scss'
 
 export default function Paging() {
-  return (
-    <div>Paging</div>
-  )
+    return (
+        <div>Paging</div>
+    )
 }

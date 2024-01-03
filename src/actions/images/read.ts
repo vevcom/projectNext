@@ -1,16 +1,16 @@
 'use server'
-import prisma from "@/prisma"
-import type { ImageCollection, Image } from "@prisma/client"
-import type { ActionReturn, ReadPageInput } from "@/actions/type"
-import errorHandeler from "@/prisma/errorHandler"
+import prisma from '@/prisma'
+import type { ImageCollection, Image } from '@prisma/client'
+import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import errorHandeler from '@/prisma/errorHandler'
 
-export async function readPage<const PageSize extends number>({page, details}: ReadPageInput<PageSize, {id: number}>)
+export async function readPage<const PageSize extends number>({ page, details }: ReadPageInput<PageSize, {id: number}>)
     : Promise<ActionReturn<ImageCollection & {images: Image[]}>> {
     const { id } = details
-    const { page: pageNumber , pageSize } = page
+    const { page: pageNumber, pageSize } = page
     const collection = await prisma.imageCollection.findUnique({
         where: {
-            id: id,
+            id,
         },
         include: {
             images: {
@@ -35,7 +35,7 @@ export async function readById(id: number) : Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
-                id: id,
+                id,
             },
         })
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
@@ -49,7 +49,7 @@ export async function readByName(name: string) : Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
-                name: name,
+                name,
             },
         })
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }

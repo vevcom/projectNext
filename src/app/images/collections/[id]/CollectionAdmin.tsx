@@ -23,10 +23,10 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
-                <Form 
+                <Form
                     successCallback={() => router.refresh()}
-                    title="Upload image" 
-                    submitText="upload" 
+                    title="Upload image"
+                    submitText="upload"
                     action={create.bind(null, collectionId)}
                 >
                     <TextInput color="black" label="name" name="name" />
@@ -39,30 +39,30 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         <FontAwesomeIcon icon={faUpload} />
                     </>
                 }>
-                    <Form 
+                    <Form
                         successCallback={() => router.refresh()}
-                        title="Upload images" 
-                        submitText="upload" 
+                        title="Upload images"
+                        submitText="upload"
                         action={createMany.bind(null, collectionId)}
                     >
                         <Dropzone label="upload images" name="files"/>
                     </Form>
                 </PopUp>
             </div>
-            <Form 
+            <Form
                 successCallback={() => router.refresh()}
-                title="Edit collection" 
-                submitText="update" 
+                title="Edit collection"
+                submitText="update"
                 action={update.bind(null, collectionId)}
             >
                 <TextInput color="black" label="collection name" name="name" />
                 <TextInput color="black" label="description" name="description" />
             </Form>
             <Form
-                submitText='delete collection'
+                submitText="delete collection"
                 successCallback={() => router.push('/images')}
                 action={destroy.bind(null, collectionId)}
-                submitColor='red'
+                submitColor="red"
                 confirmation={{
                     confirm: true,
                     text: 'Are you sure you want to delete this collection? This will also delete all the images in this collection.'

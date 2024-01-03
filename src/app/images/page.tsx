@@ -28,8 +28,7 @@ export default async function Images() {
 
     const chooseCoverImage = (collection : Collection) => {
         if (collection.coverImage) return <Image width={100} image={collection.coverImage} />
-        if (collection.images && collection.images.length > 0) 
-            return <Image width={100} image={collection.images[0]} />
+        if (collection.images && collection.images.length > 0) {return <Image width={100} image={collection.images[0]} />}
         if (lensCamera) return <Image width={100} image={lensCamera} />
         return <h3>Something went wrong</h3>
     }

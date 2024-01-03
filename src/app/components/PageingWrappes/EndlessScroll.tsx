@@ -12,8 +12,7 @@ type PropTypes<Data, PageSize extends number, FetcherDetails> = {
     renderer: (data: Data) => JSX.Element,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number, FetcherDetails>
-({ pageingContext, details, renderer }: PropTypes<Data, PageSize, FetcherDetails>) {
+export default function EndlessScroll<Data, const PageSize extends number, FetcherDetails>({ pageingContext, details, renderer }: PropTypes<Data, PageSize, FetcherDetails>) {
     const context = useContext(pageingContext)
 
     //This component must be rendered inside ContextProvider
@@ -28,7 +27,7 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
         }
     }, [inView])
 
-    const renderedPageData = useMemo(() => <RenderPageData data={context.state.data} renderer={renderer} />, [context.state.data, renderer]);
+    const renderedPageData = useMemo(() => <RenderPageData data={context.state.data} renderer={renderer} />, [context.state.data, renderer])
 
     return (
         <div className={styles.EndlessScroll}>
@@ -37,7 +36,7 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
                 {
                     context.state.allLoaded ? (
                         <i>No more images to load</i>
-                    ) : 
+                    ) :
                         <div ref={ref}>
                             <Button onClick={() => context?.loadMore(details)}>Load more</Button>
                         </div>

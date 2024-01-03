@@ -23,7 +23,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
         alt: rawdata.get('alt'),
     })
     if (!parse.success) return { success: false, error: parse.error.issues }
-    const {file, ...data } = parse.data
+    const { file, ...data } = parse.data
     return await createOne(file, { ...data, collectionId })
 }
 
@@ -41,8 +41,8 @@ export async function createMany(collectionId: number, rawdata: FormData): Promi
 
     let finalReturn : ActionReturn<Image[]> = { success: true, error: [], data: [] }
     for (const file of data.files) {
-        const ret = await createOne(file, {name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId})
-        finalReturn  = {
+        const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        finalReturn = {
             success: ret.success,
             error: ret.error,
         }
