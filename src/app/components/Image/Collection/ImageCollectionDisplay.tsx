@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from '../Image'
-import { Suspense, useContext, useState, useEffect, useRef } from 'react'
+import { Suspense, useContext, useState, useEffect, useRef, use } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '@/hooks/useKeyPress'
@@ -24,17 +24,33 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     if (!context) throw new Error('No context')
 
     const images = useRef<ImageT[]>(context?.state.data || [])
+    const firstIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
+    const currentImage = useRef<ImageT>(images.current[firstIndex])
+    const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
     useEffect(() => {
         images.current = context?.state.data || []
     }, [context.state.data])
-    const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
+    useEffect(() => {
+        currentImage.current = images.current[currentIndex]
+    }, [currentIndex])
+
 
     const goLeft = () => {
         setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? images.current.length - 1 : prevIndex - 1))
     }
 
-    const goRight = () => {
-        setcurrentIndex(prevIndex => (prevIndex + 1) % images.current.length)
+    const naiveGoRight = () => {
+        setcurrentIndex(prevIndex => (prevIndex + 1 === images.current.length ? 0 : prevIndex + 1))
+    }
+
+    const goRight = async () => {
+        if (currentImage.current.id === images.current[images.current.length - 1].id) {
+            if (context?.state.allLoaded) return naiveGoRight()
+            const newImages = await context.loadMore({id: images.current[0].collectionId})
+            if (!newImages.length) return naiveGoRight()
+            images.current = [...images.current, ...newImages]
+        }
+        naiveGoRight()
     }
 
     useKeyPress('ArrowRight', goRight)
@@ -47,14 +63,15 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     return (
         <div className={styles.ImageCollectionDisplay}>
             <div>
+                <button onClick={() => context.loadMore({id: images.current[0].collectionId})} >load more</button>
                 <div className={styles.currentImage}>
-                    <h2>{images.current[currentIndex].name}</h2>
-                    <i>{images.current[currentIndex].alt}</i>
+                    <h2>{currentImage.current.name}</h2>
+                    <i>{currentImage.current.alt}</i>
                     <i>{currentIndex}</i>
                     <Suspense fallback={
                         <div className={styles.loading}></div>
                     }>
-                        <Image width={200} image={images.current[currentIndex]} />
+                        <Image width={200} image={currentImage.current} />
                     </Suspense>
                 </div>
 
@@ -73,14 +90,14 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                         <Form 
                             title='Edit metadata' 
                             successCallback={refresh} 
-                            action={update.bind(null, images.current[currentIndex].id)}
+                            action={update.bind(null, currentImage.current.id)}
                         >
                             <TextInput name='name' label='name' />
                             <TextInput name='alt' label='alt' />
                         </Form>
                         <Form
                             successCallback={refresh}
-                            action={destroy.bind(null, images.current[currentIndex].id)}
+                            action={destroy.bind(null, currentImage.current.id)}
                             submitText='delete'
                             submitColor='red'
                             confirmation={{
