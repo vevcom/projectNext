@@ -4,6 +4,13 @@ import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import React, { createContext, useReducer, useRef, useEffect } from 'react'
 import type { Context } from 'react'
 
+export type StateTypes<Data, PageSize extends number> = {
+    page: Page<PageSize>,
+    data: Data[],
+    allLoaded: boolean,
+    loading: boolean,
+}
+
 export type PagingContextType<Data, PageSize extends number, FetcherDetails> = Context<{
     state: StateTypes<Data, PageSize>,
     loadMore: (details: FetcherDetails) => Promise<Data[]>,
@@ -18,13 +25,6 @@ export type PropTypes<Data, PageSize extends number> = {
 export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
     fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
     Context: PagingContextType<Data, PageSize, FetcherDetails>,
-}
-
-export type StateTypes<Data, PageSize extends number> = {
-    page: Page<PageSize>,
-    data: Data[],
-    allLoaded: boolean,
-    loading: boolean,
 }
 
 type ActionTypes<Data> = {
@@ -54,6 +54,8 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
         case 'loadMoreFailure':
             console.error(action.fetchReturn.error)
             return { ...state, allLoaded: true, loading: false }
+        default:
+            return state
     }
 }
 
@@ -90,7 +92,8 @@ const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({
     }
 
 
-function generatePagingContext<Data, const PageSize extends number, FetcherDetails>() : PagingContextType<Data, PageSize, FetcherDetails> {
+function generatePagingContext<Data, const PageSize extends number, FetcherDetails>()
+: PagingContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore:(details: FetcherDetails) => Promise<Data[]>,

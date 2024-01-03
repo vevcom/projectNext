@@ -26,7 +26,7 @@ function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void
             window.removeEventListener('keydown', downHandler)
             window.removeEventListener('keyup', upHandler)
         }
-    }, [])
+    }, [upHandler, downHandler])
 
     return keyPressed
 }
