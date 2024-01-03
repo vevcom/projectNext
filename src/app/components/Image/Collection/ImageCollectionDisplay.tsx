@@ -87,21 +87,21 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                 isAdmin && (
                     <aside className={styles.admin}>
                         <Form
-                            title="Edit metadata"
+                            title="Rediger metadata"
                             successCallback={refresh}
                             action={update.bind(null, currentImage.current.id)}
                         >
-                            <TextInput name="name" label="name" />
+                            <TextInput name="name" label="navn" />
                             <TextInput name="alt" label="alt" />
                         </Form>
                         <Form
                             successCallback={refresh}
                             action={destroy.bind(null, currentImage.current.id)}
-                            submitText="delete"
+                            submitText="slett"
                             submitColor="red"
                             confirmation={{
                                 confirm: true,
-                                text: 'Are you sure you want to delete this image?'
+                                text: 'Er du sikker på at du vil slette bildet?'
                             }}
                         >
                         </Form>

@@ -28,47 +28,47 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
             <div className={styles.upload}>
                 <Form
                     successCallback={() => router.refresh()}
-                    title="Upload image"
-                    submitText="upload"
+                    title="last opp bilde"
+                    submitText="last opp"
                     action={create.bind(null, collectionId)}
                 >
-                    <TextInput color="black" label="name" name="name" />
+                    <TextInput color="black" label="navn" name="name" />
                     <TextInput color="black" label="alt" name="alt" />
-                    <FileInput label="file" name="file" color="primary" />
+                    <FileInput label="fil" name="file" color="primary" />
                 </Form>
                 <PopUp showButtonContent={
                     <>
-                        Upload many
+                        Last opp mange
                         <FontAwesomeIcon icon={faUpload} />
                     </>
                 }>
                     <Form
                         successCallback={() => router.refresh()}
-                        title="Upload images"
-                        submitText="upload"
+                        title="last opp bilder"
+                        submitText="last opp"
                         action={createMany.bind(null, collectionId)}
                     >
-                        <Dropzone label="upload images" name="files"/>
+                        <Dropzone label="last opp" name="files"/>
                     </Form>
                 </PopUp>
             </div>
             <Form
                 successCallback={() => router.refresh()}
-                title="Edit collection"
-                submitText="update"
+                title="Rediger samling"
+                submitText="oppdater"
                 action={update.bind(null, collectionId)}
             >
-                <TextInput color="black" label="collection name" name="name" />
-                <TextInput color="black" label="description" name="description" />
+                <TextInput color="black" label="navn" name="name" />
+                <TextInput color="black" label="beskrivelse" name="description" />
             </Form>
             <Form
-                submitText="delete collection"
+                submitText="slett samling"
                 successCallback={() => router.push('/images')}
                 action={destroy.bind(null, collectionId)}
                 submitColor="red"
                 confirmation={{
                     confirm: true,
-                    text: 'Are you sure you want to delete this collection? This will also delete all the images in this collection.'
+                    text: 'Er du sikker på at du vil slette samlingen. Dette vil også slette alle bilder i salingen.'
                 }}
             />
         </div>
