@@ -1,7 +1,7 @@
 'use client'
 
 import type { Image } from '@prisma/client'
-import read from '@/actions/images/collections/read'
+import read from '@/actions/images/read'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { ReadPageInput } from '@/actions/type'
 

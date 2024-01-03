@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
-import read from '@/actions/images/collections/read'
+import read from '@/actions/images/read'
 import ImageCollectionList from '@/components/Image/ImageCollectionList'
 import ScrollImageProvider, { PageSizeImageCollection } from '@/context/paging/ImagePaging'
 
