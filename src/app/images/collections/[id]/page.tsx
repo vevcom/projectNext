@@ -4,6 +4,7 @@ import CollectionAdmin from './CollectionAdmin'
 import { readPage } from '@/actions/images/read'
 import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
 import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
+import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
 
 type PropTypes = {
     params: {
@@ -19,26 +20,29 @@ export default async function Collection({ params } : PropTypes) {
     const isAdmin = true //temp
 
     return (
-        <div className={styles.wrapper}>
-            {isAdmin &&
-                <aside className={styles.admin}>
-                    <CollectionAdmin collectionId={collection.id} />
-                </aside>
-            }
-            <div className={styles.images}>
-                <h1>{collection.name}</h1>
-                <i>{collection.description}</i>
-                <main>
-                    <ImageContextProvider
-                        startPage={{
-                            pageSize,
-                            page: 1,
-                        }}
-                        initialData={collection.images}>
-                        <ImageCollectionList collection={collection} />
-                    </ImageContextProvider>
-                </main>
+        <ImageCollectionSelectImageProvider>
+            <div className={styles.wrapper}>
+                {isAdmin &&
+                    <aside className={styles.admin}>
+                        <CollectionAdmin collectionId={collection.id} />
+                    </aside>
+                }
+                <div className={styles.images}>
+                    <h1>{collection.name}</h1>
+                    <i>{collection.description}</i>
+                    <main>
+                        <ImageContextProvider
+                            startPage={{
+                                pageSize,
+                                page: 1,
+                            }}
+                            initialData={collection.images}>
+                            <ImageCollectionList collection={collection} />
+                        </ImageContextProvider>
+                    </main>
+                </div>
             </div>
-        </div>
+        </ImageCollectionSelectImageProvider>
+       
     )
 }

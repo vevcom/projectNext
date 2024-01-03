@@ -12,6 +12,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
+import { useContext } from 'react'
+import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 
 type PropTypes = {
     collectionId: number
@@ -19,6 +21,7 @@ type PropTypes = {
 
 export default function CollectionAdmin({ collectionId }: PropTypes) {
     const router = useRouter()
+    const context = useContext(ImageCollectionSelectImageContext)
 
     return (
         <div className={styles.CollectionAdmin}>

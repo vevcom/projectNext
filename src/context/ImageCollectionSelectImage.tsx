@@ -8,7 +8,7 @@ export const ImageCollectionSelectImageContext = createContext<{ selectionMode: 
     setSelectionMode:(selectionMode: boolean) => void,
     selectedImage: Image | null,
     setSelectedImage: (image: Image | null) => void,
-        }>({ selectionMode: false })
+}>({ selectionMode: false })
 
 type PropTypes = {
     children: React.ReactNode,
