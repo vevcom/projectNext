@@ -44,13 +44,12 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     }
 
     const goRight = async () => {
-        if (currentImage.current.id === images.current[images.current.length - 1].id) {
-            if (context?.state.allLoaded) return naiveGoRight()
-            const newImages = await context.loadMore({id: images.current[0].collectionId})
-            if (!newImages.length) return naiveGoRight()
-            images.current = [...images.current, ...newImages]
-        }
-        naiveGoRight()
+        if (currentImage.current.id !== images.current[images.current.length - 1].id) return naiveGoRight()
+        if (context?.state.allLoaded) return naiveGoRight()
+        const newImages = await context.loadMore({id: images.current[0].collectionId})
+        if (!newImages.length) return naiveGoRight()
+        currentImage.current = newImages[0]
+        setcurrentIndex(x => x + 1)
     }
 
     useKeyPress('ArrowRight', goRight)
@@ -66,7 +65,6 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                 <div className={styles.currentImage}>
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>
-                    <i>{currentIndex}</i>
                     <Suspense fallback={
                         <div className={styles.loading}></div>
                     }>
