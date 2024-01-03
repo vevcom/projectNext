@@ -11,7 +11,7 @@ import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
-import { ImageCollectionContext } from '@/components/EndlessScroll/ScrollImageCollection'
+import { ImageCollectionContext } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     startImageName?: string,

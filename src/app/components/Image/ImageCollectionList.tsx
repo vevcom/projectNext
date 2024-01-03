@@ -13,7 +13,7 @@ import {
     Suspense,
 } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { ImageCollectionContext } from '@/components/EndlessScroll/ScrollImageCollection'
+import { ImageCollectionContext } from '@/context/paging/ImagePaging'
 
 
 type PropTypes = {

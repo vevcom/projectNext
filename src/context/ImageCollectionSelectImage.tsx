@@ -14,7 +14,7 @@ type PropTypes = {
     children: React.ReactNode,
 }
 
-export default function ImageCollectionSelectImage({ children } : PropTypes ) {
+export default function ImageCollectionSelectImageProvider({ children } : PropTypes ) {
     const [image, setImage] = useState<Image | null>(null)
     const [selectionModeActive, setSelectionModeActive] = useState(false)
 

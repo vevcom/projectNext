@@ -3,7 +3,7 @@ import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import read from '@/actions/images/collections/read'
 import ImageCollectionList from '@/components/Image/ImageCollectionList'
-import ScrollImageProvider, { PageSizeImageCollection } from '@/components/EndlessScroll/ScrollImageCollection'
+import ScrollImageProvider, { PageSizeImageCollection } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     params: {

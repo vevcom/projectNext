@@ -15,7 +15,7 @@ export type PropTypes<Data, PageSize extends number> = {
     children: React.ReactNode,
 }
 
-export type PropTypesHOF<Data, PageSize extends number, FetcherDetails> = {
+export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
     fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
     Context: ContextType<Data, PageSize, FetcherDetails>,
 }
@@ -58,7 +58,7 @@ function endlessScrollReducer<Data, const PageSize extends number>
     }
 }
 
-const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: PropTypesHOF<Data, PageSize, FetcherDetails>) =>
+const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) =>
     ({initialData, startPage, children}: PropTypes<Data, PageSize>) => {
         const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false });
 
@@ -82,7 +82,7 @@ const EndlessScroll = <Data, PageSize extends number, FetcherDetails>({ fetcher,
     }
 
 
-function createEndlessScrollContext<Data, const PageSize extends number, FetcherDetails> () : ContextType<Data, PageSize, FetcherDetails> {
+function generatePagingContext<Data, const PageSize extends number, FetcherDetails> () : ContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: (details: FetcherDetails) => Promise<void>,
@@ -90,5 +90,5 @@ function createEndlessScrollContext<Data, const PageSize extends number, Fetcher
     return context
 }
 
-export default EndlessScroll
-export { createEndlessScrollContext }
+export default generatePagingProvider
+export { generatePagingContext }
