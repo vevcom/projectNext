@@ -63,7 +63,6 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     return (
         <div className={styles.ImageCollectionDisplay}>
             <div>
-                <button onClick={() => context.loadMore({id: images.current[0].collectionId})} >load more</button>
                 <div className={styles.currentImage}>
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>

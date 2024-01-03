@@ -61,7 +61,6 @@ const Dropzone = ({ label, name, ...props } : PropTypes) => {
     }, [])
 
     const onDragOver = (event: DragEvent<HTMLDivElement>) => {
-        console.log('drag over')
         event.preventDefault()
         input.current?.focus()
     }
