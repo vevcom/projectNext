@@ -5,6 +5,7 @@
     width: 100vw;
     display: table-cell;
     vertical-align: middle;
+    position: relative;
     .info {
         display: flex;
         justify-content: center;
@@ -20,6 +21,12 @@
                 filter: invert(100%);
             }
         }
+    }
+    > button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: auto;
     }
 }
 

@@ -8,7 +8,7 @@ type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     alt?: string
 }
 
-export default async function Image({ alt, image, width, ...props } : PropTypes) {
+export default function Image({ alt, image, width, ...props } : PropTypes) {
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>
             <img width={width} alt={alt || image.alt} src={`/store/images/${image.fsLocation}`} {...props}/>

@@ -82,7 +82,7 @@ const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({
     }
 
 
-function generatePagingContext<Data, const PageSize extends number, FetcherDetails> () : ContextType<Data, PageSize, FetcherDetails> {
+function generatePagingContext<Data, const PageSize extends number, FetcherDetails>() : ContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: (details: FetcherDetails) => Promise<void>,

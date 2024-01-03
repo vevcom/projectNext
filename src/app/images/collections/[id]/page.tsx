@@ -29,9 +29,14 @@ export default async function Collection({ params } : PropTypes) {
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
                 <main>
-                  
+                    <ImageContextProvider
+                        startPage={{
+                            pageSize: pageSize,
+                            page: 1,
+                        }} 
+                        initialData={collection.images}>
                             <ImageCollectionList collection={collection} />
-                  
+                    </ImageContextProvider>
                 </main>
             </div>
         </div>
