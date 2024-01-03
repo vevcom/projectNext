@@ -22,22 +22,22 @@ type PropTypes = {
 
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageCollectionList({collection}: PropTypes) {
-    const p = useContext(ImageCollectionContext)
+    const context = useContext(ImageCollectionContext)
     
     return (
         <div className={styles.ImageCollectionList}>
             {
-                p?.state.data.map(image => 
+                context?.state.data.map(image => 
                     <ImageWithFallback key={image.id} image={image} />)
             }
             <span className={styles.loadingControl}>
                 <Suspense fallback={<div>Loading...</div>}>
                     {
-                    p?.state.allLoaded ? (
+                    context?.state.allLoaded ? (
                         <i>No more images to load</i>
                     ) : 
                         <div ref={null}>
-                            <Button onClick={() => p?.loadMore({id: collection.id})}>Load more</Button>
+                            <Button onClick={() => context?.loadMore({id: collection.id})}>Load more</Button>
                         </div>
                     }       
                 </Suspense>

@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
-import { Suspense, useRef, useState, useEffect } from 'react'
+import { Suspense, useContext, useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '@/hooks/useKeyPress'
@@ -10,16 +10,15 @@ import TextInput from '@/app/components/UI/TextInput'
 import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
+import { ImageCollectionContext } from '@/components/EndlessScroll/ScrollImageCollection'
 
 type PropTypes = {
     startImageName?: string,
 }
 
-export default function ImageCollectionDisplay({ collection, startImageName, loadMoreImages, allLoaded }: PropTypes) {
+export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const [currentIndex, setcurrentIndex] = useState(() => collection.images.findIndex(image => image.name === startImageName))
-    const currentIndexRef = useRef(currentIndex)
-    const collectionLength = useRef(collection.images.length)
-    const loop = useRef(allLoaded ?? true)
+    const context = useContext(ImageCollectionContext)
 
     useEffect(() => {
         currentIndexRef.current = currentIndex
