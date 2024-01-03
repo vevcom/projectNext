@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
-import { Suspense, useContext, useState, useEffect } from 'react'
+import { Suspense, useContext, useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useKeyPress from '@/hooks/useKeyPress'
@@ -10,6 +10,7 @@ import TextInput from '@/app/components/UI/TextInput'
 import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
+import type { Image as ImageT } from '@prisma/client'
 import { ImageCollectionContext } from '@/components/EndlessScroll/ScrollImageCollection'
 
 type PropTypes = {
@@ -17,44 +18,19 @@ type PropTypes = {
 }
 
 export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
-    const [currentIndex, setcurrentIndex] = useState(() => collection.images.findIndex(image => image.name === startImageName))
     const context = useContext(ImageCollectionContext)
-
+    const images = useRef<ImageT[]>(context?.state.data || [])
     useEffect(() => {
-        currentIndexRef.current = currentIndex
-    }, [currentIndex])
-
-    useEffect(() => {
-        collectionLength.current = collection.images.length
-    }, [collection])
-
-    useEffect(() => {
-        loop.current = allLoaded ?? true
-    }, [allLoaded])
+        images.current = context?.state.data || []
+    }, [context?.state.data])
+    const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
 
     const goLeft = () => {
-        setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? collectionLength.current - 1 : prevIndex - 1))
+        setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? images.current.length - 1 : prevIndex - 1))
     }
 
-    const naiveGoRight = () => {
-        setcurrentIndex(prevIndex => (prevIndex + 1) % collectionLength.current)
-    }
-    
-    const goRight = async () => {
-        if (currentIndexRef.current + 1 === collectionLength.current) {
-            if (loop.current) {
-                return naiveGoRight()
-            } 
-            if (!loadMoreImages) {
-                loop.current = true
-                return naiveGoRight() 
-            }
-            const data = await loadMoreImages()
-            if (!data) return naiveGoRight()
-            collectionLength.current += data.images.length
-            return naiveGoRight()
-        }
-        return naiveGoRight()
+    const goRight = () => {
+        setcurrentIndex(prevIndex => (prevIndex + 1) % images.current.length)
     }
 
     useKeyPress('ArrowRight', goRight)
@@ -68,13 +44,13 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
         <div className={styles.ImageCollectionDisplay}>
             <div>
                 <div className={styles.currentImage}>
-                    <h2>{collection.images[currentIndex].name}</h2>
-                    <i>{collection.images[currentIndex].alt}</i>
+                    <h2>{images.current[currentIndex].name}</h2>
+                    <i>{images.current[currentIndex].alt}</i>
                     <i>{currentIndex}</i>
                     <Suspense fallback={
                         <div className={styles.loading}></div>
                     }>
-                        <Image width={200} image={collection.images[currentIndex]} />
+                        <Image width={200} image={images.current[currentIndex]} />
                     </Suspense>
                 </div>
 
@@ -93,14 +69,14 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                         <Form 
                             title='Edit metadata' 
                             successCallback={refresh} 
-                            action={update.bind(null, collection.images[currentIndex].id)}
+                            action={update.bind(null, images.current[currentIndex].id)}
                         >
                             <TextInput name='name' label='name' />
                             <TextInput name='alt' label='alt' />
                         </Form>
                         <Form
                             successCallback={refresh}
-                            action={destroy.bind(null, collection.images[currentIndex].id)}
+                            action={destroy.bind(null, images.current[currentIndex].id)}
                             submitText='delete'
                             submitColor='red'
                             confirmation={{
