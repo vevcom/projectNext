@@ -2,17 +2,16 @@ import { default as NextImage, ImageProps } from 'next/image'
 import type { Image as ImageT } from '@prisma/client'
 import styles from './Image.module.scss'
 
-export type PropTypes = Omit<ImageProps, 'src' | 'alt' | 'height'> & {
+type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     image: ImageT,
     width: number,
-    alt?: string, 
-    height?: number
+    alt?: string
 }
 
-export default function Image({ alt, image, width, height, ...props } : PropTypes) {
+export default function Image({ alt, image, width, ...props } : PropTypes) {
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>
-            <NextImage {...props} width={width} height={height ?? width} alt={alt || image.alt} src={`/store/images/${image.fsLocation}`} />
+            <img {...props} width={width} alt={alt || image.alt} src={`/store/images/${image.fsLocation}`} />
         </div>
     )
 }

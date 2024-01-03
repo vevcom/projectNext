@@ -5,7 +5,6 @@ import { useInView } from 'react-intersection-observer'
 import Button from '@/components/UI/Button'
 import styles from './EndlessScroll.module.scss'
 import RenderPageData from './RenderPageData'
-import type { JSX } from 'react'
 
 type PropTypes<Data, PageSize extends number, FetcherDetails> = {
     pageingContext: PagingContextType<Data, PageSize, FetcherDetails>,
