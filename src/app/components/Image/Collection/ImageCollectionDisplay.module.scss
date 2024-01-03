@@ -70,3 +70,13 @@
         width: 300px;
     }
 }
+
+
+@keyframes rotate {
+    0% {
+        transform: translate(0) rotate(0deg);
+    }
+    100% {
+        transform: translate(20%) rotate(5deg);
+    }
+}
