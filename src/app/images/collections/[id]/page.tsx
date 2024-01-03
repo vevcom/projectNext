@@ -29,11 +29,13 @@ export default async function Collection({ params } : PropTypes) {
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
                 <main>
-                    <ScrollImageProvider startPage={{
-                        pageSize: pageSize,
-                        page: 1,
-                    }} initialData={collection.images}>
-                        <ImageCollectionList collection={collection} pageSize={pageSize} />
+                    <ScrollImageProvider 
+                        startPage={{
+                            pageSize: pageSize,
+                            page: 1,
+                        }} 
+                        initialData={collection.images}>
+                            <ImageCollectionList collection={collection} />
                     </ScrollImageProvider>
                 </main>
             </div>

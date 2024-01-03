@@ -1,7 +1,6 @@
 'use client'
 import styles from './ImageCollectionDisplay.module.scss'
 import Image from './Image'
-import type { ImageCollection, Image as ImageT } from '@prisma/client'
 import { Suspense, useRef, useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
@@ -12,15 +11,8 @@ import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 
-type ColletionWithImage = ImageCollection & {
-    images: ImageT[],
-}
-
 type PropTypes = {
-    collection: ColletionWithImage,
     startImageName?: string,
-    loadMoreImages: () => Promise<ColletionWithImage | null>,
-    allLoaded?: boolean,
 }
 
 export default function ImageCollectionDisplay({ collection, startImageName, loadMoreImages, allLoaded }: PropTypes) {
