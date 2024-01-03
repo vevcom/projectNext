@@ -3,7 +3,7 @@ import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import read from '@/actions/images/read'
 import ImageCollectionList from '@/components/Image/ImageCollectionList'
-import ScrollImageProvider, { PageSizeImageCollection } from '@/context/paging/ImagePaging'
+import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     params: {
@@ -12,7 +12,7 @@ type PropTypes = {
 }
 
 export default async function Collection({ params } : PropTypes) {
-    const pageSize : PageSizeImageCollection = 30;
+    const pageSize : PageSizeImage = 30;
 
     const { success, data: collection } = await read({page: {pageSize, page: 0}, details: {id: Number(params.id)}})
     if (!success || !collection) notFound()
@@ -29,14 +29,14 @@ export default async function Collection({ params } : PropTypes) {
                 <h1>{collection.name}</h1>
                 <i>{collection.description}</i>
                 <main>
-                    <ScrollImageProvider 
+                    <ImageContextProvider
                         startPage={{
                             pageSize: pageSize,
                             page: 1,
                         }} 
                         initialData={collection.images}>
                             <ImageCollectionList collection={collection} />
-                    </ScrollImageProvider>
+                    </ImageContextProvider>
                 </main>
             </div>
         </div>

@@ -13,7 +13,7 @@ import {
     Suspense,
 } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { ImageCollectionContext } from '@/context/paging/ImagePaging'
+import { ImagePagingContext } from '@/context/paging/ImagePaging'
 
 
 type PropTypes = {
@@ -22,7 +22,7 @@ type PropTypes = {
 
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageCollectionList({collection}: PropTypes) {
-    const context = useContext(ImageCollectionContext)
+    const context = useContext(ImagePagingContext)
     
     return (
         <div className={styles.ImageCollectionList}>

@@ -11,14 +11,14 @@ import update from '@/actions/images/update'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
-import { ImageCollectionContext } from '@/context/paging/ImagePaging'
+import { ImagePagingContext } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     startImageName?: string,
 }
 
 export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
-    const context = useContext(ImageCollectionContext)
+    const context = useContext(ImagePagingContext)
     const images = useRef<ImageT[]>(context?.state.data || [])
     useEffect(() => {
         images.current = context?.state.data || []
