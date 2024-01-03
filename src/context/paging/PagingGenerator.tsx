@@ -4,7 +4,7 @@ import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import React, { createContext, useReducer } from 'react'
 import type { Context } from 'react'
 
-type ContextType<Data, PageSize extends number, FetcherDetails> = Context<{
+export type PagingContextType<Data, PageSize extends number, FetcherDetails> = Context<{
     state: StateTypes<Data, PageSize>,
     loadMore: (details: FetcherDetails) => Promise<void>,
 } | null>
@@ -17,7 +17,7 @@ export type PropTypes<Data, PageSize extends number> = {
 
 export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
     fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
-    Context: ContextType<Data, PageSize, FetcherDetails>,
+    Context: PagingContextType<Data, PageSize, FetcherDetails>,
 }
 
 export type StateTypes<Data, PageSize extends number> = {
@@ -82,7 +82,7 @@ const generatePagingProvider = <Data, PageSize extends number, FetcherDetails>({
     }
 
 
-function generatePagingContext<Data, const PageSize extends number, FetcherDetails>() : ContextType<Data, PageSize, FetcherDetails> {
+function generatePagingContext<Data, const PageSize extends number, FetcherDetails>() : PagingContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: (details: FetcherDetails) => Promise<void>,
