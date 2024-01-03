@@ -23,6 +23,8 @@ type PropTypes = {
 export default function ImageCollectionList({collection}: PropTypes) {
     const context = useContext(ImagePagingContext)
 
+    //This component must be rendered inside a ImagePagingContextProvider
+    if (!context) throw new Error('No context')
     const [ref, inView] = useInView({
         threshold: 0,
     })
@@ -36,13 +38,13 @@ export default function ImageCollectionList({collection}: PropTypes) {
     return (
         <div className={styles.ImageCollectionList}>
             {
-                context?.state.data.map(image => 
+                context.state.data.map(image => 
                     <ImageWithFallback key={image.id} image={image} />)
             }
             <span className={styles.loadingControl}>
                 <Suspense fallback={<div>Loading...</div>}>
                     {
-                    context?.state.allLoaded ? (
+                    context.state.allLoaded ? (
                         <i>No more images to load</i>
                     ) : 
                         <div ref={ref}>

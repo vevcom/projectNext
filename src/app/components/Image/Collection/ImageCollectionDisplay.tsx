@@ -19,10 +19,14 @@ type PropTypes = {
 
 export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const context = useContext(ImagePagingContext)
+
+    //This component must be rendered inside a ImagePagingContextProvider
+    if (!context) throw new Error('No context')
+
     const images = useRef<ImageT[]>(context?.state.data || [])
     useEffect(() => {
         images.current = context?.state.data || []
-    }, [context?.state.data])
+    }, [context.state.data])
     const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
 
     const goLeft = () => {
