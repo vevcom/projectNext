@@ -9,7 +9,6 @@ import {
     useEffect, 
     useContext,
     useMemo,
-    useCallback, 
     Suspense,
 } from 'react'
 import { useInView } from 'react-intersection-observer'
@@ -23,6 +22,16 @@ type PropTypes = {
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageCollectionList({collection}: PropTypes) {
     const context = useContext(ImagePagingContext)
+
+    const [ref, inView] = useInView({
+        threshold: 0,
+    })
+
+    useEffect(() => {
+        if (inView) {
+            context?.loadMore({id: collection.id})
+        }
+    }, [inView])
     
     return (
         <div className={styles.ImageCollectionList}>
@@ -36,7 +45,7 @@ export default function ImageCollectionList({collection}: PropTypes) {
                     context?.state.allLoaded ? (
                         <i>No more images to load</i>
                     ) : 
-                        <div ref={null}>
+                        <div ref={ref}>
                             <Button onClick={() => context?.loadMore({id: collection.id})}>Load more</Button>
                         </div>
                     }       
