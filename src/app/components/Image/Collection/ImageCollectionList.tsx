@@ -13,6 +13,7 @@ import {
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
+import EndlessScroll from '../../PageingWrappes/EndlessScroll'
 
 
 type PropTypes = {
@@ -37,22 +38,11 @@ export default function ImageCollectionList({collection}: PropTypes) {
     
     return (
         <div className={styles.ImageCollectionList}>
-            {
-                context.state.data.map(image => 
-                    <ImageWithFallback key={image.id} image={image} />)
-            }
-            <span className={styles.loadingControl}>
-                <Suspense fallback={<div>Loading...</div>}>
-                    {
-                    context.state.allLoaded ? (
-                        <i>No more images to load</i>
-                    ) : 
-                        <div ref={ref}>
-                            <Button onClick={() => context?.loadMore({id: collection.id})}>Load more</Button>
-                        </div>
-                    }       
-                </Suspense>
-            </span>
+            <EndlessScroll 
+                pageingContext={ImagePagingContext}
+                details={{id: collection.id}}
+                renderer={image => <ImageWithFallback image={image} />}
+            />
         </div>
     )
 }
