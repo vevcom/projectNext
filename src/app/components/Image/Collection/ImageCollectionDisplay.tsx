@@ -49,7 +49,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
         const newImages = await context.loadMore({ id: images.current[0].collectionId })
         if (!newImages.length) return naiveGoRight()
         currentImage.current = newImages[0]
-        setcurrentIndex(x => x + 1)
+        return setcurrentIndex(x => x + 1)
     }
 
     useKeyPress('ArrowRight', goRight)
