@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
 
 export const ImageCollectionSelectImageContext = createContext<{ selectionMode: false } | {
