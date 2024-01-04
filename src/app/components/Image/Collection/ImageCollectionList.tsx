@@ -6,11 +6,26 @@ import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageColle
 import { default as ImageComponent } from '@/components/Image/Image'
 import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
+import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 import EndlessScroll from '../../PageingWrappes/EndlessScroll'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 function ImageWithFallback({ image }: { image: Image }) {
+    const selection = useContext(ImageCollectionSelectImageContext)
+
     return (
         <div className={styles.imageAndBtn}>
+            {
+                selection?.selectionMode && (
+                    <button
+                        onClick={() => selection?.setSelectedImage(image)}
+                        className={styles.selectBtn}
+                    >
+                        <FontAwesomeIcon icon={faCheck} />
+                    </button>
+                )
+            }
             <ImageComponent width={200} image={image} />
             <PopUp showButtonContent={<></>}>
                 <ImageCollectionDisplay startImageName={image.name} />

@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 
 type PropTypes = {
@@ -22,6 +22,15 @@ type PropTypes = {
 export default function CollectionAdmin({ collectionId }: PropTypes) {
     const router = useRouter()
     const context = useContext(ImageCollectionSelectImageContext)
+    if (!context) throw new Error('No context')
+
+    /*
+    useEffect(() => {
+        if (context.selectedImage && context.selectionMode) {
+            context.setSelectionMode(false)
+        }
+    }, [context.selectedImage])    
+    */
 
     return (
         <div className={styles.CollectionAdmin}>
@@ -60,6 +69,21 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
+                <div className={styles.selectedImage}>
+                    {
+                        context.selectedImage ? (
+                            <>
+                                <p>Valgt bilde: {context.selectedImage.name}</p>
+                                <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
+                            </>
+                        ) : (
+                            <>
+                                <p>Intet bilde valgt</p>
+                            </>
+                        )
+                    }
+                </div>
+                <button type='button' onClick={() => context.setSelectionMode(true)}>Velg cover bilde</button>
             </Form>
             <Form
                 submitText="slett samling"

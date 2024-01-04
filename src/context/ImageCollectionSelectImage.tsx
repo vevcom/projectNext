@@ -3,12 +3,12 @@
 import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
 
-export const ImageCollectionSelectImageContext = createContext<{ selectionMode: false } | {
-    selectionMode: true,
+export const ImageCollectionSelectImageContext = createContext<{
+    selectionMode: boolean,
     setSelectionMode:(selectionMode: boolean) => void,
     selectedImage: Image | null,
     setSelectedImage: (image: Image | null) => void,
-}>({ selectionMode: false })
+} | null>(null)
 
 type PropTypes = {
     children: React.ReactNode,
