@@ -25,6 +25,7 @@ type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     confirmation?: Confirmation,
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
+    extraContent?: ReactNode,
 }
 type InputType = {
     input: ReactNode & { label?: string },
@@ -138,6 +139,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
 
 export default function Form<GiveActionReturn>({
     children,
+    extraContent,
     title,
     submitText = 'create',
     submitColor = 'primary',
@@ -184,6 +186,7 @@ export default function Form<GiveActionReturn>({
             return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
         })
         return setInputs(inputs_)
+        
     }
 
     return (
@@ -194,6 +197,7 @@ export default function Form<GiveActionReturn>({
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
+            {extraContent}
             <SubmitButton
                 color={submitColor}
                 success={success}

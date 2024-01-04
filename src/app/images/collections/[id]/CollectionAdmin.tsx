@@ -1,5 +1,4 @@
 'use client'
-
 import create, { createMany } from '@/actions/images/create'
 import update from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
@@ -14,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
 import { useContext, useEffect } from 'react'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
+import { get } from 'http'
 
 type PropTypes = {
     collectionId: number
@@ -24,13 +24,25 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
     const context = useContext(ImageCollectionSelectImageContext)
     if (!context) throw new Error('No context')
 
-    /*
-    useEffect(() => {
-        if (context.selectedImage && context.selectionMode) {
-            context.setSelectionMode(false)
-        }
-    }, [context.selectedImage])    
-    */
+    useEffect(() => console.log(context), [context])
+
+    const getImageSelection = () => (
+        <div className={styles.selectedImage}>
+            {
+                context.selectedImage ? (
+                    <>
+                        <p>Valgt bilde: {context.selectedImage.name}</p>
+                        <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
+                    </>
+                ) : (
+                    <>
+                        <p>Intet bilde valgt</p>
+                    </>
+                )
+            }
+            <button type='button' onClick={() => context.setSelectionMode(true)}>Velg cover bilde</button>
+        </div>
+    )
 
     return (
         <div className={styles.CollectionAdmin}>
@@ -66,24 +78,10 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 title="Rediger samling"
                 submitText="oppdater"
                 action={update.bind(null, collectionId)}
+                extraContent={getImageSelection()}
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
-                <div className={styles.selectedImage}>
-                    {
-                        context.selectedImage ? (
-                            <>
-                                <p>Valgt bilde: {context.selectedImage.name}</p>
-                                <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
-                            </>
-                        ) : (
-                            <>
-                                <p>Intet bilde valgt</p>
-                            </>
-                        )
-                    }
-                </div>
-                <button type='button' onClick={() => context.setSelectionMode(true)}>Velg cover bilde</button>
             </Form>
             <Form
                 submitText="slett samling"
