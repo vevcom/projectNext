@@ -8,7 +8,7 @@ import styles from './CollectionAdmin.module.scss'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQuestion, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
 import { useContext } from 'react'
@@ -62,7 +62,10 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 </PopUp>
             </div>
             <Form
-                successCallback={() => router.refresh()}
+                successCallback={() => {
+                    router.refresh()
+                    selection.setSelectionMode(false)
+                }}
                 title="Rediger samling"
                 submitText="oppdater"
                 action={update.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
@@ -89,28 +92,31 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                         </div>
                     </div>
                     
-
-                    <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                    <div className={styles.chosenImage}>
+                        <p>Valgt bilde:</p>
+                        <span>
                         {
-                            selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                            selection.selectedImage ? (
+                                <>
+                                    <Image image={selection.selectedImage} width={120}/>
+                                    <button type='button' onClick={() => selection.setSelectedImage(null)}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <p>Intet bilde valgt</p>
+                                </>
+                            )
                         }
-                    </button>
-                    <div>
-
+                        </span>
+                        <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                            {
+                                selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                            }
+                        </button>
                     </div>
-                    {
-                        selection.selectedImage ? (
-                            <>
-                                <p>Valgt bilde:</p>
-                                <Image image={selection.selectedImage} width={120}/>
-                                <button type='button' onClick={() => selection.setSelectedImage(null)}>Fjern bilde</button>
-                            </>
-                        ) : (
-                            <>
-                                <p>Intet bilde valgt</p>
-                            </>
-                        )
-                    }
+                    
                 </div>
             </Form>
             <Form

@@ -74,11 +74,59 @@
                 }
             }
         }
-        
-        button {
-            @include ohma.roundBtn(ohma.$colors-primary);
-            min-width: 50%;
-            border-radius: .3em;
+
+        .chosenImage {
+            @include ohma.round();
+            background-color: lighten(ohma.$colors-secondary, 20%);
+            padding: .7em 0;
+            > span {
+                $selected-image-size: 5em;
+                height: $selected-image-size;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                > div {
+                    width: $selected-image-size !important;
+                    height: 100%;
+                    overflow: hidden;
+                    @include ohma.round; 
+                    padding: 0;
+                    overflow: hidden;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                > button {
+                    background-color: transparent;
+                    border: none;
+                    color: ohma.$colors-black;
+                    &:hover {
+                        cursor: pointer;
+                        > svg {
+                            color: darken(ohma.$colors-red, 20%);
+                        }
+                    }
+                    > svg {
+                        width: 1.5em;
+                        height: 1.5em;
+                        margin: 0 .2em;
+                        color: ohma.$colors-red;
+                    }
+                }
+            }
+
+            > button {
+                margin-top: 3px;
+                @include ohma.roundBtn(ohma.$colors-primary);
+                min-width: 50%;
+                border-radius: .3em;
+            }
         }
     }
 }
