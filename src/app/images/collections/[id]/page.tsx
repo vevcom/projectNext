@@ -21,6 +21,13 @@ export default async function Collection({ params } : PropTypes) {
 
     return (
         <ImageCollectionSelectImageProvider>
+            <ImageContextProvider
+                startPage={{
+                    pageSize,
+                    page: 1,
+                }}
+                initialData={collection.images}
+            >
             <div className={styles.wrapper}>
                 {isAdmin &&
                     <aside className={styles.admin}>
@@ -31,17 +38,11 @@ export default async function Collection({ params } : PropTypes) {
                     <h1>{collection.name}</h1>
                     <i>{collection.description}</i>
                     <main>
-                        <ImageContextProvider
-                            startPage={{
-                                pageSize,
-                                page: 1,
-                            }}
-                            initialData={collection.images}>
-                            <ImageCollectionList collection={collection} />
-                        </ImageContextProvider>
+                        <ImageCollectionList collection={collection} />
                     </main>
                 </div>
             </div>
+            </ImageContextProvider>
         </ImageCollectionSelectImageProvider>
        
     )

@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
 import { useContext } from 'react'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
-import { get } from 'http'
+import { ImagePagingContext } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     collectionId: number
@@ -21,14 +21,20 @@ type PropTypes = {
 
 export default function CollectionAdmin({ collectionId }: PropTypes) {
     const router = useRouter()
-    const context = useContext(ImageCollectionSelectImageContext)
-    if (!context) throw new Error('No context')
+    const selection = useContext(ImageCollectionSelectImageContext)
+    const pagingContext = useContext(ImagePagingContext)
+    if (!selection) throw new Error('No context')
+
+    const refreshImages = () => {
+        pagingContext?.refetch({id: collectionId})
+        router.refresh()
+    }
 
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
                 <Form
-                    successCallback={() => router.refresh()}
+                    successCallback={refreshImages}
                     title="last opp bilde"
                     submitText="last opp"
                     action={create.bind(null, collectionId)}
@@ -44,7 +50,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                     </>
                 }>
                     <Form
-                        successCallback={() => router.refresh()}
+                        successCallback={refreshImages}
                         title="last opp bilder"
                         submitText="last opp"
                         action={createMany.bind(null, collectionId)}
@@ -63,10 +69,10 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <TextInput color="black" label="beskrivelse" name="description" />
                 <div className={styles.selectedImage}>
                 {
-                    context.selectedImage ? (
+                    selection.selectedImage ? (
                         <>
-                            <p>Valgt bilde: {context.selectedImage.name}</p>
-                            <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
+                            <p>Valgt bilde: {selection.selectedImage.name}</p>
+                            <button type='button' onClick={() => selection.setSelectedImage(null)}>Fjern bilde</button>
                         </>
                     ) : (
                         <>
@@ -74,9 +80,9 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         </>
                     )
                 }
-                    <button type='button' onClick={() => context.setSelectionMode(!context.selectionMode)}>
+                    <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
                         {
-                            context.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                            selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
                         }
                     </button>
                 </div>
