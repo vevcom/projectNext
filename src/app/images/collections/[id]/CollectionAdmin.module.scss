@@ -23,4 +23,12 @@
             min-width: 50vw; 
         }
     }
+
+    .coverImage {
+        button {
+            @include ohma.roundBtn(ohma.$colors-primary);
+            min-width: 50%;
+            border-radius: .3em;
+        }
+    }
 }

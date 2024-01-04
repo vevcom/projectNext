@@ -14,12 +14,15 @@ import destroy from '@/actions/images/collections/destroy'
 import { useContext } from 'react'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
+import type { Image as ImageT } from '@prisma/client'
+import Image from '@/components/Image/Image'
 
 type PropTypes = {
-    collectionId: number
+    collectionId: number,
+    coverImage: ImageT | null,
 }
 
-export default function CollectionAdmin({ collectionId }: PropTypes) {
+export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
     const router = useRouter()
     const selection = useContext(ImageCollectionSelectImageContext)
     const pagingContext = useContext(ImagePagingContext)
@@ -66,25 +69,32 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
-                <div className={styles.selectedImage}>
-                <p>cover image</p>
-                <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                <div className={styles.coverImage}>
+                    <h5>cover image</h5>
                     {
-                        selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                        coverImage ? (
+                            <Image image={coverImage} width={70}/>
+                        ) : (
+                            <p>ingen cover image</p>
+                        )
                     }
-                </button>
-                {
-                    selection.selectedImage ? (
-                        <>
-                            <p>Valgt bilde: {selection.selectedImage.name}</p>
-                            <button type='button' onClick={() => selection.setSelectedImage(null)}>Fjern bilde</button>
-                        </>
-                    ) : (
-                        <>
-                            <p>Intet bilde valgt</p>
-                        </>
-                    )
-                }
+                    <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                        {
+                            selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                        }
+                    </button>
+                    {
+                        selection.selectedImage ? (
+                            <>
+                                <p>Valgt bilde: {selection.selectedImage.name}</p>
+                                <button type='button' onClick={() => selection.setSelectedImage(null)}>Fjern bilde</button>
+                            </>
+                        ) : (
+                            <>
+                                <p>Intet bilde valgt</p>
+                            </>
+                        )
+                    }
                 </div>
             </Form>
             <Form

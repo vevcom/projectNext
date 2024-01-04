@@ -33,20 +33,20 @@ export default async function Collection({ params } : PropTypes) {
                 initialData={images || []}
                 details={{collectionId: collection.id}}
             >
-            <div className={styles.wrapper}>
-                {isAdmin &&
-                    <aside className={styles.admin}>
-                        <CollectionAdmin collectionId={collection.id} />
-                    </aside>
-                }
-                <div className={styles.images}>
-                    <h1>{collection.name}</h1>
-                    <i>{collection.description}</i>
-                    <main>
-                        <ImageCollectionList collection={collection} />
-                    </main>
+                <div className={styles.wrapper}>
+                    {isAdmin &&
+                        <aside className={styles.admin}>
+                            <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                        </aside>
+                    }
+                    <div className={styles.images}>
+                        <h1>{collection.name}</h1>
+                        <i>{collection.description}</i>
+                        <main>
+                            <ImageCollectionList collection={collection} />
+                        </main>
+                    </div>
                 </div>
-            </div>
             </ImageContextProvider>
         </ImageCollectionSelectImageProvider>
        
