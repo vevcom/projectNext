@@ -13,6 +13,7 @@ import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
+import ImageSelectionButton from './ImageSelectionButton'
 
 type PropTypes = {
     startImageName?: string,
@@ -81,12 +82,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                     }
                     {
                         selection?.selectionMode && (
-                            <button
-                                onClick={() => selection?.setSelectedImage(currentImage.current)}
-                                className={styles.selectBtn + ' ' + (selection?.selectedImage?.id === currentImage.current.id ? styles.selected : '')}
-                            >
-                                <FontAwesomeIcon icon={faCheck} />
-                            </button>
+                            <ImageSelectionButton image={currentImage.current} />
                         )
                     }
                 </div>
