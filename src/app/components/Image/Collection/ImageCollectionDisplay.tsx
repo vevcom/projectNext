@@ -71,6 +71,13 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
         <div className={styles.ImageCollectionDisplay}>
             <div>
                 <div className={styles.currentImage}>
+                    <div className={styles.select}>
+                    {
+                        selection?.selectionMode && (
+                            <ImageSelectionButton image={currentImage.current} />
+                        )
+                    }
+                    </div>
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>
                     {
@@ -78,11 +85,6 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                             <div className={styles.loading}></div>
                         ) : (
                             <Image width={200} image={currentImage.current} />
-                        )
-                    }
-                    {
-                        selection?.selectionMode && (
-                            <ImageSelectionButton image={currentImage.current} />
                         )
                     }
                 </div>
