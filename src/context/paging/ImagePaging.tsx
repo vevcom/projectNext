@@ -11,6 +11,6 @@ const fetcher = async (x: ReadPageInput<PageSizeImage, {collectionId: number}>) 
     return ret
 }
 
-export const ImagePagingContext = generatePagingContext<Image, PageSizeImage, {collectionId: number}>()
+export const ImagePagingContext = generatePagingContext<Image, PageSizeImage>()
 const ImagePagingProvider = generatePagingProvider({ Context: ImagePagingContext, fetcher })
 export default ImagePagingProvider
