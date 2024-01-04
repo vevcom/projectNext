@@ -1,17 +1,16 @@
 'use client'
 import styles from './ImageCollectionList.module.scss'
-import type { ImageCollection, Image } from '@prisma/client'
+import type { ImageCollection, Image as ImageT } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
-import { default as ImageComponent } from '@/components/Image/Image'
+import Image, { default as ImageComponent } from '@/components/Image/Image'
 import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import ImageSelectionButton from './ImageSelectionButton'
 
-function ImageWithFallback({ image }: { image: Image }) {
+function ImageWithFallback({ image }: { image: ImageT }) {
     const selection = useContext(ImageCollectionSelectImageContext)
 
     return (
@@ -22,12 +21,7 @@ function ImageWithFallback({ image }: { image: Image }) {
             </PopUp>
             {
                 selection?.selectionMode && (
-                    <button
-                        onClick={() => selection?.setSelectedImage(image)}
-                        className={styles.selectBtn + ' ' + (selection?.selectedImage?.id === image.id ? styles.selected : '')}
-                    >
-                        <FontAwesomeIcon icon={faCheck} />
-                    </button>
+                    <ImageSelectionButton image={image} />
                 )
             }
         </div>

@@ -79,6 +79,16 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                             <Image width={200} image={currentImage.current} />
                         )
                     }
+                    {
+                        selection?.selectionMode && (
+                            <button
+                                onClick={() => selection?.setSelectedImage(currentImage.current)}
+                                className={styles.selectBtn + ' ' + (selection?.selectedImage?.id === currentImage.current.id ? styles.selected : '')}
+                            >
+                                <FontAwesomeIcon icon={faCheck} />
+                            </button>
+                        )
+                    }
                 </div>
 
                 <div className={styles.controls}>
