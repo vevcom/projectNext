@@ -59,6 +59,11 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
 
     const { refresh } = useRouter()
 
+    const reload = async () => {
+        images.current = await context.refetch({ id: images.current[0].collectionId })
+        refresh()
+    }
+
     return (
         <div className={styles.ImageCollectionDisplay}>
             <div>
@@ -88,14 +93,15 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                     <aside className={styles.admin}>
                         <Form
                             title="Rediger metadata"
-                            successCallback={refresh}
+                            successCallback={reload}
+                            submitText="oppdater"
                             action={update.bind(null, currentImage.current.id)}
                         >
                             <TextInput name="name" label="navn" />
                             <TextInput name="alt" label="alt" />
                         </Form>
                         <Form
-                            successCallback={refresh}
+                            successCallback={reload}
                             action={destroy.bind(null, currentImage.current.id)}
                             submitText="slett"
                             submitColor="red"

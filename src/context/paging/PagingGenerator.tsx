@@ -14,6 +14,7 @@ export type StateTypes<Data, PageSize extends number> = {
 export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
     state: StateTypes<Data, PageSize>,
     loadMore: (details: FetcherDetails) => Promise<Data[]>,
+    refetch: (details: FetcherDetails) => Promise<Data[]>,
 } | null>
 
 export type PropTypes<Data, PageSize extends number> = {
@@ -28,7 +29,7 @@ export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = 
 }
 
 type ActionTypes<Data> = {
-    type: 'loadMoreStart'
+    type: 'loadMoreStart' | 'clearAll',
 } | {
     type: 'loadMoreSuccess' | 'loadMoreFailure',
     fetchReturn: ActionReturn<Data[]>,
@@ -54,6 +55,8 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
         case 'loadMoreFailure':
             console.error(action.fetchReturn.error)
             return { ...state, allLoaded: true, loading: false }
+        case 'clearAll':
+            return { ...state, data: [], page: { ...state.page, page: 0 }, allLoaded: false }
         default:
             return state
     }
@@ -84,8 +87,20 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
             }
             return fetchReturn.data || []
         }
+
+        const refetch = async (details: FetcherDetails) => {
+            const goToPage = stateRef.current.page.page
+            dispatch({type: 'clearAll'})
+            const data : Data[] = []
+            while (stateRef.current.page.page < goToPage) {
+                const newData = await loadMore(details)
+                data.push(...newData)
+            }
+            return data
+        }
+
         return (
-            <Context.Provider value={{ state, loadMore }}>
+            <Context.Provider value={{ state, loadMore, refetch }}>
                 {children}
             </Context.Provider>
         )
@@ -95,7 +110,8 @@ function generatePagingContext<Data, const PageSize extends number, FetcherDetai
 : PagingContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
-        loadMore:(details: FetcherDetails) => Promise<Data[]>,
+        loadMore: (details: FetcherDetails) => Promise<Data[]>,
+        refetch: (details: FetcherDetails) => Promise<Data[]>,
             } | null>(null)
     return context
 }
