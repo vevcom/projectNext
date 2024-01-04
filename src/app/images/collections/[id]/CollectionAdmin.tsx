@@ -8,7 +8,7 @@ import styles from './CollectionAdmin.module.scss'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faQuestion, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
 import { useContext } from 'react'
@@ -70,23 +70,39 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
                 <div className={styles.coverImage}>
-                    <h5>cover image</h5>
-                    {
-                        coverImage ? (
-                            <Image image={coverImage} width={70}/>
-                        ) : (
-                            <p>ingen cover image</p>
-                        )
-                    }
+                    <div>
+                        <h5>coverbilde</h5>
+                        <div className={styles.showCurrentCover}>
+                            <FontAwesomeIcon icon={faQuestion} />
+                            <div className={styles.currentCover}>
+                            {
+                                coverImage ? (
+                                    <>
+                                        <i>nåværende coverbilde</i>
+                                        <Image image={coverImage} width={120}/>
+                                    </>
+                                ) : (
+                                    <i>ingen coverbilde</i>
+                                )
+                            }
+                            </div>
+                        </div>
+                    </div>
+                    
+
                     <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
                         {
                             selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
                         }
                     </button>
+                    <div>
+
+                    </div>
                     {
                         selection.selectedImage ? (
                             <>
-                                <p>Valgt bilde: {selection.selectedImage.name}</p>
+                                <p>Valgt bilde:</p>
+                                <Image image={selection.selectedImage} width={120}/>
                                 <button type='button' onClick={() => selection.setSelectedImage(null)}>Fjern bilde</button>
                             </>
                         ) : (
