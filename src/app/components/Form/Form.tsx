@@ -1,5 +1,5 @@
 'use client'
-import { Children, FormHTMLAttributes, ReactNode } from 'react'
+import { Children, FormHTMLAttributes, ReactNode, useEffect } from 'react'
 import Button from '../UI/Button'
 import { useFormStatus } from 'react-dom'
 import { DetailedHTMLProps, useState } from 'react'
@@ -25,7 +25,6 @@ type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     confirmation?: Confirmation,
     action: Action<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
-    extraContent?: ReactNode,
 }
 type InputType = {
     input: ReactNode & { label?: string },
@@ -139,7 +138,6 @@ const makeInputArray = (children: ReactNode) : Inputs =>
 
 export default function Form<GiveActionReturn>({
     children,
-    extraContent,
     title,
     submitText = 'create',
     submitColor = 'primary',
@@ -153,6 +151,10 @@ export default function Form<GiveActionReturn>({
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
+
+    useEffect(() => {
+        setInputs(() => makeInputArray(children))
+    }, [children])
 
     const actionWithError = async (formData: FormData) => {
         const inputs_ = makeInputArray(children)
@@ -197,7 +199,6 @@ export default function Form<GiveActionReturn>({
                     <Input input={input} errors={errors} key={i} />
                 ))
             }
-            {extraContent}
             <SubmitButton
                 color={submitColor}
                 success={success}

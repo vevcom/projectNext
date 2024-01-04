@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 import { get } from 'http'
 
@@ -23,8 +23,6 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
     const router = useRouter()
     const context = useContext(ImageCollectionSelectImageContext)
     if (!context) throw new Error('No context')
-
-    useEffect(() => console.log(context), [context])
 
     const getImageSelection = () => (
         <div className={styles.selectedImage}>
@@ -40,7 +38,11 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                     </>
                 )
             }
-            <button type='button' onClick={() => context.setSelectionMode(true)}>Velg cover bilde</button>
+            <button type='button' onClick={() => context.setSelectionMode(!context.selectionMode)}>
+                {
+                    context.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                }
+            </button>
         </div>
     )
 
@@ -78,10 +80,10 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 title="Rediger samling"
                 submitText="oppdater"
                 action={update.bind(null, collectionId)}
-                extraContent={getImageSelection()}
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
+                {getImageSelection()}
             </Form>
             <Form
                 submitText="slett samling"
