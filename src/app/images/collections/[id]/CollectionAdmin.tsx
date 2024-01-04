@@ -24,28 +24,6 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
     const context = useContext(ImageCollectionSelectImageContext)
     if (!context) throw new Error('No context')
 
-    const getImageSelection = () => (
-        <div className={styles.selectedImage}>
-            {
-                context.selectedImage ? (
-                    <>
-                        <p>Valgt bilde: {context.selectedImage.name}</p>
-                        <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
-                    </>
-                ) : (
-                    <>
-                        <p>Intet bilde valgt</p>
-                    </>
-                )
-            }
-            <button type='button' onClick={() => context.setSelectionMode(!context.selectionMode)}>
-                {
-                    context.selectionMode ? 'Avslutt valg' : 'Velg bilde'
-                }
-            </button>
-        </div>
-    )
-
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
@@ -83,7 +61,25 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
-                {getImageSelection()}
+                <div className={styles.selectedImage}>
+                {
+                    context.selectedImage ? (
+                        <>
+                            <p>Valgt bilde: {context.selectedImage.name}</p>
+                            <button type='button' onClick={() => context.setSelectedImage(null)}>Fjern bilde</button>
+                        </>
+                    ) : (
+                        <>
+                            <p>Intet bilde valgt</p>
+                        </>
+                    )
+                }
+                    <button type='button' onClick={() => context.setSelectionMode(!context.selectionMode)}>
+                        {
+                            context.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                        }
+                    </button>
+                </div>
             </Form>
             <Form
                 submitText="slett samling"
