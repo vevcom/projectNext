@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
+import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 
 type PropTypes = {
     startImageName?: string,
@@ -19,6 +20,7 @@ type PropTypes = {
 
 export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const context = useContext(ImagePagingContext)
+    const selection = useContext(ImageCollectionSelectImageContext)
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')

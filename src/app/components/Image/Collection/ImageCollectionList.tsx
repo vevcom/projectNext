@@ -24,7 +24,7 @@ function ImageWithFallback({ image }: { image: Image }) {
                 selection?.selectionMode && (
                     <button
                         onClick={() => selection?.setSelectedImage(image)}
-                        className={styles.selectBtn}
+                        className={styles.selectBtn + ' ' + (selection?.selectedImage?.id === image.id ? styles.selected : '')}
                     >
                         <FontAwesomeIcon icon={faCheck} />
                     </button>

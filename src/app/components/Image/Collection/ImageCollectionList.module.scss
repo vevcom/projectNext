@@ -39,6 +39,9 @@ $image-size: 150px;
                     opacity: 0.5;
                 }
             }
+            &.selected {
+                background-color: ohma.$colors-primary;
+            }
         }
         
         // img container (component):
