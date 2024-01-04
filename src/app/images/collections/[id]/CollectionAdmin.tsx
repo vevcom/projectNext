@@ -27,7 +27,6 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
 
     const refreshImages = () => {
         pagingContext?.refetch({id: collectionId})
-        router.refresh()
     }
 
     return (
@@ -63,7 +62,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 successCallback={() => router.refresh()}
                 title="Rediger samling"
                 submitText="oppdater"
-                action={update.bind(null, collectionId)}
+                action={update.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
