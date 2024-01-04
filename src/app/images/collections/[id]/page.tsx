@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import { readPage } from '@/actions/images/read'
+import read from '@/actions/images/collections/read'
 import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
 import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
@@ -15,8 +16,11 @@ type PropTypes = {
 export default async function Collection({ params } : PropTypes) {
     const pageSize : PageSizeImage = 30
 
-    const { success, data: collection } = await readPage({ page: { pageSize, page: 0 }, details: { id: Number(params.id) } })
+    const { success, data: collection } = await read(Number(params.id))
     if (!success || !collection) notFound()
+
+    const { success: imagesuccess, data: images } = await readPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
+    if (!imagesuccess || !images) notFound()
     const isAdmin = true //temp
 
     return (
@@ -26,7 +30,8 @@ export default async function Collection({ params } : PropTypes) {
                     pageSize,
                     page: 1,
                 }}
-                initialData={collection.images}
+                initialData={images || []}
+                details={{collectionId: collection.id}}
             >
             <div className={styles.wrapper}>
                 {isAdmin &&

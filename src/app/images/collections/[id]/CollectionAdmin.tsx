@@ -26,7 +26,7 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
     if (!selection) throw new Error('No context')
 
     const refreshImages = () => {
-        pagingContext?.refetch({id: collectionId})
+        pagingContext?.refetch()
     }
 
     return (
@@ -67,6 +67,12 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
                 <div className={styles.selectedImage}>
+                <p>cover image</p>
+                <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                    {
+                        selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                    }
+                </button>
                 {
                     selection.selectedImage ? (
                         <>
@@ -79,11 +85,6 @@ export default function CollectionAdmin({ collectionId }: PropTypes) {
                         </>
                     )
                 }
-                    <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
-                        {
-                            selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
-                        }
-                    </button>
                 </div>
             </Form>
             <Form

@@ -7,7 +7,7 @@ import { default as ImageComponent } from '@/components/Image/Image'
 import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
-import EndlessScroll from '../../PageingWrappes/EndlessScroll'
+import EndlessScroll from '../../PagingWrappes/EndlessScroll'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -49,7 +49,6 @@ export default function ImageCollectionList({ collection }: PropTypes) {
         <div className={styles.ImageCollectionList}>
             <EndlessScroll
                 pageingContext={ImagePagingContext}
-                details={{ id: collection.id }}
                 renderer={image => <ImageWithFallback key={image.id} image={image} />}
             />
         </div>

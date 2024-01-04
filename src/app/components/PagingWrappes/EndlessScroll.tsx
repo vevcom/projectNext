@@ -7,13 +7,12 @@ import styles from './EndlessScroll.module.scss'
 import RenderPageData from './RenderPageData'
 import type { JSX } from 'react'
 
-type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    pageingContext: PagingContextType<Data, PageSize, FetcherDetails>,
-    details: FetcherDetails,
+type PropTypes<Data, PageSize extends number> = {
+    pageingContext: PagingContextType<Data, PageSize>,
     renderer: (data: Data) => JSX.Element,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number, FetcherDetails>({ pageingContext, details, renderer }: PropTypes<Data, PageSize, FetcherDetails>) {
+export default function EndlessScroll<Data, const PageSize extends number>({ pageingContext, renderer }: PropTypes<Data, PageSize>) {
     const context = useContext(pageingContext)
 
     //This component must be rendered inside ContextProvider
@@ -24,7 +23,7 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
 
     useEffect(() => {
         if (inView) {
-            context.loadMore(details)
+            context.loadMore()
         }
     }, [inView])
 
@@ -39,7 +38,7 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
                         <i>No more images to load</i>
                     ) :
                         <div ref={ref}>
-                            <Button onClick={() => context?.loadMore(details)}>Load more</Button>
+                            <Button onClick={() => context.loadMore()}>Load more</Button>
                         </div>
                 }
             </span>

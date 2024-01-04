@@ -46,7 +46,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const goRight = async () => {
         if (currentImage.current.id !== images.current[images.current.length - 1].id) return naiveGoRight()
         if (context?.state.allLoaded) return naiveGoRight()
-        const newImages = await context.loadMore({ id: images.current[0].collectionId })
+        const newImages = await context.loadMore()
         if (!newImages.length) return naiveGoRight()
         currentImage.current = newImages[0]
         return setcurrentIndex(x => x + 1)
@@ -60,7 +60,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const { refresh } = useRouter()
 
     const reload = async () => {
-        images.current = await context.refetch({ id: images.current[0].collectionId })
+        images.current = await context.refetch()
         refresh()
     }
 

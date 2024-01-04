@@ -4,26 +4,23 @@ import type { ImageCollection, Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
 
-export async function readPage<const PageSize extends number>({ page, details }: ReadPageInput<PageSize, {id: number}>)
-    : Promise<ActionReturn<ImageCollection & {images: Image[]}>> {
-    const { id } = details
+export async function readPage<const PageSize extends number>({ page, details }: ReadPageInput<PageSize, {collectionId: number}>)
+    : Promise<ActionReturn<Image[]>> {
+    const { collectionId } = details
     const { page: pageNumber, pageSize } = page
-    const collection = await prisma.imageCollection.findUnique({
-        where: {
-            id,
-        },
-        include: {
-            images: {
-                orderBy: {
-                    id: 'asc'
-                },
-                skip: pageNumber * pageSize,
-                take: pageSize,
+    try {
+        const images = await prisma.image.findMany({
+            where: {
+                collectionId,
             },
-        },
-    })
-    if (!collection) return { success: false, error: [{ message: 'Image not found' }] }
-    return { success: true, data: collection }
+            skip: pageNumber * pageSize,
+            take: pageSize,
+        })
+        if (!images) return { success: false, error: [{ message: 'Image not found' }] }
+        return { success: true, data: images }
+    } catch (error) {
+        return errorHandeler(error)
+    }
 }
 
 
