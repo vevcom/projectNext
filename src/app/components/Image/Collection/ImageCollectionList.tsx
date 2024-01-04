@@ -16,6 +16,10 @@ function ImageWithFallback({ image }: { image: Image }) {
 
     return (
         <div className={styles.imageAndBtn}>
+            <ImageComponent width={200} image={image} />
+            <PopUp showButtonContent={<></>}>
+                <ImageCollectionDisplay startImageName={image.name} />
+            </PopUp>
             {
                 selection?.selectionMode && (
                     <button
@@ -26,10 +30,6 @@ function ImageWithFallback({ image }: { image: Image }) {
                     </button>
                 )
             }
-            <ImageComponent width={200} image={image} />
-            <PopUp showButtonContent={<></>}>
-                <ImageCollectionDisplay startImageName={image.name} />
-            </PopUp>
         </div>
     )
 }

@@ -13,6 +13,30 @@ $image-size: 150px;
         position: relative;
         border: 3px solid ohma.$colors-primary;
         padding: 0;
+        > .selectBtn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2em; 
+            height: 2em;
+            z-index: 2;
+            background-color: transparent;
+            border: none;
+            > svg {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 1;
+            }
+            &:hover {
+                cursor: pointer;
+                > svg {
+                    opacity: 0.5;
+                }
+            }
+        }
         
         // img container (component):
         > *:first-child {
@@ -39,7 +63,7 @@ $image-size: 150px;
                 transform: scale(1.1);
             }
         }
-        > button {
+        > button:not(.selectBtn) {
             z-index: 1;
             position: absolute;
             top: 0;
@@ -47,7 +71,6 @@ $image-size: 150px;
             width: 100%;
             height: 100%;
             opacity: 0;
-            
         }
     }
 }
