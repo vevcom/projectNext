@@ -72,11 +72,11 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
             <div>
                 <div className={styles.currentImage}>
                     <div className={styles.select}>
-                    {
-                        selection?.selectionMode && (
-                            <ImageSelectionButton image={currentImage.current} />
-                        )
-                    }
+                        {
+                            selection?.selectionMode && (
+                                <ImageSelectionButton image={currentImage.current} />
+                            )
+                        }
                     </div>
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>

@@ -70,7 +70,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
         const stateRef = useRef(state)
         const detailsRef = useRef(details)
         useEffect(() => {
-            dispatch({type: 'clearAll'})
+            dispatch({ type: 'clearAll' })
             detailsRef.current = details
         }, [details])
 
@@ -97,7 +97,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
 
         const refetch = async () => {
             const goToPage = stateRef.current.page.page
-            dispatch({type: 'clearAll'})
+            dispatch({ type: 'clearAll' })
             const data : Data[] = []
             while (stateRef.current.page.page < goToPage) {
                 const newData = await loadMore()
@@ -113,13 +113,13 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
         )
     }
 }
-function generatePagingContext<Data, const PageSize extends number, FetcherDetails>()
+function generatePagingContext<Data, const PageSize extends number>()
 : PagingContextType<Data, PageSize> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
-        loadMore: () => Promise<Data[]>,
+        loadMore:() => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
-    } | null>(null)
+            } | null>(null)
     return context
 }
 

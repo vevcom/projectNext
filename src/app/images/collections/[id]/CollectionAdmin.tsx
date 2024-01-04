@@ -78,45 +78,45 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                         <div className={styles.showCurrentCover}>
                             <FontAwesomeIcon icon={faQuestion} />
                             <div className={styles.currentCover}>
-                            {
-                                coverImage ? (
-                                    <>
-                                        <i>nåværende coverbilde</i>
-                                        <Image image={coverImage} width={120}/>
-                                    </>
-                                ) : (
-                                    <i>ingen coverbilde</i>
-                                )
-                            }
+                                {
+                                    coverImage ? (
+                                        <>
+                                            <i>nåværende coverbilde</i>
+                                            <Image image={coverImage} width={120}/>
+                                        </>
+                                    ) : (
+                                        <i>ingen coverbilde</i>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className={styles.chosenImage}>
                         <p>Valgt bilde:</p>
                         <span>
-                        {
-                            selection.selectedImage ? (
-                                <>
-                                    <Image image={selection.selectedImage} width={120}/>
-                                    <button type='button' onClick={() => selection.setSelectedImage(null)}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <p>Intet bilde valgt</p>
-                                </>
-                            )
-                        }
+                            {
+                                selection.selectedImage ? (
+                                    <>
+                                        <Image image={selection.selectedImage} width={120}/>
+                                        <button type="button" onClick={() => selection.setSelectedImage(null)}>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p>Intet bilde valgt</p>
+                                    </>
+                                )
+                            }
                         </span>
-                        <button type='button' onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                        <button type="button" onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
                             {
                                 selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
                             }
                         </button>
                     </div>
-                    
+
                 </div>
             </Form>
             <Form

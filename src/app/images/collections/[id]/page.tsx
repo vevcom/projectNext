@@ -31,7 +31,7 @@ export default async function Collection({ params } : PropTypes) {
                     page: 1,
                 }}
                 initialData={images || []}
-                details={{collectionId: collection.id}}
+                details={{ collectionId: collection.id }}
             >
                 <div className={styles.wrapper}>
                     {isAdmin &&
@@ -43,12 +43,12 @@ export default async function Collection({ params } : PropTypes) {
                         <h1>{collection.name}</h1>
                         <i>{collection.description}</i>
                         <main>
-                            <ImageCollectionList collection={collection} />
+                            <ImageCollectionList />
                         </main>
                     </div>
                 </div>
             </ImageContextProvider>
         </ImageCollectionSelectImageProvider>
-       
+
     )
 }

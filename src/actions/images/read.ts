@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import type { ImageCollection, Image } from '@prisma/client'
+import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
 

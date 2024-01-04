@@ -26,8 +26,8 @@ export default async function update(collectionId: number, coverImageId: number 
     const data = {
         ...parse.data,
         coverImage: coverImageId ? {
-            connect: { 
-                id: coverImageId 
+            connect: {
+                id: coverImageId
             }
         } : undefined
     }

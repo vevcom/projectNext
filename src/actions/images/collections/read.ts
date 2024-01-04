@@ -3,7 +3,7 @@ import type { ImageCollection, Image } from '@prisma/client'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 
-export default async function read(id: number) : Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+export default async function read(id: number) : Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
     try {
         const collection = await prisma.imageCollection.findUnique({
             where: {

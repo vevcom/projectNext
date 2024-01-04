@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
 
 export const ImageCollectionSelectImageContext = createContext<{
@@ -8,7 +8,7 @@ export const ImageCollectionSelectImageContext = createContext<{
     setSelectionMode:(selectionMode: boolean) => void,
     selectedImage: Image | null,
     setSelectedImage: (image: Image | null) => void,
-} | null>(null)
+        } | null>(null)
 
 type PropTypes = {
     children: React.ReactNode,
