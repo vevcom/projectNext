@@ -58,6 +58,18 @@ services:
         condition: service_healthy
     links:
       - db
+  
+  nginx:
+    image: nginx:1.21.3-alpine
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - projectnext
+    links:
+      - projectnext
 
 volumes:
   devdb:
