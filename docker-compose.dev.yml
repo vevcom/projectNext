@@ -9,6 +9,7 @@ services:
     ports:
       - 3000:3000
     volumes:
+      - store:/usr/src/app/store
       - ./src:/usr/src/app/src
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
@@ -66,6 +67,7 @@ services:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - store:/usr/store
     depends_on:
       - projectnext
     links:
@@ -73,5 +75,7 @@ services:
 
 volumes:
   devdb:
+    driver: local
+  store:
     driver: local
           
