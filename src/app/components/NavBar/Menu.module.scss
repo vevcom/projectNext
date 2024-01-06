@@ -52,7 +52,10 @@
             font-size: ohma.$fonts-l;
             font-weight: ohma.$fonts-weight-l;
             &:hover {
-                color: blue;
+                color: ohma.$colors-primary;
+                svg {
+                    color: ohma.$colors-primary;
+                }
             }
             svg {
                 margin-right: 5px;
