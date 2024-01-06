@@ -3,7 +3,7 @@
 .wrapper {
     padding: ohma.$gap;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto;
     position: relative;
     > .admin {
@@ -14,6 +14,7 @@
         width: 100%;
         > main {
             margin-top: ohma.$gap;
+            width: 100%;
         }
     }
 }
