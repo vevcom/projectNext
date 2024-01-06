@@ -3,9 +3,51 @@ import fs from 'fs'
 import { join } from 'path'
 const prisma = new PrismaClient()
 
-console.log('seed starting...')
 async function main() {
-    const harambe = await prisma.user.upsert({
+    console.log('seed starting...')
+    const standardCollection = await prisma.imageCollection.upsert({
+        where: {
+            name: 'standard_images'
+        },
+        update: {
+
+        },
+        create: {
+            name: 'standard_images',
+            description: 'standard images for the website',
+        }
+    })
+    fs.readdir(join(__dirname, 'standard_images'), (err, files) => {
+        if (err) throw err
+        files.forEach(async (file) => {
+            const ext = file.split('.')[1]
+            if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) return console.log(`skipping image ${file}`)
+            const name = file.split('.')[0]
+            return await prisma.image.upsert({
+                where: {
+                    name
+                },
+                update: {
+
+                },
+                create: {
+                    name,
+                    alt: name.split('_').join(' '),
+                    fsLocation: `${name}.${ext}`,
+                    ext,
+                    collection: {
+                        connect: {
+                            id: standardCollection.id
+                        }
+                    }
+                }
+            })
+        })
+    })
+
+    //seeding test data
+    if (process.env.NODE_ENV !== 'development') return
+    await prisma.user.upsert({
         where: {
             email: 'harambe@harambesen.io'
         },
@@ -20,31 +62,24 @@ async function main() {
             username: 'Harambe104',
         },
     })
-    fs.readdir(join(__dirname, 'standard_images'), (err, files) => {
-        if (err) throw err
-        files.forEach(async (file) => {
-            const ext = file.split('.')[1]
-            const name = file.split('.')[0]
-            await prisma.image.upsert({
-                where: {
-                    name
-                },
-                update: {
+    for (let i = 0; i < 10; i++) {
+        await prisma.imageCollection.upsert({
+            where: {
+                name: `test_collection_${i}`
+            },
+            update: {
 
-                },
-                create: {
-                    name,
-                    alt: name.split('_').join(' '),
-                    fsLocation: `${name}.${ext}`,
-                    ext,
-                }
-            })
+            },
+            create: {
+                name: `test_collection_${i}`,
+                description: 'just a test',
+            }
         })
-    })
-    console.log({ harambe })
+    }
 }
 main().then(async () => {
     await prisma.$disconnect()
+    console.log('seed finished')
 }).catch(async (e) => {
     console.error(e)
     await prisma.$disconnect()

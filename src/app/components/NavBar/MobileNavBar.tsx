@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import BurgerMenu from './BurgerMenu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './MobileNavBar.module.scss'
 import { Session } from 'next-auth'
+import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 
 type PropTypes = {
     session: Session | null
@@ -17,6 +18,7 @@ type PropTypes = {
 function MobileNavBar({ session } : PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = true
+    const isAdmin = true //temp
 
     return (
         <nav className={styles.MobileNavBar}>
@@ -38,21 +40,26 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <div>
                 <Link href="/">
-                    <Image name="logo_simple" width={30}/>
+                    <ImageLink name="logo_simple" width={30}/>
                 </Link>
             </div>
             <div>
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>
-                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link> :
                         <Link href="/login">
-                            <Image width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link>
                 }
             </div>
             <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
+            <div className={styles.editMode}>
+                {
+                    isAdmin && <EditModeSwitch />
+                }
+            </div>
         </nav>
     )
 }

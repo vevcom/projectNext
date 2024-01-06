@@ -40,7 +40,6 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         align-items: center;
         padding-bottom: 20px; //compansate a little for nav size 
         > img {
-            animation: popIn 1s ease-in-out;
             margin-bottom: 2*ohma.$gap;
         }
         > .socials {
@@ -60,21 +59,9 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         > .scrollDown {
             color: ohma.$colors-white;
         }
-        > a, .socials {
-            animation: popIn 1.2s ease-in-out;
-        }
     }
 }
 
 .emptyPart {
     height: 60vh;
-}
-
-@keyframes popIn {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
 }

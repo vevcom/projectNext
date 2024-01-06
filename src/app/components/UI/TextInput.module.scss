@@ -1,49 +1,79 @@
 @use "@/styles/ohma";
 
-$animation_time: 200ms;
-
-.Input {
+.TextInput {
     position: relative;
+    padding: 2*ohma.$gap 0 0;
+    margin-top: ohma.$gap;
     width: 100%;
-    margin: 1.3em 0.2em 0.6em 0.2em;
-    box-sizing: border-box;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
 
-    > label {
-        position: absolute;
-        top: 0;
-        left: 1em;
-        transform: translate(0%, 50%);
-        color: ohma.$colors-black;
-        font-size: ohma.$fonts-m;
-        pointer-events: none;
-        transition: $animation_time;
-        font-weight: 130;
-        padding: 0 3px 0 3px;
+.field {
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid;
+    outline: 0;
+    font-size: ohma.$fonts-s;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+    z-index: 1;
+
+    &::placeholder {
+        opacity: 0;
     }
 
-    > input {
-        border-width: 0;
-        border-bottom-width: 1px;
-        border-style: solid;
-        border-color: ohma.$colors-gray-850;
-        border-radius: 0;
-        padding: 0.4em;
-        background-color: transparent;
-        font-size: ohma.$fonts-l;
-        box-sizing: border-box;
-        transition: $animation_time / 2;
-        width: 100%;
-    }
-
-    > input:focus {
-        outline: none;
-        border-bottom-width: 2px;
-        border-color: ohma.$colors-black;
-    }
-
-    > input:focus ~ label,
-    > input:valid ~ label {
-        transform: translate(-2%, -100%);
+    &:placeholder-shown ~ .labe {
         font-size: ohma.$fonts-s;
+        cursor: text;
+        top: 20px;
     }
+
+    &:focus, &:not(:placeholder-shown) {
+        ~ .labe {
+            position: absolute;
+            top: 0;
+            display: block;
+            transition: 0.2s;
+            font-size: calc(ohma.$fonts-s * 0.8);
+        }
+        padding-bottom: 6px;  
+        border-width: 3px;
+        border-image-slice: 1;
+    }
+}
+
+.labe {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    z-index: 0;
+}
+
+.primary .labe,.primary .field,.primary:focus ~ .labe, 
+.primary:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-primary;
+    border-color: ohma.$colors-primary;
+}
+
+.secondary .labe,.secondary .field,.secondary:focus ~ .labe, 
+.secondary:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-secondary;
+    border-color: ohma.$colors-secondary;
+}
+
+.black .labe,.black .field,.black:focus ~ .labe,
+.black:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-black;
+    border-color: ohma.$colors-black;
+}
+
+.red .labe,.red .field,.red:focus ~ .labe,
+.red:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-red;
+    border-color: ohma.$colors-red;
 }

@@ -1,4 +1,4 @@
-import Image from '@/components/Image/Image'
+import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import Item from './Item'
 import styles from './NavBar.module.scss'
@@ -16,6 +16,7 @@ import {
     faGamepad
 } from '@fortawesome/free-solid-svg-icons'
 import { Session } from 'next-auth'
+import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
 import Menu from './Menu'
 
 type PropTypes = {
@@ -121,10 +122,15 @@ async function NavBar({ session }: PropTypes) {
                     </>
                     )
                 }
-                <li className={styles.magicHat}>
-                    <Link href={isLoggedIn ? '/users/me' : '/login'}>
-                        <Image name="magisk_hatt" width={25} height={25} alt="log in button"/>
-                    </Link>
+                <li className={styles.rightSide}>
+                    {
+                        isAdmin && <EditModeSwitch />
+                    }
+                    <div className={styles.magicHat}>
+                        <Link href={isLoggedIn ? '/users/me' : '/login'}>
+                            <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button"/>
+                        </Link>
+                    </div>
                 </li>
             </ul>
         </nav>

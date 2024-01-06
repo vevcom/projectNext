@@ -39,6 +39,19 @@
         }
     }
     overflow: hidden;
+    .editMode {
+        $size: 50px;
+        $padding: 1em;
+        $height: calc(#{$size} + #{$padding});
+        position: absolute;
+        top: calc(-1*$height);
+        right: 0;
+        height: $height;
+        scale: 1.3 bottom right;
+        border-start-start-radius: 15px;
+        background-color: ohma.$colors-black;
+        padding-bottom: 1em;
+    }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {

@@ -1,5 +1,6 @@
 {
   "name": "projectnext",
+  "author": "vevcom",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -25,6 +26,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fontawesome": "^1.7.1",
+    "react-intersection-observer": "^9.5.3",
     "sass": "^1.69.5",
     "sharp": "^0.33.1",
     "uuid": "^9.0.1",
