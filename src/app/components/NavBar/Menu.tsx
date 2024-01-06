@@ -7,6 +7,7 @@ import Link from 'next/link'
 import styles from './Menu.module.scss'
 
 type PropTypes = {
+    openBtnContent: React.ReactNode,
     items: {
         name: string,
         href: string,
@@ -15,7 +16,7 @@ type PropTypes = {
 }
 
 
-export default function Menu({items}: PropTypes) {
+export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
@@ -34,9 +35,9 @@ export default function Menu({items}: PropTypes) {
                 </ul>
             </div>
         ) : (
-            <div className={styles.menu}>
-                <FontAwesomeIcon icon={faBars} onClick={() => setIsOpen(true)}/>
-            </div>
+            <button className={styles.openBtn} onClick={() => setIsOpen(true)}>
+                {openBtnContent}
+            </button>
         )
     )
 }

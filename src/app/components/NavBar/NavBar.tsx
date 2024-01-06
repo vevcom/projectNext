@@ -1,7 +1,6 @@
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import Item from './Item'
-import DropDown from './Dropdown'
 import styles from './NavBar.module.scss'
 import {
     faNewspaper,
@@ -23,6 +22,64 @@ type PropTypes = {
     session: Session | null
 }
 
+const itemsForMenu = [
+    {
+        name: 'Om Omega',
+        href: 'ingopages/about',
+        icon: faCircleInfo,
+    },
+    {
+        name: 'Intressegrupper',
+        href: 'ingopages/interessegrupper',
+        icon: faGamepad,
+    },
+    {
+        name: 'Artikler',
+        href: 'news',
+        icon: faNewspaper
+    },
+    {
+        name: 'Ombul',
+        href: '/ombul',
+        icon: faBook,
+    },
+    {
+        name: 'Bulshit',
+        href: '/bulshit',
+        icon: faPoo,
+    },
+    {
+        name: 'Omegashop',
+        href: '/money/shop',
+        icon: faShoppingCart,
+    },
+    {
+        name: 'Omegaquotes',
+        href: '/omegaquotes',
+        icon: faComment,
+    },
+    {
+        name: 'Guider',
+        href: 'infopages/guides',
+        icon: faQuestionCircle,
+    },
+    {
+        name: 'Bilder',
+        href: '/images',
+        icon: faCamera,
+    },
+    {
+        name: 'Klasselister',
+        href: '/userlist',
+        icon: faList,
+    },
+    {
+        name: 'Komitémedlemmer',
+        href: '/committees',
+        icon: faUsers,
+    },
+]
+
 async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
@@ -39,78 +96,30 @@ async function NavBar({ session }: PropTypes) {
                         />
                     </Link>
                 </li>
-                {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
-                {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
-                <Item href="/infopages/committees" name="Komitéer"/>
-                {!isLoggedIn &&
-                <>
-                    <Item href="/infopages/contactor" name="For bedrifter"/>
-                    <Item href="/infopages/nystudent" name="Ny Student?"/>
-                </>}
-                {isLoggedIn &&
-                <>
-                    <Item href="/infopages/jobbannonser" name="Jobbannonser"/>
-                    {applicationPeriod &&
-                        <Item href="/applications" name="Søknader"/>
-                    }
-                    <Menu items={[
+                {
+                    isLoggedIn ? (
+                    <>
+                        <Item href="/events" name="Hvad der hender"/>
+                        <Item href="/infopages/committees" name="Komitéer"/>
+                        <Item href="/infopages/jobbannonser" name="Jobbannonser"/>
                         {
-                            name: 'Om Omega',
-                            href: 'ingopages/about',
-                            icon: faCircleInfo,
-                        },
-                        {
-                            name: 'Intressegrupper',
-                            href: 'ingopages/interessegrupper',
-                            icon: faGamepad,
-                        },
-                        {
-                            name: 'Artikler',
-                            href: 'news',
-                            icon: faNewspaper
-                        },
-                        {
-                            name: 'Ombul',
-                            href: '/ombul',
-                            icon: faBook,
-                        },
-                        {
-                            name: 'Bulshit',
-                            href: '/bulshit',
-                            icon: faPoo,
-                        },
-                        {
-                            name: 'Omegashop',
-                            href: '/money/shop',
-                            icon: faShoppingCart,
-                        },
-                        {
-                            name: 'Omegaquotes',
-                            href: '/omegaquotes',
-                            icon: faComment,
-                        },
-                        {
-                            name: 'Guider',
-                            href: 'infopages/guides',
-                            icon: faQuestionCircle,
-                        },
-                        {
-                            name: 'Bilder',
-                            href: '/images',
-                            icon: faCamera,
-                        },
-                        {
-                            name: 'Klasselister',
-                            href: '/userlist',
-                            icon: faList,
-                        },
-                        {
-                            name: 'Komitémedlemmer',
-                            href: '/committees',
-                            icon: faUsers,
-                        },
-                    ]}/>
-                </>
+                        applicationPeriod &&
+                            <Item href="/applications" name="Søknader"/>
+                        }
+                        <li>
+                            <Menu 
+                                openBtnContent={<p className={styles.openMenu}>Mer</p>} 
+                                items={itemsForMenu}/>
+                        </li>
+                    </>
+                    ) : (
+                    <>
+                        <Item href="/ombul" name="OmBul"/>
+                        <Item href="/infopages/committees" name="Komitéer"/>
+                        <Item href="/infopages/contactor" name="For bedrifter"/>
+                        <Item href="/infopages/nystudent" name="Ny Student?"/>
+                    </>
+                    )
                 }
                 <li className={styles.magicHat}>
                     <Link href={isLoggedIn ? '/users/me' : '/login'}>
