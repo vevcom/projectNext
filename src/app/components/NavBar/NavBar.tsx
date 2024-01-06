@@ -17,6 +17,7 @@ import {
     faGamepad
 } from '@fortawesome/free-solid-svg-icons'
 import { Session } from 'next-auth'
+import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
 
 type PropTypes = {
     session: Session | null
@@ -25,6 +26,7 @@ type PropTypes = {
 async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
+    const isAdmin = true //temp
 
     return (
         <nav className={styles.NavBar}>
@@ -110,6 +112,9 @@ async function NavBar({ session }: PropTypes) {
                         },
                     ]}/>
                 </>
+                }
+                {
+                    isAdmin && <EditModeSwitch />
                 }
                 <li className={styles.magicHat}>
                     <Link href={isLoggedIn ? '/users/me' : '/login'}>
