@@ -56,8 +56,8 @@ export default async function Images() {
                                     <h2>{collection.name}</h2>
                                     <i>{collection.description}</i>
                                     <p>{collection.createdAt.toLocaleDateString()}</p>
-                                    <p>{collection._count.images}</p>
                                 </div>
+                                <p className={styles.imageCount}>{collection._count.images}</p>
                             </Link>
                         ))
                     }

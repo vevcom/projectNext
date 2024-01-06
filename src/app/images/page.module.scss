@@ -30,6 +30,18 @@ $collection-size: 250px;
             @include ohma.round;
             position: relative;
             place-self: center;
+            > .imageCount {
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 0.3em;
+                color: ohma.$colors-white;
+                background-color: ohma.$colors-black;
+                border-radius: 0 0 0 1em;
+                min-width: 30px;
+                z-index: 2;
+                text-align: center;
+            }
             &::after {
                 content: '';
                 position: absolute;
