@@ -1,0 +1,30 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    height: 100%;
+    width: 100vw;
+    display: table-cell;
+    vertical-align: middle;
+    .info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        h3 {
+            color: ohma.$colors-black;
+        }
+        .imageContainer {
+            border-right: solid 2px ohma.$colors-secondary;
+            padding-right: 20px;
+            margin-right: 20px;
+            img {
+                filter: invert(100%);
+            }
+        }
+    }
+}
+
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .info {
+        min-height: 50vh;
+    }
+}

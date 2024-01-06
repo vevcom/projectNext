@@ -1,29 +1,17 @@
-import prisma from '@/prisma'
-import { default as NextImage, ImageProps } from 'next/image'
+import { ImageProps } from 'next/image'
+import type { Image as ImageT } from '@prisma/client'
+import styles from './Image.module.scss'
 
-type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
-    name: string,
+export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
+    image: ImageT,
     width: number,
     alt?: string
 }
 
-export default async function Image({ alt, name, ...props } : PropTypes) {
-    const image = await prisma.image.findUnique({
-        where: { name }
-    })
-    try {
-        if (!image) throw `no image found with name: ${name}`
-        const imagesrc = await import(`./../../../../store/images/${image?.fsLocation}`)
-        return (
-            <NextImage alt={alt ?? image.alt} src={imagesrc} {...props} />
-        )
-    } catch (err) {
-        const imagesrc = await import('./../../../../public/default_image.jpeg')
-        return (
-            <div>
-                <div>Could not find image {name}</div>
-                <NextImage alt="default image" src={imagesrc} {...props} />
-            </div>
-        )
-    }
+export default function Image({ alt, image, width, ...props } : PropTypes) {
+    return (
+        <div style={{ width: `${width}px` }} className={styles.Image}>
+            <img {...props} width={width} alt={alt || image.alt} src={`/store/images/${image.fsLocation}`} />
+        </div>
+    )
 }

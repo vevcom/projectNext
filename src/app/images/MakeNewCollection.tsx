@@ -1,0 +1,28 @@
+'use client'
+import PopUp from '@/components/PopUp/PopUp'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import TextInput from '@/components/UI/TextInput'
+import create from '@/actions/images/collections/create'
+import Form from '../components/Form/Form'
+import { useRouter } from 'next/navigation'
+import type { ImageCollection } from '@prisma/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styles from './MakeNewCollection.module.scss'
+
+export default function MakeNewCollection() {
+    const router = useRouter()
+    const collectionCreatedCallback = (collection?: ImageCollection) => {
+        if (collection) router.push(`/images/collections/${collection.id}`)
+    }
+    return (
+        <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+            <div className={styles.MakeNewCollection}>
+                <Form successCallback={collectionCreatedCallback}
+                    title="Lag et album" submitText="Lag album" action={create}>
+                    <TextInput label="navn" name="name" />
+                    <TextInput label="beskrivelse" name="description" />
+                </Form>
+            </div>
+        </PopUp>
+    )
+}

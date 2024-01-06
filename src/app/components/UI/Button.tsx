@@ -2,9 +2,9 @@ import React, { ButtonHTMLAttributes } from 'react'
 
 import styles from './Button.module.scss'
 
-type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode,
-    color?: 'primary' | 'secondary',
+    color?: 'primary' | 'secondary' | 'green' | 'red',
 }
 
 export default function Button({ color = 'primary', children, ...props } : PropTypes) {

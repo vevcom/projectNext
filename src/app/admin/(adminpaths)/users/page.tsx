@@ -1,20 +1,24 @@
 import create from '@/actions/users/create'
 import TextInput from '@/app/components/UI/TextInput'
-import Button from '@/UI/Button'
+import Form from '@/app/components/Form/Form'
+import styles from './page.module.scss'
+import { v4 as uuid } from 'uuid'
 
 export default function Users() {
     return (
-        <div>
-            <h2>Users</h2>
-            <form action={create}>
-                <TextInput label="username" name="username" />
-                <TextInput label="password" name="password" />
-                <TextInput label="confirm password" name="confirmPassword" />
-                <TextInput label="email" name="email" />
-                <TextInput label="first name" name="firstname" />
-                <TextInput label="last name" name="lastname" />
-                <Button type="submit" value="Upload">Create user</Button>
-            </form>
+        <div className={styles.wrapper}>
+            <div className={styles.createUser}>
+                <Form title="Create a user" submitText="Create user" action={create}>
+                    <TextInput label="username" name="username" key={uuid()}/>
+                    <TextInput label="password" name="password" key={uuid()}/>
+                    <TextInput label="confirm password" name="confirmPassword" key={uuid()}/>
+                    <TextInput label="email" name="email" key={uuid()}/>
+                    <TextInput label="first name" name="firstname" key={uuid()}/>
+                    <TextInput label="last name" name="lastname" key={uuid()}/>
+                </Form>
+            </div>
         </div>
+
+
     )
 }

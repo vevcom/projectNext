@@ -1,0 +1,29 @@
+@use '@/styles/ohma';
+
+.selectBtn {
+    width: 2em; 
+    height: 2em;
+    background-color: ohma.$colors-gray-300;
+    border-radius: 50%;
+    margin: 0.3em;
+    border: none;
+    position: relative;
+    > svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 80%;
+    }
+    &:hover {
+        cursor: pointer;
+        background-color: ohma.$colors-gray-500;
+        > svg {
+            opacity: 0.5;
+        }
+    }
+    &.selected {
+        background-color: ohma.$colors-primary;
+    }
+}

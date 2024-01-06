@@ -3,8 +3,18 @@
 import prisma from '@/prisma'
 import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
+import type { User } from '@prisma/client'
 
-export default async function create(rawdata: FormData) {
+export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
+    //TEST FOR WAIT
+    await (new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('resolved')
+        }, 5000)
+    }))
+    //TEST FOR WAIT
+
     const schema = z.object({
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
@@ -12,7 +22,7 @@ export default async function create(rawdata: FormData) {
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         confirmPassword: z.string().max(50).min(2),
-    }).refine((data) => data.password === data.confirmPassword, 'password must match confirmPassword')
+    }).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
     const parse = schema.safeParse({
         username: rawdata.get('username'),
         password: rawdata.get('password'),
@@ -21,6 +31,7 @@ export default async function create(rawdata: FormData) {
         lastname: rawdata.get('lastname'),
         confirmPassword: rawdata.get('confirmPassword'),
     })
+
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
     }

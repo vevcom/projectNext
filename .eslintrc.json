@@ -2,6 +2,7 @@
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -61,14 +62,6 @@
     "no-shadow": "error",
     // disallow use of undeclared variables unless mentioned in a /*global */ block
     "no-undef": "error",
-    // disallow declaration of variables that are not used in the code
-    "no-unused-vars": [
-        "error",
-        {
-            "vars": "local",
-            "args": "after-used"
-        }
-    ],
     // disallow use of variables before they are defined
     "no-use-before-define": "error",
     // enforces no braces where they can be omitted
@@ -153,19 +146,6 @@
     "linebreak-style": [
         "error",
         "unix"
-    ],
-    // specify the maximum length of a line in your program
-    "max-len": [
-        "error",
-        100,
-        4,
-        {
-            "ignoreUrls": true,
-            "ignoreComments": false,
-            "ignoreTemplateLiterals": true,
-            "ignoreStrings": true,
-            "ignoreRegExpLiterals": true
-        }
     ],
     // specify the maximum depth callbacks can be nested
     "max-nested-callbacks": [

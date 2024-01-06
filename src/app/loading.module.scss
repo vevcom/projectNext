@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    display: grid;
+    place-items: center;
+    place-content: center;
+    min-height: 100%;
+    width: 100vw;
+    position: absolute;
+}
+

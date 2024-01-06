@@ -1,0 +1,90 @@
+@use "@/styles/ohma";
+
+.ImageCollectionDisplay > div {
+    > .currentImage {
+        padding: 0;
+        width: 50vw;
+        height: 50vh;
+        display: flex;
+        flex-direction: column;
+
+        > .select {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+        }
+
+        > .loading {
+            @include ohma.card;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            @include ohma.loadImage;
+        }
+        //loading paceholder and image-container
+        > .loading, > *:last-child { 
+            margin-top: 1em;
+            position: relative;
+            width: 100% !important;
+            height: 100%;
+        }
+        img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            @include ohma.round;
+            padding: 0;
+        }
+    }
+    > .controls {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        > button {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+            border: none;
+            margin: ohma.$gap;
+            &:hover {
+                cursor: pointer;
+            }
+            > svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+.ImageCollectionDisplay {
+    position: relative;
+    .admin {
+        @include ohma.card;
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-height: 100%;
+        background-color: ohma.$colors-secondary;
+        translate: 100%;
+        width: 300px;
+    }
+}
+
+
+@keyframes rotate {
+    0% {
+        transform: translate(0) rotate(0deg);
+    }
+    100% {
+        transform: translate(20%) rotate(5deg);
+    }
+}
