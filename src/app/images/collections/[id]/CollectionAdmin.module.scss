@@ -2,6 +2,7 @@
 
 .CollectionAdmin {
     @include ohma.card;
+    width: 400px;
     background-color: ohma.$colors-secondary;
     > *:not(:last-child) {
         border-bottom: solid 5px ohma.$colors-gray-800;
@@ -25,6 +26,7 @@
     }
 
     .coverImage {
+        padding: 0 -2em;
         p, i, button {
             font-size: ohma.$fonts-s;
         }
@@ -124,8 +126,8 @@
             > button {
                 margin-top: 3px;
                 @include ohma.roundBtn(ohma.$colors-primary);
-                min-width: 50%;
-                border-radius: .3em;
+                width: auto;
+                @include ohma.round;
             }
         }
     }
