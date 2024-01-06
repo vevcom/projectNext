@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import styles from './Menu.module.scss'
+import { usePathname } from 'next/navigation'
 
 type PropTypes = {
     openBtnContent: React.ReactNode,
@@ -18,6 +19,12 @@ type PropTypes = {
 
 export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
+    
+    //close if user changes page
+    const path = usePathname()
+    useEffect(() => {
+        setIsOpen(false)
+    }, [path])
 
     return (
         <> 
