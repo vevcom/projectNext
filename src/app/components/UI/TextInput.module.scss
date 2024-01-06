@@ -22,7 +22,7 @@
     z-index: 1;
 
     &::placeholder {
-        visibility: hidden;
+        opacity: 0;
     }
 
     &:placeholder-shown ~ .labe {
