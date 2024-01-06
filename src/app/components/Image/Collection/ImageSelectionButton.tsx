@@ -11,12 +11,13 @@ type PropTypes = {
 
 export default function ImageSelectionButton({ image }: PropTypes) {
     const selection = useContext(ImageCollectionSelectImageContext)
+    const imageIsSelected = selection?.selectedImage?.id === image.id
 
     return (
         <div className={styles.ImageSelectionButton}>
             <button
-                onClick={() => selection?.setSelectedImage(image)}
-                className={`${styles.selectBtn} ${selection?.selectedImage?.id === image.id ? styles.selected : ''}`}
+                onClick={() => selection?.setSelectedImage(imageIsSelected ? null : image)}
+                className={`${styles.selectBtn} ${imageIsSelected ? styles.selected : ''}`}
             >
                 <FontAwesomeIcon icon={faCheck} />
             </button>
