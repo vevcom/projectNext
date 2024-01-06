@@ -22,8 +22,11 @@ export default function EditModeSwitch() {
 
     return (
         <div className={styles.EditModeSwitch}>
-            <input type="checkbox" id="editModeSwitch" onChange={handleChange} />
-            <span className={styles.slider}></span>
+            <label>Edit</label>
+            <div>
+                <input type="checkbox" id="editModeSwitch" onChange={handleChange} />
+                <span className={styles.slider}></span>
+            </div>
         </div>
     )
 }
