@@ -10,11 +10,11 @@ export default function EditModeSwitch() {
     if (!editingContext) throw new Error('No EditModeContext found')
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault()
         editingContext.setEditMode(e.target.checked)
     }
 
     useEffect(() => {
+        console.log(editingContext.editMode)
         if (ref.current) {
             ref.current.checked = editingContext.editMode
         }
