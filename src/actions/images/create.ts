@@ -29,7 +29,7 @@ async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'i
     const buffer = Buffer.from(bytes)
     try {
         const fsLocation = `${uuid()}.${ext}`
-        const destination = join('./', 'public', 'store', 'images')
+        const destination = join('store', 'images')
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
         const image = await prisma.image.create({
