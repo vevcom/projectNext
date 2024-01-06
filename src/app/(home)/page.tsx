@@ -16,7 +16,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <ImageLink name="logo_white" priority={true} width={300}/>
+                        <ImageLink name="logo_white" width={300}/>
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>
