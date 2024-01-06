@@ -3,67 +3,101 @@
 $collection-size: 250px;
 
 .wrapper {
-    > .header {
-        width: 100%;
-        padding: 3*ohma.$gap;
-        display: flex;
-        justify-content: space-between;
-        > button {
-            margin: ohma.$gap;
-            border: none;
-            background-color: transparent;
-            width: 30px;
-            height: 30px;
+    display: grid;
+    place-items: center;
+    > .container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        > .header {
+            grid-column: 1 / -1;
+            padding: 3*ohma.$gap;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            > button {
+                margin: ohma.$gap;
+                border: none;
+                background-color: transparent;
+                width: 30px;
+                height: 30px;
+            }
         }
-    }
-    display: flex;
-    flex-flow: row wrap;
-    place-content: center;
-    place-content: flex-start;
-    > .collection {
-        width: $collection-size;
-        height: $collection-size;
-        margin: ohma.$gap;
-        overflow: hidden;
-        @include ohma.round;
-        position: relative;
-        > *:first-child {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100% !important;
-            height: 100%;
-            > img {
+        > .collection {
+            width: $collection-size;
+            height: $collection-size;
+            margin: ohma.$gap;
+            overflow: hidden;
+            @include ohma.round;
+            position: relative;
+            place-self: center;
+            > *:first-child {
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100%;
+                width: 100% !important;
                 height: 100%;
+                > img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            > .info {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: ohma.$colors-secondary;
+                opacity: 0.95;
+                padding: 0.3em;
+                color: ohma.$colors-black;
+                text-decoration: none;
+                min-height: 25%;
+                transition: min-height 0.5s;
+                padding: ohma.$gap;
+                h4 {
+                    margin-top: ohma.$gap;
+                    transition: opacity 0.5s;
+                    opacity: 0;
+                }
+            }
+            &:hover > .info {
+                min-height: 100%;
+                h4 {
+                    opacity: 1;
+                }
             }
         }
-        > .info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: ohma.$colors-secondary;
-            opacity: 0.95;
-            padding: 0.3em;
-            color: ohma.$colors-black;
-            text-decoration: none;
-            min-height: 25%;
-            transition: min-height 0.5s;
-            padding: ohma.$gap;
-            h4 {
-                margin-top: ohma.$gap;
-                transition: opacity 0.5s;
-                opacity: 0;
-            }
+    }
+}
+
+@media screen and (max-width: (4 * ($collection-size + 20px))) {
+    .wrapper {
+        > .container {
+            grid-template-columns: repeat(3, 1fr);
         }
-        &:hover > .info {
-            min-height: 100%;
-            h4 {
-                opacity: 1;
+    }
+}
+
+@media screen and (max-width: (3 * ($collection-size + 20px))) {
+    .wrapper {
+        > .container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+@media screen and (max-width: (2 * ($collection-size + 20px))) {
+    .wrapper {
+        place-content: flex-start;
+        > .container {
+            grid-template-columns: repeat(1, 1fr);
+            >.collection {
+                place-self: initial;
+                width: min(90vw, 350px);
+                height: min(90vw, 350px);
             }
         }
     }
