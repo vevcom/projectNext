@@ -56,9 +56,9 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
             <div className={styles.editMode}>
-            {
-                isAdmin && <EditModeSwitch />
-            }
+                {
+                    isAdmin && <EditModeSwitch />
+                }
             </div>
         </nav>
     )

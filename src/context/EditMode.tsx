@@ -1,6 +1,6 @@
 'use client'
-
-import { useState, createContext } from "react"
+import React from 'react'
+import { useState, createContext } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -8,8 +8,8 @@ type PropTypes = {
 
 export const EditModeContext = createContext<{
     editMode: boolean,
-    setEditMode: (editMode: boolean) => void,
-} | null>(null)
+    setEditMode:(editMode: boolean) => void,
+        } | null>(null)
 
 export default function EditModeProvider({ children } : PropTypes) {
     const [editMode, setEditMode] = useState(false)

@@ -15,8 +15,8 @@ export default async function Images() {
                 take: 1
             },
             _count: {
-                select: { 
-                    images: true 
+                select: {
+                    images: true
                 }
             }
         },
