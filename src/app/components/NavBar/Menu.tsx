@@ -22,7 +22,10 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
     return (
         <> 
         {
+
             isOpen ? (
+            <>
+                <div className={styles.overlay}></div>
                 <div className={styles.Menu}>
                     <FontAwesomeIcon icon={faTimes} onClick={() => setIsOpen(false)}/>
                     <ul>
@@ -36,6 +39,7 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
                         ))}
                     </ul>
                 </div>
+            </>
             ) : null
         }
             <button className={styles.openBtn} onClick={() => setIsOpen(true)}>
