@@ -17,13 +17,16 @@
             &.logo {
                 margin-left: 2*ohma.$gap;
             }
-            &.magicHat {
-                @include ohma.btn(ohma.$colors-primary);
-                @include ohma.round;
+            &.rightSide {
+                display: flex;
                 width: auto;
-                padding: 2*ohma.$gap;
                 margin-left: auto;
+                align-items: center
             }
+        }
+        .magicHat {
+            @include ohma.btn(ohma.$colors-primary);
+            @include ohma.round;
         }
     }
 }
