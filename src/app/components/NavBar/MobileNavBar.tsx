@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './MobileNavBar.module.scss'
 import { Session } from 'next-auth'
+import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 
 type PropTypes = {
     session: Session | null
@@ -17,6 +18,7 @@ type PropTypes = {
 function MobileNavBar({ session } : PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = true
+    const isAdmin = true //temp
 
     return (
         <nav className={styles.MobileNavBar}>
@@ -53,6 +55,11 @@ function MobileNavBar({ session } : PropTypes) {
                 }
             </div>
             <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
+            <div className={styles.editMode}>
+            {
+                isAdmin && <EditModeSwitch />
+            }
+            </div>
         </nav>
     )
 }
