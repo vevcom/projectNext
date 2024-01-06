@@ -2,7 +2,7 @@
 
 .CollectionAdmin {
     @include ohma.card;
-    width: 400px;
+    width: min(400px, 90vw);
     background-color: ohma.$colors-secondary;
     > *:not(:last-child) {
         border-bottom: solid 5px ohma.$colors-gray-800;
