@@ -16,6 +16,7 @@ import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSele
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import type { Image as ImageT } from '@prisma/client'
 import Image from '@/components/Image/Image'
+import { EditModeContext } from '@/context/EditMode'
 
 type PropTypes = {
     collectionId: number,
@@ -27,6 +28,10 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     const selection = useContext(ImageCollectionSelectImageContext)
     const pagingContext = useContext(ImagePagingContext)
     if (!selection) throw new Error('No context')
+
+    const editMode = useContext(EditModeContext)
+    const shouldRender = editMode?.editMode ?? true
+    if (!shouldRender) return null
 
     const refreshImages = () => {
         pagingContext?.refetch()
