@@ -47,7 +47,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                     action={create.bind(null, collectionId)}
                 >
                     <TextInput color="black" label="navn" name="name" />
-                    <TextInput color="black" label="alt" name="alt" />
+                    <TextInput color="black" label="alternativ tekst" name="alt" />
                     <FileInput label="fil" name="file" color="primary" />
                 </Form>
                 <PopUp showButtonContent={
@@ -79,18 +79,18 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 <TextInput color="black" label="beskrivelse" name="description" />
                 <div className={styles.coverImage}>
                     <div>
-                        <h5>coverbilde</h5>
+                        <h5>forsidebilde</h5>
                         <div className={styles.showCurrentCover}>
                             <FontAwesomeIcon icon={faQuestion} />
                             <div className={styles.currentCover}>
                                 {
                                     coverImage ? (
                                         <>
-                                            <i>nåværende coverbilde</i>
+                                            <i>nåværende forsidebilde</i>
                                             <Image image={coverImage} width={120}/>
                                         </>
                                     ) : (
-                                        <i>ingen coverbilde</i>
+                                        <i>ingen forsidebilde</i>
                                     )
                                 }
                             </div>

@@ -90,8 +90,8 @@ const Dropzone = ({ label, name, ...props } : PropTypes) => {
             </div>
             <span>
                 <div className={styles.general}>
-                    <p>uploaded {files.length} {files.length === 1 ? 'file' : 'files'}</p>
-                    <p>total size: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
+                    <p>Til opplastning {files.length} {files.length === 1 ? 'fil' : 'filer'}</p>
+                    <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
                     <p>
                         <button className={styles.trash} onClick={handleRemoveAll}>
                             <FontAwesomeIcon icon={faTrash} />

@@ -39,30 +39,28 @@ export default async function Images() {
     }
 
     return (
-        <>
-            <div className={styles.wrapper}>
-                <div className={styles.container}>
-                    <span className={styles.header}>
-                        <h1>Fotogalleri</h1>
-                        {isAdmin && <MakeNewCollection />}
-                    </span>
-                    {
-                        collections.map(collection => (
-                            <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
-                                {
-                                    chooseCoverImage(collection)
-                                }
-                                <div className={styles.info}>
-                                    <h2>{collection.name}</h2>
-                                    <i>{collection.description}</i>
-                                    <p>{collection.createdAt.toLocaleDateString()}</p>
-                                </div>
-                                <p className={styles.imageCount}>{collection._count.images}</p>
-                            </Link>
-                        ))
-                    }
-                </div>
+        <div className={styles.wrapper}>
+            <div className={styles.container}>
+                <span className={styles.header}>
+                    <h1>Fotogalleri</h1>
+                    {isAdmin && <MakeNewCollection />}
+                </span>
+                {
+                    collections.map(collection => (
+                        <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
+                            {
+                                chooseCoverImage(collection)
+                            }
+                            <div className={styles.info}>
+                                <h2>{collection.name}</h2>
+                                <i>{collection.description}</i>
+                                <p>{collection.createdAt.toLocaleDateString()}</p>
+                            </div>
+                            <p className={styles.imageCount}>{collection._count.images}</p>
+                        </Link>
+                    ))
+                }
             </div>
-        </>
+        </div>
     )
 }

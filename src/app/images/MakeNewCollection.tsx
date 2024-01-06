@@ -18,9 +18,9 @@ export default function MakeNewCollection() {
         <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
                 <Form successCallback={collectionCreatedCallback}
-                    title="Make a collection" submitText="Create collection" action={create}>
-                    <TextInput label="name" name="name" />
-                    <TextInput label="description" name="description" />
+                    title="Lag et album" submitText="Lag album" action={create}>
+                    <TextInput label="navn" name="name" />
+                    <TextInput label="beskrivelse" name="description" />
                 </Form>
             </div>
         </PopUp>
