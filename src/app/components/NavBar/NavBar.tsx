@@ -17,6 +17,7 @@ import {
     faGamepad
 } from '@fortawesome/free-solid-svg-icons'
 import { Session } from 'next-auth'
+import Menu from './Menu'
 
 type PropTypes = {
     session: Session | null
@@ -52,7 +53,7 @@ async function NavBar({ session }: PropTypes) {
                     {applicationPeriod &&
                         <Item href="/applications" name="Søknader"/>
                     }
-                    <DropDown name="Mer" items={[
+                    <Menu items={[
                         {
                             name: 'Om Omega',
                             href: 'ingopages/about',
