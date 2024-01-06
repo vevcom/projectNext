@@ -3,15 +3,13 @@ import React from 'react'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
-
 import '@/styles/globals.scss'
 import styles from './layout.module.scss'
-
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-
 import { getServerSession } from 'next-auth'
 import authOptions from '@/auth'
+import EditModeProvider from '@/context/EditMode'
 
 config.autoAddCss = false
 
@@ -33,20 +31,22 @@ export default async function RootLayout({ children } : PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <div className={styles.wrapper}>
-                    <div className={styles.navBar}>
-                        <NavBar session={session} />
+                <EditModeProvider>
+                    <div className={styles.wrapper}>
+                        <div className={styles.navBar}>
+                            <NavBar session={session} />
+                        </div>
+                        <div className={styles.content}>
+                            {children}
+                        </div>
+                        <div className={styles.footer}>
+                            <Footer />
+                        </div>
+                        <div className={styles.mobileNavBar}>
+                            <MobileNavBar session={session} />
+                        </div>
                     </div>
-                    <div className={styles.content}>
-                        {children}
-                    </div>
-                    <div className={styles.footer}>
-                        <Footer />
-                    </div>
-                    <div className={styles.mobileNavBar}>
-                        <MobileNavBar session={session} />
-                    </div>
-                </div>
+                </EditModeProvider>
             </body>
         </html>
     )
