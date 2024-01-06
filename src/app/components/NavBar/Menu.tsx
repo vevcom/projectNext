@@ -6,6 +6,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import styles from './Menu.module.scss'
 import { usePathname } from 'next/navigation'
+import useKeyPress from '@/hooks/useKeyPress'
 
 type PropTypes = {
     openBtnContent: React.ReactNode,
@@ -37,6 +38,8 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
+
+    useKeyPress('Escape', () => setIsOpen(false))
 
     return (
         <> 
