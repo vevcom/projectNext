@@ -25,9 +25,8 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
 
             isOpen ? (
             <>
-                <div className={styles.overlay}></div>
                 <div className={styles.Menu}>
-                    <FontAwesomeIcon icon={faTimes} onClick={() => setIsOpen(false)}/>
+                    <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => setIsOpen(false)}/>
                     <ul>
                         {items.map((item) => (
                             <li key={item.name}>

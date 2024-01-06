@@ -11,19 +11,62 @@
 .Menu {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     z-index: 9;
-    background-color: rgba(ohma.$colors-secondary, 0.5);
-    width: 100vw;
-    height: 100vh;
+    background: radial-gradient(circle at top right, ohma.$colors-secondary 50%, transparent 100%);
+    width: min(100vh, 100vw);
+    height: min(100vh, 100vw);
+    border-end-start-radius: 100%;
+    padding: 0 0 12.5% 12.5%;
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 1rem;
+        background-color: transparent;
+        border: none;
+        &:hover {
+            cursor: pointer;
+        }
+        width: 50px;
+        height: 50px;
+    }
+    ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    li {
+        list-style: none; 
+        margin-bottom: 10px; 
+        a {
+            text-decoration: none; 
+            color: black; 
+            display: flex;
+            align-items: center; 
+            color: ohma.$colors-white;
+            font-size: ohma.$fonts-l;
+            font-weight: ohma.$fonts-weight-l;
+            &:hover {
+                color: blue;
+            }
+            svg {
+                margin-right: 5px;
+                color: ohma.$colors-white;
+            }
+        }
+    }
+    animation: radiate .4s ease-out forwards;
 }
 
-.overlay {
-    backdrop-filter: blur(5px);
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 8;
+@keyframes radiate {
+    0% {
+        clip-path: circle(0% at top right);
+    }
+    100% {
+        clip-path: circle(100% at top right);
+    }
 }
+
