@@ -13,8 +13,13 @@ export default async function Images() {
             coverImage: true,
             images: {
                 take: 1
+            },
+            _count: {
+                select: { 
+                    images: true 
+                }
             }
-        }
+        },
     })
 
     const lensCamera = await prisma.image.findUnique({
@@ -50,6 +55,7 @@ export default async function Images() {
                                 <div className={styles.info}>
                                     <h2>{collection.name}</h2>
                                     <i>{collection.description}</i>
+                                    <p>{collection._count.images}</p>
                                 </div>
                             </Link>
                         ))
