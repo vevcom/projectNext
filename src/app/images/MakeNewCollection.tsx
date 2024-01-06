@@ -1,5 +1,4 @@
 'use client'
-
 import PopUp from '@/components/PopUp/PopUp'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TextInput from '@/components/UI/TextInput'
@@ -8,6 +7,7 @@ import Form from '../components/Form/Form'
 import { useRouter } from 'next/navigation'
 import type { ImageCollection } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styles from './MakeNewCollection.module.scss'
 
 export default function MakeNewCollection() {
     const router = useRouter()
@@ -16,11 +16,13 @@ export default function MakeNewCollection() {
     }
     return (
         <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
-            <Form successCallback={collectionCreatedCallback}
-                title="Make a collection" submitText="Create collection" action={create}>
-                <TextInput label="name" name="name" />
-                <TextInput label="description" name="description" />
-            </Form>
+            <div className={styles.MakeNewCollection}>
+                <Form successCallback={collectionCreatedCallback}
+                    title="Make a collection" submitText="Create collection" action={create}>
+                    <TextInput label="name" name="name" />
+                    <TextInput label="description" name="description" />
+                </Form>
+            </div>
         </PopUp>
     )
 }
