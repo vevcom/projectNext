@@ -49,7 +49,7 @@ export default async function Images() {
                                 }
                                 <div className={styles.info}>
                                     <h2>{collection.name}</h2>
-                                    <h4>{collection.description}</h4>
+                                    <i>{collection.description}</i>
                                 </div>
                             </Link>
                         ))
