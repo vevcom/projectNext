@@ -84,13 +84,14 @@ const itemsForMenu = [
 async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false
+    const isAdmin = true //temp
 
     return (
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
                     <Link href="/">
-                        <Image
+                        <ImageLink
                             name="logo_simple"
                             width={30}
                             alt="omega logo"
