@@ -21,9 +21,11 @@ import { EditModeContext } from '@/context/EditMode'
 type PropTypes = {
     collectionId: number,
     coverImage: ImageT | null,
+    name: string,
+    description: string,
 }
 
-export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
+export default function CollectionAdmin({ collectionId, coverImage, name, description }: PropTypes) {
     const router = useRouter()
     const selection = useContext(ImageCollectionSelectImageContext)
     const pagingContext = useContext(ImagePagingContext)
@@ -75,8 +77,8 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 submitText="oppdater"
                 action={update.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput color="black" label="navn" name="name" />
-                <TextInput color="black" label="beskrivelse" name="description" />
+                <TextInput color="black" label="navn" name="name" value={name}/>
+                <TextInput color="black" label="beskrivelse" name="description" value={description}/>
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>

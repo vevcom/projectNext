@@ -36,7 +36,7 @@ export default async function Collection({ params } : PropTypes) {
                 <div className={styles.wrapper}>
                     {isAdmin &&
                         <aside className={styles.admin}>
-                            <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                            <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} name={collection.name} description={collection.description}/>
                         </aside>
                     }
                     <div className={styles.images}>
