@@ -14,11 +14,11 @@ type PropTypes = {
 
 function MobileNavBar({ session } : PropTypes) {
     const isLoggedIn = Boolean(session?.user)
-    const applicationPeriod = true
-    const isAdmin = true //temp
+    const applicationPeriod = false //temp
+    const isAdmin = false //temp
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
-    const itemsForNav = navItems.slice(0, 1)
+    const itemsForNav = navItems.slice(0, 2)
     const itemsForMenu = navItems.slice(2, navItems.length)
 
     return (
@@ -27,7 +27,7 @@ function MobileNavBar({ session } : PropTypes) {
                 itemsForNav.map((item) => (
                     <div key={item.name}>
                         <Link href={item.href}>
-                            <ImageLink name={item.name} width={25}/>
+                            <FontAwesomeIcon icon={item.icon} width={25}/>
                         </Link>
                     </div>
                 ))

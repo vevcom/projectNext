@@ -12,7 +12,7 @@ type PropTypes = {
 }
 
 async function NavBar({ session }: PropTypes) {
-    const isLoggedIn = false
+    const isLoggedIn = Boolean(session?.user)
     
     //temporary
     const applicationPeriod = false
