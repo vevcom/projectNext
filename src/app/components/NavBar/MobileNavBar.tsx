@@ -47,7 +47,7 @@ function MobileNavBar({ session } : PropTypes) {
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>
-                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="profile button"/>
                         </Link> :
                         <Link href="/login">
                             <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>

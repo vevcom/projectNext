@@ -2,19 +2,6 @@ import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
 import Item from './Item'
 import styles from './NavBar.module.scss'
-import {
-    faNewspaper,
-    faPoo,
-    faShoppingCart,
-    faComment,
-    faQuestionCircle,
-    faCamera,
-    faBook,
-    faList,
-    faUsers,
-    faCircleInfo,
-    faGamepad
-} from '@fortawesome/free-solid-svg-icons'
 import { Session } from 'next-auth'
 import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
 import Menu from './Menu'
@@ -22,64 +9,6 @@ import Menu from './Menu'
 type PropTypes = {
     session: Session | null
 }
-
-const itemsForMenu = [
-    {
-        name: 'Om Omega',
-        href: 'ingopages/about',
-        icon: faCircleInfo,
-    },
-    {
-        name: 'Intressegrupper',
-        href: 'ingopages/interessegrupper',
-        icon: faGamepad,
-    },
-    {
-        name: 'Artikler',
-        href: 'news',
-        icon: faNewspaper
-    },
-    {
-        name: 'Ombul',
-        href: '/ombul',
-        icon: faBook,
-    },
-    {
-        name: 'Bulshit',
-        href: '/bulshit',
-        icon: faPoo,
-    },
-    {
-        name: 'Omegashop',
-        href: '/money/shop',
-        icon: faShoppingCart,
-    },
-    {
-        name: 'Omegaquotes',
-        href: '/omegaquotes',
-        icon: faComment,
-    },
-    {
-        name: 'Guider',
-        href: 'infopages/guides',
-        icon: faQuestionCircle,
-    },
-    {
-        name: 'Bilder',
-        href: '/images',
-        icon: faCamera,
-    },
-    {
-        name: 'Klasselister',
-        href: '/userlist',
-        icon: faList,
-    },
-    {
-        name: 'Komitémedlemmer',
-        href: '/committees',
-        icon: faUsers,
-    },
-]
 
 async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)

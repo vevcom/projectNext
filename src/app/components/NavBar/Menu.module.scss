@@ -11,20 +11,20 @@
 .Menu {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     z-index: 9;
-    background: radial-gradient(circle at top right, ohma.$colors-secondary 50%, transparent 100%);
-    width: min(100vh, 100vw);
-    height: min(100vh, 100vw);
-    border-end-start-radius: 100%;
-    padding: 0 0 12.5% 12.5%;
+    background: radial-gradient(circle at top left, ohma.$colors-secondary 50%, transparent 90%);
+    width: min(80vh, 80vw);
+    height: min(80vh, 80vw);
+    border-end-end-radius: 100%;
+    padding: 0 12.5% 12.5% 0;
     display: flex;
     justify-content: center;
     align-items: center;
     .close {
         position: absolute;
         top: 0;
-        right: 0;
+        left: 0;
         margin: 1rem;
         background-color: transparent;
         border: none;
@@ -71,19 +71,19 @@
 
 @keyframes radiate {
     0% {
-        clip-path: circle(0% at top right);
+        clip-path: circle(0% at top left);
     }
     100% {
-        clip-path: circle(100% at top right);
+        clip-path: circle(100% at top left);
     }
 }
 
 @keyframes deradiate {
     0% {
-        clip-path: circle(100% at top right);
+        clip-path: circle(100% at top left);
     }
     100% {
-        clip-path: circle(0% at top right);
+        clip-path: circle(0% at top left);
     }
 }
 
