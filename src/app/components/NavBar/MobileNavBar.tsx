@@ -27,7 +27,7 @@ function MobileNavBar({ session } : PropTypes) {
                 itemsForNav.map((item) => (
                     <div key={item.name}>
                         <Link href={item.href}>
-                            <FontAwesomeIcon icon={item.icon} width={25}/>
+                            <FontAwesomeIcon className={styles.icon} icon={item.icon} width={25}/>
                         </Link>
                     </div>
                 ))
@@ -50,7 +50,7 @@ function MobileNavBar({ session } : PropTypes) {
             </div>
             <Menu items={itemsForMenu} openBtnContent={
                 <div className={styles.menuBtn}>
-                    <FontAwesomeIcon icon={faBars}/>
+                    <FontAwesomeIcon className={styles.icon} icon={faBars}/>
                 </div>
             }/>
             <div className={styles.editMode}>

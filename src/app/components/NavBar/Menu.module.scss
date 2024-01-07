@@ -87,3 +87,55 @@
     }
 }
 
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .Menu {
+        width: auto;
+        height: auto;
+        bottom: 0;
+        right: 0;
+        padding: 0;
+        border-end-end-radius: 0; 
+        border: collapse;
+        background: radial-gradient(ellipse at bottom right, ohma.$colors-secondary 70%, transparent);
+        animation: none;
+        > ul {
+            justify-content: flex-end;
+            padding-bottom: 5em;
+        }
+        &.closeMenu {
+            animation: none;
+        }
+        > .close {
+            width: 3em;
+            height: 3em;
+            top: auto;
+            left: auto;
+            bottom: 0;
+            right: 0;
+            margin: .5em;
+        }
+        animation: radiateMobile .4s ease-out forwards;
+        &.closeMenu {
+            animation: deradiateMobile .4s ease-in forwards;
+        }
+    }
+}
+
+@keyframes radiateMobile {
+    0% {
+        clip-path: ellipse(0% 0% at bottom right);
+    }
+    100% {
+        clip-path: ellipse(150% 150% at bottom right);
+    }
+}
+
+@keyframes deradiateMobile {
+    0% {
+        clip-path: ellipse(150% 150% at bottom right);
+    }
+    100% {
+        clip-path: ellipse(0% 0% at bottom right);
+    }
+}
+
