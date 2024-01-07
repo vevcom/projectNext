@@ -21,7 +21,7 @@ async function NavBar({ session }: PropTypes) {
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, navSize - 1)
-    const itemsForMenu = navItems.slice(navSize - 1, navItems.length - 1)
+    const itemsForMenu = navItems.slice(navSize - 1, navItems.length)
 
     return (
         <nav className={styles.NavBar}>

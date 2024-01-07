@@ -19,7 +19,7 @@ function MobileNavBar({ session } : PropTypes) {
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 1)
-    const itemsForMenu = navItems.slice(2, navItems.length - 1)
+    const itemsForMenu = navItems.slice(2, navItems.length)
 
     return (
         <nav className={styles.MobileNavBar}>
