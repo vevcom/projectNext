@@ -12,11 +12,11 @@ type PropTypes = {
 }
 
 async function NavBar({ session }: PropTypes) {
-    const isLoggedIn = Boolean(session?.user)
+    const isLoggedIn = false
     
     //temporary
     const applicationPeriod = false
-    const isAdmin = true 
+    const isAdmin = false
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
@@ -40,10 +40,12 @@ async function NavBar({ session }: PropTypes) {
                         <Item key={item.name} {...item} />
                     ))
                 }
-                <Menu 
-                    openBtnContent={<p className={styles.openMenu}>Mer</p>} 
-                    items={itemsForMenu}/>
-
+                <li>
+                    <Menu 
+                        openBtnContent={<p className={styles.openMenu}>Mer</p>} 
+                        items={itemsForMenu}
+                    />
+                </li>
                 <li className={styles.rightSide}>
                     {
                         isAdmin && <EditModeSwitch />

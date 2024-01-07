@@ -57,12 +57,6 @@ export const itemsForMenu : NavItem[] = [
         icon: faAddressCard,
     },
     {
-        name: 'Ombul',
-        href: '/infopages/about',
-        show: 'all',
-        icon: faBook,
-    },
-    {
         name: 'For Bedrifter',
         href: '/contactor',
         show: 'loggedOut',
@@ -73,6 +67,12 @@ export const itemsForMenu : NavItem[] = [
         href: '/infopages/nystudent',
         show: 'loggedOut',
         icon: faGraduationCap,
+    },
+    {
+        name: 'Ombul',
+        href: '/infopages/about',
+        show: 'all',
+        icon: faBook,
     },
     {
         name: 'Intressegrupper',
