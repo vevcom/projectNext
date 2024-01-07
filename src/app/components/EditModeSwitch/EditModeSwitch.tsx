@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useRef } from 'react'
+import { useContext } from 'react'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './EditModeSwitch.module.scss'
 import type { ChangeEvent } from 'react'
