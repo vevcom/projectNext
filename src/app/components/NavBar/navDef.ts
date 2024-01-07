@@ -30,7 +30,7 @@ export type NavItem = {
     icon: IconDefinition,
 }
 
-const itemsForMenu : NavItem[] = [
+export const itemsForMenu : NavItem[] = [
     {
         name: 'Hvad der hender',
         href: '/events',
@@ -147,4 +147,22 @@ const itemsForMenu : NavItem[] = [
     }
 ]
 
-export default itemsForMenu
+export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean) : NavItem[] {
+    return itemsForMenu.filter(item => {
+        switch (item.show) {
+            case 'all':
+                return true
+            case 'loggedOut':
+                return !loggedIn
+            case 'loggedIn':
+                return loggedIn
+            case 'applicationPeriodAndLoggedIn':
+                return loggedIn && applicationPeiod
+            case 'admin':
+                return admin
+            default:
+                //item.show should be of type never
+                return true
+        }
+    })
+}

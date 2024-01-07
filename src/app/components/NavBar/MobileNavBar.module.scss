@@ -8,12 +8,8 @@
 
     display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-        ". . . . ."
-        "b b b b b";
+    grid-template-rows: auto;
     > *:not(:last-child) {
-  
         border-left: solid .5px ohma.$colors-white;
         display: grid;
         place-items: center;
