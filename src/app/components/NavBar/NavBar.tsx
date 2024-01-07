@@ -16,7 +16,7 @@ async function NavBar({ session }: PropTypes) {
 
     //temporary
     const applicationPeriod = false
-    const isAdmin = false
+    const isAdmin = true
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)

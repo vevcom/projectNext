@@ -15,7 +15,7 @@ type PropTypes = {
 function MobileNavBar({ session } : PropTypes) {
     const isLoggedIn = Boolean(session?.user)
     const applicationPeriod = false //temp
-    const isAdmin = false //temp
+    const isAdmin = true //temp
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 2)
