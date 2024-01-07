@@ -1,6 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
@@ -18,7 +17,7 @@ type PropTypes = {
 export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
-    
+
     const closeMenu = () => {
         menuRef.current?.classList.add(styles.closeMenu)
         setTimeout(() => setIsOpen(false), 400)
@@ -44,26 +43,26 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
     useKeyPress('Escape', closeMenu)
 
     return (
-        <> 
-        {
-            isOpen ? (
-            <>
-                <div ref={menuRef} className={styles.Menu}>
-                    <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={closeMenu}/>
-                    <ul>
-                        {items.map((item) => (
-                            <li key={item.name}>
-                                <Link href={item.href}>
-                                    <FontAwesomeIcon icon={item.icon}/>
-                                    {item.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </>
-            ) : null
-        }
+        <>
+            {
+                isOpen ? (
+                    <>
+                        <div ref={menuRef} className={styles.Menu}>
+                            <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={closeMenu}/>
+                            <ul>
+                                {items.map((item) => (
+                                    <li key={item.name}>
+                                        <Link href={item.href}>
+                                            <FontAwesomeIcon icon={item.icon}/>
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </>
+                ) : null
+            }
             <button className={styles.openBtn} onClick={() => setIsOpen(true)}>
                 {openBtnContent}
             </button>

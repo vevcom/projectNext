@@ -13,7 +13,7 @@ type PropTypes = {
 
 async function NavBar({ session }: PropTypes) {
     const isLoggedIn = Boolean(session?.user)
-    
+
     //temporary
     const applicationPeriod = false
     const isAdmin = false
@@ -41,8 +41,8 @@ async function NavBar({ session }: PropTypes) {
                     ))
                 }
                 <li>
-                    <Menu 
-                        openBtnContent={<p className={styles.openMenu}>Mer</p>} 
+                    <Menu
+                        openBtnContent={<p className={styles.openMenu}>Mer</p>}
                         items={itemsForMenu}
                     />
                 </li>

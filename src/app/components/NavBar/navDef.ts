@@ -102,7 +102,7 @@ export const itemsForMenu : NavItem[] = [
         name: 'Omegaquotes',
         href: '/omegaquotes',
         show: 'loggedIn',
-        icon: faComment, 
+        icon: faComment,
     },
     {
         name: 'Guider',

@@ -27,7 +27,7 @@ type PropTypes = {
 
 export default async function RootLayout({ children } : PropTypes) {
     const session = await getServerSession(authOptions)
-    
+
     return (
         <html lang="en">
             <body className={inter.className}>
