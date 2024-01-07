@@ -107,8 +107,8 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                             submitText="oppdater"
                             action={update.bind(null, currentImage.current.id)}
                         >
-                            <TextInput name="name" label="navn" value={currentImage.current.name}/>
-                            <TextInput name="alt" label="alternativ tekst" value={currentImage.current.alt}/>
+                            <TextInput name="name" label="navn" defaultValue={currentImage.current.name}/>
+                            <TextInput name="alt" label="alternativ tekst" defaultValue={currentImage.current.alt}/>
                         </Form>
                         <Form
                             successCallback={reload}

@@ -77,8 +77,8 @@ export default function CollectionAdmin({ collectionId, coverImage, name, descri
                 submitText="oppdater"
                 action={update.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput color="black" label="navn" name="name" value={name}/>
-                <TextInput color="black" label="beskrivelse" name="description" value={description}/>
+                <TextInput color="black" label="navn" name="name" defaultValue={name}/>
+                <TextInput color="black" label="beskrivelse" name="description" defaultValue={description}/>
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>
