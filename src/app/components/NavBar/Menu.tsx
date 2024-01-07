@@ -7,14 +7,11 @@ import Link from 'next/link'
 import styles from './Menu.module.scss'
 import { usePathname } from 'next/navigation'
 import useKeyPress from '@/hooks/useKeyPress'
+import { NavItem } from './navDef'
 
 type PropTypes = {
     openBtnContent: React.ReactNode,
-    items: {
-        name: string,
-        href: string,
-        icon: IconDefinition
-    }[]
+    items: NavItem[]
 }
 
 
@@ -49,7 +46,6 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
     return (
         <> 
         {
-
             isOpen ? (
             <>
                 <div ref={menuRef} className={styles.Menu}>

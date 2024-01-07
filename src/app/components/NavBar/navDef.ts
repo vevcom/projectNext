@@ -1,5 +1,6 @@
 //This file defines all the routes for the navbar and menu
 //Higher placment in array gives hight priority on where it is placed (ie menu vs. navbar)
+//does not include / or /login (or profile route) as they are always shown and ar special
 import {
     faGamepad,
     faBook,
