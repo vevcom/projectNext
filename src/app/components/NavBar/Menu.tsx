@@ -22,24 +22,29 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef<HTMLDivElement>(null)
     
+    const closeMenu = () => {
+        menuRef.current?.classList.add(styles.closeMenu)
+        setTimeout(() => setIsOpen(false), 400)
+    }
+
     //close if user changes page
     const path = usePathname()
 
     useEffect(() => {
-        setIsOpen(false)
+        setIsOpen(false) //should be done with no animation
     }, [path])
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && event.target instanceof Node && !menuRef.current.contains(event.target)) {
-                setIsOpen(false)
+                closeMenu()
             }
         }
         document.addEventListener('mousedown', handleClickOutside)
         return () => document.removeEventListener('mousedown', handleClickOutside)
     }, [])
 
-    useKeyPress('Escape', () => setIsOpen(false))
+    useKeyPress('Escape', closeMenu)
 
     return (
         <> 
@@ -48,7 +53,7 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
             isOpen ? (
             <>
                 <div ref={menuRef} className={styles.Menu}>
-                    <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => setIsOpen(false)}/>
+                    <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={closeMenu}/>
                     <ul>
                         {items.map((item) => (
                             <li key={item.name}>

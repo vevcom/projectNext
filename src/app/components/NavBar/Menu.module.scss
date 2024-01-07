@@ -64,6 +64,9 @@
         }
     }
     animation: radiate .4s ease-out forwards;
+    &.closeMenu {
+        animation: deradiate .4s ease-in forwards;
+    }
 }
 
 @keyframes radiate {
@@ -72,6 +75,15 @@
     }
     100% {
         clip-path: circle(100% at top right);
+    }
+}
+
+@keyframes deradiate {
+    0% {
+        clip-path: circle(100% at top right);
+    }
+    100% {
+        clip-path: circle(0% at top right);
     }
 }
 
