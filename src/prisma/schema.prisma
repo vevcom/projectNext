@@ -7,15 +7,60 @@ datasource db {
   url      = env("DB_URI")
 }
 
+enum MembershipType {
+  MEMBER
+  SOELLE
+  EXTERNAL
+}
+
 model User {
-  id        Int    @id @default(autoincrement())
-  username  String @unique
-  email     String @unique
-  password  String // Dette er kun for testing
-  firstname String @default("[Fjernet]")
-  lastname  String @default("[Fjernet]")
+  id             Int            @id @default(autoincrement())
+  username       String         @unique
+  email          String         @unique
+  password       String // Dette er kun for testing
+  firstname      String         @default("[Fjernet]")
+  lastname       String         @default("[Fjernet]")
+  membershipType MembershipType @default(SOELLE)
+  roles          RolesUsers[]
 
   @@map("users")
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  users RolesUsers[]
+
+  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
+
+  // Money
+  useMoney      Boolean @default(false)
+  useFridge     Boolean @default(false)
+  infiniteMoney Boolean @default(false)
+
+  // Quotes
+  useOmegaQuote Boolean @default(false)
+
+  // Bulshit
+  postBulshit Boolean @default(false)
+  viewBulshit Boolean @default(false)
+
+  // Events
+  participateEvents Boolean @default(false)
+  createEvents      Boolean @default(false)
+
+  // Minecraft
+  creativeMode Boolean @default(false)
+}
+
+model RolesUsers {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@id([userId, roleId])
 }
 
 model Image {
