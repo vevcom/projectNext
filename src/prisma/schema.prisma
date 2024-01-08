@@ -29,7 +29,7 @@ model Image {
   collectionId  Int
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
-  ImageLink     ImageLink[]     
+  ImageLink     ImageLink[]
 
   @@map("images")
 }
@@ -37,8 +37,8 @@ model Image {
 model ImageLink {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId   Int
+  image     Image?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId   Int?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

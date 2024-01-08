@@ -11,7 +11,7 @@ export default function ImageLinkClient({ name, width, alt, ...props }: PropType
         read(name).then(({ success, data }) => {
             if (success && data) return setImage(data.image)
             return read('default_image').then(({ success: defaultSuccess, data: defaultImage }) => {
-                if (defaultSuccess && defaultImage) return setImage(defaultImage)
+                if (defaultSuccess && defaultImage) return setImage(defaultImage.image)
                 throw new Error('No default image found. To fix add a image called: default_image')
             })
         })
