@@ -1,9 +1,9 @@
 'use client'
 import React, { createContext, useState } from 'react'
-import { v4 as uuid } from 'uuid'
 
 export const TeleportContext = createContext<{
-    teleport: (component: React.ReactNode) => (() => void),
+    teleport: (component: React.ReactNode, id: string) => void,
+    remove: (id: string) => void,
 } | null>(null)
 
 export default function TeleportProvider({ children }: { children: React.ReactNode }) {
@@ -12,21 +12,19 @@ export default function TeleportProvider({ children }: { children: React.ReactNo
         id: string
     }[]>([])
 
-    const teleport = (component: React.ReactNode) => {
-        const id = uuid()
+    const teleport = (component: React.ReactNode, id: string) => {
         setTeleportQueue((prev) => [...prev, {
             node: component,
             id,
         }])
-        const remove = () => {
-            setTeleportQueue((prev) => prev.filter((item) => item.id !== id))
-        }
-        return remove
     }
+
+    const remove = (id: string) => setTeleportQueue((prev) => prev.filter((item) => item.id !== id))
 
     return (
         <TeleportContext.Provider value={{
             teleport,
+            remove,
         }}>
             {
                 teleportQueue.map(({ node }, index) => (
