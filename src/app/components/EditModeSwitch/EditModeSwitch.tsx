@@ -3,6 +3,8 @@ import { useContext } from 'react'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './EditModeSwitch.module.scss'
 import type { ChangeEvent } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
 
 export default function EditModeSwitch() {
     const editingContext = useContext(EditModeContext)
@@ -14,11 +16,10 @@ export default function EditModeSwitch() {
 
     return (
         <div className={styles.EditModeSwitch}>
-            <label>Edit</label>
-            <div>
+            <label>
                 <input checked={editingContext.editMode} type="checkbox" id="editModeSwitch" onChange={handleChange} />
-                <span className={styles.slider}></span>
-            </div>
+                <FontAwesomeIcon className={styles.EditModeSwitchIcon} icon={faPencil} />
+            </label>
         </div>
     )
 }
