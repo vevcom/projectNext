@@ -10,6 +10,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/auth'
 import EditModeProvider from '@/context/EditMode'
+import TeleportProvider from '@/context/Teleport'
 
 config.autoAddCss = false
 
@@ -31,22 +32,24 @@ export default async function RootLayout({ children } : PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <EditModeProvider>
-                    <div className={styles.wrapper}>
-                        <div className={styles.navBar}>
-                            <NavBar session={session} />
+                <TeleportProvider>
+                    <EditModeProvider>
+                        <div className={styles.wrapper}>
+                            <div className={styles.navBar}>
+                                <NavBar session={session} />
+                            </div>
+                            <div className={styles.content}>
+                                {children}
+                            </div>
+                            <div className={styles.footer}>
+                                <Footer />
+                            </div>
+                            <div className={styles.mobileNavBar}>
+                                <MobileNavBar session={session} />
+                            </div>
                         </div>
-                        <div className={styles.content}>
-                            {children}
-                        </div>
-                        <div className={styles.footer}>
-                            <Footer />
-                        </div>
-                        <div className={styles.mobileNavBar}>
-                            <MobileNavBar session={session} />
-                        </div>
-                    </div>
-                </EditModeProvider>
+                    </EditModeProvider>
+                </TeleportProvider>
             </body>
         </html>
     )
