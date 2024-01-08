@@ -23,7 +23,7 @@ async function main() {
             const ext = file.split('.')[1]
             if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) return console.log(`skipping image ${file}`)
             const name = file.split('.')[0]
-            return await prisma.image.upsert({
+            const image = await prisma.image.upsert({
                 where: {
                     name
                 },
@@ -40,6 +40,22 @@ async function main() {
                             id: standardCollection.id
                         }
                     }
+                }
+            })
+            return await prisma.imageLink.upsert({
+                where: {
+                    name
+                },
+                update: {
+
+                },
+                create: {
+                    name,
+                    image: {
+                        connect: {
+                            id: image.id
+                        }
+                    },
                 }
             })
         })
