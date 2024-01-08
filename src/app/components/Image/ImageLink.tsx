@@ -1,6 +1,7 @@
 import Image from './Image'
 import type { PropTypes as ImagePropTypes } from './Image'
-import read from '@/actions/images/read'
+import read from '@/actions/images/links/read'
+import ImageLinkEditor from './ImageLinkEditor'
 
 export type PropTypes = Omit<ImagePropTypes, 'image'> & {
     name: string,
@@ -8,10 +9,13 @@ export type PropTypes = Omit<ImagePropTypes, 'image'> & {
 
 export default async function ImageLink({ name, ...props }: PropTypes) {
     const { success, data } = await read(name)
-    const image = success && data ? data : (await read('default_image')).data
+    //The read inageLink action should always return a imageLink (it creates it if it does not exist)
+    if (!data || !success) throw new Error(`An error with creating or loading image link: ${name}`)
+    const image = data.image ? data.image : (await read('default_image')).data?.image
     if (!image) throw new Error('No default image found. To fix add a image called: default_image')
     return (
         <div>
+            <ImageLinkEditor imageLink={data}/>
             <Image image={image} {...props}/>
         </div>
     )
