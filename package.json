@@ -19,7 +19,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "eslint": "8.56.0",
-    "eslint-config-next": "^14.0.2",
+    "eslint-config-next": "^14.0.4",
     "google-map-react": "^2.2.1",
     "next": "^14.0.4",
     "next-auth": "^4.24.4",
