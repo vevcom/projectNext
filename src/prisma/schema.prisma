@@ -37,7 +37,6 @@ model Image {
 model ImageLink {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  url       String   @unique
   image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId   Int
   createdAt DateTime @default(now()) @map("created_at")
