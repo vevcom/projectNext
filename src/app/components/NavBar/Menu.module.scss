@@ -14,9 +14,8 @@
     left: 0;
     z-index: 9;
     background: radial-gradient(circle at top left, ohma.$colors-secondary 50%, transparent 90%);
-    width: min(80vh, 80vw);
-    height: min(80vh, 80vw);
-    border-end-end-radius: 100%;
+    height: max(80vmin, 550px);
+    width: max(80vmin, 550px);
     padding: 0 12.5% 12.5% 0;
     display: flex;
     justify-content: center;
@@ -25,7 +24,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        margin: 1rem;
+        margin: .6rem;
         background-color: transparent;
         border: none;
         &:hover {
@@ -35,6 +34,8 @@
         height: 50px;
     }
     ul {
+        position: absolute;
+        top: 0;
         display: flex;
         flex-direction: column;
         justify-content: center;
