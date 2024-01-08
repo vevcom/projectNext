@@ -1,27 +1,37 @@
 'use client'
 import React, { createContext, useState } from 'react'
+import { v4 as uuid } from 'uuid'
 
 export const TeleportContext = createContext<{
-    teleport: (component: React.ReactNode) => void,
-    setTeleportQueue: (teleportQueue: React.ReactNode[]) => void,
+    teleport: (component: React.ReactNode) => (() => void),
 } | null>(null)
 
 export default function TeleportProvider({ children }: { children: React.ReactNode }) {
-    const [teleportQueue, setTeleportQueue] = useState<React.ReactNode[]>([])
+    const [teleportQueue, setTeleportQueue] = useState<{
+        node: React.ReactNode
+        id: string
+    }[]>([])
 
     const teleport = (component: React.ReactNode) => {
-        setTeleportQueue([...teleportQueue, component])
+        const id = uuid()
+        setTeleportQueue((prev) => [...prev, {
+            node: component,
+            id,
+        }])
+        const remove = () => {
+            setTeleportQueue((prev) => prev.filter((item) => item.id !== id))
+        }
+        return remove
     }
 
     return (
         <TeleportContext.Provider value={{
             teleport,
-            setTeleportQueue,
         }}>
             {
-                teleportQueue.map((component, index) => (
+                teleportQueue.map(({ node }, index) => (
                     <React.Fragment key={index}>
-                        {component}
+                        {node}
                     </React.Fragment>
                 ))
             }
