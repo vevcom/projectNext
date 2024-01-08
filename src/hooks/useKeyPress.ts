@@ -8,14 +8,15 @@ function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void
             const { key } = event
             if (key === targetKey) {
                 setKeyPressed(true)
-                return callback(event)
             }
             return undefined
         }
 
-        const upHandler = ({ key }: KeyboardEvent) => {
+        const upHandler = (event: KeyboardEvent) => {
+            const { key } = event
             if (key === targetKey) {
                 setKeyPressed(false)
+                return callback(event)
             }
         }
         window.addEventListener('keydown', downHandler)
