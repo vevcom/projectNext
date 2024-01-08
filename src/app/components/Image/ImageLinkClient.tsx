@@ -22,7 +22,7 @@ export default function ImageLinkClient({ name, width, alt, ...props }: PropType
 
     return (
         <div>
-            {image && <Image alt={alt} image={image} width={width} {...props}/>}
+            {imageLink?.image && <Image alt={alt} image={imageLink.image} width={width} {...props}/>}
         </div>
     )
 }
