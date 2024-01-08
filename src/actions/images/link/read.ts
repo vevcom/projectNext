@@ -1,10 +1,10 @@
 'use server'
 import prisma from '@/prisma'
-import type { ImageLink } from '@prisma/client'
+import type { Image, ImageLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
 
-export default async function read(name: string) : Promise<ActionReturn<ImageLink>> {
+export default async function read(name: string) : Promise<ActionReturn<ImageLink & {image: Image}>> {
     try {
         const imageLink = await prisma.imageLink.findUnique({
             where: {

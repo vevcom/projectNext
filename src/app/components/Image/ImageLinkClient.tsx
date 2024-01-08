@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import type { Image as ImageT } from '@prisma/client'
-import read from '@/actions/images/read'
+import read from '@/actions/images/link/read'
 import Image from './Image'
 import type { PropTypes } from './ImageLink'
 
