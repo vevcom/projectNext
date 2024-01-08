@@ -7,8 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import useKeyPress from '@/hooks/useKeyPress'
-import { TeleportContext } from '@/context/Teleport'
-import { v4 as uuid } from 'uuid'
+import { PopUpContext } from '@/context/PopUp'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -16,13 +15,13 @@ type PropTypes = {
 }
 
 export default function PopUp({ children, showButtonContent } : PropTypes) {
-    const teleport = useContext(TeleportContext)
-    if (!teleport) throw new Error('TeleportContext needed for popups')
+    const popUpContext = useContext(PopUpContext)
+    if (!popUpContext) throw new Error('Pop up context needed for popups')
 
     const content = (
         <div className={styles.PopUp}>
             <div>
-                <Button className={styles.closeBtn} onClick={teleport.remove}>
+                <Button className={styles.closeBtn} onClick={popUpContext.remove}>
                     <FontAwesomeIcon icon={faX} />
                 </Button>
                 <div className={styles.content}>
@@ -32,10 +31,10 @@ export default function PopUp({ children, showButtonContent } : PropTypes) {
         </div>
     )
 
-    useKeyPress('Escape', teleport.remove)
+    useKeyPress('Escape', popUpContext.remove)
      
     return (
-        <button className={styles.openBtn} onClick={() => teleport.teleport(content)}>
+        <button className={styles.openBtn} onClick={() => popUpContext.teleport(content)}>
             {showButtonContent}
         </button>
     )

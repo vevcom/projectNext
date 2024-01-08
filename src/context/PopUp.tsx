@@ -1,12 +1,12 @@
 'use client'
 import React, { createContext, useState } from 'react'
 
-export const TeleportContext = createContext<{
+export const PopUpContext = createContext<{
     teleport: (component: React.ReactNode) => void,
     remove: () => void,
 } | null>(null)
 
-export default function TeleportProvider({ children }: { children: React.ReactNode }) {
+export default function PopUpProvider({ children }: { children: React.ReactNode }) {
     const [node, setNode] = useState<React.ReactNode | null>(null)
 
     const teleport = (component: React.ReactNode) => {
@@ -18,13 +18,13 @@ export default function TeleportProvider({ children }: { children: React.ReactNo
     }
 
     return (
-        <TeleportContext.Provider value={{
+        <PopUpContext.Provider value={{
             teleport,
             remove,
         }}>
             {node}
             {children}
-        </TeleportContext.Provider>
+        </PopUpContext.Provider>
     )
 }
 

@@ -10,7 +10,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/auth'
 import EditModeProvider from '@/context/EditMode'
-import TeleportProvider from '@/context/Teleport'
+import TeleportProvider from '@/context/PopUp'
 
 config.autoAddCss = false
 
