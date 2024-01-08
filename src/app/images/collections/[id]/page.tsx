@@ -6,6 +6,7 @@ import read from '@/actions/images/collections/read'
 import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
 import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
+import PopUpProvider from '@/context/PopUp'
 
 type PropTypes = {
     params: {
@@ -33,20 +34,22 @@ export default async function Collection({ params } : PropTypes) {
                 initialData={images || []}
                 details={{ collectionId: collection.id }}
             >
-                <div className={styles.wrapper}>
-                    {isAdmin &&
-                        <aside className={styles.admin}>
-                            <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
-                        </aside>
-                    }
-                    <div className={styles.images}>
-                        <h1>{collection.name}</h1>
-                        <i>{collection.description}</i>
-                        <main>
-                            <ImageCollectionList />
-                        </main>
+                <PopUpProvider>
+                    <div className={styles.wrapper}>
+                        {isAdmin &&
+                            <aside className={styles.admin}>
+                                <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                            </aside>
+                        }
+                        <div className={styles.images}>
+                            <h1>{collection.name}</h1>
+                            <i>{collection.description}</i>
+                            <main>
+                                <ImageCollectionList />
+                            </main>
+                        </div>
                     </div>
-                </div>
+                </PopUpProvider>
             </ImageContextProvider>
         </ImageCollectionSelectImageProvider>
 
