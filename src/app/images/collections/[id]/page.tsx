@@ -52,6 +52,5 @@ export default async function Collection({ params } : PropTypes) {
                 </PopUpProvider>
             </ImageContextProvider>
         </ImageCollectionSelectImageProvider>
-
     )
 }

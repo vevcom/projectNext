@@ -10,7 +10,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import authOptions from '@/auth'
 import EditModeProvider from '@/context/EditMode'
-import TeleportProvider from '@/context/PopUp'
+import PopUpProvider from '@/context/PopUp'
 
 config.autoAddCss = false
 
@@ -32,7 +32,7 @@ export default async function RootLayout({ children } : PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <TeleportProvider>
+                <PopUpProvider>
                     <EditModeProvider>
                         <div className={styles.wrapper}>
                             <div className={styles.navBar}>
@@ -49,7 +49,7 @@ export default async function RootLayout({ children } : PropTypes) {
                             </div>
                         </div>
                     </EditModeProvider>
-                </TeleportProvider>
+                </PopUpProvider>
             </body>
         </html>
     )

@@ -21,7 +21,7 @@
             width: 25px;
             height: 25px;
         }
-        .magiskHatt {
+        &.magicHat {
             filter: invert(1);
         }
         > button {
@@ -32,6 +32,10 @@
             font: inherit;
             cursor: pointer;
             outline: inherit;
+        }
+        .imageLink {
+            width: 100%;
+            height: 100%;
         }
     }
     overflow: hidden;

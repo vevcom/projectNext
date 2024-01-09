@@ -34,12 +34,12 @@ function MobileNavBar({ session } : PropTypes) {
             }
             <div>
                 <ImageLink name="logo_simple" width={30}>
-                    <Link href="/"/> 
+                    <Link className={styles.imageLink} href="/"/> 
                 </ImageLink>
             </div>
-            <div>
+            <div className={styles.magicHat}>
                 <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button">
-                    <Link href={isLoggedIn ? '/users/me' : '/login'} />
+                    <Link className={styles.imageLink} href={isLoggedIn ? '/users/me' : '/login'} />
                 </ImageLink>
             </div>
             <Menu items={itemsForMenu} openBtnContent={
