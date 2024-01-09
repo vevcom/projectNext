@@ -24,14 +24,6 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
     const menuRef = useClickOutsideRef(closeMenu)
 
 
-    //close if user changes page
-    const path = usePathname()
-
-    useEffect(() => {
-        setIsOpen(false) //should be done with no animation
-    }, [path])
-
-
     useKeyPress('Escape', closeMenu)
 
     return (
