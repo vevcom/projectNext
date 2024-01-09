@@ -2,9 +2,9 @@
 import React, { createContext, useState } from 'react'
 
 export const PopUpContext = createContext<{
-    teleport: (component: React.ReactNode) => void,
+    teleport:(component: React.ReactNode) => void,
     remove: () => void,
-} | null>(null)
+        } | null>(null)
 
 export default function PopUpProvider({ children }: { children: React.ReactNode }) {
     const [node, setNode] = useState<React.ReactNode | null>(null)

@@ -18,6 +18,7 @@ export default function useKeyPress(targetKey: string, callback: (event: Keyboar
                 setKeyPressed(false)
                 return callback(event)
             }
+            return undefined
         }
         window.addEventListener('keydown', downHandler)
         window.addEventListener('keyup', upHandler)

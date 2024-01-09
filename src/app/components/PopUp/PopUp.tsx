@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useCallback, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +8,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
-import useClickOutsideRef from '@/hooks/useclickOutsideRef'
+import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
 
 type PropTypes = {
@@ -37,7 +37,7 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
             </div>
         </div>
     )
-     
+
     return (
         <button className={`${styles.openBtn} ${showButtonClass}`} onClick={() => popUpContext.teleport(content)}>
             {showButtonContent}

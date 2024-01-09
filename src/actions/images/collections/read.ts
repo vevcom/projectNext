@@ -25,8 +25,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
     coverImage: Image | null,
     numberOfImages: number,
 }
-export async function readPage<const PageSize extends number>
-({page, details}: ReadPageInput<PageSize, null>) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
+export async function readPage<const PageSize extends number>({ page }: ReadPageInput<PageSize, null>) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({
@@ -66,7 +65,7 @@ export async function readPage<const PageSize extends number>
             numberOfImages: collection._count.images,
         }))
 
-        return { success: true, data: returnData}
+        return { success: true, data: returnData }
     } catch (error) {
         return errorHandeler(error)
     }

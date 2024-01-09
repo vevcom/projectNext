@@ -34,7 +34,7 @@ function MobileNavBar({ session } : PropTypes) {
             }
             <div>
                 <ImageLink name="logo_simple" width={30}>
-                    <Link className={styles.imageLink} href="/"/> 
+                    <Link className={styles.imageLink} href="/"/>
                 </ImageLink>
             </div>
             <div className={styles.magicHat}>
