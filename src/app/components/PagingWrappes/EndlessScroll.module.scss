@@ -1,12 +1,9 @@
 @use '@/styles/ohma';
 
-.EndlessScroll {
+.loadingControl {
     width: 100%;
-    .loadingControl {
-        width: 100%;
-        padding: ohma.$gap;
-        button {
-            width: auto;
-        }
+    padding: ohma.$gap;
+    button {
+        width: auto;
     }
 }

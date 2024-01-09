@@ -30,7 +30,7 @@ export default function EndlessScroll<Data, const PageSize extends number>({ pag
     const renderedPageData = useMemo(() => <RenderPageData data={context.state.data} renderer={renderer} />, [context.state.data, renderer])
 
     return (
-        <div className={styles.EndlessScroll}>
+        <>
             {renderedPageData}
             <span className={styles.loadingControl}>
                 {
@@ -42,6 +42,6 @@ export default function EndlessScroll<Data, const PageSize extends number>({ pag
                         </div>
                 }
             </span>
-        </div>
+        </>
     )
 }
