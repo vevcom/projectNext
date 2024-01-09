@@ -21,8 +21,10 @@ export default function ImageLinkEditor({imageLink}: PropTypes) {
 
     return (
         <PopUp showButtonContent={
-            <FontAwesomeIcon icon={faPencil} className={styles.editIcon} />
-        }>
+            <div className={styles.editIcon}>
+                <FontAwesomeIcon icon={faPencil} />
+            </div>
+        } showButtonClass={styles.openBtn}>
             <div className={styles.ImageLinkEditor}>
                 ImageLinkEditor
             </div>

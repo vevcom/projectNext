@@ -12,9 +12,10 @@ import { PopUpContext } from '@/context/PopUp'
 type PropTypes = {
     children: React.ReactNode,
     showButtonContent: React.ReactNode,
+    showButtonClass?: string,
 }
 
-export default function PopUp({ children, showButtonContent } : PropTypes) {
+export default function PopUp({ children, showButtonContent, showButtonClass } : PropTypes) {
     const popUpContext = useContext(PopUpContext)
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
@@ -34,7 +35,7 @@ export default function PopUp({ children, showButtonContent } : PropTypes) {
     useKeyPress('Escape', popUpContext.remove)
      
     return (
-        <button className={styles.openBtn} onClick={() => popUpContext.teleport(content)}>
+        <button className={`${styles.openBtn} ${showButtonClass}`} onClick={() => popUpContext.teleport(content)}>
             {showButtonContent}
         </button>
     )
