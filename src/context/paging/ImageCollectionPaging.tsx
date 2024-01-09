@@ -5,7 +5,7 @@ import generatePagingProvider, { generatePagingContext } from './PagingGenerator
 import { ReadPageInput } from '@/actions/type'
 
 export type PageSizeImageCollection = 15
-const fetcher = async (x: ReadPageInput<PageSizeImageCollection, {}>) => {
+const fetcher = async (x: ReadPageInput<PageSizeImageCollection, null>) => {
     const ret = await readPage(x)
     return ret
 }

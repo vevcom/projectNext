@@ -4,36 +4,35 @@ import Link from 'next/link'
 import Image from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
 import MakeNewCollection from './MakeNewCollection'
+import { readPage } from '@/actions/images/collections/read'
+import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
     const isAdmin = true //temp
+    const pageSize : PageSizeImageCollection = 15
 
-    const collections = await prisma.imageCollection.findMany({
-        include: {
-            coverImage: true,
-            images: {
-                take: 1
-            },
-            _count: {
-                select: {
-                    images: true
-                }
-            }
+    const {success, data: initialCollections = [], error} = await readPage({
+        page: {
+            pageSize,
+            page: 0
         },
+        details: null,
     })
+    if (!success) throw error ? error[0].message : new Error('Unknown error')
 
     const lensCamera = await prisma.image.findUnique({
         where: { name: 'lens_camera' }
     })
 
+
     type Collection = {
         coverImage: ImageT | null,
-        images?: ImageT[]
+        backupImage: ImageT | null,
     }
 
     const chooseCoverImage = (collection : Collection) => {
         if (collection.coverImage) return <Image width={100} image={collection.coverImage} />
-        if (collection.images && collection.images.length > 0) {return <Image width={100} image={collection.images[0]} />}
+        if (collection.backupImage) {return <Image width={100} image={collection.backupImage} />}
         if (lensCamera) return <Image width={100} image={lensCamera} />
         return <h3>Something went wrong</h3>
     }
@@ -46,7 +45,7 @@ export default async function Images() {
                     {isAdmin && <MakeNewCollection />}
                 </span>
                 {
-                    collections.map(collection => (
+                    initialCollections.map(collection => (
                         <Link href={`/images/collections/${collection.id}`} className={styles.collection} key={collection.id}>
                             {
                                 chooseCoverImage(collection)
@@ -56,7 +55,7 @@ export default async function Images() {
                                 <i>{collection.description}</i>
                                 <p>{collection.createdAt.toLocaleDateString()}</p>
                             </div>
-                            <p className={styles.imageCount}>{collection._count.images}</p>
+                            <p className={styles.imageCount}>{collection.numberOfImages}</p>
                         </Link>
                     ))
                 }
