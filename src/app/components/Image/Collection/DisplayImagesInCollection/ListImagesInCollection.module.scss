@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 $image-size: 150px;
 
-.ImageCollectionList > div { // > div to enter EndlessScroll
+.ListImagesInCollection > div { // > div to enter EndlessScroll
     display: flex;
     flex-flow: row wrap;
     .imageAndBtn {

@@ -29,14 +29,14 @@ function ImageWithFallback({ image }: { image: ImageT }) {
 }
 
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageCollectionList() {
+export default function ListImagesInCollection() {
     const context = useContext(ImagePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
 
     return (
-        <div className={styles.ImageCollectionList}>
+        <div className={styles.ListImagesInCollection}>
             <EndlessScroll
                 pagingContext={ImagePagingContext}
                 renderer={image => <ImageWithFallback key={image.id} image={image} />}
