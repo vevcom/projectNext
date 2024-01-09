@@ -4,11 +4,12 @@ import read from '@/actions/images/links/read'
 import ImageLinkEditor from './ImageLinkEditor'
 import styles from './ImageLink.module.scss'
 
-export type PropTypes = Omit<ImagePropTypes, 'image'> & {
+export type PropTypes = Omit<ImagePropTypes, 'image' | 'children'> & {
     name: string,
+    children?: React.ReactNode
 }
 
-export default async function ImageLink({ name, ...props }: PropTypes) {
+export default async function ImageLink({ name, children, ...props }: PropTypes) {
     const { success, data } = await read(name)
     //The read inageLink action should always return a imageLink (it creates it if it does not exist)
     if (!data || !success) throw new Error(`An error with creating or loading image link: ${name}`)
@@ -18,6 +19,7 @@ export default async function ImageLink({ name, ...props }: PropTypes) {
         <div className={styles.ImageLink}>
             <ImageLinkEditor imageLink={data}/>
             <Image image={image} {...props}/>
+            {children}
         </div>
     )
 }

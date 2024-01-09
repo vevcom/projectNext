@@ -15,7 +15,7 @@ type PropTypes = {
 }
 
 
-export default function ImageLinkEditor({imageLink}: PropTypes) {
+export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     if (!editingContext?.editMode) return null
 

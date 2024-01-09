@@ -7,7 +7,7 @@ import type { PropTypes } from './ImageLink'
 import ImageLinkEditor from './ImageLinkEditor'
 import styles from './ImageLink.module.scss'
 
-export default function ImageLinkClient({ name, width, alt, ...props }: PropTypes) {
+export default function ImageLinkClient({ name, width, alt, children, ...props }: PropTypes) {
     const [imageLink, setImageLink] = useState<
         ImageLink & {
             image: ImageT | null
@@ -26,6 +26,7 @@ export default function ImageLinkClient({ name, width, alt, ...props }: PropType
         <div className={styles.ImageLink}>
             {imageLink && <ImageLinkEditor imageLink={imageLink}/>}
             {imageLink?.image && <Image alt={alt} image={imageLink.image} width={width} {...props}/>}
+            {children}
         </div>
     )
 }
