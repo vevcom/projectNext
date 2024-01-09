@@ -3,7 +3,6 @@ import type { ImageCollection } from '@prisma/client'
 import { readPage } from '@/actions/images/collections/read'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { ReadPageInput } from '@/actions/type'
-import { ImagePagingContext } from './ImagePaging'
 
 export type PageSizeImageCollection = 15
 const fetcher = async (x: ReadPageInput<PageSizeImageCollection, {}>) => {
