@@ -3,7 +3,7 @@ import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import { readPage } from '@/actions/images/read'
 import read from '@/actions/images/collections/read'
-import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
+import ListImagesInCollection from '@/components/Image/Collection/DisplayImagesInCollection/ListImagesInCollection'
 import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
 import PopUpProvider from '@/context/PopUp'
@@ -45,7 +45,7 @@ export default async function Collection({ params } : PropTypes) {
                             <h1>{collection.name}</h1>
                             <i>{collection.description}</i>
                             <main>
-                                <ImageCollectionList />
+                                <ListImagesInCollection />
                             </main>
                         </div>
                     </div>
