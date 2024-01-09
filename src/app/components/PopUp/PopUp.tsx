@@ -9,6 +9,7 @@ import React from 'react'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useclickOutsideRef'
+import useOnNavigation from '@/hooks/useOnNavigation'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -21,6 +22,7 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
     useKeyPress('Escape', popUpContext.remove)
+    useOnNavigation(popUpContext.remove)
     const ref = useClickOutsideRef(popUpContext.remove)
 
     const content = (

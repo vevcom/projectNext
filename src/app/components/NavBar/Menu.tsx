@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 import useKeyPress from '@/hooks/useKeyPress'
 import { NavItem } from './navDef'
 import useClickOutsideRef from '@/hooks/useclickOutsideRef'
+import useOnNavigation from '@/hooks/useOnNavigation'
 
 type PropTypes = {
     openBtnContent: React.ReactNode,
@@ -22,8 +23,7 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
         setTimeout(() => setIsOpen(false), 400)
     }
     const menuRef = useClickOutsideRef(closeMenu)
-
-
+    useOnNavigation(() => setIsOpen(false)) //done with no animation
     useKeyPress('Escape', closeMenu)
 
     return (
