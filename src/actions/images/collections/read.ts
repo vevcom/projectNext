@@ -56,7 +56,7 @@ export async function readPage<const PageSize extends number>
             images: Image[]
         }) => {
             if (collection.coverImage) return collection.coverImage
-            if (collection.images[0]) collection.images[0]
+            if (collection.images[0]) return collection.images[0]
             if (lensCamera) return lensCamera
             return null
         }
