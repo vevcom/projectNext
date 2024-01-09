@@ -1,5 +1,3 @@
-'use client'
-
 import Link from "next/link"
 import styles from "./CollectionCard.module.scss"
 import Image from '@/components/Image/Image'
@@ -14,12 +12,11 @@ type PropTypes = {
 }
 
 export default function CollectionCard({ collection }: PropTypes) {
-    
     return (
         <Link href={`/images/collections/${collection.id}`} className={styles.CollectionCard} key={collection.id}>
             {
             collection.coverImage ? (
-                <Image width={200} image={collection.coverImage} /> 
+                <Image width={100} image={collection.coverImage} /> 
             ): (
                 <p>Something went wrong</p>
             )
