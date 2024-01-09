@@ -32,13 +32,13 @@ async function NavBar({ session }: PropTypes) {
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
-                    <Link href="/">
-                        <ImageLink
-                            name="logo_simple"
-                            width={30}
-                            alt="omega logo"
-                        />
-                    </Link>
+                    <ImageLink
+                        name="logo_simple"
+                        width={30}
+                        alt="omega logo"
+                    >
+                        <Link href="/" />
+                    </ImageLink>
                 </li>
                 {isLoggedIn && <Item href="/events" name="Hvad der hender"/>}
                 {!isLoggedIn && <Item href="/ombul" name="OmBul"/>}
