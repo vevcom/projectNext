@@ -17,11 +17,12 @@ type PropTypes = {
 
 export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
-
     const closeMenu = () => {
         menuRef.current?.classList.add(styles.closeMenu)
         setTimeout(() => setIsOpen(false), 400)
     }
+    const menuRef = useClickOutsideRef(closeMenu)
+
 
     //close if user changes page
     const path = usePathname()
@@ -30,7 +31,6 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
         setIsOpen(false) //should be done with no animation
     }, [path])
 
-    const menuRef = useClickOutsideRef(closeMenu)
 
     useKeyPress('Escape', closeMenu)
 

@@ -8,6 +8,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
+import useClickOutsideRef from '@/hooks/useclickOutsideRef'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -19,9 +20,12 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
     const popUpContext = useContext(PopUpContext)
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
+    useKeyPress('Escape', popUpContext.remove)
+    const ref = useClickOutsideRef(popUpContext.remove)
+
     const content = (
         <div className={styles.PopUp}>
-            <div>
+            <div ref={ref}>
                 <Button className={styles.closeBtn} onClick={popUpContext.remove}>
                     <FontAwesomeIcon icon={faX} />
                 </Button>
@@ -31,8 +35,6 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
             </div>
         </div>
     )
-
-    useKeyPress('Escape', popUpContext.remove)
      
     return (
         <button className={`${styles.openBtn} ${showButtonClass}`} onClick={() => popUpContext.teleport(content)}>
