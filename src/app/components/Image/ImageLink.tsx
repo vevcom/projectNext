@@ -2,6 +2,7 @@ import Image from './Image'
 import type { PropTypes as ImagePropTypes } from './Image'
 import read from '@/actions/images/links/read'
 import ImageLinkEditor from './ImageLinkEditor'
+import styles from './ImageLink.module.scss'
 
 export type PropTypes = Omit<ImagePropTypes, 'image'> & {
     name: string,
@@ -14,7 +15,7 @@ export default async function ImageLink({ name, ...props }: PropTypes) {
     const image = data.image ? data.image : (await read('default_image')).data?.image
     if (!image) throw new Error('No default image found. To fix add a image called: default_image')
     return (
-        <div>
+        <div className={styles.ImageLink}>
             <ImageLinkEditor imageLink={data}/>
             <Image image={image} {...props}/>
         </div>

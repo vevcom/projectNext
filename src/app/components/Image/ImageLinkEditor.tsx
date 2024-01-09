@@ -5,6 +5,8 @@ import PopUp from '../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
 import { ImageLink, Image as ImageT } from '@prisma/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     imageLink: ImageLink & {
@@ -19,7 +21,7 @@ export default function ImageLinkEditor({imageLink}: PropTypes) {
 
     return (
         <PopUp showButtonContent={
-            <>open button</>
+            <FontAwesomeIcon icon={faPencil} className={styles.editIcon} />
         }>
             <div className={styles.ImageLinkEditor}>
                 ImageLinkEditor
