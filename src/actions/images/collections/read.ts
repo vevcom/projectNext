@@ -1,3 +1,5 @@
+'use server'
+
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 import type { ImageCollection, Image } from '@prisma/client'
 import prisma from '@/prisma'
