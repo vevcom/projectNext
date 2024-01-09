@@ -47,7 +47,7 @@ export async function readPage<const PageSize extends number>
 
         const lensCamera = await prisma.image.findUnique({
             where: {
-                name: 'lens-camera'
+                name: 'lens_camera'
             },
         })
 
