@@ -14,9 +14,9 @@ function Footer() {
                 Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
                 </p>
                 <div>
-                    <Link className={styles.pwa} href="/infopages/pwa">
-                        <ImageLink name="pwa" width={200}/>
-                    </Link>
+                    <ImageLink name="pwa" width={200} >
+                        <Link className={styles.pwa} href="/infopages/pwa" />
+                    </ImageLink>
                     <div className={styles.icons}>
                         <SocialIcons />
                     </div>
@@ -38,12 +38,12 @@ function Footer() {
                 <p>7491 Trondheim</p>
             </div>
             <div className={styles.sponsors}>
-                <Link href="http://www.nordicsemi.com" target="_blank">
-                    <ImageLink name="nordic" width={170} />
-                </Link>
-                <Link href="http://www.kongsberg.com" target="_blank">
-                    <ImageLink name="kongsberg" width={100} />
-                </Link>
+                <ImageLink name="nordic" width={170}>
+                    <Link href="http://www.nordicsemi.com" target="_blank" />
+                </ImageLink>
+                <ImageLink name="kongsberg" width={100}>
+                    <Link href="http://www.kongsberg.com" target="_blank" />
+                </ImageLink>
             </div>
         </footer>
     )
