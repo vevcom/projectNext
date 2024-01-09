@@ -39,20 +39,14 @@ function MobileNavBar({ session } : PropTypes) {
                 </Link>
             </div>
             <div>
-                <Link href="/">
-                    <ImageLink name="logo_simple" width={30}/>
-                </Link>
+                <ImageLink name="logo_simple" width={30}>
+                    <Link href="/"/> 
+                </ImageLink>
             </div>
             <div>
-                {
-                    isLoggedIn ?
-                        <Link href={'/user/profile/me'}>
-                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
-                        </Link> :
-                        <Link href="/login">
-                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
-                        </Link>
-                }
+                <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button">
+                    <Link href={isLoggedIn ? '/users/me' : '/login'} />
+                </ImageLink>
             </div>
             <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
             <div className={styles.editMode}>
