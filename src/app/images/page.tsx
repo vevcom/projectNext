@@ -9,7 +9,7 @@ import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPa
 
 export default async function Images() {
     const isAdmin = true //temp
-    const pageSize : PageSizeImageCollection = 15
+    const pageSize : PageSizeImageCollection = 12
 
     const {success, data: initialCollections = [], error} = await readPage({
         page: {
