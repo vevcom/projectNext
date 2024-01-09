@@ -8,6 +8,7 @@ export default function Admin() {
             <Link href="admin/phaestum">Phaestum</Link>
             <Link href="admin/cms">Edit cms</Link>
             <Link href="admin/users">Users</Link>
+            <Link href="admin/permissions">Permissions</Link>
         </div>
     )
 }
