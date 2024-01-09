@@ -1,5 +1,5 @@
 'use client'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollectionPageReturn } from '@/actions/images/collections/read'
 import { readPage } from '@/actions/images/collections/read'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { ReadPageInput } from '@/actions/type'
@@ -10,6 +10,6 @@ const fetcher = async (x: ReadPageInput<PageSizeImageCollection, null>) => {
     return ret
 }
 
-export const ImageCollectionPagingContext = generatePagingContext<ImageCollection, PageSizeImageCollection>()
+export const ImageCollectionPagingContext = generatePagingContext<ImageCollectionPageReturn, PageSizeImageCollection>()
 const ImageCollectionPagingProvider = generatePagingProvider({ Context: ImageCollectionPagingContext, fetcher })
 export default ImageCollectionPagingProvider

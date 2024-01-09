@@ -21,13 +21,12 @@ export default async function read(id: number) : Promise<ActionReturn<ImageColle
 }
 
 
-type PageReturn = ImageCollection & {
+export type ImageCollectionPageReturn = ImageCollection & {
     coverImage: Image | null,
-    backupImage: Image | null,
     numberOfImages: number,
 }
 export async function readPage<const PageSize extends number>
-({page, details}: ReadPageInput<PageSize, null>) : Promise<ActionReturn<PageReturn[]>> {
+({page, details}: ReadPageInput<PageSize, null>) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({
@@ -45,11 +44,29 @@ export async function readPage<const PageSize extends number>
             skip: pageNumber * pageSize,
             take: pageSize,
         })
-        return { success: true, data: collections.map(collection => ({
+
+        const lensCamera = await prisma.image.findUnique({
+            where: {
+                name: 'lens-camera'
+            },
+        })
+
+        const chooseCoverImage = (collection : {
+            coverImage: Image | null,
+            images: Image[]
+        }) => {
+            if (collection.coverImage) return collection.coverImage
+            if (collection.images[0]) collection.images[0]
+            if (lensCamera) return lensCamera
+            return null
+        }
+        const returnData = collections.map(collection => ({
             ...collection,
+            coverImage: chooseCoverImage(collection),
             numberOfImages: collection._count.images,
-            backupImage: collection.images[0] ?? null,
-        }))}
+        }))
+
+        return { success: true, data: returnData}
     } catch (error) {
         return errorHandeler(error)
     }
