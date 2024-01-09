@@ -118,9 +118,9 @@ async function NavBar({ session }: PropTypes) {
                         isAdmin && <EditModeSwitch />
                     }
                     <div className={styles.magicHat}>
-                        <Link href={isLoggedIn ? '/users/me' : '/login'}>
-                            <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button"/>
-                        </Link>
+                        <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button">
+                            <Link href={isLoggedIn ? '/users/me' : '/login'} />
+                        </ImageLink>
                     </div>
                 </li>
             </ul>
