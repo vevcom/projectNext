@@ -1,5 +1,5 @@
 'use client'
-import styles from './ImageCollectionList.module.scss'
+import styles from './ListImagesInCollection.module.scss'
 import type { Image as ImageT } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
 import ImageCollectionDisplay from '@/app/components/Image/Collection/DisplayImagesInCollection/ImageCollectionDisplay'
