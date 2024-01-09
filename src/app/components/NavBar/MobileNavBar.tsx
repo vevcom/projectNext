@@ -1,15 +1,12 @@
 import ImageLink from '@/components/Image/ImageLink'
 import Link from 'next/link'
-import BurgerMenu from './BurgerMenu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-    faNewspaper,
-    faSuitcase,
-    faCalendar
-} from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import { Session } from 'next-auth'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
+import Menu from './Menu'
 
 type PropTypes = {
     session: Session | null
@@ -17,27 +14,24 @@ type PropTypes = {
 
 function MobileNavBar({ session } : PropTypes) {
     const isLoggedIn = Boolean(session?.user)
-    const applicationPeriod = true
+    const applicationPeriod = false //temp
     const isAdmin = true //temp
+
+    const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
+    const itemsForNav = navItems.slice(0, 2)
+    const itemsForMenu = navItems.slice(2, navItems.length)
 
     return (
         <nav className={styles.MobileNavBar}>
-            <div>
-                {
-                    isLoggedIn ?
-                        <Link href="/events">
-                            <FontAwesomeIcon icon={faCalendar} />
-                        </Link> :
-                        <Link href="/infopages/contactor">
-                            <FontAwesomeIcon icon={faSuitcase} />
+            {
+                itemsForNav.map((item) => (
+                    <div key={item.name}>
+                        <Link href={item.href}>
+                            <FontAwesomeIcon className={styles.icon} icon={item.icon} width={25}/>
                         </Link>
-                }
-            </div>
-            <div>
-                <Link href="/news">
-                    <FontAwesomeIcon icon={faNewspaper} />
-                </Link>
-            </div>
+                    </div>
+                ))
+            }
             <div>
                 <Link href="/">
                     <ImageLink name="logo_simple" width={30}/>
@@ -47,14 +41,18 @@ function MobileNavBar({ session } : PropTypes) {
                 {
                     isLoggedIn ?
                         <Link href={'/user/profile/me'}>
-                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
+                            <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="profile button"/>
                         </Link> :
                         <Link href="/login">
                             <ImageLink width={25} name="magisk_hatt" className={styles.magiskHatt} alt="log in button"/>
                         </Link>
                 }
             </div>
-            <BurgerMenu isLoggedIn={isLoggedIn} applicationPeriod={applicationPeriod}/>
+            <Menu items={itemsForMenu} openBtnContent={
+                <div className={styles.menuBtn}>
+                    <FontAwesomeIcon className={styles.icon} icon={faBars}/>
+                </div>
+            }/>
             <div className={styles.editMode}>
                 {
                     isAdmin && <EditModeSwitch />

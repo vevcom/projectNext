@@ -29,6 +29,10 @@
             @include ohma.round;
         }
     }
+    .openMenu {
+        font-size: ohma.$fonts-m;
+        color: ohma.$colors-white;
+    }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
