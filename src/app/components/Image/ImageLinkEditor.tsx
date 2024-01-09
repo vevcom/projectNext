@@ -7,6 +7,7 @@ import styles from './ImageLinkEditor.module.scss'
 import { ImageLink, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import Image from './Image'
 
 type PropTypes = {
     imageLink: ImageLink & {
@@ -26,7 +27,16 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
             </div>
         } showButtonClass={styles.openBtn}>
             <div className={styles.ImageLinkEditor}>
-                ImageLinkEditor
+                <h2>Edit image link</h2>
+                <div className={styles.meta}>
+                    <p>name: {imageLink.name}</p>
+                    <i>id: {imageLink.id}</i>
+                </div>
+                {
+                    imageLink.image
+                        ? <Image width={200} image={imageLink.image} />
+                        : <p>image: null</p>
+                }
             </div>
         </PopUp>
     )

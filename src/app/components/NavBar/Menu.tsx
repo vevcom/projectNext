@@ -7,6 +7,7 @@ import styles from './Menu.module.scss'
 import { usePathname } from 'next/navigation'
 import useKeyPress from '@/hooks/useKeyPress'
 import { NavItem } from './navDef'
+import useClickOutsideRef from '@/hooks/useclickOutsideRef'
 
 type PropTypes = {
     openBtnContent: React.ReactNode,
@@ -16,7 +17,6 @@ type PropTypes = {
 
 export default function Menu({ items, openBtnContent } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
-    const menuRef = useRef<HTMLDivElement>(null)
 
     const closeMenu = () => {
         menuRef.current?.classList.add(styles.closeMenu)
@@ -30,15 +30,7 @@ export default function Menu({ items, openBtnContent } : PropTypes) {
         setIsOpen(false) //should be done with no animation
     }, [path])
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (menuRef.current && event.target instanceof Node && !menuRef.current.contains(event.target)) {
-                closeMenu()
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => document.removeEventListener('mousedown', handleClickOutside)
-    }, [])
+    const menuRef = useClickOutsideRef(closeMenu)
 
     useKeyPress('Escape', closeMenu)
 
