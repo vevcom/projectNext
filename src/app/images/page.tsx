@@ -5,6 +5,7 @@ import MakeNewCollection from './MakeNewCollection'
 import { readPage } from '@/actions/images/collections/read'
 import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 import ImageCollectionList from '../components/Image/Collection/ImageCollectionList'
+import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
     const isAdmin = true //temp
@@ -22,11 +23,21 @@ export default async function Images() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>
-                <span className={styles.header}>
-                    <h1>Fotogalleri</h1>
-                    {isAdmin && <MakeNewCollection />}
-                </span>
-                <ImageCollectionList collections={initialCollections} />
+                <ImageCollectionPagingProvider
+                    initialData={initialCollections}
+                    startPage={{
+                        pageSize,
+                        page: 1,
+                    }}
+                    details={null}
+                >
+                    <span className={styles.header}>
+                        <h1>Fotogalleri</h1>
+                        {isAdmin && <MakeNewCollection />}
+                    </span>
+                
+                    <ImageCollectionList collections={initialCollections} />
+                </ImageCollectionPagingProvider>
             </div>
         </div>
     )
