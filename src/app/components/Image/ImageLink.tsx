@@ -19,7 +19,7 @@ export default async function ImageLink({ name, children, ...props }: PropTypes)
         <div className={styles.ImageLink}>
             <ImageLinkEditor imageLink={data}/>
             <Image image={image} {...props}/>
-            {children}
+            <div className={styles.children}>{children}</div>
         </div>
     )
 }
