@@ -2,12 +2,12 @@
 import styles from './ImageCollectionList.module.scss'
 import type { Image as ImageT } from '@prisma/client'
 import PopUp from '@/app/components/PopUp/PopUp'
-import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
+import ImageCollectionDisplay from '@/app/components/Image/Collection/DisplayImagesInCollection/ImageCollectionDisplay'
 import { default as ImageComponent } from '@/components/Image/Image'
 import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
-import EndlessScroll from '../../PagingWrappes/EndlessScroll'
+import EndlessScroll from '../../../PagingWrappes/EndlessScroll'
 import ImageSelectionButton from './ImageSelectionButton'
 
 function ImageWithFallback({ image }: { image: ImageT }) {
@@ -38,7 +38,7 @@ export default function ImageCollectionList() {
     return (
         <div className={styles.ImageCollectionList}>
             <EndlessScroll
-                pageingContext={ImagePagingContext}
+                pagingContext={ImagePagingContext}
                 renderer={image => <ImageWithFallback key={image.id} image={image} />}
             />
         </div>

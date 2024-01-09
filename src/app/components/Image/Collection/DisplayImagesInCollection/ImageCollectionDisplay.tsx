@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageCollectionDisplay.module.scss'
-import Image from '../Image'
+import Image from '../../Image'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
