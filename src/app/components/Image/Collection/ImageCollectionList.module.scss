@@ -7,7 +7,9 @@ $collection-size: 250px;
     height: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    > .collectionCard {
+
+    //selects all collection card but not the button for loading more in Endless scroll
+    > *:not(:last-child) {
         width: $collection-size;
         height: $collection-size;
         margin: ohma.$gap;
@@ -75,9 +77,10 @@ $collection-size: 250px;
             scale: 1.2;
         }
     }
-    > *:not(.collectionCard) {
-        grid-column: 1/-1;
 
+    //button for loading more in Endless scroll
+    > *:last-child {
+        grid-column: 1/-1;
     }
 }
 
@@ -96,7 +99,7 @@ $collection-size: 250px;
 @media screen and (max-width: (2 * ($collection-size + 20px))) {
     .ImageCollectionList {
         grid-template-columns: repeat(1, 1fr);
-        > .collectionCard {
+        > *:not(:last-child) {
             place-self: initial;
             width: min(90vw, 350px);
             height: min(90vw, 350px);

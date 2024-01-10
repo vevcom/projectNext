@@ -4,6 +4,7 @@ import { readPage } from '@/actions/images/collections/read'
 import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 import ImageCollectionList from '../components/Image/Collection/ImageCollectionList'
 import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
+import CollectionCard from '@/components/Image/Collection/CollectionCard'
 
 export default async function Images() {
     const isAdmin = true //temp
@@ -33,7 +34,11 @@ export default async function Images() {
                         <h1>Fotogalleri</h1>
                         {isAdmin && <MakeNewCollection />}
                     </span>
-                    <ImageCollectionList />
+                    <ImageCollectionList 
+                        serverRendered={collections.map(collection => (
+                            <CollectionCard key={collection.id} collection={collection} />
+                        ))} 
+                    />
                 </ImageCollectionPagingProvider>
             </div>
         </div>
