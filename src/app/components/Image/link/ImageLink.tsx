@@ -1,5 +1,5 @@
-import Image from './Image'
-import type { PropTypes as ImagePropTypes } from './Image'
+import Image from '../Image'
+import type { PropTypes as ImagePropTypes } from '../Image'
 import read from '@/actions/images/links/read'
 import ImageLinkEditor from './ImageLinkEditor'
 import styles from './ImageLink.module.scss'

@@ -1,13 +1,13 @@
 'use client'
 
 import { useContext } from 'react'
-import PopUp from '../PopUp/PopUp'
+import PopUp from '../../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
 import { ImageLink, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import Image from './Image'
+import Image from '../Image'
 
 type PropTypes = {
     imageLink: ImageLink & {

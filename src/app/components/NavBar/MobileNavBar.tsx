@@ -1,4 +1,4 @@
-import ImageLink from '@/components/Image/ImageLink'
+import ImageLink from '@/app/components/Image/link/ImageLink'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'

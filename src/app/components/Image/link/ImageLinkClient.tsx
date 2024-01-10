@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import type { Image as ImageT, ImageLink } from '@prisma/client'
 import read from '@/actions/images/links/read'
-import Image from './Image'
+import Image from '../Image'
 import type { PropTypes } from './ImageLink'
 import ImageLinkEditor from './ImageLinkEditor'
 import styles from './ImageLink.module.scss'
