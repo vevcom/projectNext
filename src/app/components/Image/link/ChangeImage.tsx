@@ -6,6 +6,8 @@ import Image from '../Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
+import Form from '@/components/Form/Form'
+
 
 type PropTypes = {
     currentImage: ImageT
@@ -18,7 +20,7 @@ export default function ChangeImage({ currentImage } : PropTypes) {
     return (
         <div className={styles.ChangeImage}>
             {
-                selectedContext?.selectedImage ? (
+                selectedContext?.selectedImage && selectedContext?.selectedImage.id !== currentImage.id ? (
                     <div className={styles.currentAndSelected}>
                         <div className={styles.imageClip}>
                             <Image width={200} image={currentImage} />
@@ -28,6 +30,8 @@ export default function ChangeImage({ currentImage } : PropTypes) {
                         </div>
                         <FontAwesomeIcon className={styles.arrow1} icon={faTurnUp} />
                         <FontAwesomeIcon className={styles.arrow2} icon={faTurnUp} />
+
+                        
                     </div>
                 ) : (
                     <div className={`${styles.onlyCurrent} ${styles.imageClip}`}>

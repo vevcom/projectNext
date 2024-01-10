@@ -6,7 +6,6 @@ import styles from './ImageLinkEditor.module.scss'
 import { ImageLink, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import Image from '../Image'
 import ImageCollectionPagingProvider, {ImageCollectionPagingContext} from '@/context/paging/ImageCollectionPaging'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
 import CollectionCard from '../Collection/CollectionCard'
@@ -34,7 +33,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                 <FontAwesomeIcon icon={faPencil} />
             </div>
         } showButtonClass={styles.openBtn}>
-            <ImageSelectionProvider defaultSelectionMode={true}>
+            <ImageSelectionProvider defaultSelectionMode={true} defaultImage={imageLink.image}>
                 <ImagePagingProvider
                     startPage={
                         {
