@@ -52,7 +52,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                     <p>name: {imageLink.name}</p>
                                     <i>id: {imageLink.id}</i>
                                 </div>
-                                <ChangeImage currentImage={imageLink.image} />
+                                <ChangeImage currentImage={imageLink.image} imageLinkId={imageLink.id}/>
                             </div>
                             <div className={styles.selectImage}>
                                 <ImageList disableEditing={true}/>

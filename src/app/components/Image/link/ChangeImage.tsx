@@ -7,20 +7,23 @@ import { ImageSelectionContext } from '@/context/ImageSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/components/Form/Form'
-
+import update from '@/actions/images/links/update'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
-    currentImage: ImageT
+    currentImage: ImageT,
+    imageLinkId: number,
 }
 
-export default function ChangeImage({ currentImage } : PropTypes) {
+export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
-    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
+    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage') 
+    const { refresh } = useRouter()
 
     return (
         <div className={styles.ChangeImage}>
             {
-                selectedContext?.selectedImage && selectedContext?.selectedImage.id !== currentImage.id ? (
+                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
                     <div className={styles.currentAndSelected}>
                         <div className={styles.imageClip}>
                             <Image width={200} image={currentImage} />
@@ -31,7 +34,11 @@ export default function ChangeImage({ currentImage } : PropTypes) {
                         <FontAwesomeIcon className={styles.arrow1} icon={faTurnUp} />
                         <FontAwesomeIcon className={styles.arrow2} icon={faTurnUp} />
 
-                        
+                        <Form
+                            action={update.bind(null, imageLinkId).bind(null, selectedContext.selectedImage.id)}
+                            submitText="update image"
+                            successCallback={refresh}
+                        />
                     </div>
                 ) : (
                     <div className={`${styles.onlyCurrent} ${styles.imageClip}`}>
