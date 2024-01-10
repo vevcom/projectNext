@@ -191,7 +191,7 @@ export default function Form<GiveActionReturn>({
     }
 
     return (
-        <form className={styles.Form} action={actionWithError} {...props}>
+        <form  {...props} className={`${styles.Form} ${props.className}`} action={actionWithError}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (

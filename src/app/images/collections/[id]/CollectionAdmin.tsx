@@ -57,6 +57,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                     </>
                 }>
                     <Form
+                        className={styles.uploadMany}
                         successCallback={refreshImages}
                         title="last opp bilder"
                         submitText="last opp"
