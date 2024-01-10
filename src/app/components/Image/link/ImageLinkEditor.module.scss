@@ -1,8 +1,50 @@
 @use '@/styles/ohma';
 
+$currentImageSize: 200px;
+
 .ImageLinkEditor {
     min-width: 50vw;
     min-height: 50vh;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 1fr auto;
+    gap: 1em;
+    > .currentImageLink {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        > .currentImage {
+            margin-top: .6em;
+            > *:not(i) {
+                position: relative;
+                width: $currentImageSize;
+                max-height: $currentImageSize;
+                overflow: hidden;
+                @include ohma.round;
+                padding: 0;
+                img {
+                    width: 100% !important;
+                    max-height: 100%;
+                    object-fit: contain;
+                    @include ohma.round;
+                    padding: 0;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+    > .selectImage {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        background-color: lighten(ohma.$colors-secondary, 40%);
+        @include ohma.round;
+    }
+    > .selectCollection {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+        min-height: 100px;
+        background-color: ohma.$colors-secondary;
+        @include ohma.round;
+    }
 }
 
 .openBtn {
