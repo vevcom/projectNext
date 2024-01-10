@@ -22,7 +22,6 @@ export default async function Images() {
         <div className={styles.wrapper}>
             <div className={styles.container}>
                 <ImageCollectionPagingProvider
-                    initialData={initialCollections}
                     startPage={{
                         pageSize,
                         page: 1,
