@@ -33,7 +33,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                 <FontAwesomeIcon icon={faPencil} />
             </div>
         } showButtonClass={styles.openBtn}>
-            <ImageSelectionProvider>
+            <ImageSelectionProvider defaultImage={imageLink.image} defaultSelectionMode={true}>
                 <ImagePagingProvider
                     startPage={
                         {
