@@ -4,8 +4,8 @@ $currentImageSize: 200px;
 $collectionSize: 170px;
 
 .ImageLinkEditor {
-    min-width: 50vw;
-    min-height: 50vh;
+    width: calc(100vw - 200px);
+    height: calc(100vh - 200px);
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr auto;
@@ -39,8 +39,6 @@ $collectionSize: 170px;
         background-color: lighten(ohma.$colors-secondary, 40%);
         @include ohma.round;
         overflow: scroll;
-        width: 50vw;
-        height: 50vh;
         > * {
             isolation: isolate;
         }

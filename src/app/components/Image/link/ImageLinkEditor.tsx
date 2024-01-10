@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import PopUp from '../../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
@@ -13,20 +13,19 @@ import CollectionCard from '../Collection/CollectionCard'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageList from '../ImageList/ImageList'
+import ImageSelectionProvider from '@/context/ImageSelection'
 
 type PropTypes = {
     imageLink: ImageLink & {
-        image: ImageT | null
+        image: ImageT
     }
 }
 
 
 export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
-    const [currentCollectionId, setCurrentCollectionId] = useState<number | null>(null)
-    useEffect(() => {
-        console.log('currentCollectionId changed:', currentCollectionId);
-    }, [currentCollectionId]);
+    const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
+
     if (!editingContext?.editMode) return null
     return (
         <PopUp showButtonContent={
@@ -34,70 +33,66 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                 <FontAwesomeIcon icon={faPencil} />
             </div>
         } showButtonClass={styles.openBtn}>
-            <div className={styles.ImageLinkEditor}>
-                <div className={styles.currentImageLink}>
-                    <h2>Edit image link</h2>
-                    <div className={styles.meta}>
-                        <p>name: {imageLink.name}</p>
-                        <i>id: {imageLink.id}</i>
-                    </div>
-                    <div className={styles.currentImage}>
-                    {
-                        imageLink.image ? (
-                        <>
-                            <div>
-                                <Image width={200} image={imageLink.image} />
-                            </div>
-                            <i>image name: {imageLink.image.name}</i>
-                        </>
-                        ): 
-                        <p>Ingen bilde er linker til denne linken</p>
-                    }
-                    </div>
-                </div>
-                <div className={styles.selectImage}>
-                {
-                    currentCollectionId ? (
-                        <ImagePagingProvider
-                            startPage={
-                                {
-                                    pageSize: 30,
-                                    page: 0,
-                                }
-                            }
-                            details={{collectionId: currentCollectionId}}
-                            serverRenderedData={[]}
-                        >
-                            <PopUpProvider>
-                                <ImageList />
-                            </PopUpProvider>
-                        </ImagePagingProvider>
-                    ) : (
-                        <p>Velg en samling</p>
-                    )
-                }   
-                </div>
-                <div className={styles.selectCollection}>
-                    <ImageCollectionPagingProvider
-                        startPage={{
-                            pageSize: 12,
+            <ImageSelectionProvider>
+                <ImagePagingProvider
+                    startPage={
+                        {
+                            pageSize: 30,
                             page: 0,
-                        }}
-                        details={null}
-                        serverRenderedData={[]}
-                    >
-                        <EndlessScroll 
-                            pagingContext={ImageCollectionPagingContext}
-                            renderer={collection => (
-                                <div key={collection.id} className={styles.collection}>
-                                    <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
-                                    <CollectionCard className={styles.collectionCard} collection={collection} />
+                        }
+                    }
+                    details={{collectionId: currentCollectionId}}
+                    serverRenderedData={[]}
+                >
+                    <PopUpProvider>
+                        <div className={styles.ImageLinkEditor}>
+                            <div className={styles.currentImageLink}>
+                                <h2>Edit image link</h2>
+                                <div className={styles.meta}>
+                                    <p>name: {imageLink.name}</p>
+                                    <i>id: {imageLink.id}</i>
                                 </div>
-                            )}
-                        />
-                    </ImageCollectionPagingProvider>
-                </div>
-            </div>
+                                <div className={styles.currentImage}>
+                                {
+                                    imageLink.image ? (
+                                    <>
+                                        <div>
+                                            <Image width={200} image={imageLink.image} />
+                                        </div>
+                                        <i>image name: {imageLink.image.name}</i>
+                                    </>
+                                    ): 
+                                    <p>Ingen bilde er linker til denne linken</p>
+                                }
+                                </div>
+                            </div>
+                            <div className={styles.selectImage}>
+                                <ImageList disableEditing={true}/>
+                            </div>
+                            <div className={styles.selectCollection}>
+                                <ImageCollectionPagingProvider
+                                    startPage={{
+                                        pageSize: 12,
+                                        page: 0,
+                                    }}
+                                    details={null}
+                                    serverRenderedData={[]}
+                                >
+                                    <EndlessScroll 
+                                        pagingContext={ImageCollectionPagingContext}
+                                        renderer={collection => (
+                                            <div key={collection.id} className={styles.collection}>
+                                                <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
+                                                <CollectionCard className={styles.collectionCard} collection={collection} />
+                                            </div>
+                                        )}
+                                    />
+                                </ImageCollectionPagingProvider>
+                            </div>
+                        </div>
+                    </PopUpProvider>
+                </ImagePagingProvider>
+            </ImageSelectionProvider>
         </PopUp>
     )
 }

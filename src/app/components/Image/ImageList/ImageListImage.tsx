@@ -7,14 +7,16 @@ import ImageDisplay from './ImageDisplay'
 
 type PropTypes = {
     image: Image
+    disableEditing?: boolean
 }
 
-export default function ImageListImage({ image }: PropTypes) {
+export default function ImageListImage({ image, disableEditing }: PropTypes) {
+
     return (
         <div className={styles.ImageListImage}>
             <ImageComponent width={200} image={image} />
             <PopUp showButtonContent={<></>}>
-                <ImageDisplay startImageName={image.name} />
+                <ImageDisplay startImageName={image.name} disableEditing={disableEditing} />
             </PopUp>
             <ImageSelectionButton image={image} />
         </div>

@@ -12,11 +12,13 @@ export const ImageSelectionContext = createContext<{
 
 type PropTypes = {
     children: React.ReactNode,
+    defaultSelectionMode?: boolean,
+    defaultImage?: Image,
 }
 
-export default function ImageSelectionProvider({ children } : PropTypes) {
-    const [image, setImage] = useState<Image | null>(null)
-    const [selectionModeActive, setSelectionModeActive] = useState(false)
+export default function ImageSelectionProvider({ children, defaultSelectionMode = false, defaultImage } : PropTypes) {
+    const [image, setImage] = useState<Image | null>(defaultImage || null)
+    const [selectionModeActive, setSelectionModeActive] = useState(defaultSelectionMode)
 
     return (
         <ImageSelectionContext.Provider value={{

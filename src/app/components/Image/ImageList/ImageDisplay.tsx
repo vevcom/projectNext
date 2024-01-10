@@ -14,14 +14,18 @@ import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import ImageSelectionButton from './ImageSelectionButton'
+import { EditModeContext } from '@/context/EditMode'
 
 type PropTypes = {
     startImageName?: string,
+    disableEditing?: boolean,
 }
 
-export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
+export default function ImageCollectionDisplay({ startImageName, disableEditing = false }: PropTypes) {    
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
+    const editContect = useContext(EditModeContext)
+    const edit = editContect?.editMode || false
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
@@ -57,8 +61,6 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
 
     useKeyPress('ArrowRight', goRight)
     useKeyPress('ArrowLeft', goLeft)
-
-    const isAdmin = true //temp
 
     const { refresh } = useRouter()
 
@@ -99,7 +101,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                 </div>
             </div>
             {
-                isAdmin && (
+                (edit && !disableEditing) && (
                     <aside className={styles.admin}>
                         <Form
                             title="Rediger metadata"

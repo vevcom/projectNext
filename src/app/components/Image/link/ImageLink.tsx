@@ -18,7 +18,7 @@ export default async function ImageLink({ name, children, ...props }: PropTypes)
     if (!image) throw new Error('No default image found. To fix add a image called: default_image')
     return (
         <div className={styles.ImageLink}>
-            <ImageLinkEditor imageLink={data}/>
+            <ImageLinkEditor imageLink={{...data, image}}/>
             <Image image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
