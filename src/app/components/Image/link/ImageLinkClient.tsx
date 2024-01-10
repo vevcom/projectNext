@@ -20,10 +20,10 @@ export default function ImageLinkClient({ name, width, alt, children, ...props }
             if (!image) {
                 return readImage('default_image').then(({ success: defaultSuccess, data: defaultImage }) => {
                     if (!defaultSuccess || !defaultImage) throw new Error('No default image found')
-                    return setImageLink({...data, image: defaultImage})
+                    return setImageLink({ ...data, image: defaultImage })
                 })
             }
-            setImageLink({...data, image})
+            setImageLink({ ...data, image })
         })
     }, [])
 

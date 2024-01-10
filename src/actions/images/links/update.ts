@@ -1,8 +1,8 @@
 'use server'
 import { ActionReturn } from '@/actions/type'
-import { ImageLink } from "@prisma/client"
+import { ImageLink } from '@prisma/client'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler' 
+import errorHandeler from '@/prisma/errorHandler'
 
 export default async function update(linkId: number, imageId: number) : Promise<ActionReturn<ImageLink>> {
     try {
@@ -22,5 +22,4 @@ export default async function update(linkId: number, imageId: number) : Promise<
     } catch (error) {
         return errorHandeler(error)
     }
-   
 }

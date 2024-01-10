@@ -10,7 +10,7 @@ export const PopUpContext = createContext<{
 export default function PopUpProvider({ children }: { children: React.ReactNode }) {
     const [node, setNode] = useState<React.ReactNode | null>(null)
     const [keyOfCurrentNode, setKeyOfCurrentNode] = useState<number | string | undefined>(undefined)
-    useOnNavigation(() => setNode(null), [setNode])
+    useOnNavigation(() => setNode(null))
 
     const teleport = (component: React.ReactNode, key: number | string) => {
         setNode(component)

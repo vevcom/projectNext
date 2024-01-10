@@ -17,7 +17,7 @@ type PropTypes = {
 
 export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
-    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage') 
+    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
 
     return (

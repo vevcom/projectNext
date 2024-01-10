@@ -6,7 +6,7 @@ import styles from './ImageLinkEditor.module.scss'
 import { ImageLink, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import ImageCollectionPagingProvider, {ImageCollectionPagingContext} from '@/context/paging/ImageCollectionPaging'
+import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
 import CollectionCard from '../Collection/CollectionCard'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
@@ -42,7 +42,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                 page: 0,
                             }
                         }
-                        details={{collectionId: currentCollectionId}}
+                        details={{ collectionId: currentCollectionId }}
                         serverRenderedData={[]}
                     >
                         <PopUpProvider>
@@ -67,7 +67,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                         details={null}
                                         serverRenderedData={[]}
                                     >
-                                        <EndlessScroll 
+                                        <EndlessScroll
                                             pagingContext={ImageCollectionPagingContext}
                                             renderer={collection => (
                                                 <div key={collection.id} className={styles.collection}>

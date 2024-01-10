@@ -16,7 +16,7 @@ type PropTypes = {
     PopUpKey: number | string,
 }
 
-export default function PopUp({ PopUpKey, children, showButtonContent, showButtonClass} : PropTypes) {
+export default function PopUp({ PopUpKey, children, showButtonContent, showButtonClass } : PropTypes) {
     const popUpContext = useContext(PopUpContext)
     if (!popUpContext) throw new Error('Pop up context needed for popups')
     const [isOpen, setIsOpen] = useState(false)
@@ -30,7 +30,7 @@ export default function PopUp({ PopUpKey, children, showButtonContent, showButto
         } else {
             popUpContext.remove(PopUpKey)
         }
-    }, [isOpen]);
+    }, [isOpen])
 
     useEffect(() => {
         contentRef.current = (
@@ -53,7 +53,7 @@ export default function PopUp({ PopUpKey, children, showButtonContent, showButto
     const handleOpening = useCallback(() => {
         setIsOpen(true)
     }, [setIsOpen])
- 
+
     return (
         <button className={`${styles.openBtn} ${showButtonClass}`} onClick={handleOpening}>
             {showButtonContent}

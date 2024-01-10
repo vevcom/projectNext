@@ -21,7 +21,7 @@ type PropTypes = {
     disableEditing?: boolean,
 }
 
-export default function ImageCollectionDisplay({ startImageName, disableEditing = false }: PropTypes) {    
+export default function ImageCollectionDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
     const editContect = useContext(EditModeContext)

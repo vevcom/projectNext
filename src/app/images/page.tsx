@@ -34,10 +34,10 @@ export default async function Images() {
                         <h1>Fotogalleri</h1>
                         {isAdmin && <MakeNewCollection />}
                     </span>
-                    <ImageCollectionList 
+                    <ImageCollectionList
                         serverRendered={collections.map(collection => (
                             <CollectionCard key={collection.id} collection={collection} />
-                        ))} 
+                        ))}
                     />
                 </ImageCollectionPagingProvider>
             </div>

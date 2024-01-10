@@ -11,7 +11,6 @@ type PropTypes = {
 }
 
 export default function ImageListImage({ image, disableEditing }: PropTypes) {
-
     return (
         <div className={styles.ImageListImage}>
             <ImageComponent width={200} image={image} />

@@ -20,8 +20,8 @@ export default function ImageList({ serverRendered, disableEditing } : PropTypes
     return (
         <div className={styles.ListImagesInCollection}>
             {serverRendered} {/* Rendered on server homefully in the right way*/}
-            <EndlessScroll 
-                pagingContext={ImagePagingContext} 
+            <EndlessScroll
+                pagingContext={ImagePagingContext}
                 renderer={image => <ImageListImage key={image.id} image={image} disableEditing={disableEditing}/>}
             />
         </div>
