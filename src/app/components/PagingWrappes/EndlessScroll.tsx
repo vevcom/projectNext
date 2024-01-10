@@ -36,7 +36,7 @@ export default function EndlessScroll<Data, const PageSize extends number>({ pag
             <span className={styles.loadingControl}>
                 {
                     context.state.allLoaded ? (
-                        <i>Ingen flere bilder å laste inn</i>
+                        <i>Ingen flere å laste inn</i>
                     ) :
                         <div ref={ref}>
                             <Button onClick={() => context.loadMore()}>Last inn flere</Button>

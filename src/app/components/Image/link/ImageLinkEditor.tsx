@@ -10,6 +10,9 @@ import Image from '../Image'
 import ImageCollectionPagingProvider, {ImageCollectionPagingContext} from '@/context/paging/ImageCollectionPaging'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
 import CollectionCard from '../Collection/CollectionCard'
+import ImagePagingProvider from '@/context/paging/ImagePaging'
+import PopUpProvider from '@/context/PopUp'
+import ImageList from '../ImageList/ImageList'
 
 type PropTypes = {
     imageLink: ImageLink & {
@@ -54,7 +57,26 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                     </div>
                 </div>
                 <div className={styles.selectImage}>
-                    {currentCollectionId}
+                {
+                    currentCollectionId ? (
+                        <ImagePagingProvider
+                            startPage={
+                                {
+                                    pageSize: 30,
+                                    page: 0,
+                                }
+                            }
+                            details={{collectionId: currentCollectionId}}
+                            serverRenderedData={[]}
+                        >
+                            <PopUpProvider>
+                                <ImageList />
+                            </PopUpProvider>
+                        </ImagePagingProvider>
+                    ) : (
+                        <p>Velg en samling</p>
+                    )
+                }   
                 </div>
                 <div className={styles.selectCollection}>
                     <ImageCollectionPagingProvider
