@@ -27,8 +27,8 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     if (!context) throw new Error('No context')
 
     const images = useRef<ImageT[]>(context?.state.data || [])
-    const firstIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
-    const currentImage = useRef<ImageT>(images.current[firstIndex])
+    const startIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
+    const currentImage = useRef<ImageT>(images.current[startIndex])
     const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
     useEffect(() => {
         images.current = context?.state.data || []

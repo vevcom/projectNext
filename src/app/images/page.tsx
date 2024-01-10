@@ -9,7 +9,7 @@ export default async function Images() {
     const isAdmin = true //temp
     const pageSize : PageSizeImageCollection = 12
 
-    const { success, data: initialCollections = [], error } = await readPage({
+    const { success, data: collections = [], error } = await readPage({
         page: {
             pageSize,
             page: 0
@@ -27,12 +27,12 @@ export default async function Images() {
                         page: 1,
                     }}
                     details={null}
+                    serverRenderedData={collections}
                 >
                     <span className={styles.header}>
                         <h1>Fotogalleri</h1>
                         {isAdmin && <MakeNewCollection />}
                     </span>
-
                     <ImageCollectionList />
                 </ImageCollectionPagingProvider>
             </div>

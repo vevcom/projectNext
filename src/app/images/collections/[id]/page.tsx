@@ -33,6 +33,7 @@ export default async function Collection({ params } : PropTypes) {
                     page: 1,
                 }}
                 details={{ collectionId: collection.id }}
+                serverRenderedData={images}
             >
                 <PopUpProvider>
                     <div className={styles.wrapper}>
