@@ -14,6 +14,7 @@ import PopUpProvider from '@/context/PopUp'
 import ImageList from '../ImageList/ImageList'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import ChangeImage from './ChangeImage'
+import Link from 'next/link'
 
 type PropTypes = {
     imageLink: ImageLink & {
@@ -77,6 +78,9 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                     />
                                 </ImageCollectionPagingProvider>
                             </div>
+                            <Link className={styles.linkToImages} href="/images/">
+                                Go to images
+                            </Link>
                         </div>
                     </PopUpProvider>
                 </ImagePagingProvider>

@@ -9,6 +9,13 @@ $collectionSize: 170px;
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr auto;
     gap: 1em;
+    .linkToImages {
+        position: absolute;
+        top: -2%;
+        right: -2%;
+        @include ohma.btn(ohma.$colors-primary);
+        width: 10em;
+    }
     > .currentImageLink {
         grid-column: 1 / 2;
         grid-row: 1 / 2;
