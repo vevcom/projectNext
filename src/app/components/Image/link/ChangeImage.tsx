@@ -33,12 +33,6 @@ export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
                         </div>
                         <FontAwesomeIcon className={styles.arrow1} icon={faTurnUp} />
                         <FontAwesomeIcon className={styles.arrow2} icon={faTurnUp} />
-
-                        <Form
-                            action={update.bind(null, imageLinkId).bind(null, selectedContext.selectedImage.id)}
-                            submitText="update image"
-                            successCallback={refresh}
-                        />
                     </div>
                 ) : (
                     <div className={`${styles.onlyCurrent} ${styles.imageClip}`}>
@@ -46,8 +40,16 @@ export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
                     </div>
                 )
             }
-            
             <i>image name: {currentImage.name}</i>
+            {
+                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id && (
+                    <Form
+                        action={update.bind(null, imageLinkId).bind(null, selectedContext.selectedImage.id)}
+                        successCallback={refresh}
+                        submitText="change"
+                    />
+                )
+            }
         </div>
     )
 }
