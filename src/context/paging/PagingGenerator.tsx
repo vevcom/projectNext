@@ -28,14 +28,17 @@ export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = 
     Context: PagingContextType<Data, PageSize>,
 }
 
-type ActionTypes<Data> = {
-    type: 'loadMoreStart' | 'clearAll',
+type ActionTypes<Data, PageSize extends number> = {
+    type: 'loadMoreStart',
 } | {
     type: 'loadMoreSuccess' | 'loadMoreFailure',
     fetchReturn: ActionReturn<Data[]>,
+} | {
+    type: 'clearAll',
+    startPage: Page<PageSize>,
 }
 
-function endlessScrollReducer<Data, const PageSize extends number>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data>) : StateTypes<Data, PageSize> {
+function endlessScrollReducer<Data, const PageSize extends number>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data, PageSize>) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
             return { ...state, loading: true }
@@ -56,7 +59,7 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
             console.error(action.fetchReturn.error)
             return { ...state, allLoaded: true, loading: false }
         case 'clearAll':
-            return { ...state, data: [], page: { ...state.page, page: 0 }, allLoaded: false }
+            return { ...state, data: [], page: action.startPage, allLoaded: false }
         default:
             return state
     }
@@ -69,7 +72,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
         const stateRef = useRef(state)
         const detailsRef = useRef(details)
         useEffect(() => {
-            dispatch({ type: 'clearAll' })
+            dispatch({ type: 'clearAll', startPage: startPage })
             detailsRef.current = details
         }, [details])
 
@@ -96,7 +99,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
 
         const refetch = async () => {
             const goToPage = stateRef.current.page.page
-            dispatch({ type: 'clearAll' })
+            dispatch({ type: 'clearAll', startPage: startPage  })
             const data : Data[] = []
             while (stateRef.current.page.page < goToPage) {
                 const newData = await loadMore()
