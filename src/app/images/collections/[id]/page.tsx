@@ -47,7 +47,7 @@ export default async function Collection({ params } : PropTypes) {
                             <i>{collection.description}</i>
                             <main>
                                 <ImageList serverRendered={
-                                    images.map(image => <ImageListImage image={image} />)
+                                    images.map(image => <ImageListImage key={image.id} image={image} />)
                                 } />
                             </main>
                         </div>

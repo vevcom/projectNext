@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, useRef } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,22 +24,24 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
     useKeyPress('Escape', () => setIsOpen(false))
     useOnNavigation(() => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
+    const contentRef = useRef<React.ReactNode>(null)
 
 
     useEffect(() => {
-        if (isOpen) {
-            popUpContext.teleport(
-                <div className={styles.PopUp}>
-                    <div className={styles.main} ref={ref}>
-                        <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-                            <FontAwesomeIcon icon={faX} />
-                        </Button>
-                        <div className={styles.content}>
-                            { children }
-                        </div>
+        contentRef.current = (
+            <div className={styles.PopUp}>
+                <div className={styles.main} ref={ref}>
+                    <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
+                        <FontAwesomeIcon icon={faX} />
+                    </Button>
+                    <div className={styles.content}>
+                        { children }
                     </div>
                 </div>
-            )
+            </div>
+        )
+        if (isOpen) {
+            popUpContext.teleport(contentRef.current)
         } else {
             popUpContext.remove()
         }
