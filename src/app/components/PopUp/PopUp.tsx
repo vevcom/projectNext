@@ -23,9 +23,17 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
     if (!popUpContext) throw new Error('Pop up context needed for popups')
     const [isOpen, setIsOpen] = useState(false)
     useKeyPress('Escape', () => setIsOpen(false))
-   
+    useOnNavigation(() => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
     const contentRef = useRef<React.ReactNode>(null)
+
+    useEffect(() => {
+        if (isOpen) {
+            popUpContext.teleport(contentRef.current)
+        } else {
+            popUpContext.remove()
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         contentRef.current = (
@@ -42,10 +50,8 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
         )
         if (isOpen) {
             popUpContext.teleport(contentRef.current)
-        } else {
-            popUpContext.remove()
         }
-    }, [isOpen, children]);
+    }, [children])
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)
