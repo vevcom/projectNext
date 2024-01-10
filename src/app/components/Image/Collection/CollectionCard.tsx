@@ -3,17 +3,17 @@ import styles from './CollectionCard.module.scss'
 import Image from '@/components/Image/Image'
 import type { Image as ImageT, ImageCollection } from '@prisma/client'
 
-
 type PropTypes = {
     collection: ImageCollection & {
         coverImage: ImageT | null,
         numberOfImages: number,
     },
+    className?: string,
 }
 
-export default function CollectionCard({ collection }: PropTypes) {
+export default function CollectionCard({ collection, className }: PropTypes) {
     return (
-        <Link href={`/images/collections/${collection.id}`} className={styles.CollectionCard} key={collection.id}>
+        <Link href={`/images/collections/${collection.id}`} className={`${styles.CollectionCard} ${className}`} key={collection.id}>
             {
                 collection.coverImage ? (
                     <Image width={100} image={collection.coverImage} />
@@ -24,7 +24,7 @@ export default function CollectionCard({ collection }: PropTypes) {
             <div className={styles.info}>
                 <h2>{collection.name}</h2>
                 <i>{collection.description}</i>
-                <p>{collection.createdAt.toLocaleDateString()}</p>
+                <p>{collection.createdAt.toUTCString().split(' ').slice(0, 4).join(' ')}</p>
             </div>
             <p className={styles.imageCount}>{collection.numberOfImages}</p>
         </Link>
