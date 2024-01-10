@@ -7,9 +7,10 @@ import styles from './EndlessScroll.module.scss'
 
 type PropTypes<Data, PageSize extends number> = {
     pagingContext: PagingContextType<Data, PageSize>,
+    renderer: (data: Data) => React.ReactNode,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number>({ pagingContext }: PropTypes<Data, PageSize>) {
+export default function EndlessScroll<Data, const PageSize extends number>({ pagingContext, renderer }: PropTypes<Data, PageSize>) {
     const context = useContext(pagingContext)
 
     //This component must be rendered inside ContextProvider
@@ -24,7 +25,7 @@ export default function EndlessScroll<Data, const PageSize extends number>({ pag
         }
     }, [inView])
 
-    const renderedPageData = useMemo(() => context.state.data.map(dataEntry => context.renderer(dataEntry)), [context.state.data, context.renderer])
+    const renderedPageData = useMemo(() => context.state.data.map(dataEntry => renderer(dataEntry)), [context.state.data, renderer])
 
     return (
         <>

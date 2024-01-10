@@ -3,6 +3,7 @@ import styles from './ImageList.module.scss'
 import { useContext } from 'react'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
+import ImageListImage from './ImageListImage'
 
 //Note that this component may take iniitial images as props fetched on server
 export default function ImageList() {
@@ -13,7 +14,10 @@ export default function ImageList() {
 
     return (
         <div className={styles.ListImagesInCollection}>
-            <EndlessScroll pagingContext={ImagePagingContext} />
+            <EndlessScroll 
+                pagingContext={ImagePagingContext} 
+                renderer={image => <ImageListImage image={image} />}
+            />
         </div>
     )
 }
