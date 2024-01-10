@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import PopUp from '../../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
@@ -26,65 +26,68 @@ type PropTypes = {
 export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
-
-    if (!editingContext?.editMode) return null
+    useEffect(() => {
+        console.log('imageLink', imageLink)
+    }, [imageLink])
     return (
-        <PopUp showButtonContent={
-            <div className={styles.editIcon}>
-                <FontAwesomeIcon icon={faPencil} />
-            </div>
-        } showButtonClass={styles.openBtn}>
-            <ImageSelectionProvider defaultSelectionMode={true} defaultImage={imageLink.image}>
-                <ImagePagingProvider
-                    startPage={
-                        {
-                            pageSize: 30,
-                            page: 0,
+        editingContext?.editMode && (
+            <PopUp showButtonContent={
+                <div className={styles.editIcon}>
+                    <FontAwesomeIcon icon={faPencil} />
+                </div>
+            } showButtonClass={styles.openBtn}>
+                <ImageSelectionProvider defaultSelectionMode={true} defaultImage={imageLink.image}>
+                    <ImagePagingProvider
+                        startPage={
+                            {
+                                pageSize: 30,
+                                page: 0,
+                            }
                         }
-                    }
-                    details={{collectionId: currentCollectionId}}
-                    serverRenderedData={[]}
-                >
-                    <PopUpProvider>
-                        <div className={styles.ImageLinkEditor}>
-                            <div className={styles.currentImageLink}>
-                                <h2>Edit image link</h2>
-                                <div className={styles.meta}>
-                                    <p>name: {imageLink.name}</p>
-                                    <i>id: {imageLink.id}</i>
+                        details={{collectionId: currentCollectionId}}
+                        serverRenderedData={[]}
+                    >
+                        <PopUpProvider>
+                            <div className={styles.ImageLinkEditor}>
+                                <div className={styles.currentImageLink}>
+                                    <h2>Edit image link</h2>
+                                    <div className={styles.meta}>
+                                        <p>name: {imageLink.name}</p>
+                                        <i>id: {imageLink.id}</i>
+                                    </div>
+                                    <ChangeImage currentImage={imageLink.image} imageLinkId={imageLink.id}/>
                                 </div>
-                                <ChangeImage currentImage={imageLink.image} imageLinkId={imageLink.id}/>
+                                <div className={styles.selectImage}>
+                                    <ImageList disableEditing={true}/>
+                                </div>
+                                <div className={styles.selectCollection}>
+                                    <ImageCollectionPagingProvider
+                                        startPage={{
+                                            pageSize: 12,
+                                            page: 0,
+                                        }}
+                                        details={null}
+                                        serverRenderedData={[]}
+                                    >
+                                        <EndlessScroll 
+                                            pagingContext={ImageCollectionPagingContext}
+                                            renderer={collection => (
+                                                <div key={collection.id} className={styles.collection}>
+                                                    <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
+                                                    <CollectionCard className={styles.collectionCard} collection={collection} />
+                                                </div>
+                                            )}
+                                        />
+                                    </ImageCollectionPagingProvider>
+                                </div>
+                                <Link className={styles.linkToImages} href="/images/">
+                                    Go to images
+                                </Link>
                             </div>
-                            <div className={styles.selectImage}>
-                                <ImageList disableEditing={true}/>
-                            </div>
-                            <div className={styles.selectCollection}>
-                                <ImageCollectionPagingProvider
-                                    startPage={{
-                                        pageSize: 12,
-                                        page: 0,
-                                    }}
-                                    details={null}
-                                    serverRenderedData={[]}
-                                >
-                                    <EndlessScroll 
-                                        pagingContext={ImageCollectionPagingContext}
-                                        renderer={collection => (
-                                            <div key={collection.id} className={styles.collection}>
-                                                <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
-                                                <CollectionCard className={styles.collectionCard} collection={collection} />
-                                            </div>
-                                        )}
-                                    />
-                                </ImageCollectionPagingProvider>
-                            </div>
-                            <Link className={styles.linkToImages} href="/images/">
-                                Go to images
-                            </Link>
-                        </div>
-                    </PopUpProvider>
-                </ImagePagingProvider>
-            </ImageSelectionProvider>
-        </PopUp>
+                        </PopUpProvider>
+                    </ImagePagingProvider>
+                </ImageSelectionProvider>
+            </PopUp>
+        )
     )
 }

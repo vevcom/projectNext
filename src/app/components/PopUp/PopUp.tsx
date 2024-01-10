@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useState, useRef } from 'react'
+import { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +10,7 @@ import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
+import { set } from 'zod'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -22,10 +23,9 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
     if (!popUpContext) throw new Error('Pop up context needed for popups')
     const [isOpen, setIsOpen] = useState(false)
     useKeyPress('Escape', () => setIsOpen(false))
-    useOnNavigation(() => setIsOpen(false))
+   
     const ref = useClickOutsideRef(() => setIsOpen(false))
     const contentRef = useRef<React.ReactNode>(null)
-
 
     useEffect(() => {
         contentRef.current = (
@@ -45,10 +45,14 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
         } else {
             popUpContext.remove()
         }
-    }, [children, isOpen]);
+    }, [isOpen]);
 
+    const handleOpening = useCallback(() => {
+        setIsOpen(true)
+    }, [setIsOpen])
+ 
     return (
-        <button className={`${styles.openBtn} ${showButtonClass}`} onClick={() => setIsOpen(true)}>
+        <button className={`${styles.openBtn} ${showButtonClass}`} onClick={handleOpening}>
             {showButtonContent}
         </button>
     )
