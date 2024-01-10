@@ -13,6 +13,7 @@ export default function MakeNewCollection() {
     const router = useRouter()
     const collectionCreatedCallback = (collection?: ImageCollection) => {
         if (collection) router.push(`/images/collections/${collection.id}`)
+        router.refresh()
     }
     return (
         <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
