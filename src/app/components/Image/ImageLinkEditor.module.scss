@@ -17,7 +17,6 @@
     background-color: rgba(ohma.$colors-gray-700, 0.8);
     transition: background-color 0.2s ease-in-out;
     .editIcon {
-        transition: scale 0.2s ease-in-out;
         background-color: transparant;
         position: absolute;
         top: 50%;
@@ -26,13 +25,16 @@
         svg {
             width: min(30px, 80%);
             height: min(30px, 80%);
+            color: ohma.$colors-white;
+            transition: scale 0.2s ease-in-out;
         }
     }
     &:hover {
         background-color: rgba(ohma.$colors-gray-700, 0.95);
         .editIcon > svg {
-            transform: scale(1.1);
+            scale: 1.2;
             transform-origin: center center;
+            color: ohma.$colors-primary;
         }
     }
 }

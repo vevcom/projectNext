@@ -1,8 +1,9 @@
 'use client'
 
 import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
-import React, { createContext, useReducer, useRef, useEffect } from 'react'
+import React, { createContext, useReducer, useRef, useEffect, useState } from 'react'
 import type { Context as ReactContextType } from 'react'
+import { render } from 'react-dom'
 
 export type StateTypes<Data, PageSize extends number> = {
     page: Page<PageSize>,
@@ -15,13 +16,16 @@ export type PagingContextType<Data, PageSize extends number> = ReactContextType<
     state: StateTypes<Data, PageSize>,
     loadMore: () => Promise<Data[]>,
     refetch: () => Promise<Data[]>,
+    renderer: (data: Data) => React.ReactNode,
+    setRenderer: (renderer: (data: Data) => React.ReactNode) => void,
 } | null>
 
 export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
     initialData: Data[],
     startPage: Page<PageSize>,
     children: React.ReactNode,
-    details: FetcherDetails
+    details: FetcherDetails,
+    renderer: (data: Data) => React.ReactNode,
 }
 
 export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
@@ -64,8 +68,9 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
 }
 
 function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) {
-    return function PagingProvider({ initialData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
+    return function PagingProvider({ initialData, startPage, children, details, renderer: initialRenderer }: PropTypes<Data, PageSize, FetcherDetails>) {
         const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false })
+        const [renderer, setRenderer] = useState<(data: Data) => React.ReactNode>(initialRenderer)
 
         const stateRef = useRef(state)
         const detailsRef = useRef(details)
@@ -107,7 +112,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
         }
 
         return (
-            <Context.Provider value={{ state, loadMore, refetch }}>
+            <Context.Provider value={{ state, loadMore, refetch, renderer, setRenderer }}>
                 {children}
             </Context.Provider>
         )
@@ -119,6 +124,8 @@ function generatePagingContext<Data, const PageSize extends number>()
         state: StateTypes<Data, PageSize>,
         loadMore:() => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
+        renderer: (data: Data) => React.ReactNode,
+        setRenderer: (renderer: (data: Data) => React.ReactNode) => void,
             } | null>(null)
     return context
 }
