@@ -35,6 +35,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
 
     const refreshImages = () => {
         pagingContext?.refetch()
+        router.refresh()
     }
 
     return (
