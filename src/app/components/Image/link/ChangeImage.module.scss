@@ -4,13 +4,16 @@ $currentImageSize: 200px;
 
 .ChangeImage {
     margin-top: .6em;
-    > *:not(i) {
-        position: relative;
+    > .onlyCurrent {
         width: $currentImageSize;
         max-height: $currentImageSize;
+
+    }
+    .imageClip {
         overflow: hidden;
         @include ohma.round;
         padding: 0;
+        position: relative;
         img {
             width: 100% !important;
             max-height: 100%;
@@ -18,6 +21,37 @@ $currentImageSize: 200px;
             @include ohma.round;
             padding: 0;
             overflow: hidden;
+        }
+    }
+    > .currentAndSelected {
+        width: $currentImageSize;
+        max-height: $currentImageSize;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        > * {
+            width: $currentImageSize / 2;
+            max-height: $currentImageSize / 2;
+            > * {
+                width: 100% !important;
+                max-height: 100%;
+            }
+        }
+        > .arrow1 {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+            width: 70%;
+            height: 70%;
+            rotate: 90deg;
+            place-self: center;
+        }
+        > .arrow2 {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            width: 70%;
+            height: 70%;
+            transform: scaleX(-1) rotate(180deg);
+            place-self: center;
         }
     }
 }
