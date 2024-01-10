@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import type { ImageCollection } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './MakeNewCollection.module.scss'
+import { v4 as uuid } from 'uuid'
 
 export default function MakeNewCollection() {
     const router = useRouter()
@@ -16,7 +17,7 @@ export default function MakeNewCollection() {
         router.refresh()
     }
     return (
-        <PopUp showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+        <PopUp PopUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
                 <Form successCallback={collectionCreatedCallback}
                     title="Lag et album" submitText="Lag album" action={create}>

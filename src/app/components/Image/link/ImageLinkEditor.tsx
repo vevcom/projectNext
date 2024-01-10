@@ -29,7 +29,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
 
     return (
         editingContext?.editMode && (
-            <PopUp showButtonContent={
+            <PopUp PopUpKey={imageLink.id} showButtonContent={
                 <div className={styles.editIcon}>
                     <FontAwesomeIcon icon={faPencil} />
                 </div>

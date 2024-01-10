@@ -17,6 +17,7 @@ import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import type { Image as ImageT } from '@prisma/client'
 import Image from '@/components/Image/Image'
 import { EditModeContext } from '@/context/EditMode'
+import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     collectionId: number,
@@ -51,7 +52,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                     <TextInput color="black" label="alternativ tekst" name="alt" />
                     <FileInput label="fil" name="file" color="primary" />
                 </Form>
-                <PopUp showButtonContent={
+                <PopUp PopUpKey={uuid()} showButtonContent={
                     <>
                         Last opp mange
                         <FontAwesomeIcon icon={faUpload} />

@@ -13,9 +13,10 @@ type PropTypes = {
     children: React.ReactNode,
     showButtonContent: React.ReactNode,
     showButtonClass?: string,
+    PopUpKey: number | string,
 }
 
-export default function PopUp({ children, showButtonContent, showButtonClass} : PropTypes) {
+export default function PopUp({ PopUpKey, children, showButtonContent, showButtonClass} : PropTypes) {
     const popUpContext = useContext(PopUpContext)
     if (!popUpContext) throw new Error('Pop up context needed for popups')
     const [isOpen, setIsOpen] = useState(false)
@@ -25,9 +26,9 @@ export default function PopUp({ children, showButtonContent, showButtonClass} : 
 
     useEffect(() => {
         if (isOpen) {
-            popUpContext.teleport(contentRef.current)
+            popUpContext.teleport(contentRef.current, PopUpKey)
         } else {
-            popUpContext.remove()
+            popUpContext.remove(PopUpKey)
         }
     }, [isOpen]);
 
@@ -45,7 +46,7 @@ export default function PopUp({ children, showButtonContent, showButtonClass} : 
             </div>
         )
         if (isOpen) {
-            popUpContext.teleport(contentRef.current)
+            popUpContext.teleport(contentRef.current, PopUpKey)
         }
     }, [children])
 
