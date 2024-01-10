@@ -4,10 +4,14 @@ $currentImageSize: 200px;
 
 .ChangeImage {
     margin-top: .6em;
+    max-width: $currentImageSize;
     > .onlyCurrent {
         width: $currentImageSize;
         max-height: $currentImageSize;
-
+    }
+    > i {
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .imageClip {
         overflow: hidden;
