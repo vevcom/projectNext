@@ -6,6 +6,7 @@
     @include ohma.round;
     position: relative;
     place-self: center;
+    display: block;
     > .imageCount {
         position: absolute;
         top: 0;
@@ -60,6 +61,8 @@
         i {
             margin-top: ohma.$gap;
             transition: opacity 0.5s;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
     &:hover img {

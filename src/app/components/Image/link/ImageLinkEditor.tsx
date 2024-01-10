@@ -1,6 +1,5 @@
 'use client'
-
-import { useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import PopUp from '../../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
@@ -21,6 +20,10 @@ type PropTypes = {
 
 export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
+    const [currentCollectionId, setCurrentCollectionId] = useState<number | null>(null)
+    useEffect(() => {
+        console.log('currentCollectionId changed:', currentCollectionId);
+    }, [currentCollectionId]);
     if (!editingContext?.editMode) return null
 
     return (
@@ -51,10 +54,13 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                     </div>
                 </div>
                 <div className={styles.selectImage}>
+                    {currentCollectionId}
+                </div>
+                <div className={styles.selectCollection}>
                     <ImageCollectionPagingProvider
                         startPage={{
                             pageSize: 12,
-                            page: 1,
+                            page: 0,
                         }}
                         details={null}
                         serverRenderedData={[]}
@@ -62,13 +68,13 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                         <EndlessScroll 
                             pagingContext={ImageCollectionPagingContext}
                             renderer={collection => (
-                                <CollectionCard key={collection.id} collection={collection} />
+                                <div key={collection.id} className={styles.collection}>
+                                    <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
+                                    <CollectionCard className={styles.collectionCard} collection={collection} />
+                                </div>
                             )}
                         />
                     </ImageCollectionPagingProvider>
-                </div>
-                <div className={styles.selectCollection}>
-                    hola
                 </div>
             </div>
         </PopUp>

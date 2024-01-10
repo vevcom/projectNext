@@ -1,6 +1,7 @@
 @use '@/styles/ohma';
 
 $currentImageSize: 200px;
+$collectionSize: 200px;
 
 .ImageLinkEditor {
     min-width: 50vw;
@@ -42,8 +43,32 @@ $currentImageSize: 200px;
         grid-column: 1 / 3;
         grid-row: 2 / 3;
         min-height: 100px;
-        background-color: ohma.$colors-secondary;
+        background-color: lighten(ohma.$colors-secondary, 50%);
         @include ohma.round;
+        display: flex;
+        max-width: 100%;
+        overflow: scroll;
+        min-height: $collectionSize + 50px;
+        align-items: center;
+        .collection {
+            position: relative;
+            margin: 0 .2em;
+            .collectionCard {
+                width: $collectionSize;
+                height: $collectionSize;
+                margin: 0;
+                z-index: 1;
+            }
+            .selector {
+                width: $collectionSize;
+                height: $collectionSize;
+                z-index: 2;
+                position: absolute;
+                background-color: transparent;
+                color: transparent;
+                border: none;
+            }
+        }
     }
 }
 
