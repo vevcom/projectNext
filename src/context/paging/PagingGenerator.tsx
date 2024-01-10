@@ -17,8 +17,7 @@ export type PagingContextType<Data, PageSize extends number> = ReactContextType<
     refetch: () => Promise<Data[]>,
 } | null>
 
-export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    initialData: Data[],
+export type PropTypes<PageSize extends number, FetcherDetails> = {
     startPage: Page<PageSize>,
     children: React.ReactNode,
     details: FetcherDetails,
@@ -64,8 +63,8 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
 }
 
 function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) {
-    return function PagingProvider({ initialData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
-        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false })
+    return function PagingProvider({ startPage, children, details }: PropTypes< PageSize, FetcherDetails>) {
+        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: [], page: startPage, loading: false, allLoaded: false })
 
         const stateRef = useRef(state)
         const detailsRef = useRef(details)

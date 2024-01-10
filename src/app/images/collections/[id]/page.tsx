@@ -7,6 +7,7 @@ import ImageList from '@/app/components/Image/ImageList/ImageList'
 import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
+import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 
 type PropTypes = {
     params: {
@@ -31,7 +32,6 @@ export default async function Collection({ params } : PropTypes) {
                     pageSize,
                     page: 1,
                 }}
-                initialData={images || []}
                 details={{ collectionId: collection.id }}
             >
                 <PopUpProvider>
@@ -45,7 +45,9 @@ export default async function Collection({ params } : PropTypes) {
                             <h1>{collection.name}</h1>
                             <i>{collection.description}</i>
                             <main>
-                                <ImageList />
+                                <ImageList serverRendered={
+                                    images.map(image => <ImageListImage image={image} />)
+                                } />
                             </main>
                         </div>
                     </div>

@@ -5,8 +5,12 @@ import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
 import ImageListImage from './ImageListImage'
 
+type PropTypes = {
+    serverRendered?: React.ReactNode,
+}
+
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageList() {
+export default function ImageList({ serverRendered } : PropTypes) {
     const context = useContext(ImagePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider
@@ -14,6 +18,7 @@ export default function ImageList() {
 
     return (
         <div className={styles.ListImagesInCollection}>
+            {serverRendered} {/* Rendered on server homefully in the right way*/}
             <EndlessScroll 
                 pagingContext={ImagePagingContext} 
                 renderer={image => <ImageListImage image={image} />}
