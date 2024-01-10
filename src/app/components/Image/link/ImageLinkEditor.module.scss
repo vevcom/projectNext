@@ -38,6 +38,13 @@ $collectionSize: 170px;
         grid-row: 1 / 2;
         background-color: lighten(ohma.$colors-secondary, 40%);
         @include ohma.round;
+        overflow: scroll;
+        width: 50vw;
+        height: 50vh;
+        > * {
+            isolation: isolate;
+        }
+
     }
     > .selectCollection {
         grid-column: 1 / 3;

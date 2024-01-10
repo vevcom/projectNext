@@ -13,6 +13,8 @@ export default function EditModeSwitch() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         editingContext.setEditMode(e.target.checked)
     }
+    const isAdmin = true
+    if (!isAdmin) return null
 
     return (
         <div className={styles.EditModeSwitch}>

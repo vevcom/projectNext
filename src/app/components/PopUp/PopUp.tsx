@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,7 +10,6 @@ import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
-import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -31,7 +30,7 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
         if (isOpen) {
             popUpContext.teleport(
                 <div className={styles.PopUp}>
-                    <div ref={ref}>
+                    <div className={styles.main} ref={ref}>
                         <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
                             <FontAwesomeIcon icon={faX} />
                         </Button>

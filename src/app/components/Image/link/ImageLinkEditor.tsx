@@ -28,7 +28,6 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
         console.log('currentCollectionId changed:', currentCollectionId);
     }, [currentCollectionId]);
     if (!editingContext?.editMode) return null
-
     return (
         <PopUp showButtonContent={
             <div className={styles.editIcon}>
@@ -51,8 +50,8 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                             </div>
                             <i>image name: {imageLink.image.name}</i>
                         </>
-                        )
-                            : <p>No image to this link yet</p>
+                        ): 
+                        <p>Ingen bilde er linker til denne linken</p>
                     }
                     </div>
                 </div>

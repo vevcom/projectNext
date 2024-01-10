@@ -32,8 +32,8 @@ export default async function RootLayout({ children } : PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <PopUpProvider>
-                    <EditModeProvider>
+                <EditModeProvider>
+                    <PopUpProvider>
                         <div className={styles.wrapper}>
                             <div className={styles.navBar}>
                                 <NavBar session={session} />
@@ -48,8 +48,8 @@ export default async function RootLayout({ children } : PropTypes) {
                                 <MobileNavBar session={session} />
                             </div>
                         </div>
-                    </EditModeProvider>
-                </PopUpProvider>
+                    </PopUpProvider>
+                </EditModeProvider>
             </body>
         </html>
     )

@@ -4,6 +4,7 @@ import { useState, createContext } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
+    defaultValue?: boolean,
 }
 
 export const EditModeContext = createContext<{
@@ -11,8 +12,8 @@ export const EditModeContext = createContext<{
     setEditMode:(editMode: boolean) => void,
         } | null>(null)
 
-export default function EditModeProvider({ children } : PropTypes) {
-    const [editMode, setEditMode] = useState(false)
+export default function EditModeProvider({ defaultValue = false, children } : PropTypes) {
+    const [editMode, setEditMode] = useState(defaultValue)
 
     return (
         <EditModeContext.Provider value={{
