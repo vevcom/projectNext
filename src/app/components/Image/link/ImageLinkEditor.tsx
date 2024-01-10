@@ -14,6 +14,7 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageList from '../ImageList/ImageList'
 import ImageSelectionProvider from '@/context/ImageSelection'
+import ChangeImage from './ChangeImage'
 
 type PropTypes = {
     imageLink: ImageLink & {
@@ -52,19 +53,7 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                     <p>name: {imageLink.name}</p>
                                     <i>id: {imageLink.id}</i>
                                 </div>
-                                <div className={styles.currentImage}>
-                                {
-                                    imageLink.image ? (
-                                    <>
-                                        <div>
-                                            <Image width={200} image={imageLink.image} />
-                                        </div>
-                                        <i>image name: {imageLink.image.name}</i>
-                                    </>
-                                    ): 
-                                    <p>Ingen bilde er linker til denne linken</p>
-                                }
-                                </div>
+                                <ChangeImage currentImage={imageLink.image} />
                             </div>
                             <div className={styles.selectImage}>
                                 <ImageList disableEditing={true}/>

@@ -1,0 +1,23 @@
+@use '@/styles/ohma';
+
+$currentImageSize: 200px;
+
+.ChangeImage {
+    margin-top: .6em;
+    > *:not(i) {
+        position: relative;
+        width: $currentImageSize;
+        max-height: $currentImageSize;
+        overflow: hidden;
+        @include ohma.round;
+        padding: 0;
+        img {
+            width: 100% !important;
+            max-height: 100%;
+            object-fit: contain;
+            @include ohma.round;
+            padding: 0;
+            overflow: hidden;
+        }
+    }
+}
