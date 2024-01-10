@@ -12,7 +12,7 @@ import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons
 import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/collections/destroy'
 import { useContext } from 'react'
-import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
+import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import type { Image as ImageT } from '@prisma/client'
 import Image from '@/components/Image/Image'
@@ -25,7 +25,7 @@ type PropTypes = {
 
 export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
     const router = useRouter()
-    const selection = useContext(ImageCollectionSelectImageContext)
+    const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
     if (!selection) throw new Error('No context')
 

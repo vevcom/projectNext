@@ -4,8 +4,8 @@ import CollectionAdmin from './CollectionAdmin'
 import { readPage } from '@/actions/images/read'
 import read from '@/actions/images/collections/read'
 import ListImagesInCollection from '@/components/Image/Collection/DisplayImagesInCollection/ListImagesInCollection'
-import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
-import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
+import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
+import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 
 type PropTypes = {
@@ -25,8 +25,8 @@ export default async function Collection({ params } : PropTypes) {
     const isAdmin = true //temp
 
     return (
-        <ImageCollectionSelectImageProvider>
-            <ImageContextProvider
+        <ImageSelectionProvider>
+            <ImagePagingProvider
                 startPage={{
                     pageSize,
                     page: 1,
@@ -50,7 +50,7 @@ export default async function Collection({ params } : PropTypes) {
                         </div>
                     </div>
                 </PopUpProvider>
-            </ImageContextProvider>
-        </ImageCollectionSelectImageProvider>
+            </ImagePagingProvider>
+        </ImageSelectionProvider>
     )
 }

@@ -1,6 +1,6 @@
 'use client'
-import styles from './ImageCollectionDisplay.module.scss'
-import Image from '../../Image'
+import styles from './ImageDisplay.module.scss'
+import Image from '../Image'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
-import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
+import { ImageSelectionContext } from '@/context/ImageSelection'
 import ImageSelectionButton from './ImageSelectionButton'
 
 type PropTypes = {
@@ -21,7 +21,7 @@ type PropTypes = {
 
 export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
     const context = useContext(ImagePagingContext)
-    const selection = useContext(ImageCollectionSelectImageContext)
+    const selection = useContext(ImageSelectionContext)
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')

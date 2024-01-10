@@ -3,7 +3,7 @@
 import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
 
-export const ImageCollectionSelectImageContext = createContext<{
+export const ImageSelectionContext = createContext<{
     selectionMode: boolean,
     setSelectionMode:(selectionMode: boolean) => void,
     selectedImage: Image | null,
@@ -14,18 +14,18 @@ type PropTypes = {
     children: React.ReactNode,
 }
 
-export default function ImageCollectionSelectImageProvider({ children } : PropTypes) {
+export default function ImageSelectionProvider({ children } : PropTypes) {
     const [image, setImage] = useState<Image | null>(null)
     const [selectionModeActive, setSelectionModeActive] = useState(false)
 
     return (
-        <ImageCollectionSelectImageContext.Provider value={{
+        <ImageSelectionContext.Provider value={{
             selectionMode: selectionModeActive,
             setSelectionMode: setSelectionModeActive,
             selectedImage: image,
             setSelectedImage: setImage,
         }}>
             {children}
-        </ImageCollectionSelectImageContext.Provider>
+        </ImageSelectionContext.Provider>
     )
 }
