@@ -45,7 +45,7 @@ export default function PopUp({ children, showButtonContent, showButtonClass } :
         } else {
             popUpContext.remove()
         }
-    }, [isOpen]);
+    }, [isOpen, children]);
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)

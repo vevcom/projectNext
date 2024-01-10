@@ -26,9 +26,7 @@ type PropTypes = {
 export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
-    useEffect(() => {
-        console.log('imageLink', imageLink)
-    }, [imageLink])
+
     return (
         editingContext?.editMode && (
             <PopUp showButtonContent={

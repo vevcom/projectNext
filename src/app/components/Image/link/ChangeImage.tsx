@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/components/Form/Form'
 import update from '@/actions/images/links/update'
-import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     currentImage: ImageT,
@@ -18,7 +17,6 @@ type PropTypes = {
 export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage') 
-    const { refresh } = useRouter()
 
     return (
         <div className={styles.ChangeImage}>
@@ -45,7 +43,6 @@ export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id && (
                     <Form
                         action={update.bind(null, imageLinkId).bind(null, selectedContext.selectedImage.id)}
-                        successCallback={refresh}
                         submitText="change"
                     />
                 )
