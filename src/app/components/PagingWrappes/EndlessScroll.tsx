@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 import { useInView } from 'react-intersection-observer'
 import Button from '@/components/UI/Button'

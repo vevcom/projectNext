@@ -23,7 +23,7 @@ export default function ImageLinkClient({ name, width, alt, children, ...props }
                     return setImageLink({ ...data, image: defaultImage })
                 })
             }
-            setImageLink({ ...data, image })
+            return setImageLink({ ...data, image })
         })
     }, [])
 

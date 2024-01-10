@@ -1,5 +1,5 @@
 'use client'
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import PopUp from '../../PopUp/PopUp'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './ImageLinkEditor.module.scss'
