@@ -74,10 +74,10 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                         <EndlessScroll
                                             pagingContext={ImageCollectionPagingContext}
                                             renderer={collection => (
-                                                <div key={collection.id} className={styles.collection}>
+                                                <div key={collection.id} className={`${styles.collection} ${isColectionActive(collection)}`}>
                                                     <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
                                                     <CollectionCard 
-                                                        className={`${styles.collectionCard} ${isColectionActive(collection)}}`} 
+                                                        className={styles.collectionCard} 
                                                         collection={collection} 
                                                     />
                                                 </div>

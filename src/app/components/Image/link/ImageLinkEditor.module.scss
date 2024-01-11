@@ -49,9 +49,6 @@ $collectionSize: calc(10vmin + 100px);
                 height: $collectionSize;
                 margin: 0;
                 z-index: 1;
-                &.selected {
-                    border: ohma.$colors-primary 2px solid;
-                }
             }
             .selector {
                 width: $collectionSize;
@@ -69,6 +66,15 @@ $collectionSize: calc(10vmin + 100px);
                     ~ .collectionCard img {
                         scale: 1.2;
                     }
+                }
+            }
+            &.selected {
+                transform: scale(1.1);
+                z-index: 2;
+                border: 5px solid ohma.$colors-primary;
+                border-radius: 1.2em;
+                &:hover > .collectionCard img {
+                    scale: 1;
                 }
             }
         }
