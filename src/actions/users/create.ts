@@ -1,5 +1,4 @@
 'use server'
-
 import prisma from '@/prisma'
 import { z } from 'zod'
 import errorHandeler from '@/prisma/errorHandler'

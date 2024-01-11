@@ -1,4 +1,4 @@
-import ImageLink from '@/components/Image/ImageLink'
+import ImageLink from '@/app/components/Image/link/ImageLink'
 import Link from 'next/link'
 import Item from './Item'
 import styles from './NavBar.module.scss'
@@ -27,13 +27,13 @@ async function NavBar({ session }: PropTypes) {
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
-                    <Link href="/">
-                        <ImageLink
-                            name="logo_simple"
-                            width={30}
-                            alt="omega logo"
-                        />
-                    </Link>
+                    <ImageLink
+                        name="logo_simple"
+                        width={30}
+                        alt="omega logo"
+                    >
+                        <Link href="/" />
+                    </ImageLink>
                 </li>
                 {
                     itemsForNav.map((item) => (
@@ -51,9 +51,9 @@ async function NavBar({ session }: PropTypes) {
                         isAdmin && <EditModeSwitch />
                     }
                     <div className={styles.magicHat}>
-                        <Link href={isLoggedIn ? '/users/me' : '/login'}>
-                            <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button"/>
-                        </Link>
+                        <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button">
+                            <Link href={isLoggedIn ? '/users/me' : '/login'} />
+                        </ImageLink>
                     </div>
                 </li>
             </ul>

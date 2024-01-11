@@ -1,5 +1,5 @@
 'use client'
-import styles from './ImageCollectionDisplay.module.scss'
+import styles from './ImageDisplay.module.scss'
 import Image from '../Image'
 import { useContext, useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,23 +12,27 @@ import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
 import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
-import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
+import { ImageSelectionContext } from '@/context/ImageSelection'
 import ImageSelectionButton from './ImageSelectionButton'
+import { EditModeContext } from '@/context/EditMode'
 
 type PropTypes = {
     startImageName?: string,
+    disableEditing?: boolean,
 }
 
-export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
+export default function ImageCollectionDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
-    const selection = useContext(ImageCollectionSelectImageContext)
+    const selection = useContext(ImageSelectionContext)
+    const editContect = useContext(EditModeContext)
+    const edit = editContect?.editMode || false
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
 
     const images = useRef<ImageT[]>(context?.state.data || [])
-    const firstIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
-    const currentImage = useRef<ImageT>(images.current[firstIndex])
+    const startIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
+    const currentImage = useRef<ImageT>(images.current[startIndex])
     const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
     useEffect(() => {
         images.current = context?.state.data || []
@@ -57,8 +61,6 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
 
     useKeyPress('ArrowRight', goRight)
     useKeyPress('ArrowLeft', goLeft)
-
-    const isAdmin = true //temp
 
     const { refresh } = useRouter()
 
@@ -99,7 +101,7 @@ export default function ImageCollectionDisplay({ startImageName }: PropTypes) {
                 </div>
             </div>
             {
-                isAdmin && (
+                (edit && !disableEditing) && (
                     <aside className={styles.admin}>
                         <Form
                             title="Rediger metadata"
