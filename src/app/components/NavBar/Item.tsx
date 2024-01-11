@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import styles from './Item.module.scss'
+import Link from 'next/link'
 
 type PropTypes = {
     href: string,

@@ -1,7 +1,7 @@
+import styles from './TextInput.module.scss'
 import { v4 as uuid } from 'uuid'
 import { InputHTMLAttributes } from 'react'
 
-import styles from './TextInput.module.scss'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label: string,

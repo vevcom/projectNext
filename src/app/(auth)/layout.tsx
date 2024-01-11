@@ -1,6 +1,6 @@
-import React from 'react'
-import ImageLink from '@/app/components/Image/link/ImageLink'
 import styles from './layout.module.scss'
+import ImageLink from '@/app/components/Image/link/ImageLink'
+import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode

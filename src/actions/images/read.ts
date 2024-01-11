@@ -1,8 +1,8 @@
 'use server'
 import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
-import errorHandeler from '@/prisma/errorHandler'
 
 export async function readPage<const PageSize extends number>({ page, details }: ReadPageInput<PageSize, {collectionId: number}>)
     : Promise<ActionReturn<Image[]>> {

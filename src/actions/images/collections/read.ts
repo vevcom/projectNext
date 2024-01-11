@@ -1,8 +1,8 @@
 'use server'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
-import type { ImageCollection, Image } from '@prisma/client'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ImageCollection, Image } from '@prisma/client'
 
 export default async function read(id: number) : Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
     try {

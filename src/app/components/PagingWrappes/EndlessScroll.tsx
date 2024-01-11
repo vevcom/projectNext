@@ -1,9 +1,9 @@
 'use client'
-import React, { useContext, useEffect, useMemo } from 'react'
-import type { PagingContextType } from '@/context/paging/PagingGenerator'
-import { useInView } from 'react-intersection-observer'
-import Button from '@/components/UI/Button'
 import styles from './EndlessScroll.module.scss'
+import Button from '@/components/UI/Button'
+import React, { useContext, useEffect, useMemo } from 'react'
+import { useInView } from 'react-intersection-observer'
+import type { PagingContextType } from '@/context/paging/PagingGenerator'
 
 type PropTypes<Data, PageSize extends number> = {
     pagingContext: PagingContextType<Data, PageSize>,
