@@ -1,5 +1,5 @@
 import styles from './Loader.module.scss'
-import ImageLink from '@/components/Image/ImageLink'
+import ImageLink from '@/app/components/Image/link/ImageLink'
 
 function Loader() {
     return (

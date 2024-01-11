@@ -1,0 +1,142 @@
+@use '@/styles/ohma';
+
+.openBtn {
+    background-color: transparent;
+    border: none;
+    :hover {
+        cursor: pointer;
+    }
+}
+
+.Menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    background: radial-gradient(circle at top left, ohma.$colors-secondary 50%, transparent 90%);
+    height: max(80vmin, 550px);
+    width: max(80vmin, 550px);
+    padding: 0 12.5% 12.5% 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .close {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: .6rem;
+        background-color: transparent;
+        border: none;
+        &:hover {
+            cursor: pointer;
+        }
+        width: 50px;
+        height: 50px;
+    }
+    ul {
+        position: absolute;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+    li {
+        list-style: none; 
+        margin-bottom: 10px; 
+        a {
+            text-decoration: none; 
+            color: black; 
+            display: flex;
+            align-items: center; 
+            color: ohma.$colors-white;
+            font-size: ohma.$fonts-l;
+            font-weight: ohma.$fonts-weight-l;
+            &:hover {
+                color: ohma.$colors-primary;
+                svg {
+                    color: ohma.$colors-primary;
+                }
+            }
+            svg {
+                margin-right: 5px;
+                color: ohma.$colors-white;
+            }
+        }
+    }
+    animation: radiate .4s ease-out forwards;
+    &.closeMenu {
+        animation: deradiate .4s ease-in forwards;
+    }
+}
+
+@keyframes radiate {
+    0% {
+        clip-path: circle(0% at top left);
+    }
+    100% {
+        clip-path: circle(100% at top left);
+    }
+}
+
+@keyframes deradiate {
+    0% {
+        clip-path: circle(100% at top left);
+    }
+    100% {
+        clip-path: circle(0% at top left);
+    }
+}
+
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .Menu {
+        width: auto;
+        height: auto;
+        bottom: 0;
+        right: 0;
+        padding: 0;
+        border-end-end-radius: 0; 
+        border: collapse;
+        background: radial-gradient(ellipse at bottom right, ohma.$colors-secondary 70%, transparent);
+        animation: none;
+        > ul {
+            justify-content: flex-end;
+            padding-bottom: 5em;
+        }
+        &.closeMenu {
+            animation: none;
+        }
+        > .close {
+            width: 3em;
+            height: 3em;
+            top: auto;
+            left: auto;
+            bottom: 0;
+            right: 0;
+            margin: .5em;
+        }
+        animation: radiateMobile .4s ease-out forwards;
+        &.closeMenu {
+            animation: deradiateMobile .4s ease-in forwards;
+        }
+    }
+}
+
+@keyframes radiateMobile {
+    0% {
+        clip-path: ellipse(0% 0% at bottom right);
+    }
+    100% {
+        clip-path: ellipse(150% 150% at bottom right);
+    }
+}
+
+@keyframes deradiateMobile {
+    0% {
+        clip-path: ellipse(150% 150% at bottom right);
+    }
+    100% {
+        clip-path: ellipse(0% 0% at bottom right);
+    }
+}
+

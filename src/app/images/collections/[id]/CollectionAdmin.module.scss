@@ -1,5 +1,9 @@
 @use '@/styles/ohma';
 
+.uploadMany {
+    min-width: 50vw;
+}
+
 .CollectionAdmin {
     @include ohma.card;
     width: min(400px, 90vw);
@@ -19,9 +23,6 @@
                 height: 1.5em;
                 margin: 0 .2em;
             }
-        }
-        > * form {
-            min-width: 50vw; 
         }
     }
 

@@ -2,7 +2,7 @@
 
 import Button from './components/UI/Button'
 import styles from './error.module.scss'
-import ImageLinkClient from './components/Image/ImageLinkClient'
+import ImageLinkClient from './components/Image/link/ImageLinkClient'
 
 export default function ErrorBoundary({ error, reset } : {error: Error, reset: () => void}) {
     console.error(error) //Should be exchanged for logger when implemented

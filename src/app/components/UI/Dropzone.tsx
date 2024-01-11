@@ -90,7 +90,7 @@ const Dropzone = ({ label, name, ...props } : PropTypes) => {
             </div>
             <span>
                 <div className={styles.general}>
-                    <p>Til opplastning {files.length} {files.length === 1 ? 'fil' : 'filer'}</p>
+                    <p>Til opplastning: {files.length} {files.length === 1 ? 'fil' : 'filer'}</p>
                     <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
                     <p>
                         <button className={styles.trash} onClick={handleRemoveAll}>
