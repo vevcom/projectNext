@@ -466,7 +466,7 @@
     ],
     //import statement order
     "import/order": [
-        "error",
+        "warn",
         {
             "groups": [
             "index",
