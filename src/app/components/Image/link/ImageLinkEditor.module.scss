@@ -59,10 +59,13 @@ $collectionSize: calc(10vmin + 100px);
                 background-color: transparent;
                 color: transparent;
                 border: none;
+                ~ .collectionCard img {
+                    z-index: -1;
+                }
                 &:hover {
                     cursor: pointer;
                     ~ .collectionCard img {
-                        scale: 1.2
+                        scale: 1.2;
                     }
                 }
             }
