@@ -15,13 +15,14 @@ export type PagingContextType<Data, PageSize extends number> = ReactContextType<
     state: StateTypes<Data, PageSize>,
     loadMore: () => Promise<Data[]>,
     refetch: () => Promise<Data[]>,
+    serverRenderedData: Data[],
 } | null>
 
 export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    initialData: Data[],
     startPage: Page<PageSize>,
     children: React.ReactNode,
-    details: FetcherDetails
+    details: FetcherDetails,
+    serverRenderedData: Data[],
 }
 
 export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
@@ -29,14 +30,18 @@ export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = 
     Context: PagingContextType<Data, PageSize>,
 }
 
-type ActionTypes<Data> = {
-    type: 'loadMoreStart' | 'clearAll',
+type ActionTypes<Data, PageSize extends number> = {
+    type: 'loadMoreStart',
 } | {
     type: 'loadMoreSuccess' | 'loadMoreFailure',
     fetchReturn: ActionReturn<Data[]>,
+} | {
+    type: 'clearAll',
+    startPage: Page<PageSize>,
+    serverRenderedData: Data[],
 }
 
-function endlessScrollReducer<Data, const PageSize extends number>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data>) : StateTypes<Data, PageSize> {
+function endlessScrollReducer<Data, const PageSize extends number>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data, PageSize>) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
             return { ...state, loading: true }
@@ -57,20 +62,20 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
             console.error(action.fetchReturn.error)
             return { ...state, allLoaded: true, loading: false }
         case 'clearAll':
-            return { ...state, data: [], page: { ...state.page, page: 0 }, allLoaded: false }
+            return { ...state, data: action.serverRenderedData, page: action.startPage, allLoaded: false }
         default:
             return state
     }
 }
 
 function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) {
-    return function PagingProvider({ initialData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
-        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: initialData, page: startPage, loading: false, allLoaded: false })
+    return function PagingProvider({ serverRenderedData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
+        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: serverRenderedData, page: startPage, loading: false, allLoaded: false })
 
         const stateRef = useRef(state)
         const detailsRef = useRef(details)
         useEffect(() => {
-            dispatch({ type: 'clearAll' })
+            dispatch({ type: 'clearAll', startPage, serverRenderedData })
             detailsRef.current = details
         }, [details])
 
@@ -97,7 +102,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
 
         const refetch = async () => {
             const goToPage = stateRef.current.page.page
-            dispatch({ type: 'clearAll' })
+            dispatch({ type: 'clearAll', startPage, serverRenderedData })
             const data : Data[] = []
             while (stateRef.current.page.page < goToPage) {
                 const newData = await loadMore()
@@ -107,7 +112,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
         }
 
         return (
-            <Context.Provider value={{ state, loadMore, refetch }}>
+            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData }}>
                 {children}
             </Context.Provider>
         )
@@ -119,6 +124,7 @@ function generatePagingContext<Data, const PageSize extends number>()
         state: StateTypes<Data, PageSize>,
         loadMore:() => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
+        serverRenderedData: Data[],
             } | null>(null)
     return context
 }

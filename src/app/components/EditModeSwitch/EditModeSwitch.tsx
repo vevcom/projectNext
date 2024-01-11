@@ -1,5 +1,5 @@
 'use client'
-import { useContext } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { EditModeContext } from '@/context/EditMode'
 import styles from './EditModeSwitch.module.scss'
 import type { ChangeEvent } from 'react'
@@ -13,11 +13,21 @@ export default function EditModeSwitch() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         editingContext.setEditMode(e.target.checked)
     }
+    const isAdmin = true
+
+    const ref = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        if (ref.current?.checked) {
+            ref.current.checked = editingContext.editMode
+        }
+    })
+    if (!isAdmin) return null
 
     return (
         <div className={styles.EditModeSwitch}>
             <label>
-                <input checked={editingContext.editMode} type="checkbox" id="editModeSwitch" onChange={handleChange} />
+                <input ref={ref} checked={editingContext.editMode} type="checkbox" onChange={handleChange} />
                 <FontAwesomeIcon className={styles.EditModeSwitchIcon} icon={faPencil} />
             </label>
         </div>

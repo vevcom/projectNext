@@ -1,124 +1,25 @@
 @use '@/styles/ohma';
 
-$collection-size: 250px;
-
 .wrapper {
     display: grid;
     place-items: center;
     > .container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        > .header {
-            grid-column: 1 / -1;
-            padding: 3*ohma.$gap;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            > button {
-                margin: ohma.$gap;
-                border: none;
-                background-color: transparent;
-                width: 30px;
-                height: 30px;
-            }
-        }
-        > .collection {
-            width: $collection-size;
-            height: $collection-size;
-            margin: ohma.$gap;
-            overflow: hidden;
-            @include ohma.round;
-            position: relative;
-            place-self: center;
-            > .imageCount {
-                position: absolute;
-                top: 0;
-                right: 0;
-                padding: 0.3em;
-                color: ohma.$colors-white;
-                background-color: ohma.$colors-black;
-                border-radius: 0 0 0 1em;
-                min-width: 30px;
-                z-index: 1;
-                text-align: center;
-            }
-            &::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-secondary 70%, ohma.$colors-secondary 100%);
-                rotate: 180deg;
-                scale: 1.5;
-                z-index: 0;
-            }
-            > *:first-child {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100% !important;
-                height: 100%;
-                > img {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    transition: scale 0.5s;
-                }
-            }
-            > .info {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                padding: 0.3em;
-                color: ohma.$colors-black;
-                text-decoration: none;
-                transition: min-height 0.5s;
-                padding: ohma.$gap;
-                z-index: 1;
-                i {
-                    margin-top: ohma.$gap;
-                    transition: opacity 0.5s;
-                }
-            }
-            &:hover img {
-                scale: 1.2;
-            }
-        }
+        display: flex;
+        flex-direction: column;
+    }
+}
+.header {
+    padding: 3*ohma.$gap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > button {
+        margin: ohma.$gap;
+        border: none;
+        background-color: transparent;
+        width: 30px;
+        height: 30px;
     }
 }
 
-@media screen and (max-width: (4 * ($collection-size + 20px))) {
-    .wrapper {
-        > .container {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-}
 
-@media screen and (max-width: (3 * ($collection-size + 20px))) {
-    .wrapper {
-        > .container {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-}
-
-@media screen and (max-width: (2 * ($collection-size + 20px))) {
-    .wrapper {
-        place-content: flex-start;
-        > .container {
-            grid-template-columns: repeat(1, 1fr);
-            >.collection {
-                place-self: initial;
-                width: min(90vw, 350px);
-                height: min(90vw, 350px);
-            }
-        }
-    }
-}

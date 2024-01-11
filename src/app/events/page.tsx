@@ -1,8 +1,10 @@
+import ImageLink from '../components/Image/link/ImageLink'
 import styles from './page.module.scss'
 
 export default function Events() {
     return (
         <div className={styles.wrapper}>
+            <ImageLink name="logo_whi" width={300}/>
             iejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf

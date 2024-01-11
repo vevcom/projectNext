@@ -3,9 +3,11 @@ import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import { readPage } from '@/actions/images/read'
 import read from '@/actions/images/collections/read'
-import ImageCollectionList from '@/app/components/Image/Collection/ImageCollectionList'
-import ImageContextProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
-import ImageCollectionSelectImageProvider from '@/context/ImageCollectionSelectImage'
+import ImageList from '@/app/components/Image/ImageList/ImageList'
+import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
+import ImageSelectionProvider from '@/context/ImageSelection'
+import PopUpProvider from '@/context/PopUp'
+import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 
 type PropTypes = {
     params: {
@@ -24,31 +26,34 @@ export default async function Collection({ params } : PropTypes) {
     const isAdmin = true //temp
 
     return (
-        <ImageCollectionSelectImageProvider>
-            <ImageContextProvider
+        <ImageSelectionProvider>
+            <ImagePagingProvider
                 startPage={{
                     pageSize,
                     page: 1,
                 }}
-                initialData={images || []}
                 details={{ collectionId: collection.id }}
+                serverRenderedData={images}
             >
-                <div className={styles.wrapper}>
-                    {isAdmin &&
-                        <aside className={styles.admin}>
-                            <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
-                        </aside>
-                    }
-                    <div className={styles.images}>
-                        <h1>{collection.name}</h1>
-                        <i>{collection.description}</i>
-                        <main>
-                            <ImageCollectionList />
-                        </main>
+                <PopUpProvider>
+                    <div className={styles.wrapper}>
+                        {isAdmin &&
+                            <aside className={styles.admin}>
+                                <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                            </aside>
+                        }
+                        <div className={styles.images}>
+                            <h1>{collection.name}</h1>
+                            <i>{collection.description}</i>
+                            <main>
+                                <ImageList serverRendered={
+                                    images.map(image => <ImageListImage key={image.id} image={image} />)
+                                } />
+                            </main>
+                        </div>
                     </div>
-                </div>
-            </ImageContextProvider>
-        </ImageCollectionSelectImageProvider>
-
+                </PopUpProvider>
+            </ImagePagingProvider>
+        </ImageSelectionProvider>
     )
 }

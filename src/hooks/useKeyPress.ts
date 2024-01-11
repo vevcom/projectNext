@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void) {
+export default function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void) {
     const [keyPressed, setKeyPressed] = useState(false)
 
     useEffect(() => {
@@ -8,15 +8,17 @@ function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void
             const { key } = event
             if (key === targetKey) {
                 setKeyPressed(true)
-                return callback(event)
             }
             return undefined
         }
 
-        const upHandler = ({ key }: KeyboardEvent) => {
+        const upHandler = (event: KeyboardEvent) => {
+            const { key } = event
             if (key === targetKey) {
                 setKeyPressed(false)
+                return callback(event)
             }
+            return undefined
         }
         window.addEventListener('keydown', downHandler)
         window.addEventListener('keyup', upHandler)
@@ -29,5 +31,3 @@ function useKeyPress(targetKey: string, callback: (event: KeyboardEvent) => void
 
     return keyPressed
 }
-
-export default useKeyPress

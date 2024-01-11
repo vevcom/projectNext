@@ -1,46 +1,22 @@
 'use client'
+import React from 'react'
 import styles from './ImageCollectionList.module.scss'
-import type { Image as ImageT } from '@prisma/client'
-import PopUp from '@/app/components/PopUp/PopUp'
-import ImageCollectionDisplay from '@/app/components/Image/Collection/ImageCollectionDisplay'
-import { default as ImageComponent } from '@/components/Image/Image'
-import { useContext } from 'react'
-import { ImagePagingContext } from '@/context/paging/ImagePaging'
-import { ImageCollectionSelectImageContext } from '@/context/ImageCollectionSelectImage'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
-import ImageSelectionButton from './ImageSelectionButton'
+import { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
+import CollectionCard from './CollectionCard'
 
-function ImageWithFallback({ image }: { image: ImageT }) {
-    const selection = useContext(ImageCollectionSelectImageContext)
-
-    return (
-        <div className={styles.imageAndBtn}>
-            <ImageComponent width={200} image={image} />
-            <PopUp showButtonContent={<></>}>
-                <ImageCollectionDisplay startImageName={image.name} />
-            </PopUp>
-            {
-                selection?.selectionMode && (
-                    <ImageSelectionButton image={image} />
-                )
-            }
-        </div>
-    )
+type PropTypes = {
+    serverRendered: React.ReactNode,
 }
 
-//Note that this component may take iniitial images as props fetched on server
-export default function ImageCollectionList() {
-    const context = useContext(ImagePagingContext)
-
-    //This component must be rendered inside a ImagePagingContextProvider
-    if (!context) throw new Error('No context')
-
+//Note that this component may take iniitial imagecollections as props fetched on server
+export default function ImageCollectionList({ serverRendered }: PropTypes) {
     return (
         <div className={styles.ImageCollectionList}>
-            <EndlessScroll
-                pageingContext={ImagePagingContext}
-                renderer={image => <ImageWithFallback key={image.id} image={image} />}
-            />
+            {serverRendered} {/* Rendered on server homefully in the right way*/}
+            <EndlessScroll pagingContext={ImageCollectionPagingContext} renderer={
+                collection => <CollectionCard className={styles.collectionCard} key={collection.id} collection={collection}/>
+            }/>
         </div>
     )
 }
