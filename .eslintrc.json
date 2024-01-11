@@ -3,10 +3,12 @@
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "import"],
   "root": true,
   "rules": {
     "indent": [
@@ -460,6 +462,22 @@
         "1tbs", 
         { 
             "allowSingleLine": true 
+        }
+    ],
+    //import statement order
+    "import/order": [
+        "error",
+        {
+            "groups": [
+            "index",
+            "sibling",
+            "parent",
+            "internal",
+            "external",
+            "builtin",
+            "object",
+            "type"
+            ]
         }
     ],
 
