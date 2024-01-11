@@ -22,7 +22,9 @@
             height: 25px;
         }
         &.magicHat {
-            filter: invert(1);
+            > * {
+                filter: invert(1);
+            }
         }
         > button {
             background: none;

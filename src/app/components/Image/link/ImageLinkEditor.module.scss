@@ -49,6 +49,9 @@ $collectionSize: calc(10vmin + 100px);
                 height: $collectionSize;
                 margin: 0;
                 z-index: 1;
+                &.selected {
+                    border: ohma.$colors-primary 2px solid;
+                }
             }
             .selector {
                 width: $collectionSize;

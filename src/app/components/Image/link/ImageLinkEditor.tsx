@@ -27,6 +27,10 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
 
+    const isColectionActive = (collection: { id: number }) => {
+        return collection.id === currentCollectionId ? styles.selected : ''   
+    }
+
     return (
         editingContext?.editMode && (
             <PopUp PopUpKey={imageLink.id} showButtonContent={
@@ -72,7 +76,10 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                                             renderer={collection => (
                                                 <div key={collection.id} className={styles.collection}>
                                                     <button onClick={() => setCurrentCollectionId(collection.id)} className={styles.selector}></button>
-                                                    <CollectionCard className={styles.collectionCard} collection={collection} />
+                                                    <CollectionCard 
+                                                        className={`${styles.collectionCard} ${isColectionActive(collection)}}`} 
+                                                        collection={collection} 
+                                                    />
                                                 </div>
                                             )}
                                         />
