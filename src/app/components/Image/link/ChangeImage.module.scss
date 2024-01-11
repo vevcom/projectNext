@@ -1,6 +1,6 @@
 @use '@/styles/ohma';
 
-$currentImageSize: 200px;
+$currentImageSize: min(200px, 24vh);
 
 .ChangeImage {
     margin-top: .6em;
@@ -18,6 +18,9 @@ $currentImageSize: 200px;
         @include ohma.round;
         padding: 0;
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         img {
             width: 100% !important;
             max-height: 100%;

@@ -1,14 +1,15 @@
 @use '@/styles/ohma';
 
-$collectionSize: 170px;
+$collectionSize: calc(10vmin + 100px);
 
 .ImageLinkEditor {
-    width: calc(100vw - 200px);
-    height: calc(100vh - 200px);
+    width: calc(97vw - 140px);
+    height: calc(97vh - 140px);
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr auto;
     gap: 1em;
+    padding: -1em;
     .linkToImages {
         position: absolute;
         top: -2%;
@@ -29,7 +30,6 @@ $collectionSize: 170px;
         > * {
             isolation: isolate;
         }
-
     }
     > .selectCollection {
         grid-column: 1 / 3;
@@ -40,7 +40,7 @@ $collectionSize: 170px;
         display: flex;
         max-width: 100%;
         overflow: scroll;
-        min-height: $collectionSize + 50px;
+        min-height: calc($collectionSize + 50px);
         align-items: center;
         .collection {
             position: relative;
