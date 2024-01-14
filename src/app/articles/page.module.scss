@@ -1,5 +1,5 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    padding: 2em;
+    padding: ohma.$gap 2em;
 }
