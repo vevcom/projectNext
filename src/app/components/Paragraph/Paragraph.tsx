@@ -1,8 +1,13 @@
+import type { Paragraph } from '@prisma/client'
 import React from 'react'
 
-export default async function Paragraph() {
+type PropTypes = {
+    paragraph: Paragraph | null
+}
+
+export default async function Paragraph({paragraph}: PropTypes) {
 
     return (
-        <div>Paragraph</div>
+        <div>{paragraph ? paragraph.content : <i>no content</i>}</div>
     )
 }
