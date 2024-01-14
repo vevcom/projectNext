@@ -1,7 +1,7 @@
 'use client'
 
-import { signOut } from 'next-auth/react'
 import BorderButton from '@/UI/BorderButton'
+import { signOut } from 'next-auth/react'
 
 export default function LogOut() {
     async function handleSignOut() {

@@ -1,8 +1,8 @@
 'use server'
-import type { ImageCollection } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ImageCollection } from '@prisma/client'
+import type { ActionReturn } from '@/actions/type'
 
 export default async function destroy(collectionId: number): Promise<ActionReturn<ImageCollection>> {
     try {

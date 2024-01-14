@@ -1,16 +1,16 @@
-import { Inter } from 'next/font/google'
-import React from 'react'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
+import authOptions from '@/auth'
+import EditModeProvider from '@/context/EditMode'
+import PopUpProvider from '@/context/PopUp'
+import { Inter } from 'next/font/google'
+import React from 'react'
 import '@/styles/globals.scss'
 import styles from './layout.module.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
-import authOptions from '@/auth'
-import EditModeProvider from '@/context/EditMode'
-import PopUpProvider from '@/context/PopUp'
 
 config.autoAddCss = false
 

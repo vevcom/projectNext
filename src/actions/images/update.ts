@@ -1,9 +1,9 @@
 'use server'
+import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '../type'
-import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
 
 export default async function update(imageId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({

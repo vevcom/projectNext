@@ -1,9 +1,9 @@
-import Image from '../Image'
-import type { PropTypes as ImagePropTypes } from '../Image'
-import read from '@/actions/images/links/read'
 import ImageLinkEditor from './ImageLinkEditor'
 import styles from './ImageLink.module.scss'
+import Image from '../Image'
+import read from '@/actions/images/links/read'
 import React from 'react'
+import type { PropTypes as ImagePropTypes } from '../Image'
 
 export type PropTypes = Omit<ImagePropTypes, 'image' | 'children'> & {
     name: string,

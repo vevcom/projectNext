@@ -1,8 +1,8 @@
+import styles from './Footer.module.scss'
+import SocialIcons from '../SocialIcons/SocialIcons'
 import ImageLink from '@/app/components/Image/link/ImageLink'
 import Link from 'next/link'
-import SocialIcons from '../SocialIcons/SocialIcons'
 
-import styles from './Footer.module.scss'
 function Footer() {
     return (
         <footer className={styles.Footer}>
