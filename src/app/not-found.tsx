@@ -1,5 +1,5 @@
 import styles from './not-found.module.scss'
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/components/Image/ImageLink/ImageLink'
 
 export default function Error404() {
     return (

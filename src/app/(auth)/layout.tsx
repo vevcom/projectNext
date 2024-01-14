@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
 import React from 'react'
 
 type PropTypes = {

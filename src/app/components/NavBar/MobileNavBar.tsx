@@ -1,7 +1,7 @@
 import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/components/Image/ImageLink/ImageLink'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

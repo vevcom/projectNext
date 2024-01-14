@@ -1,5 +1,5 @@
 import styles from './Section.module.scss'
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/components/Image/ImageLink/ImageLink'
 import React from 'react'
 import Link from 'next/link'
 
