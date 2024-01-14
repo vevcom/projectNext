@@ -1,4 +1,4 @@
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
 import Link from 'next/link'
 import SocialIcons from '../SocialIcons/SocialIcons'
 

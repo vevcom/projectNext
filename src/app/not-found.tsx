@@ -1,4 +1,4 @@
-import ImageLink from '@/app/components/Image/link/ImageLink'
+import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
 import styles from './not-found.module.scss'
 
 export default function Error404() {
