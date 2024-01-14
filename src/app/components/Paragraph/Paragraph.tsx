@@ -1,5 +1,6 @@
 import type { Paragraph } from '@prisma/client'
 import React from 'react'
+import styles from './Paragraph.module.scss'
 
 type PropTypes = {
     paragraph: Paragraph
@@ -7,6 +8,8 @@ type PropTypes = {
 
 export default async function Paragraph({paragraph}: PropTypes) {
     return (
-        <div>{paragraph.content ? paragraph.content : <i>no content</i>}</div>
+        <div className={styles.Paragraph}>
+            {paragraph.content ? paragraph.content : <i>no content</i>}
+        </div>
     )
 }
