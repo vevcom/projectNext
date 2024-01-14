@@ -61,7 +61,7 @@ model ImageCollection {
 model Paragraph {
   id        Int      @id @default(autoincrement())
   name      String   @unique
-  content   String
+  content   String   @default("")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
