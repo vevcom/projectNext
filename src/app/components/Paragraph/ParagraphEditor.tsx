@@ -6,15 +6,17 @@ import type { Paragraph } from '@prisma/client';
 import { ChangeEvent } from 'react';
 import Form from '@/components/Form/Form';
 import update from '@/actions/paragraphs/update';
+import { useRouter } from 'next/navigation';
 
 type PropTypes = {
     paragraph: Paragraph
 }
 
-export default function ParagraphEditor({paragraph}: PropTypes) {
+export default function ParagraphEditor({ paragraph }: PropTypes) {
     const editmode = useContext(EditModeContext)
-    if (!editmode) return null
+    const { refresh } = useRouter()
     const [content, setContent] = useState(paragraph.content)
+    if (!editmode) return null
 
     const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         e.preventDefault()
@@ -29,9 +31,9 @@ export default function ParagraphEditor({paragraph}: PropTypes) {
                 </textarea>
                 <Form
                     action={update.bind(null, paragraph.id).bind(null, content)}
-                >
-
-                </Form>
+                    submitText='Update'
+                    successCallback={refresh}
+                />
             </div>
         )
     )
