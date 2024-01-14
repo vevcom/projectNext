@@ -1,11 +1,11 @@
-import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
-import Link from 'next/link'
 import Item from './Item'
 import styles from './NavBar.module.scss'
-import { Session } from 'next-auth'
-import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
 import Menu from './Menu'
 import getNavItems from './navDef'
+import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
+import ImageLink from '@/app/components/Image/link/ImageLink'
+import { Session } from 'next-auth'
+import Link from 'next/link'
 
 type PropTypes = {
     session: Session | null

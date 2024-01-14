@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { v4 as uuid } from 'uuid'
-import { InputHTMLAttributes, ChangeEvent } from 'react'
-
 import styles from './FileInput.module.scss'
+import { useState, InputHTMLAttributes, ChangeEvent } from 'react'
+import { v4 as uuid } from 'uuid'
+
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label: string,

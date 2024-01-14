@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import styles from './CollectionCard.module.scss'
 import Image from '@/components/Image/Image'
+import Link from 'next/link'
 import type { Image as ImageT, ImageCollection } from '@prisma/client'
 
 type PropTypes = {

@@ -1,14 +1,14 @@
 'use client'
-import React, { useContext } from 'react'
 import styles from './ChangeImage.module.scss'
-import type { Image as ImageT } from '@prisma/client'
 import Image from '../Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import Form from '@/components/Form/Form'
 import update from '@/actions/images/links/update'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
+import React, { useContext } from 'react'
 import { useRouter } from 'next/navigation'
+import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     currentImage: ImageT,

@@ -1,6 +1,6 @@
+import styles from './Image.module.scss'
 import { ImageProps } from 'next/image'
 import type { Image as ImageT } from '@prisma/client'
-import styles from './Image.module.scss'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     image: ImageT,

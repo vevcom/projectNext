@@ -1,12 +1,12 @@
-import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
+import getNavItems from './navDef'
+import styles from './MobileNavBar.module.scss'
+import Menu from './Menu'
+import ImageLink from '@/app/components/Image/link/ImageLink'
+import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import getNavItems from './navDef'
-import styles from './MobileNavBar.module.scss'
 import { Session } from 'next-auth'
-import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import Menu from './Menu'
 
 type PropTypes = {
     session: Session | null

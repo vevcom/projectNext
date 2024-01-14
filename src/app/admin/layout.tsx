@@ -1,9 +1,9 @@
 'use client'
+import styles from './layout.module.scss'
 import React from 'react'
 import Link from 'next/link'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styles from './layout.module.scss'
 import { usePathname } from 'next/navigation'
 
 type PropTypes = {

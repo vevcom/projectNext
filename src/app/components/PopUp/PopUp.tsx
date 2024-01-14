@@ -1,13 +1,12 @@
 'use client'
-import { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import styles from './PopUp.module.scss'
 import Button from '../UI/Button'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faX } from '@fortawesome/free-solid-svg-icons'
-import React from 'react'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons'
+import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,

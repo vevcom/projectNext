@@ -1,10 +1,10 @@
 'use client'
-import { useContext, useEffect, useRef } from 'react'
-import { EditModeContext } from '@/context/EditMode'
 import styles from './EditModeSwitch.module.scss'
-import type { ChangeEvent } from 'react'
+import { EditModeContext } from '@/context/EditMode'
+import { useContext, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import type { ChangeEvent } from 'react'
 
 export default function EditModeSwitch() {
     const editingContext = useContext(EditModeContext)

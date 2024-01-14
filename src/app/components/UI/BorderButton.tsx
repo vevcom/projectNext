@@ -1,6 +1,6 @@
+import styles from './BorderButton.module.scss'
 import React, { ButtonHTMLAttributes } from 'react'
 
-import styles from './BorderButton.module.scss'
 
 type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode,

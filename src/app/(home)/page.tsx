@@ -1,14 +1,14 @@
-import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
-import Link from 'next/link'
-import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import Section from './Section'
 import styles from './page.module.scss'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import InfoBubbles from './InfoBubbles'
+import SocialIcons from '@/components/SocialIcons/SocialIcons'
+import ImageLink from '@/app/components/Image/link/ImageLink'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 
 export default function Home() {
     return (
