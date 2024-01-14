@@ -4,6 +4,8 @@ import styles from './ParagraphEditor.module.scss';
 import { useContext, useState } from 'react';
 import type { Paragraph } from '@prisma/client';
 import { ChangeEvent } from 'react';
+import Form from '@/components/Form/Form';
+import update from '@/actions/paragraphs/update';
 
 type PropTypes = {
     paragraph: Paragraph
@@ -25,6 +27,11 @@ export default function ParagraphEditor({paragraph}: PropTypes) {
                 <textarea onChange={handleContentChange}>
                     {content}
                 </textarea>
+                <Form
+                    action={update.bind(null, paragraph.id).bind(null, content)}
+                >
+
+                </Form>
             </div>
         )
     )
