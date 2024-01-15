@@ -10,7 +10,7 @@ type PropTypes = {
 export default async function Paragraph({paragraph}: PropTypes) {
     return (
         <div className={styles.Paragraph}>
-            {paragraph.content ? paragraph.content : <i>no content</i>}
+            {paragraph.contentHtml ? paragraph.contentHtml : <i>no content</i>}
             <ParagraphEditor paragraph={paragraph} />
         </div>
     )

@@ -10,35 +10,40 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import remarkUnlink from 'remark-unlink'
 
-export default async function update(id: number, content: string) : Promise<ActionReturn<Paragraph>> {
+export default async function update(id: number, contentMd: string) : Promise<ActionReturn<Paragraph>> {
     //This function expects to get valid md
     try {
-        const html = unified()
+        const contentHtml = unified()
             .use(remarkUnlink)
             .use(remarkParse)
             .use(remarkRehype)
             .use(rehypeFormat)
             .use(rehypeStringify)
-            .processSync(content)
-        console.log(html)
+            .processSync(contentMd).value.toString()
+        try {
+            const paragraph = await prisma.paragraph.update({
+                where: { 
+                    id 
+                },
+                data: { 
+                    contentMd, 
+                    contentHtml,
+                }
+            })
+            return {
+                success: true,
+                data: paragraph
+            }
+        } catch (error) {
+            return errorHandeler(error)
+        }
     } catch (e) {
         console.log(e)
-    }
-    
-    try {
-        const paragraph = await prisma.paragraph.update({
-            where: { 
-                id 
-            },
-            data: { 
-                content 
-            }
-        })
         return {
-            success: true,
-            data: paragraph
+            success: false,
+            error: [{
+                message: "Invalid markdown"
+            }]
         }
-    } catch (error) {
-        return errorHandeler(error)
     }
 }
