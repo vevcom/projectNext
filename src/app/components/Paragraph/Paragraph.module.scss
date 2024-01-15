@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.Paragraph {
+    width: 100%;
+    > .HTMLcontent {
+        width: 100%;
+        * {
+            word-wrap: break-word;
+        }
+    }
+}

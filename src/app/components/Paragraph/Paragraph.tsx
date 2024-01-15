@@ -11,7 +11,7 @@ export default async function Paragraph({paragraph}: PropTypes) {
     return (
         <div className={styles.Paragraph}>
             {paragraph.contentHtml ? (
-                <div dangerouslySetInnerHTML={{__html: paragraph.contentHtml}} /> 
+                <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{__html: paragraph.contentHtml}} /> 
             ) : (
                 <i>no content</i>
             )}
