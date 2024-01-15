@@ -31,6 +31,7 @@
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
+    "remark-unlink": "^5.0.0",
     "sanitize-html": "^2.11.0",
     "sass": "^1.69.5",
     "sharp": "^0.33.1",
