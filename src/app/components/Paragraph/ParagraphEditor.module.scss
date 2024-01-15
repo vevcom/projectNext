@@ -8,11 +8,12 @@
         font-size: ohma.$fonts-s;
         border-radius: 4px;
         border: 1px solid ohma.$colors-primary;
-        resize: vertical;
         &:focus {
             outline: none;
             box-shadow: 0 0 0 2px ohma.$colors-primary;
         }
     }
+    resize: vertical;
+
     
 }

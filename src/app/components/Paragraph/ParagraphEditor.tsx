@@ -15,7 +15,7 @@ type PropTypes = {
 export default function ParagraphEditor({ paragraph }: PropTypes) {
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
-    const [content, setContent] = useState(paragraph.contentHtml)
+    const [content, setContent] = useState(paragraph.contentMd)
     if (!editmode) return null
 
     const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
