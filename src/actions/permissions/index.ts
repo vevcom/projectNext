@@ -35,3 +35,19 @@ export async function addRole(data: FormData) : Promise<ActionReturn<void>> {
         success: true
     }
 }
+
+export async function deleteRole(roleId: number) : Promise<ActionReturn<never>> {
+    try {
+        await prisma.role.delete({
+            where: {
+                id: roleId
+            }
+        })
+    } catch(e) {
+        return errorHandeler(e)
+    }
+
+    return {
+        success: true
+    }
+}
