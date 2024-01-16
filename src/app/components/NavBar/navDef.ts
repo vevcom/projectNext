@@ -82,7 +82,7 @@ export const itemsForMenu : NavItem[] = [
     },
     {
         name: 'Artikler',
-        href: '/articles',
+        href: '/news',
         show: 'all',
         icon: faNewspaper
     },
