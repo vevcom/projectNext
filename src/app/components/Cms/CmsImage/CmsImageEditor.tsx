@@ -3,27 +3,27 @@ import styles from './ImageLinkEditor.module.scss'
 import ChangeImage from './ChangeImage'
 import PopUp from '../../PopUp/PopUp'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
-import CollectionCard from '../Collection/CollectionCard'
-import ImageList from '../ImageList/ImageList'
+import CollectionCard from '../../Image/Collection/CollectionCard'
+import ImageList from '../../Image/ImageList/ImageList'
 import { EditModeContext } from '@/context/EditMode'
 import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
-import { ImageLink, Image as ImageT } from '@prisma/client'
+import { CmsImage, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
-    imageLink: ImageLink & {
+    imageLink: CmsImage & {
         image: ImageT
     }
 }
 
 
-export default function ImageLinkEditor({ imageLink }: PropTypes) {
+export default function CmsImageEditor({ imageLink }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
 

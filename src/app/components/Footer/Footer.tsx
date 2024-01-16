@@ -1,6 +1,6 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '../SocialIcons/SocialIcons'
-import ImageLink from '@/app/components/Image/ImageLink/ImageLink'
+import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 
 function Footer() {

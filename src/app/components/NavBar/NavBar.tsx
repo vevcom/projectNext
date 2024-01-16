@@ -3,7 +3,7 @@ import styles from './NavBar.module.scss'
 import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '../EditModeSwitch/EditModeSwitch'
-import ImageLink from '@/components/Image/ImageLink/ImageLink'
+import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
 import { Session } from 'next-auth'
 import Link from 'next/link'
 

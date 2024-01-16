@@ -3,7 +3,7 @@ import styles from './page.module.scss'
 
 import InfoBubbles from './InfoBubbles'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import ImageLink from '@/components/Image/ImageLink/ImageLink'
+import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'

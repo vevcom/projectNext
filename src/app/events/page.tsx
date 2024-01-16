@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import ImageLink from '@/components/Image/ImageLink/ImageLink'
+import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
 
 export default function Events() {
     return (

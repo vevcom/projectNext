@@ -1,16 +1,16 @@
 'use client'
-import ImageLinkEditor from './ImageLinkEditor'
+import ImageLinkEditor from './CmsImageEditor'
 import styles from './ImageLink.module.scss'
-import Image from '../Image'
-import read from '@/actions/images/links/read'
+import Image from '../../Image/Image'
+import read from '@/actions/cms/images/read'
 import readImage from '@/actions/images/read'
 import { useState, useEffect } from 'react'
-import type { Image as ImageT, ImageLink } from '@prisma/client'
-import type { PropTypes } from './ImageLink'
+import type { Image as ImageT, CmsImage } from '@prisma/client'
+import type { PropTypes } from './CmsImage'
 
-export default function ImageLinkClient({ name, width, alt, children, ...props }: PropTypes) {
+export default function CmsImageClient({ name, width, alt, children, ...props }: PropTypes) {
     const [imageLink, setImageLink] = useState<
-        ImageLink & {
+        CmsImage & {
             image: ImageT
         } | null>(null)
     useEffect(() => {
