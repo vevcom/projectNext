@@ -4,7 +4,13 @@
     display: none;
 }
 
+.EasyMDEContainer .CodeMirror {
+    border: none;
+    background-color: transparent;
+}
+
 .CodeMirror-wrap {
+    border: none;
     pre.CodeMirror-line {
         .cm-header {
             font-size: ohma.$fonts-s;
