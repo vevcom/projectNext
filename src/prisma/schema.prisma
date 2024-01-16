@@ -29,12 +29,12 @@ model Image {
   collectionId  Int
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
-  ImageLink     CMSImage[]
+  ImageLink     CmsImage[]
 
   @@map("images")
 }
 
-model CMSImage {
+model CmsImage {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   image     Image?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
@@ -42,7 +42,7 @@ model CMSImage {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("CMS_image")
+  @@map("cms_image")
 }
 
 model ImageCollection {
