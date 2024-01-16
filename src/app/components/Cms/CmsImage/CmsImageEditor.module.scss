@@ -73,8 +73,8 @@ $collectionSize: calc(10vmin + 100px);
                 z-index: 2;
                 border: 5px solid ohma.$colors-primary;
                 border-radius: 1.2em;
-                &:hover > .collectionCard img {
-                    scale: 1;
+                .collectionCard img {
+                    scale: 1.2;
                 }
             }
         }
