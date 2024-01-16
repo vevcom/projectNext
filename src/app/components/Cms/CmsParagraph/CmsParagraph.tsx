@@ -9,7 +9,7 @@ type PropTypes = {
 
 export default async function CmsParagraph({ cmsParagraph }: PropTypes) {
     return (
-        <div className={styles.Paragraph}>
+        <div className={styles.CmsParagraph}>
             {cmsParagraph.contentHtml ? (
                 <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{ __html: cmsParagraph.contentHtml }} />
             ) : (

@@ -36,7 +36,7 @@ export default function CmsParagraphEditor({ cmsParagraph }: PropTypes) {
 
     return (
         editmode.editMode && (
-            <div className={styles.ParagraphEditor}>
+            <div className={styles.CmsParagraphEditor}>
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}
