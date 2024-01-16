@@ -11,5 +11,7 @@
             box-shadow: 0 0 0 2px ohma.$colors-primary;
         }
         background-color: ohma.$colors-gray-200;
+        max-height: 300px;
+        overflow-y: scroll;
     }
 }
