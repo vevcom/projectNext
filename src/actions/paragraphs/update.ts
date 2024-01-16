@@ -8,18 +8,16 @@ import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import remarkUnlink from 'remark-unlink'
 
 export default async function update(id: number, contentMd: string) : Promise<ActionReturn<Paragraph>> {
     //This function expects to get valid md
     try {
         const contentHtml = unified()
-            .use(remarkUnlink)
             .use(remarkParse)
             .use(remarkRehype)
             .use(rehypeFormat)
             .use(rehypeStringify)
-            .processSync(contentMd).value.toString()
+            .processSync(contentMd).value.toString().replace(/<img[^>]*>/g, "CANT HAVE IMAGE");
         try {
             const paragraph = await prisma.paragraph.update({
                 where: { 
