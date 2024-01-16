@@ -48,7 +48,7 @@ export default function CmsImageEditor({ imageLink }: PropTypes) {
                         serverRenderedData={[]}
                     >
                         <PopUpProvider>
-                            <div className={styles.ImageLinkEditor}>
+                            <div className={styles.CmsImageEditor}>
                                 <div className={styles.currentImageLink}>
                                     <h2>Edit image link</h2>
                                     <div className={styles.meta}>

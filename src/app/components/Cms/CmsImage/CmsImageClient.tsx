@@ -28,7 +28,7 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
     }, [])
 
     return (
-        <div className={styles.ImageLink}>
+        <div className={styles.CmsImage}>
             {imageLink && <ImageLinkEditor imageLink={imageLink}/>}
             <div className={styles.children}>{children}</div>
             {imageLink?.image && <Image alt={alt} image={imageLink.image} width={width} {...props}/>}
