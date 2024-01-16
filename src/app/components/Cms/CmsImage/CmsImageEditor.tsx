@@ -17,26 +17,26 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
-    imageLink: CmsImage & {
+    cmsImage: CmsImage & {
         image: ImageT
     }
 }
 
 
-export default function CmsImageEditor({ imageLink }: PropTypes) {
+export default function CmsImageEditor({ cmsImage }: PropTypes) {
     const editingContext = useContext(EditModeContext)
-    const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
+    const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isColectionActive = (collection: { id: number }) => (collection.id === currentCollectionId ? styles.selected : '')
 
     return (
         editingContext?.editMode && (
-            <PopUp PopUpKey={imageLink.id} showButtonContent={
+            <PopUp PopUpKey={cmsImage.id} showButtonContent={
                 <div className={styles.editIcon}>
                     <FontAwesomeIcon icon={faPencil} />
                 </div>
             } showButtonClass={styles.openBtn}>
-                <ImageSelectionProvider defaultSelectionMode={true} defaultImage={imageLink.image}>
+                <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
                     <ImagePagingProvider
                         startPage={
                             {
@@ -52,10 +52,10 @@ export default function CmsImageEditor({ imageLink }: PropTypes) {
                                 <div className={styles.currentImageLink}>
                                     <h2>Edit image link</h2>
                                     <div className={styles.meta}>
-                                        <p>name: {imageLink.name}</p>
-                                        <i>id: {imageLink.id}</i>
+                                        <p>name: {cmsImage.name}</p>
+                                        <i>id: {cmsImage.id}</i>
                                     </div>
-                                    <ChangeImage currentImage={imageLink.image} imageLinkId={imageLink.id}/>
+                                    <ChangeImage currentImage={cmsImage.image} imageLinkId={cmsImage.id}/>
                                 </div>
                                 <div className={styles.selectImage}>
                                     <ImageList disableEditing={true}/>

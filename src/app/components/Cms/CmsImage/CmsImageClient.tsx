@@ -9,7 +9,7 @@ import type { Image as ImageT, CmsImage } from '@prisma/client'
 import type { PropTypes } from './CmsImage'
 
 export default function CmsImageClient({ name, width, alt, children, ...props }: PropTypes) {
-    const [imageLink, setImageLink] = useState<
+    const [cmsImage, setCmsImage] = useState<
         CmsImage & {
             image: ImageT
         } | null>(null)
@@ -20,18 +20,18 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
             if (!image) {
                 return readImage('default_image').then(({ success: defaultSuccess, data: defaultImage }) => {
                     if (!defaultSuccess || !defaultImage) throw new Error('No default image found')
-                    return setImageLink({ ...data, image: defaultImage })
+                    return setCmsImage({ ...data, image: defaultImage })
                 })
             }
-            return setImageLink({ ...data, image })
+            return setCmsImage({ ...data, image })
         })
     }, [])
 
     return (
         <div className={styles.CmsImage}>
-            {imageLink && <ImageLinkEditor imageLink={imageLink}/>}
+            {cmsImage && <ImageLinkEditor cmsImage={cmsImage}/>}
             <div className={styles.children}>{children}</div>
-            {imageLink?.image && <Image alt={alt} image={imageLink.image} width={width} {...props}/>}
+            {cmsImage?.image && <Image alt={alt} image={cmsImage.image} width={width} {...props}/>}
         </div>
     )
 }
