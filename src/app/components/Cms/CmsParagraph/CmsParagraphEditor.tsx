@@ -1,5 +1,5 @@
 'use client'
-import styles from './ParagraphEditor.module.scss'
+import styles from './CmsParagraphEditor.module.scss'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import update from '@/actions/cms/paragraphs/update'
@@ -23,7 +23,7 @@ type PropTypes = {
     paragraph: Paragraph
 }
 
-const ParagraphEditor = ({ paragraph }: PropTypes) => {
+export default function CmsParagraphEditor({ paragraph }: PropTypes) {
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const [content, setContent] = useState(paragraph.contentMd)
@@ -47,5 +47,3 @@ const ParagraphEditor = ({ paragraph }: PropTypes) => {
         )
     )
 }
-
-export default ParagraphEditor
