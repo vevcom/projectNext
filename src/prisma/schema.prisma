@@ -55,10 +55,10 @@ model CmsImage {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("cms_image")
+  @@map("cms_images")
 }
 
-model Paragraph {
+model CmsParagraph {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   contentMd   String   @default("")
@@ -66,5 +66,5 @@ model Paragraph {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  @@map("paragraphs")
+  @@map("cms_paragraphs")
 }
