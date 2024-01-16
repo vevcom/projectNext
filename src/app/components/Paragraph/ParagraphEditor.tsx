@@ -6,9 +6,17 @@ import type { Paragraph } from '@prisma/client'
 import Form from '@/components/Form/Form'
 import update from '@/actions/paragraphs/update'
 import { useRouter } from 'next/navigation'
-import SimpleMDEEditor from 'react-simplemde-editor'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
+import dynamic from 'next/dynamic';
+
+const DynamicSimpleMDEditor = dynamic(
+    () => import('react-simplemde-editor'),
+    { 
+        ssr: false,
+        loading: () => <p className={styles.loader}>Loading...</p>
+    }
+);
 
 
 type PropTypes = {
@@ -29,7 +37,7 @@ const ParagraphEditor = ({ paragraph }: PropTypes) => {
     return (
         editmode.editMode && (
             <div className={styles.ParagraphEditor}>
-                <SimpleMDEEditor className={styles.editor} value={content} onChange={handleContentChange} />
+                <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
                     action={update.bind(null, paragraph.id).bind(null, content)}
                     submitText='Update'
