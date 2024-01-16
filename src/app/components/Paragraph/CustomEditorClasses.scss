@@ -1,0 +1,21 @@
+@use '@/styles/ohma';
+
+.editor-toolbar, .editor-statusbar, .CodeMirror-measure {
+    display: none;
+}
+
+.CodeMirror-wrap {
+    pre.CodeMirror-line {
+        .cm-header {
+            font-size: ohma.$fonts-s;
+            font-weight: 200;
+            color: ohma.$colors-secondary;
+        }
+        .cm-formatting-header {
+            font-weight: 900;
+        }
+        .cm-spell-error {
+            background: none !important;
+        }
+    }
+}
