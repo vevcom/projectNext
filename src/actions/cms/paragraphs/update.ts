@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionReturn } from '../type'
+import { ActionReturn } from '../../type'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { Paragraph } from '@prisma/client'

@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import Paragraph from '../components/Paragraph/Paragraph'
-import read from '@/actions/paragraphs/read'
+import read from '@/actions/cms/paragraphs/read'
 
 export default async function Articles() {
     const { success, data: paragraph, error } = await read('my_first_paragraph')

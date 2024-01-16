@@ -2,7 +2,7 @@
 import styles from './ParagraphEditor.module.scss'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
-import update from '@/actions/paragraphs/update'
+import update from '@/actions/cms/paragraphs/update'
 import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'

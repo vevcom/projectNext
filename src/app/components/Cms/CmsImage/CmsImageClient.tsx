@@ -1,5 +1,5 @@
 'use client'
-import ImageLinkEditor from './CmsImageEditor'
+import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import Image from '../../Image/Image'
 import read from '@/actions/cms/images/read'
@@ -29,7 +29,7 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
 
     return (
         <div className={styles.CmsImage}>
-            {cmsImage && <ImageLinkEditor cmsImage={cmsImage}/>}
+            {cmsImage && <CmsImageEditor cmsImage={cmsImage}/>}
             <div className={styles.children}>{children}</div>
             {cmsImage?.image && <Image alt={alt} image={cmsImage.image} width={width} {...props}/>}
         </div>

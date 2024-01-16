@@ -49,13 +49,13 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                     >
                         <PopUpProvider>
                             <div className={styles.CmsImageEditor}>
-                                <div className={styles.currentImageLink}>
+                                <div className={styles.currentCmsImage}>
                                     <h2>Edit image link</h2>
                                     <div className={styles.meta}>
                                         <p>name: {cmsImage.name}</p>
                                         <i>id: {cmsImage.id}</i>
                                     </div>
-                                    <ChangeImage currentImage={cmsImage.image} imageLinkId={cmsImage.id}/>
+                                    <ChangeImage currentImage={cmsImage.image} cmsImageId={cmsImage.id}/>
                                 </div>
                                 <div className={styles.selectImage}>
                                     <ImageList disableEditing={true}/>
