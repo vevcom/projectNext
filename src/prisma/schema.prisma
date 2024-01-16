@@ -57,3 +57,14 @@ model ImageCollection {
 
   @@map("image_collections")
 }
+
+model Paragraph {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  contentMd   String   @default("")
+  contentHtml String   @default("")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("paragraphs")
+}

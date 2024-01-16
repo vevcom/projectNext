@@ -1,0 +1,17 @@
+@use '@/styles/ohma';
+
+.Paragraph {
+    width: 100%;
+    > .HTMLcontent {
+        width: 100%;
+        * {
+            word-wrap: break-word;
+        }
+        ul ul, ol ol {
+            padding-left: 20px;
+        }
+        li {
+            list-style-position: inside;
+        }
+    }
+}

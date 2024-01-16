@@ -1,4 +1,5 @@
 'use server'
+import create from './create'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 import type { Image, ImageLink } from '@prisma/client'
@@ -16,15 +17,7 @@ export default async function read(name: string) : Promise<ActionReturn<ImageLin
             }
         })
         if (!imageLink) {
-            const created = {
-                ...await prisma.imageLink.create({
-                    data: {
-                        name,
-                    },
-                }),
-                image: null,
-            }
-            return { success: true, data: created }
+            return await create(name)
         }
         return { success: true, data: imageLink }
     } catch (error) {

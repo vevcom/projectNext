@@ -1,0 +1,6 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    padding: ohma.$gap 2em;
+    max-width: 100vw;
+}

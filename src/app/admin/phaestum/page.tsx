@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import Link from 'next/link'
 
-export default function Phaesumcd() {
+export default function Phaestum() {
     return (
         <div className={styles.wrapper}>
             <h3>Phaestum</h3>

@@ -10,7 +10,7 @@ You will also need to copy next-env.default.d.ts into a new file next-env.d.ts (
 Have the docker deamon running, then run:
 
 ```bash
-docker-compose -f docker-compose.dev.yml up --build
+docker compose -f docker-compose.dev.yml up --build
 ```
 
 #### Working with the DB
@@ -39,7 +39,7 @@ inside projectnext-container
 This project is not meant to be deployed, but a build can be made by running
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 ## Lint
