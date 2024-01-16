@@ -18,11 +18,13 @@ type PropTypes = {
 export default async function Collection({ params } : PropTypes) {
     const pageSize : PageSizeImage = 30
 
-    const { success, data: collection } = await read(Number(params.id))
-    if (!success || !collection) notFound()
+    const readCollection = await read(Number(params.id))
+    if (!readCollection.success) notFound()
+    const collection = readCollection.data
 
-    const { success: imagesuccess, data: images } = await readPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
-    if (!imagesuccess || !images) notFound()
+    const readImages = await readPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
+    if (!readImages.success) notFound()
+    const images = readImages.data
     const isAdmin = true //temp
 
     return (

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { Action, ActionError } from '@/actions/type'
 import type { PropTypes as ButtonPropTypes } from '../UI/Button'
+import { boolean } from 'zod'
 
 type Colors = ButtonPropTypes['color']
 type Confirmation = {
@@ -15,13 +16,13 @@ type Confirmation = {
 }
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
+type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,
     submitColor?: Colors,
     confirmation?: Confirmation,
-    action: Action<ReturnType>,
+    action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
 }
 type InputType = {
@@ -134,7 +135,7 @@ const makeInputArray = (children: ReactNode) : Inputs =>
         }
     })
 
-export default function Form<GiveActionReturn>({
+export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     children,
     title,
     submitText = 'create',
@@ -145,7 +146,7 @@ export default function Form<GiveActionReturn>({
     action,
     successCallback,
     ...props
-} : PropTypes<GiveActionReturn>) {
+} : PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
@@ -159,17 +160,17 @@ export default function Form<GiveActionReturn>({
         setGeneralErrors(() => undefined)
         setInputs(() => inputs_)
 
-        const { success: successFromAction, data, error: errorFromAction } = await action(formData)
+        const res = await action(formData)
 
-        if (successFromAction) {
+        if (res.success) {
             setSuccess(true)
-            successCallback?.(data)
+            successCallback?.(res.data)
             return setTimeout(() => {
                 setSuccess(false)
             }, 3000)
         }
         //No error provided
-        if (!errorFromAction) {
+        if (!res.error) {
             return setGeneralErrors([
                 {
                     path: [],
@@ -179,7 +180,7 @@ export default function Form<GiveActionReturn>({
         }
 
         //sort errors
-        errorFromAction.forEach(error => {
+        res.error.forEach(error => {
             if (error.path === undefined) return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
             const inputWithError = inputs_.find((input) => input.input.label === (error.path ?? [])[0])
             if (inputWithError) return inputWithError.errors.push(error)

@@ -10,14 +10,15 @@ export default async function Images() {
     const isAdmin = true //temp
     const pageSize : PageSizeImageCollection = 12
 
-    const { success, data: collections = [], error } = await readPage({
+    const collectionPage = await readPage({
         page: {
             pageSize,
             page: 0
         },
         details: null,
     })
-    if (!success) throw error ? error[0].message : new Error('Unknown error')
+    if (!collectionPage.success) throw collectionPage.error ? collectionPage.error[0].message : new Error('Unknown error')
+    const collections = collectionPage.data
 
     return (
         <div className={styles.wrapper}>

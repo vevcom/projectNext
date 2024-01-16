@@ -14,16 +14,16 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
             image: ImageT
         } | null>(null)
     useEffect(() => {
-        read(name).then(({ success, data }) => {
-            if (!success || !data) throw new Error('No image link found') //should not happen as the read action creates a link that does not exist
-            const { image } = data
+        read(name).then(res => {
+            if (!res.success) throw new Error('No image link found') //should not happen as the read action creates a link that does not exist
+            const { image } = res.data
             if (!image) {
-                return readImage('default_image').then(({ success: defaultSuccess, data: defaultImage }) => {
-                    if (!defaultSuccess || !defaultImage) throw new Error('No default image found')
-                    return setCmsImage({ ...data, image: defaultImage })
+                return readImage('default_image').then(defaultres => {
+                    if (!defaultres.success) throw new Error('No default image found')
+                    return setCmsImage({ ...res.data, image: defaultres.data })
                 })
             }
-            return setCmsImage({ ...data, image })
+            return setCmsImage({ ...res.data, image })
         })
     }, [])
 
