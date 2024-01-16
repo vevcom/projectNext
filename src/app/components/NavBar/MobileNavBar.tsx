@@ -1,7 +1,7 @@
 import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
-import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -33,14 +33,14 @@ function MobileNavBar({ session } : PropTypes) {
                 ))
             }
             <div>
-                <ImageLink name="logo_simple" width={30}>
-                    <Link className={styles.imageLink} href="/"/>
-                </ImageLink>
+                <CmsImage name="logo_simple" width={30}>
+                    <Link className={styles.imagelink} href="/"/>
+                </CmsImage>
             </div>
             <div className={styles.magicHat}>
-                <ImageLink name="magisk_hatt" width={25} height={25} alt="log in button">
-                    <Link className={styles.imageLink} href={isLoggedIn ? '/users/me' : '/login'} />
-                </ImageLink>
+                <CmsImage name="magisk_hatt" width={25} height={25} alt="log in button">
+                    <Link className={styles.imagelink} href={isLoggedIn ? '/users/me' : '/login'} />
+                </CmsImage>
             </div>
             <Menu items={itemsForMenu} openBtnContent={
                 <div className={styles.menuBtn}>

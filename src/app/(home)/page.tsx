@@ -1,9 +1,8 @@
 import Section from './Section'
 import styles from './page.module.scss'
-
 import InfoBubbles from './InfoBubbles'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import ImageLink from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -16,7 +15,7 @@ export default function Home() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <ImageLink name="logo_white" width={300}/>
+                        <CmsImage name="logo_white" width={300}/>
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>

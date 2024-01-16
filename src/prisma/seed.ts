@@ -42,7 +42,7 @@ async function main() {
                     }
                 }
             })
-            return await prisma.imageLink.upsert({
+            return await prisma.cmsImage.upsert({
                 where: {
                     name
                 },
