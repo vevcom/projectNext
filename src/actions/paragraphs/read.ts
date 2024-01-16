@@ -1,14 +1,15 @@
 'use server'
-import errorHandeler from "@/prisma/errorHandler"
-import { Paragraph } from "@prisma/client"
-import { ActionReturn } from "../type"
-import create from "./create"
+import create from './create'
+import { ActionReturn } from '../type'
+import errorHandeler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
+import { Paragraph } from '@prisma/client'
 
 export default async function read(name: string) : Promise<ActionReturn<Paragraph>> {
     try {
         const paragraph = await prisma.paragraph.findUnique({
             where: {
-            name
+                name
             }
         })
         if (paragraph) {

@@ -9,11 +9,11 @@ import { EditModeContext } from '@/context/EditMode'
 import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
+import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
 import { ImageLink, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import ImageSelectionProvider from '@/context/ImageSelection'
 import Link from 'next/link'
 
 type PropTypes = {

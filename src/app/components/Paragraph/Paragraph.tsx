@@ -1,17 +1,17 @@
-import type { Paragraph } from '@prisma/client'
-import React from 'react'
 import styles from './Paragraph.module.scss'
 import ParagraphEditor from './ParagraphEditor'
+import React from 'react'
+import type { Paragraph as ParagraphT } from '@prisma/client'
 
 type PropTypes = {
-    paragraph: Paragraph
+    paragraph: ParagraphT
 }
 
-export default async function Paragraph({paragraph}: PropTypes) {
+export default async function Paragraph({ paragraph }: PropTypes) {
     return (
         <div className={styles.Paragraph}>
             {paragraph.contentHtml ? (
-                <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{__html: paragraph.contentHtml}} /> 
+                <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{ __html: paragraph.contentHtml }} />
             ) : (
                 <i>no content</i>
             )}

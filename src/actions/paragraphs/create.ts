@@ -1,8 +1,8 @@
 'use server'
 import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
 import type { Paragraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
-import errorHandeler from '@/prisma/errorHandler'
 
 export default async function create(name: string) : Promise<ActionReturn<Paragraph>> {
     try {
