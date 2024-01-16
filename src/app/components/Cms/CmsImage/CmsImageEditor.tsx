@@ -1,5 +1,5 @@
 'use client'
-import styles from './ImageLinkEditor.module.scss'
+import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
 import PopUp from '../../PopUp/PopUp'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'

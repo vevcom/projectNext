@@ -34,17 +34,6 @@ model Image {
   @@map("images")
 }
 
-model CmsImage {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  image     Image?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId   Int?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("cms_image")
-}
-
 model ImageCollection {
   id           Int      @id @default(autoincrement())
   name         String   @unique
@@ -56,6 +45,17 @@ model ImageCollection {
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("image_collections")
+}
+
+model CmsImage {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  image     Image?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId   Int?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cms_image")
 }
 
 model Paragraph {

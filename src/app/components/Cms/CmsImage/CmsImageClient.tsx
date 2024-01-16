@@ -1,6 +1,6 @@
 'use client'
 import ImageLinkEditor from './CmsImageEditor'
-import styles from './ImageLink.module.scss'
+import styles from './CmsImage.module.scss'
 import Image from '../../Image/Image'
 import read from '@/actions/cms/images/read'
 import readImage from '@/actions/images/read'
