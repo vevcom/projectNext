@@ -3,10 +3,12 @@ export type ActionError = {
     message: string,
 }
 
-export type ActionReturn<ReturnType> = {
-    success: boolean,
-    data?: ReturnType,
+export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = {
+    success: false,
     error?: ActionError[],
+} | {
+    success: true,
+    data: DataGuarantee extends true ? ReturnType : ReturnType | undefined,
 }
 
 export type Page<PageSize extends number> = {

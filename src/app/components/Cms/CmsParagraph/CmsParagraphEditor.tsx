@@ -10,6 +10,7 @@ import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
 
+//needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
     () => import('react-simplemde-editor'),
     {
@@ -17,7 +18,6 @@ const DynamicSimpleMDEditor = dynamic(
         loading: () => <p className={styles.loader}>Loading...</p>
     }
 )
-
 
 type PropTypes = {
     cmsParagraph: CmsParagraph
