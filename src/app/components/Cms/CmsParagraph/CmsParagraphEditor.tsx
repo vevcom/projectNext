@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
-import type { Paragraph } from '@prisma/client'
+import type { CmsParagraph } from '@prisma/client'
 
 const DynamicSimpleMDEditor = dynamic(
     () => import('react-simplemde-editor'),
@@ -20,13 +20,13 @@ const DynamicSimpleMDEditor = dynamic(
 
 
 type PropTypes = {
-    paragraph: Paragraph
+    cmsParagraph: CmsParagraph
 }
 
-export default function CmsParagraphEditor({ paragraph }: PropTypes) {
+export default function CmsParagraphEditor({ cmsParagraph }: PropTypes) {
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
-    const [content, setContent] = useState(paragraph.contentMd)
+    const [content, setContent] = useState(cmsParagraph.contentMd)
 
     if (!editmode) return null
 
@@ -39,7 +39,7 @@ export default function CmsParagraphEditor({ paragraph }: PropTypes) {
             <div className={styles.ParagraphEditor}>
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
-                    action={update.bind(null, paragraph.id).bind(null, content)}
+                    action={update.bind(null, cmsParagraph.id).bind(null, content)}
                     submitText="Update"
                     successCallback={refresh}
                 />

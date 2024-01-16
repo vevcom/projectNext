@@ -1,21 +1,21 @@
 import styles from './CmsParagraph.module.scss'
 import ParagraphEditor from './CmsParagraphEditor'
 import React from 'react'
-import type { Paragraph as ParagraphT } from '@prisma/client'
+import type { CmsParagraph as CmsParagraphT } from '@prisma/client'
 
 type PropTypes = {
-    paragraph: ParagraphT
+    cmsParagraph: CmsParagraphT
 }
 
-export default async function CmsParagraph({ paragraph }: PropTypes) {
+export default async function CmsParagraph({ cmsParagraph }: PropTypes) {
     return (
         <div className={styles.Paragraph}>
-            {paragraph.contentHtml ? (
-                <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{ __html: paragraph.contentHtml }} />
+            {cmsParagraph.contentHtml ? (
+                <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{ __html: cmsParagraph.contentHtml }} />
             ) : (
                 <i>no content</i>
             )}
-            <ParagraphEditor paragraph={paragraph} />
+            <ParagraphEditor cmsParagraph={cmsParagraph} />
         </div>
     )
 }
