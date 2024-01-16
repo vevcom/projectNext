@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import Paragraph from '../components/Paragraph/Paragraph'
+import CmsParagraph from '../components/Cms/CmsParagraph/CmsParagraph'
 import read from '@/actions/cms/paragraphs/read'
 
 export default async function Articles() {
@@ -10,7 +10,7 @@ export default async function Articles() {
 
     return (
         <main className={styles.wrapper}>
-            <Paragraph paragraph={paragraph} />
+            <CmsParagraph paragraph={paragraph} />
         </main>
     )
 }

@@ -3,11 +3,11 @@ import create from './create'
 import { ActionReturn } from '../../type'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { Paragraph } from '@prisma/client'
+import { CmsParagraph } from '@prisma/client'
 
-export default async function read(name: string) : Promise<ActionReturn<Paragraph>> {
+export default async function read(name: string) : Promise<ActionReturn<CmsParagraph>> {
     try {
-        const paragraph = await prisma.paragraph.findUnique({
+        const paragraph = await prisma.cmsParagraph.findUnique({
             where: {
                 name
             }
