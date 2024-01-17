@@ -33,12 +33,12 @@ function MobileNavBar({ session } : PropTypes) {
                 ))
             }
             <div>
-                <CmsImage name="logo_simple" width={30}>
+                <CmsImage name="mobile_nav_primary_button" width={30}>
                     <Link className={styles.imagelink} href="/"/>
                 </CmsImage>
             </div>
             <div className={styles.magicHat}>
-                <CmsImage name="magisk_hatt" width={25} height={25} alt="log in button">
+                <CmsImage name="mobile_nav_login_button" width={25} height={25} alt="log in button">
                     <Link className={styles.imagelink} href={isLoggedIn ? '/users/me' : '/login'} />
                 </CmsImage>
             </div>

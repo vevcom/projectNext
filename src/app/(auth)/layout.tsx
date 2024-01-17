@@ -14,7 +14,7 @@ export default function AuthLayout({ children } : PropTypes) {
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <CmsImage name="magisk_hatt" alt="en kappemann sin hatt" width={200}/>
+                    <CmsImage name="auth_icon" alt="en kappemann sin hatt" width={200}/>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@ export default function ErrorBoundary({ error, reset } : {error: Error, reset: (
         <div className={styles.wrapper}>
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
-                    <CmsImageClient name="logo_simple" width={60} />
+                    <CmsImageClient name="server_error" width={60} />
                 </div>
                 <h3>500 - {error.message}</h3>
             </div>

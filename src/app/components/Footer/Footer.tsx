@@ -7,14 +7,14 @@ function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <CmsImage name="omega_logo_white" width={350} />
+                <CmsImage name="footer_logo" width={350} />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og
                 Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
                 </p>
                 <div>
-                    <CmsImage name="pwa" width={200} >
+                    <CmsImage name="footer_1" width={200} >
                         <Link className={styles.pwa} href="/infopages/pwa" />
                     </CmsImage>
                     <div className={styles.icons}>
@@ -38,10 +38,10 @@ function Footer() {
                 <p>7491 Trondheim</p>
             </div>
             <div className={styles.sponsors}>
-                <CmsImage name="nordic" width={170}>
+                <CmsImage name="footer_2" width={170}>
                     <Link href="http://www.nordicsemi.com" target="_blank" />
                 </CmsImage>
-                <CmsImage name="kongsberg" width={100}>
+                <CmsImage name="footer_3" width={100}>
                     <Link href="http://www.kongsberg.com" target="_blank" />
                 </CmsImage>
             </div>

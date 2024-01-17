@@ -34,7 +34,7 @@ export default function Home() {
           opp automatisk fra 1. klasse.
                 </Section>
                 <InfoBubbles />
-                <Section right imagename="ov" name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
+                <Section right imagename="frontpage_2" name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
           Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved
           Norges Teknisk-Naturvitenskapelige
           Universitet (NTNU) stiftet i 1971. Omega Verksted holder
@@ -47,13 +47,13 @@ export default function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <Section imagename="ov" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
+                <Section imagename="frontpage_3" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
           Altså omega er helt fantastisk for bedrifter.... tro meg 100%. Bare å ta kontakt
           med contactor ellerno... Lorem ipsium bla lofrgin fofkewivj irjvioer
           firegjoireg g jfirejgergo  rjgijgoieg jgirejgioe geroigjkoiegoekg kogkpeogkg
           rgierg
                 </Section>
-                <Section right imagename="ohma" name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
+                <Section right imagename="frontpage_4" name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
           Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
           Ohma er verdens første(!) fungerende
           vekselstrøm-lokomotiv, og har en lang historie fra både

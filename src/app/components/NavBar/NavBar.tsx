@@ -28,7 +28,7 @@ async function NavBar({ session }: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <CmsImage
-                        name="logo_simple"
+                        name="nav_primary_button"
                         width={30}
                         alt="omega logo"
                     >
@@ -51,7 +51,7 @@ async function NavBar({ session }: PropTypes) {
                         isAdmin && <EditModeSwitch />
                     }
                     <div className={styles.magicHat}>
-                        <CmsImage name="magisk_hatt" width={25} height={25} alt="log in button">
+                        <CmsImage name="nav_login_button" width={25} height={25} alt="log in button">
                             <Link href={isLoggedIn ? '/users/me' : '/login'} />
                         </CmsImage>
                     </div>

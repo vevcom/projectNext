@@ -6,7 +6,7 @@ export default function Error404() {
         <div className={styles.wrapper}>
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
-                    <CmsImage name="logo_simple" width={60} />
+                    <CmsImage name="not-found" width={60} />
                 </div>
                 <h3>404 - Page not found</h3>
             </div>

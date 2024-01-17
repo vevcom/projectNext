@@ -4,7 +4,7 @@ import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 export default function Events() {
     return (
         <div className={styles.wrapper}>
-            <CmsImage name="logo_whi" width={300}/>
+            <CmsImage name="events_test__" width={300}/>
             iejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf
