@@ -1,0 +1,18 @@
+import prisma from "@/prisma"
+
+export default async function seedDevImages() {
+    for (let i = 0; i < 10; i++) {
+        await prisma.imageCollection.upsert({
+            where: {
+                name: `test_collection_${i}`
+            },
+            update: {
+
+            },
+            create: {
+                name: `test_collection_${i}`,
+                description: 'just a test',
+            }
+        })
+    }
+}
