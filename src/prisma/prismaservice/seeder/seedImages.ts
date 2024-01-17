@@ -44,7 +44,7 @@ export default async function seedImages(prisma: PrismaClient) {
         })
 
         //copy the file from standard_store images to the image store/images with new name to add it to store volume.
-        await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, 'store', 'images', image.fsLocation))
+        await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, '..', 'store', 'images', image.fsLocation))
 
         console.log(image)
         return image

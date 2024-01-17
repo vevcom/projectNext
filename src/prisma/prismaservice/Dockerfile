@@ -8,6 +8,7 @@ COPY ./schema.prisma ./schema.prisma
 RUN npx prisma generate
 
 COPY /prismaservice/seeder ./seeder
+RUN mkdir -p ./store/images
 
 ########################################################
 FROM node:20-alpine AS prod
