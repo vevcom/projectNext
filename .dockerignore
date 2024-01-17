@@ -13,6 +13,7 @@ README.md
 docker-compose.yml
 Dockerfile
 docker-compose.dev.yml
+nginx.conf
 
 # prisma
 src/prisma/migrations
