@@ -3,11 +3,10 @@ FROM node:20-alpine AS base
 WORKDIR /usr/src/app
 RUN npm i prisma
 RUN npx prisma init
-COPY schema.prisma ./
+COPY ../schema.prisma ./
 
 RUN npm install @prisma/client
 RUN npx prisma generate
-COPY ./standard_images ./standard_images
 COPY ./seeder ./seeder
 RUN npm i ts-node
 
