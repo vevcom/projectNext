@@ -4,7 +4,7 @@
   "description": "migrations and seeding for db",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed": "npx ts-node seeder/seed.ts"
   },
   "author": "vevcom",
   "license": "ISC",
