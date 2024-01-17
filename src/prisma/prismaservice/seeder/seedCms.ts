@@ -8,8 +8,10 @@ export default async function seedCms(prisma: PrismaClient) {
                 name: cmsimage.imageName
             }
         })
-        if (!image) throw new Error(`Tried to cennect CmsImage ${cmsimage.name} to 
+        if (!image) {
+            throw new Error(`Tried to cennect CmsImage ${cmsimage.name} to 
             ${cmsimage.imageName}, but not the image was not found`)
+        }
 
         return prisma.cmsImage.upsert({
             where: {
@@ -27,5 +29,5 @@ export default async function seedCms(prisma: PrismaClient) {
                 }
             }
         })
-    }));
+    }))
 }

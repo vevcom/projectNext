@@ -22,7 +22,7 @@ const standardCmsContents : CmsContent = {
         },
         {
             name: 'frontpage_2',
-            imageName: 'ov', 
+            imageName: 'ov',
         },
         {
             name: 'frontpage_3',

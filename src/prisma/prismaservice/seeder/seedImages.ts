@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import fs from 'fs'
+import { readdir, copyFile } from 'fs/promises'
 import { join } from 'path'
 import type { PrismaClient } from '@prisma/client'
 
@@ -17,14 +17,14 @@ export default async function seedImages(prisma: PrismaClient) {
         }
     })
 
-    const files = fs.readdirSync(join(__dirname, 'standard_store', 'images'));
+    const files = await readdir(join(__dirname, 'standard_store', 'images'))
     await Promise.all(files.map(async (file) => {
-        const ext = file.split('.')[1];
+        const ext = file.split('.')[1]
         if (!['jpg', 'jpeg', 'png', 'gif', 'heic'].includes(ext)) {
-            console.log(`skipping image ${file}`);
-            return;
+            console.log(`skipping image ${file}`)
+            return
         }
-        const name = file.split('.')[0];
+        const name = file.split('.')[0]
         const image = await prisma.image.upsert({
             where: {
                 name
@@ -41,12 +41,12 @@ export default async function seedImages(prisma: PrismaClient) {
                     }
                 }
             }
-        });
+        })
 
         //copy the file from standard_store images to the image store/images with new name to add it to store volume.
-        fs.copyFileSync(join(__dirname, 'standard_store', 'images', file), join(__dirname, 'store', 'images', image.fsLocation));
+        await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, 'store', 'images', image.fsLocation))
 
-        console.log(image);
-        return image;
-    }));
+        console.log(image)
+        return image
+    }))
 }
