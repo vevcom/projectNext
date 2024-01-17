@@ -46,6 +46,8 @@ services:
     environment:
       NODE_ENV: production
       DB_URI: ${DB_URI}
+    volumes:
+      - store:/usr/src/app/seeder/standard_images
     depends_on:
       db:
         condition: service_healthy

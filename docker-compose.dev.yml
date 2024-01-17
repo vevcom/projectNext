@@ -54,6 +54,7 @@ services:
       DB_URI: ${DB_URI}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
+      - store:/usr/src/app/seeder/standard_images
     depends_on:
       db:
         condition: service_healthy
