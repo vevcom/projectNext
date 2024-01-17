@@ -81,7 +81,7 @@ export const itemsForMenu : NavItem[] = [
         icon: faGamepad,
     },
     {
-        name: 'Artikler',
+        name: 'Nyheter',
         href: '/news',
         show: 'all',
         icon: faNewspaper
