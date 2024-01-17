@@ -16,33 +16,33 @@ export default async function seedImages(prisma: PrismaClient) {
             description: 'standard images for the website',
         }
     })
-    fs.readdir(join(__dirname, 'store', 'images'), (err, files) => {
-        if (err) throw err
-        files.forEach(async (file) => {
-            const ext = file.split('.')[1]
-            if (!['jpg', 'jpeg', 'png', 'gif', 'heic'].includes(ext)) return console.log(`skipping image ${file}`)
-            const name = file.split('.')[0]
-            const image = await prisma.image.upsert({
-                where: {
-                    name
-                },
-                update: {
-
-                },
-                create: {
-                    name,
-                    alt: name.split('_').join(' '),
-                    fsLocation: `${uuid()}.${ext}`,
-                    ext,
-                    collection: {
-                        connect: {
-                            id: standardCollection.id
-                        }
+    
+    const files = fs.readdirSync(join(__dirname, 'store', 'images'));
+    await Promise.all(files.map(async (file) => {
+        const ext = file.split('.')[1];
+        if (!['jpg', 'jpeg', 'png', 'gif', 'heic'].includes(ext)) {
+            console.log(`skipping image ${file}`);
+            return;
+        }
+        const name = file.split('.')[0];
+        const image = await prisma.image.upsert({
+            where: {
+                name
+            },
+            update: {},
+            create: {
+                name,
+                alt: name.split('_').join(' '),
+                fsLocation: `${uuid()}.${ext}`,
+                ext,
+                collection: {
+                    connect: {
+                        id: standardCollection.id
                     }
                 }
-            })
-            console.log(image)
-            return image
-        })
-    })
+            }
+        });
+        console.log(image);
+        return image;
+    }));
 }

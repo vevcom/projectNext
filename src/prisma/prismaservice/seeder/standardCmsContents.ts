@@ -1,11 +1,7 @@
 type CmsContent = {
     cmsImages: {
         name: string,
-        image: {
-            connect: {
-                name: string
-            }
-        }
+        imageName: string
     }[],
     cmsParagraphs: {
         name: string,
@@ -17,19 +13,11 @@ const standardCmsContents : CmsContent = {
     cmsImages: [
         {
             name: 'frontpage_1',
-            image: {
-                connect: {
-                    name: 'kappemann'
-                }
-            }
+            imageName: 'kappemann',
         },
         {
             name: 'frontpage_2',
-            image: {
-                connect: {
-                    name: 'ov'
-                }
-            }
+            imageName: 'ov', 
         }
     ],
     cmsParagraphs: []

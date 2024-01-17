@@ -16,7 +16,7 @@ export default async function CmsImage({ name, children, ...props }: PropTypes) 
     let image : ImageT | null = null
     const res = await read(name)
     //The read inageLink action should always return a CmsImage (it creates it if it does not exist)
-    if (!res.success) throw new Error(`An error with creating or loading image link: ${name}`)
+    if (!res.success) throw new Error(`An error with creating or loading cms image: ${name}`)
     image = res.data.image ?? null
     if (!image) {
         const defaultImageRes = await readImage('default_image')
