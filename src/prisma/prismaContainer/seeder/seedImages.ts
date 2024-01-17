@@ -1,9 +1,10 @@
-import prisma from ".."
+import prisma from "../.."
 import { v4 as uuid } from 'uuid'
 import fs from 'fs'
 import { join } from 'path'
+import type { PrismaClient } from "@prisma/client"
 
-export default async function seedImages() {
+export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.upsert({
         where: {
             name: 'standard_images'

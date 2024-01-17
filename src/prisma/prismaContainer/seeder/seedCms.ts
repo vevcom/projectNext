@@ -1,7 +1,7 @@
 import standardCmsContents from "./standardCmsContents"
-import prisma from '..'
+import type { PrismaClient } from "@prisma/client"
 
-export default async function seedCms() {
+export default async function seedCms(prisma: PrismaClient) {
     standardCmsContents.cmsImages.forEach(async (image) => {
         prisma.cmsImage.upsert({
             where: {

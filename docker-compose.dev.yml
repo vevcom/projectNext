@@ -46,7 +46,7 @@ services:
 
   prisma:
     build: 
-      context: ./src/prisma
+      context: ./src/prisma/prismaContainer
       dockerfile: ./Dockerfile
       target: dev
     environment:

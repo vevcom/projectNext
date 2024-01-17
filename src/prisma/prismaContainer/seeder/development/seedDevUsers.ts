@@ -1,4 +1,6 @@
-export default async function seedDevUsers() {
+import type { PrismaClient } from "@prisma/client"
+
+export default async function seedDevUsers(prisma: PrismaClient) {
     const harambe = await prisma.user.upsert({
         where: {
             email: 'harambe@harambesen.io'
