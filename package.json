@@ -10,8 +10,7 @@
     "lint": "next lint"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma",
-    "seed": "node src/prisma/seed.ts"
+    "schema": "src/prisma/schema.prisma"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
