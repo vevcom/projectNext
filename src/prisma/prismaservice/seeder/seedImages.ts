@@ -16,8 +16,8 @@ export default async function seedImages(prisma: PrismaClient) {
             description: 'standard images for the website',
         }
     })
-    
-    const files = fs.readdirSync(join(__dirname, 'store', 'images'));
+
+    const files = fs.readdirSync(join(__dirname, 'standard_store', 'images'));
     await Promise.all(files.map(async (file) => {
         const ext = file.split('.')[1];
         if (!['jpg', 'jpeg', 'png', 'gif', 'heic'].includes(ext)) {
@@ -42,6 +42,10 @@ export default async function seedImages(prisma: PrismaClient) {
                 }
             }
         });
+
+        //copy the file from standard_store images to the image store/images with new name to add it to store volume.
+        fs.copyFileSync(join(__dirname, 'standard_store', 'images', file), join(__dirname, 'store', 'images', image.fsLocation));
+
         console.log(image);
         return image;
     }));
