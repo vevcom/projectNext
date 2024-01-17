@@ -22,6 +22,14 @@ const standardCmsContents : CmsContent = {
                     name: 'kappemann'
                 }
             }
+        },
+        {
+            name: 'frontpage_2',
+            image: {
+                connect: {
+                    name: 'ov'
+                }
+            }
         }
     ],
     cmsParagraphs: []
