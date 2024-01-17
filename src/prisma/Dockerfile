@@ -8,7 +8,7 @@ COPY schema.prisma ./
 RUN npm install @prisma/client
 RUN npx prisma generate
 COPY ./standard_images ./standard_images
-COPY seed.ts ./
+COPY ./seeder ./seeder
 RUN npm i ts-node
 
 ########################################################
@@ -17,11 +17,11 @@ WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 
 #DEPLOY NOT IMPLEMENTED YET: should be npy prisma migrate deploy.
-CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seed.ts"]
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seeder/seed.ts"]
 
 ########################################################
 FROM node:20-alpine AS dev
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 
-CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seed.ts"]
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npx ts-node seeder/seed.ts"]
