@@ -4,7 +4,7 @@ import seedDevImages from './development/seedDevImages'
 import seedCms from './seedCms'
 import { PrismaClient } from '@prisma/client'
 
-export default async function seed() {
+async function seed() {
     const prisma = new PrismaClient()
 
     console.log('seeding standard data....')
@@ -18,3 +18,5 @@ export default async function seed() {
     await seedDevImages(prisma)
     console.log('seed dev done')
 }
+
+seed().then(() => console.log('exiting'))
