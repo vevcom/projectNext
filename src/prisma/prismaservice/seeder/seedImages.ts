@@ -47,6 +47,5 @@ export default async function seedImages(prisma: PrismaClient) {
         await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, '..', 'store', 'images', image.fsLocation))
 
         console.log(image)
-        return image
     }))
 }
