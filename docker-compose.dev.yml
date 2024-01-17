@@ -55,7 +55,6 @@ services:
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
       - devstore:/usr/src/app/seeder/standard_images
-      - tttt:/usr/src/app
     depends_on:
       db:
         condition: service_healthy
@@ -79,7 +78,5 @@ volumes:
   devdb:
     driver: local
   devstore:
-    driver: local
-  tttt:
     driver: local
           
