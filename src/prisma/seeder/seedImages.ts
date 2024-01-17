@@ -41,22 +41,7 @@ export default async function seedImages() {
                     }
                 }
             })
-            return await prisma.cmsImage.upsert({
-                where: {
-                    name
-                },
-                update: {
-
-                },
-                create: {
-                    name,
-                    image: {
-                        connect: {
-                            id: image.id
-                        }
-                    },
-                }
-            })
+            console.log(image)
         })
     })
 }

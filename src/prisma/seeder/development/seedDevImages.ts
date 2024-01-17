@@ -2,7 +2,7 @@ import prisma from "@/prisma"
 
 export default async function seedDevImages() {
     for (let i = 0; i < 10; i++) {
-        await prisma.imageCollection.upsert({
+        const collection = await prisma.imageCollection.upsert({
             where: {
                 name: `test_collection_${i}`
             },
@@ -14,5 +14,6 @@ export default async function seedDevImages() {
                 description: 'just a test',
             }
         })
+        console.log(collection)
     }
 }

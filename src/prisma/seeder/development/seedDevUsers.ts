@@ -1,5 +1,5 @@
 export default async function seedDevUsers() {
-    await prisma.user.upsert({
+    const harambe = await prisma.user.upsert({
         where: {
             email: 'harambe@harambesen.io'
         },
@@ -14,4 +14,5 @@ export default async function seedDevUsers() {
             username: 'Harambe104',
         },
     })
+    console.log(harambe)
 }
