@@ -40,8 +40,8 @@ services:
 
   prisma:
     build: 
-      context: ./src/prisma/prismaContainer
-      dockerfile: ./Dockerfile
+      context: ./src/prisma
+      dockerfile: ./prismaservice/Dockerfile
       target: prod
     environment:
       NODE_ENV: production
@@ -72,4 +72,3 @@ volumes:
     driver: local
   store:
     driver: local
-    

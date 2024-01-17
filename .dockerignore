@@ -9,5 +9,4 @@ default.env
 
 # prisma
 src/prisma/migrations
-
-src/prisma/prismaContainer
+src/prisma/prismaservice

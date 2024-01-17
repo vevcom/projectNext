@@ -46,8 +46,8 @@ services:
 
   prisma:
     build: 
-      context: ./src/prisma/prismaContainer
-      dockerfile: ./Dockerfile
+      context: ./src/prisma
+      dockerfile: ./prismaservice/Dockerfile
       target: dev
     environment:
       NODE_ENV: development
@@ -55,6 +55,7 @@ services:
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
       - store:/usr/src/app/seeder/standard_images
+      - tttt:/usr/src/app
     depends_on:
       db:
         condition: service_healthy
@@ -78,5 +79,7 @@ volumes:
   devdb:
     driver: local
   store:
+    driver: local
+  tttt:
     driver: local
           
