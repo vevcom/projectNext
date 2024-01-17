@@ -16,7 +16,7 @@ export default async function seedImages(prisma: PrismaClient) {
             description: 'standard images for the website',
         }
     })
-    fs.readdir(join(__dirname, 'standard_images'), (err, files) => {
+    fs.readdir(join(__dirname, 'store', 'images'), (err, files) => {
         if (err) throw err
         files.forEach(async (file) => {
             const ext = file.split('.')[1]
