@@ -4,3 +4,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/src/prisma/prismaservice"
+    schedule:
+      interval: "weekly"
