@@ -6,7 +6,7 @@ import { CmsImage } from '@prisma/client'
 
 export default async function update(linkId: number, imageId: number) : Promise<ActionReturn<CmsImage>> {
     try {
-        const CmsImage = await prisma.cmsImage.update({
+        const cmsImage = await prisma.cmsImage.update({
             where: {
                 id: linkId,
             },
@@ -18,7 +18,7 @@ export default async function update(linkId: number, imageId: number) : Promise<
                 }
             }
         })
-        return { success: true, data: CmsImage }
+        return { success: true, data: cmsImage }
     } catch (error) {
         return errorHandeler(error)
     }

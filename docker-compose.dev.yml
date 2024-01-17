@@ -9,7 +9,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - store:/usr/src/app/store
+      - devstore:/usr/src/app/store
       - ./src:/usr/src/app/src
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
@@ -54,7 +54,7 @@ services:
       DB_URI: ${DB_URI}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
-      - store:/usr/src/app/seeder/standard_images
+      - devstore:/usr/src/app/seeder/standard_images
       - tttt:/usr/src/app
     depends_on:
       db:
@@ -69,7 +69,7 @@ services:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - store:/usr/store
+      - devstore:/usr/store
     depends_on:
       - projectnext
     links:
@@ -78,7 +78,7 @@ services:
 volumes:
   devdb:
     driver: local
-  store:
+  devstore:
     driver: local
   tttt:
     driver: local

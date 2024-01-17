@@ -13,7 +13,7 @@ type CmsContent = {
     }[]
 }
 
-const standardCmsContents = {
+const standardCmsContents : CmsContent = {
     cmsImages: [
         {
             name: 'frontpage_1',
@@ -24,9 +24,7 @@ const standardCmsContents = {
             }
         }
     ],
-    cmsParagraphs: {
-
-    }
+    cmsParagraphs: []
 }
 
 export default standardCmsContents

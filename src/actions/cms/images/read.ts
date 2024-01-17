@@ -8,7 +8,7 @@ import type { ActionReturn } from '@/actions/type'
 export default async function read(name: string) : Promise<ActionReturn<CmsImage & {image: Image | null}>> {
     //Note this action reates a image link if it does not exist and returns it
     try {
-        const CmsImage = await prisma.cmsImage.findUnique({
+        const cmsImage = await prisma.cmsImage.findUnique({
             where: {
                 name,
             },
@@ -16,10 +16,10 @@ export default async function read(name: string) : Promise<ActionReturn<CmsImage
                 image: true,
             }
         })
-        if (!CmsImage) {
+        if (!cmsImage) {
             return await create(name)
         }
-        return { success: true, data: CmsImage }
+        return { success: true, data: cmsImage }
     } catch (error) {
         return errorHandeler(error)
     }

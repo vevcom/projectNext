@@ -6,6 +6,13 @@ build
 #you should be explicit in docker-compose about what env-vars should be loaded into a container
 .env 
 default.env
+next-env.default.d.ts
+
+README.md
+.gitignore
+docker-compose.yml
+Dockerfile
+docker-compose.dev.yml
 
 # prisma
 src/prisma/migrations

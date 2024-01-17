@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { Action, ActionError } from '@/actions/type'
 import type { PropTypes as ButtonPropTypes } from '../UI/Button'
-import { boolean } from 'zod'
 
 type Colors = ButtonPropTypes['color']
 type Confirmation = {
