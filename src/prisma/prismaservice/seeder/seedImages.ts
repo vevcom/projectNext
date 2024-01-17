@@ -32,7 +32,7 @@ export default async function seedImages(prisma: PrismaClient) {
                 create: {
                     name,
                     alt: name.split('_').join(' '),
-                    fsLocation: uuid(),
+                    fsLocation: `${uuid()}.${ext}`,
                     ext,
                     collection: {
                         connect: {
