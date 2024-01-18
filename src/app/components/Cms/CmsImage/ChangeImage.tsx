@@ -43,21 +43,24 @@ export default function ChangeImage({ currentImage, cmsImageId, isSmallSize } : 
             }
             <i>image name: {currentImage.name}</i>
             {
-                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id && (
+                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
                     <Form
                         action={update.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
                         submitText="change"
                         successCallback={refresh}
                     />
+                ) : (
+                    <div className={styles.resolution}>
+                        <p>Resolution: {isSmallSize ? 'low' : 'heigh'}</p>
+                        <Form 
+                            action={updateConfig.bind(null, cmsImageId).bind(null, {smallSize: !isSmallSize})}
+                            submitText={isSmallSize ? 'change to heigh' : 'change to low'}
+                            successCallback={refresh}
+                            submitColor='secondary'
+                        />
+                    </div> 
                 )
             }
-            <p>Resolution: {isSmallSize ? 'low' : 'heigh'}</p>
-            <Form 
-                action={updateConfig.bind(null, cmsImageId).bind(null, {smallSize: !isSmallSize})}
-                submitText={isSmallSize ? 'change to heigh' : 'change to low'}
-                successCallback={refresh}
-                submitColor='secondary'
-            />
         </div>
     )
 }

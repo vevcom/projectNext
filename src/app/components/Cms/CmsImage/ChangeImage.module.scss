@@ -30,6 +30,12 @@ $currentImageSize: min(200px, 24vh);
             overflow: hidden;
         }
     }
+    .resolution {
+        margin-top: .2em;
+        p {
+            font-size: ohma.$fonts-s;
+        }
+    }
     > .currentAndSelected {
         width: $currentImageSize;
         max-height: $currentImageSize;

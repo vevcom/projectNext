@@ -1,6 +1,6 @@
 @use '@/styles/ohma';
 
-$collectionSize: calc(15vmin + 30px);
+$collectionSize: calc(14vmin + 70px);
 
 .CmsImageEditor {
     width: calc(97vw - 140px);
@@ -39,8 +39,9 @@ $collectionSize: calc(15vmin + 30px);
         display: flex;
         max-width: 100%;
         overflow: scroll;
-        min-height: calc($collectionSize + 50px);
+        min-height: calc($collectionSize + 5vmin);
         align-items: center;
+        padding: 0;
         .collection {
             position: relative;
             margin: 0 .2em;
@@ -70,9 +71,9 @@ $collectionSize: calc(15vmin + 30px);
             }
             &.selected {
                 transform: scale(1.1);
-                z-index: 2;
+                z-index: 3;
                 border: 5px solid ohma.$colors-primary;
-                border-radius: 1.2em;
+                border-radius: 1.25em;
                 .collectionCard img {
                     scale: 1.2;
                 }
