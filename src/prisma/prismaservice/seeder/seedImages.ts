@@ -19,7 +19,10 @@ export default async function seedImages(prisma: PrismaClient) {
         }
     })
 
-    const files = await readdir(join(__dirname, 'standard_store', 'images'))
+    const standardLocation = join(__dirname, 'standard_store', 'images')
+    const storeLocation = join(__dirname, '..', 'store', 'images')
+
+    const files = await readdir(standardLocation)
     await Promise.all(files.map(async (file) => {
         const ext = file.split('.')[1]
         if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
@@ -29,13 +32,16 @@ export default async function seedImages(prisma: PrismaClient) {
         const name = file.split('.')[0]
 
         const fsLocation = `${uuid()}.${ext}`
-        await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, '..', 'store', 'images', fsLocation))
+        await copyFile(
+            join(standardLocation, file), 
+            join(storeLocation, fsLocation)
+        )
 
         //create small size version of the image
         const fsLocationSmallSize = `${uuid()}.${ext}`
-        const inputPath = path.join(join(__dirname, 'standard_store', 'images'), file);
-        const outputPath = path.join(join(__dirname, 'standard_store', 'images'), fsLocationSmallSize);
-        await sharp(inputPath).resize(200, 200).toFile(outputPath);
+        const bigPath = path.join(standardLocation, file);
+        const smallPath = path.join(storeLocation, fsLocationSmallSize);
+        await sharp(bigPath).resize(200, 200).toFile(smallPath);
 
         const image = await prisma.image.upsert({
             where: {
