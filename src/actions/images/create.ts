@@ -9,13 +9,12 @@ import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
 import type { Image } from '@prisma/client'
-import heicConvert from 'heic-convert'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
 
 async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' | 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
-    let ext = file.type.split('/')[1]
+    const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
             success: false, error: [
@@ -27,8 +26,8 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         }
     }
 
-    let arrBuffer = await file.arrayBuffer()
- 
+    const arrBuffer = await file.arrayBuffer()
+
     const buffer = Buffer.from(arrBuffer)
 
     try {
@@ -63,8 +62,8 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         }
     } catch (err) {
         //LOGGER
-        return { 
-            success: false, 
+        return {
+            success: false,
             error: [{ path: ['file'], message: 'Failed to create small size image' }]
         }
     }
