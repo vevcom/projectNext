@@ -14,7 +14,7 @@ const maxFileSize = 10 * 1024 * 1024 // 10mb
 
 
 async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' | 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
-    const ext = file.type.split('/')[1]
+    let ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
             success: false, error: [
@@ -26,8 +26,14 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         }
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    let buffer = Buffer.from(await file.arrayBuffer())
+
+    // If the image is in HEIC format, convert it to PNG
+    if (ext === 'heic') {
+        buffer = await sharp(buffer).toFormat('png').toBuffer();
+        ext = 'png';
+    }
+
     try {
         const fsLocation = `${uuid()}.${ext}`
         const destination = join('store', 'images')
