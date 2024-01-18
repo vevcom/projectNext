@@ -1,7 +1,10 @@
+import { ImageSize } from "@prisma/client"
+
 type CmsContent = {
     cmsImages: {
         name: string,
         imageName: string
+        imageSize?: ImageSize
     }[],
     cmsParagraphs: {
         name: string,
@@ -15,6 +18,7 @@ const standardCmsContents : CmsContent = {
         {
             name: 'frontpage_logo',
             imageName: 'logo_white',
+            imageSize: 'LARGE'
         },
         {
             name: 'frontpage_1',
