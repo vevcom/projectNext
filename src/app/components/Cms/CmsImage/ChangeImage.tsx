@@ -54,7 +54,7 @@ export default function ChangeImage({ currentImage, cmsImageId, isSmallSize } : 
             <p>Resolution: {isSmallSize ? 'low' : 'heigh'}</p>
             <Form 
                 action={updateConfig.bind(null, cmsImageId).bind(null, {smallSize: !isSmallSize})}
-                submitText={isSmallSize ? 'change to heigh' : 'change to small'}
+                submitText={isSmallSize ? 'change to heigh' : 'change to low'}
                 successCallback={refresh}
                 submitColor='secondary'
             />
