@@ -41,7 +41,10 @@ export default async function seedImages(prisma: PrismaClient) {
         const fsLocationSmallSize = `${uuid()}.${ext}`
         const bigPath = path.join(standardLocation, file);
         const smallPath = path.join(storeLocation, fsLocationSmallSize);
-        await sharp(bigPath).resize(200, 200).toFile(smallPath);
+        await sharp(bigPath).resize(200, 200, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toFile(smallPath);
 
         const image = await prisma.image.upsert({
             where: {

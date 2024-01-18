@@ -36,7 +36,10 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
 
-        const smallsize = await sharp(buffer).resize(200, 200).toBuffer() // Adjust the size as needed
+        const smallsize = await sharp(buffer).resize(200, 200, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toBuffer() // Adjust the size as needed
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
         try {

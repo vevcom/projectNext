@@ -23,3 +23,19 @@ export default async function update(linkId: number, imageId: number) : Promise<
         return errorHandeler(error)
     }
 }
+
+export async function updateConfig(linkId: number, config: {smallSize: boolean}): Promise<ActionReturn<CmsImage>> {
+    try {
+        const cmsImage = await prisma.cmsImage.update({
+            where: {
+                id: linkId,
+            },
+            data: {
+                smallSize: config.smallSize,
+            }
+        })
+        return { success: true, data: cmsImage }
+    } catch (error) {
+        return errorHandeler(error)
+    }
+}

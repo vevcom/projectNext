@@ -3,7 +3,7 @@ import styles from './ChangeImage.module.scss'
 import Image from '../../Image/Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import Form from '@/components/Form/Form'
-import update from '@/actions/cms/images/update'
+import update, { updateConfig } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext } from 'react'
@@ -13,9 +13,10 @@ import type { Image as ImageT } from '@prisma/client'
 type PropTypes = {
     currentImage: ImageT,
     cmsImageId: number,
+    isSmallSize?: boolean
 }
 
-export default function ChangeImage({ currentImage, cmsImageId } : PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId, isSmallSize } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
@@ -50,6 +51,15 @@ export default function ChangeImage({ currentImage, cmsImageId } : PropTypes) {
                     />
                 )
             }
+            <p>Resolution: {isSmallSize ? 'low' : 'heigh'}</p>
+            <Form 
+                action={updateConfig.bind(null, cmsImageId).bind(null, {smallSize: !isSmallSize})}
+                submitText={isSmallSize ? 'change to heigh' : 'change to small'}
+                successCallback={refresh}
+                submitColor='secondary'
+            />
         </div>
     )
 }
+
+
