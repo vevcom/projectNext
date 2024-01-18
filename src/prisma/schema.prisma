@@ -19,17 +19,18 @@ model User {
 }
 
 model Image {
-  id            Int              @id @default(autoincrement())
-  fsLocation    String           @unique @default(cuid())
-  name          String           @unique
-  ext           String
-  alt           String
-  collection    ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  coverImageFor ImageCollection? @relation(name: "coverImage")
-  collectionId  Int
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @updatedAt @map("updated_at")
-  CmsImage      CmsImage[]
+  id                  Int              @id @default(autoincrement())
+  fsLocation          String           @unique @default(cuid())
+  fsLocationSmallSize String?          @unique @default(cuid())
+  name                String           @unique
+  ext                 String
+  alt                 String
+  collection          ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageFor       ImageCollection? @relation(name: "coverImage")
+  collectionId        Int
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+  CmsImage            CmsImage[]
 
   @@map("images")
 }
