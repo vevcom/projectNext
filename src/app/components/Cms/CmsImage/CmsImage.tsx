@@ -27,7 +27,7 @@ export default async function CmsImage({ name, children, ...props }: PropTypes) 
     return (
         <div className={styles.CmsImage}>
             <CmsImageEditor cmsImage={{ ...res.data, image }}/>
-            <Image image={image} {...props}/>
+            <Image smallSize={res.data.smallSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
     )

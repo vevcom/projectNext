@@ -55,6 +55,7 @@ model CmsImage {
   imageId   Int?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  smallSize Boolean  @default(false) @map("small_image")
 
   @@map("cms_images")
 }
