@@ -37,25 +37,33 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         const smallsize = await sharp(buffer).resize(200, 200).toBuffer() // Adjust the size as needed
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
-
-        const image = await prisma.image.create({
-            data: {
-                name: meta.name,
-                alt: meta.alt,
-                fsLocation,
-                fsLocationSmallSize,
-                ext,
-                collection: {
-                    connect: {
-                        id: meta.collectionId,
+        try {
+            const image = await prisma.image.create({
+                data: {
+                    name: meta.name,
+                    alt: meta.alt,
+                    fsLocation,
+                    fsLocationSmallSize,
+                    ext,
+                    collection: {
+                        connect: {
+                            id: meta.collectionId,
+                        }
                     }
                 }
-            }
-        })
-        if (!image) return { success: false }
-        return { success: true, data: image }
+            })
+            if (!image) return { success: false }
+            return { success: true, data: image }
+        } catch (err) {
+            console.log(err)
+            return errorHandeler(err)
+        }
     } catch (err) {
-        return errorHandeler(err)
+        //LOGGER
+        return { 
+            success: false, 
+            error: [{ path: ['file'], message: 'Failed to create small size image' }]
+        }
     }
 }
 
