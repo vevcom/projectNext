@@ -4,11 +4,11 @@ import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
+import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
 import type { Image } from '@prisma/client'
-import sharp from 'sharp'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
@@ -34,10 +34,10 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
 
-        const smallsize =  await sharp(buffer).resize(200, 200).toBuffer() // Adjust the size as needed
+        const smallsize = await sharp(buffer).resize(200, 200).toBuffer() // Adjust the size as needed
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
-        
+
         const image = await prisma.image.create({
             data: {
                 name: meta.name,
