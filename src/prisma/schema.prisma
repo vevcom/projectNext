@@ -20,8 +20,8 @@ model User {
 
 model Image {
   id                  Int              @id @default(autoincrement())
-  fsLocation          String           @unique @default(cuid())
-  fsLocationSmallSize String?          @unique @default(cuid())
+  fsLocation          String           @unique
+  fsLocationSmallSize String?          @unique
   name                String           @unique
   ext                 String
   alt                 String
