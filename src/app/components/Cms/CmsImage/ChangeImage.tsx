@@ -6,20 +6,39 @@ import Form from '@/components/Form/Form'
 import update, { updateConfig } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Image as ImageT } from '@prisma/client'
+import type { ImageSize, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     currentImage: ImageT,
     cmsImageId: number,
-    isSmallSize?: boolean
+    currentImageSize: ImageSize,
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, isSmallSize } : PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId, currentImageSize } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
+    
+    //What is the next option in quality. The image always cycles up.
+    const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
+    useEffect(() => {
+        switch (currentImageSize) {
+            case 'SMALL':
+                setChangeToSize('MEDIUM')
+                break
+            case 'MEDIUM':
+                setChangeToSize('LARGE')
+                break
+            case 'LARGE':
+                setChangeToSize('SMALL')
+                break
+            default:
+                setChangeToSize('MEDIUM')
+                break
+        }
+    }, [currentImageSize])
 
     return (
         <div className={styles.ChangeImage}>
@@ -51,10 +70,10 @@ export default function ChangeImage({ currentImage, cmsImageId, isSmallSize } : 
                     />
                 ) : (
                     <div className={styles.resolution}>
-                        <p>Resolution: {isSmallSize ? 'low' : 'heigh'}</p>
+                        <p>Resolution: {currentImageSize}</p>
                         <Form 
-                            action={updateConfig.bind(null, cmsImageId).bind(null, {smallSize: !isSmallSize})}
-                            submitText={isSmallSize ? 'change to heigh' : 'change to low'}
+                            action={updateConfig.bind(null, cmsImageId).bind(null, {imageSize: changeToSize})}
+                            submitText={`change to ${changeToSize}`}
                             successCallback={refresh}
                             submitColor='secondary'
                         />

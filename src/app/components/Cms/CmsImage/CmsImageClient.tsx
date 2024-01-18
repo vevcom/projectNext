@@ -31,7 +31,7 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
         <div className={styles.CmsImage}>
             {cmsImage && <CmsImageEditor cmsImage={cmsImage}/>}
             <div className={styles.children}>{children}</div>
-            {cmsImage?.image && <Image smallSize={cmsImage.smallSize} alt={alt} image={cmsImage.image} width={width} {...props}/>}
+            {cmsImage?.image && <Image imageSize={cmsImage.imageSize} alt={alt} image={cmsImage.image} width={width} {...props}/>}
         </div>
     )
 }

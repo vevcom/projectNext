@@ -31,20 +31,30 @@ export default async function seedImages(prisma: PrismaClient) {
         }
         const name = file.split('.')[0]
 
+        //full size version of the image
         const fsLocation = `${uuid()}.${ext}`
         await copyFile(
             join(standardLocation, file), 
             join(storeLocation, fsLocation)
         )
 
+        const bigPath = path.join(standardLocation, file);
+
         //create small size version of the image
         const fsLocationSmallSize = `${uuid()}.${ext}`
-        const bigPath = path.join(standardLocation, file);
         const smallPath = path.join(storeLocation, fsLocationSmallSize);
-        await sharp(bigPath).resize(200, 200, {
+        await sharp(bigPath).resize(300, 300, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toFile(smallPath);
+
+        //create medium size version of the image
+        const fsLocationMediumSize = `${uuid()}.${ext}`
+        const mediumPath = path.join(storeLocation, fsLocationMediumSize);
+        await sharp(bigPath).resize(600, 600, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toFile(mediumPath);
 
         const image = await prisma.image.upsert({
             where: {
@@ -56,6 +66,7 @@ export default async function seedImages(prisma: PrismaClient) {
                 alt: name.split('_').join(' '),
                 fsLocation,
                 fsLocationSmallSize,
+                fsLocationMediumSize,
                 ext,
                 collection: {
                     connect: {

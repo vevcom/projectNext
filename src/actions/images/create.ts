@@ -13,7 +13,11 @@ import type { Image } from '@prisma/client'
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
 
-async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' | 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
+async function createOne(file: File, meta: {
+    name: string,
+    alt: string,
+    collectionId: number,
+}) : Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
@@ -36,12 +40,20 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
 
-        const smallsize = await sharp(buffer).resize(200, 200, {
+        const smallsize = await sharp(buffer).resize(300, 300, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toBuffer() // Adjust the size as needed
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
+
+        const madiumSize = await sharp(buffer).resize(600, 600, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toBuffer() // Adjust the size as needed
+        const fsLocationMediumSize = `${uuid()}.${ext}`
+        await writeFile(join(destination, fsLocationMediumSize), madiumSize)
+
         try {
             const image = await prisma.image.create({
                 data: {
@@ -49,6 +61,7 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
                     alt: meta.alt,
                     fsLocation,
                     fsLocationSmallSize,
+                    fsLocationMediumSize,
                     ext,
                     collection: {
                         connect: {

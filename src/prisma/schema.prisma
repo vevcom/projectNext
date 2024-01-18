@@ -19,18 +19,19 @@ model User {
 }
 
 model Image {
-  id                  Int              @id @default(autoincrement())
-  fsLocation          String           @unique
-  fsLocationSmallSize String?          @unique
-  name                String           @unique
-  ext                 String
-  alt                 String
-  collection          ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  coverImageFor       ImageCollection? @relation(name: "coverImage")
-  collectionId        Int
-  createdAt           DateTime         @default(now()) @map("created_at")
-  updatedAt           DateTime         @updatedAt @map("updated_at")
-  CmsImage            CmsImage[]
+  id                   Int              @id @default(autoincrement())
+  fsLocation           String           @unique
+  fsLocationSmallSize  String?          @unique
+  fsLocationMediumSize String?          @unique
+  name                 String           @unique
+  ext                  String
+  alt                  String
+  collection           ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageFor        ImageCollection? @relation(name: "coverImage")
+  collectionId         Int
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
+  CmsImage             CmsImage[]
 
   @@map("images")
 }
@@ -48,14 +49,20 @@ model ImageCollection {
   @@map("image_collections")
 }
 
+enum ImageSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
 model CmsImage {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  image     Image?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  image     Image?    @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId   Int?
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  smallSize Boolean  @default(false) @map("small_image")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  imageSize ImageSize @default(MEDIUM) @map("small_image")
 
   @@map("cms_images")
 }

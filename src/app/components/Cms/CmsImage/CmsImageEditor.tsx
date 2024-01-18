@@ -55,7 +55,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                         <p>name: {cmsImage.name}</p>
                                         <i>id: {cmsImage.id}</i>
                                     </div>
-                                    <ChangeImage isSmallSize={cmsImage.smallSize} currentImage={cmsImage.image} cmsImageId={cmsImage.id}/>
+                                    <ChangeImage currentImageSize={cmsImage.imageSize} currentImage={cmsImage.image} cmsImageId={cmsImage.id}/>
                                 </div>
                                 <div className={styles.selectImage}>
                                     <ImageList disableEditing={true}/>
