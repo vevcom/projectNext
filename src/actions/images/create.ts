@@ -40,7 +40,7 @@ async function createOne(file: File, meta: {
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
 
-        const smallsize = await sharp(buffer).resize(300, 300, {
+        const smallsize = await sharp(buffer).resize(250, 250, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toBuffer() // Adjust the size as needed

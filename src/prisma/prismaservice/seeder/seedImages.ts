@@ -43,7 +43,7 @@ export default async function seedImages(prisma: PrismaClient) {
         //create small size version of the image
         const fsLocationSmallSize = `${uuid()}.${ext}`
         const smallPath = path.join(storeLocation, fsLocationSmallSize);
-        await sharp(bigPath).resize(300, 300, {
+        await sharp(bigPath).resize(250, 250, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toFile(smallPath);
