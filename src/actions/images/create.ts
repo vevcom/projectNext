@@ -9,6 +9,7 @@ import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
 import type { Image } from '@prisma/client'
+import heicConvert from 'heic-convert'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
