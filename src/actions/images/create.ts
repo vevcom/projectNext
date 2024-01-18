@@ -8,11 +8,12 @@ import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
 import type { Image } from '@prisma/client'
+import sharp from 'sharp'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
 
-async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
+async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' | 'fsLocation' | 'ext' | 'id' | 'createdAt' | 'updatedAt'>) : Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
@@ -32,11 +33,17 @@ async function createOne(file: File, meta: Omit<Image, 'fsLocation' | 'ext' | 'i
         const destination = join('store', 'images')
         await mkdir(destination, { recursive: true })
         await writeFile(join(destination, fsLocation), buffer)
+
+        const smallsize =  await sharp(buffer).resize(200, 200).toBuffer() // Adjust the size as needed
+        const fsLocationSmallSize = `${uuid()}.${ext}`
+        await writeFile(join(destination, fsLocationSmallSize), smallsize)
+        
         const image = await prisma.image.create({
             data: {
                 name: meta.name,
                 alt: meta.alt,
                 fsLocation,
+                fsLocationSmallSize,
                 ext,
                 collection: {
                     connect: {
