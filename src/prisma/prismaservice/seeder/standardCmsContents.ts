@@ -1,4 +1,4 @@
-import { ImageSize } from "@prisma/client"
+import { ImageSize } from '@prisma/client'
 
 type CmsContent = {
     cmsImages: {

@@ -20,7 +20,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
-    
+
     //What is the next option in quality. The image always cycles up.
     const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
     useEffect(() => {
@@ -71,17 +71,16 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                 ) : (
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
-                        <Form 
-                            action={updateConfig.bind(null, cmsImageId).bind(null, {imageSize: changeToSize})}
+                        <Form
+                            action={updateConfig.bind(null, cmsImageId).bind(null, { imageSize: changeToSize })}
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             successCallback={refresh}
-                            submitColor='secondary'
+                            submitColor="secondary"
                         />
-                    </div> 
+                    </div>
                 )
             }
         </div>
     )
 }
-
 

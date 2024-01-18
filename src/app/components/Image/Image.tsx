@@ -1,6 +1,6 @@
 import styles from './Image.module.scss'
 import { ImageProps } from 'next/image'
-import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
+import type { ImageSize, Image as ImageT } from '@prisma/client'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     image: ImageT,
@@ -25,6 +25,8 @@ export default function Image({ alt, image, width, smallSize, largeSize, imageSi
                 break
             case 'LARGE':
                 url = `/store/images/${image.fsLocation}`
+                break
+            default:
                 break
         }
     } else {
