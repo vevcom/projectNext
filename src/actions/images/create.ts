@@ -27,13 +27,18 @@ async function createOne(file: File, meta: Omit<Image, | 'fsLocationSmallSize' |
         }
     }
 
-    let buffer = Buffer.from(await file.arrayBuffer())
+    let arrBuffer = await file.arrayBuffer()
 
     // If the image is in HEIC format, convert it to PNG
     if (ext === 'heic') {
-        buffer = await sharp(buffer).toFormat('png').toBuffer();
+        arrBuffer = await heicConvert({
+            buffer: arrBuffer,
+            format: 'PNG',
+            quality: 1
+        })
         ext = 'png';
     }
+    const buffer = Buffer.from(arrBuffer)
 
     try {
         const fsLocation = `${uuid()}.${ext}`
