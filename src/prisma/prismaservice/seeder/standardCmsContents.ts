@@ -59,6 +59,7 @@ const standardCmsContents : CmsContent = {
         {
             name: 'footer_2',
             imageName: 'nordic',
+            imageSize: 'SMALL'
         },
         {
             name: 'footer_3',
@@ -70,19 +71,23 @@ const standardCmsContents : CmsContent = {
         },
         {
             name: 'mobile_nav_primary_button',
-            imageName: 'logo_simple'
+            imageName: 'logo_simple',
+            imageSize: 'SMALL'
         },
         {
             name: 'mobile_nav_login_button',
-            imageName: 'magisk_hatt'
+            imageName: 'magisk_hatt',
+            imageSize: 'SMALL'
         },
         {
             name: 'nav_primary_button',
-            imageName: 'logo_simple'
+            imageName: 'logo_simple',
+            imageSize: 'SMALL'
         },
         {
             name: 'nav_login_button',
-            imageName: 'magisk_hatt'
+            imageName: 'magisk_hatt',
+            imageSize: 'SMALL'
         }
     ],
     cmsParagraphs: []
