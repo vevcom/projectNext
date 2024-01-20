@@ -1,9 +1,9 @@
 'use client'
 import styles from './ChangeImage.module.scss'
-import Image from '../Image'
+import Image from '../../Image/Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import Form from '@/components/Form/Form'
-import update from '@/actions/images/links/update'
+import update from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext } from 'react'
@@ -12,10 +12,10 @@ import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     currentImage: ImageT,
-    imageLinkId: number,
+    cmsImageId: number,
 }
 
-export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId } : PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
@@ -44,7 +44,7 @@ export default function ChangeImage({ currentImage, imageLinkId } : PropTypes) {
             {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id && (
                     <Form
-                        action={update.bind(null, imageLinkId).bind(null, selectedContext.selectedImage.id)}
+                        action={update.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
                         submitText="change"
                         successCallback={refresh}
                     />

@@ -2,7 +2,7 @@
 
 $collectionSize: calc(10vmin + 100px);
 
-.ImageLinkEditor {
+.CmsImageEditor {
     width: calc(97vw - 140px);
     height: calc(97vh - 140px);
     display: grid;
@@ -17,7 +17,7 @@ $collectionSize: calc(10vmin + 100px);
         @include ohma.btn(ohma.$colors-primary);
         width: 10em;
     }
-    > .currentImageLink {
+    > .currentCmsImage {
         grid-column: 1 / 2;
         grid-row: 1 / 2;
     }
@@ -73,8 +73,8 @@ $collectionSize: calc(10vmin + 100px);
                 z-index: 2;
                 border: 5px solid ohma.$colors-primary;
                 border-radius: 1.2em;
-                &:hover > .collectionCard img {
-                    scale: 1;
+                .collectionCard img {
+                    scale: 1.2;
                 }
             }
         }

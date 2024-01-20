@@ -25,27 +25,28 @@ export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
     serverRenderedData: Data[],
 }
 
-export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails> = {
-    fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
+export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
+    fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
     Context: PagingContextType<Data, PageSize>,
 }
 
-type ActionTypes<Data, PageSize extends number> = {
+type ActionTypes<Data, PageSize extends number, DataGuarantee extends boolean> = {
     type: 'loadMoreStart',
 } | {
     type: 'loadMoreSuccess' | 'loadMoreFailure',
-    fetchReturn: ActionReturn<Data[]>,
+    fetchReturn: ActionReturn<Data[], DataGuarantee>,
 } | {
     type: 'clearAll',
     startPage: Page<PageSize>,
     serverRenderedData: Data[],
 }
 
-function endlessScrollReducer<Data, const PageSize extends number>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data, PageSize>) : StateTypes<Data, PageSize> {
+function fetchReducer<Data, const PageSize extends number, DataGuarantee extends boolean>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data, PageSize, DataGuarantee>) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
             return { ...state, loading: true }
         case 'loadMoreSuccess':
+            if (!action.fetchReturn.success) throw new Error('loadMoreSuccess called with unsuccessful fetchReturn')
             if (!action.fetchReturn.data || action.fetchReturn.data.length === 0) {
                 return { ...state, allLoaded: true, loading: false }
             }
@@ -59,7 +60,6 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
                 }
             }
         case 'loadMoreFailure':
-            console.error(action.fetchReturn.error)
             return { ...state, allLoaded: true, loading: false }
         case 'clearAll':
             return { ...state, data: action.serverRenderedData, page: action.startPage, allLoaded: false }
@@ -68,9 +68,9 @@ function endlessScrollReducer<Data, const PageSize extends number>(state: StateT
     }
 }
 
-function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails>) {
+function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>) {
     return function PagingProvider({ serverRenderedData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
-        const [state, dispatch] = useReducer(endlessScrollReducer<Data, PageSize>, { data: serverRenderedData, page: startPage, loading: false, allLoaded: false })
+        const [state, dispatch] = useReducer(fetchReducer<Data, PageSize, DataGuarantee>, { data: serverRenderedData, page: startPage, loading: false, allLoaded: false })
 
         const stateRef = useRef(state)
         const detailsRef = useRef(details)
@@ -92,11 +92,11 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails>({
                 page: stateRef.current.page,
                 details: detailsRef.current,
             })
-            if (!fetchReturn.success || !fetchReturn.data) {
+            if (!fetchReturn.success) {
                 dispatch({ type: 'loadMoreFailure', fetchReturn })
-            } else {
-                dispatch({ type: 'loadMoreSuccess', fetchReturn })
+                return []
             }
+            dispatch({ type: 'loadMoreSuccess', fetchReturn })
             return fetchReturn.data || []
         }
 

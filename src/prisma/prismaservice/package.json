@@ -1,0 +1,23 @@
+{
+  "name": "prismaservice",
+  "version": "0.0.0",
+  "description": "migrations and seeding for db",
+  "main": "index.js",
+  "scripts": {
+    "seed": "npx ts-node seeder/seed.ts"
+  },
+  "author": "vevcom",
+  "license": "ISC",
+  "dependencies": {
+    "prisma": "^5.8.1",
+    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1"
+  },
+  "prisma": {
+    "schema": "schema.prisma"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.7"
+  }
+}

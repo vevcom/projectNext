@@ -9,7 +9,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - store:/usr/src/app/store
+      - devstore:/usr/src/app/store
       - ./src:/usr/src/app/src
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
@@ -47,13 +47,14 @@ services:
   prisma:
     build: 
       context: ./src/prisma
-      dockerfile: ./Dockerfile
+      dockerfile: ./prismaservice/Dockerfile
       target: dev
     environment:
       NODE_ENV: development
       DB_URI: ${DB_URI}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
+      - devstore:/usr/src/app/store
     depends_on:
       db:
         condition: service_healthy
@@ -67,7 +68,7 @@ services:
       - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - store:/usr/store
+      - devstore:/usr/store
     depends_on:
       - projectnext
     links:
@@ -76,6 +77,6 @@ services:
 volumes:
   devdb:
     driver: local
-  store:
+  devstore:
     driver: local
           

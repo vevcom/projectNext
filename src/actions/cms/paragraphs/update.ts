@@ -1,16 +1,16 @@
 'use server'
 
-import { ActionReturn } from '../type'
+import { ActionReturn } from '../../type'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { Paragraph } from '@prisma/client'
+import { CmsParagraph } from '@prisma/client'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 
-export default async function update(id: number, contentMd: string) : Promise<ActionReturn<Paragraph>> {
+export default async function update(id: number, contentMd: string) : Promise<ActionReturn<CmsParagraph>> {
     //This function expects to get valid md
     try {
         const contentHtml = (await unified()
@@ -21,7 +21,7 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             .process(contentMd)).value.toString()
             .replace(/<img[^>]*>/g, 'CANT HAVE IMAGE')
         try {
-            const paragraph = await prisma.paragraph.update({
+            const paragraph = await prisma.cmsParagraph.update({
                 where: {
                     id
                 },

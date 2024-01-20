@@ -80,15 +80,15 @@ export async function createMany(collectionId: number, rawdata: FormData): Promi
 
     const data = parse.data
 
-    let finalReturn : ActionReturn<Image[]> = { success: true, error: [], data: [] }
+    let finalReturn : ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
         const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        if (!ret.success) return ret
         finalReturn = {
+            ...finalReturn,
             success: ret.success,
-            error: ret.error,
         }
-        if (ret.data) finalReturn.data?.push(ret.data)
-        if (!finalReturn.success) return finalReturn
+        finalReturn.data.push(ret.data)
     }
     return finalReturn
 }

@@ -1,42 +1,42 @@
 'use client'
-import styles from './ImageLinkEditor.module.scss'
+import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
 import PopUp from '../../PopUp/PopUp'
 import EndlessScroll from '../../PagingWrappes/EndlessScroll'
-import CollectionCard from '../Collection/CollectionCard'
-import ImageList from '../ImageList/ImageList'
+import CollectionCard from '../../Image/Collection/CollectionCard'
+import ImageList from '../../Image/ImageList/ImageList'
 import { EditModeContext } from '@/context/EditMode'
 import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
-import { ImageLink, Image as ImageT } from '@prisma/client'
+import { CmsImage, Image as ImageT } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
-    imageLink: ImageLink & {
+    cmsImage: CmsImage & {
         image: ImageT
     }
 }
 
 
-export default function ImageLinkEditor({ imageLink }: PropTypes) {
+export default function CmsImageEditor({ cmsImage }: PropTypes) {
     const editingContext = useContext(EditModeContext)
-    const [currentCollectionId, setCurrentCollectionId] = useState<number>(imageLink.image.collectionId)
+    const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isColectionActive = (collection: { id: number }) => (collection.id === currentCollectionId ? styles.selected : '')
 
     return (
         editingContext?.editMode && (
-            <PopUp PopUpKey={imageLink.id} showButtonContent={
+            <PopUp PopUpKey={cmsImage.id} showButtonContent={
                 <div className={styles.editIcon}>
                     <FontAwesomeIcon icon={faPencil} />
                 </div>
             } showButtonClass={styles.openBtn}>
-                <ImageSelectionProvider defaultSelectionMode={true} defaultImage={imageLink.image}>
+                <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
                     <ImagePagingProvider
                         startPage={
                             {
@@ -48,14 +48,14 @@ export default function ImageLinkEditor({ imageLink }: PropTypes) {
                         serverRenderedData={[]}
                     >
                         <PopUpProvider>
-                            <div className={styles.ImageLinkEditor}>
-                                <div className={styles.currentImageLink}>
+                            <div className={styles.CmsImageEditor}>
+                                <div className={styles.currentCmsImage}>
                                     <h2>Edit image link</h2>
                                     <div className={styles.meta}>
-                                        <p>name: {imageLink.name}</p>
-                                        <i>id: {imageLink.id}</i>
+                                        <p>name: {cmsImage.name}</p>
+                                        <i>id: {cmsImage.id}</i>
                                     </div>
-                                    <ChangeImage currentImage={imageLink.image} imageLinkId={imageLink.id}/>
+                                    <ChangeImage currentImage={cmsImage.image} cmsImageId={cmsImage.id}/>
                                 </div>
                                 <div className={styles.selectImage}>
                                     <ImageList disableEditing={true}/>

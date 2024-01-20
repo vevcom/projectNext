@@ -1,5 +1,5 @@
 import styles from './Section.module.scss'
-import ImageLink from '@/components/Image/ImageLink/ImageLink'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import React from 'react'
 import Link from 'next/link'
 
@@ -16,7 +16,7 @@ type PropTypes = {
 function Section({ children, imagename, name, lesMer, right, imgWidth, id }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
-            <ImageLink name={imagename} width={imgWidth} />
+            <CmsImage name={imagename} width={imgWidth} />
         </div>
     )
     return (
