@@ -4,11 +4,11 @@ import { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler';
 import { z } from 'zod'
 
-export async function getRoles() {
+export async function readRoles() {
     return await prisma.role.findMany();
 }
 
-export async function addRole(data: FormData) : Promise<ActionReturn<void>> {
+export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
     const schema = z.object({name: z.string()})
 
     const parse = schema.safeParse({
@@ -36,7 +36,7 @@ export async function addRole(data: FormData) : Promise<ActionReturn<void>> {
     }
 }
 
-export async function deleteRole(roleId: number) : Promise<ActionReturn<never>> {
+export async function destroyRole(roleId: number) : Promise<ActionReturn<never>> {
     try {
         await prisma.role.delete({
             where: {
