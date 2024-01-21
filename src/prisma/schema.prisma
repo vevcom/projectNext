@@ -14,44 +14,54 @@ enum MembershipType {
 }
 
 model User {
-  id             Int            @id @default(autoincrement())
-  username       String         @unique
-  email          String         @unique
-  password       String         // Dette er kun for testing
-  firstname      String         @default("[Fjernet]")
-  lastname       String         @default("[Fjernet]")
-  membershipType MembershipType @default(SOELLE)
-  roles          RolesUsers[]
+  id        Int          @id @default(autoincrement())
+  username  String       @unique
+  email     String       @unique
+  password  String // Dette er kun for testing
+  firstname String       @default("[Fjernet]")
+  lastname  String       @default("[Fjernet]")
+  roles     RolesUsers[]
 
   @@map("users")
+}
+
+enum Permission {
+  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
+
+  // Fridge
+  USE_MONEY
+  USE_FRIDGE
+  INFINITE_MONEY
+
+  // Quotes
+  USE_OMEGA_QUOTES
+
+  // Bulshit
+  POST_BULSHIT
+  VIEW_BULSHIT
+
+  // Events
+  PARTICIPATE_IN_EVENTS
+  CREATE_EVENTS
+
+  // Minecraft
+  CREATIVE_MODE
 }
 
 model Role {
   id   Int    @id @default(autoincrement())
   name String @unique
 
-  users RolesUsers[]
+  users       RolesUsers[]
+  permissions RolePermission[]
+}
 
-  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
+model RolePermission {
+  role Role @relation(fields: [roleId], references: [id])
+  roleId Int
+  permission Permission
 
-  // Money
-  useMoney      Boolean @default(false)
-  useFridge     Boolean @default(false)
-  infiniteMoney Boolean @default(false)
-
-  // Quotes
-  useOmegaQuote Boolean @default(false)
-
-  // Bulshit
-  postBulshit Boolean @default(false)
-  viewBulshit Boolean @default(false)
-
-  // Events
-  participateEvents Boolean @default(false)
-  createEvents      Boolean @default(false)
-
-  // Minecraft
-  creativeMode Boolean @default(false)
+  @@unique([roleId, permission])
 }
 
 model RolesUsers {
