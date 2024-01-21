@@ -9,7 +9,7 @@ export async function readRoles() {
 }
 
 export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
-    const schema = z.object({name: z.string()})
+    const schema = z.object({ name: z.string() })
 
     const parse = schema.safeParse({
         name: data.get('name')
@@ -17,13 +17,10 @@ export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
-    const {name} = parse.data
 
-    if(!name) {
-        return {
-            success: false
-        }
-    } 
+    const { name } = parse.data
+
+    if(!name) return { success: false } 
     
     try {
         await prisma.role.create({data: {name}})
@@ -31,9 +28,7 @@ export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
         return errorHandeler(e)
     }
 
-    return {
-        success: true
-    }
+    return { success: true }
 }
 
 export async function destroyRole(roleId: number) : Promise<ActionReturn<never>> {
@@ -47,7 +42,5 @@ export async function destroyRole(roleId: number) : Promise<ActionReturn<never>>
         return errorHandeler(e)
     }
 
-    return {
-        success: true
-    }
+    return { success: true }
 }
