@@ -1,5 +1,5 @@
 # Image System
-The image system of which much of whose functionality is contained in /images route. Note that a distinction should be made between the image system, which is responsible for storing and rendering the images, many of which are uploaded by users at runtime, and images displayed using a CmsImage. To keep it short: a CmsImage is like a frame containing one image from the image system at any given time. Read more about CmsImages [here](/CMS_and_Articles.md)
+The image system of which much of whose functionality is contained in /images route. Note that a distinction should be made between the image system, which is responsible for storing and rendering the images, many of which are uploaded by users at runtime, and images displayed using a CmsImage. To keep it short: a CmsImage is like a frame containing one image from the image system at any given time. Read more about CmsImages [here](/docs/Content_Managment_System/CMS_and_Articles.md)
 
 ## Storing a image on fs
 A image is physically stored in the store volume, under the /images folder. This volume is accessible to both the main projectnext container responsible for storing user uploaded images, and nginx responsible for serving images stored. 
