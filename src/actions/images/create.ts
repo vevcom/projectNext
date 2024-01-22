@@ -47,12 +47,12 @@ async function createOne(file: File, meta: {
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
 
-        const madiumSize = await sharp(buffer).resize(600, 600, {
+        const mediumSize = await sharp(buffer).resize(600, 600, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toBuffer() // Adjust the size as needed
         const fsLocationMediumSize = `${uuid()}.${ext}`
-        await writeFile(join(destination, fsLocationMediumSize), madiumSize)
+        await writeFile(join(destination, fsLocationMediumSize), mediumSize)
 
         try {
             const image = await prisma.image.create({
