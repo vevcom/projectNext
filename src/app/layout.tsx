@@ -8,7 +8,7 @@ import styles from './layout.module.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
-import authOptions from '@/auth'
+import { authOptions } from '@/auth'
 import EditModeProvider from '@/context/EditMode'
 import PopUpProvider from '@/context/PopUp'
 
