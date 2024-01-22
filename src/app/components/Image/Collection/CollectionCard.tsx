@@ -16,7 +16,7 @@ export default function CollectionCard({ collection, className }: PropTypes) {
         <Link href={`/images/collections/${collection.id}`} className={`${styles.CollectionCard} ${className}`} key={collection.id}>
             {
                 collection.coverImage ? (
-                    <Image width={100} image={collection.coverImage} />
+                    <Image smallSize width={100} image={collection.coverImage} />
                 ) : (
                     <p>Something went wrong</p>
                 )

@@ -22,6 +22,7 @@ export default async function seedCms(prisma: PrismaClient) {
             },
             create: {
                 name: cmsimage.name,
+                imageSize: cmsimage.imageSize || 'MEDIUM',
                 image: {
                     connect: {
                         id: image.id

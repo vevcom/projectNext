@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid'
+import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
-import { join } from 'path'
+import path, { join } from 'path'
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedImages(prisma: PrismaClient) {
@@ -17,14 +18,43 @@ export default async function seedImages(prisma: PrismaClient) {
         }
     })
 
-    const files = await readdir(join(__dirname, 'standard_store', 'images'))
+    const standardLocation = join(__dirname, 'standard_store', 'images')
+    const storeLocation = join(__dirname, '..', 'store', 'images')
+
+    const files = await readdir(standardLocation)
     await Promise.all(files.map(async (file) => {
         const ext = file.split('.')[1]
-        if (!['jpg', 'jpeg', 'png', 'gif', 'heic'].includes(ext)) {
+        if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
             console.log(`skipping image ${file}`)
             return
         }
         const name = file.split('.')[0]
+
+        //full size version of the image
+        const fsLocation = `${uuid()}.${ext}`
+        await copyFile(
+            join(standardLocation, file),
+            join(storeLocation, fsLocation)
+        )
+
+        const bigPath = path.join(standardLocation, file)
+
+        //create small size version of the image
+        const fsLocationSmallSize = `${uuid()}.${ext}`
+        const smallPath = path.join(storeLocation, fsLocationSmallSize)
+        await sharp(bigPath).resize(250, 250, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toFile(smallPath)
+
+        //create medium size version of the image
+        const fsLocationMediumSize = `${uuid()}.${ext}`
+        const mediumPath = path.join(storeLocation, fsLocationMediumSize)
+        await sharp(bigPath).resize(600, 600, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toFile(mediumPath)
+
         const image = await prisma.image.upsert({
             where: {
                 name
@@ -33,7 +63,9 @@ export default async function seedImages(prisma: PrismaClient) {
             create: {
                 name,
                 alt: name.split('_').join(' '),
-                fsLocation: `${uuid()}.${ext}`,
+                fsLocation,
+                fsLocationSmallSize,
+                fsLocationMediumSize,
                 ext,
                 collection: {
                     connect: {
@@ -42,10 +74,6 @@ export default async function seedImages(prisma: PrismaClient) {
                 }
             }
         })
-
-        //copy the file from standard_store images to the image store/images with new name to add it to store volume.
-        await copyFile(join(__dirname, 'standard_store', 'images', file), join(__dirname, '..', 'store', 'images', image.fsLocation))
-
         console.log(image)
     }))
 }

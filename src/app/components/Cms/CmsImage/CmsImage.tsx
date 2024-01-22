@@ -7,7 +7,7 @@ import React from 'react'
 import type { PropTypes as ImagePropTypes } from '../../Image/Image'
 import type { Image as ImageT } from '@prisma/client'
 
-export type PropTypes = Omit<ImagePropTypes, 'image' | 'children'> & {
+export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & {
     name: string,
     children?: React.ReactNode
 }
@@ -27,7 +27,7 @@ export default async function CmsImage({ name, children, ...props }: PropTypes) 
     return (
         <div className={styles.CmsImage}>
             <CmsImageEditor cmsImage={{ ...res.data, image }}/>
-            <Image image={image} {...props}/>
+            <Image imageSize={res.data.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
     )
