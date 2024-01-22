@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
@@ -41,6 +41,6 @@ export default async function update(collectionId: number, coverImageId: number 
         })
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

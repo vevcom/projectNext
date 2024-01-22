@@ -1,7 +1,7 @@
 'use server'
 
 import { ActionReturn } from '../../type'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { CmsParagraph } from '@prisma/client'
 import { unified } from 'unified'
@@ -35,7 +35,7 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
                 data: paragraph
             }
         } catch (error) {
-            return errorHandeler(error)
+            return errorHandler(error)
         }
     } catch (e) {
         console.log(e)
