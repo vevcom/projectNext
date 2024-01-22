@@ -4,8 +4,25 @@ import { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler';
 import { z } from 'zod'
 
-export async function readRoles() {
-    return await prisma.role.findMany();
+import type { Prisma, Role, RolePermission } from '@prisma/client';
+
+type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: true } }>
+
+export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>>{
+    try {
+        const roles = await prisma.role.findMany({
+            include: { 
+                permissions: true 
+            }
+        });
+
+        return {
+            data: roles,
+            success: true,
+        }
+    } catch(e) {
+        return errorHandeler(e)
+    }
 }
 
 export async function createRole(data: FormData) : Promise<ActionReturn<void>> {

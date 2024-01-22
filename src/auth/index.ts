@@ -2,8 +2,9 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions } from 'next-auth'
 
 import prisma from '@/prisma'
+import type { Permission } from '@prisma/client'
 
-const authOptions : AuthOptions = {
+export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -54,5 +55,3 @@ const authOptions : AuthOptions = {
         signOut: '/logout'
     }
 }
-
-export default authOptions

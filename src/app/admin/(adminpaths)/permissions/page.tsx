@@ -1,31 +1,31 @@
 import styles from './page.module.scss'
 import CreateRoleForm from './CreateRoleForm'
 
-import { getRoles } from '@/actions/permissions'
+import { readRoles } from '@/actions/permissions'
 import DeleteRoleButton from './DeleteRoleButton'
 import TextInput from '@/app/components/UI/TextInput'
+import { Permission } from '@prisma/client'
 
 export default async function Permissions() {
-    const roles = await getRoles()
-    
-    const tableHeaders = [
-        "Navn",
-        "Bruke penger",
-        "Bruke kioleskab",
-        "Lage hendelser",
-        "Kreativ-modus"
-    ]
+    const {data: roles = []} = await readRoles()
 
-    const tableContents = Array.from(roles, role => { 
+    const permissionNames: Record<Permission, string> = {
+        USE_MONEY: "Bruke penger",
+        USE_FRIDGE: "Bruke kioleskab",
+        INFINITE_MONEY: "Evig peneger",
+        PARTICIPATE_IN_EVENTS: "Delta på hendelser",
+        CREATE_EVENTS: "Lage hendelser",
+        USE_OMEGA_QUOTES: "Skrive Omega Quotes",
+        POST_BULSHIT: "Skrive bulshit",
+        VIEW_BULSHIT: "Lese bulshit",
+        CREATIVE_MODE: "Kreativ-modus",
+    }
+
+    const tableContents = roles.map(role => { 
         return {
             name: role.name, 
             roleId: role.id,
-            permissions: [
-                role.useMoney,
-                role.useFridge,
-                role.createEvents,
-                role.creativeMode
-            ]
+            permissions: role.permissions.map(permission => permission.permission)
         }
     })
 
@@ -36,13 +36,17 @@ export default async function Permissions() {
             
             <table className={styles.permissionsTable}>
                 <thead>
-                    <tr>{tableHeaders.map(header => <th>{header}</th>)}</tr>
+                    <tr><th>Navn</th>{Object.values(permissionNames).map(header => <th>{header}</th>)}</tr>
                 </thead>
                 <tbody>
                     {tableContents.map(({name, roleId, permissions}) => 
                         <tr>
                             <td><TextInput label="" defaultValue={name}/></td>
-                            {permissions.map(allowed => <td><input type="checkbox" defaultChecked={allowed}></input></td>)}
+
+                            {Object.keys(permissionNames).map(permission => 
+                                <td><input type="checkbox" defaultChecked={permissions.includes(permission as Permission)} /></td>
+                            )}
+                            
                             <td><DeleteRoleButton roleId={roleId} /></td>
                         </tr>
                     )}
