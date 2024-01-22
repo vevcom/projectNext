@@ -16,7 +16,7 @@ The prisma service can also write (and read) to the store volume when it is runn
 No image is literally stored in the database, but all images stored in store/images has a record in the database that contains: name, date uploaded, and importantly its fsLocation. The fsLocation field in a Image record is a filename that mirroring its filename in store/images. The server action responsible for uploading a image is /images/create.
 
 ## The Image component
-The simple Image component is a simple component that takes a image object from the database and displays
+The simple Image component is a simple component that takes a image object from the database and displays it by making a request to the right url stored on the image object.
 
 ## Storing images in multiple sizes
 Since an image from the image system may be displayed in many different locations either direcly through the Image component or indirectly through the CmsImage component it is neccessary for performance reasons to be able to serve 

@@ -34,6 +34,10 @@ Run this to deploy:
 ## Roadmap to understand projectnext
 1. **General Knowledge** First you should familiarize yourself with react, next.js then move on to understanding the basics of typescript and scss. You should also be somewhat familiar with Prisma and the general use of sql databases.
 
-2. Download Docker and make sure you are able to use iit start projectnext in both dev and prod  
+2. Download Docker and make sure you are able to use ii start projectnext in both dev and prod. You can read more about Docker in [Docker](./Docker.md) but the basics on how to start are written above.
+
+3. Read about our project structure [here](./)
+
+4. Read on how we use git and github in this project [here](./Git_Note.md)
 
 
