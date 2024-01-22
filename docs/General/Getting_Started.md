@@ -11,11 +11,29 @@ Our stack consists of
 - Typescript
 
 ## Development
-The whole 
+The whole project is dockerized both for development, production and testing (NOT IMPLEMENTED). To build your own production environment (you need Docker installed):
+```bash
+    docker compose -f docker-compose.dev.yml build
+```
+Then to start it run this: 
+```bash
+    docker compose -f docker-compose.dev.yml build
+```
 
+## Production
+Run this to build:
+```bash
+    docker compose build
+```
 
-## Roadmap to understand project next
+Run this to deploy:
+```bash
+    docker compose up
+```
+
+## Roadmap to understand projectnext
 1. **General Knowledge** First you should familiarize yourself with react, next.js then move on to understanding the basics of typescript and scss. You should also be somewhat familiar with Prisma and the general use of sql databases.
 
-2. Download Docker and make sure you are able to use 
+2. Download Docker and make sure you are able to use iit start projectnext in both dev and prod  
+
 
