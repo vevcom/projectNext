@@ -40,4 +40,8 @@ Run this to deploy:
 
 4. Read on how we use git and github in this project [here](./Git_Note.md)
 
+After 4 you can start writing things in the project.
+
+5. Read about styling ing
+
 
