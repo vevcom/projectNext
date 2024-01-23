@@ -11,18 +11,34 @@ import type {
 
 type PropTypes = {
     articleSection: ArticleSection & {
-        cmsParagraph: CmsParagraphT,
-        cmsImage: CmsImageT,
-        cmsLink: CmsLinkT
+        cmsParagraph: CmsParagraphT | null,
+        cmsImage: CmsImageT | null,
+        cmsLink: CmsLinkT | null
     }
 }
 
 export default function ArticleSection({ articleSection }: PropTypes) {
+    const { cmsParagraph, cmsImage, cmsLink } = articleSection;
     return (
         <section className={styles.ArticleSection}>
-            <CmsParagraph cmsParagraph={articleSection.cmsParagraph} />
-            <CmsImage width={articleSection.imageSize} name={articleSection.cmsImage.name} />
-            <CmsLink cmsLink={articleSection.cmsLink} />
+            {
+                cmsParagraph && 
+                <span>
+                    <CmsParagraph cmsParagraph={cmsParagraph} />
+                </span>
+            }
+            {
+                cmsImage && 
+                <span>
+                    <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
+                </span>
+            }
+            {
+                cmsLink && 
+                <span>
+                    <CmsLink cmsLink={cmsLink} />
+                </span>
+            }
         </section>
     );
 }
