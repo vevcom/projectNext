@@ -1,17 +1,49 @@
 'use server'
 
 import { ActionReturn } from "@/actions/type";
-import type { ArticleSection } from "prisma/client";
+import type { ArticleSection } from "@prisma/client";
 import prisma from "@/prisma";
 import { default as createCmsImage } from "@/actions/cms/images/create";
 import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
+import { default as createCmsLink } from "@/actions/cms/links/create";
+import errorHandeler from "@/prisma/errorHandler";
 
 export default async function create(name: string): Promise<ActionReturn<ArticleSection>> {
-    const cmsImage = await 
+    const cmsImageRes = await createCmsImage(`${name}_image`)
+    if (!cmsImageRes.success) return cmsImageRes
+    const cmsImage = cmsImageRes.data
 
-    const articleSection = await prisma.articleSection.create({
-        data: {
-            name
-        }
-    })
+    const cmsParagraphRes = await createCmsParagraph(`${name}_paragraph`)
+    if (!cmsParagraphRes.success) return cmsParagraphRes
+    const cmsParagraph = cmsParagraphRes.data
+
+    const cmsLinkRes = await createCmsLink(`${name}_link`)
+    if (!cmsLinkRes.success) return cmsLinkRes
+    const cmsLink = cmsLinkRes.data
+
+    try {
+        const articleSection = await prisma.articleSection.create({
+            data: {
+                name,
+                cmsImage: {
+                    connect: {
+                        id: cmsImage.id
+                    }
+                },
+                cmsParagraph: {
+                    connect: {
+                        id: cmsParagraph.id
+                    }
+                },
+                cmsLink: {
+                    connect: {
+                        id: cmsLink.id
+                    }
+                }
+            }
+        })
+        return { success: true, data: articleSection }
+    } catch (error) {
+        return errorHandeler(error)
+    }
 }
