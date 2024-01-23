@@ -21,6 +21,8 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     return (
         <span className={styles.ArticleSection}>
             <CmsParagraph cmsParagraph={articleSection.cmsParagraph} />
+            <CmsImage width={articleSection.imageSize} name={articleSection.cmsImage.name} />
+            <CmsLink cmsLink={articleSection.cmsLink} />
         </span>
     );
 }
