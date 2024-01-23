@@ -19,7 +19,7 @@ The DataGuarantee is just a bool that is true by default and not that important.
 When using a server action called from a form you will get raw data of type FormData as one parameter. On this object you can access fields by ```rawData.get("prop")``` where prop is the name of the input inside a form. 
 
 ### using zod
-To make this access of formData typesafe we use zod to validate. Here is an example of a zod schema:
+To make this access of formData type-safe we use zod to validate. Here is an example of a zod schema:
 ```javascript
     const schema = z.object({
         name: z.string().max(40).min(2).trim(),
@@ -30,7 +30,7 @@ To make this access of formData typesafe we use zod to validate. Here is an exam
 ```
 Here you see that zod provides a way to validate more than just simple types. to parse data we use ```const parse = schema.safeParse({ [object matching schema] })``` To create the object you use: ```{... name: rawData.get("name") ...}``` for example. parse can either:
 1. Return parse.success false Then you can just return success: false with error as parse.error.issues. Note that the error.issues returned by zod is assignable to our ActionError type.
-2. success is true and you can access typesafe data on parse.data in accordance with your schema.
+2. success is true and you can access type-safe data on parse.data in accordance with your schema.
 
 The rest of the action will be used to implement the specific functionality of the action, and will most likely include prisma calls.
 
