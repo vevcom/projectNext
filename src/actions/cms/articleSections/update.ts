@@ -1,3 +1,4 @@
+'use server';
 import type { ArticleSection } from "@prisma/client";
 import type { ActionReturn } from "@/actions/type";
 import prisma from "@/prisma";
@@ -10,6 +11,7 @@ import type { ReturnType } from "./ReturnType";
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
 export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
+    console.log(name, part)
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },

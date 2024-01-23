@@ -1,3 +1,4 @@
+'use server'
 import type { ReturnType } from "./ReturnType";
 import { ActionReturn } from "@/actions/type";
 import prisma from "@/prisma";
