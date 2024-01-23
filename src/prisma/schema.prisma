@@ -91,6 +91,11 @@ model CmsLink {
   @@map("cms_links")
 }
 
+enum Position {
+  LEFT
+  RIGHT
+}
+
 model ArticleSection {
   id             Int          @id @default(autoincrement())
   name           String       @unique
@@ -102,6 +107,8 @@ model ArticleSection {
   cmsLinkId      Int          @unique
   cmsParagraph   CmsParagraph @relation(fields: [cmsParagraphId], references: [id], onDelete: Cascade)
   cmsParagraphId Int          @unique
+  imagePosition  Position     @default(RIGHT) @map("image_position")
+  imageSize      Int          @default(200)
 
   @@map("article_sections")
 }
