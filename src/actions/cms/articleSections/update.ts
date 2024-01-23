@@ -25,7 +25,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
         }
 
         switch (part) {
-            case 'cmsLink':
+            case 'cmsImage':
                 const cmsImage = await createCmsImage(`${name}_image`)
                 if (!cmsImage.success) return cmsImage
                 return { 
@@ -49,7 +49,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
                     }) 
                 }
             
-            case 'cmsImage':
+            case 'cmsLink':
                 const cmsLink = await createCmsLink(`${name}_link`)
                 if (!cmsLink.success) return cmsLink
                 return { 
