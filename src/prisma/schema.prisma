@@ -97,18 +97,18 @@ enum Position {
 }
 
 model ArticleSection {
-  id             Int          @id @default(autoincrement())
-  name           String       @unique
-  createdAt      DateTime     @default(now()) @map("created_at")
-  updatedAt      DateTime     @updatedAt @map("updated_at")
-  cmsImage       CmsImage     @relation(fields: [cmsImageId], references: [id], onDelete: Cascade)
-  cmsImageId     Int          @unique
-  cmsLink        CmsLink      @relation(fields: [cmsLinkId], references: [id], onDelete: Cascade)
-  cmsLinkId      Int          @unique
-  cmsParagraph   CmsParagraph @relation(fields: [cmsParagraphId], references: [id], onDelete: Cascade)
-  cmsParagraphId Int          @unique
-  imagePosition  Position     @default(RIGHT) @map("image_position")
-  imageSize      Int          @default(200)
+  id             Int           @id @default(autoincrement())
+  name           String        @unique
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  cmsImage       CmsImage?     @relation(fields: [cmsImageId], references: [id], onDelete: SetNull)
+  cmsImageId     Int?          @unique
+  cmsLink        CmsLink?      @relation(fields: [cmsLinkId], references: [id], onDelete: SetNull)
+  cmsLinkId      Int?          @unique
+  cmsParagraph   CmsParagraph? @relation(fields: [cmsParagraphId], references: [id], onDelete: SetNull)
+  cmsParagraphId Int?          @unique
+  imagePosition  Position      @default(RIGHT) @map("image_position")
+  imageSize      Int           @default(200)
 
   @@map("article_sections")
 }
