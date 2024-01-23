@@ -83,7 +83,7 @@ model CmsParagraph {
 model CmsLink {
   id             Int             @id @default(autoincrement())
   name           String          @unique
-  url            String
+  url            String          @default("./")
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   ArticleSection ArticleSection?
