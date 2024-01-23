@@ -1,14 +1,20 @@
 'use server'
 
 import { ActionReturn } from "@/actions/type";
-import type { ArticleSection } from "@prisma/client";
+import type { ArticleSection, CmsImage, CmsParagraph, CmsLink } from "@prisma/client";
 import prisma from "@/prisma";
 import { default as createCmsImage } from "@/actions/cms/images/create";
 import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
 import { default as createCmsLink } from "@/actions/cms/links/create";
 import errorHandeler from "@/prisma/errorHandler";
 
-export default async function create(name: string): Promise<ActionReturn<ArticleSection>> {
+type ReturnType = ArticleSection & {
+    cmsImage: CmsImage,
+    cmsParagraph: CmsParagraph,
+    cmsLink: CmsLink
+}
+
+export default async function create(name: string): Promise<ActionReturn<ReturnType>> {
     const cmsImageRes = await createCmsImage(`${name}_image`)
     if (!cmsImageRes.success) return cmsImageRes
     const cmsImage = cmsImageRes.data
@@ -40,6 +46,11 @@ export default async function create(name: string): Promise<ActionReturn<Article
                         id: cmsLink.id
                     }
                 }
+            },
+            include: {
+                cmsImage: true,
+                cmsParagraph: true,
+                cmsLink: true
             }
         })
         return { success: true, data: articleSection }
