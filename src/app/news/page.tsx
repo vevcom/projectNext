@@ -4,11 +4,12 @@ import create from '@/actions/cms/articleSections/create'
 
 export default async function Articles() {
 
-    create('test_article')
+    const articleRes = await create('test_article')
+    if (!articleRes.success) throw new Error(articleRes.error ? articleRes.error[0].message : 'error')
     
     return (
         <main className={styles.wrapper}>
-            <ArticleSection articleSection={} />
+            <ArticleSection articleSection={articleRes.data} />
         </main>
     )
 }
