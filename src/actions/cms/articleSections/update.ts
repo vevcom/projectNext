@@ -83,33 +83,33 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
 
         switch (part) {
             case 'cmsLink':
+                await prisma.cmsLink.delete({ where: { id: articleSection.cmsLink?.id } })
                 return {
                     success: true,
-                    data: await prisma.articleSection.update({
+                    data: await prisma.articleSection.findUnique({
                         where: { name },
-                        data: { cmsLink: { disconnect: true } },
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    })
+                    }) || articleSection
                 }
 
             case 'cmsParagraph':
+                await prisma.cmsParagraph.delete({ where: { id: articleSection.cmsParagraph?.id } })
                 return {
                     success: true,
-                    data: await prisma.articleSection.update({
+                    data: await prisma.articleSection.findUnique({
                         where: { name },
-                        data: { cmsParagraph: { disconnect: true } },
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    })
+                    }) || articleSection
                 }
 
             case 'cmsImage':
+                await prisma.cmsImage.delete({ where: { id: articleSection.cmsImage?.id } })
                 return {
                     success: true,
-                    data: await prisma.articleSection.update({
+                    data: await prisma.articleSection.findUnique({
                         where: { name },
-                        data: { cmsImage: { disconnect: true } },
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    })
+                    }) || articleSection
                 }
             default:
                 break;
