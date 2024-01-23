@@ -40,8 +40,11 @@ Run this to deploy:
 
 4. Read on how we use git and github in this project [here](./Git_Note.md)
 
-After 4 you can start writing things in the project.
+5. Read about styling using scss [here](./Styling_and_Ohma.md)
 
-5. Read about styling ing
+After 5. you should have knowledge to be able to start writing code.
+
+6. Read about how we use server actions [here](./Server_Actions.md)
+
 
 
