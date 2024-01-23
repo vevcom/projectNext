@@ -7,7 +7,7 @@ import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
 import { default as createCmsLink } from "@/actions/cms/links/create";
 import type { ReturnType } from "./ReturnType";
 
-type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
+export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
 export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
     try {
