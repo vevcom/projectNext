@@ -56,24 +56,52 @@ enum ImageSize {
 }
 
 model CmsImage {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  image     Image?    @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId   Int?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  imageSize ImageSize @default(MEDIUM) @map("small_image")
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  image          Image?           @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId        Int?
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  imageSize      ImageSize        @default(MEDIUM) @map("small_image")
+  ArticleSection ArticleSection[]
 
   @@map("cms_images")
 }
 
 model CmsParagraph {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  contentMd   String   @default("")
-  contentHtml String   @default("")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  contentMd      String          @default("")
+  contentHtml    String          @default("")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  ArticleSection ArticleSection?
 
   @@map("cms_paragraphs")
+}
+
+model CmsLink {
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
+  url            String
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  ArticleSection ArticleSection?
+
+  @@map("cms_links")
+}
+
+model ArticleSection {
+  id             Int          @id @default(autoincrement())
+  name           String       @unique
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  cmsImage       CmsImage     @relation(fields: [cmsImageId], references: [id], onDelete: Cascade)
+  cmsImageId     Int          @unique
+  cmsLink        CmsLink      @relation(fields: [cmsLinkId], references: [id], onDelete: Cascade)
+  cmsLinkId      Int          @unique
+  cmsParagraph   CmsParagraph @relation(fields: [cmsParagraphId], references: [id], onDelete: Cascade)
+  cmsParagraphId Int          @unique
+
+  @@map("article_sections")
 }
