@@ -1,18 +1,13 @@
 'use server'
 
 import { ActionReturn } from "@/actions/type";
-import type { ArticleSection, CmsImage, CmsParagraph, CmsLink } from "@prisma/client";
 import prisma from "@/prisma";
 import { default as createCmsImage } from "@/actions/cms/images/create";
 import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
 import { default as createCmsLink } from "@/actions/cms/links/create";
 import errorHandeler from "@/prisma/errorHandler";
+import type { ReturnType } from "./ReturnType";
 
-type ReturnType = ArticleSection & {
-    cmsImage: CmsImage,
-    cmsParagraph: CmsParagraph,
-    cmsLink: CmsLink
-}
 
 export default async function create(name: string): Promise<ActionReturn<ReturnType>> {
     const cmsImageRes = await createCmsImage(`${name}_image`)
