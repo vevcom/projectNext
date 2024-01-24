@@ -3,22 +3,17 @@
 .AddParts {
     position: relative;
     padding: ohma.$gap;
-
-    &:before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 30px;
-        left: 0;
-        border: ohma.$colors-primary 3px solid;
-        border-radius: ohma.$rounding;
-        z-index: -1;
-    }
-
+    border: ohma.$colors-secondary 3px solid;
+    border-radius: ohma.$rounding;
+    min-height: 100px;
     > .addControls {
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: 3px;
+        right: 3px;
+        z-index: 1;
+        display: flex;
+        button {
+            display: flex;
+        }
     }
 }

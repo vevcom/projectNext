@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import type { ReactNode } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import BorderButton from "../../UI/BorderButton"
 
 type PropTypes = {
     articleSectionName: string,
@@ -59,13 +60,14 @@ export default function AddPart({
             <div className={styles.addControls}>
             {
                 parts.map((part, i) => part.shouldShow && (
-                    <button 
+                    <BorderButton 
                         key={i} 
                         onClick={() => handleAdd(part.part)}
+                        color="secondary"
                     >
                         <FontAwesomeIcon icon={faPlus} />
                         {part.text}
-                    </button>
+                    </BorderButton>
                 ))
             }
             </div>
