@@ -21,9 +21,10 @@ const DynamicSimpleMDEditor = dynamic(
 
 type PropTypes = {
     cmsParagraph: CmsParagraph
+    editorClassName?: string
 }
 
-export default function CmsParagraphEditor({ cmsParagraph }: PropTypes) {
+export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: PropTypes) {
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
@@ -36,7 +37,7 @@ export default function CmsParagraphEditor({ cmsParagraph }: PropTypes) {
 
     return (
         editmode.editMode && (
-            <div className={styles.CmsParagraphEditor}>
+            <div className={`${styles.CmsParagraphEditor} ${editorClassName}`}>
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}

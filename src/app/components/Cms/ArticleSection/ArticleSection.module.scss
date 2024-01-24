@@ -1,5 +1,25 @@
 @use '@/styles/ohma';
 
 .ArticleSection {
-
+    .content {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto auto;
+        grid-template-areas: 
+            "image_left paragraph image_right"
+            "image_left link image_right"
+            "paragraph_editor paragraph_editor paragraph_editor";
+        > .paragraph {
+            grid-area: paragraph;
+        }
+        > .image {
+            grid-area: image_right;
+        }
+        > .paragraphEditor {
+            grid-area: paragraph_editor;
+        }
+        > .link {
+            grid-area: link;
+        }
+    }
 }

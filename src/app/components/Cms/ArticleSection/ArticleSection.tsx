@@ -29,27 +29,28 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                 showImageAdd={!cmsImage}
                 showLinkAdd={!cmsLink}
             >
-            {
-                cmsParagraph && 
-                <span className={styles.paragraph}>
+                <span className={styles.content}>
+                {
+                    cmsParagraph && <>
                     <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
-                    <CmsParagraph cmsParagraph={cmsParagraph} />
+                    <CmsParagraph className={styles.paragraph} editorClassName={styles.paragraphEditor} cmsParagraph={cmsParagraph} />
+                </>
+                }
+                {
+                    cmsImage && 
+                    <span className={styles.image}>
+                        <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+                        <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
+                    </span>
+                }
+                {
+                    cmsLink && 
+                    <span className={styles.link}>
+                        <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
+                        <CmsLink cmsLink={cmsLink} />
+                    </span>
+                }
                 </span>
-            }
-            {
-                cmsImage && 
-                <span className={styles.image}>
-                    <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
-                    <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
-                </span>
-            }
-            {
-                cmsLink && 
-                <span className={styles.link}>
-                    <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
-                    <CmsLink cmsLink={cmsLink} />
-                </span>
-            }
             </AddPart>
         </section>
     );
