@@ -31,10 +31,12 @@ export default function ArticleSection({ articleSection }: PropTypes) {
             >
                 <span className={styles.content}>
                 {
-                    cmsParagraph && <>
+                    cmsParagraph ? (<>
                     <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
                     <CmsParagraph className={styles.paragraph} editorClassName={styles.paragraphEditor} cmsParagraph={cmsParagraph} />
-                </>
+                </>) : (
+                    <div className={styles.paragraphEditor} />
+                )
                 }
                 {
                     cmsImage && 

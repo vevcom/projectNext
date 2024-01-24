@@ -14,9 +14,12 @@
         }
         > .image {
             grid-area: image_right;
+            overflow: hidden;
+            border-radius: ohma.$rounding;
         }
         > .paragraphEditor {
             grid-area: paragraph_editor;
+            min-height: 60px;
         }
         > .link {
             grid-area: link;
