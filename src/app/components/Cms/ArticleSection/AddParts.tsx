@@ -56,7 +56,7 @@ export default function AddPart({
     return (
         <div className={styles.AddParts}>
             {children}
-            <div className={styles.addcontrols}>
+            <div className={styles.addControls}>
             {
                 parts.map((part, i) => part.shouldShow && (
                     <button 

@@ -1,5 +1,24 @@
 @use '@/styles/ohma';
 
 .AddParts {
-    border: ohma.$colors-primary 1px solid;
+    position: relative;
+    padding: ohma.$gap;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 30px;
+        left: 0;
+        border: ohma.$colors-primary 3px solid;
+        border-radius: ohma.$rounding;
+        z-index: -1;
+    }
+
+    > .addControls {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
 }
