@@ -23,10 +23,6 @@
                 z-index: 2;
             }
         }
-        > .paragraphEditor {
-            grid-area: paragraph_editor;
-            min-height: 60px;
-        }
         > .link {
             grid-area: link;
         }

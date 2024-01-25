@@ -9,7 +9,7 @@ import type {
     CmsLink as CmsLinkT
 } from '@prisma/client';
 import RemovePart from './RemovePart';
-import AddPart from './AddParts';
+import AddParts from './AddParts';
 
 type PropTypes = {
     articleSection: ArticleSection & {
@@ -23,7 +23,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
     return (
         <section className={styles.ArticleSection}>
-            <AddPart 
+            <AddParts 
                 articleSectionName={articleSection.name}
                 showParagraphAdd={!cmsParagraph}
                 showImageAdd={!cmsImage}
@@ -31,14 +31,13 @@ export default function ArticleSection({ articleSection }: PropTypes) {
             >
                 <span className={styles.content}>
                 {
-                    cmsParagraph ? (<>
-                    <div className={styles.remover}>
-                        <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
-                    </div>
-                    <CmsParagraph className={styles.paragraph} editorClassName={styles.paragraphEditor} cmsParagraph={cmsParagraph} />
-                </>) : (
-                    <div className={styles.paragraphEditor} />
-                )
+                    cmsParagraph && 
+                    <span className={styles.paragraph}>
+                        <div className={styles.remover}>
+                            <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
+                        </div>
+                        <CmsParagraph cmsParagraph={cmsParagraph} />
+                    </span>
                 }
                 {
                     cmsImage && 
@@ -59,7 +58,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                     </span>
                 }
                 </span>
-            </AddPart>
+            </AddParts>
         </section>
     );
 }
