@@ -1,5 +1,6 @@
 @use '@/styles/ohma';
 
 .CmsLink {
-    
+    @include ohma.borderBtn(ohma.$colors-primary);
+    margin: 0;
 }
