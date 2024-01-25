@@ -1,5 +1,16 @@
 @use "@/styles/ohma";
 
 .RemovePart {
-    display:  block
+    background-color: red;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    display: grid;
+    place-items: center;
+    transition: .3 background-color;
+    &:hover {
+        background-color: darken(red, 10%);
+        cursor: pointer;
+    }
 }

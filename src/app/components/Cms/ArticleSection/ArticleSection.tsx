@@ -32,7 +32,9 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                 <span className={styles.content}>
                 {
                     cmsParagraph ? (<>
-                    <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
+                    <div className={styles.remover}>
+                        <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
+                    </div>
                     <CmsParagraph className={styles.paragraph} editorClassName={styles.paragraphEditor} cmsParagraph={cmsParagraph} />
                 </>) : (
                     <div className={styles.paragraphEditor} />
@@ -41,14 +43,18 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                 {
                     cmsImage && 
                     <span className={styles.image}>
-                        <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+                        <div className={styles.remover}>
+                            <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+                        </div>
                         <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
                     </span>
                 }
                 {
                     cmsLink && 
                     <span className={styles.link}>
-                        <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
+                        <div className={styles.remover}>
+                            <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
+                        </div>
                         <CmsLink cmsLink={cmsLink} />
                     </span>
                 }

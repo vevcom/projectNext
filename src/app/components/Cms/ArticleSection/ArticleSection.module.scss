@@ -13,9 +13,14 @@
             grid-area: paragraph;
         }
         > .image {
-            grid-area: image_right;
-            overflow: hidden;
-            border-radius: ohma.$rounding;
+            > *:not(.remover) {
+                grid-area: image_right;
+                overflow: hidden;
+                border-radius: ohma.$rounding;
+            }
+            > .remover {
+                z-index: 2;
+            }
         }
         > .paragraphEditor {
             grid-area: paragraph_editor;
@@ -23,6 +28,15 @@
         }
         > .link {
             grid-area: link;
+        }
+        > span {
+            position: relative;
+            > .remover {
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                z-index: 1;
+            }
         }
     }
 }
