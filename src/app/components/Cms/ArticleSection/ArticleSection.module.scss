@@ -13,8 +13,9 @@
             grid-area: paragraph;
         }
         > .image {
+            grid-area: image_right;
+            isolation: isolate;
             > *:not(.remover) {
-                grid-area: image_right;
                 overflow: hidden;
                 border-radius: ohma.$rounding;
             }
