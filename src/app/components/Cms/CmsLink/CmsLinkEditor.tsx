@@ -6,6 +6,7 @@ import type { CmsLink } from '@prisma/client';
 import update from '@/actions/cms/links/update';
 import { EditModeContext } from '@/context/EditMode';
 import { useContext } from 'react';
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     cmsLink: CmsLink
@@ -13,6 +14,7 @@ type PropTypes = {
 
 export default function CmsLinkEditor({ cmsLink }: PropTypes) {
     const editContext = useContext(EditModeContext)
+    const { refresh } = useRouter()
     if (!editContext?.editMode) return null
 
     return (
@@ -20,6 +22,7 @@ export default function CmsLinkEditor({ cmsLink }: PropTypes) {
             className={styles.CmsLinkEditor}
             action={update.bind(null, cmsLink.id)}
             submitText='Chang Link'
+            successCallback={refresh}
         >
             <TextInput defaultValue={cmsLink.text} name="text" label="Text" />
             <TextInput defaultValue={cmsLink.url} name="url" label="URL" />
