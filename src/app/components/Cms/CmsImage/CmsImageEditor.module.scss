@@ -90,6 +90,16 @@ $collectionSize: calc(14vmin + 70px);
     }
 }
 
+.showBtn {
+    width: 100%; 
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+    background-color: transparent;
+}
+
 .openBtn {
     background-color: transparent;
     border: none;

@@ -32,10 +32,12 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
     return (
         editingContext?.editMode && (
             <PopUp PopUpKey={cmsImage.id} showButtonContent={
-                <div className={styles.editIcon}>
-                    <FontAwesomeIcon icon={faPencil} />
+                <div className={styles.openBtn}>
+                    <div className={styles.editIcon}>
+                        <FontAwesomeIcon icon={faPencil} />
+                    </div>
                 </div>
-            } showButtonClass={styles.openBtn}>
+            } showButtonClass={styles.showBtn}>
                 <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
                     <ImagePagingProvider
                         startPage={
