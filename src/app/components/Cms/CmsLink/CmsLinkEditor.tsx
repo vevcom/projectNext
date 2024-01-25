@@ -19,9 +19,10 @@ export default function CmsLinkEditor({ cmsLink }: PropTypes) {
         <Form 
             className={styles.CmsLinkEditor}
             action={update.bind(null, cmsLink.id)}
+            submitText='Chang Link'
         >
-            <TextInput name="text" label="Text" />
-            <TextInput name="url" label="URL" />
+            <TextInput defaultValue={cmsLink.text} name="text" label="Text" />
+            <TextInput defaultValue={cmsLink.url} name="url" label="URL" />
         </Form>
     )
 }
