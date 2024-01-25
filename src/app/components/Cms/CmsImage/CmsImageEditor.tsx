@@ -12,9 +12,8 @@ import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
 import { CmsImage, Image as ImageT } from '@prisma/client'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import EditOverlay from '../EditOverlay'
 
 type PropTypes = {
     cmsImage: CmsImage & {
@@ -32,11 +31,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
     return (
         editingContext?.editMode && (
             <PopUp PopUpKey={cmsImage.id} showButtonContent={
-                <div className={styles.openBtn}>
-                    <div className={styles.editIcon}>
-                        <FontAwesomeIcon icon={faPencil} />
-                    </div>
-                </div>
+                <EditOverlay />
             } showButtonClass={styles.showBtn}>
                 <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
                     <ImagePagingProvider
