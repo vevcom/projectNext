@@ -86,6 +86,7 @@ model CmsLink {
   url            String          @default("./")
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
+  text           String          @default("Link")
   ArticleSection ArticleSection?
 
   @@map("cms_links")

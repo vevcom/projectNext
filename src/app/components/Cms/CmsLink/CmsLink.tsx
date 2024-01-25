@@ -1,5 +1,6 @@
 import type { CmsLink } from '@prisma/client';
 import styles from './CmsLink.module.scss'
+import Link from 'next/link'
 
 type PropTypes = {
     cmsLink: CmsLink
@@ -7,8 +8,6 @@ type PropTypes = {
 
 export default function CmsLink({ cmsLink }: PropTypes) { 
     return (
-        <div className={styles.cmsLink}>
-            <h1>CmsLink</h1>
-        </div>
-    );
+        <Link href={cmsLink.url} className={styles.cmsLink}>{cmsLink.name}</Link>
+    )
 }
