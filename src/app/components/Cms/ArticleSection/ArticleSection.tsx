@@ -30,15 +30,26 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                 showLinkAdd={!cmsLink}
             >
                 <span className={styles.content}>
-                {
-                    cmsParagraph && 
-                    <span className={styles.paragraph}>
-                        <div className={styles.remover}>
-                            <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
-                        </div>
-                        <CmsParagraph cmsParagraph={cmsParagraph} />
-                    </span>
-                }
+                    <div className={styles.paragraphAndLink}>
+                    {
+                        cmsParagraph && 
+                        <span className={styles.paragraph}>
+                            <div className={styles.remover}>
+                                <RemovePart articleSectionName={articleSection.name} part='cmsParagraph' />
+                            </div>
+                            <CmsParagraph cmsParagraph={cmsParagraph} className={styles.paragrphComponent} />
+                        </span>
+                    }
+                    {
+                        cmsLink && 
+                        <span className={styles.link}>
+                            <div className={styles.remover}>
+                                <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
+                            </div>
+                            <CmsLink cmsLink={cmsLink} />
+                        </span>
+                    }
+                    </div>
                 {
                     cmsImage && 
                     <span className={styles.image}>
@@ -46,15 +57,6 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                             <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
                         </div>
                         <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
-                    </span>
-                }
-                {
-                    cmsLink && 
-                    <span className={styles.link}>
-                        <div className={styles.remover}>
-                            <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
-                        </div>
-                        <CmsLink cmsLink={cmsLink} />
                     </span>
                 }
                 </span>
