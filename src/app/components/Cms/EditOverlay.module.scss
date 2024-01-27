@@ -11,6 +11,7 @@
     left: 0;
     background-color: rgba(ohma.$colors-gray-700, 0.8);
     transition: background-color 0.2s ease-in-out;
+    min-height: 30px;
     .editIcon {
         background-color: transparant;
         position: absolute;

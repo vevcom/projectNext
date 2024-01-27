@@ -1,6 +1,8 @@
 @use '@/styles/ohma';
 
-.CmsParagraphEditor {
+.CmsParagraphEditor, .openEditor {
+    width: 70vw;
+
     > .editor, .loader {
         width: 100%;
         font-size: ohma.$fonts-s;
@@ -12,12 +14,20 @@
             box-shadow: 0 0 0 2px ohma.$colors-primary;
         }
         background-color: ohma.$colors-gray-200;
-        height: 350px;
         overflow-y: scroll;
         &.loader {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+    }
+}
+
+.openBtn {
+    border: none;
+    background-color: transparent;
+    overflow: hidden;
+    > * {
+        border-radius: ohma.$rounding;
     }
 }

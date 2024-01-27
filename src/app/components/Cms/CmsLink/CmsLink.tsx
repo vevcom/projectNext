@@ -9,9 +9,9 @@ type PropTypes = {
 
 export default function CmsLink({ cmsLink }: PropTypes) { 
     return (
-        <>
+        <div className={styles.CmsLink}>
             <Link href={cmsLink.url} className={styles.CmsLink}>{cmsLink.text}</Link>
             <CmsLinkEditor cmsLink={cmsLink} />
-        </>
+        </div>
     )
 }

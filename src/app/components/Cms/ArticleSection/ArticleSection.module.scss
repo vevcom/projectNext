@@ -8,27 +8,33 @@
             min-height: 100%;
             flex: 1 1 100%;
             display: flex;
+            flex-direction: column;
             > .paragraph {
-                width: 100%;
+                flex: 1;
+                > .paragrphComponent {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            > .link {
+                min-height: 50px; 
             }
         }
         > .image {
-            isolation: isolate;
             > *:not(.remover) {
                 overflow: hidden;
                 border-radius: ohma.$rounding;
             }
-            > .remover {
-                z-index: 2;
-            }
         }
         > span, > div > span {
+            margin: ohma.$gap;
             position: relative;
+            isolation: isolate;
             > .remover {
                 position: absolute;
                 top: -10px;
                 left: -10px;
-                z-index: 1;
+                z-index: 2;
             }
         }
     }

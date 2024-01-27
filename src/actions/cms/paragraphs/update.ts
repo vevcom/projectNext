@@ -38,7 +38,6 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             return errorHandeler(error)
         }
     } catch (e) {
-        console.log(e)
         return {
             success: false,
             error: [{

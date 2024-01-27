@@ -1,6 +1,21 @@
 @use '@/styles/ohma';
 
 .CmsLink {
-    @include ohma.borderBtn(ohma.$colors-primary);
-    margin: 0;
+    position: relative;
+    width: 70px; 
+    height: 30px;
+    > a {
+        @include ohma.borderBtn(ohma.$colors-primary);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
