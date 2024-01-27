@@ -47,7 +47,7 @@ export default function PopUp({ PopUpKey, children, showButtonContent, showButto
         if (isOpen) {
             popUpContext.teleport(contentRef.current, PopUpKey)
         }
-    }, [])
+    }, [children])
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)

@@ -3,7 +3,7 @@ import styles from './CmsParagraphEditor.module.scss'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import update from '@/actions/cms/paragraphs/update'
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
@@ -11,8 +11,6 @@ import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
 import EditOverlay from '../EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
-import { PopUpContext } from '@/context/PopUp'
-import SimpleMDEditor from 'react-simplemde-editor'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
@@ -32,7 +30,6 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: Pr
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
-    const popUpContext = useContext(PopUpContext)
 
     if (!editmode?.editMode) return null
 
@@ -52,6 +49,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: Pr
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}
                     submitText="Update"
+                    successCallback={refresh}
                 />
             </div>
         </PopUp>

@@ -163,7 +163,6 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
 
         if (res.success) {
             setSuccess(true)
-            console.log('succ')
             successCallback?.(res.data)
             return setTimeout(() => {
                 setSuccess(false)
