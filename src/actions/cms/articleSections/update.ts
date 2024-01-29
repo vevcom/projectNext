@@ -8,17 +8,35 @@ import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
 import { default as createCmsLink } from "@/actions/cms/links/create";
 import type { ReturnType } from "./ReturnType";
 import type { Position } from "@prisma/client";
+import { ImageSize } from "@prisma/client";
 
 export async function update(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
-}) : Promise<ActionReturn<ArticleSection>> {
+}) : Promise<ActionReturn<ReturnType>> {
     try {
+        //Sets the image resolution based on the image size
+        let newCmsImageResolution : ImageSize | undefined = undefined
+        if (changes.imageSize) {
+            newCmsImageResolution = "SMALL"
+            if ( changes.imageSize > 350) {
+                newCmsImageResolution = "LARGE"
+            }
+        }
+        
         const articleSection = await prisma.articleSection.update({
             where: { name },
-            data: changes,
+            data: {
+                ...changes,
+                cmsImage: {
+                    update: {
+                        imageSize: newCmsImageResolution,
+                    },
+                },
+            },
             include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
         });
+        articleSection.cmsImage
         return { success: true, data: articleSection }
     } catch (error) {
         return errorHandeler(error)
