@@ -1,6 +1,7 @@
 @use '@/styles/ohma';
 
 .ArticleSection {
+    isolation: isolate;
     .content {
         display: flex;
         flex-direction: row wrap;
@@ -23,13 +24,13 @@
                 max-width: 200px;
             }
         }
-        > .image {
+        .image {
             > *:not(.remover) {
                 overflow: hidden;
                 border-radius: ohma.$rounding;
             }
         }
-        > .image, .link, .paragraph {
+        .image, .link, .paragraph {
             margin: ohma.$gap;
             position: relative;
             isolation: isolate;

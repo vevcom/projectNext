@@ -24,14 +24,13 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
     const cmsImageContent =  (
-        <ImageControls>
-            <span className={styles.image}>
-                <div className={styles.remover}>
-                    <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
-                </div>
-                {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
-            </span>
-        </ImageControls>
+        <span className={styles.image}>
+            <div className={styles.remover}>
+                <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+            </div>
+            {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
+            <ImageControls currentPosition={articleSection.imagePosition} currentSize={articleSection.imageSize} />
+        </span>
     )   
 
     return (
