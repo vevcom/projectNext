@@ -10,6 +10,7 @@ import type {
 } from '@prisma/client';
 import RemovePart from './RemovePart';
 import AddParts from './AddParts';
+import ImageControls from './ImageControls';
 
 type PropTypes = {
     articleSection: ArticleSection & {
@@ -23,12 +24,14 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
     const cmsImageContent =  (
-    <span className={styles.image}>
-        <div className={styles.remover}>
-            <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
-        </div>
-        {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
-    </span>
+        <ImageControls>
+            <span className={styles.image}>
+                <div className={styles.remover}>
+                    <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+                </div>
+                {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
+            </span>
+        </ImageControls>
     )   
 
     return (

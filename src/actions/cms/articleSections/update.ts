@@ -10,7 +10,7 @@ import type { ReturnType } from "./ReturnType";
 import type { Position } from "@prisma/client";
 import { ImageSize } from "@prisma/client";
 
-export async function update(name: string, changes: {
+export default async function update(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }) : Promise<ActionReturn<ReturnType>> {
