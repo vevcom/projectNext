@@ -21,6 +21,16 @@ type PropTypes = {
 
 export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
+
+    const cmsImageContent =  (
+    <span className={styles.image}>
+        <div className={styles.remover}>
+            <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
+        </div>
+        {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
+    </span>
+    )   
+
     return (
         <section className={styles.ArticleSection}>
             <AddParts 
@@ -30,6 +40,10 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                 showLinkAdd={!cmsLink}
             >
                 <span className={styles.content}>
+                {
+                    cmsImage && articleSection.imagePosition === "LEFT" && 
+                        cmsImageContent
+                }
                     <div className={styles.paragraphAndLink}>
                     {
                         cmsParagraph && 
@@ -51,13 +65,8 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                     }
                     </div>
                 {
-                    cmsImage && 
-                    <span className={styles.image}>
-                        <div className={styles.remover}>
-                            <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
-                        </div>
-                        <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
-                    </span>
+                    cmsImage && articleSection.imagePosition === "RIGHT" && 
+                        cmsImageContent
                 }
                 </span>
             </AddParts>
