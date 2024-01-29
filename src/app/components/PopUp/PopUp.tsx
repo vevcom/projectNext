@@ -7,6 +7,7 @@ import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -15,13 +16,21 @@ type PropTypes = {
     PopUpKey: number | string,
 }
 
-export default function PopUp({ PopUpKey, children, showButtonContent, showButtonClass } : PropTypes) {
-    const popUpContext = useContext(PopUpContext)
-    if (!popUpContext) throw new Error('Pop up context needed for popups')
+export default function PopUp({ 
+    PopUpKey, 
+    children, 
+    showButtonContent, 
+    showButtonClass, 
+} : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
+
+
+    const popUpContext = useContext(PopUpContext)
     useKeyPress('Escape', () => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
     const contentRef = useRef<React.ReactNode>(null)
+
+    if (!popUpContext) throw new Error('Pop up context needed for popups')
 
     useEffect(() => {
         if (isOpen) {

@@ -49,7 +49,9 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: Pr
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}
                     submitText="Update"
-                    successCallback={refresh}
+                    successCallback={() => {
+                        refresh()
+                    }}
                 />
             </div>
         </PopUp>
