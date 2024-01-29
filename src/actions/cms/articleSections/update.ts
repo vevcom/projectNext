@@ -7,11 +7,27 @@ import { default as createCmsImage } from "@/actions/cms/images/create";
 import { default as createCmsParagraph } from "@/actions/cms/paragraphs/create";
 import { default as createCmsLink } from "@/actions/cms/links/create";
 import type { ReturnType } from "./ReturnType";
+import type { Position } from "@prisma/client";
+
+export async function update(name: string, changes: {
+    imageSize?: number,
+    imagePosition?: Position,
+}) : Promise<ActionReturn<ArticleSection>> {
+    try {
+        const articleSection = await prisma.articleSection.update({
+            where: { name },
+            data: changes,
+            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+        });
+        return { success: true, data: articleSection }
+    } catch (error) {
+        return errorHandeler(error)
+    }
+}
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
 export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
-    console.log(name, part)
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
