@@ -1,16 +1,35 @@
 @use "@/styles/ohma";
 
 .RemovePart {
-    background-color: red;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: none;
-    display: grid;
-    place-items: center;
-    transition: .3s background-color;
-    &:hover {
-        background-color: darken(red, 10%);
-        cursor: pointer;
+    position: relative;
+    .openBtn {
+        background-color: red;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        display: grid;
+        place-items: center;
+        transition: .3s background-color;
+        &:hover {
+            background-color: darken(red, 10%);
+            cursor: pointer;
+        }
+    }
+    .confirmation {
+        position: absolute;
+        top: 100%; 
+        left: 50%; 
+        transform: translateX(-50%); 
+        width: 200px; 
+        background-color: ohma.$colors-white;
+        @include ohma.round;
+        padding-bottom: 0;
+        display: grid;
+        place-items: center;
+        form{
+            width: auto;
+            height: auto;
+        }
     }
 }

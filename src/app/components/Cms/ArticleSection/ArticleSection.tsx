@@ -56,12 +56,12 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                     }
                     {
                         cmsLink && 
-                        <span className={styles.link}>
+                        <div className={styles.link}>
                             <div className={styles.remover}>
                                 <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
                             </div>
                             <CmsLink cmsLink={cmsLink} />
-                        </span>
+                        </div>
                     }
                     </div>
                 {
