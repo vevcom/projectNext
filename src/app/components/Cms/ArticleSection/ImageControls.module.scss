@@ -15,14 +15,21 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: white;
+        border: none;
+        svg {
+            color: white;
+            width: 40%;
+            height: 40%;
+        }
         path {
             translate: 10px 0;
         }
         &:hover {
             background-color: ohma.$colors-gray-700;
             cursor: pointer;
-            color: ohma.$colors-primary;
+            svg {
+                color: ohma.$colors-primary;
+            }
         }
     }
 }

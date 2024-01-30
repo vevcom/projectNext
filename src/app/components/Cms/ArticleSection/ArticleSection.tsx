@@ -29,7 +29,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
             <div className={styles.remover}>
                 <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
             </div>
-            <ImageControls currentPosition={articleSection.imagePosition} currentSize={articleSection.imageSize} />
+            <ImageControls articleSection={articleSection} />
         </span>
     )   
 

@@ -5,7 +5,8 @@ import update from '@/actions/cms/articleSections/update';
 import { EditModeContext } from '@/context/EditMode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import type { Position } from '@prisma/client';
+import type { ArticleSection, Position } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 /**
  * This component is used to control the image in the article section
@@ -13,16 +14,27 @@ import type { Position } from '@prisma/client';
  */
 
 type PropTypes = {
-    currentSize: number,
-    currentPosition: Position,
+    articleSection: ArticleSection
 }
 
-export default function ImageControls({ currentPosition, currentSize } : PropTypes) {
+export default function ImageControls({ articleSection } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
+    const { refresh } = useRouter()
     if (!editModeContext?.editMode) return null
+
+    const moveLeft = async () => {
+        await update(articleSection.name, { imagePosition: 'LEFT' })
+        refresh()
+    }
+
     return (
         <div className={styles.ImageControls}>
-            <FontAwesomeIcon className={styles.moveLeft} icon={faChevronLeft} />
+            <button onClick={moveLeft} className={styles.moveLeft}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <button>
+
+            </button>
         </div>
     )
 }
