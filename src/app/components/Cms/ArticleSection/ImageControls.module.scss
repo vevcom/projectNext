@@ -52,6 +52,10 @@
         &.placeRight {
             right: 0;
             border-top-right-radius: ohma.$rounding;
+            
+            //avoid the x to remove image
+            padding-top: 1.2em;
+            padding-right: 1.2em;
         }
         button {
             &:hover {

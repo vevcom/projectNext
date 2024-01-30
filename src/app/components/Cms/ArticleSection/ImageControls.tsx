@@ -68,10 +68,16 @@ export default function ImageControls({ articleSection } : PropTypes) {
                         `${styles.adjustSize} ${styles.placeRight}`
                 }
             >
-                <button onClick={increaseSize}>
+                <button onClick={increaseSize} className={
+                    articleSection.imageSize + increment > maxImageSize ? 
+                        `${styles.disabled}` : ''
+                }>
                     <FontAwesomeIcon icon={faMaximize} />
                 </button>
-                <button onClick={decreaseSize}>
+                <button onClick={decreaseSize} className={
+                    articleSection.imageSize - increment > maxImageSize ? 
+                    `${styles.disabled}` : ''
+                }>
                     <FontAwesomeIcon icon={faMinimize} />
                 </button>
             </div>
