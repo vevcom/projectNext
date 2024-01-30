@@ -4,7 +4,7 @@
     isolation: isolate;
     .content {
         display: flex;
-        flex-direction: row wrap;
+        flex-flow: row wrap;
         > *:first-child {
             z-index: 2; //Neccessary for the remover confirmation to be on top of the thing on right
         }
@@ -13,7 +13,7 @@
         }
         > .paragraphAndLink {
             min-height: 100%;
-            flex: 1 1 100%; 
+            flex: 10 0 200px;
             display: flex;
             flex-direction: column;
             margin-bottom: ohma.$gap;
@@ -24,12 +24,21 @@
                 max-width: 200px;
             }
         }
-        .image {
-            //CMS-Image
+        > .image {
+            flex: 1 0;
             position: relative;
-            > :first-child {
+            max-width: 100%;
+            align-self: flex-start;
+            //CMS-Image
+            > *:first-child {
                 overflow: hidden;
                 border-radius: ohma.$rounding;
+                width: 100%;
+                max-width: 90vw;
+                > * {
+                    min-width: 100%;
+                    max-width: 83vw;
+                }
             }
         }
         .image, .link, .paragraph {
@@ -43,7 +52,6 @@
                 z-index: 2;
             }
             > *:not(.remover) {
-                position: relative;
                 z-index: 1;
             }
         }
