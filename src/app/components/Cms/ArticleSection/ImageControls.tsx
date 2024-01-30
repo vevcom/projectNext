@@ -4,7 +4,12 @@ import { useContext } from 'react'
 import update from '@/actions/cms/articleSections/update';
 import { EditModeContext } from '@/context/EditMode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { 
+    faChevronLeft, 
+    faChevronRight,
+    faMaximize,
+    faMinimize
+} from '@fortawesome/free-solid-svg-icons';
 import type { ArticleSection } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 
@@ -16,6 +21,8 @@ import { useRouter } from 'next/navigation';
 type PropTypes = {
     articleSection: ArticleSection
 }
+
+const incrementSizeStep  = 20;
 
 export default function ImageControls({ articleSection } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
@@ -32,6 +39,16 @@ export default function ImageControls({ articleSection } : PropTypes) {
         refresh()
     }
 
+    const increaseSize = async () => {
+        await update(articleSection.name, { imageSize: articleSection.imageSize + incrementSizeStep })
+        refresh()
+    }
+
+    const decreaseSize = async () => {
+        await update(articleSection.name, { imageSize: articleSection.imageSize - incrementSizeStep })
+        refresh()
+    }
+
     return (
         <div className={styles.ImageControls}>
             {
@@ -45,6 +62,14 @@ export default function ImageControls({ articleSection } : PropTypes) {
                     </button>
                 )
             }
+            <div className={styles.adjustSize}>
+                <button onClick={increaseSize}>
+                    <FontAwesomeIcon icon={faMaximize} />
+                </button>
+                <button onClick={decreaseSize}>
+                    <FontAwesomeIcon icon={faMinimize} />
+                </button>
+            </div>
         </div>
     )
 }
