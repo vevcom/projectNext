@@ -34,12 +34,17 @@ export default function ImageControls({ articleSection } : PropTypes) {
 
     return (
         <div className={styles.ImageControls}>
-            <button onClick={moveLeft} className={styles.moveLeft}>
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-            <button onClick={moveRight} className={styles.moveRight}>
-                <FontAwesomeIcon icon={faChevronRight} />
-            </button>
+            {
+                articleSection.imagePosition === 'LEFT' ? (
+                    <button onClick={moveRight} className={styles.moveRight}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                ) : (
+                    <button onClick={moveLeft} className={styles.moveLeft}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                )
+            }
         </div>
     )
 }
