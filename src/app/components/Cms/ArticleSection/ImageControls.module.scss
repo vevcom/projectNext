@@ -1,25 +1,28 @@
 @use '@/styles/ohma';
 
 .ImageControls {
-    position: absolute;
-    top: -100%;
-    left: 0;
     width: 100%;
     height: 100%;
+    position: relative;
     > .moveLeft {
+        border-radius: ohma.$rounding 0 0 ohma.$rounding;
         position: absolute;
-        top: 50%;
-        left: 0;
         transform: translateY(-50%);
-        width: 50%;
+        width: 30%;
         height: 100%;
-        background-color: rgba(0,0,0,0.5);
+        top: -50%;
+        background-color: ohma.$colors-gray-800;
         display: flex;
         justify-content: center;
         align-items: center;
-        svg {
-            color: white;
-            font-size: 2rem;
+        color: white;
+        path {
+            translate: 10px 0;
+        }
+        &:hover {
+            background-color: ohma.$colors-gray-700;
+            cursor: pointer;
+            color: ohma.$colors-primary;
         }
     }
 }

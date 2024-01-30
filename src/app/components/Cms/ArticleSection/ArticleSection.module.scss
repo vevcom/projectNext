@@ -25,7 +25,9 @@
             }
         }
         .image {
-            > *:not(.remover) {
+            //CMS-Image
+            position: relative;
+            > :first-child {
                 overflow: hidden;
                 border-radius: ohma.$rounding;
             }

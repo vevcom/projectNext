@@ -25,10 +25,10 @@ export default function ArticleSection({ articleSection }: PropTypes) {
 
     const cmsImageContent =  (
         <span className={styles.image}>
+            {cmsImage && <CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
             <div className={styles.remover}>
                 <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
             </div>
-            {cmsImage &&<CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
             <ImageControls currentPosition={articleSection.imagePosition} currentSize={articleSection.imageSize} />
         </span>
     )   

@@ -19,7 +19,7 @@ type PropTypes = {
 
 export default function ImageControls({ currentPosition, currentSize } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
-    if (!editModeContext) return null
+    if (!editModeContext?.editMode) return null
     return (
         <div className={styles.ImageControls}>
             <FontAwesomeIcon className={styles.moveLeft} icon={faChevronLeft} />
