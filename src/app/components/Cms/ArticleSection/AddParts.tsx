@@ -1,14 +1,14 @@
 'use client'
-import type { Part } from "@/actions/cms/articleSections/update"
-import { useCallback, useContext } from "react"
-import { EditModeContext } from "@/context/EditMode"
-import { addPart } from "@/actions/cms/articleSections/update"
 import styles from './AddParts.module.scss'
-import { useRouter } from "next/navigation"
-import type { ReactNode } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
-import BorderButton from "../../UI/BorderButton"
+import BorderButton from '../../UI/BorderButton'
+import { EditModeContext } from '@/context/EditMode'
+import { addPart } from '@/actions/cms/articleSections/update'
+import { useCallback, useContext } from 'react'
+import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import type { Part } from '@/actions/cms/articleSections/update'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     articleSectionName: string,
@@ -18,12 +18,12 @@ type PropTypes = {
     showLinkAdd: boolean
 }
 
-export default function AddPart({ 
-    articleSectionName, 
-    children, 
-    showImageAdd, 
-    showLinkAdd, 
-    showParagraphAdd 
+export default function AddPart({
+    articleSectionName,
+    children,
+    showImageAdd,
+    showLinkAdd,
+    showParagraphAdd
 }: PropTypes) {
     const { refresh } = useRouter()
     const editContext = useContext(EditModeContext)
@@ -48,7 +48,7 @@ export default function AddPart({
             part: 'cmsLink',
             text: 'link'
         }
-    ] 
+    ]
     const handleAdd = useCallback(async (part: Part) => {
         await addPart(articleSectionName, part)
         refresh()
@@ -58,18 +58,18 @@ export default function AddPart({
         <div className={styles.AddParts}>
             {children}
             <div className={styles.addControls}>
-            {
-                parts.map((part, i) => part.shouldShow && (
-                    <BorderButton 
-                        key={i} 
-                        onClick={() => handleAdd(part.part)}
-                        color="secondary"
-                    >
-                        <FontAwesomeIcon icon={faPlus} />
-                        {part.text}
-                    </BorderButton>
-                ))
-            }
+                {
+                    parts.map((part, i) => part.shouldShow && (
+                        <BorderButton
+                            key={i}
+                            onClick={() => handleAdd(part.part)}
+                            color="secondary"
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            {part.text}
+                        </BorderButton>
+                    ))
+                }
             </div>
         </div>
     )

@@ -1,6 +1,7 @@
 'use client'
 import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
+import EditOverlay from '../EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
@@ -13,7 +14,6 @@ import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
 import { CmsImage, Image as ImageT } from '@prisma/client'
 import Link from 'next/link'
-import EditOverlay from '../EditOverlay'
 
 type PropTypes = {
     cmsImage: CmsImage & {

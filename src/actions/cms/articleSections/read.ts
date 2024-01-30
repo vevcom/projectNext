@@ -1,12 +1,12 @@
 'use server'
-import type { ReturnType } from "./ReturnType";
-import { ActionReturn } from "@/actions/type";
-import prisma from "@/prisma";
-import create from "./create";
-import errorHandeler from "@/prisma/errorHandler";
+import create from './create'
+import { ActionReturn } from '@/actions/type'
+import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
+import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist
-export default async function read(name: string): Promise<ActionReturn<ReturnType>> { 
+export default async function read(name: string): Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: {

@@ -16,11 +16,11 @@ type PropTypes = {
     PopUpKey: number | string,
 }
 
-export default function PopUp({ 
-    PopUpKey, 
-    children, 
-    showButtonContent, 
-    showButtonClass, 
+export default function PopUp({
+    PopUpKey,
+    children,
+    showButtonContent,
+    showButtonClass,
 } : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
 

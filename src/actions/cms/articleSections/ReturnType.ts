@@ -1,4 +1,4 @@
-import type { ArticleSection, CmsImage, CmsParagraph, CmsLink } from "@prisma/client";
+import type { ArticleSection, CmsImage, CmsParagraph, CmsLink } from '@prisma/client'
 
 export type ReturnType = ArticleSection & {
     cmsImage: CmsImage | null,

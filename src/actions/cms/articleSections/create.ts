@@ -1,8 +1,8 @@
 'use server'
-import { ActionReturn } from "@/actions/type";
-import prisma from "@/prisma";
-import errorHandeler from "@/prisma/errorHandler";
-import type { ReturnType } from "./ReturnType";
+import { ActionReturn } from '@/actions/type'
+import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
+import type { ReturnType } from './ReturnType'
 
 
 export default async function create(name: string): Promise<ActionReturn<ReturnType>> {

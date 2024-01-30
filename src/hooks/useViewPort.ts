@@ -1,18 +1,18 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 
 export default function useViewPort(callback: (width: number, height: number) => void) {
     useEffect(() => {
         const handleResize = () => {
-            callback(window.innerWidth, window.innerHeight);
-        };
+            callback(window.innerWidth, window.innerHeight)
+        }
 
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize)
 
         // Call handleResize to set the initial size
-        handleResize();
+        handleResize()
 
         return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [callback]);
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [callback])
 }

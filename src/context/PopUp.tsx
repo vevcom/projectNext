@@ -18,7 +18,7 @@ export default function PopUpProvider({ children }: { children: React.ReactNode 
         setNode(component)
         setKeyOfCurrentNode(key)
     }, []) // Add dependencies if necessary
-    
+
     const remove = useCallback((key: number | string) => {
         if (key === undefined) {
             setNode(null)
@@ -29,7 +29,7 @@ export default function PopUpProvider({ children }: { children: React.ReactNode 
             setNode(null)
             setKeyOfCurrentNode(undefined)
         }
-    }, [keyOfCurrentNode]) 
+    }, [keyOfCurrentNode])
 
     return (
         <PopUpContext.Provider value={{

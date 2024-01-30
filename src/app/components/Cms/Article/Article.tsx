@@ -5,5 +5,5 @@ export default function Article() {
         <span className={styles.Article}>
             <h1>Article</h1>
         </span>
-    );
+    )
 }

@@ -1,16 +1,16 @@
 'use client'
 import styles from './CmsParagraphEditor.module.scss'
+import EditOverlay from '../EditOverlay'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import update from '@/actions/cms/paragraphs/update'
+import PopUp from '@/components/PopUp/PopUp'
 import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
-import EditOverlay from '../EditOverlay'
-import PopUp from '@/components/PopUp/PopUp'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
@@ -38,12 +38,12 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: Pr
     }
 
     return (
-        <PopUp 
-            PopUpKey={cmsParagraph.id} 
+        <PopUp
+            PopUpKey={cmsParagraph.id}
             showButtonClass={styles.openBtn}
             showButtonContent={
                 <EditOverlay />
-        }>
+            }>
             <div className={`${styles.CmsParagraphEditor} ${editorClassName}`}>
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form

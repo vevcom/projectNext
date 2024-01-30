@@ -1,23 +1,23 @@
 'use server'
 
-import type { ActionReturn } from "@/actions/type";
-import prisma from "@/prisma";
-import errorHandeler from "@/prisma/errorHandler";
-import type { CmsLink } from "@prisma/client";
-import { z } from "zod";
+import prisma from '@/prisma'
+import errorHandeler from '@/prisma/errorHandler'
+import { z } from 'zod'
+import type { CmsLink } from '@prisma/client'
+import type { ActionReturn } from '@/actions/type'
 
 export default async function update(id: number, rawData: FormData) : Promise<ActionReturn<CmsLink>> {
     const schema = z.object({
         text: z.string().min(2).max(30),
         url: z.string().refine(value => {
             try {
-                new URL(value);
-                return true;
+                new URL(value)
+                return true
             } catch (_) {
-                return value.startsWith('/') || value.includes('.');
+                return value.startsWith('/') || value.includes('.')
             }
         }, {
-            message: "Invalid URL",
+            message: 'Invalid URL',
         })
     })
     const parse = schema.safeParse({
@@ -32,7 +32,7 @@ export default async function update(id: number, rawData: FormData) : Promise<Ac
     let { text, url } = parse.data
 
     if (url.includes('.') && !url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
+        url = `https://${url}`
     }
 
     try {
