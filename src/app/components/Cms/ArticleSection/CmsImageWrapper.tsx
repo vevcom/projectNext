@@ -13,17 +13,20 @@ type PropTypes = {
     children: React.ReactNode
     className?: string
     idParagraph: string
+    idMoveControls: string
 }
 
-export default function CmsImageWrapper({ children, className, idParagraph }: PropTypes) {
+export default function CmsImageWrapper({ children, className, idParagraph, idMoveControls }: PropTypes) {
     const ref = useRef<HTMLSpanElement>(null)
     useViewPort(() => {
         const imageY = ref.current?.getBoundingClientRect().top;
         const paragraphY = document.getElementById(idParagraph)?.getBoundingClientRect().top;
         if (imageY !== paragraphY) {
             ref.current?.style.setProperty('order', '2')
+            document.getElementById(idMoveControls)?.style.setProperty('display', 'none')
         } else {
             ref.current?.style.setProperty('order', null)
+            document.getElementById(idMoveControls)?.style.setProperty('display', null)
         }
     })
 

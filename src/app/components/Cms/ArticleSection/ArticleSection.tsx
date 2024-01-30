@@ -27,14 +27,15 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
     const id = uuid()
+    const idMoveControls = uuid()
 
     const cmsImageContent =  (
-        <CmsImageWrapper className={styles.image} idParagraph={id}>
+        <CmsImageWrapper idMoveControls={idMoveControls} className={styles.image} idParagraph={id}>
             {cmsImage && <CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
             <div className={styles.remover}>
                 <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
             </div>
-            <ImageControls articleSection={articleSection} />
+            <ImageControls id={idMoveControls} articleSection={articleSection} />
         </CmsImageWrapper>
     )   
 

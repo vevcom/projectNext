@@ -21,9 +21,10 @@ import { increment, maxImageSize, minImageSize } from '@/actions/cms/articleSect
 
 type PropTypes = {
     articleSection: ArticleSection
+    id: string
 }
 
-export default function ImageControls({ articleSection } : PropTypes) {
+export default function ImageControls({ articleSection, id } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
     const { refresh } = useRouter()
     if (!editModeContext?.editMode) return null
@@ -49,7 +50,7 @@ export default function ImageControls({ articleSection } : PropTypes) {
     }
 
     return (
-        <div className={styles.ImageControls}>
+        <div id={id} className={styles.ImageControls}>
             {
                 articleSection.imagePosition === 'LEFT' ? (
                     <button onClick={moveRight} className={styles.moveRight}>
