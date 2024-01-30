@@ -4,8 +4,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    > .moveLeft {
-        border-radius: ohma.$rounding 0 0 ohma.$rounding;
+    > button {
         position: absolute;
         transform: translateY(-50%);
         width: 30%;
@@ -31,5 +30,13 @@
                 color: ohma.$colors-primary;
             }
         }
+    }
+    > .moveLeft {
+        border-radius: ohma.$rounding 0 0 ohma.$rounding;
+        left: 0;
+    }
+    > .moveRight {
+        border-radius: 0 ohma.$rounding ohma.$rounding 0 ;
+        right: 0;
     }
 }
