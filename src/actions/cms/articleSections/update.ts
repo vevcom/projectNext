@@ -28,7 +28,7 @@ export default async function update(name: string, changes: {
                 changes.imageSize = minImageSize
             }
             newCmsImageResolution = "SMALL"
-            if ( changes.imageSize > 350) {
+            if ( changes.imageSize > 250) {
                 newCmsImageResolution = "MEDIUM"
             }
         }

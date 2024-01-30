@@ -11,6 +11,8 @@ import type {
 import RemovePart from './RemovePart';
 import AddParts from './AddParts';
 import ImageControls from './ImageControls';
+import CmsImageWrapper from './CmsImageWrapper';
+import { v4 as uuid } from 'uuid';
 
 type PropTypes = {
     articleSection: ArticleSection & {
@@ -21,16 +23,19 @@ type PropTypes = {
 }
 
 export default function ArticleSection({ articleSection }: PropTypes) {
+
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
+    const id = uuid()
+
     const cmsImageContent =  (
-        <span className={styles.image}>
+        <CmsImageWrapper className={styles.image} idParagraph={id}>
             {cmsImage && <CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
             <div className={styles.remover}>
                 <RemovePart articleSectionName={articleSection.name} part='cmsImage' />
             </div>
             <ImageControls articleSection={articleSection} />
-        </span>
+        </CmsImageWrapper>
     )   
 
     return (
@@ -46,7 +51,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                     cmsImage && articleSection.imagePosition === "LEFT" && 
                         cmsImageContent
                 }
-                    <div className={styles.paragraphAndLink}>
+                    <div id={id} className={styles.paragraphAndLink}>
                     {
                         cmsParagraph && 
                         <span className={styles.paragraph}>

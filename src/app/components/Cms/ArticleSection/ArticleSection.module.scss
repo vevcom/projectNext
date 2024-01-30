@@ -21,6 +21,7 @@
                 flex: 1 1 100%;
             }
             > .link {
+                margin-top: ohma.$gap;
                 max-width: 200px;
             }
         }
@@ -41,7 +42,7 @@
             }
         }
         .image, .link, .paragraph {
-            margin: ohma.$gap;
+            margin: 0 ohma.$gap;
             position: relative;
             isolation: isolate;
             > .remover {
