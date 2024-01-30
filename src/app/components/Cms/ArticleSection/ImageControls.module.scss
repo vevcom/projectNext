@@ -45,6 +45,7 @@
         top: -100%;
         background-color: ohma.$colors-gray-800;
         padding: .5em;
+
         &.placeLeft {
             left: 0;
             border-top-left-radius: ohma.$rounding;
@@ -57,9 +58,15 @@
             padding-top: 1.2em;
             padding-right: 1.2em;
         }
+        .disabled {
+            opacity: .5;
+        }
         button {
-            &:hover {
+            &:hover:not(.disabled) {
                 cursor: pointer;
+                svg {
+                    color: ohma.$colors-primary;
+                }
             }
             background-color: transparent;
             border: none;

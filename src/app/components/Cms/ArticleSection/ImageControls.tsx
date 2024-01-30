@@ -75,7 +75,7 @@ export default function ImageControls({ articleSection } : PropTypes) {
                     <FontAwesomeIcon icon={faMaximize} />
                 </button>
                 <button onClick={decreaseSize} className={
-                    articleSection.imageSize - increment > maxImageSize ? 
+                    articleSection.imageSize - increment < minImageSize ? 
                     `${styles.disabled}` : ''
                 }>
                     <FontAwesomeIcon icon={faMinimize} />
