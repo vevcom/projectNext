@@ -12,6 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import type { ArticleSection } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { increment, maxImageSize, minImageSize } from '@/actions/cms/articleSections/ConfigVars';
 
 /**
  * This component is used to control the image in the article section
@@ -21,8 +22,6 @@ import { useRouter } from 'next/navigation';
 type PropTypes = {
     articleSection: ArticleSection
 }
-
-const incrementSizeStep  = 20;
 
 export default function ImageControls({ articleSection } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
@@ -40,12 +39,12 @@ export default function ImageControls({ articleSection } : PropTypes) {
     }
 
     const increaseSize = async () => {
-        await update(articleSection.name, { imageSize: articleSection.imageSize + incrementSizeStep })
+        await update(articleSection.name, { imageSize: articleSection.imageSize + increment })
         refresh()
     }
 
     const decreaseSize = async () => {
-        await update(articleSection.name, { imageSize: articleSection.imageSize - incrementSizeStep })
+        await update(articleSection.name, { imageSize: articleSection.imageSize - increment })
         refresh()
     }
 

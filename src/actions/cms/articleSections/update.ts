@@ -9,6 +9,8 @@ import { default as createCmsLink } from "@/actions/cms/links/create";
 import type { ReturnType } from "./ReturnType";
 import type { Position } from "@prisma/client";
 import { ImageSize } from "@prisma/client";
+import { maxImageSize, minImageSize } from "./ConfigVars";
+
 
 export default async function update(name: string, changes: {
     imageSize?: number,
@@ -17,10 +19,17 @@ export default async function update(name: string, changes: {
     try {
         //Sets the image resolution based on the image size
         let newCmsImageResolution : ImageSize | undefined = undefined
+        
         if (changes.imageSize) {
+            if (changes.imageSize > maxImageSize) {
+                changes.imageSize = maxImageSize
+            }
+            if (changes.imageSize < minImageSize) {
+                changes.imageSize = minImageSize
+            }
             newCmsImageResolution = "SMALL"
             if ( changes.imageSize > 350) {
-                newCmsImageResolution = "LARGE"
+                newCmsImageResolution = "MEDIUM"
             }
         }
         
