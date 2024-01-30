@@ -62,7 +62,13 @@ export default function ImageControls({ articleSection } : PropTypes) {
                     </button>
                 )
             }
-            <div className={styles.adjustSize}>
+            <div 
+                className={
+                    articleSection.imagePosition === 'LEFT' ? 
+                        `${styles.adjustSize} ${styles.placeLeft}` : 
+                        `${styles.adjustSize} ${styles.placeRight}`
+                }
+            >
                 <button onClick={increaseSize}>
                     <FontAwesomeIcon icon={faMaximize} />
                 </button>

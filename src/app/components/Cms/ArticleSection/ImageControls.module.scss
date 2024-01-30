@@ -45,7 +45,14 @@
         top: -100%;
         background-color: ohma.$colors-gray-800;
         padding: .5em;
-        border-top-left-radius: ohma.$rounding;
+        &.placeLeft {
+            left: 0;
+            border-top-left-radius: ohma.$rounding;
+        }
+        &.placeRight {
+            right: 0;
+            border-top-right-radius: ohma.$rounding;
+        }
         button {
             &:hover {
                 cursor: pointer;
