@@ -13,7 +13,7 @@
         }
         > .paragraphAndLink {
             min-height: 100%;
-            flex: 10 0 200px;
+            flex: 10 0 250px;
             display: flex;
             flex-direction: column;
             margin-bottom: ohma.$gap;
@@ -28,7 +28,6 @@
             flex: 1 0;
             position: relative;
             max-width: 100%;
-            align-self: flex-start;
             //CMS-Image
             > *:first-child {
                 overflow: hidden;
