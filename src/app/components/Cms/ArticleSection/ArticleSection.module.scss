@@ -29,16 +29,30 @@
             position: relative;
             max-width: 100%;
             //CMS-Image
-            > *:first-child {
-                overflow: hidden;
-                border-radius: ohma.$rounding;
-                width: 100%;
-                max-width: 90vw;
-                > * {
-                    min-width: 100%;
-                    max-width: 83vw;
+            > .cmsImageWithControls {
+                position: relative;
+
+                >*:first-child {
+                    overflow: hidden;
+                    border-radius: ohma.$rounding;
+                    width: 100%;
+                    max-width: 90vw;
+                    > * {
+                        min-width: 100%;
+                        max-width: 83vw;
+                    }
+                }                
+                > .moveControls {
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    translate: 0 100%;
                 }
             }
+            
         }
         .image, .link, .paragraph {
             margin: 0 ohma.$gap;
@@ -57,10 +71,6 @@
     }
 }
 
-.moveControls {
-    display: block;
-}
-
 @media screen and (max-width: ohma.$mobileBreakpoint) {
     .ArticleSection {
         .content {
@@ -75,10 +85,10 @@
                 order: 2;
                 border-radius: ohma.$rounding;
                 max-height: 100%;
+                > .cmsImageWithControls > .moveControls {
+                    display: none;
+                }
             }
         }
-    }
-    .moveControls {
-        display: none;
     }
 }
