@@ -2,9 +2,9 @@ import styles from './ArticleSection.module.scss'
 import RemovePart from './RemovePart'
 import AddParts from './AddParts'
 import ImageControls from './ImageControls'
-import CmsLink from '../CmsLink/CmsLink'
-import CmsImage from '../CmsImage/CmsImage'
-import CmsParagraph from '../CmsParagraph/CmsParagraph'
+import CmsLink from '@/components/Cms/CmsLink/CmsLink'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import type {
     ArticleSection as ArticleSectionT,
     CmsParagraph as CmsParagraphT,

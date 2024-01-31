@@ -1,6 +1,6 @@
 'use client'
 import styles from './CmsParagraphEditor.module.scss'
-import EditOverlay from '../EditOverlay'
+import EditOverlay from '@/components/Cms/EditOverlay'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import update from '@/actions/cms/paragraphs/update'

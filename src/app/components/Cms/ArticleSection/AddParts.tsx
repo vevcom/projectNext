@@ -1,6 +1,6 @@
 'use client'
 import styles from './AddParts.module.scss'
-import BorderButton from '../../UI/BorderButton'
+import BorderButton from '@/components/UI/BorderButton'
 import { EditModeContext } from '@/context/EditMode'
 import { addPart } from '@/actions/cms/articleSections/update'
 import { useCallback, useContext } from 'react'
