@@ -1,6 +1,6 @@
 'use server'
 import create from './create'
-import { ActionReturn } from '../../type'
+import { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { CmsParagraph } from '@prisma/client'

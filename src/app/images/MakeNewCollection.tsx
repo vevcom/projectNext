@@ -1,6 +1,6 @@
 'use client'
 import styles from './MakeNewCollection.module.scss'
-import Form from '../components/Form/Form'
+import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import TextInput from '@/components/UI/TextInput'
 import create from '@/actions/images/collections/create'

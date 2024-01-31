@@ -1,7 +1,7 @@
 'use client'
 import styles from './RemovePart.module.scss'
 import { EditModeContext } from '@/context/EditMode'
-import { Part, removePart } from '@/actions/cms/articleSections/update'
+import { Part, removePart } from '@/cms/articleSections/update'
 import Form from '@/components/Form/Form'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { useRouter } from 'next/navigation'

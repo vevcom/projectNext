@@ -464,7 +464,19 @@
             "allowSingleLine": true 
         }
     ],
-    //import statement order
+    // dissallow relative imports (e.g. '../'), imports from same folder are stil allowed
+    "no-restricted-imports": [
+        "error",
+        {
+            "patterns": [
+                {
+                    "group": ["../"],
+                    "message": "Relative imports are not allowed."
+                }
+            ]
+        }
+    ],
+    // import statement order
     "import/order": [
         "warn",
         {

@@ -1,6 +1,6 @@
 'use client'
 import styles from './PopUp.module.scss'
-import Button from '../UI/Button'
+import Button from '@/components/UI/Button'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
