@@ -19,7 +19,7 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             .use(rehypeFormat)
             .use(rehypeStringify)
             .process(contentMd)).value.toString()
-            .replace(/<img[^>]*>/g, 'CANT HAVE IMAGE')
+            .replace(/<img[^>]*>/g, 'Bilder i markdown er ikke støttet. Bruk det innebygde bildeverktøyet.')
         try {
             const paragraph = await prisma.cmsParagraph.update({
                 where: {
@@ -38,7 +38,6 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             return errorHandeler(error)
         }
     } catch (e) {
-        console.log(e)
         return {
             success: false,
             error: [{

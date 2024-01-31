@@ -1,17 +1,15 @@
 import styles from './page.module.scss'
-import CmsParagraph from '../components/Cms/CmsParagraph/CmsParagraph'
-import read from '@/actions/cms/paragraphs/read'
+import ArticleSection from '../components/Cms/ArticleSection/ArticleSection'
+import read from '@/actions/cms/articleSections/read'
 
 export default async function Articles() {
-    const pargraphAction = await read('my_first_paragraph')
+    const articleSectionRes = await read('test_article')
+    if (!articleSectionRes.success) throw new Error(articleSectionRes.error ? articleSectionRes.error[0].message : 'error')
+    const articleSection = articleSectionRes.data
 
-    //should never happen as default behaviour is to create if not found.
-    if (!pargraphAction.success) throw new Error(pargraphAction.error ? pargraphAction.error[0].message : 'something unexpected happen in loading paragraph')
-
-    const cmsParagraph = pargraphAction.data
     return (
         <main className={styles.wrapper}>
-            <CmsParagraph cmsParagraph={cmsParagraph} />
+            <ArticleSection articleSection={articleSection} />
         </main>
     )
 }

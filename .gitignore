@@ -41,3 +41,5 @@ src/prisma/migrations
 .env
 
 .rest
+
+.vscode

@@ -33,14 +33,14 @@
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white) { 
+@mixin borderBtn($color: colors.$white, $hoverColor: darken($color, 40%)) { 
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
     color: $color;
     &:hover {
         background: $color;
-        color: invert($color);
+        color: $hoverColor;
     }
 }
 
