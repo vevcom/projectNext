@@ -9,16 +9,17 @@
   "author": "vevcom",
   "license": "ISC",
   "dependencies": {
-    "prisma": "^5.8.1",
+    "@prisma/client": "^5.8.1",
     "sharp": "^0.33.2",
     "ts-node": "^10.9.2",
     "uuid": "^9.0.1"
   },
   "prisma": {
-    "schema": "schema.prisma"
+    "schema": "../schema.prisma"
   },
   "devDependencies": {
     "@types/node": "^20.11.10",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.8.1"
   }
 }

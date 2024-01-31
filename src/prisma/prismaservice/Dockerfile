@@ -1,13 +1,15 @@
 #This container is responisble for running migrations and seeding the database.
 FROM node:20-alpine AS base
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/
 COPY /prismaservice/package*.json ./
 RUN npm ci
 
-COPY ./schema.prisma ./schema.prisma
+COPY ./schema.prisma ../schema.prisma
+
 RUN npx prisma generate
 
 COPY /prismaservice/seeder ./seeder
+
 RUN mkdir -p ./store/images
 
 ########################################################
