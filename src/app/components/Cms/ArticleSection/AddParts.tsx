@@ -18,7 +18,7 @@ type PropTypes = {
     showLinkAdd: boolean
 }
 
-export default function AddPart({
+export default function AddParts({
     articleSectionName,
     children,
     showImageAdd,
