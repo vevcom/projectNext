@@ -2,11 +2,9 @@ import styles from './ArticleSection.module.scss'
 import RemovePart from './RemovePart'
 import AddParts from './AddParts'
 import ImageControls from './ImageControls'
-import CmsImageWrapper from './CmsImageWrapper'
 import CmsLink from '../CmsLink/CmsLink'
 import CmsImage from '../CmsImage/CmsImage'
 import CmsParagraph from '../CmsParagraph/CmsParagraph'
-import { v4 as uuid } from 'uuid'
 import type {
     ArticleSection,
     CmsParagraph as CmsParagraphT,
@@ -25,17 +23,15 @@ type PropTypes = {
 export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
-    const id = uuid()
-    const idMoveControls = uuid()
 
     const cmsImageContent = (
-        <CmsImageWrapper idMoveControls={idMoveControls} className={styles.image} idParagraph={id}>
+        <span className={styles.image}>
             {cmsImage && <CmsImage width={articleSection.imageSize} name={cmsImage.name} />}
             <div className={styles.remover}>
                 <RemovePart articleSectionName={articleSection.name} part="cmsImage" />
             </div>
-            <ImageControls id={idMoveControls} articleSection={articleSection} />
-        </CmsImageWrapper>
+            <ImageControls className={styles.moveControls} articleSection={articleSection} />
+        </span>
     )
 
     return (
@@ -51,7 +47,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                         cmsImage && articleSection.imagePosition === 'LEFT' &&
                         cmsImageContent
                     }
-                    <div id={id} className={styles.paragraphAndLink}>
+                    <div className={styles.paragraphAndLink}>
                         {
                             cmsParagraph &&
                         <span className={styles.paragraph}>

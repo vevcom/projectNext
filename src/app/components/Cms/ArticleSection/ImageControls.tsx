@@ -21,10 +21,10 @@ import type { ArticleSection } from '@prisma/client'
 
 type PropTypes = {
     articleSection: ArticleSection
-    id: string
+    className?: string
 }
 
-export default function ImageControls({ articleSection, id } : PropTypes) {
+export default function ImageControls({ articleSection, className } : PropTypes) {
     const editModeContext = useContext(EditModeContext)
     const { refresh } = useRouter()
     if (!editModeContext?.editMode) return null
@@ -50,7 +50,7 @@ export default function ImageControls({ articleSection, id } : PropTypes) {
     }
 
     return (
-        <div id={id} className={styles.ImageControls}>
+        <div className={`${className} ${styles.ImageControls}`}>
             {
                 articleSection.imagePosition === 'LEFT' ? (
                     <button onClick={moveRight} className={styles.moveRight}>

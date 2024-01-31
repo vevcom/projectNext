@@ -13,11 +13,15 @@
 } 
 
 .content {
+    flex: 1 0 auto;
     max-width: 100vw;
-    flex: 1; 
     overflow-x: hidden;
     position: relative;
-    display: table;
+    width: 100%;
+}
+
+.footer {
+    flex-shrink: 0;
 }
 
 .mobileNavBar {

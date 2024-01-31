@@ -13,7 +13,7 @@
         }
         > .paragraphAndLink {
             min-height: 100%;
-            flex: 10 0 250px;
+            flex: 1;
             display: flex;
             flex-direction: column;
             margin-bottom: ohma.$gap;
@@ -26,7 +26,6 @@
             }
         }
         > .image {
-            flex: 1 0;
             position: relative;
             max-width: 100%;
             //CMS-Image
@@ -55,5 +54,31 @@
                 z-index: 1;
             }
         }
+    }
+}
+
+.moveControls {
+    display: block;
+}
+
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .ArticleSection {
+        .content {
+            flex-flow: column;
+            > .paragraphAndLink {
+                order: 1;
+                > .paragraph {
+                    margin-right: ohma.$gap;
+                }
+            }
+            > .image {
+                order: 2;
+                border-radius: ohma.$rounding;
+                max-height: 100%;
+            }
+        }
+    }
+    .moveControls {
+        display: none;
     }
 }
