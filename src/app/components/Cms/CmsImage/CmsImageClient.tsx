@@ -1,7 +1,7 @@
 'use client'
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
-import Image from '../../Image/Image'
+import Image from '@/components/Image/Image'
 import read from '@/actions/cms/images/read'
 import readImage from '@/actions/images/read'
 import { useState, useEffect } from 'react'

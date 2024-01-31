@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import CmsParagraph from '../components/Cms/CmsParagraph/CmsParagraph'
+import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import read from '@/actions/cms/paragraphs/read'
 
 export default async function Articles() {

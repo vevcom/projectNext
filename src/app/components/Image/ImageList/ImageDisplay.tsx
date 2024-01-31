@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
-import Image from '../Image'
+import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'

@@ -1,5 +1,5 @@
 'use server'
-import { ActionReturn } from '../type'
+import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 import { z } from 'zod'
