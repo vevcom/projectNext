@@ -1,6 +1,7 @@
 'use server'
 import { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
 import type { CmsLink } from '@prisma/client'
 
 export default async function create(name: string): Promise<ActionReturn<CmsLink>> {

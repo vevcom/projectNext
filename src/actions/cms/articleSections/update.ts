@@ -44,7 +44,6 @@ export default async function update(name: string, changes: {
             },
             include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
         })
-        articleSection.cmsImage
         return { success: true, data: articleSection }
     } catch (error) {
         return errorHandeler(error)
@@ -68,6 +67,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
 
         switch (part) {
             case 'cmsImage':
+            {
                 const cmsImage = await createCmsImage(`${name}_image`)
                 if (!cmsImage.success) return cmsImage
                 return {
@@ -78,8 +78,9 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
                     })
                 }
-
+            }
             case 'cmsParagraph':
+            {
                 const cmsParagraph = await createCmsParagraph(`${name}_paragraph`)
                 if (!cmsParagraph.success) return cmsParagraph
                 return {
@@ -90,8 +91,9 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
                     })
                 }
-
+            }
             case 'cmsLink':
+            {
                 const cmsLink = await createCmsLink(`${name}_link`)
                 if (!cmsLink.success) return cmsLink
                 return {
@@ -102,7 +104,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
                         include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
                     })
                 }
-
+            }
             default:
                 break
         }

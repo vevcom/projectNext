@@ -27,7 +27,10 @@ export default function AddParts({
 }: PropTypes) {
     const { refresh } = useRouter()
     const editContext = useContext(EditModeContext)
-    if (!editContext?.editMode) return children
+    const handleAdd = useCallback(async (part: Part) => {
+        await addPart(articleSectionName, part)
+        refresh()
+    }, [articleSectionName])
     const parts : {
         shouldShow: boolean,
         part: Part
@@ -49,10 +52,8 @@ export default function AddParts({
             text: 'link'
         }
     ]
-    const handleAdd = useCallback(async (part: Part) => {
-        await addPart(articleSectionName, part)
-        refresh()
-    }, [articleSectionName])
+
+    if (!editContext?.editMode) return children
 
     return (
         <div className={styles.AddParts}>

@@ -1,10 +1,10 @@
 import styles from './CmsLink.module.scss'
 import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
-import type { CmsLink } from '@prisma/client'
+import type { CmsLink as CmsLinkT } from '@prisma/client'
 
 type PropTypes = {
-    cmsLink: CmsLink
+    cmsLink: CmsLinkT
 }
 
 export default function CmsLink({ cmsLink }: PropTypes) {

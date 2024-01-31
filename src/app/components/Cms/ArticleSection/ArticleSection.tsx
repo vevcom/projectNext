@@ -6,14 +6,14 @@ import CmsLink from '../CmsLink/CmsLink'
 import CmsImage from '../CmsImage/CmsImage'
 import CmsParagraph from '../CmsParagraph/CmsParagraph'
 import type {
-    ArticleSection,
+    ArticleSection as ArticleSectionT,
     CmsParagraph as CmsParagraphT,
     CmsImage as CmsImageT,
     CmsLink as CmsLinkT
 } from '@prisma/client'
 
 type PropTypes = {
-    articleSection: ArticleSection & {
+    articleSection: ArticleSectionT & {
         cmsParagraph: CmsParagraphT | null,
         cmsImage: CmsImageT | null,
         cmsLink: CmsLinkT | null

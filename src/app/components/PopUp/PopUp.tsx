@@ -7,7 +7,6 @@ import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,

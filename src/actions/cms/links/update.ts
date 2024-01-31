@@ -8,11 +8,11 @@ import type { ActionReturn } from '@/actions/type'
 
 export default async function update(id: number, rawData: FormData) : Promise<ActionReturn<CmsLink>> {
     const schema = z.object({
-        text: z.string().min(2).max(30),
+        text: z.string().min(2, 'Linken må ha navn på mer enn 1 bokstav').max(30, 'Max lengde er 30'),
         url: z.string().refine(value => {
             try {
-                new URL(value)
-                return true
+                const url = new URL(value)
+                return url
             } catch (_) {
                 return value.startsWith('/') || value.includes('.')
             }
@@ -29,11 +29,11 @@ export default async function update(id: number, rawData: FormData) : Promise<Ac
         return { success: false, error: parse.error.issues }
     }
 
-    let { text, url } = parse.data
-
-    if (url.includes('.') && !url.startsWith('http://') && !url.startsWith('https://')) {
-        url = `https://${url}`
+    const data = parse.data
+    if (data.url.includes('.') && !data.url.startsWith('http://') && !data.url.startsWith('https://')) {
+        data.url = `https://${data.url}`
     }
+    const { text, url } = data
 
     try {
         const cmsLink = await prisma.cmsLink.update({
