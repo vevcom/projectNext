@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import ArticleSection from '../components/Cms/ArticleSection/ArticleSection'
+import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import read from '@/actions/cms/articleSections/read'
 
 export default async function Articles() {

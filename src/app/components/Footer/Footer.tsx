@@ -1,5 +1,5 @@
 import styles from './Footer.module.scss'
-import SocialIcons from '../SocialIcons/SocialIcons'
+import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 

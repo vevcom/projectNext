@@ -1,7 +1,7 @@
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import Image from '@/components/Image/Image'
-import read from '@/actions/cms/images/read'
+import read from '@/cms/images/read'
 import readImage from '@/actions/images/read'
 import React from 'react'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'

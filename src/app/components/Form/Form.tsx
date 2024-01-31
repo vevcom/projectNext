@@ -1,12 +1,12 @@
 'use client'
 import styles from './Form.module.scss'
-import Button from '../UI/Button'
+import Button from '@/components/UI/Button'
 import { Children, FormHTMLAttributes, ReactNode, useEffect, DetailedHTMLProps, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { Action, ActionError } from '@/actions/type'
-import type { PropTypes as ButtonPropTypes } from '../UI/Button'
+import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 type Colors = ButtonPropTypes['color']
 type Confirmation = {

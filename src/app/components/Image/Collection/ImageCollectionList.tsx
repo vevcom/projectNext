@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageCollectionList.module.scss'
 import CollectionCard from './CollectionCard'
-import EndlessScroll from '../../PagingWrappes/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
 import { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import React from 'react'
 

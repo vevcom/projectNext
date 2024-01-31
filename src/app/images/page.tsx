@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
-import ImageCollectionList from '../components/Image/Collection/ImageCollectionList'
+import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
 import { readPage } from '@/actions/images/collections/read'
 import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
