@@ -1,0 +1,95 @@
+@use '@/styles/ohma';
+
+.ArticleSection {
+    isolation: isolate;
+    .content {
+        display: flex;
+        flex-flow: row wrap;
+        > *:first-child {
+            z-index: 2; //Neccessary for the remover confirmation to be on top of the thing on right
+        }
+        > *:nth-child(2) {
+            z-index: 1; //Neccessary for the remover confirmation to be on top of the thing on right    
+        }
+        > .paragraphAndLink {
+            min-height: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: ohma.$gap;
+            > .paragraph {
+                flex: 1 1 100%;
+            }
+            > .link {
+                margin-top: ohma.$gap;
+                max-width: 200px;
+            }
+        }
+        > .image {
+            position: relative;
+            max-width: 100%;
+            //CMS-Image
+            > .cmsImageWithControls {
+                position: relative;
+                display: flex;
+                overflow: hidden;
+                >*:first-child {
+                    border-radius: ohma.$rounding;
+                    overflow: hidden;
+                    width: 100%;
+                    height: 100%;
+                    max-width: 90vw;
+                    > * {
+                        min-width: 100%;
+                        max-width: 83vw;
+                    }
+                }                
+                > .moveControls {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transform: translate(0, 100%);
+                }
+            }
+            
+        }
+        .image, .link, .paragraph {
+            margin: 0 ohma.$gap;
+            position: relative;
+            isolation: isolate;
+            > .remover {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                z-index: 2;
+            }
+            > *:not(.remover) {
+                z-index: 1;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .ArticleSection {
+        .content {
+            flex-flow: column;
+            > .paragraphAndLink {
+                order: 1;
+                > .paragraph {
+                    margin-right: ohma.$gap;
+                }
+            }
+            > .image {
+                order: 2;
+                border-radius: ohma.$rounding;
+                max-height: 100%;
+                > .cmsImageWithControls > .moveControls {
+                    display: none;
+                }
+            }
+        }
+    }
+}

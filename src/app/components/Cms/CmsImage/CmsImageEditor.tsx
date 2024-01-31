@@ -1,6 +1,7 @@
 'use client'
 import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
+import EditOverlay from '../EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
@@ -12,8 +13,6 @@ import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
 import { CmsImage, Image as ImageT } from '@prisma/client'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
@@ -32,10 +31,8 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
     return (
         editingContext?.editMode && (
             <PopUp PopUpKey={cmsImage.id} showButtonContent={
-                <div className={styles.editIcon}>
-                    <FontAwesomeIcon icon={faPencil} />
-                </div>
-            } showButtonClass={styles.openBtn}>
+                <EditOverlay />
+            } showButtonClass={styles.showBtn}>
                 <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
                     <ImagePagingProvider
                         startPage={

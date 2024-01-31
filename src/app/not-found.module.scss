@@ -2,9 +2,10 @@
 
 .wrapper {
     height: 100%;
-    width: 100vw;
-    display: table-cell;
-    vertical-align: middle;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     .info {
         display: flex;
         justify-content: center;
