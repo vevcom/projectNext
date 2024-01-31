@@ -28,6 +28,8 @@
       "@/actions/*": ["src/actions/*"],
       "@/prisma/*": ["src/prisma/*"],
       "@/context/*": ["src/context/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

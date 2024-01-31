@@ -2,7 +2,7 @@
 import styles from './AddParts.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
 import { EditModeContext } from '@/context/EditMode'
-import { addPart } from '@/actions/cms/articleSections/update'
+import { addPart } from '@/cms/articleSections/update'
 import { useCallback, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

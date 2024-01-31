@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageControls.module.scss'
-import update from '@/actions/cms/articleSections/update'
+import update from '@/cms/articleSections/update'
 import { EditModeContext } from '@/context/EditMode'
 import { increment, maxImageSize, minImageSize } from '@/actions/cms/articleSections/ConfigVars'
 import { useContext } from 'react'

@@ -1,7 +1,7 @@
 'use client'
 import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
-import EditOverlay from '@/components/Cms/EditOverlay'
+import EditOverlay from '@/cms/EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
