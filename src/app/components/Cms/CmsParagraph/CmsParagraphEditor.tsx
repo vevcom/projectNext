@@ -48,7 +48,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: Pr
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}
-                    submitText="Update"
+                    submitText="Oppdater"
                     successCallback={() => {
                         refresh()
                     }}
