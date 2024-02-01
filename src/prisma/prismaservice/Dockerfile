@@ -13,6 +13,9 @@ RUN npx prisma generate
 
 RUN mkdir -p ./store/images
 
+COPY prismaservice/standard_store ./standard_store
+COPY prismaservice/cms_paragraphs ./cms_paragraphs
+
 COPY /prismaservice/src ./src
 RUN npm run build
 
