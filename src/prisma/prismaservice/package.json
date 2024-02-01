@@ -17,7 +17,6 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "sharp": "^0.33.2",
-    "ts-node": "^10.9.2",
     "unified": "^11.0.4",
     "uuid": "^9.0.1"
   },
@@ -27,6 +26,8 @@
   "devDependencies": {
     "@types/node": "^20.11.10",
     "@types/uuid": "^9.0.8",
-    "prisma": "^5.8.1"
+    "prisma": "^5.8.1",
+    "tsc-alias": "^1.8.8",
+    "typescript": "^5.3.3"
   }
 }
