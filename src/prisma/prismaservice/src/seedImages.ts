@@ -23,7 +23,7 @@ export default async function seedImages(prisma: PrismaClient) {
         }
     })
 
-    const standardLocation = join(__dirname, 'standard_store', 'images')
+    const standardLocation = join(__dirname, '..', 'standard_store', 'images')
     const storeLocation = join(__dirname, '..', 'store', 'images')
 
     const files = await readdir(standardLocation)
