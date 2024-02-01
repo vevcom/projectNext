@@ -41,7 +41,10 @@ type ActionTypes<Data, PageSize extends number, DataGuarantee extends boolean> =
     serverRenderedData: Data[],
 }
 
-function fetchReducer<Data, const PageSize extends number, DataGuarantee extends boolean>(state: StateTypes<Data, PageSize>, action: ActionTypes<Data, PageSize, DataGuarantee>) : StateTypes<Data, PageSize> {
+function fetchReducer<Data, const PageSize extends number, DataGuarantee extends boolean>(
+    state: StateTypes<Data, PageSize>,
+    action: ActionTypes<Data, PageSize, DataGuarantee>
+) : StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
             return { ...state, loading: true }
@@ -68,9 +71,21 @@ function fetchReducer<Data, const PageSize extends number, DataGuarantee extends
     }
 }
 
-function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({ fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>) {
-    return function PagingProvider({ serverRenderedData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>) {
-        const [state, dispatch] = useReducer(fetchReducer<Data, PageSize, DataGuarantee>, { data: serverRenderedData, page: startPage, loading: false, allLoaded: false })
+function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>(
+    { fetcher, Context }: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>
+) {
+    return function PagingProvider(
+        { serverRenderedData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>
+    ) {
+        const [state, dispatch] = useReducer(
+            fetchReducer<Data, PageSize, DataGuarantee>,
+            {
+                data: serverRenderedData,
+                page: startPage,
+                loading: false,
+                allLoaded: false
+            }
+        )
 
         const stateRef = useRef(state)
         const detailsRef = useRef(details)

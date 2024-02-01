@@ -21,12 +21,14 @@ export default async function read(id: number) : Promise<ActionReturn<ImageColle
     }
 }
 
-
 export type ImageCollectionPageReturn = ImageCollection & {
     coverImage: Image | null,
     numberOfImages: number,
 }
-export async function readPage<const PageSize extends number>({ page }: ReadPageInput<PageSize, null>) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
+
+export async function readPage<const PageSize extends number>(
+    { page }: ReadPageInput<PageSize, null>
+) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({

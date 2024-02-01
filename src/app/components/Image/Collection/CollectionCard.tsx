@@ -13,7 +13,11 @@ type PropTypes = {
 
 export default function CollectionCard({ collection, className }: PropTypes) {
     return (
-        <Link href={`/images/collections/${collection.id}`} className={`${styles.CollectionCard} ${className}`} key={collection.id}>
+        <Link
+            href={`/images/collections/${collection.id}`}
+            className={`${styles.CollectionCard} ${className}`}
+            key={collection.id}
+        >
             {
                 collection.coverImage ? (
                     <Image smallSize width={100} image={collection.coverImage} />

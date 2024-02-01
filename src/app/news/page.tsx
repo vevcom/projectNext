@@ -4,7 +4,11 @@ import read from '@/actions/cms/articleSections/read'
 
 export default async function Articles() {
     const articleSectionRes = await read('test_article')
-    if (!articleSectionRes.success) throw new Error(articleSectionRes.error ? articleSectionRes.error[0].message : 'error')
+
+    if (!articleSectionRes.success) {
+        throw new Error(articleSectionRes.error ? articleSectionRes.error[0].message : 'error')
+    }
+
     const articleSection = articleSectionRes.data
 
     return (
