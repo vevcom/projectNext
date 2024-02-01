@@ -1,4 +1,5 @@
-import { ImageSize } from '@prisma/client'
+import {  } from '@prisma/client'
+import type { Position, ImageSize } from '@prisma/client'
 
 export type SeedCmsImage = {
     name: string,
@@ -21,11 +22,13 @@ export type SeedCmsArticleSection = {
     cmsImage?: SeedCmsImage,
     cmsParagraph?: SeedCmsParagraph,
     cmsLink?: SeedCmsLink
+    imagePosition?: Position
+    imageSize?: ImageSize
 }
 
 export type SeedArticle = {
     name: string,
-    coverImageName: SeedCmsImage,
+    coverImage: SeedCmsImage,
     articleSections: SeedCmsArticleSection[]
 }
 
@@ -127,7 +130,72 @@ const standardCmsContents : CmsContent = {
 
     ],
     articles: [
-
+        {
+            name: 'about',
+            coverImage: {
+                name: 'about_cover',
+                imageName: 'ohma',
+                imageSize: 'LARGE'
+            },
+            articleSections: [
+                {
+                    name: 'about_1',
+                    cmsParagraph: {
+                        name: 'about_1_paragraph',
+                        file: 'about/about_1.md'
+                    },
+                    cmsLink: {
+                        name: 'about_1_link',
+                        url: 'https://omega.ntnu.no',
+                    }
+                },
+                {
+                    name: 'about_2',
+                    cmsParagraph: {
+                        name: 'about_2_paragraph',
+                        file: 'about/about_2.md'
+                    },
+                    cmsImage: {
+                        name: 'about_2_image',
+                        imageName: 'kappemann',
+                        imageSize: 'LARGE'
+                    }
+                }
+            ]
+        },
+        {
+            name: 'statutter',
+            coverImage: {
+                name: 'statutter_cover',
+                imageName: '',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'statutter_1',
+                    cmsParagraph: {
+                        name: 'statutter_1_paragraph',
+                        file: 'statutter/statutter_1.md'
+                    },
+                    cmsLink: {
+                        name: 'statutter_1_link',
+                        url: 'https://omega.ntnu.no',
+                    }
+                },
+                {
+                    name: 'statutter_2',
+                    cmsParagraph: {
+                        name: 'statutter_2_paragraph',
+                        file: 'statutter/statutter_2.md'
+                    },
+                    cmsImage: {
+                        name: 'statutter_2_image',
+                        imageName: 'traktat',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
+        }
     ]
 }
 
