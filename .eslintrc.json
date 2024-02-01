@@ -409,8 +409,6 @@
     "no-unreachable": "error",
     // disallow comparisons with the value NaN
     "use-isnan": "error",
-    // ensure JSDoc comments are valid
-    "valid-jsdoc": "warn",
     // ensure that the results of typeof are compared against a valid string
     "valid-typeof": "error",
     // Avoid code that looks like two expressions but is actually one
