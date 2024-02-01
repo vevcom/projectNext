@@ -1,6 +1,7 @@
 import prisma from '@/prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { AuthOptions } from 'next-auth'
+import { AuthOptions, getServerSession } from 'next-auth'
+import { notFound, redirect } from 'next/navigation'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -52,4 +53,37 @@ export const authOptions: AuthOptions = {
         signIn: '/login',
         signOut: '/logout'
     }
+}
+
+/**
+ * Returns the user object from the current session. If there is no session
+ * null is returned. 
+ */
+export async function getUser() {
+    const session = await getServerSession(authOptions);
+
+    return session?.user ?? null
+}
+
+type RequireUserArgsType = {
+    returnUrl?: string | null,
+    redirectUrl?: string | null,
+}
+
+/**
+ * Gets user in the same way as getUser, but with redirects to handle
+ * situations where there is no user.
+ */
+export async function requireUser({ returnUrl = null, redirectUrl = null }: RequireUserArgsType) {
+    const user = await getUser()
+
+    if (user === null) {
+        if (returnUrl !== null) redirect(`/login?callbackUrl=${returnUrl}`)
+
+        if (redirectUrl != null) redirect(redirectUrl)
+
+        notFound()
+    }
+
+    return user
 }

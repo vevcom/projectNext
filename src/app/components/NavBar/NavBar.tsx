@@ -4,15 +4,15 @@ import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { Session } from 'next-auth'
+import { User } from 'next-auth'
 import Link from 'next/link'
 
 type PropTypes = {
-    session: Session | null
+    user: User | null
 }
 
-async function NavBar({ session }: PropTypes) {
-    const isLoggedIn = Boolean(session?.user)
+async function NavBar({ user }: PropTypes) {
+    const isLoggedIn = user !== null
 
     //temporary
     const applicationPeriod = false

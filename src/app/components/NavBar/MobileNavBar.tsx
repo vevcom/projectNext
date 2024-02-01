@@ -6,14 +6,14 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { Session } from 'next-auth'
+import { User } from 'next-auth'
 
 type PropTypes = {
-    session: Session | null
+    user: User | null
 }
 
-function MobileNavBar({ session } : PropTypes) {
-    const isLoggedIn = Boolean(session?.user)
+function MobileNavBar({ user } : PropTypes) {
+    const isLoggedIn = user !== null
     const applicationPeriod = false //temp
     const isAdmin = true //temp
 
