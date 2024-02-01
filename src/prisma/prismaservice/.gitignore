@@ -2,5 +2,6 @@
 /.pnp
 .pnp.js
 /seeder/store
+/dist
 
 .DS_Store

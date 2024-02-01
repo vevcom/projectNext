@@ -9,5 +9,9 @@
       "strict": true
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules"],
+    "tsc-alias": {
+      "verbose": false,
+      "resolveFullPaths": true
+    }
   }

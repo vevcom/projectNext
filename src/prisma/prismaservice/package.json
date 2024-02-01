@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "seed": "npx ts-node sdist/eeder/seed.ts"
+    "seed": "npx ts-node dist/seeder/seed.js"
   },
   "author": "vevcom",
   "license": "ISC",
