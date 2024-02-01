@@ -1,5 +1,10 @@
-generator client {
+generator projectnext {
   provider = "prisma-client-js"
+}
+
+generator prismaservice {
+  provider = "prisma-client-js"
+  output   = "./prismaservice/node_modules/.prisma/client"
 }
 
 datasource db {

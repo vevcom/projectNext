@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "description": "migrations and seeding for db",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "seed": "npx ts-node seeder/seed.ts"
+    "build": "tsc && tsc-alias",
+    "seed": "npx ts-node sdist/eeder/seed.ts"
   },
   "author": "vevcom",
   "license": "ISC",
