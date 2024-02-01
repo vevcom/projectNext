@@ -1,9 +1,21 @@
 import styles from './Article.module.scss'
+import ArticleSection from '@/cms/ArticleSection/ArticleSection'
+import type { ReturnType } from '@/cms/articles/ReturnType'
 
-export default function Article() {
+type PropTypes = {
+    article: ReturnType,
+}
+
+export default function Article({ article } : PropTypes) {
     return (
         <span className={styles.Article}>
-            <h1>Article</h1>
+            <article>
+            {
+                article.articleSections.map(section => (
+                    <ArticleSection key={section.id} articleSection={section} />
+                ))
+            }
+            </article>
         </span>
     )
 }

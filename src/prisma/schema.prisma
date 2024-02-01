@@ -125,9 +125,8 @@ model Article {
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @updatedAt @map("updated_at")
   ArticleSection ArticleSection[]
-
-  coverImage   CmsImage? @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
-  coverImageId Int?      @unique
+  coverImage     CmsImage?        @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
+  coverImageId   Int?             @unique
 
   @@map("articles")
 }
