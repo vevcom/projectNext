@@ -1,15 +1,42 @@
 import { ImageSize } from '@prisma/client'
 
+type SeedCmsImage = {
+    name: string,
+    imageName: string
+    imageSize?: ImageSize
+}
+
+type SeedCmsParagraph = {
+    name: string,
+    file: string //location in cms_paragraphs folder
+}
+
+type SeedCmsLink = {
+    name: string,
+    url: string
+}
+
+type SeedCmsArticleSection = {
+    name: string,
+    cmsImage?: SeedCmsImage,
+    cmsParagraph?: SeedCmsParagraph,
+    cmsLink?: SeedCmsLink
+}
+
+type SeedArticle = {
+    name: string,
+    coverImageName: SeedCmsImage,
+    articleSections: SeedCmsArticleSection[]
+}
+
 type CmsContent = {
-    cmsImages: {
-        name: string,
-        imageName: string
-        imageSize?: ImageSize
-    }[],
-    cmsParagraphs: {
-        name: string,
-        text: string
-    }[]
+    cmsImages: SeedCmsImage[], //this is a cmsImage without a connection to a cmsArticleSection
+    cmsParagraphs: SeedCmsParagraph[], //this is a cmsParagraph without a connection to a cmsArticleSection
+    cmsLink: SeedCmsLink[], //this is a cmsLink without a connection to a cmsArticleSection
+
+    articleSections: SeedCmsArticleSection[], //this is a cmsArticleSection without a connection to a Article
+    
+    articles: SeedArticle[],
 }
 
 //this object describes the starting state of all cmsimages
@@ -90,7 +117,18 @@ const standardCmsContents : CmsContent = {
             imageSize: 'SMALL'
         }
     ],
-    cmsParagraphs: []
+    cmsParagraphs: [
+
+    ],
+    cmsLink: [
+
+    ],
+    articleSections: [
+
+    ],
+    articles: [
+
+    ]
 }
 
 export default standardCmsContents
