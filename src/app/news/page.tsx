@@ -4,7 +4,6 @@ import create from '@/cms/articles/create'
 
 export default async function Articles() {
     const article = await create('test')
-    console.log(article)
     if (!article.success) return (<div>{article.error ? article.error[9].message : 'error'}</div>)
 
     return (
