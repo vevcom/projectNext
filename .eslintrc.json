@@ -462,7 +462,7 @@
     "max-len": [
         "error",
         {
-            "code": 120
+            "code": 125
         }
     ],
     // dissallow relative imports (e.g. '../'), imports from same folder are stil allowed
