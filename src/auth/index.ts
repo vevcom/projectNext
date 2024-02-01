@@ -1,8 +1,6 @@
+import prisma from '@/prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions } from 'next-auth'
-
-import prisma from '@/prisma'
-import type { Permission } from '@prisma/client'
 
 export const authOptions: AuthOptions = {
     providers: [

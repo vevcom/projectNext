@@ -1,27 +1,27 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
-import Image from '../Image'
-import { useContext, useState, useEffect, useRef } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import ImageSelectionButton from './ImageSelectionButton'
+import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import update from '@/actions/images/update'
-import { useRouter } from 'next/navigation'
 import destroy from '@/actions/images/destroy'
-import type { Image as ImageT } from '@prisma/client'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
-import ImageSelectionButton from './ImageSelectionButton'
 import { EditModeContext } from '@/context/EditMode'
+import { useRouter } from 'next/navigation'
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useContext, useState, useEffect, useRef } from 'react'
+import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     startImageName?: string,
     disableEditing?: boolean,
 }
 
-export default function ImageCollectionDisplay({ startImageName, disableEditing = false }: PropTypes) {
+export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
     const editContect = useContext(EditModeContext)
@@ -70,7 +70,7 @@ export default function ImageCollectionDisplay({ startImageName, disableEditing 
     }
 
     return (
-        <div className={styles.ImageCollectionDisplay}>
+        <div className={styles.ImageDisplay}>
             <div>
                 <div className={styles.currentImage}>
                     <div className={styles.select}>

@@ -1,10 +1,10 @@
-import ImageLink from '../components/Image/link/ImageLink'
 import styles from './page.module.scss'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 
 export default function Events() {
     return (
         <div className={styles.wrapper}>
-            <ImageLink name="logo_whi" width={300}/>
+            <CmsImage name="events_test__" width={300}/>
             iejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf

@@ -1,9 +1,7 @@
+import { authOptions } from '@/auth'
+import prisma from '@/prisma'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
-
-import { authOptions } from '@/auth'
-
-import prisma from '@/prisma'
 import Link from 'next/link'
 
 type PropTypes = {

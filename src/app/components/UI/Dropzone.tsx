@@ -1,5 +1,6 @@
 'use client'
 
+import styles from './Dropzone.module.scss'
 import React, {
     InputHTMLAttributes,
     useCallback,
@@ -9,7 +10,6 @@ import React, {
     useRef,
     useEffect,
 } from 'react'
-import styles from './Dropzone.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
 

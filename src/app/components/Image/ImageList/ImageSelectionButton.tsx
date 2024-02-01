@@ -1,10 +1,10 @@
 'use client'
 import styles from './ImageSelectionButton.module.scss'
+import { ImageSelectionContext } from '@/context/ImageSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import type { Image } from '@prisma/client'
-import { ImageSelectionContext } from '@/context/ImageSelection'
 import { useContext } from 'react'
+import type { Image } from '@prisma/client'
 
 type PropTypes = {
     image: Image,

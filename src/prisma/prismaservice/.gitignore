@@ -1,0 +1,6 @@
+/node_modules
+/.pnp
+.pnp.js
+/seeder/store
+
+.DS_Store

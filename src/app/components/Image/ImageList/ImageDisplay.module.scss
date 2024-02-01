@@ -1,6 +1,6 @@
 @use "@/styles/ohma";
 
-.ImageCollectionDisplay > div {
+.ImageDisplay > div {
     > .currentImage {
         padding: 0;
         width: 50vw;
@@ -65,7 +65,7 @@
     }
 }
 
-.ImageCollectionDisplay {
+.ImageDisplay {
     position: relative;
     .admin {
         @include ohma.card;

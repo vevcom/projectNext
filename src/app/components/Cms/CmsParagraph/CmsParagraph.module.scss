@@ -1,0 +1,18 @@
+@use '@/styles/ohma';
+
+.CmsParagraph {
+    width: 100%;
+    position: relative;
+    > .HTMLcontent {
+        width: 100%;
+        * {
+            word-wrap: break-word;
+        }
+        ul ul, ol ol {
+            padding-left: 20px;
+        }
+        li {
+            list-style-position: inside;
+        }
+    }
+}

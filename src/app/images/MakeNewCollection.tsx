@@ -1,14 +1,14 @@
 'use client'
+import styles from './MakeNewCollection.module.scss'
+import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TextInput from '@/components/UI/TextInput'
 import create from '@/actions/images/collections/create'
-import Form from '../components/Form/Form'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ImageCollection } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styles from './MakeNewCollection.module.scss'
 import { v4 as uuid } from 'uuid'
+import type { ImageCollection } from '@prisma/client'
 
 export default function MakeNewCollection() {
     const router = useRouter()

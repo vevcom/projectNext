@@ -41,11 +41,13 @@ services:
   prisma:
     build: 
       context: ./src/prisma
-      dockerfile: ./Dockerfile
+      dockerfile: ./prismaservice/Dockerfile
       target: prod
     environment:
       NODE_ENV: production
       DB_URI: ${DB_URI}
+    volumes:
+      - store:/usr/src/app/store
     depends_on:
       db:
         condition: service_healthy
@@ -70,4 +72,3 @@ volumes:
     driver: local
   store:
     driver: local
-    

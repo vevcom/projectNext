@@ -1,6 +1,6 @@
-import React from 'react'
-import ImageLink from '@/app/components/Image/link/ImageLink'
 import styles from './layout.module.scss'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode
@@ -14,7 +14,7 @@ export default function AuthLayout({ children } : PropTypes) {
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <ImageLink name="magisk_hatt" alt="en kappemann sin hatt" width={200}/>
+                    <CmsImage name="auth_icon" alt="en kappemann sin hatt" width={200}/>
                 </div>
             </div>
         </div>
