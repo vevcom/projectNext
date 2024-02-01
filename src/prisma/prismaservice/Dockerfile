@@ -6,6 +6,7 @@ COPY ./schema.prisma ./schema.prisma
 
 WORKDIR /usr/src/app/prismaservice
 COPY /prismaservice/package*.json ./
+COPY /prismaservice/tsconfig.json ./
 RUN npm ci
 
 RUN npx prisma generate
