@@ -4,6 +4,7 @@ import type {
     SeedCmsParagraph,
     SeedCmsLink,
     SeedArticleSection,
+    SeedArticle,
 } from './standardCmsContents'
 import type { PrismaClient } from '@prisma/client'
 import { readFile } from 'fs/promises'
@@ -28,7 +29,11 @@ export default async function seedCms(prisma: PrismaClient) {
     }))
 
     await Promise.all(standardCmsContents.articleSections.map(async (articleSection) => {
-        
+        await seedArticleSection(articleSection, prisma)
+    }))
+
+    await Promise.all(standardCmsContents.articles.map(async (article) => {
+        await seedArticle(article, prisma)
     }))
 }
 
@@ -125,6 +130,31 @@ async function seedArticleSection(articleSection: SeedArticleSection, prisma: Pr
             },
             cmsParagraph: {
                 connect: cmsParagraph
+            }
+        }
+    })
+}
+
+async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
+    const coverImage = await seedCmsImage(article.coverImage, prisma)
+    const articleSections = await Promise.all(article.articleSections.map(async (articleSection) => {
+        return seedArticleSection(articleSection, prisma)
+    }))
+
+    return prisma.article.upsert({
+        where: {
+            name: article.name
+        },
+        update: {
+            name: article.name,
+        },
+        create: {
+            name: article.name,
+            coverImage: {
+                connect: coverImage
+            },
+            articleSections: {
+                connect: articleSections.map(section => ({ id: section.id }))
             }
         }
     })
