@@ -10,9 +10,11 @@ RUN npm ci
 
 RUN npx prisma generate
 
-COPY /prismaservice/seeder ./seeder
+COPY /prismaservice/src ./src
 
 RUN mkdir -p ./store/images
+
+RUN npm run build
 
 ########################################################
 FROM node:20-alpine AS prod
