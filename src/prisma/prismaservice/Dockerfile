@@ -11,10 +11,9 @@ RUN npm ci
 
 RUN npx prisma generate
 
-COPY /prismaservice/src ./src
-
 RUN mkdir -p ./store/images
 
+COPY /prismaservice/src ./src
 RUN npm run build
 
 ########################################################
