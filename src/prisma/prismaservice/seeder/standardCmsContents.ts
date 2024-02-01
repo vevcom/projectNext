@@ -1,35 +1,35 @@
 import { ImageSize } from '@prisma/client'
 
-type SeedCmsImage = {
+export type SeedCmsImage = {
     name: string,
     imageName: string
     imageSize?: ImageSize
 }
 
-type SeedCmsParagraph = {
+export type SeedCmsParagraph = {
     name: string,
     file: string //location in cms_paragraphs folder
 }
 
-type SeedCmsLink = {
+export type SeedCmsLink = {
     name: string,
     url: string
 }
 
-type SeedCmsArticleSection = {
+export type SeedCmsArticleSection = {
     name: string,
     cmsImage?: SeedCmsImage,
     cmsParagraph?: SeedCmsParagraph,
     cmsLink?: SeedCmsLink
 }
 
-type SeedArticle = {
+export type SeedArticle = {
     name: string,
     coverImageName: SeedCmsImage,
     articleSections: SeedCmsArticleSection[]
 }
 
-type CmsContent = {
+export type CmsContent = {
     cmsImages: SeedCmsImage[], //this is a cmsImage without a connection to a cmsArticleSection
     cmsParagraphs: SeedCmsParagraph[], //this is a cmsParagraph without a connection to a cmsArticleSection
     cmsLink: SeedCmsLink[], //this is a cmsLink without a connection to a cmsArticleSection
