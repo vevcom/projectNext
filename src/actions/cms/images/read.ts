@@ -1,7 +1,7 @@
 'use server'
 import create from './create'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { Image, CmsImage } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
@@ -21,6 +21,6 @@ export default async function read(name: string) : Promise<ActionReturn<CmsImage
         }
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

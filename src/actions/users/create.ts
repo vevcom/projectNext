@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 import type { User } from '@prisma/client'
@@ -50,6 +50,6 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<U
 
         return { success: true, data: user }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

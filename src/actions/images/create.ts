@@ -1,7 +1,7 @@
 'use server'
 import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
@@ -74,7 +74,7 @@ async function createOne(file: File, meta: {
             return { success: true, data: image }
         } catch (err) {
             console.log(err)
-            return errorHandeler(err)
+            return errorHandler(err)
         }
     } catch (err) {
         //LOGGER

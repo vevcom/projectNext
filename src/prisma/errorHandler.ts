@@ -1,7 +1,7 @@
 import { ActionReturn } from '@/actions/type'
 import { Prisma } from '@prisma/client'
 
-export default function errorHandeler(err: unknown) : ActionReturn<never> {
+export default function errorHandler(err: unknown) : ActionReturn<never> {
     // TODO - LOGGER
 
     if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {

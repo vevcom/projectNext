@@ -2,7 +2,7 @@
 import create from './create'
 import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist
@@ -22,6 +22,6 @@ export default async function read(name: string): Promise<ActionReturn<ReturnTyp
         const createRes = await create(name)
         return createRes
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
