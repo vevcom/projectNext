@@ -464,6 +464,13 @@
             "allowSingleLine": true 
         }
     ],
+    // enforce max length of lines
+    "max-len": [
+        "error",
+        {
+            "code": 120
+        }
+    ],
     // dissallow relative imports (e.g. '../'), imports from same folder are stil allowed
     "no-restricted-imports": [
         "error",
