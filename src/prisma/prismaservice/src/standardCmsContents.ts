@@ -167,7 +167,7 @@ const standardCmsContents : CmsContent = {
             name: 'statutter',
             coverImage: {
                 name: 'statutter_cover',
-                imageName: '',
+                imageName: 'ov',
                 imageSize: 'MEDIUM'
             },
             articleSections: [
