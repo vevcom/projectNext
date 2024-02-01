@@ -17,7 +17,7 @@ export type SeedCmsLink = {
     url: string
 }
 
-export type SeedCmsArticleSection = {
+export type SeedArticleSection = {
     name: string,
     cmsImage?: SeedCmsImage,
     cmsParagraph?: SeedCmsParagraph,
@@ -29,7 +29,7 @@ export type SeedCmsArticleSection = {
 export type SeedArticle = {
     name: string,
     coverImage: SeedCmsImage,
-    articleSections: SeedCmsArticleSection[]
+    articleSections: SeedArticleSection[]
 }
 
 export type CmsContent = {
@@ -37,7 +37,7 @@ export type CmsContent = {
     cmsParagraphs: SeedCmsParagraph[], //this is a cmsParagraph without a connection to a cmsArticleSection
     cmsLink: SeedCmsLink[], //this is a cmsLink without a connection to a cmsArticleSection
 
-    articleSections: SeedCmsArticleSection[], //this is a cmsArticleSection without a connection to a Article
+    articleSections: SeedArticleSection[], //this is a cmsArticleSection without a connection to a Article
     
     articles: SeedArticle[],
 }

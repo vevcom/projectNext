@@ -1,9 +1,34 @@
-import standardCmsContents, { SeedCmsImage } from './standardCmsContents'
+import standardCmsContents from './standardCmsContents'
+import type { 
+    SeedCmsImage, 
+    SeedCmsParagraph,
+    SeedCmsLink,
+    SeedArticleSection,
+} from './standardCmsContents'
 import type { PrismaClient } from '@prisma/client'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+import { unified } from 'unified'
+import rehypeFormat from 'rehype-format'
+import rehypeStringify from 'rehype-stringify'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
 
 export default async function seedCms(prisma: PrismaClient) {
     await Promise.all(standardCmsContents.cmsImages.map(async (cmsimage) => {
         await seedCmsImage(cmsimage, prisma)
+    }))
+
+    await Promise.all(standardCmsContents.cmsParagraphs.map(async (cmsparagraph) => {
+        await seedCmsParagraph(cmsparagraph, prisma)
+    }))
+
+    await Promise.all(standardCmsContents.cmsLink.map(async (cmslink) => {
+        await seedCmsLink(cmslink, prisma)
+    }))
+
+    await Promise.all(standardCmsContents.articleSections.map(async (articleSection) => {
+        
     }))
 }
 
@@ -37,6 +62,55 @@ async function seedCmsImage(cmsimage: SeedCmsImage, prisma: PrismaClient) {
     })
 }
 
-async function seedCmsParagraph() {
-    
+async function seedCmsParagraph(cmssparagraph: SeedCmsParagraph, prisma: PrismaClient) {
+    const contentMd = await readFile(join('./cms_paragraphs', cmssparagraph.file), 'utf-8')
+    const contentHtml = (await unified()
+            .use(remarkParse)
+            .use(remarkRehype)
+            .use(rehypeFormat)
+            .use(rehypeStringify)
+            .process(contentMd)).value.toString()
+
+    return prisma.cmsParagraph.upsert({
+        where: {
+            name: cmssparagraph.name
+        },
+        update: {
+            name: cmssparagraph.name,
+        },
+        create: {
+            name: cmssparagraph.name,
+            contentMd,
+            contentHtml,
+        }
+    })
+}
+
+async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
+    return prisma.cmsLink.upsert({
+        where: {
+            name: cmsLink.name
+        },
+        update: {
+            name: cmsLink.name,
+        },
+        create: {
+            name: cmsLink.name,
+            url: cmsLink.url,
+        }
+    })
+}
+
+async function seedArticleSection(articleSection: SeedArticleSection, prisma: PrismaClient) {
+    return prisma.articleSection.upsert({
+        where: {
+            name: articleSection.name
+        },
+        update: {
+            name: articleSection.name,
+        },
+        create: {
+            name: articleSection.name,
+        }
+    })
 }

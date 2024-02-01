@@ -10,8 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.8.1",
+    "rehype-format": "^5.0.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
     "sharp": "^0.33.2",
     "ts-node": "^10.9.2",
+    "unified": "^11.0.4",
     "uuid": "^9.0.1"
   },
   "prisma": {
