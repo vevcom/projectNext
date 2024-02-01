@@ -64,6 +64,7 @@ model CmsImage {
   updatedAt      DateTime         @updatedAt @map("updated_at")
   imageSize      ImageSize        @default(MEDIUM) @map("small_image")
   ArticleSection ArticleSection[]
+  Article        Article? //Can be cover image for an article
 
   @@map("cms_images")
 }
@@ -110,6 +111,23 @@ model ArticleSection {
   cmsParagraphId Int?          @unique
   imagePosition  Position      @default(RIGHT) @map("image_position")
   imageSize      Int           @default(200)
+  Article        Article?      @relation(fields: [articleId], references: [id])
+  articleId      Int?          @unique
+  order          Int           @default(0) //The order "position" of the article section in the article
 
+  @@unique([articleId, order]) //There can only be one article section with a given order in an article
   @@map("article_sections")
+}
+
+model Article {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  ArticleSection ArticleSection[]
+
+  coverImage   CmsImage? @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
+  coverImageId Int?      @unique
+
+  @@map("articles")
 }
