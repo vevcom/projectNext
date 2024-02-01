@@ -23,7 +23,7 @@ export type SeedArticleSection = {
     cmsParagraph?: SeedCmsParagraph,
     cmsLink?: SeedCmsLink
     imagePosition?: Position
-    imageSize?: ImageSize
+    imageSize?: number,
 }
 
 export type SeedArticle = {

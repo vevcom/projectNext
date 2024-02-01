@@ -102,6 +102,10 @@ async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
 }
 
 async function seedArticleSection(articleSection: SeedArticleSection, prisma: PrismaClient) {
+    const cmsImage = articleSection.cmsImage ? await seedCmsImage(articleSection.cmsImage, prisma) : undefined
+    const cmsParagraph = articleSection.cmsParagraph ? await seedCmsParagraph(articleSection.cmsParagraph, prisma) : undefined
+    const cmsLink = articleSection.cmsLink ? await seedCmsLink(articleSection.cmsLink, prisma) : undefined
+
     return prisma.articleSection.upsert({
         where: {
             name: articleSection.name
@@ -111,6 +115,17 @@ async function seedArticleSection(articleSection: SeedArticleSection, prisma: Pr
         },
         create: {
             name: articleSection.name,
+            imagePosition: articleSection.imagePosition,
+            imageSize: articleSection.imageSize,
+            cmsImage:  {
+                connect: cmsImage
+            },
+            cmsLink: {
+                connect: cmsLink
+            },
+            cmsParagraph: {
+                connect: cmsParagraph
+            }
         }
     })
 }
