@@ -5,6 +5,7 @@
     .content {
         display: flex;
         flex-flow: row wrap;
+        gap: 2*ohma.$gap;
         > *:first-child {
             z-index: 2; //Neccessary for the remover confirmation to be on top of the thing on right
         }

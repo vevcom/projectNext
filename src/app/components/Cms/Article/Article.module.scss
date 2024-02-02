@@ -26,6 +26,7 @@ $cover-height: 200px;
     article {
         > * {
             margin: $padding;
+            isolation: isolate;
         }
     }
 }   
