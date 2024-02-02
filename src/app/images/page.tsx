@@ -20,7 +20,11 @@ export default async function Images() {
         },
         details: null,
     })
-    if (!collectionPage.success) throw collectionPage.error ? collectionPage.error[0].message : new Error('Unknown error')
+
+    if (!collectionPage.success) {
+        throw collectionPage.error ? collectionPage.error[0].message : new Error('Unknown error')
+    }
+
     const collections = collectionPage.data
 
     return (

@@ -1,11 +1,12 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 
-export async function readPage<const PageSize extends number>({ page, details }: ReadPageInput<PageSize, {collectionId: number}>)
-    : Promise<ActionReturn<Image[]>> {
+export async function readPage<const PageSize extends number>(
+    { page, details }: ReadPageInput<PageSize, {collectionId: number}>
+) : Promise<ActionReturn<Image[]>> {
     const { collectionId } = details
     const { page: pageNumber, pageSize } = page
     try {
@@ -19,7 +20,7 @@ export async function readPage<const PageSize extends number>({ page, details }:
         if (!images) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: images }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 
@@ -34,7 +35,7 @@ export async function readById(id: number) : Promise<ActionReturn<Image>> {
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: image }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 
@@ -48,7 +49,7 @@ export async function readByName(name: string) : Promise<ActionReturn<Image>> {
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: image }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 

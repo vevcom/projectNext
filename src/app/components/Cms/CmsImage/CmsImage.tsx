@@ -15,15 +15,24 @@ export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeS
 export default async function CmsImage({ name, children, ...props }: PropTypes) {
     let image : ImageT | null = null
     const res = await read(name)
+
     //The read inageLink action should always return a CmsImage (it creates it if it does not exist)
     if (!res.success) throw new Error(`An error with creating or loading cms image: ${name}`)
+
     image = res.data.image ?? null
+
     if (!image) {
         const defaultImageRes = await readImage('default_image')
-        if (!defaultImageRes.success) throw new Error('No default image found. To fix add a image called: default_image')
+
+        if (!defaultImageRes.success) {
+            throw new Error('No default image found. To fix add a image called: default_image')
+        }
+
         image = defaultImageRes.data ?? null
     }
+
     if (!image) throw new Error('No default image found. To fix add a image called: default_image')
+
     return (
         <div className={styles.CmsImage}>
             <CmsImageEditor cmsImage={{ ...res.data, image }}/>
