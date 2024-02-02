@@ -1,31 +1,32 @@
 'use server'
 
 import { ActionReturn } from '@/actions/type'
-import errorHandeler from '@/prisma/errorHandler';
+import errorHandeler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
 import { z } from 'zod'
 
-import type { Prisma, Role, RolePermission } from '@prisma/client';
+import type { Prisma } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: true } }>
 
-export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>>{
+export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>> {
     try {
         const roles = await prisma.role.findMany({
-            include: { 
-                permissions: true 
+            include: {
+                permissions: true
             }
-        });
+        })
 
         return {
             data: roles,
             success: true,
         }
-    } catch(e) {
+    } catch (e) {
         return errorHandeler(e)
     }
 }
 
-export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
+export async function createRole(data: FormData) : Promise<ActionReturn<void, false>> {
     const schema = z.object({ name: z.string() })
 
     const parse = schema.safeParse({
@@ -37,27 +38,27 @@ export async function createRole(data: FormData) : Promise<ActionReturn<void>> {
 
     const { name } = parse.data
 
-    if(!name) return { success: false } 
-    
+    if (!name) return { success: false }
+
     try {
-        await prisma.role.create({data: {name}})
-    } catch(e) {
+        await prisma.role.create({ data: { name } })
+    } catch (e) {
         return errorHandeler(e)
     }
 
-    return { success: true }
+    return { success: true, data: undefined }
 }
 
-export async function destroyRole(roleId: number) : Promise<ActionReturn<never>> {
+export async function destroyRole(roleId: number) : Promise<ActionReturn<void, false>> {
     try {
         await prisma.role.delete({
             where: {
                 id: roleId
             }
         })
-    } catch(e) {
+    } catch (e) {
         return errorHandeler(e)
     }
 
-    return { success: true }
+    return { success: true, data: undefined }
 }
