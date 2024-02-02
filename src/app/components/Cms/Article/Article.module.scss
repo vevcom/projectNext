@@ -22,6 +22,8 @@ $cover-height: 200px;
         margin-top: $cover-height;
         margin-left: $padding;
         font-size: ohma.$fonts-xxl;
+        font-family: ohma.$fonts-secondary;
+        text-transform: uppercase;
     }
     article {
         > * {
