@@ -1,10 +1,11 @@
 @use "@/styles/ohma";
 
-$padding: 1rem;
-$cover-height: 300px;
+$padding: 4rem;
+$cover-height: min(300px, 40vh);
 
 .Article {
     .coverImage {
+        overflow: hidden;
         isolation: isolate;
         display: block;
         width: 100%;
@@ -42,21 +43,32 @@ $cover-height: 300px;
             }
         }
         .title {
-            margin-left: $padding;
             font-size: ohma.$fonts-xxl;
             font-family: ohma.$fonts-secondary;
             text-transform: uppercase;
             color: ohma.$colors-white;
             position: absolute;
-            bottom: $padding;
             left: $padding;
+            bottom: 1em;
             z-index: 2;
+            animation: fadeInUp 1s ease-out;
         }
     }
     article {
         > * {
-            margin: $padding;
+            margin: 2em $padding;
             isolation: isolate;
         }
     }
 }   
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
