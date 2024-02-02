@@ -1,13 +1,19 @@
 import { ActionReturn } from '@/actions/type'
 import { Prisma } from '@prisma/client'
 
-export default function errorHandeler(err: unknown) : ActionReturn<never> {
-    //LOGGER
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-        return { success: false, error: [{ message: 'Duplicate entry' }] }
+export default function errorHandler(err: unknown) : ActionReturn<never> {
+    // TODO - LOGGER
+
+    if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {
+        return { success: false, error: [{ message: 'unknown error' }] }
     }
-    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
-        return { success: false, error: [{ message: 'Record not found' }] }
+
+    const errorMessages: { [key: string]: string } = {
+        P2002: 'duplicate entry',
+        P2025: 'record not found',
     }
-    return { success: false, error: [{ message: 'unknown error' }] }
+
+    const errorMessage = errorMessages[err.code] ?? 'unknown prisma error'
+
+    return { success: false, error: [{ message: errorMessage }] }
 }

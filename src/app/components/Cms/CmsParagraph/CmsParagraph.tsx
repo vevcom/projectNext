@@ -13,9 +13,12 @@ export default async function CmsParagraph({ cmsParagraph, className }: PropType
         <>
             <div className={`${styles.CmsParagraph} ${className}`}>
                 {cmsParagraph.contentHtml ? (
-                    <div className={styles.HTMLcontent} dangerouslySetInnerHTML={{ __html: cmsParagraph.contentHtml }} />
+                    <div
+                        className={styles.HTMLcontent}
+                        dangerouslySetInnerHTML={{ __html: cmsParagraph.contentHtml }}
+                    />
                 ) : (
-                    <i>Her var det ikke noe inhold</i>
+                    <i>Her var det ikke noe innhold</i>
                 )}
                 <ParagraphEditor cmsParagraph={cmsParagraph} />
             </div>

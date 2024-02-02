@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 import type { ImageCollection, Image } from '@prisma/client'
 
@@ -17,16 +17,18 @@ export default async function read(id: number) : Promise<ActionReturn<ImageColle
         if (!collection) return { success: false, error: [{ message: 'Collection not found' }] }
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
-
 
 export type ImageCollectionPageReturn = ImageCollection & {
     coverImage: Image | null,
     numberOfImages: number,
 }
-export async function readPage<const PageSize extends number>({ page }: ReadPageInput<PageSize, null>) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
+
+export async function readPage<const PageSize extends number>(
+    { page }: ReadPageInput<PageSize, null>
+) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({
@@ -68,6 +70,6 @@ export async function readPage<const PageSize extends number>({ page }: ReadPage
 
         return { success: true, data: returnData }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

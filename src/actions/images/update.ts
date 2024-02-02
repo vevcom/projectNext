@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
@@ -31,6 +31,6 @@ export default async function update(imageId: number, rawdata: FormData): Promis
         })
         return { success: true, data: image }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
