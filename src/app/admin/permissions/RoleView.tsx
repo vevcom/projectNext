@@ -2,7 +2,7 @@
 
 import styles from './page.module.scss'
 import CreateRoleForm from './CreateRoleForm'
-import DeleteRoleButton from './DeleteRoleButton'
+import DeleteRoleForm from './DeleteRoleForm'
 import { UpdateRoleForm } from './UpdateRoleForm'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
@@ -82,7 +82,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                 {selectedRole ?
                     <>
                         <UpdateRoleForm selectedRole={selectedRole} refreshRoles={refreshRoles}/>
-                        <DeleteRoleButton selectedRoleId={selectedRole.id} refreshRoles={refreshRoles} />
+                        <DeleteRoleForm selectedRoleId={selectedRole.id} refreshRoles={refreshRoles} />
                     </> :
                     <p><i>Ingen tillgangsnivå valgt</i></p>
                 }

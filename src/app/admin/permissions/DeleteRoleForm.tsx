@@ -8,7 +8,7 @@ type PropType = {
     refreshRoles: () => void
 }
 
-export default function DeleteRoleButton({ selectedRoleId, refreshRoles }: PropType) {
+export default function DeleteRoleForm({ selectedRoleId, refreshRoles }: PropType) {
     return <Form
         submitText="Slett"
         submitColor="red"
