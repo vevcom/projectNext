@@ -78,7 +78,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                         renderer={collection => (
                                             <div
                                                 key={collection.id}
-                                                className={`${styles.collection}${isCollectionActive(collection)}`}
+                                                className={`${styles.collection} ${isCollectionActive(collection)}`}
                                             >
                                                 <button
                                                     onClick={() => setCurrentCollectionId(collection.id)}
