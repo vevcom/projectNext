@@ -1,4 +1,8 @@
-$primary: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+$primary: 'Roboto', sans-serif;
+$secondary: 'Merriweather', serif;
 
 $s: clamp(12px, 2vw, 14px);
 $m: clamp(14px, 2.5vw, 16px);
