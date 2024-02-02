@@ -1,7 +1,7 @@
 'use client'
 
-import { destroyRole } from "@/actions/permissions"
-import Button from "@/app/components/UI/Button"
+import { destroyRole } from '@/actions/permissions'
+import Button from '@/app/components/UI/Button'
 import { useRouter } from 'next/navigation'
 
 type PropType = {
