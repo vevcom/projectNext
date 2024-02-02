@@ -1,7 +1,7 @@
 import prisma from '@/prisma'
-import { notFound, redirect } from 'next/navigation'
-import Link from 'next/link'
 import { requireUser } from '@/auth'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
