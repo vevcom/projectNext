@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.SlideInOnView {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 1s, transform .6s; 
+    &.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
