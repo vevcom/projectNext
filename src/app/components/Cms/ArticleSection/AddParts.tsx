@@ -57,20 +57,22 @@ export default function AddParts({
 
     return (
         <div className={styles.AddParts}>
-            {children}
-            <div className={styles.addControls}>
-                {
-                    parts.map((part, i) => part.shouldShow && (
-                        <BorderButton
-                            key={i}
-                            onClick={() => handleAdd(part.part)}
-                            color="secondary"
-                        >
-                            <FontAwesomeIcon icon={faPlus} />
-                            {part.text}
-                        </BorderButton>
-                    ))
-                }
+            <div className={styles.wrapper}>
+                {children}
+                <div className={styles.addControls}>
+                    {
+                        parts.map((part, i) => part.shouldShow && (
+                            <BorderButton
+                                key={i}
+                                onClick={() => handleAdd(part.part)}
+                                color="secondary"
+                            >
+                                <FontAwesomeIcon icon={faPlus} />
+                                {part.text}
+                            </BorderButton>
+                        ))
+                    }
+                </div>
             </div>
         </div>
     )
