@@ -56,7 +56,7 @@
             
         }
         .image, .link, .paragraph {
-            margin: 0 ohma.$gap;
+            margin: 1rem; 
             position: relative;
             isolation: isolate;
             > .remover {
