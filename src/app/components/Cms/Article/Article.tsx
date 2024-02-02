@@ -13,8 +13,8 @@ export default function Article({ article } : PropTypes) {
         <span className={styles.Article}>
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
+                <h1 className={styles.title}>{article.name}</h1>
             </span>
-            <h1 className={styles.title}>{article.name}</h1>
             <article>
             {
                 article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
