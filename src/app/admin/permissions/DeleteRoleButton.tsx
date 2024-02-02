@@ -1,20 +1,19 @@
 'use client'
 
 import { destroyRole } from '@/actions/permissions'
-import Button from '@/app/components/UI/Button'
-import { useRouter } from 'next/navigation'
+import Form from '@/app/components/Form/Form'
 
 type PropType = {
-    roleId: number
+    selectedRoleId: number
+    refreshRoles: () => void
 }
 
-export default function DeleteRoleButton({ roleId }: PropType) {
-    const router = useRouter()
-
-    async function handleClick() {
-        destroyRole(roleId)
-        router.refresh()
-    }
-
-    return <Button type="button" onClick={handleClick}>Slett</Button>
+export default function DeleteRoleButton({ selectedRoleId, refreshRoles }: PropType) {
+    return <Form
+        submitText="Slett"
+        submitColor="red"
+        confirmation={{ confirm: true, text: 'Er du sikker på at du vil slette denne rollen?' }}
+        action={() => destroyRole(selectedRoleId)}
+        successCallback={refreshRoles}
+    />
 }

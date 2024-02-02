@@ -3,13 +3,14 @@
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { createRole } from '@/actions/permissions'
-import { useRouter } from 'next/navigation'
 
-export default function CreateRoleForm() {
-    const router = useRouter()
+type PropTypes = {
+    refreshRoles: () => void
+}
 
+export default function CreateRoleForm({ refreshRoles }: PropTypes) {
     return (
-        <Form action={createRole} successCallback={router.refresh} submitText="Legg til">
+        <Form submitText="Legg til" action={createRole} successCallback={refreshRoles} >
             <TextInput label="Rollenavn" name="name"/>
         </Form>
     )
