@@ -71,9 +71,9 @@ function fetchReducer<Data, const PageSize extends number, DataGuarantee extends
     }
 }
 
-function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({ 
-    fetcher, 
-    Context 
+function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
+    fetcher,
+    Context
 }: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>
 ) {
     return function PagingProvider(
