@@ -1,7 +1,7 @@
 'use server'
 import create from './create'
 import { ActionReturn } from '@/actions/type'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { CmsParagraph } from '@prisma/client'
 
@@ -20,6 +20,6 @@ export default async function read(name: string) : Promise<ActionReturn<CmsParag
         }
         return create(name)
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
