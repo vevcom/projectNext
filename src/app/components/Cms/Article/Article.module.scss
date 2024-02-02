@@ -1,5 +1,31 @@
 @use "@/styles/ohma";
 
+$padding: 1rem;
+$cover-height: 200px;
+
 .Article {
-    
-}
+    .coverImage {
+        width: 100%;
+        * {
+            position: relative;
+        }
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: $cover-height !important; // Add this line
+            object-fit: cover;
+        }
+    }
+    .title {
+        margin-top: $cover-height;
+        margin-left: $padding;
+        font-size: ohma.$fonts-xxl;
+    }
+    article {
+        > * {
+            margin: $padding;
+        }
+    }
+}   
