@@ -9,8 +9,8 @@ export default function CreateRoleForm() {
     const router = useRouter()
 
     return (
-        <Form action={createRole} successCallback={router.refresh} submitText="Legg til rolle">
-            <TextInput label="Navn" name="name"/>
+        <Form action={createRole} successCallback={router.refresh} submitText="Legg til">
+            <TextInput label="Rollenavn" name="name"/>
         </Form>
     )
 }

@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 import type { Prisma } from '@prisma/client'
 
-type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: true } }>
+type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
 export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>> {
     try {
@@ -46,6 +46,10 @@ export async function createRole(data: FormData) : Promise<ActionReturn<void, fa
         return errorHandeler(e)
     }
 
+    return { success: true, data: undefined }
+}
+
+export async function updateRole() : Promise<ActionReturn<void, false>> {
     return { success: true, data: undefined }
 }
 

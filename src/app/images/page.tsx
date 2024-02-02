@@ -4,8 +4,8 @@ import ImageCollectionList from '@/components/Image/Collection/ImageCollectionLi
 import { readPage } from '@/actions/images/collections/read'
 import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
-import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 import { getUser } from '@/auth'
+import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
     const user = await getUser()
