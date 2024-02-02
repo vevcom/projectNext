@@ -34,7 +34,7 @@ export default async function Permissions() {
     return (
         <div className={styles.permissionsWrapper}>
             <div className={styles.permissionsDiv}>
-                <h2>Permissions</h2>
+                <h2>Tillgangsnivåer</h2>
 
                 <table className={styles.permissionsTable}>
                     <thead>

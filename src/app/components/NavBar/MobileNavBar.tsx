@@ -12,7 +12,7 @@ export default async function MobileNavBar() {
     const user = await getUser()
     const isLoggedIn = user !== null
     const applicationPeriod = false //temp
-    const isAdmin = true //temp
+    const isAdmin = user?.username === 'Harambe104' // temp
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 2)
