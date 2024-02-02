@@ -21,4 +21,6 @@ export type ReadPageInput<PageSize extends number, InputDetailType = undefined> 
     details: InputDetailType,
 }
 
-export type Action<ReturnType, DataGuarantee extends boolean = true> = (formData: FormData) => Promise<ActionReturn<ReturnType, DataGuarantee>>
+export type Action<ReturnType, DataGuarantee extends boolean = true> = (formData: FormData) => (
+    Promise<ActionReturn<ReturnType, DataGuarantee>>
+)

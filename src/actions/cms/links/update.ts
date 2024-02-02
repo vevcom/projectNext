@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
@@ -42,6 +42,6 @@ export default async function update(id: number, rawData: FormData) : Promise<Ac
         })
         return { success: true, data: cmsLink }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

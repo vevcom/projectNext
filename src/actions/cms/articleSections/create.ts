@@ -1,7 +1,7 @@
 'use server'
 import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 
 
@@ -19,6 +19,6 @@ export default async function create(name: string): Promise<ActionReturn<ReturnT
         })
         return { success: true, data: articleSection }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

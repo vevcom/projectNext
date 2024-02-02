@@ -1,7 +1,7 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import { default as createCmsImage } from '@/actions/cms/images/create'
 import { default as createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { default as createCmsLink } from '@/actions/cms/links/create'
@@ -46,7 +46,7 @@ export default async function update(name: string, changes: {
         })
         return { success: true, data: articleSection }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 
@@ -110,7 +110,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
         }
         return { success: false, error: [{ message: 'Invalid part' }] }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 
@@ -162,6 +162,6 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
         }
         return { success: false, error: [{ message: 'Invalid part' }] }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
