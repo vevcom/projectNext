@@ -1,9 +1,9 @@
 import styles from './page.module.scss'
 import Article from '@/cms/Article/Article'
-import create from '@/cms/articles/create'
+import read from '@/cms/articles/read'
 
 export default async function Articles() {
-    const article = await create('test')
+    const article = await read('about')
     if (!article.success) return (<div>{article.error ? article.error[9].message : 'error'}</div>)
 
     return (

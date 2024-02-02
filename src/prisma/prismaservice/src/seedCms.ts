@@ -122,6 +122,7 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
             name: articleSection.name,
             imagePosition: articleSection.imagePosition,
             imageSize: articleSection.imageSize,
+            order: articleSection.order,
             cmsImage:  {
                 connect: cmsImage
             },

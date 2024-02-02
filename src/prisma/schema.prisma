@@ -118,7 +118,7 @@ model ArticleSection {
   imageSize      Int           @default(200)
   article        Article?      @relation(fields: [articleId], references: [id])
   articleId      Int?          
-  order          Int           @default(0) //The order "position" of the article section in the article
+  order          Int           @default(autoincrement()) //The order "position" of the article section in the article
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
   @@map("article_sections")
