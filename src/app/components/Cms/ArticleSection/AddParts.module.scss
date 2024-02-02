@@ -19,6 +19,8 @@
             }
         }
         padding: 2*ohma.$gap;
-        padding-bottom: 60px;
+        &.paddingBottom {
+            padding-bottom: 60px;
+        }
     } 
 }
