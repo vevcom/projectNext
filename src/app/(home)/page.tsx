@@ -5,16 +5,16 @@ import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
+import { getUser } from '@/auth'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { getUser } from '@/auth'
 
 export default async function Home() {
     const user = await getUser()
 
     console.log(user)
-    
+
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
@@ -24,7 +24,7 @@ export default async function Home() {
                         {user === null && <>
                             <Link href="login">Logg inn</Link>
                             <Link href="infopages/nystudent">Ny student</Link>
-                        </>} 
+                        </>}
                         <div className={styles.socials}>
                             <SocialIcons />
                         </div>

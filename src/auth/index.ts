@@ -57,10 +57,13 @@ export const authOptions: AuthOptions = {
 
 /**
  * Returns the user object from the current session. If there is no session
- * null is returned. 
+ * ```null``` is returned.
+ *
+ * This function is for server side components and actions. For client side
+ * components use ```useUser```.
  */
 export async function getUser() {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
 
     return session?.user ?? null
 }
@@ -71,8 +74,11 @@ type RequireUserArgsType = {
 }
 
 /**
- * Gets user in the same way as getUser, but with redirects to handle
- * situations where there is no user.
+ * Gets user in the same way as ```getUser```, but redirects when the user is not
+ * logged in.
+ *
+ * This function is for server side components. For client side components
+ * use ```useUser```. For actions use ```getUser```.
  */
 export async function requireUser({ returnUrl = null, redirectUrl = null }: RequireUserArgsType) {
     const user = await getUser()
@@ -80,7 +86,7 @@ export async function requireUser({ returnUrl = null, redirectUrl = null }: Requ
     if (user === null) {
         if (returnUrl !== null) redirect(`/login?callbackUrl=${returnUrl}`)
 
-        if (redirectUrl != null) redirect(redirectUrl)
+        if (redirectUrl !== null) redirect(redirectUrl)
 
         notFound()
     }

@@ -4,14 +4,11 @@ import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { User } from 'next-auth'
+import { getUser } from '@/auth'
 import Link from 'next/link'
 
-type PropTypes = {
-    user: User | null
-}
-
-async function NavBar({ user }: PropTypes) {
+export default async function NavBar() {
+    const user = await getUser()
     const isLoggedIn = user !== null
 
     //temporary
@@ -60,6 +57,3 @@ async function NavBar({ user }: PropTypes) {
         </nav>
     )
 }
-
-
-export default NavBar
