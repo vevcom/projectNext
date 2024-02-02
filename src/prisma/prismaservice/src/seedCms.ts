@@ -106,7 +106,7 @@ async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
     })
 }
 
-async function seedArticleSection(articleSection: SeedArticleSection, prisma: PrismaClient) {
+async function seedArticleSection(articleSection: SeedArticleSection & {order?: number}, prisma: PrismaClient) {
     const cmsImage = articleSection.cmsImage ? await seedCmsImage(articleSection.cmsImage, prisma) : undefined
     const cmsParagraph = articleSection.cmsParagraph ? await seedCmsParagraph(articleSection.cmsParagraph, prisma) : undefined
     const cmsLink = articleSection.cmsLink ? await seedCmsLink(articleSection.cmsLink, prisma) : undefined
@@ -137,8 +137,8 @@ async function seedArticleSection(articleSection: SeedArticleSection, prisma: Pr
 
 async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
-    const articleSections = await Promise.all(article.articleSections.map(async (articleSection) => {
-        return seedArticleSection(articleSection, prisma)
+    const articleSections = await Promise.all(article.articleSections.map(async (articleSection, i) => {
+        return seedArticleSection({...articleSection, order: i}, prisma)
     }))
 
     return prisma.article.upsert({
