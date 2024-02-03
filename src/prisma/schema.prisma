@@ -57,7 +57,7 @@ model Role {
 }
 
 model RolePermission {
-  role Role @relation(fields: [roleId], references: [id])
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId Int
   permission Permission
 

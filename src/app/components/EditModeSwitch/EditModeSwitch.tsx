@@ -1,15 +1,15 @@
 'use client'
 import styles from './EditModeSwitch.module.scss'
 import { EditModeContext } from '@/context/EditMode'
+import { useUser } from '@/auth/client'
 import { useContext, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { ChangeEvent } from 'react'
-import { useUser } from '@/auth/client'
 
 export default function EditModeSwitch() {
     const { user } = useUser()
-    
+
     const editingContext = useContext(EditModeContext)
     if (!editingContext) throw new Error('No EditModeContext found')
 

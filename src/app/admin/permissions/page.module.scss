@@ -1,20 +1,66 @@
+@use '@/styles/ohma';
+
 .permissionsWrapper {
     display: flex;
     flex-direction: row;
+    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
-.permissionsDiv {
-    width: 66%;
-}
+.roleTable {
+    padding-right: 20px;
 
-.permissionsTable {
     th {
-        padding-left: 0.5em;
-        padding-right: 0.5em;
+        font-size: large;
     }
 
     td {
-        text-align: center;
-        vertical-align: middle;
+        padding: 10px;
+    }
+}
+
+.roleSelect {
+    > input {
+        display: none;
+
+        &:hover ~ label {
+            background-color: darken($color: ohma.$colors-white, $amount: 5%);
+        }
+
+        &:checked ~ label {
+            background-color: ohma.$colors-primary;
+        }
+    }
+
+    > label {
+        display: block;
+        border-style: solid;
+        border-color: ohma.$colors-primary;
+        border-width: 2px;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 0.5em;
+        user-select: none;
+    }
+}
+
+.newRoleForm {
+    > h2 {
+        margin-top: 10px;
+    }
+}
+
+.permissionsSettings {
+    border-left-style: solid;
+    border-left-width: 2px;
+    border-left-color: ohma.$colors-gray-600;
+    padding-left: 30px;
+
+    input[type=checkbox] {
+        margin: 0 0.5em 0 0.5em;
+    }
+
+    > p {
+        margin-top: 20px;
     }
 }

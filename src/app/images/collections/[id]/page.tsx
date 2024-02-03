@@ -7,8 +7,8 @@ import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import { notFound } from 'next/navigation'
 import { getUser } from '@/auth'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {
