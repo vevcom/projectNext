@@ -8,14 +8,65 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  username  String @unique
-  email     String @unique
+  id        Int          @id @default(autoincrement())
+  username  String       @unique
+  email     String       @unique
   password  String // Dette er kun for testing
-  firstname String @default("[Fjernet]")
-  lastname  String @default("[Fjernet]")
+  firstname String       @default("[Fjernet]")
+  lastname  String       @default("[Fjernet]")
+  roles     RolesUsers[]
 
   @@map("users")
+}
+
+enum Permission {
+  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
+
+  // Fridge
+  USE_MONEY
+  USE_FRIDGE
+  INFINITE_MONEY
+
+  // Quotes
+  USE_OMEGA_QUOTES
+
+  // Bulshit
+  POST_BULSHIT
+  VIEW_BULSHIT
+
+  // Events
+  PARTICIPATE_IN_EVENTS
+  CREATE_EVENTS
+
+  // Minecraft
+  CREATIVE_MODE
+}
+
+model Role {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  users       RolesUsers[]
+  permissions RolePermission[]
+
+  @@map("role")
+}
+
+model RolePermission {
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     Int        @map("role_id")
+  permission Permission
+
+  @@unique([roleId, permission])
+  @@map("role_permission")
+}
+
+model RolesUsers {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @map("user_id")
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@id([userId, roleId])
 }
 
 model Image {

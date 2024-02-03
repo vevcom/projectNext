@@ -3,19 +3,16 @@ import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
+import { getUser } from '@/auth'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { Session } from 'next-auth'
 
-type PropTypes = {
-    session: Session | null
-}
-
-function MobileNavBar({ session } : PropTypes) {
-    const isLoggedIn = Boolean(session?.user)
+export default async function MobileNavBar() {
+    const user = await getUser()
+    const isLoggedIn = user !== null
     const applicationPeriod = false //temp
-    const isAdmin = true //temp
+    const isAdmin = user?.username === 'Harambe104' // temp
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 2)
@@ -55,5 +52,3 @@ function MobileNavBar({ session } : PropTypes) {
         </nav>
     )
 }
-
-export default MobileNavBar

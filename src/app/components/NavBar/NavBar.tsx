@@ -4,19 +4,16 @@ import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { Session } from 'next-auth'
+import { getUser } from '@/auth'
 import Link from 'next/link'
 
-type PropTypes = {
-    session: Session | null
-}
-
-async function NavBar({ session }: PropTypes) {
-    const isLoggedIn = Boolean(session?.user)
+export default async function NavBar() {
+    const user = await getUser()
+    const isLoggedIn = user !== null
 
     //temporary
     const applicationPeriod = false
-    const isAdmin = true
+    const isAdmin = user?.username === 'Harambe104'
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
@@ -60,6 +57,3 @@ async function NavBar({ session }: PropTypes) {
         </nav>
     )
 }
-
-
-export default NavBar

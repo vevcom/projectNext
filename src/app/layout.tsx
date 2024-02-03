@@ -1,8 +1,9 @@
 import styles from './layout.module.scss'
+import { AuthProvider } from '@/auth/client'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
-import authOptions from '@/auth'
+import { authOptions } from '@/auth'
 import EditModeProvider from '@/context/EditMode'
 import PopUpProvider from '@/context/PopUp'
 import { Inter } from 'next/font/google'
@@ -32,24 +33,26 @@ export default async function RootLayout({ children } : PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <EditModeProvider>
-                    <PopUpProvider>
-                        <div className={styles.wrapper}>
-                            <div className={styles.navBar}>
-                                <NavBar session={session} />
+                <AuthProvider session={session}>
+                    <EditModeProvider>
+                        <PopUpProvider>
+                            <div className={styles.wrapper}>
+                                <div className={styles.navBar}>
+                                    <NavBar />
+                                </div>
+                                <div className={styles.content}>
+                                    {children}
+                                </div>
+                                <div className={styles.footer}>
+                                    <Footer />
+                                </div>
+                                <div className={styles.mobileNavBar}>
+                                    <MobileNavBar />
+                                </div>
                             </div>
-                            <div className={styles.content}>
-                                {children}
-                            </div>
-                            <div className={styles.footer}>
-                                <Footer />
-                            </div>
-                            <div className={styles.mobileNavBar}>
-                                <MobileNavBar session={session} />
-                            </div>
-                        </div>
-                    </PopUpProvider>
-                </EditModeProvider>
+                        </PopUpProvider>
+                    </EditModeProvider>
+                </AuthProvider>
             </body>
         </html>
     )

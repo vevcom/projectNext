@@ -4,10 +4,13 @@ import ImageCollectionList from '@/components/Image/Collection/ImageCollectionLi
 import { readPage } from '@/actions/images/collections/read'
 import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
+import { getUser } from '@/auth'
 import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
-    const isAdmin = true //temp
+    const user = await getUser()
+
+    const isAdmin = user?.username === 'Harambe104' //temp
     const pageSize : PageSizeImageCollection = 12
 
     const collectionPage = await readPage({

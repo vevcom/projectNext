@@ -13,7 +13,7 @@ export default function errorHandler(err: unknown) : ActionReturn<never> {
         P2025: 'record not found',
     }
 
-    const errorMessage = errorMessages[err.code] ?? 'unknown prisma error'
+    const errorMessage = errorMessages[err.code] ?? `unknown prisma error (${err.code})`
 
     return { success: false, error: [{ message: errorMessage }] }
 }
