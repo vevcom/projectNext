@@ -85,10 +85,12 @@
     }
 }
 
-@mixin pagePadding {
-    margin: auto;
-    width: 100%;
-    max-width: 800px;
+@mixin pagePadding($max-width: 800px) {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
     position: relative;
 }
 

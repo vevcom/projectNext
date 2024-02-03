@@ -3,6 +3,7 @@
 .wrapper {
     @include ohma.pagePadding();
     align-self: flex-start;
+    margin-top: 1rem;
 
     h1 {
         font-family: ohma.$fonts-secondary;
@@ -10,7 +11,7 @@
         text-transform: capitalize;
     }
 
-    > .inlineHeader {
+    .inlineHeader {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
