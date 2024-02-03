@@ -7,12 +7,6 @@ datasource db {
   url      = env("DB_URI")
 }
 
-enum MembershipType {
-  MEMBER
-  SOELLE
-  EXTERNAL
-}
-
 model User {
   id        Int          @id @default(autoincrement())
   username  String       @unique
@@ -49,16 +43,15 @@ enum Permission {
 }
 
 model Role {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
   users       RolesUsers[]
   permissions RolePermission[]
 }
 
 model RolePermission {
-  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId Int
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId     Int
   permission Permission
 
   @@unique([roleId, permission])
