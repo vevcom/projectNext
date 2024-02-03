@@ -1,0 +1,10 @@
+@use "@/styles/ohma";
+
+.TextArea {
+    > textarea {
+        min-height: 30px;
+        width: 100%;
+        resize: vertical;
+        margin-top: 0.5em;
+    }
+}

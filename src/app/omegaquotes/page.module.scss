@@ -7,3 +7,20 @@
     @include ohma.btn(ohma.$colors-primary);
     width: 10rem;
 }
+
+.popupForm {
+    width: 400px;
+
+    .said_by {
+        width: 100%;
+        max-width: 100%;
+        input {
+            width: 100%;
+        }
+    }
+
+    .textarea {
+        height: 100px;
+        max-height: 300px;
+    }
+}
