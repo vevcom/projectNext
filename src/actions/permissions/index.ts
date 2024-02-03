@@ -1,9 +1,9 @@
 'use server'
 
 import { ActionReturn } from '@/actions/type'
-import { Permission } from '@prisma/client'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
+import { Permission } from '@prisma/client'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
 
@@ -14,6 +14,9 @@ export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>>
         const roles = await prisma.role.findMany({
             include: {
                 permissions: true
+            },
+            orderBy: {
+                id: 'asc'
             }
         })
 
@@ -55,7 +58,7 @@ export async function updateRole(data: FormData) : Promise<ActionReturn<void, fa
         name: z.string(),
         permissions: z.nativeEnum(Permission).array(),
     })
-    
+
     const parse = schema.safeParse({
         id: data.get('id'),
         name: data.get('name'),
