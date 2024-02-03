@@ -3,7 +3,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { Image } from '@prisma/client'
-import type { ActionReturn } from '../type'
+import type { ActionReturn } from '@/actions/type'
 
 export default async function update(imageId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({

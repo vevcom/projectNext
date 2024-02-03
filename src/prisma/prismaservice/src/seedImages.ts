@@ -1,8 +1,12 @@
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
-import path, { join } from 'path'
+import path, { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@prisma/client'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.upsert({
@@ -18,7 +22,7 @@ export default async function seedImages(prisma: PrismaClient) {
         }
     })
 
-    const standardLocation = join(__dirname, 'standard_store', 'images')
+    const standardLocation = join(__dirname, '..', 'standard_store', 'images')
     const storeLocation = join(__dirname, '..', 'store', 'images')
 
     const files = await readdir(standardLocation)

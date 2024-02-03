@@ -1,8 +1,10 @@
 'use client'
 import styles from './CmsParagraphEditor.module.scss'
+import EditOverlay from '@/components/Cms/EditOverlay'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import update from '@/actions/cms/paragraphs/update'
+import PopUp from '@/components/PopUp/PopUp'
 import { useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
@@ -21,29 +23,37 @@ const DynamicSimpleMDEditor = dynamic(
 
 type PropTypes = {
     cmsParagraph: CmsParagraph
+    editorClassName?: string
 }
 
-export default function CmsParagraphEditor({ cmsParagraph }: PropTypes) {
+export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: PropTypes) {
     const editmode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
 
-    if (!editmode) return null
+    if (!editmode?.editMode) return null
 
     const handleContentChange = (value: string) => {
         setContent(value)
     }
 
     return (
-        editmode.editMode && (
-            <div className={styles.CmsParagraphEditor}>
+        <PopUp
+            PopUpKey={cmsParagraph.id}
+            showButtonClass={styles.openBtn}
+            showButtonContent={
+                <EditOverlay />
+            }>
+            <div className={`${styles.CmsParagraphEditor} ${editorClassName}`}>
                 <DynamicSimpleMDEditor className={styles.editor} value={content} onChange={handleContentChange} />
                 <Form
                     action={update.bind(null, cmsParagraph.id).bind(null, content)}
-                    submitText="Update"
-                    successCallback={refresh}
+                    submitText="Oppdater"
+                    successCallback={() => {
+                        refresh()
+                    }}
                 />
             </div>
-        )
+        </PopUp>
     )
 }

@@ -1,6 +1,6 @@
 'use client'
 import styles from './PopUp.module.scss'
-import Button from '../UI/Button'
+import Button from '@/components/UI/Button'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
@@ -15,13 +15,21 @@ type PropTypes = {
     PopUpKey: number | string,
 }
 
-export default function PopUp({ PopUpKey, children, showButtonContent, showButtonClass } : PropTypes) {
-    const popUpContext = useContext(PopUpContext)
-    if (!popUpContext) throw new Error('Pop up context needed for popups')
+export default function PopUp({
+    PopUpKey,
+    children,
+    showButtonContent,
+    showButtonClass,
+} : PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
+
+
+    const popUpContext = useContext(PopUpContext)
     useKeyPress('Escape', () => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
     const contentRef = useRef<React.ReactNode>(null)
+
+    if (!popUpContext) throw new Error('Pop up context needed for popups')
 
     useEffect(() => {
         if (isOpen) {
@@ -51,7 +59,7 @@ export default function PopUp({ PopUpKey, children, showButtonContent, showButto
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)
-    }, [setIsOpen])
+    }, [])
 
     return (
         <button className={`${styles.openBtn} ${showButtonClass}`} onClick={handleOpening}>

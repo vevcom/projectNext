@@ -1,6 +1,10 @@
 'use server'
 
+<<<<<<< HEAD
 import { ActionReturn } from '../../type'
+=======
+import { ActionReturn } from '@/actions/type'
+>>>>>>> main
 import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { CmsParagraph } from '@prisma/client'
@@ -19,7 +23,7 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             .use(rehypeFormat)
             .use(rehypeStringify)
             .process(contentMd)).value.toString()
-            .replace(/<img[^>]*>/g, 'CANT HAVE IMAGE')
+            .replace(/<img[^>]*>/g, 'Bilder i markdown er ikke støttet. Bruk det innebygde bildeverktøyet.')
         try {
             const paragraph = await prisma.cmsParagraph.update({
                 where: {
@@ -38,7 +42,6 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
             return errorHandler(error)
         }
     } catch (e) {
-        console.log(e)
         return {
             success: false,
             error: [{

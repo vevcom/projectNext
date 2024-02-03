@@ -1,6 +1,6 @@
 'use client'
 import styles from './ChangeImage.module.scss'
-import Image from '../../Image/Image'
+import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import Form from '@/components/Form/Form'
 import update, { updateConfig } from '@/actions/cms/images/update'

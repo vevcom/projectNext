@@ -1,6 +1,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/seeder/store
+/store
+/dist
 
 .DS_Store

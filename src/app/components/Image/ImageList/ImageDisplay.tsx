@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
-import Image from '../Image'
+import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
@@ -33,7 +33,10 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
     const images = useRef<ImageT[]>(context?.state.data || [])
     const startIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
     const currentImage = useRef<ImageT>(images.current[startIndex])
-    const [currentIndex, setcurrentIndex] = useState(() => images.current.findIndex(image => image.name === startImageName) || 0)
+    const [currentIndex, setcurrentIndex] = useState(
+        () => images.current.findIndex(image => image.name === startImageName) || 0
+    )
+
     useEffect(() => {
         images.current = context?.state.data || []
     }, [context.state.data])

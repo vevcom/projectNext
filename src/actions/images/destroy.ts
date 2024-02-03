@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
-import type { ActionReturn } from '../type'
+import type { ActionReturn } from '@/actions/type'
 
 export default async function destroy(imageId: number): Promise<ActionReturn<Image>> {
     try {

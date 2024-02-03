@@ -28,10 +28,6 @@
       "error",
       "never"
     ],
-    "comma-style": [
-      "error",
-      "last"
-    ],
     // suggest using arrow functions as callbacks
     "prefer-arrow-callback": "error",
     // suggest using template literals instead of string concatenation
@@ -65,7 +61,14 @@
     // disallow use of undeclared variables unless mentioned in a /*global */ block
     "no-undef": "error",
     // disallow use of variables before they are defined
-    "no-use-before-define": "error",
+    "no-use-before-define": [
+        "error",
+        {
+            "functions": false,
+            "classes": false,
+            "variables": true
+        }
+    ],
     // enforces no braces where they can be omitted
     "arrow-body-style": [
         "error",
@@ -413,8 +416,6 @@
     "no-unreachable": "error",
     // disallow comparisons with the value NaN
     "use-isnan": "error",
-    // ensure JSDoc comments are valid
-    "valid-jsdoc": "warn",
     // ensure that the results of typeof are compared against a valid string
     "valid-typeof": "error",
     // Avoid code that looks like two expressions but is actually one
@@ -464,7 +465,26 @@
             "allowSingleLine": true 
         }
     ],
-    //import statement order
+    // enforce max length of lines
+    "max-len": [
+        "error",
+        {
+            "code": 125
+        }
+    ],
+    // dissallow relative imports (e.g. '../'), imports from same folder are stil allowed
+    "no-restricted-imports": [
+        "error",
+        {
+            "patterns": [
+                {
+                    "group": ["../"],
+                    "message": "Relative imports are not allowed."
+                }
+            ]
+        }
+    ],
+    // import statement order
     "import/order": [
         "warn",
         {
