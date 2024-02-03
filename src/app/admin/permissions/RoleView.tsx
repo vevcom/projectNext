@@ -8,23 +8,20 @@ import UserManagmentForm from './UserManagmentForm'
 import { readUsersOfRole } from '@/actions/permissions'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { useRouter } from 'next/navigation'
 import { User, type Prisma } from '@prisma/client'
 import Link from 'next/link'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
 
 type PropTypes = {
-    roles: Array<RoleWithPermissions>
+    roles: RoleWithPermissions[]
 }
 
 export default function RoleView({ roles: initalRoles }: PropTypes) {
-    const router = useRouter()
-
-    const [roles, setRoles] = useState<Array<RoleWithPermissions>>(initalRoles)
+    const [roles, setRoles] = useState<RoleWithPermissions[]>(initalRoles)
     const [selectedRole, setSelectedRole] = useState<RoleWithPermissions | undefined>()
 
-    const [users, setUsers] = useState<Array<User>>([])
+    const [users, setUsers] = useState<User[]>([])
 
     function onRoleSelectChange(e: React.ChangeEvent<HTMLInputElement>) {
         const id = Number(e.target.value)
@@ -48,10 +45,6 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
         setUsers(res.data)
     }
 
-    function refreshRoles() {
-        router.refresh()
-    }
-
     useEffect(() => {
         setRoles(initalRoles)
 
@@ -61,7 +54,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
     }, [initalRoles])
 
     useEffect(() => {
-        refreshUsers().catch(() => console.log('whoopsie poopsie jeg er trøtt'))
+        refreshUsers().catch(() => { throw new Error('Could not refresh role users') })
     }, [selectedRole])
 
     return (
@@ -100,7 +93,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         <tr>
                             <td className={styles.newRoleForm}>
                                 <h2>Legg til ny rolle</h2>
-                                <CreateRoleForm refreshRoles={refreshRoles}/>
+                                <CreateRoleForm />
                             </td>
                         </tr>
                     </tbody>
@@ -111,8 +104,8 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                 <h2>Tillatelser</h2>
                 {selectedRole ?
                     <>
-                        <UpdateRoleForm selectedRole={selectedRole} refreshRoles={refreshRoles} />
-                        <DeleteRoleForm selectedRoleId={selectedRole.id} refreshRoles={refreshRoles} />
+                        <UpdateRoleForm selectedRole={selectedRole} />
+                        <DeleteRoleForm selectedRoleId={selectedRole.id} />
                     </> :
                     <p><i>Ingen tillgangsnivå valgt</i></p>
                 }
@@ -125,7 +118,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         <li key={uuid()}>{user.username}</li>
                     )}
                 </ul>
-                {selectedRole && <UserManagmentForm selectedRoleId={selectedRole.id} refreshUsers={refreshUsers} />}
+                {selectedRole && <UserManagmentForm selectedRoleId={selectedRole.id} />}
             </div>
         </div>
     )

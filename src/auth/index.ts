@@ -73,7 +73,7 @@ export async function getUser() {
 type RequireUserArgsType = {
     returnUrl?: string | undefined,
     redirectUrl?: string | undefined,
-    permissions: Permission[] | undefined,
+    permissions?: Permission[] | undefined,
 }
 
 /**

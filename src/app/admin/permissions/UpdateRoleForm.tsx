@@ -5,18 +5,19 @@ import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import { useRouter } from 'next/navigation'
 import type { Prisma, Permission } from '@prisma/client'
 
 type PermissionCategory = {
     title: string,
-    permissions: Array<{
+    permissions: {
         name: string,
         permission: Permission,
-    }>,
+    }[],
 }
 
 // defines the layout of the role edit section
-const permissionCategories: Array<PermissionCategory> = [
+const permissionCategories: PermissionCategory[] = [
     {
         title: 'Hendelser',
         permissions: [
@@ -67,10 +68,11 @@ function generateDisplayedPermissionsState(role: RoleWithPermissions) {
 
 type PropTypes = {
     selectedRole: RoleWithPermissions
-    refreshRoles: () => void
 }
 
-export function UpdateRoleForm({ selectedRole, refreshRoles }: PropTypes) {
+export function UpdateRoleForm({ selectedRole }: PropTypes) {
+    const { refresh } = useRouter()
+
     const [nameField, setNameField] = useState<string>(selectedRole.name)
     const [checkedPermissions, setCheckedPermissions] = useState<{ [key in Permission]?: boolean }>(
         generateDisplayedPermissionsState(selectedRole)
@@ -83,7 +85,7 @@ export function UpdateRoleForm({ selectedRole, refreshRoles }: PropTypes) {
     }, [selectedRole])
 
     return (
-        <Form submitText="Lagre" action={updateRole} successCallback={refreshRoles}>
+        <Form submitText="Lagre" action={updateRole} successCallback={refresh}>
             <input type="hidden" name="id" value={selectedRole.id} />
             <TextInput label="Navn" name="name" value={nameField} onChange={e => setNameField(e.target.value) } />
 

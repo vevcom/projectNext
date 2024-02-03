@@ -4,17 +4,16 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { createRole } from '@/actions/permissions'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-type PropTypes = {
-    refreshRoles: () => void
-}
+export default function CreateRoleForm() {
+    const { refresh } = useRouter()
 
-export default function CreateRoleForm({ refreshRoles }: PropTypes) {
     const [roleName, setRoleName] = useState<string>('')
 
     function callback() {
         setRoleName('')
-        refreshRoles()
+        refresh()
     }
 
     return (
