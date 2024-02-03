@@ -192,7 +192,7 @@ model OmegaQutoe {
   id          Int      @id @default(autoincrement())
   author      String
   quote       String
-  timestamp   DateTime
+  timestamp   DateTime @default(now())
   user_poster User     @relation(fields: [id], references: [id])
 
   @@map("omega_quotes")

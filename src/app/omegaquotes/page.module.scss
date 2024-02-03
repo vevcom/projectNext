@@ -4,5 +4,6 @@
 }
 
 .button {
+    @include ohma.btn(ohma.$colors-primary);
     width: 10rem;
 }
