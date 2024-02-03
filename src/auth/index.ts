@@ -2,6 +2,8 @@ import prisma from '@/prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
+import type { Permission } from '@prisma/client'
+import { readPermissionsOfUser } from '@/actions/permissions'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -69,24 +71,39 @@ export async function getUser() {
 }
 
 type RequireUserArgsType = {
-    returnUrl?: string | null,
-    redirectUrl?: string | null,
+    returnUrl?: string | undefined,
+    redirectUrl?: string | undefined,
+    permissions: Permission[] | undefined,
 }
 
 /**
- * Gets user in the same way as ```getUser```, but redirects when the user is not
- * logged in.
- *
+ * Gets user in the same way as `getUser`, but redirects when the user is not
+ * logged in. This function will never return `null`.
+ * 
  * This function is for server side components. For client side components
- * use ```useUser```. For actions use ```getUser```.
+ * use `useUser`. For actions use `getUser`.
  */
-export async function requireUser({ returnUrl = null, redirectUrl = null }: RequireUserArgsType) {
+export async function requireUser({ returnUrl, redirectUrl, permissions }: RequireUserArgsType) {
     const user = await getUser()
 
-    if (user === null) {
-        if (returnUrl !== null) redirect(`/login?callbackUrl=${returnUrl}`)
+    if (!user) {
+        if (typeof returnUrl !== 'undefined') redirect(`/login?callbackUrl=${returnUrl}`)
 
-        if (redirectUrl !== null) redirect(redirectUrl)
+        if (typeof redirectUrl !== 'undefined') redirect(redirectUrl)
+
+        notFound()
+    }
+
+    const userPermissionResult = (await readPermissionsOfUser(user.id))
+
+    if (!userPermissionResult.success) throw new Error('Unable to retrieve user permissions')
+
+    const userPermission = userPermissionResult.data
+
+    const hasPermissions = permissions?.every(permission => userPermission.has(permission)) ?? true
+
+    if (!hasPermissions) {
+        if (typeof redirectUrl !== 'undefined') redirect(redirectUrl)
 
         notFound()
     }

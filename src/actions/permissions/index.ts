@@ -3,9 +3,9 @@
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { Permission } from '@prisma/client'
-import { z } from 'zod'
+import { set, z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
-import type { Prisma, User } from '@prisma/client'
+import type { Prisma, Role, User } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -230,4 +230,46 @@ export async function readUsersOfRole(roleId: number) : Promise<ActionReturn<Use
     } catch (e) {
         return errorHandeler(e)
     }
+}
+
+export async function readRolesOfUser(userId: number) : Promise<ActionReturn<RoleWithPermissions[]>> {
+    try {
+        const rolesUsers = await prisma.rolesUsers.findMany({
+            where: {
+                userId
+            },
+            select: {
+                role: {
+                    select: {
+                        id: true,
+                        name: true,
+                        permissions: {
+                            select: {
+                                permission: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const roles = rolesUsers.map(roleUser => roleUser.role)
+
+        return { success: true, data: roles }
+    } catch (e) {
+        return errorHandeler(e)
+    }
+}
+
+export async function readPermissionsOfUser(userId: number) : Promise<ActionReturn<Set<Permission>>> {
+    const rolesResult = await readRolesOfUser(userId)
+
+    if (!rolesResult.success) return rolesResult
+
+    const roles = rolesResult.data
+
+    
+    const permissions = roles.reduce((result, role) => role.permissions.map(permission => permission.permission).concat(result), Array<Permission>())
+
+    return { success: true, data: new Set(permissions) }
 }
