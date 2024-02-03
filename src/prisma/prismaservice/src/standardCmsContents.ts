@@ -1,4 +1,4 @@
-import {  } from '@prisma/client'
+import { } from '@prisma/client'
 import type { Position, ImageSize } from '@prisma/client'
 
 export type SeedCmsImage = {
@@ -38,7 +38,7 @@ export type CmsContent = {
     cmsLink: SeedCmsLink[], //this is a cmsLink without a connection to a cmsArticleSection
 
     articleSections: SeedArticleSection[], //this is a cmsArticleSection without a connection to a Article
-    
+
     articles: SeedArticle[],
 }
 

@@ -1,8 +1,8 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType } from './ReturnType'
 import { ActionReturn } from '@/actions/type'
+import type { ReturnType } from './ReturnType'
 
 export default async function update(id: number, config: {
     name?: string,

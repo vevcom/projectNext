@@ -1,19 +1,19 @@
 import standardCmsContents from './standardCmsContents'
-import type { 
-    SeedCmsImage, 
-    SeedCmsParagraph,
-    SeedCmsLink,
-    SeedArticleSection,
-    SeedArticle,
-} from './standardCmsContents'
-import type { PrismaClient } from '@prisma/client'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import { join } from 'path'
+import { readFile } from 'fs/promises'
+import type { PrismaClient } from '@prisma/client'
+import type {
+    SeedCmsImage,
+    SeedCmsParagraph,
+    SeedCmsLink,
+    SeedArticleSection,
+    SeedArticle,
+} from './standardCmsContents'
 
 export default async function seedCms(prisma: PrismaClient) {
     await Promise.all(standardCmsContents.cmsImages.map(async (cmsimage) => {
@@ -70,11 +70,11 @@ async function seedCmsImage(cmsimage: SeedCmsImage, prisma: PrismaClient) {
 async function seedCmsParagraph(cmssparagraph: SeedCmsParagraph, prisma: PrismaClient) {
     const contentMd = await readFile(join('./cms_paragraphs', cmssparagraph.file), 'utf-8')
     const contentHtml = (await unified()
-            .use(remarkParse)
-            .use(remarkRehype)
-            .use(rehypeFormat)
-            .use(rehypeStringify)
-            .process(contentMd)).value.toString()
+        .use(remarkParse)
+        .use(remarkRehype)
+        .use(rehypeFormat)
+        .use(rehypeStringify)
+        .process(contentMd)).value.toString()
 
     return prisma.cmsParagraph.upsert({
         where: {
@@ -107,9 +107,14 @@ async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
 }
 
 async function seedArticleSection(articleSection: SeedArticleSection & {order?: number}, prisma: PrismaClient) {
-    const cmsImage = articleSection.cmsImage ? await seedCmsImage(articleSection.cmsImage, prisma) : undefined
-    const cmsParagraph = articleSection.cmsParagraph ? await seedCmsParagraph(articleSection.cmsParagraph, prisma) : undefined
-    const cmsLink = articleSection.cmsLink ? await seedCmsLink(articleSection.cmsLink, prisma) : undefined
+    const cmsImage = articleSection.cmsImage ?
+        await seedCmsImage(articleSection.cmsImage, prisma) : undefined
+
+    const cmsParagraph = articleSection.cmsParagraph ?
+        await seedCmsParagraph(articleSection.cmsParagraph, prisma) : undefined
+
+    const cmsLink = articleSection.cmsLink ?
+        await seedCmsLink(articleSection.cmsLink, prisma) : undefined
 
     return prisma.articleSection.upsert({
         where: {
@@ -123,7 +128,7 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
             imagePosition: articleSection.imagePosition,
             imageSize: articleSection.imageSize,
             order: articleSection.order,
-            cmsImage:  {
+            cmsImage: {
                 connect: cmsImage
             },
             cmsLink: {
@@ -138,9 +143,10 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
 
 async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
-    const articleSections = await Promise.all(article.articleSections.map(async (articleSection, i) => {
-        return seedArticleSection({...articleSection, order: i}, prisma)
-    }))
+    const articleSections = await Promise.all(article.articleSections.map(
+        async (articleSection, i) =>
+            seedArticleSection({ ...articleSection, order: i }, prisma)
+    ))
 
     return prisma.article.upsert({
         where: {

@@ -51,7 +51,6 @@ $cover-height: min(300px, 40vh);
             left: $padding;
             bottom: 1em;
             z-index: 2;
-            animation: fadeInUp 1s ease-out;
         }
     }
     article {
@@ -62,13 +61,3 @@ $cover-height: min(300px, 40vh);
     }
 }   
 
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}

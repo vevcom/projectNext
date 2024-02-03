@@ -2,11 +2,22 @@
 
 .SlideInOnView {
     opacity: 0;
-    transform: translateX(-20px);
+    &.bottom {
+        transform: translateX(-20px);
+    }
+    &.top {
+        transform: translateX(20px);
+    }
+    &.left {
+        transform: translateY(20px);
+    }
+    &.right {
+        transform: translateY(-20px);
+    }
     transition: opacity 1s, transform .6s; 
     &.visible {
         opacity: 1;
-        transform: translateX(0);
+        
     }
 }
 

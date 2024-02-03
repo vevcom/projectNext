@@ -59,8 +59,8 @@ export default function AddParts({
         <div className={styles.AddParts}>
             <div className={
                 parts.some(part => part.shouldShow) ?
-                    `${styles.wrapper} ${styles.paddingBottom}` 
-                : 
+                    `${styles.wrapper} ${styles.paddingBottom}`
+                    :
                     styles.wrapper
             }>
                 {children}

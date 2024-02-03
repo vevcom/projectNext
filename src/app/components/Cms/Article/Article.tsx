@@ -1,8 +1,8 @@
 import styles from './Article.module.scss'
+import CmsImage from '@/cms/CmsImage/CmsImage'
+import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ReturnType } from '@/cms/articles/ReturnType'
-import CmsImage from '../CmsImage/CmsImage'
-import SlideInOnView from '../../SlideInOnView/SlideInOnView'
 
 type PropTypes = {
     article: ReturnType,
@@ -13,17 +13,19 @@ export default function Article({ article } : PropTypes) {
         <span className={styles.Article}>
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
-                <h1 className={styles.title}>{article.name}</h1>
+                <SlideInOnView>
+                    <h1 className={styles.title}>{article.name}</h1>
+                </SlideInOnView>
             </span>
             <article>
-            
-            {
-                article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
-                    <SlideInOnView>
-                        <ArticleSection key={section.id} articleSection={section} />
-                    </SlideInOnView>
-                ))
-            }
+
+                {
+                    article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
+                        <SlideInOnView key={section.id}>
+                            <ArticleSection articleSection={section} />
+                        </SlideInOnView>
+                    ))
+                }
             </article>
         </span>
     )

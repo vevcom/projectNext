@@ -1,6 +1,6 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import { ReturnType } from './ReturnType'
+import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 
@@ -21,7 +21,7 @@ export default async function read(name: string): Promise<ActionReturn<ReturnTyp
                 coverImage: true,
             }
         })
-        if (!article) return { success: false, error: [{message: `Article ${name} not found`}] }
+        if (!article) return { success: false, error: [{ message: `Article ${name} not found` }] }
         return { success: true, data: article }
     } catch (error) {
         return errorHandeler(error)
