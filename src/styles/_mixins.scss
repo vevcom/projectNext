@@ -85,6 +85,13 @@
     }
 }
 
+@mixin pagePadding {
+    margin: auto;
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+}
+
 @keyframes rotate {
     0% {
         transform: translate(0) rotate(0deg);
