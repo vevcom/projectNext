@@ -1,6 +1,7 @@
 import read from "@/actions/images/read";
 import BackdropImage from "@/components/BackdropImage/BackdropImage";
 import { notDeepEqual } from "assert";
+import styles from "./page.module.scss"
 
 export default async function committees() {
     const im = await read("vevcom_logo")
@@ -13,7 +14,11 @@ export default async function committees() {
             {
  //            <BackdropImage>jfjfjfjfjfjj</BackdropImage> 
             }
-            <BackdropImage image={im.data}>meow</BackdropImage>
+            <BackdropImage image={im.data}>
+                <div className={styles.test}>
+
+                </div>
+            </BackdropImage>
         </div>
     );
 }

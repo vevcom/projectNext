@@ -2,11 +2,22 @@
 
 .BackdropImage {
     position: relative;
+    isolation: isolate;
 
     .image {
         position: absolute;
-        translate: 50% 0;
+        translate: 40% 0;
         right: 0;
         bottom: 0;
+        opacity: 0.2;
+        z-index: 1;
+        width: 400px;
+        * {
+            width: 100% !important;
+        }
+    }
+
+    .content {
+        z-index: 2;
     }
 }

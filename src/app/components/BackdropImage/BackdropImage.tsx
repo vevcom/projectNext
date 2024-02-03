@@ -11,8 +11,9 @@ type PropTypes = {
 export default function BackdropImage({children, image}:PropTypes) {
     return (
         <div className={styles.BackdropImage}>
-            <h1>test</h1>
-            {children}
+            <div className={styles.content}>
+                {children}
+            </div>
             <div className={styles.image}>
                 <Image image={image} width={350} />
             </div>
