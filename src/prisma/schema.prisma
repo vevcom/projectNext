@@ -13,13 +13,14 @@ datasource db {
 }
 
 model User {
-  id        Int          @id @default(autoincrement())
-  username  String       @unique
-  email     String       @unique
-  password  String // Dette er kun for testing
-  firstname String       @default("[Fjernet]")
-  lastname  String       @default("[Fjernet]")
-  roles     RolesUsers[]
+  id         Int          @id @default(autoincrement())
+  username   String       @unique
+  email      String       @unique
+  password   String // Dette er kun for testing
+  firstname  String       @default("[Fjernet]")
+  lastname   String       @default("[Fjernet]")
+  roles      RolesUsers[]
+  OmegaQutoe OmegaQutoe[]
 
   @@map("users")
 }
@@ -168,7 +169,7 @@ model ArticleSection {
   imagePosition  Position      @default(RIGHT) @map("image_position")
   imageSize      Int           @default(200)
   article        Article?      @relation(fields: [articleId], references: [id])
-  articleId      Int?          
+  articleId      Int?
   order          Int           @default(autoincrement()) //The order "position" of the article section in the article
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
@@ -185,4 +186,14 @@ model Article {
   coverImageId    Int              @unique
 
   @@map("articles")
+}
+
+model OmegaQutoe {
+  id          Int      @id @default(autoincrement())
+  author      String
+  quote       String
+  timestamp   DateTime
+  user_poster User     @relation(fields: [id], references: [id])
+
+  @@map("omega_quotes")
 }
