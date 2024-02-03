@@ -21,6 +21,7 @@ import {
     faBriefcase,
     faGraduationCap,
     faTools,
+    faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
 
 type showTypes = 'all' | 'loggedOut' | 'loggedIn' | 'applicationPeriodAndLoggedIn' | 'admin'
@@ -100,7 +101,7 @@ export const itemsForMenu : NavItem[] = [
     },
     {
         name: 'Guider',
-        href: 'infopages/guides',
+        href: '/infopages/guides',
         show: 'all',
         icon: faQuestionCircle,
     },
@@ -124,13 +125,19 @@ export const itemsForMenu : NavItem[] = [
     },
     {
         name: 'Om Omega',
-        href: 'ingopages/about',
+        href: '/infopages/about',
         show: 'all',
         icon: faCircleInfo,
     },
     {
+        name: 'Omegafond',
+        href: '/omegafund',
+        show: 'all',
+        icon: faChartLine,
+    },
+    {
         name: 'Intressegrupper',
-        href: 'ingopages/interessegrupper',
+        href: '/infopages/interessegrupper',
         show: 'all',
         icon: faGamepad,
     },
