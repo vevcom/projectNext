@@ -75,12 +75,6 @@ export const itemsForMenu : NavItem[] = [
         icon: faBook,
     },
     {
-        name: 'Intressegrupper',
-        href: '/infopages/interessegrupper',
-        show: 'all',
-        icon: faGamepad,
-    },
-    {
         name: 'Nyheter',
         href: '/news',
         show: 'all',
