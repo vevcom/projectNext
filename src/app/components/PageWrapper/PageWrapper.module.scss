@@ -2,10 +2,17 @@
 
 .wrapper {
     @include ohma.pagePadding();
+    align-self: flex-start;
 
     h1 {
         font-family: ohma.$fonts-secondary;
         font-size: ohma.$fonts-xxl;
         text-transform: capitalize;
+    }
+
+    > .inlineHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 }

@@ -3,13 +3,20 @@ import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
-    title: string
+    title: string,
+    headerItem?: React.ReactNode
 }
 
-export default function PageWrapper({title, children}: PropTypes) {
+export default function PageWrapper({title, children, headerItem}: PropTypes) {
     return (
         <div className={styles.wrapper}>
-            <h1>{ title }</h1>
+            <div className={styles.inlineHeader}>
+                <h1>{ title }</h1>
+
+                <div>
+                    { headerItem }
+                </div>
+            </div>
 
             { children }
         </div>
