@@ -1,11 +1,11 @@
 'use server'
 
-import { ActionReturn } from '@/actions/type'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { Permission } from '@prisma/client'
 import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
+import type { ActionReturn } from '@/actions/type'
+import type { Prisma, User } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -127,4 +127,107 @@ export async function destroyRole(roleId: number) : Promise<ActionReturn<void, f
     }
 
     return { success: true, data: undefined }
+}
+
+export async function addUserToRole(data: FormData) : Promise<ActionReturn<void, false>> {
+    const schema = z.object({
+        roleId: z.coerce.number(),
+        username: z.string(),
+    })
+
+    const parse = schema.safeParse({
+        roleId: data.get('roleId'),
+        username: data.get('username'),
+    })
+
+
+    if (!parse.success) return { success: false, error: parse.error.issues }
+
+    const { roleId, username } = parse.data
+    console.log(roleId)
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                username
+            },
+            select: {
+                id: true
+            },
+        })
+
+        if (!user) return { success: false, error: [{ message: 'Invalid username' }] }
+
+        await prisma.rolesUsers.create({
+            data: {
+                roleId,
+                userId: user.id,
+            },
+        })
+    } catch (e) {
+        return errorHandeler(e)
+    }
+
+    return { success: true, data: undefined }
+}
+
+export async function removeUserFromRole(data: FormData) : Promise<ActionReturn<void, false>> {
+    const schema = z.object({
+        roleId: z.coerce.number(),
+        username: z.string(),
+    })
+
+    const parse = schema.safeParse({
+        roleId: data.get('roleId'),
+        username: data.get('username'),
+    })
+
+    if (!parse.success) return { success: false, error: parse.error.issues }
+
+    const { roleId, username } = parse.data
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                username
+            },
+            select: {
+                id: true
+            },
+        })
+
+        if (!user) return { success: false, error: [{ message: 'Invalid username' }] }
+
+        await prisma.rolesUsers.delete({
+            where: {
+                userId_roleId: {
+                    roleId,
+                    userId: user.id
+                }
+            },
+        })
+    } catch (e) {
+        return errorHandeler(e)
+    }
+
+    return { success: true, data: undefined }
+}
+
+export async function readUsersOfRole(roleId: number) : Promise<ActionReturn<User[]>> {
+    try {
+        const rolesUsers = await prisma.rolesUsers.findMany({
+            where: {
+                roleId
+            },
+            select: {
+                user: true
+            }
+        })
+
+        const users = rolesUsers.map(roleUser => roleUser.user)
+
+        return { success: true, data: users }
+    } catch (e) {
+        return errorHandeler(e)
+    }
 }
