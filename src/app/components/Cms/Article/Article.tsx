@@ -13,7 +13,7 @@ export default function Article({ article } : PropTypes) {
         <span className={styles.Article}>
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
-                <SlideInOnView>
+                <SlideInOnView direction="bottom">
                     <h1 className={styles.title}>{article.name}</h1>
                 </SlideInOnView>
             </span>
@@ -21,7 +21,7 @@ export default function Article({ article } : PropTypes) {
 
                 {
                     article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
-                        <SlideInOnView key={section.id}>
+                        <SlideInOnView direction="left" key={section.id}>
                             <ArticleSection articleSection={section} />
                         </SlideInOnView>
                     ))
