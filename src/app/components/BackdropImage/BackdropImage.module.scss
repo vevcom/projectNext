@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.BackdropImage {
+    position: relative;
+
+    .image {
+        position: absolute;
+        translate: 50% 0;
+        right: 0;
+        bottom: 0;
+    }
+}

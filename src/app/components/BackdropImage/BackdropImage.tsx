@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import type { Image as ImageT } from "@prisma/client";
 import Image from "../Image/Image";
+import styles from "./BackdropImage.module.scss"
 
 type PropTypes = { 
     children:ReactNode
@@ -9,10 +10,12 @@ type PropTypes = {
 
 export default function BackdropImage({children, image}:PropTypes) {
     return (
-        <div>
+        <div className={styles.BackdropImage}>
             <h1>test</h1>
             {children}
-            <Image image={image} width={350} />
+            <div className={styles.image}>
+                <Image image={image} width={350} />
+            </div>
         </div>
     )
 }

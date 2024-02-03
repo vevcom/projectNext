@@ -3,9 +3,9 @@ import BackdropImage from "@/components/BackdropImage/BackdropImage";
 import { notDeepEqual } from "assert";
 
 export default async function committees() {
-    const im = await read("logo_simple")
+    const im = await read("vevcom_logo")
     if (!im.success) {
-        throw Error("):")
+        throw Error("man")
     }
     return (
         <div>
