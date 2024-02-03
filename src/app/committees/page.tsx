@@ -11,9 +11,7 @@ export default async function committees() {
     return (
         <div>
             <h1>jkhkjh</h1>
-            {
- //            <BackdropImage>jfjfjfjfjfjj</BackdropImage> 
-            }
+    
             <BackdropImage image={im.data}>
                 <div className={styles.test}>
 
