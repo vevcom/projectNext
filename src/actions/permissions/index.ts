@@ -29,7 +29,7 @@ export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>>
     }
 }
 
-export async function createRole(data: FormData) : Promise<ActionReturn<void, false>> {
+export async function createRole(data: FormData) : Promise<ActionReturn<RoleWithPermissions>> {
     const schema = z.object({ name: z.string() })
 
     const parse = schema.safeParse({
@@ -44,15 +44,26 @@ export async function createRole(data: FormData) : Promise<ActionReturn<void, fa
     if (!name) return { success: false }
 
     try {
-        await prisma.role.create({ data: { name } })
+        const role = await prisma.role.create({
+            data: { name },
+            select: {
+                id: true,
+                name: true,
+                permissions: {
+                    select: {
+                        permission: true
+                    }
+                }
+            }
+        })
+
+        return { success: true, data: role }
     } catch (e) {
         return errorHandeler(e)
     }
-
-    return { success: true, data: undefined }
 }
 
-export async function updateRole(data: FormData) : Promise<ActionReturn<void, false>> {
+export async function updateRole(data: FormData) : Promise<ActionReturn<RoleWithPermissions>> {
     const schema = z.object({
         id: z.coerce.number(),
         name: z.string(),
@@ -115,18 +126,18 @@ export async function updateRole(data: FormData) : Promise<ActionReturn<void, fa
     return { success: true, data: undefined }
 }
 
-export async function destroyRole(roleId: number) : Promise<ActionReturn<void, false>> {
+export async function destroyRole(roleId: number) : Promise<ActionReturn<void, RoleWithPermissions>> {
     try {
-        await prisma.role.delete({
+        const role = await prisma.role.delete({
             where: {
                 id: roleId
             }
         })
+
+        return { success: true, data: role }
     } catch (e) {
         return errorHandeler(e)
     }
-
-    return { success: true, data: undefined }
 }
 
 export async function addUserToRole(data: FormData) : Promise<ActionReturn<void, false>> {
