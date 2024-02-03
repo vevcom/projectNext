@@ -63,7 +63,9 @@ export function UpdateRoleForm({ selectedRole, refreshRoles }: PropTypes) {
 
     return (
         <Form submitText="Lagre" action={updateRole} successCallback={refreshRoles}>
+            <input type="hidden" name="id" value={selectedRole.id} />
             <TextInput label="Navn" name="name" value={nameField} onChange={e => setNameField(e.target.value) } />
+
             {roleSettingsCategories.map(category => (
                 category.permissions.map((entry, index) => (
                     <div key={uuid()}>
@@ -71,7 +73,8 @@ export function UpdateRoleForm({ selectedRole, refreshRoles }: PropTypes) {
                         <label>
                             <input
                                 type="checkbox"
-                                name={entry.permission}
+                                name="permission"
+                                value={entry.permission}
                                 defaultChecked={selectedRole.permissions.some(
                                     permission => permission.permission === entry.permission
                                 )}
