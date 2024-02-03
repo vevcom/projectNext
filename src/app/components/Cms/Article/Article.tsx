@@ -2,7 +2,6 @@ import styles from './Article.module.scss'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ReturnType } from '@/cms/articles/ReturnType'
 import CmsImage from '../CmsImage/CmsImage'
-import Collection from '@/app/images/collections/[id]/page'
 import SlideInOnView from '../../SlideInOnView/SlideInOnView'
 
 type PropTypes = {

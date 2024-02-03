@@ -131,7 +131,7 @@ const standardCmsContents : CmsContent = {
     ],
     articles: [
         {
-            name: 'about',
+            name: 'om omega',
             coverImage: {
                 name: 'about_cover',
                 imageName: 'ohma',
