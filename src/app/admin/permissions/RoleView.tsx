@@ -69,7 +69,8 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         )}
 
                         <tr>
-                            <td>
+                            <td className={styles.newRoleForm}>
+                                <h2>Legg til ny rolle</h2>
                                 <CreateRoleForm refreshRoles={refreshRoles}/>
                             </td>
                         </tr>

@@ -3,6 +3,8 @@
 .permissionsWrapper {
     display: flex;
     flex-direction: row;
+    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
 .roleTable {
@@ -42,28 +44,23 @@
     }
 }
 
+.newRoleForm {
+    > h2 {
+        margin-top: 10px;
+    }
+}
+
 .permissionsSettings {
     border-left-style: solid;
     border-left-width: 2px;
+    border-left-color: ohma.$colors-gray-600;
     padding-left: 30px;
 
     input[type=checkbox] {
         margin: 0 0.5em 0 0.5em;
     }
+
+    > p {
+        margin-top: 20px;
+    }
 }
-
-// .permissionsDiv {
-//     width: 66%;
-// }
-
-// .permissionsTable {
-//     th {
-//         padding-left: 0.5em;
-//         padding-right: 0.5em;
-//     }
-
-//     td {
-//         text-align: center;
-//         vertical-align: middle;
-//     }
-// }
