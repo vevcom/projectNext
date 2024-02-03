@@ -2,23 +2,31 @@
   "name": "prismaservice",
   "version": "0.0.0",
   "description": "migrations and seeding for db",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "seed": "npx ts-node seeder/seed.ts"
+    "build": "tsc && tsc-alias",
+    "seed": "npx node dist/seed.js"
   },
   "author": "vevcom",
   "license": "ISC",
   "dependencies": {
-    "prisma": "^5.8.1",
+    "@prisma/client": "^5.8.1",
+    "rehype-format": "^5.0.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
     "sharp": "^0.33.2",
-    "ts-node": "^10.9.2",
+    "unified": "^11.0.4",
     "uuid": "^9.0.1"
   },
   "prisma": {
-    "schema": "schema.prisma"
+    "schema": "../schema.prisma"
   },
   "devDependencies": {
     "@types/node": "^20.11.10",
-    "@types/uuid": "^9.0.8"
+    "@types/uuid": "^9.0.8",
+    "prisma": "^5.8.1",
+    "tsc-alias": "^1.8.8",
+    "typescript": "^5.3.3"
   }
 }

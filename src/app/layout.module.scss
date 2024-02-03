@@ -18,7 +18,8 @@
     overflow-x: hidden;
     position: relative;
     width: 100%;
-    display: grid;
+    display: flex;
+    flex-direction: column;
 }
 
 .footer {

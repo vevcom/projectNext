@@ -1,2 +1,3 @@
 node_modules
-seeder/store
+store
+dist

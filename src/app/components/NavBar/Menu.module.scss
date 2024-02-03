@@ -13,7 +13,14 @@
     top: 0;
     left: 0;
     z-index: 9;
-    background: radial-gradient(circle at top left, ohma.$colors-secondary 50%, transparent 90%);
+    background: radial-gradient(circle at top left, 
+        ohma.$colors-secondary 0%, 
+        ohma.$colors-secondary 40%, 
+        rgba(ohma.$colors-secondary, 0.7) 60%, 
+        rgba(ohma.$colors-secondary, 0.4) 80%, 
+        rgba(ohma.$colors-secondary, 0.1) 90%, 
+        transparent 100%
+    );
     height: max(80vmin, 550px);
     width: max(80vmin, 550px);
     padding: 0 12.5% 12.5% 0;

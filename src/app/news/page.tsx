@@ -1,19 +1,14 @@
 import styles from './page.module.scss'
-import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
-import read from '@/actions/cms/articleSections/read'
+import Article from '@/cms/Article/Article'
+import read from '@/cms/articles/read'
 
 export default async function Articles() {
-    const articleSectionRes = await read('test_article')
-
-    if (!articleSectionRes.success) {
-        throw new Error(articleSectionRes.error ? articleSectionRes.error[0].message : 'error')
-    }
-
-    const articleSection = articleSectionRes.data
+    const article = await read('om omega')
+    if (!article.success) return (<div>{article.error ? article.error[9].message : 'error'}</div>)
 
     return (
         <main className={styles.wrapper}>
-            <ArticleSection articleSection={articleSection} />
+            <Article article={article.data} />
         </main>
     )
 }
