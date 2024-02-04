@@ -11,7 +11,7 @@ export default async function OmegaQuotes() {
         <PageWrapper title="Omega Quotes" headerItem={
             <PopUp PopUpKey="new_omega_quote" showButtonContent="Ny Omegaquote" showButtonClass={styles.button}>
                 <Form title="Ny Omegaquote" submitText="Legg til" action={create} className={styles.popupForm}>
-                    <Textarea label="Omegaquote" placeholder="Omegaquote" className={styles.textarea}></Textarea>
+                    <Textarea name="quote" label="Omegaquote" placeholder="Omegaquote" className={styles.textarea}></Textarea>
                     <TextInput label="Sagt av" name="said_by" className={styles.said_by}/>
                 </Form>
             </PopUp>

@@ -20,7 +20,7 @@ model User {
   firstname  String       @default("[Fjernet]")
   lastname   String       @default("[Fjernet]")
   roles      RolesUsers[]
-  OmegaQutoe OmegaQutoe[]
+  OmegaQutoe OmegaQuote[]
 
   @@map("users")
 }
@@ -188,7 +188,7 @@ model Article {
   @@map("articles")
 }
 
-model OmegaQutoe {
+model OmegaQuote {
   id          Int      @id @default(autoincrement())
   author      String
   quote       String
