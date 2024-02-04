@@ -1,6 +1,5 @@
 import styles from './ArticleSection.module.scss'
 import RemovePart from './RemovePart'
-import AddParts from './AddParts'
 import ImageControls from './ImageControls'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
@@ -11,6 +10,7 @@ import type {
     CmsImage as CmsImageT,
     CmsLink as CmsLinkT
 } from '@prisma/client'
+import AddPartToArticleSection from './AddPartToArticleSection'
 
 type PropTypes = {
     articleSection: ArticleSectionT & {
@@ -41,7 +41,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
 
     return (
         <section className={styles.ArticleSection}>
-            <AddParts
+            <AddPartToArticleSection
                 articleSectionName={articleSection.name}
                 showParagraphAdd={!cmsParagraph}
                 showImageAdd={!cmsImage}
@@ -77,7 +77,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                         cmsImageContent
                     }
                 </span>
-            </AddParts>
+            </AddPartToArticleSection>
         </section>
     )
 }

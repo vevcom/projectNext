@@ -1,4 +1,4 @@
-
+'use client'
 import { useCallback } from 'react'
 import { addPart } from '@/cms/articleSections/update'
 import { useRouter } from 'next/navigation'
