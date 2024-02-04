@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
+import { maxSections } from './ConfigVars'
 
 export default async function update(id: number, config: {
     name?: string,
@@ -50,6 +51,13 @@ export async function addSectionToArticle(id: number, include: {
 
         // Get the order of the highest order section, or 0 if there are no sections
         const highestOrder = highestOrderSection.length > 0 ? highestOrderSection[0].order : 0;
+
+        if (highestOrder >= maxSections) return {
+            success: false,
+            error: [{
+                message: `The maximum number of sections is ${maxSections}`,
+            }],
+        }
 
         const article = await prisma.article.update({
             where: {
