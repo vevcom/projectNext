@@ -5,7 +5,7 @@ import { EditModeContext } from '@/context/EditMode'
 import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import type { Part } from '@/actions/cms/articleSections/update'
+import type { Part } from '@/cms/articleSections/update'
 import type { ReactNode } from 'react'
 
 /**

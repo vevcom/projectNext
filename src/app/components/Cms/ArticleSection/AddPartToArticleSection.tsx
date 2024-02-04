@@ -4,7 +4,7 @@ import { addPart } from '@/cms/articleSections/update'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
 import AddParts from '@/cms/AddParts'
-import type { Part } from '@/actions/cms/articleSections/update'
+import type { Part } from '@/cms/articleSections/update'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
     articleSectionName: string

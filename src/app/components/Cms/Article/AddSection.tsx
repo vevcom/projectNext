@@ -1,3 +1,5 @@
+'use client'
+
 import AddParts from '@/cms/AddParts'
 import styles from './AddSection.module.scss'
 import type { Part } from '@/cms/articleSections/update'
