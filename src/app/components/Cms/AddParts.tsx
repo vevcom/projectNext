@@ -10,6 +10,7 @@ import type { ReactNode } from 'react'
 
 /**
  * Component for adding parts to an article and article section.
+ * Used by two wrapper components: AddSection and AddPartToArticleSection for atricle and article section respectively.
  */
 
 export type PropTypes = {
