@@ -32,7 +32,11 @@ export default async function update(id: number, config: {
     }
 }
 
-export async function addSectionToArticle(id: number) : Promise<ActionReturn<ReturnType>> {
+export async function addSectionToArticle(id: number, include: {
+    paragraph: boolean,
+    image: boolean,
+    link: boolean,
+}) : Promise<ActionReturn<ReturnType>> {
     try {
         const highestOrderSection = await prisma.articleSection.findMany({
             where: {
@@ -56,6 +60,21 @@ export async function addSectionToArticle(id: number) : Promise<ActionReturn<Ret
                     create: {
                         name: `section ${highestOrder + 1}`,
                         order: highestOrder + 1, // Increment the highest order
+                        cmsParagraph: include.paragraph ? {
+                            create: {
+                                name: `section ${highestOrder + 1} paragraph`,
+                            }
+                        } : undefined,
+                        cmsImage: include.image ? {
+                            create: {
+                                name: `section ${highestOrder + 1} image`,
+                            }
+                        } : undefined,
+                        cmsLink: include.link ? {
+                            create: {
+                                name: `section ${highestOrder + 1} link`,
+                            }
+                        } : undefined,
                     },
                 },
             },
