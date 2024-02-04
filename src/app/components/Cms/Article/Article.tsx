@@ -18,7 +18,6 @@ export default function Article({ article } : PropTypes) {
                 </SlideInOnView>
             </span>
             <article>
-
                 {
                     article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
                         <SlideInOnView direction="left" key={section.id}>

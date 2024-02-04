@@ -2,35 +2,33 @@
 import styles from './AddParts.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
 import { EditModeContext } from '@/context/EditMode'
-import { addPart } from '@/cms/articleSections/update'
-import { useCallback, useContext } from 'react'
-import { useRouter } from 'next/navigation'
+import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import type { Part } from '@/actions/cms/articleSections/update'
 import type { ReactNode } from 'react'
 
-type PropTypes = {
-    articleSectionName: string,
+/**
+ * Component for adding parts to an article and article section.
+ */
+
+export type PropTypes = {
     children: ReactNode,
     showParagraphAdd: boolean,
     showImageAdd: boolean,
     showLinkAdd: boolean
+    onClick: (part: Part) => Promise<void>
 }
 
 export default function AddParts({
-    articleSectionName,
     children,
     showImageAdd,
     showLinkAdd,
-    showParagraphAdd
+    showParagraphAdd,
+    onClick
 }: PropTypes) {
-    const { refresh } = useRouter()
     const editContext = useContext(EditModeContext)
-    const handleAdd = useCallback(async (part: Part) => {
-        await addPart(articleSectionName, part)
-        refresh()
-    }, [articleSectionName])
+    
     const parts : {
         shouldShow: boolean,
         part: Part
@@ -69,7 +67,7 @@ export default function AddParts({
                         parts.map((part, i) => part.shouldShow && (
                             <BorderButton
                                 key={i}
-                                onClick={() => handleAdd(part.part)}
+                                onClick={() => onClick(part.part)}
                                 color="secondary"
                             >
                                 <FontAwesomeIcon icon={faPlus} />
