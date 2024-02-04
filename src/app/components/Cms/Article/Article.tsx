@@ -3,6 +3,7 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ReturnType } from '@/cms/articles/ReturnType'
+import AddSection from './AddSection'
 
 type PropTypes = {
     article: ReturnType,
@@ -26,6 +27,7 @@ export default function Article({ article } : PropTypes) {
                     ))
                 }
             </article>
+            <AddSection />
         </span>
     )
 }

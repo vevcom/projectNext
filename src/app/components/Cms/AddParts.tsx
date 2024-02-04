@@ -13,7 +13,7 @@ import type { ReactNode } from 'react'
  */
 
 export type PropTypes = {
-    children: ReactNode,
+    children?: ReactNode,
     showParagraphAdd: boolean,
     showImageAdd: boolean,
     showLinkAdd: boolean
