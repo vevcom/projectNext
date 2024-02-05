@@ -141,7 +141,9 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
             default:
                 break
         }
-        //chack if all Parts are removed.
+
+
+        //check if all Parts are removed and if so, remove the articleSection if dis
         const afterDelete = await prisma.articleSection.findUnique({
             where: { name },
             include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
@@ -151,7 +153,7 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
                 error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }] 
             }
         if (
-            articleSection.distroyOnEmpty && 
+            articleSection.destroyOnEmpty && 
             !afterDelete.cmsImage && 
             !afterDelete.cmsParagraph && 
             !afterDelete.cmsImage
