@@ -4,6 +4,8 @@ import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 import { maxSections } from './ConfigVars'
+import { addPart } from '@/cms/articleSections/update'
+import type { Part } from '@/cms/articleSections/update'
 
 export default async function update(id: number, config: {
     name?: string,
@@ -33,11 +35,7 @@ export default async function update(id: number, config: {
     }
 }
 
-export async function addSectionToArticle(id: number, include: {
-    paragraph?: boolean,
-    image?: boolean,
-    link?: boolean,
-}) : Promise<ActionReturn<ReturnType>> {
+export async function addSectionToArticle(id: number, include: Partial<Record<Part, boolean>>) : Promise<ActionReturn<ReturnType>> {
     try {
         const article = await prisma.article.findUnique({
             where: {
@@ -72,6 +70,8 @@ export async function addSectionToArticle(id: number, include: {
             }],
         }
 
+        const newSectionName = `${article.name} section ${highestOrder + 1}`
+
         const updatedArticle = await prisma.article.update({
             where: {
                 id,
@@ -79,23 +79,8 @@ export async function addSectionToArticle(id: number, include: {
             data: {
                 articleSections: {
                     create: {
-                        name: `${article.name} section ${highestOrder + 1}`,
-                        order: highestOrder + 1, // Increment the highest order
-                        cmsParagraph: include.paragraph ? {
-                            create: {
-                                name: `section ${highestOrder + 1} paragraph`,
-                            }
-                        } : undefined,
-                        cmsImage: include.image ? {
-                            create: {
-                                name: `section ${highestOrder + 1} image`,
-                            }
-                        } : undefined,
-                        cmsLink: include.link ? {
-                            create: {
-                                name: `section ${highestOrder + 1} link`,
-                            }
-                        } : undefined,
+                        name: newSectionName,
+                        order: highestOrder + 1, // Increment the highest order 1
                     },
                 },
             },
@@ -109,7 +94,18 @@ export async function addSectionToArticle(id: number, include: {
                     }
                 }
             }
-        });
+        })
+
+        for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] as const) {
+            if (include[part]) {
+                const newPart = await addPart(newSectionName, part)
+            }
+        }
+        if (include['cmsImage']) {
+            const newPart = await addPart(newSectionName, 'cmsImage')
+            console.log(newPart)
+        }
+
         return { success: true, data: updatedArticle }
     } catch (error) {
         return errorHandler(error)
