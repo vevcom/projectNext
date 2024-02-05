@@ -2,10 +2,10 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
-import { OmegaQutoe } from '@prisma/client'
+import { OmegaQuote } from '@prisma/client'
 import { z } from 'zod'
 
-export default async function create(rawdata: FormData) : Promise<ActionReturn<OmegaQutoe>> {
+export default async function create(rawdata: FormData) : Promise<ActionReturn<OmegaQuote>> {
 
     const shema = z.object({
         quote: z.string().min(1, "Sitatet kan ikke være tomt"),
@@ -40,12 +40,11 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<O
     }
 
     try {
-
         const results = await prisma.omegaQuote.create({
             data: {
                 author: saidBy,
                 quote,
-                user_poster: {
+                userPoster: {
                     connect: {
                         id: user.id
                     }

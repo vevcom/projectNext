@@ -189,11 +189,12 @@ model Article {
 }
 
 model OmegaQuote {
-  id          Int      @id @default(autoincrement())
-  author      String
-  quote       String
-  timestamp   DateTime @default(now())
-  user_poster User     @relation(fields: [id], references: [id])
+  id           Int      @id @default(autoincrement())
+  author       String
+  quote        String
+  timestamp    DateTime @default(now())
+  userPoster   User     @relation(fields: [userPosterId], references: [id])
+  userPosterId Int
 
   @@map("omega_quotes")
 }
