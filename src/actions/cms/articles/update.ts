@@ -39,6 +39,19 @@ export async function addSectionToArticle(id: number, include: {
     link?: boolean,
 }) : Promise<ActionReturn<ReturnType>> {
     try {
+        const article = await prisma.article.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!article) return {
+            success: false,
+            error: [{
+                message: 'Artikkel ikke funnet',
+            }],
+        }
+
         const highestOrderSection = await prisma.articleSection.findMany({
             where: {
                 articleId: id,
@@ -59,14 +72,14 @@ export async function addSectionToArticle(id: number, include: {
             }],
         }
 
-        const article = await prisma.article.update({
+        const updatedArticle = await prisma.article.update({
             where: {
                 id,
             },
             data: {
                 articleSections: {
                     create: {
-                        name: `section ${highestOrder + 1}`,
+                        name: `${article.name} section ${highestOrder + 1}`,
                         order: highestOrder + 1, // Increment the highest order
                         cmsParagraph: include.paragraph ? {
                             create: {
@@ -97,7 +110,7 @@ export async function addSectionToArticle(id: number, include: {
                 }
             }
         });
-        return { success: true, data: article }
+        return { success: true, data: updatedArticle }
     } catch (error) {
         return errorHandler(error)
     }
