@@ -172,7 +172,7 @@ model ArticleSection {
   order          Int           @default(autoincrement()) //The order "position" of the article section in the article
 
   //If true, the article section will be deleted if it is empty, ie has no relation to paragraph, link or image
-  distroyOnEmpty Boolean       @default(true) 
+  distroyOnEmpty Boolean       @default(true) @map("distroy_on_empty")
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
   @@map("article_sections")
