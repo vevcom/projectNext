@@ -61,16 +61,22 @@ export async function addSectionToArticle(id: number, include: Partial<Record<Pa
         });
 
         // Get the order of the highest order section, or 0 if there are no sections
-        const highestOrder = highestOrderSection.length > 0 ? highestOrderSection[0].order : 0;
+        const nextOreder = highestOrderSection.length > 0 ? highestOrderSection[0].order + 1 : 0;
 
-        if (highestOrder >= maxSections) return {
+
+        const numberOfSections = await prisma.articleSection.count({
+            where: {
+                articleId: id,
+            },
+        });
+        if (numberOfSections >= maxSections) return {
             success: false,
             error: [{
                 message: `The maximum number of sections is ${maxSections}`,
             }],
         }
 
-        const newSectionName = `${article.name} section ${highestOrder + 1}`
+        const newSectionName = `${article.name} section ${nextOreder}`
 
         const updatedArticle = await prisma.article.update({
             where: {
@@ -80,7 +86,7 @@ export async function addSectionToArticle(id: number, include: Partial<Record<Pa
                 articleSections: {
                     create: {
                         name: newSectionName,
-                        order: highestOrder + 1, // Increment the highest order 1
+                        order: nextOreder,
                     },
                 },
             },
