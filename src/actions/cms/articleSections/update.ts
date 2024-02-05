@@ -9,6 +9,7 @@ import { ImageSize } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import type { ArticleSection, Position } from '@prisma/client'
+import destroy from './destroy'
 
 
 export default async function update(name: string, changes: {
@@ -130,36 +131,44 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
         switch (part) {
             case 'cmsLink':
                 await prisma.cmsLink.delete({ where: { id: articleSection.cmsLink?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsParagraph':
                 await prisma.cmsParagraph.delete({ where: { id: articleSection.cmsParagraph?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsImage':
                 await prisma.cmsImage.delete({ where: { id: articleSection.cmsImage?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
+                break
             default:
                 break
         }
+        //chack if all Parts are removed.
+        const afterDelete = await prisma.articleSection.findUnique({
+            where: { name },
+            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+        })
+        if (!afterDelete) return { 
+                success: false, 
+                error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }] 
+            }
+        if (
+            articleSection.distroyOnEmpty && 
+            !afterDelete.cmsImage && 
+            !afterDelete.cmsParagraph && 
+            !afterDelete.cmsImage
+        ) {
+            const destroyRes = await destroy(name)
+            if (!destroyRes.success) return {
+                success: false,
+                error: [{ message: 'Greide ikke slette artikkelseksjonen' }]
+            }
+            return { success: true, data: destroyRes.data }
+        }
+
+        return {
+            success: true,
+            data: afterDelete
+        }
+
         return { success: false, error: [{ message: 'Invalid part' }] }
     } catch (error) {
         return errorHandler(error)

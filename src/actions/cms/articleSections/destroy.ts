@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
-import type { ArticleSection } from '@prisma/client'
+import { ArticleSection } from '@prisma/client'
 
 export default async function destroy(name: string) : Promise<ActionReturn<ArticleSection>> {
     try {
