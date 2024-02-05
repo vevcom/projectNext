@@ -34,9 +34,9 @@ export default async function update(id: number, config: {
 }
 
 export async function addSectionToArticle(id: number, include: {
-    paragraph: boolean,
-    image: boolean,
-    link: boolean,
+    paragraph?: boolean,
+    image?: boolean,
+    link?: boolean,
 }) : Promise<ActionReturn<ReturnType>> {
     try {
         const highestOrderSection = await prisma.articleSection.findMany({

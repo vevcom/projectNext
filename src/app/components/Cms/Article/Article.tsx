@@ -27,7 +27,7 @@ export default function Article({ article } : PropTypes) {
                     ))
                 }
             </article>
-            <AddSection />
+            <AddSection articleId={article.id} />
         </span>
     )
 }
