@@ -67,7 +67,7 @@ $cover-height: min(300px, 40vh);
             }
         }  
         
-        //This makes sure the the confirmation for deletion doe not lay below section underneath
+        //This makes sure the the confirmation for deletion does not lay underneath section 
         @for $i from 1 through 15 { 
             > *:nth-child(#{$i}) {
                 z-index: calc(15 - $i); 
