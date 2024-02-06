@@ -141,7 +141,7 @@ export async function moveSectionOrder(
         }
 
         //find the section with the order one higher/lower than the current section
-        const otherSection = await prisma.articleSection.findFirst({
+        const otherSection = await prisma.articleSection.findMany({
             where: {
                 order: direction === 'UP' ? {
                     lt: section.order,
@@ -152,7 +152,8 @@ export async function moveSectionOrder(
             orderBy: {
                 order: direction === 'UP' ? 'desc' : 'asc',
             },
-        })
+            take: 1,
+        }).then(sections => sections[0])
         if (!otherSection) return {
             success: false,
             error: [{
@@ -190,6 +191,7 @@ export async function moveSectionOrder(
 
         return { success: true, data: updatedSection }
     } catch (error) {
+        console.log(error)
         return errorHandler(error)
     }
 }
