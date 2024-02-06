@@ -57,14 +57,18 @@ export const authOptions: AuthOptions = {
     }
 }
 
-type AuthStatus = "unauthenticated" | "unauthorized" | "authorized" 
+type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
+
+type UserWithPermissions = User & {
+    permissions: Set<Permission>
+}
 
 type GetUserArgsType = {
     permissions?: Permission[] | undefined,
 }
 
 type GetUserReturnType = {
-    user: User | null,
+    user: UserWithPermissions | null,
     status: AuthStatus,
 }
 
@@ -73,27 +77,29 @@ type GetUserReturnType = {
  * user does not have adequate permissions `null` is returned.
  *
  * @param permissions - A list of permissions that the user must have.
- * 
+ *
  * This function is for server side components and actions. For client side
  * components use `useUser`.
  */
 export async function getUser({ permissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user
 
-    if (!user) 
-        return { user: null, status: 'unauthenticated' }
+    if (!user) {return { user: null, status: 'unauthenticated' }}
 
-    if (permissions) {
-        const userPermissions = await readPermissionsOfUser(user.id)
-    
-        if (!userPermissions.success) 
-            throw new Error('Could not read permissions of user')
+    const userPermissions = await readPermissionsOfUser(user.id)
 
-        if (!permissions.every(permission => userPermissions.data.has(permission)))
-            return { user: null, status: 'unauthorized' }
+    if (!userPermissions.success) {throw new Error('Could not read permissions of user')}
+
+    // Check if user has all required permissions
+    if (permissions && !permissions.every(permission => userPermissions.data.has(permission))) {return { user: null, status: 'unauthorized' }}
+
+    return {
+        user: {
+            ...user,
+            permissions: userPermissions.data,
+        },
+        status: 'authorized',
     }
-
-    return { user, status: 'authorized' }
 }
 
 type RequireUserArgsType = {
@@ -109,12 +115,12 @@ type RequireUserArgsType = {
  * @param returnUrl - The url to the current page. If set the user will be
  * redirected to a login page for login, and then back after successfull
  * login. Must be set manually because next js doesn't provide a function to
- * retrive the current url of the page on the server side. 
- * 
+ * retrive the current url of the page on the server side.
+ *
  * @param redirectUrl - The url that the user should be redirected to if there
  * is no session and/or if the user doesn't have adequate permissions. If it's
  * not set user will be redirected to a 404.
- * 
+ *
  * @param permissions - A list of permissions that the user must have.
  *
  * This function is for server side components. For client side components
@@ -124,15 +130,17 @@ export async function requireUser({
     returnUrl,
     redirectUrl,
     permissions,
-}: RequireUserArgsType = {})  {
+}: RequireUserArgsType = {}): Promise<UserWithPermissions> {
     const { user, status } = await getUser({ permissions })
 
     if (!user) {
-        if (status === 'unauthenticated' && typeof returnUrl === 'string')
+        if (status === 'unauthenticated' && typeof returnUrl === 'string') {
             redirect(`/login?callbackUrl=${returnUrl}`)
+        }
 
-        if (typeof redirectUrl === 'string')
+        if (typeof redirectUrl === 'string') {
             redirect(redirectUrl)
+        }
 
         notFound()
     }
