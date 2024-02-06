@@ -136,4 +136,6 @@ export async function requireUser({
 
         notFound()
     }
+
+    return user
 }
