@@ -29,7 +29,7 @@ export default function AddSection({ articleId, currentNumberSections }: PropTyp
         <span className={styles.AddSection}>
             {
                 currentNumberSections >= maxSections ? (
-                    <p>Maksimal lengde på {maxSections} nådd</p>
+                    <p className={styles.maxLength}>Maksimal lengde på {maxSections} nådd</p>
                 ) : (
                     <AddParts 
                         showParagraphAdd={true}
@@ -39,7 +39,6 @@ export default function AddSection({ articleId, currentNumberSections }: PropTyp
                     />
                 )
             }
-            
         </span>
     )
 }
