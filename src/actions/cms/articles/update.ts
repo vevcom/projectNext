@@ -7,17 +7,29 @@ import { maxSections } from './ConfigVars'
 import { addPart } from '@/cms/articleSections/update'
 import type { Part } from '@/cms/articleSections/update'
 import { ArticleSection } from '@prisma/client'
+import { z } from 'zod'
 
-export default async function update(id: number, config: {
-    name?: string,
-}) : Promise<ActionReturn<ReturnType>> {
+export default async function update(id: number, rawData: FormData) : Promise<ActionReturn<ReturnType>> {
+    const schema = z.object({
+        name: z.string().min(2).max(20)
+    })
+    const parse = schema.safeParse({
+        name: rawData.get('name'),
+    })
+
+    if (!parse.success) return {
+        success: false,
+        error: parse.error.issues
+    }
+    const data = parse.data
+    
     try {
         const article = await prisma.article.update({
             where: {
                 id,
             },
             data: {
-                ...config,
+                ...data,
             },
             include: {
                 coverImage: true,

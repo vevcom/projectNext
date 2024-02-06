@@ -15,7 +15,7 @@ type Confirmation = {
 }
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
+export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,

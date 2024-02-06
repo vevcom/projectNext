@@ -5,6 +5,8 @@ import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ReturnType } from '@/cms/articles/ReturnType'
 import AddSection from './AddSection'
 import SectionMover from './SectionMover'
+import EditableTextField from '@/components/EditableTextField/EditableTextField'
+import update from '@/actions/cms/articles/update'
 
 type PropTypes = {
     article: ReturnType,
@@ -16,7 +18,20 @@ export default function Article({ article } : PropTypes) {
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
                 <SlideInOnView direction="bottom">
-                    <h1 className={styles.title}>{article.name}</h1>
+                    <EditableTextField 
+                        formProps={
+                            {
+                                action: update.bind(null, article.id),
+                            }
+                        }
+                        submitButton={{ 
+                            name: 'name', 
+                            text: 'lagre'    
+                        }}
+                        editable={true}
+                    >
+                        <h1 className={styles.title}>{article.name}</h1>
+                    </EditableTextField>
                 </SlideInOnView>
             </span>
             <article>
