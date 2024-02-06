@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 
-export async function readImagePage<const PageSize extends number>(
+export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, {collectionId: number}>
 ) : Promise<ActionReturn<Image[]>> {
     const { collectionId } = details
