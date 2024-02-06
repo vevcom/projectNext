@@ -1,5 +1,6 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
+import destroy from './destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { default as createCmsImage } from '@/actions/cms/images/create'
@@ -130,37 +131,50 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
         switch (part) {
             case 'cmsLink':
                 await prisma.cmsLink.delete({ where: { id: articleSection.cmsLink?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsParagraph':
                 await prisma.cmsParagraph.delete({ where: { id: articleSection.cmsParagraph?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsImage':
                 await prisma.cmsImage.delete({ where: { id: articleSection.cmsImage?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
+                break
             default:
                 break
         }
-        return { success: false, error: [{ message: 'Invalid part' }] }
+
+
+        // check if all Parts are removed and if so, remove the articleSection,
+        // but only if destroyOnEmpty is true
+        const afterDelete = await prisma.articleSection.findUnique({
+            where: { name },
+            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+        })
+        if (!afterDelete) {
+            return {
+                success: false,
+                error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }]
+            }
+        }
+        if (
+            articleSection.destroyOnEmpty &&
+            !afterDelete.cmsImage &&
+            !afterDelete.cmsParagraph &&
+            !afterDelete.cmsImage
+        ) {
+            const destroyRes = await destroy(name)
+            if (!destroyRes.success) {
+                return {
+                    success: false,
+                    error: [{ message: 'Greide ikke slette artikkelseksjonen' }]
+                }
+            }
+            return { success: true, data: destroyRes.data }
+        }
+
+        return {
+            success: true,
+            data: afterDelete
+        }
     } catch (error) {
         return errorHandler(error)
     }
