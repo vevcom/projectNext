@@ -1,8 +1,8 @@
 'use client'
 
 import { updateRole } from '@/actions/permissions'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'

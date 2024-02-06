@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import create from '@/actions/users/create'
-import TextInput from '@/app/components/UI/TextInput'
-import Form from '@/app/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import Form from '@/components/Form/Form'
 import { v4 as uuid } from 'uuid'
 
 export default function Users() {

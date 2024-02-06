@@ -2,7 +2,7 @@
 import styles from './ImageList.module.scss'
 import ImageListImage from './ImageListImage'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
-import EndlessScroll from '@/app/components/PagingWrappers/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import React, { useContext } from 'react'
 
 type PropTypes = {

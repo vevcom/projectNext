@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 
 export default function Events() {
     return (
