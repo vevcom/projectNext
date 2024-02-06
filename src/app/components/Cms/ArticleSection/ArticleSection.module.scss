@@ -2,6 +2,7 @@
 
 .ArticleSection {
     isolation: isolate;
+    display: grid;
     .content {
         display: flex;
         flex-flow: row wrap;
