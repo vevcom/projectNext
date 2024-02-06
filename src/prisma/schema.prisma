@@ -26,15 +26,17 @@ model User {
 }
 
 enum Permission {
+
+  // Omega Quotes
+  OMEGAQUOTES_WRITE
+  OMEGAQUOTES_READ
+
   // Her kommer masse eksempler på tillganger, for nå er de bare for testing
 
   // Fridge
   USE_MONEY
   USE_FRIDGE
   INFINITE_MONEY
-
-  // Quotes
-  USE_OMEGA_QUOTES
 
   // Bulshit
   POST_BULSHIT

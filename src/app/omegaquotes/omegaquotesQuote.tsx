@@ -6,11 +6,16 @@ export type OmegaquoteQuotePropTypes = {
 }
 
 export default function OmegaquoteQuote({ quote } : OmegaquoteQuotePropTypes) {
-    console.log(quote);
-    return <div>
+    const dateString = `${quote.timestamp.getDay()}.${quote.timestamp.getMonth()}.${quote.timestamp.getFullYear()}`
+
+    return <div className={styles.OmegaquoteQuote}>
+        <div className={styles.QuoteBubble}>
+            <p>"{ quote.quote }"</p>
+        </div>
+        <span className={styles.triangle}>▼</span>
         <h3>
             { quote.author }
         </h3>
-        <div>{ quote.quote }</div>
+        <span className={styles.timestamp}>{ dateString }</span>
     </div>
 }

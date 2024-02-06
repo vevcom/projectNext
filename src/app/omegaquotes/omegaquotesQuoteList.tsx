@@ -2,7 +2,6 @@
 
 import { useContext } from "react"
 import { OmegaquotePagingContext } from "./omegaquotesPaging"
-import styles from "./omegaquotesComponents.module.scss"
 import EndlessScroll from "../components/PagingWrappers/EndlessScroll"
 import OmegaquoteQuote from "./omegaquotesQuote"
 

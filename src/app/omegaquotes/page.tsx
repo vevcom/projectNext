@@ -10,8 +10,18 @@ import { readPage } from '@/actions/quotes/read'
 import { notFound } from 'next/navigation'
 import OmegaquoteList from './omegaquotesQuoteList'
 import OmegaquoteQuote from './omegaquotesQuote'
+import { requireUser } from '@/auth'
+import { Permission } from '@prisma/client'
+import { readPermissionsOfUser } from '@/actions/permissions'
 
 export default async function OmegaQuotes() {
+
+    const user = await requireUser({
+        permissions: [Permission.OMEGAQUOTES_READ]
+    });
+
+    const userPermissions = await readPermissionsOfUser(user.id);
+    let showCreateButton = (userPermissions.success && userPermissions.data.has("OMEGAQUOTES_WRITE"));
 
     const pageSize : PageSizeOmegaquote = 50;
 
@@ -21,7 +31,7 @@ export default async function OmegaQuotes() {
 
     return (
         <PageWrapper title="Omega Quotes" headerItem={
-            <PopUp PopUpKey="new_omega_quote" showButtonContent="Ny Omegaquote" showButtonClass={styles.button}>
+            showCreateButton && <PopUp PopUpKey="new_omega_quote" showButtonContent="Ny Omegaquote" showButtonClass={styles.button}>
                 <Form title="Ny Omegaquote" submitText="Legg til" action={create} className={styles.popupForm}>
                     <Textarea name="quote" label="Omegaquote" placeholder="Omegaquote" className={styles.textarea}></Textarea>
                     <TextInput label="Sagt av" name="said_by" className={styles.said_by}/>

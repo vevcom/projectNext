@@ -4,6 +4,9 @@ import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
 import { OmegaQuote } from '@prisma/client'
 import { z } from 'zod'
+import { getUser } from '@/auth'
+import { readPermissionsOfUser } from '../permissions'
+import { Permission } from '@prisma/client'
 
 export default async function create(rawdata: FormData) : Promise<ActionReturn<OmegaQuote>> {
 
@@ -26,15 +29,33 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<O
 
     const { quote, saidBy } = parse.data;
 
-    // TODO: Check for permission to add a quote
-    const user = await prisma.user.findFirst();
-    console.log(user);
+    // REFACTOR when new permission system is working
+    const user = await getUser();
 
     if (!user) {
         return {
             success: false,
             error: [{
-                message: "No user, this message should be a 403"
+                message: "403: Not authenticated"
+            }]
+        }
+    }
+
+    const permissions = await readPermissionsOfUser(user.id);
+    if (!permissions.success) {
+        return {
+            success: false,
+            error: [{
+                message: "500: Failed to read permissions of user"
+            }]
+        }
+    }
+
+    if (!permissions.data.has("OMEGAQUOTES_WRITE")) {
+        return {
+            success: false,
+            error: [{
+                message: "403: User not allowed to add quotes"
             }]
         }
     }
