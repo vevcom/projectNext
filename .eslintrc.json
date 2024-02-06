@@ -500,6 +500,13 @@
             ]
         }
     ],
+    "@typescript-eslint/type-annotation-spacing": "error",
+    "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+            "prefer": "type-imports"
+        }
+    ],
 
     //SOME ODD OPTIONS:
     // suggest using the spread operator instead of .apply()
@@ -509,6 +516,8 @@
     // use rest parameters instead of arguments
     "prefer-rest-params": "error",
     // enforce usage of spacing in template strings
-    "template-curly-spacing": "error"
+    "template-curly-spacing": "error",
+    // disable next js warning for using <img>
+    "@next/next/no-img-element": "off"
   }
 }
