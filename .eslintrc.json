@@ -187,8 +187,6 @@
     "no-nested-ternary": "error",
     // disallow use of the Object constructor
     "no-new-object": "error",
-    // disallow space between function identifier and application
-    "no-spaced-func": "error",
     // disallow trailing whitespace at the end of lines
     "no-trailing-spaces": "error",
     // disallow the use of Boolean literals in conditional expressions
