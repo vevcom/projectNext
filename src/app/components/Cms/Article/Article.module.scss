@@ -63,7 +63,7 @@ $cover-height: min(300px, 40vh);
             isolation: isolate;
             position: relative;
             &:last-child {
-                margin-bottom: .5em;
+                margin-bottom: 1em;
             }
         }  
         
@@ -76,11 +76,11 @@ $cover-height: min(300px, 40vh);
 
         .moveSection {
             position: relative;
-            .moverComponent {
+            > .moverComponent {
                 position: absolute;
                 bottom: 0;
                 left: 50%;
-                transform: translate(-50%, 50%);
+                transform: translate(-50%, 40%);
                 z-index: 2;
             }
         }
