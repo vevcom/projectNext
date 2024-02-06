@@ -10,12 +10,12 @@ import { z } from 'zod'
 export default async function create(rawdata: FormData) : Promise<ActionReturn<OmegaQuote>> {
     const shema = z.object({
         quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
-        saidBy: z.string().min(1, 'Noen må siteres'),
+        author: z.string().min(1, 'Noen må siteres'),
     })
 
     const parse = shema.safeParse({
         quote: rawdata.get('quote'),
-        saidBy: rawdata.get('said_by')
+        author: rawdata.get('author')
     })
 
     if (!parse.success) {
@@ -25,7 +25,7 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<O
         }
     }
 
-    const { quote, saidBy } = parse.data
+    const { quote, author } = parse.data
 
     // REFACTOR when new permission system is working
     const user = await getUser()
@@ -61,7 +61,7 @@ export default async function create(rawdata: FormData) : Promise<ActionReturn<O
     try {
         const results = await prisma.omegaQuote.create({
             data: {
-                author: saidBy,
+                author,
                 quote,
                 userPoster: {
                     connect: {

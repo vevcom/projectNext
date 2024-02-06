@@ -7,7 +7,7 @@ import PopUp from '@/components/PopUp/PopUp'
 import Form from '@/components/Form/Form'
 import create from '@/actions/quotes/create'
 import TextInput from '@/components/UI/TextInput'
-import Textarea from '@/app/components/UI/Textarea'
+import Textarea from '@/components/UI/Textarea'
 import { readPage } from '@/actions/quotes/read'
 import { requireUser } from '@/auth'
 import { readPermissionsOfUser } from '@/actions/permissions'
@@ -43,7 +43,7 @@ export default async function OmegaQuotes() {
                         placeholder="Omegaquote"
                         className={styles.textarea}
                     />
-                    <TextInput label="Sagt av" name="said_by" className={styles.said_by}/>
+                    <TextInput label="Sagt av" name="author" className={styles.author}/>
                 </Form>
             </PopUp>
         }>

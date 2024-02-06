@@ -20,7 +20,7 @@ model User {
   firstname  String       @default("[Fjernet]")
   lastname   String       @default("[Fjernet]")
   roles      RolesUsers[]
-  OmegaQutoe OmegaQuote[]
+  OmegaQuote OmegaQuote[]
 
   @@map("users")
 }
