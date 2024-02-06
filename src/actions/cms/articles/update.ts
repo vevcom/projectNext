@@ -163,24 +163,22 @@ export async function moveSectionOrder(
 
 
         //flip thir order numbers
-        const [updatedSection, updatedOtherSection] = await prisma.$transaction([
-            prisma.articleSection.update({
-                where: {
-                    id: section.id,
-                },
-                data: {
-                    order: otherSection.order,
-                },
-            }),
-            prisma.articleSection.update({
-                where: {
-                    id: otherSection.id,
-                },
-                data: {
-                    order: section.order,
-                },
-            }),
-        ])
+        const tempOrder = -21; // need intemidiate step to avoid unique constraint
+        console.log({section, otherSection})
+        await prisma.articleSection.update({
+            where: { id: section.id },
+            data: { order: tempOrder },
+        })
+
+        const updatedOtherSection = await prisma.articleSection.update({
+            where: { id: otherSection.id },
+            data: { order: section.order },
+        })
+
+        const updatedSection = await prisma.articleSection.update({
+            where: { id: section.id },
+            data: { order: otherSection.order },
+        })
 
         if (!updatedSection || !updatedOtherSection) return {
             success: false,
