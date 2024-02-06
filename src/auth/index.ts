@@ -1,5 +1,5 @@
 import prisma from '@/prisma'
-import { readPermissionsOfUser } from '@/actions/permissions'
+import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'

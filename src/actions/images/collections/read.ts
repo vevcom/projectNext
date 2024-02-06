@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 import type { ImageCollection, Image } from '@prisma/client'
 
-export default async function read(id: number) : Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+export async function readImageCollection(id: number) : Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
     try {
         const collection = await prisma.imageCollection.findUnique({
             where: {
@@ -26,7 +26,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
     numberOfImages: number,
 }
 
-export async function readPage<const PageSize extends number>(
+export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, null>
 ) : Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {

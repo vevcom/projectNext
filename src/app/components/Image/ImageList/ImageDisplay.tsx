@@ -3,10 +3,10 @@ import styles from './ImageDisplay.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
 import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
-import Form from '@/components/Form/Form'
-import TextInput from '@/components/UI/TextInput'
-import update from '@/actions/images/update'
-import destroy from '@/actions/images/destroy'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import { updateImage } from '@/actions/images/update'
+import { destroyImage } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { EditModeContext } from '@/context/EditMode'
@@ -110,14 +110,14 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                             title="Rediger metadata"
                             successCallback={reload}
                             submitText="oppdater"
-                            action={update.bind(null, currentImage.current.id)}
+                            action={updateImage.bind(null, currentImage.current.id)}
                         >
                             <TextInput name="name" label="navn" />
                             <TextInput name="alt" label="alt" />
                         </Form>
                         <Form
                             successCallback={reload}
-                            action={destroy.bind(null, currentImage.current.id)}
+                            action={destroyImage.bind(null, currentImage.current.id)}
                             submitText="slett"
                             submitColor="red"
                             confirmation={{

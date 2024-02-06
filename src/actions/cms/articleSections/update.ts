@@ -1,18 +1,18 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
-import destroy from './destroy'
+import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { default as createCmsImage } from '@/actions/cms/images/create'
-import { default as createCmsParagraph } from '@/actions/cms/paragraphs/create'
-import { default as createCmsLink } from '@/actions/cms/links/create'
+import { createCmsImage } from '@/actions/cms/images/create'
+import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
+import { createCmsLink } from '@/actions/cms/links/create'
 import { ImageSize } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import type { ArticleSection, Position } from '@prisma/client'
 
 
-export default async function update(name: string, changes: {
+export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }) : Promise<ActionReturn<ReturnType>> {
@@ -53,7 +53,7 @@ export default async function update(name: string, changes: {
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
-export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
+export async function addArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -115,7 +115,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
     }
 }
 
-export async function removePart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
+export async function removeArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -161,7 +161,7 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
             !afterDelete.cmsParagraph &&
             !afterDelete.cmsImage
         ) {
-            const destroyRes = await destroy(name)
+            const destroyRes = await destroyArticleSection(name)
             if (!destroyRes.success) {
                 return {
                     success: false,

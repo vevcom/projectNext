@@ -10,7 +10,7 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 
-export default async function update(id: number, contentMd: string) : Promise<ActionReturn<CmsParagraph>> {
+export async function updateCmsParagraph(id: number, contentMd: string) : Promise<ActionReturn<CmsParagraph>> {
     //This function expects to get valid md
     try {
         const contentHtml = (await unified()

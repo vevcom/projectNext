@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import type { CmsLink } from '@prisma/client'
 
-export default async function create(name: string): Promise<ActionReturn<CmsLink>> {
+export async function createCmsLink(name: string): Promise<ActionReturn<CmsLink>> {
     try {
         const cmsLink = await prisma.cmsLink.create({
             data: {

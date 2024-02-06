@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
-export default async function update(
+export async function updateImageCollection(
     collectionId: number,
     coverImageId: number | undefined,
     rawdata: FormData
