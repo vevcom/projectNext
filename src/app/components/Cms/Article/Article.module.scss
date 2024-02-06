@@ -62,12 +62,20 @@ $cover-height: min(300px, 40vh);
             margin: 2em $padding;
             isolation: isolate;
             position: relative;
+            &:last-child {
+                margin-bottom: .5em;
+            }
         }  
+        
+        //This makes sure the the confirmation for deletion doe not lay below section underneath
         @for $i from 1 through 15 { 
             > *:nth-child(#{$i}) {
-                z-index: calc(15 - $i); // Increment z-index for each child
+                z-index: calc(15 - $i); 
             }
         }
+    }
+    .addSection {
+        margin: 0 $padding;
     }
 }   
 

@@ -1,12 +1,8 @@
-'use client'
 import styles from './AddParts.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
-import { EditModeContext } from '@/context/EditMode'
-import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import type { Part } from '@/cms/articleSections/update'
-import type { ReactNode } from 'react'
 
 /**
  * Component for adding parts to an article and article section.
@@ -14,7 +10,6 @@ import type { ReactNode } from 'react'
  */
 
 export type PropTypes = {
-    children?: ReactNode,
     showParagraphAdd: boolean,
     showImageAdd: boolean,
     showLinkAdd: boolean
@@ -22,14 +17,11 @@ export type PropTypes = {
 }
 
 export default function AddParts({
-    children,
     showImageAdd,
     showLinkAdd,
     showParagraphAdd,
     onClick
-}: PropTypes) {
-    const editContext = useContext(EditModeContext)
-    
+}: PropTypes) {    
     const parts : {
         shouldShow: boolean,
         part: Part
@@ -38,12 +30,12 @@ export default function AddParts({
         {
             shouldShow: showParagraphAdd,
             part: 'cmsParagraph',
-            text: 'paragraph'
+            text: 'paragraf'
         },
         {
             shouldShow: showImageAdd,
             part: 'cmsImage',
-            text: 'image'
+            text: 'bilde'
         },
         {
             shouldShow: showLinkAdd,
@@ -52,32 +44,20 @@ export default function AddParts({
         }
     ]
 
-    if (!editContext?.editMode) return children
-
     return (
         <div className={styles.AddParts}>
-            <div className={
-                parts.some(part => part.shouldShow) ?
-                    `${styles.wrapper} ${styles.paddingBottom}`
-                    :
-                    styles.wrapper
-            }>
-                {children}
-                <div className={styles.addControls}>
-                    {
-                        parts.map((part, i) => part.shouldShow && (
-                            <BorderButton
-                                key={i}
-                                onClick={() => onClick(part.part)}
-                                color="secondary"
-                            >
-                                <FontAwesomeIcon icon={faPlus} />
-                                {part.text}
-                            </BorderButton>
-                        ))
-                    }
-                </div>
-            </div>
+            {
+                parts.map((part, i) => part.shouldShow && (
+                    <BorderButton
+                        key={i}
+                        onClick={() => onClick(part.part)}
+                        color="secondary"
+                    >
+                        <FontAwesomeIcon icon={faPlus} />
+                        {part.text}
+                    </BorderButton>
+                ))
+            }
         </div>
     )
 }

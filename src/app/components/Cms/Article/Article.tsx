@@ -27,7 +27,9 @@ export default function Article({ article } : PropTypes) {
                     ))
                 }
             </article>
-            <AddSection articleId={article.id} currentNumberSections={article.articleSections.length} />
+            <div className={styles.addSection}>
+                <AddSection articleId={article.id} currentNumberSections={article.articleSections.length} />
+            </div>
         </span>
     )
 }
