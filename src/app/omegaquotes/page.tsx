@@ -23,7 +23,7 @@ export default async function OmegaQuotes() {
     const userPermissions = await readPermissionsOfUser(user.id);
     let showCreateButton = (userPermissions.success && userPermissions.data.has("OMEGAQUOTES_WRITE"));
 
-    const pageSize : PageSizeOmegaquote = 50;
+    const pageSize : PageSizeOmegaquote = 20;
 
     const readQuotes = await readPage({ page: { pageSize, page: 0 }, details: undefined })
     if (!readQuotes.success) notFound()
