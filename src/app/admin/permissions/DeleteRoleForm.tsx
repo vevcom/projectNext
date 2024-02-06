@@ -1,7 +1,7 @@
 'use client'
 
 import { destroyRole } from '@/actions/permissions'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { useRouter } from 'next/navigation'
 
 type PropType = {

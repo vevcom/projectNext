@@ -2,6 +2,7 @@ import seedImages from './seedImages'
 import seedDevUsers from './development/seedDevUsers'
 import seedDevImages from './development/seedDevImages'
 import seedCms from './seedCms'
+import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import { PrismaClient } from '@prisma/client'
 
 async function seed() {
@@ -16,6 +17,7 @@ async function seed() {
     console.log('seeding dev data....')
     await seedDevUsers(prisma)
     await seedDevImages(prisma)
+    await seedDevOmegaquotes(prisma)
     console.log('seed dev done')
 }
 
