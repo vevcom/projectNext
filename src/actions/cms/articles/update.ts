@@ -3,13 +3,13 @@ import { maxSections } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
-import { addPart } from '@/cms/articleSections/update'
+import { addArticleSectionPart } from '@/cms/articleSections/update'
 import { ArticleSection } from '@prisma/client'
 import { z } from 'zod'
 import type { Part } from '@/cms/articleSections/update'
 import type { ReturnType } from './ReturnType'
 
-export default async function updateArticle(id: number, rawData: FormData) : Promise<ActionReturn<ReturnType>> {
+export async function updateArticle(id: number, rawData: FormData) : Promise<ActionReturn<ReturnType>> {
     const schema = z.object({
         name: z.string().min(2).max(20)
     })
@@ -126,7 +126,7 @@ export async function addSectionToArticle(
 
         for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] as const) {
             if (include[part]) {
-                await addPart(newSectionName, part)
+                await addArticleSectionPart(newSectionName, part)
             }
         }
 

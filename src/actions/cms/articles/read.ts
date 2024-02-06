@@ -4,7 +4,7 @@ import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 
-export default async function readArticle(id: number): Promise<ActionReturn<ReturnType>> {
+export async function readArticle(id: number): Promise<ActionReturn<ReturnType>> {
     try {
         const article = await prisma.article.findUnique({
             where: {

@@ -1,6 +1,6 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
-import destroy from './destroy'
+import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { createCmsImage } from '@/actions/cms/images/create'
@@ -53,7 +53,7 @@ export async function updateArticleSection(name: string, changes: {
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
-export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
+export async function addArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -115,7 +115,7 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
     }
 }
 
-export async function removePart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
+export async function removeArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -161,7 +161,7 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
             !afterDelete.cmsParagraph &&
             !afterDelete.cmsImage
         ) {
-            const destroyRes = await destroy(name)
+            const destroyRes = await destroyArticleSection(name)
             if (!destroyRes.success) {
                 return {
                     success: false,
