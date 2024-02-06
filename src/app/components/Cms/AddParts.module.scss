@@ -16,6 +16,9 @@
             display: flex;
             button {
                 display: flex;
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
         padding: 2*ohma.$gap;

@@ -57,9 +57,16 @@ $cover-height: min(300px, 40vh);
         
     }
     article {
+        isolation: isolate;  
         > * {
             margin: 2em $padding;
             isolation: isolate;
+            position: relative;
+        }  
+        @for $i from 1 through 15 { 
+            > *:nth-child(#{$i}) {
+                z-index: calc(15 - $i); // Increment z-index for each child
+            }
         }
     }
 }   
