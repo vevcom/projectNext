@@ -163,8 +163,7 @@ export async function moveSectionOrder(
 
 
         //flip thir order numbers
-        const tempOrder = -21; // need intemidiate step to avoid unique constraint
-        console.log({section, otherSection})
+        const tempOrder = -1; // need intemidiate step to avoid unique constraint
         await prisma.articleSection.update({
             where: { id: section.id },
             data: { order: tempOrder },
