@@ -16,7 +16,7 @@ type PropTypes = {
     currentImageSize: ImageSize,
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, currentImageSize } : PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId, currentImageSize }: PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()

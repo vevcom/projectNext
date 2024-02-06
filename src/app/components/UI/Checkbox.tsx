@@ -1,6 +1,6 @@
 import styles from './Checkbox.module.scss'
 import { v4 as uuid } from 'uuid'
-import { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes } from 'react'
 
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {

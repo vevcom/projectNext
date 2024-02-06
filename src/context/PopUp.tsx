@@ -3,7 +3,7 @@ import useOnNavigation from '@/hooks/useOnNavigation'
 import React, { createContext, useState, useCallback } from 'react'
 
 type PopUpContextType = {
-    teleport:(component: React.ReactNode, key: number | string) => void,
+    teleport: (component: React.ReactNode, key: number | string) => void,
     remove: (key: number | string) => void,
         } | null
 

@@ -12,7 +12,7 @@ type PropTypes = {
     article: ReturnType,
 }
 
-export default function Article({ article } : PropTypes) {
+export default function Article({ article }: PropTypes) {
     return (
         <span className={styles.Article}>
             <span className={styles.coverImage}>

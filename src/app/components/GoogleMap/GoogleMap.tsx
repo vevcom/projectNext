@@ -1,13 +1,14 @@
 'use client'
 import styles from './GoogleMap.module.scss'
-import GoogleMapReact, { Coords } from 'google-map-react'
+import GoogleMapReact from 'google-map-react'
+import type { Coords } from 'google-map-react'
 
 type PropTypes = {
     location: Coords,
     height: number,
 }
 
-function GoogleMap({ location, height } : PropTypes) {
+function GoogleMap({ location, height }: PropTypes) {
     return (
         <div style={{ height: `${height}px` }} className={styles.GoogleMap}>
             <GoogleMapReact

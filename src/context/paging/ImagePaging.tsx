@@ -2,7 +2,7 @@
 
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readImagesPage } from '@/actions/images/read'
-import { ReadPageInput } from '@/actions/type'
+import type { ReadPageInput } from '@/actions/type'
 import type { Image } from '@prisma/client'
 
 export type PageSizeImage = 30

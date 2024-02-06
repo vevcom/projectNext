@@ -2,13 +2,12 @@
 
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { Permission } from '@prisma/client'
+import type { Permission, Prisma, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
-import type { Prisma, User } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
-export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>> {
+export async function readRoles(): Promise<ActionReturn<RoleWithPermissions[]>> {
     try {
         const roles = await prisma.role.findMany({
             include: {
@@ -28,7 +27,7 @@ export async function readRoles() : Promise<ActionReturn<RoleWithPermissions[]>>
     }
 }
 
-export async function readUsersOfRole(roleId: number) : Promise<ActionReturn<User[]>> {
+export async function readUsersOfRole(roleId: number): Promise<ActionReturn<User[]>> {
     try {
         const rolesUsers = await prisma.rolesUsers.findMany({
             where: {
@@ -47,7 +46,7 @@ export async function readUsersOfRole(roleId: number) : Promise<ActionReturn<Use
     }
 }
 
-export async function readRolesOfUser(userId: number) : Promise<ActionReturn<RoleWithPermissions[]>> {
+export async function readRolesOfUser(userId: number): Promise<ActionReturn<RoleWithPermissions[]>> {
     try {
         const rolesUsers = await prisma.rolesUsers.findMany({
             where: {
@@ -76,7 +75,7 @@ export async function readRolesOfUser(userId: number) : Promise<ActionReturn<Rol
     }
 }
 
-export async function readPermissionsOfUser(userId: number) : Promise<ActionReturn<Set<Permission>>> {
+export async function readPermissionsOfUser(userId: number): Promise<ActionReturn<Set<Permission>>> {
     const rolesResult = await readRolesOfUser(userId)
 
     if (!rolesResult.success) return rolesResult

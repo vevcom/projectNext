@@ -5,7 +5,7 @@ import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 import type { User } from '@prisma/client'
 
-export async function createUser(rawdata: FormData) : Promise<ActionReturn<User>> {
+export async function createUser(rawdata: FormData): Promise<ActionReturn<User>> {
     //TEST FOR WAIT
     await (new Promise((resolve) => {
         setTimeout(() => {

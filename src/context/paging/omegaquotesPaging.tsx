@@ -2,7 +2,7 @@
 
 import generatePagingProvider, { generatePagingContext } from '@/context/paging/PagingGenerator'
 import { readQuotesPage } from '@/actions/quotes/read'
-import { ReadPageInput } from '@/actions/type'
+import type { ReadPageInput } from '@/actions/type'
 import type { OmegaquoteFiltered } from '@/actions/quotes/read'
 
 export type PageSizeOmegaquote = 20;

@@ -24,7 +24,7 @@ type PropTypes = {
     className?: string
 }
 
-export default function ImageControls({ articleSection, className } : PropTypes) {
+export default function ImageControls({ articleSection, className }: PropTypes) {
     const editModeContext = useContext(EditModeContext)
     const { refresh } = useRouter()
     if (!editModeContext?.editMode) return null

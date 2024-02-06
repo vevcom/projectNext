@@ -1,8 +1,8 @@
 'use server'
 import { createArticleSection } from './create'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist

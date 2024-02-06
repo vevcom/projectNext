@@ -11,7 +11,7 @@ export default async function Images() {
     const user = await getUser()
 
     const isAdmin = user?.username === 'Harambe104' //temp
-    const pageSize : PageSizeImageCollection = 12
+    const pageSize: PageSizeImageCollection = 12
 
     const collectionPage = await readImageCollectionsPage({
         page: {
