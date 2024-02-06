@@ -1,9 +1,9 @@
 'use client'
 
-import { useContext } from "react"
-import { OmegaquotePagingContext } from "./omegaquotesPaging"
-import EndlessScroll from "../components/PagingWrappers/EndlessScroll"
-import OmegaquoteQuote from "./omegaquotesQuote"
+import OmegaquoteQuote from './omegaquotesQuote'
+import { OmegaquotePagingContext } from '@/context/paging/omegaquotesPaging'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import React, { useContext } from 'react'
 
 export type PropTypes = {
     serverRendered?: React.ReactNode,

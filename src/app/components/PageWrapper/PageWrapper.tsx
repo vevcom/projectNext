@@ -7,7 +7,7 @@ type PropTypes = {
     headerItem?: React.ReactNode
 }
 
-export default function PageWrapper({title, children, headerItem}: PropTypes) {
+export default function PageWrapper({ title, children, headerItem }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.inlineHeader}>

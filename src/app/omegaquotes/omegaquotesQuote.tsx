@@ -1,5 +1,5 @@
-import { OmegaquoteFiltered } from "@/actions/quotes/read"
-import styles from "./omegaquotesQuote.module.scss"
+import styles from './omegaquotesQuote.module.scss'
+import { OmegaquoteFiltered } from '@/actions/quotes/read'
 
 export type OmegaquoteQuotePropTypes = {
     quote: OmegaquoteFiltered
@@ -10,7 +10,7 @@ export default function OmegaquoteQuote({ quote } : OmegaquoteQuotePropTypes) {
 
     return <div className={styles.OmegaquoteQuote}>
         <div className={styles.QuoteBubble}>
-            <p>"{ quote.quote }"</p>
+            <p>&quot;{ quote.quote }&quot;</p>
         </div>
         <span className={styles.triangle}>▼</span>
         <h3>
