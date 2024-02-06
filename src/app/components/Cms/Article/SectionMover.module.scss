@@ -1,0 +1,16 @@
+@use '@/styles/ohma';
+
+.SectionMover {
+    display: flex;
+    button {
+        background-color: ohma.$colors-primary;
+        border: none;
+        border-radius: 50%;
+        padding: 1em;
+        width: 2em;
+        height: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
