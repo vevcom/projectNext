@@ -21,7 +21,7 @@ export default function AddParts({
     showLinkAdd,
     showParagraphAdd,
     onClick
-}: PropTypes) {    
+}: PropTypes) {
     const parts : {
         shouldShow: boolean,
         part: Part

@@ -1,14 +1,13 @@
 'use client'
-import { useCallback } from 'react'
+import styles from './AddPartToArticleSection.module.scss'
 import { addPart } from '@/cms/articleSections/update'
+import AddParts from '@/cms/AddParts'
+import { EditModeContext } from '@/context/EditMode'
+import { useCallback, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
-import AddParts from '@/cms/AddParts'
 import type { Part } from '@/cms/articleSections/update'
-import styles from './AddPartToArticleSection.module.scss'
 import type { ReactNode } from 'react'
-import { EditModeContext } from '@/context/EditMode'
-import { useContext } from 'react'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
     articleSectionName: string
@@ -18,13 +17,12 @@ type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
 export default function AddPartToArticleSection({ articleSectionName, children, ...props }: PropTypes) {
     const { refresh } = useRouter()
     const editMode = useContext(EditModeContext)
-    if (!editMode?.editMode) return children
-    
     const handleAdd = useCallback(async (part: Part) => {
         await addPart(articleSectionName, part)
         refresh()
     }, [articleSectionName])
-  
+    if (!editMode?.editMode) return children
+
     return (
         <div className={styles.AddPartToArticleSection}>
             <div className={

@@ -1,12 +1,12 @@
 import styles from './Article.module.scss'
+import AddSection from './AddSection'
+import SectionMover from './SectionMover'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
-import type { ReturnType } from '@/cms/articles/ReturnType'
-import AddSection from './AddSection'
-import SectionMover from './SectionMover'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import update from '@/actions/cms/articles/update'
+import type { ReturnType } from '@/cms/articles/ReturnType'
 
 type PropTypes = {
     article: ReturnType,
@@ -18,14 +18,14 @@ export default function Article({ article } : PropTypes) {
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
                 <SlideInOnView direction="bottom">
-                    <EditableTextField 
+                    <EditableTextField
                         formProps={
                             {
                                 action: update.bind(null, article.id),
                             }
                         }
-                        submitButton={{ 
-                            name: 'name', 
+                        submitButton={{
+                            name: 'name',
                             text: 'lagre',
                             className: styles.submitNameButton
                         }}
@@ -41,12 +41,12 @@ export default function Article({ article } : PropTypes) {
                         <SlideInOnView direction="left" key={section.id}>
                             <span className={styles.moveSection}>
                                 <ArticleSection articleSection={section} />
-                                <SectionMover 
+                                <SectionMover
                                     showUp={i !== 0}
-                                    showDown={i !== article.articleSections.length - 1} 
-                                    articleId={article.id} 
-                                    sectionId={section.id} 
-                                    className={styles.moverComponent} 
+                                    showDown={i !== article.articleSections.length - 1}
+                                    articleId={article.id}
+                                    sectionId={section.id}
+                                    className={styles.moverComponent}
                                 />
                             </span>
                         </SlideInOnView>

@@ -1,13 +1,13 @@
 'use client'
 
-import AddParts from '@/cms/AddParts'
 import styles from './AddSection.module.scss'
-import type { Part } from '@/cms/articleSections/update'
-import { useRouter } from 'next/navigation'
+import AddParts from '@/cms/AddParts'
 import { addSectionToArticle } from '@/cms/articles/update'
 import { maxSections } from '@/cms/articles/ConfigVars'
 import { EditModeContext } from '@/context/EditMode'
+import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
+import type { Part } from '@/cms/articleSections/update'
 
 type PropTypes = {
     articleId: number,
@@ -31,7 +31,7 @@ export default function AddSection({ articleId, currentNumberSections }: PropTyp
                 currentNumberSections >= maxSections ? (
                     <p className={styles.maxLength}>Maksimal lengde på {maxSections} nådd</p>
                 ) : (
-                    <AddParts 
+                    <AddParts
                         showParagraphAdd={true}
                         showImageAdd={true}
                         showLinkAdd={true}

@@ -1,13 +1,13 @@
 'use server'
+import { maxSections } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
-import type { ReturnType } from './ReturnType'
-import { maxSections } from './ConfigVars'
 import { addPart } from '@/cms/articleSections/update'
-import type { Part } from '@/cms/articleSections/update'
 import { ArticleSection } from '@prisma/client'
 import { z } from 'zod'
+import type { Part } from '@/cms/articleSections/update'
+import type { ReturnType } from './ReturnType'
 
 export default async function update(id: number, rawData: FormData) : Promise<ActionReturn<ReturnType>> {
     const schema = z.object({
@@ -17,12 +17,14 @@ export default async function update(id: number, rawData: FormData) : Promise<Ac
         name: rawData.get('name'),
     })
 
-    if (!parse.success) return {
-        success: false,
-        error: parse.error.issues
+    if (!parse.success) {
+        return {
+            success: false,
+            error: parse.error.issues
+        }
     }
     const data = parse.data
-    
+
     try {
         const article = await prisma.article.update({
             where: {
@@ -49,7 +51,7 @@ export default async function update(id: number, rawData: FormData) : Promise<Ac
 }
 
 export async function addSectionToArticle(
-    id: number, 
+    id: number,
     include: Partial<Record<Part, boolean>>
 ) : Promise<ActionReturn<ReturnType>> {
     try {
@@ -57,13 +59,15 @@ export async function addSectionToArticle(
             where: {
                 id,
             },
-        });
+        })
 
-        if (!article) return {
-            success: false,
-            error: [{
-                message: 'Artikkel ikke funnet',
-            }],
+        if (!article) {
+            return {
+                success: false,
+                error: [{
+                    message: 'Artikkel ikke funnet',
+                }],
+            }
         }
 
         const highestOrderSection = await prisma.articleSection.findMany({
@@ -74,22 +78,24 @@ export async function addSectionToArticle(
                 order: 'desc',
             },
             take: 1,
-        });
+        })
 
         // Get the order of the highest order section, or 0 if there are no sections
-        const nextOreder = highestOrderSection.length > 0 ? highestOrderSection[0].order + 1 : 0;
+        const nextOreder = highestOrderSection.length > 0 ? highestOrderSection[0].order + 1 : 0
 
 
         const numberOfSections = await prisma.articleSection.count({
             where: {
                 articleId: id,
             },
-        });
-        if (numberOfSections >= maxSections) return {
-            success: false,
-            error: [{
-                message: `The maximum number of sections is ${maxSections}`,
-            }],
+        })
+        if (numberOfSections >= maxSections) {
+            return {
+                success: false,
+                error: [{
+                    message: `The maximum number of sections is ${maxSections}`,
+                }],
+            }
         }
 
         const newSectionName = `${article.name} section ${nextOreder}`
@@ -132,7 +138,7 @@ export async function addSectionToArticle(
 
 export async function moveSectionOrder(
     id: number,
-    sectionId: number, 
+    sectionId: number,
     direction: 'UP' | 'DOWN'
 ) : Promise<ActionReturn<ArticleSection>> {
     try {
@@ -143,11 +149,13 @@ export async function moveSectionOrder(
                 id: sectionId,
             },
         })
-        if (!section) return {
-            success: false,
-            error: [{
-                message: 'Seksjon ikke funnet',
-            }],
+        if (!section) {
+            return {
+                success: false,
+                error: [{
+                    message: 'Seksjon ikke funnet',
+                }],
+            }
         }
 
         //find the section with the order one higher/lower than the current section
@@ -165,48 +173,51 @@ export async function moveSectionOrder(
             },
             take: 1,
         }).then(sections => sections[0])
-        if (!otherSection) return {
-            success: false,
-            error: [{
-                message: 'Seksjon kan ikke  flyttes opp/ned',
-            }],
+        if (!otherSection) {
+            return {
+                success: false,
+                error: [{
+                    message: 'Seksjon kan ikke  flyttes opp/ned',
+                }],
+            }
         }
 
 
         //flip thir order numbers
-        const tempOrder = -1; // Or any other value that won't violate the unique constraint
+        const tempOrder = -1 // Or any other value that won't violate the unique constraint
 
         // First, set the order of the section to the temporary value
         await prisma.articleSection.update({
-            where: { 
+            where: {
                 articleId: id,
-                id: section.id 
+                id: section.id
             },
             data: { order: tempOrder },
         })
         const updatedOtherSection = await prisma.articleSection.update({
-            where: { 
+            where: {
                 articleId: id,
-                id: otherSection.id 
+                id: otherSection.id
             },
             data: { order: section.order },
         })
         // Finally, set the order of the section to the otherSection's original order
         const updatedSection = await prisma.articleSection.update({
-            where: { 
+            where: {
                 articleId: id,
-                id: section.id 
+                id: section.id
             },
             data: { order: otherSection.order },
         })
 
-        
 
-        if (!updatedSection || !updatedOtherSection) return {
-            success: false,
-            error: [{
-                message: 'Noe uventet skjedde under flytting av seksjonen',
-            }],
+        if (!updatedSection || !updatedOtherSection) {
+            return {
+                success: false,
+                error: [{
+                    message: 'Noe uventet skjedde under flytting av seksjonen',
+                }],
+            }
         }
 
         return { success: true, data: updatedSection }

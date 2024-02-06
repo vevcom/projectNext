@@ -1,5 +1,6 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
+import destroy from './destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { default as createCmsImage } from '@/actions/cms/images/create'
@@ -9,7 +10,6 @@ import { ImageSize } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import type { ArticleSection, Position } from '@prisma/client'
-import destroy from './destroy'
 
 
 export default async function update(name: string, changes: {
@@ -148,20 +148,24 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
             where: { name },
             include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
         })
-        if (!afterDelete) return { 
-                success: false, 
-                error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }] 
+        if (!afterDelete) {
+            return {
+                success: false,
+                error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }]
             }
+        }
         if (
-            articleSection.destroyOnEmpty && 
-            !afterDelete.cmsImage && 
-            !afterDelete.cmsParagraph && 
+            articleSection.destroyOnEmpty &&
+            !afterDelete.cmsImage &&
+            !afterDelete.cmsParagraph &&
             !afterDelete.cmsImage
         ) {
             const destroyRes = await destroy(name)
-            if (!destroyRes.success) return {
-                success: false,
-                error: [{ message: 'Greide ikke slette artikkelseksjonen' }]
+            if (!destroyRes.success) {
+                return {
+                    success: false,
+                    error: [{ message: 'Greide ikke slette artikkelseksjonen' }]
+                }
             }
             return { success: true, data: destroyRes.data }
         }
@@ -170,8 +174,6 @@ export async function removePart(name: string, part: Part) : Promise<ActionRetur
             success: true,
             data: afterDelete
         }
-
-        return { success: false, error: [{ message: 'Invalid part' }] }
     } catch (error) {
         return errorHandler(error)
     }

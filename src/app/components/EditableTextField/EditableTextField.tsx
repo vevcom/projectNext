@@ -1,13 +1,12 @@
 'use client'
-import React, { useContext, useEffect, useState, useRef } from 'react'
-import { EditModeContext } from '@/context/EditMode'
-import Form from '@/components/Form/Form'
-import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 import styles from './EditableTextField.module.scss'
-import { set } from 'zod'
+import Form from '@/components/Form/Form'
+import { EditModeContext } from '@/context/EditMode'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
 type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
@@ -22,28 +21,28 @@ type PropTypes<ReturnType, DataGuaratee extends boolean> = {
 }
 
 export default function EditableTextField<ReturnType, DataGuaratee extends boolean>({
-    editable, 
+    editable,
     children,
     formProps,
     submitButton,
     ...props
 }: PropTypes<ReturnType, DataGuaratee>
 ) {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
     const editMode = useContext(EditModeContext)
     const ref = useRef<HTMLInputElement>(null)
-    const {refresh} = useRouter()
+    const { refresh } = useRouter()
 
     useEffect(() => {
         setNoChange(true)
     }, [editMode?.editMode])
-    
+
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         setNoChange(false)
         console.log(value)
-        setValue(e.currentTarget.textContent || '');
-    };
+        setValue(e.currentTarget.textContent || '')
+    }
 
     useEffect(() => {
         ref.current?.setAttribute('value', value)
@@ -56,8 +55,13 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
                 {children}
             </div>
             <FontAwesomeIcon className={styles.icon} icon={faPencil} />
-            <Form 
-                className={noChange ? `${styles.hiddenInput} ${submitButton.className}` : `${styles.input} ${submitButton.className}`} 
+            <Form
+                className={
+                    noChange ? (
+                        `${styles.hiddenInput} ${submitButton.className}`
+                    ) : (
+                        `${styles.input} ${submitButton.className}`
+                    )}
                 submitText={submitButton.text} {...formProps}
                 successCallback={() => {
                     setNoChange(true)
@@ -68,6 +72,6 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
                 <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
             </Form>
         </div>
-        
-    );
+
+    )
 }

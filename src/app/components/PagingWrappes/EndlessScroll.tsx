@@ -10,11 +10,10 @@ type PropTypes<Data, PageSize extends number> = {
     renderer: (data: Data) => React.ReactNode,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number>({ 
-    pagingContext, 
-    renderer 
-}: PropTypes<Data, PageSize>) 
-{
+export default function EndlessScroll<Data, const PageSize extends number>({
+    pagingContext,
+    renderer
+}: PropTypes<Data, PageSize>) {
     const context = useContext(pagingContext)
 
     //This component must be rendered inside ContextProvider
