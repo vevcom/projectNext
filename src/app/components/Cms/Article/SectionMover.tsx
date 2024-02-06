@@ -6,12 +6,16 @@ import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons"
 import { useContext } from "react"
 import styles from './SectionMover.module.scss'
 
-export default function SectionMover() {
+type PropTypes = {
+    className?: string
+}
+
+export default function SectionMover({ className }: PropTypes) {
     const editMode = useContext(EditModeContext)
     if (!editMode?.editMode) return null
 
     return (
-        <div className={styles.SectionMover}>
+        <div className={`${styles.SectionMover} ${className}`}>
             <button>
                 <FontAwesomeIcon icon={faArrowUp} />
             </button>

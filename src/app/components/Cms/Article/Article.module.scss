@@ -73,6 +73,17 @@ $cover-height: min(300px, 40vh);
                 z-index: calc(15 - $i); 
             }
         }
+
+        .moveSection {
+            position: relative;
+            .moverComponent {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translate(-50%, 50%);
+                z-index: 2;
+            }
+        }
     }
     .addSection {
         margin: 0 $padding;

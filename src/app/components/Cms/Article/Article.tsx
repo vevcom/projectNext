@@ -25,7 +25,7 @@ export default function Article({ article } : PropTypes) {
                         <SlideInOnView direction="left" key={section.id}>
                             <span className={styles.moveSection}>
                                 <ArticleSection articleSection={section} />
-                                <SectionMover />
+                                <SectionMover className={styles.moverComponent} />
                             </span>
                         </SlideInOnView>
                     ))
