@@ -10,17 +10,15 @@ type PropTypes = {
 export default function PageWrapper({title, children, headerItem}: PropTypes) {
     return (
         <div className={styles.wrapper}>
-            <div>
-                <div className={styles.inlineHeader}>
-                    <h1>{ title }</h1>
+            <div className={styles.inlineHeader}>
+                <h1>{ title }</h1>
 
-                    <div>
-                        { headerItem }
-                    </div>
+                <div>
+                    { headerItem }
                 </div>
-
-                { children }
             </div>
+
+            { children }
         </div>
     )
 }

@@ -4,6 +4,7 @@
     @include ohma.pagePadding();
     align-self: flex-start;
     margin-top: 1rem;
+    margin-bottom: 1rem;
 
     h1 {
         font-family: ohma.$fonts-secondary;
