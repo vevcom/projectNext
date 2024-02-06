@@ -3,7 +3,7 @@ import { readPermissionsOfUser } from '@/actions/permissions'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
-import type { Permission } from '@prisma/client'
+import type { Permission, User } from '@prisma/client'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -57,17 +57,43 @@ export const authOptions: AuthOptions = {
     }
 }
 
-/**
- * Returns the user object from the current session. If there is no session
- * ```null``` is returned.
- *
- * This function is for server side components and actions. For client side
- * components use ```useUser```.
- */
-export async function getUser() {
-    const session = await getServerSession(authOptions)
+type AuthStatus = "unauthenticated" | "unauthorized" | "authorized" 
 
-    return session?.user ?? null
+type GetUserArgsType = {
+    permissions?: Permission[] | undefined,
+}
+
+type GetUserReturnType = {
+    user: User | null,
+    status: AuthStatus,
+}
+
+/**
+ * Returns the user object from the current session. If there is no session or the
+ * user does not have adequate permissions `null` is returned.
+ *
+ * @param permissions - A list of permissions that the user must have.
+ * 
+ * This function is for server side components and actions. For client side
+ * components use `useUser`.
+ */
+export async function getUser({ permissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
+    const user = (await getServerSession(authOptions))?.user
+
+    if (!user) 
+        return { user: null, status: 'unauthenticated' }
+
+    if (permissions) {
+        const userPermissions = await readPermissionsOfUser(user.id)
+    
+        if (!userPermissions.success) 
+            throw new Error('Could not read permissions of user')
+
+        if (!permissions.every(permission => userPermissions.data.has(permission)))
+            return { user: null, status: 'unauthorized' }
+    }
+
+    return { user, status: 'authorized' }
 }
 
 type RequireUserArgsType = {
@@ -80,38 +106,34 @@ type RequireUserArgsType = {
  * Gets user in the same way as `getUser`, but redirects when the user is not
  * logged in. This function will never return `null`.
  *
+ * @param returnUrl - The url to the current page. If set the user will be
+ * redirected to a login page for login, and then back after successfull
+ * login. Must be set manually because next js doesn't provide a function to
+ * retrive the current url of the page on the server side. 
+ * 
+ * @param redirectUrl - The url that the user should be redirected to if there
+ * is no session and/or if the user doesn't have adequate permissions. If it's
+ * not set user will be redirected to a 404.
+ * 
+ * @param permissions - A list of permissions that the user must have.
+ *
  * This function is for server side components. For client side components
  * use `useUser`. For actions use `getUser`.
  */
 export async function requireUser({
     returnUrl,
     redirectUrl,
-    permissions
-}: RequireUserArgsType
-) {
-    const user = await getUser()
+    permissions,
+}: RequireUserArgsType = {})  {
+    const { user, status } = await getUser({ permissions })
 
     if (!user) {
-        if (typeof returnUrl !== 'undefined') redirect(`/login?callbackUrl=${returnUrl}`)
+        if (status === 'unauthenticated' && typeof returnUrl === 'string')
+            redirect(`/login?callbackUrl=${returnUrl}`)
 
-        if (typeof redirectUrl !== 'undefined') redirect(redirectUrl)
-
-        notFound()
-    }
-
-    const userPermissionResult = await readPermissionsOfUser(user.id)
-
-    if (!userPermissionResult.success) throw new Error('Unable to retrieve user permissions')
-
-    const userPermission = userPermissionResult.data
-
-    const hasPermissions = permissions?.every(permission => userPermission.has(permission)) ?? true
-
-    if (!hasPermissions) {
-        if (typeof redirectUrl !== 'undefined') redirect(redirectUrl)
+        if (typeof redirectUrl === 'string')
+            redirect(redirectUrl)
 
         notFound()
     }
-
-    return user
 }
