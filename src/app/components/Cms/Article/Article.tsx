@@ -26,7 +26,8 @@ export default function Article({ article } : PropTypes) {
                         }
                         submitButton={{ 
                             name: 'name', 
-                            text: 'lagre'    
+                            text: 'lagre',
+                            className: styles.submitNameButton
                         }}
                         editable={true}
                     >

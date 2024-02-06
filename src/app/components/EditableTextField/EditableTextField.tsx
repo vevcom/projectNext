@@ -5,6 +5,9 @@ import Form from '@/components/Form/Form'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 import styles from './EditableTextField.module.scss'
 import { set } from 'zod'
+import { useRouter } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
@@ -14,6 +17,7 @@ type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     submitButton: {
         text?: string,
         name: string,
+        className?: string,
     }
 }
 
@@ -29,6 +33,11 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     const [noChange, setNoChange] = useState(true)
     const editMode = useContext(EditModeContext)
     const ref = useRef<HTMLInputElement>(null)
+    const {refresh} = useRouter()
+
+    useEffect(() => {
+        setNoChange(true)
+    }, [editMode?.editMode])
     
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         setNoChange(false)
@@ -43,10 +52,19 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     if (!editMode?.editMode || !editable) return (children)
     return (
         <div className={styles.EditableTextField}>
-            <div contentEditable={true} onInput={handleInput} {...props}>
+            <div className={styles.text} contentEditable={true} onInput={handleInput} {...props}>
                 {children}
             </div>
-            <Form className={noChange ? styles.hiddenInput : ''} submitText={submitButton.text} {...formProps}>
+            <FontAwesomeIcon className={styles.icon} icon={faPencil} />
+            <Form 
+                className={noChange ? `${styles.hiddenInput} ${submitButton.className}` : `${styles.input} ${submitButton.className}`} 
+                submitText={submitButton.text} {...formProps}
+                successCallback={() => {
+                    setNoChange(true)
+                    formProps.successCallback?.()
+                    refresh()
+                }}
+            >
                 <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
             </Form>
         </div>

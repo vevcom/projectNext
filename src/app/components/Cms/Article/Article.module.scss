@@ -88,5 +88,12 @@ $cover-height: min(300px, 40vh);
     .addSection {
         margin: 0 $padding;
     }
+
+    .submitNameButton {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0, -100%);
+    }
 }   
 
