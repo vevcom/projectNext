@@ -21,11 +21,17 @@ export default function Article({ article } : PropTypes) {
             </span>
             <article>
                 {
-                    article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
+                    article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
                         <SlideInOnView direction="left" key={section.id}>
                             <span className={styles.moveSection}>
                                 <ArticleSection articleSection={section} />
-                                <SectionMover articleId={article.id} sectionId={section.id} className={styles.moverComponent} />
+                                <SectionMover 
+                                    showUp={i !== 0}
+                                    showDown={i !== article.articleSections.length - 1} 
+                                    articleId={article.id} 
+                                    sectionId={section.id} 
+                                    className={styles.moverComponent} 
+                                />
                             </span>
                         </SlideInOnView>
                     ))

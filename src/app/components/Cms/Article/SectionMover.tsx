@@ -11,9 +11,11 @@ type PropTypes = {
     articleId: number
     sectionId: number
     className?: string
+    showUp: boolean
+    showDown: boolean
 }
 
-export default function SectionMover({ articleId, sectionId, className }: PropTypes) {
+export default function SectionMover({ articleId, sectionId, className, showUp, showDown }: PropTypes) {
     const editMode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
@@ -28,12 +30,16 @@ export default function SectionMover({ articleId, sectionId, className }: PropTy
 
     return (
         <div className={`${styles.SectionMover} ${className}`}>
-            <button onClick={() => handleMove('UP')}>
-                <FontAwesomeIcon icon={faArrowUp} />
-            </button>
-            <button onClick={() => handleMove('DOWN')}>
-                <FontAwesomeIcon icon={faArrowDown} />
-            </button>
+            {
+                showUp && <button onClick={() => handleMove('UP')}>
+                    <FontAwesomeIcon icon={faArrowUp} />
+                </button>
+            }
+            {
+                showDown && <button onClick={() => handleMove('DOWN')}>
+                    <FontAwesomeIcon icon={faArrowDown} />
+                </button>
+            }
         </div>
     )
 }
