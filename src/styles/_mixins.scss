@@ -85,6 +85,16 @@
     }
 }
 
+@mixin pagePadding($max-width: 800px) {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
+    position: relative;
+    overflow-y: hidden;
+}
+
 @keyframes rotate {
     0% {
         transform: translate(0) rotate(0deg);
