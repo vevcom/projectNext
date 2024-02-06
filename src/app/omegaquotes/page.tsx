@@ -1,19 +1,14 @@
-import styles from './page.module.scss'
 import OmegaquoteList from './omegaquotesQuoteList'
 import OmegaquoteQuote from './omegaquotesQuote'
 import OmegaquotePagingProvider, { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import PopUp from '@/components/PopUp/PopUp'
-import Form from '@/components/Form/Form'
-import create from '@/actions/quotes/create'
-import TextInput from '@/components/UI/TextInput'
-import Textarea from '@/components/UI/Textarea'
 import { readPage } from '@/actions/quotes/read'
 import { requireUser } from '@/auth'
 import { readPermissionsOfUser } from '@/actions/permissions'
 import { notFound } from 'next/navigation'
 import { Permission } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
+import CreateOmegaquoteForm from './createOmegaquoteForm'
 
 export default async function OmegaQuotes() {
     const user = await requireUser({
@@ -31,21 +26,7 @@ export default async function OmegaQuotes() {
 
     return (
         <PageWrapper title="Omega Quotes" headerItem={
-            showCreateButton && <PopUp
-                PopUpKey="new_omega_quote"
-                showButtonContent="Ny Omegaquote"
-                showButtonClass={styles.button}
-            >
-                <Form title="Ny Omegaquote" submitText="Legg til" action={create} className={styles.popupForm}>
-                    <Textarea
-                        name="quote"
-                        label="Omegaquote"
-                        placeholder="Omegaquote"
-                        className={styles.textarea}
-                    />
-                    <TextInput label="Sagt av" name="author" className={styles.author}/>
-                </Form>
-            </PopUp>
+            showCreateButton && <CreateOmegaquoteForm/>
         }>
             <OmegaquotePagingProvider
                 startPage={{
