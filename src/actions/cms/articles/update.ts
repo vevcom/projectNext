@@ -108,12 +108,8 @@ export async function addSectionToArticle(
 
         for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] as const) {
             if (include[part]) {
-                const newPart = await addPart(newSectionName, part)
+                await addPart(newSectionName, part)
             }
-        }
-        if (include['cmsImage']) {
-            const newPart = await addPart(newSectionName, 'cmsImage')
-            console.log(newPart)
         }
 
         return { success: true, data: updatedArticle }
@@ -123,6 +119,7 @@ export async function addSectionToArticle(
 }
 
 export async function moveSectionOrder(
+    id: number,
     sectionId: number, 
     direction: 'UP' | 'DOWN'
 ) : Promise<ActionReturn<ArticleSection>> {
@@ -130,6 +127,7 @@ export async function moveSectionOrder(
         //get section to move
         const section = await prisma.articleSection.findUnique({
             where: {
+                articleId: id,
                 id: sectionId,
             },
         })
@@ -143,6 +141,7 @@ export async function moveSectionOrder(
         //find the section with the order one higher/lower than the current section
         const otherSection = await prisma.articleSection.findMany({
             where: {
+                articleId: id,
                 order: direction === 'UP' ? {
                     lt: section.order,
                 } : {
@@ -163,21 +162,33 @@ export async function moveSectionOrder(
 
 
         //flip thir order numbers
-        const tempOrder = -1; // need intemidiate step to avoid unique constraint
+        const tempOrder = -1; // Or any other value that won't violate the unique constraint
+
+        // First, set the order of the section to the temporary value
         await prisma.articleSection.update({
-            where: { id: section.id },
+            where: { 
+                articleId: id,
+                id: section.id 
+            },
             data: { order: tempOrder },
         })
-
         const updatedOtherSection = await prisma.articleSection.update({
-            where: { id: otherSection.id },
+            where: { 
+                articleId: id,
+                id: otherSection.id 
+            },
             data: { order: section.order },
         })
-
+        // Finally, set the order of the section to the otherSection's original order
         const updatedSection = await prisma.articleSection.update({
-            where: { id: section.id },
+            where: { 
+                articleId: id,
+                id: section.id 
+            },
             data: { order: otherSection.order },
         })
+
+        
 
         if (!updatedSection || !updatedOtherSection) return {
             success: false,

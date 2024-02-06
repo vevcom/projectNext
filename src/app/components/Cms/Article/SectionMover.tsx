@@ -8,19 +8,23 @@ import styles from './SectionMover.module.scss'
 import { useRouter } from "next/navigation"
 
 type PropTypes = {
+    articleId: number
     sectionId: number
     className?: string
 }
 
-export default function SectionMover({ sectionId, className }: PropTypes) {
+export default function SectionMover({ articleId, sectionId, className }: PropTypes) {
     const editMode = useContext(EditModeContext)
     const { refresh } = useRouter()
-    if (!editMode?.editMode) return null
-
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
-        console.log(await moveSectionOrder(sectionId, direction))
+        const res = (await moveSectionOrder(articleId, sectionId, direction))
+        if (!res.success) {
+            const m = res.error ? res?.error[0].message : 'dd'
+            console.error(m)
+        }        
         refresh()
-    }, [sectionId])
+    }, [sectionId, articleId, refresh])
+    if (!editMode?.editMode) return null
 
     return (
         <div className={`${styles.SectionMover} ${className}`}>
