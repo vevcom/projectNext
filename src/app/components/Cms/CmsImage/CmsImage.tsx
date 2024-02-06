@@ -13,7 +13,7 @@ export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeS
 }
 
 export default async function CmsImage({ name, children, ...props }: PropTypes) {
-    let image : ImageT | null = null
+    let image: ImageT | null = null
     const res = await readCmsImage(name)
 
     //The read inageLink action should always return a CmsImage (it creates it if it does not exist)

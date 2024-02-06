@@ -3,12 +3,13 @@ import CollectionAdmin from './CollectionAdmin'
 import { readImagesPage } from '@/actions/images/read'
 import { readImageCollection } from '@/actions/images/collections/read'
 import ImageList from '@/app/components/Image/ImageList/ImageList'
-import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
+import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { getUser } from '@/auth'
 import { notFound } from 'next/navigation'
+import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     params: {
@@ -16,10 +17,10 @@ type PropTypes = {
     }
 }
 
-export default async function Collection({ params } : PropTypes) {
+export default async function Collection({ params }: PropTypes) {
     const user = await getUser()
 
-    const pageSize : PageSizeImage = 30
+    const pageSize: PageSizeImage = 30
 
     const readCollection = await readImageCollection(Number(params.id))
     if (!readCollection.success) notFound()

@@ -8,8 +8,8 @@ import UserManagmentForm from './UserManagmentForm'
 import { readUsersOfRole } from '@/actions/permissions/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { User, type Prisma } from '@prisma/client'
 import Link from 'next/link'
+import type { Prisma, User } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
 

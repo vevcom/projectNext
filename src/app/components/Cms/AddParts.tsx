@@ -22,7 +22,7 @@ export default function AddParts({
     showParagraphAdd,
     onClick
 }: PropTypes) {
-    const parts : {
+    const parts: {
         shouldShow: boolean,
         part: Part
         text: string

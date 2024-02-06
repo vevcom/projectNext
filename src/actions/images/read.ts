@@ -6,7 +6,7 @@ import type { ActionReturn, ReadPageInput } from '@/actions/type'
 
 export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, {collectionId: number}>
-) : Promise<ActionReturn<Image[]>> {
+): Promise<ActionReturn<Image[]>> {
     const { collectionId } = details
     const { page: pageNumber, pageSize } = page
     try {
@@ -25,7 +25,7 @@ export async function readImagesPage<const PageSize extends number>(
 }
 
 
-export async function readImageById(id: number) : Promise<ActionReturn<Image>> {
+export async function readImageById(id: number): Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
@@ -39,7 +39,7 @@ export async function readImageById(id: number) : Promise<ActionReturn<Image>> {
     }
 }
 
-export async function readImageByName(name: string) : Promise<ActionReturn<Image>> {
+export async function readImageByName(name: string): Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
@@ -53,7 +53,7 @@ export async function readImageByName(name: string) : Promise<ActionReturn<Image
     }
 }
 
-export async function readImage(nameOrId: string | number) : Promise<ActionReturn<Image>> {
+export async function readImage(nameOrId: string | number): Promise<ActionReturn<Image>> {
     if (typeof nameOrId === 'number') return readImageById(nameOrId)
     return readImageByName(nameOrId)
 }

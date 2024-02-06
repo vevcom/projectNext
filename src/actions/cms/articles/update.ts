@@ -2,14 +2,14 @@
 import { maxSections } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { ActionReturn } from '@/actions/type'
 import { addArticleSectionPart } from '@/cms/articleSections/update'
-import { ArticleSection } from '@prisma/client'
 import { z } from 'zod'
+import type { ActionReturn } from '@/actions/type'
+import type { ArticleSection } from '@prisma/client'
 import type { Part } from '@/cms/articleSections/update'
 import type { ReturnType } from './ReturnType'
 
-export async function updateArticle(id: number, rawData: FormData) : Promise<ActionReturn<ReturnType>> {
+export async function updateArticle(id: number, rawData: FormData): Promise<ActionReturn<ReturnType>> {
     const schema = z.object({
         name: z.string().min(2).max(20)
     })
@@ -53,7 +53,7 @@ export async function updateArticle(id: number, rawData: FormData) : Promise<Act
 export async function addSectionToArticle(
     id: number,
     include: Partial<Record<Part, boolean>>
-) : Promise<ActionReturn<ReturnType>> {
+): Promise<ActionReturn<ReturnType>> {
     try {
         const article = await prisma.article.findUnique({
             where: {
@@ -140,7 +140,7 @@ export async function moveSectionOrder(
     id: number,
     sectionId: number,
     direction: 'UP' | 'DOWN'
-) : Promise<ActionReturn<ArticleSection>> {
+): Promise<ActionReturn<ArticleSection>> {
     try {
         //get section to move
         const section = await prisma.articleSection.findUnique({

@@ -8,7 +8,7 @@ import type { Prisma } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
-export async function destroyRole(roleId: number) : Promise<ActionReturn<RoleWithPermissions>> {
+export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
     try {
         const role = await prisma.role.delete({
             where: {
@@ -31,7 +31,7 @@ export async function destroyRole(roleId: number) : Promise<ActionReturn<RoleWit
     }
 }
 
-export async function removeUserFromRole(data: FormData) : Promise<ActionReturn<void, false>> {
+export async function removeUserFromRole(data: FormData): Promise<ActionReturn<void, false>> {
     const schema = z.object({
         roleId: z.coerce.number(),
         username: z.string(),

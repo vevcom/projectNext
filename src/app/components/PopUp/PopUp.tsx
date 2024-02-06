@@ -20,7 +20,7 @@ export default function PopUp({
     children,
     showButtonContent,
     showButtonClass,
-} : PropTypes) {
+}: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
 
 

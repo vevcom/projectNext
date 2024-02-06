@@ -8,7 +8,7 @@ import type { Prisma } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
-export async function createRole(data: FormData) : Promise<ActionReturn<RoleWithPermissions>> {
+export async function createRole(data: FormData): Promise<ActionReturn<RoleWithPermissions>> {
     const schema = z.object({ name: z.string() })
 
     const parse = schema.safeParse({
@@ -42,7 +42,7 @@ export async function createRole(data: FormData) : Promise<ActionReturn<RoleWith
     }
 }
 
-export async function addUserToRole(data: FormData) : Promise<ActionReturn<void, false>> {
+export async function addUserToRole(data: FormData): Promise<ActionReturn<void, false>> {
     const schema = z.object({
         roleId: z.coerce.number(),
         username: z.string(),

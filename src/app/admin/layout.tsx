@@ -10,7 +10,7 @@ type PropTypes = {
     children: React.ReactNode
 }
 
-export default function RootLayout({ children } : PropTypes) {
+export default function RootLayout({ children }: PropTypes) {
     //go back one layer in url
     const pathname = usePathname()
     const href = `/${pathname?.split('/').slice(1, -1).join('/')}` ?? '/admin'

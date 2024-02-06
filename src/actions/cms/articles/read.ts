@@ -1,8 +1,8 @@
 'use server'
-import { ReturnType } from './ReturnType'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
+import type { ReturnType } from './ReturnType'
+import type { ActionReturn } from '@/actions/type'
 
 export async function readArticle(id: number): Promise<ActionReturn<ReturnType>> {
     try {

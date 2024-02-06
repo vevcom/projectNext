@@ -6,7 +6,7 @@ import { Permission } from '@prisma/client'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 
-export async function updateRole(data: FormData) : Promise<ActionReturn<void, false>> {
+export async function updateRole(data: FormData): Promise<ActionReturn<void, false>> {
     const schema = z.object({
         id: z.coerce.number(),
         name: z.string(),

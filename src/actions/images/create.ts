@@ -1,5 +1,4 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
@@ -8,6 +7,7 @@ import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
+import type { ActionReturn } from '@/actions/type'
 import type { Image } from '@prisma/client'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
@@ -17,7 +17,7 @@ async function createOne(file: File, meta: {
     name: string,
     alt: string,
     collectionId: number,
-}) : Promise<ActionReturn<Image>> {
+}): Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
@@ -123,7 +123,7 @@ export async function createImages(collectionId: number, rawdata: FormData): Pro
 
     const data = parse.data
 
-    let finalReturn : ActionReturn<Image[]> = { success: true, data: [] }
+    let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
         const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
         if (!ret.success) return ret

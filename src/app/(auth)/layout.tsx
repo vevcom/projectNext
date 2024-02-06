@@ -6,7 +6,7 @@ type PropTypes = {
     children: React.ReactNode
 }
 
-export default function AuthLayout({ children } : PropTypes) {
+export default function AuthLayout({ children }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>

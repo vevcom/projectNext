@@ -6,19 +6,18 @@ import errorHandler from '@/prisma/errorHandler'
 import { createCmsImage } from '@/actions/cms/images/create'
 import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
-import { ImageSize } from '@prisma/client'
+import type { ImageSize, ArticleSection, Position } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
-import type { ArticleSection, Position } from '@prisma/client'
 
 
 export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
-}) : Promise<ActionReturn<ReturnType>> {
+}): Promise<ActionReturn<ReturnType>> {
     try {
         //Sets the image resolution based on the image size
-        let newCmsImageResolution : ImageSize | undefined = undefined
+        let newCmsImageResolution: ImageSize | undefined = undefined
 
         if (changes.imageSize) {
             if (changes.imageSize > maxImageSize) {
@@ -53,7 +52,7 @@ export async function updateArticleSection(name: string, changes: {
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
-export async function addArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
+export async function addArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -115,7 +114,7 @@ export async function addArticleSectionPart(name: string, part: Part) : Promise<
     }
 }
 
-export async function removeArticleSectionPart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
+export async function removeArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },

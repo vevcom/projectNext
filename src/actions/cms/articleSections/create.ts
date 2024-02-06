@@ -1,7 +1,7 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 
 

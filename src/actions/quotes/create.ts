@@ -2,12 +2,12 @@
 import { readPermissionsOfUser } from '@/actions/permissions/read'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { ActionReturn } from '@/actions/type'
 import { getUser } from '@/auth'
-import { OmegaQuote } from '@prisma/client'
 import { z } from 'zod'
+import type { ActionReturn } from '@/actions/type'
+import type { OmegaQuote } from '@prisma/client'
 
-export async function createQuote(rawdata: FormData) : Promise<ActionReturn<OmegaQuote>> {
+export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {
     const shema = z.object({
         quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
         author: z.string().min(1, 'Noen må siteres'),

@@ -2,23 +2,24 @@
 
 import styles from './Dropzone.module.scss'
 import React, {
-    InputHTMLAttributes,
     useCallback,
     useState,
-    ChangeEvent,
-    DragEvent,
     useRef,
     useEffect,
 } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
+import type {
+    InputHTMLAttributes,
+    ChangeEvent,
+    DragEvent } from 'react'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'multiple'> & {
     label: string,
     name: string,
 }
 
-const byteToUnderstandable = (bytes: number) : string => {
+const byteToUnderstandable = (bytes: number): string => {
     if (bytes < 1024) {
         return `${bytes} bytes`
     }
@@ -28,7 +29,7 @@ const byteToUnderstandable = (bytes: number) : string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-const Dropzone = ({ label, name, ...props } : PropTypes) => {
+const Dropzone = ({ label, name, ...props }: PropTypes) => {
     const [files, setFiles] = useState<File[]>([])
     const input = useRef<HTMLInputElement>(null)
 
