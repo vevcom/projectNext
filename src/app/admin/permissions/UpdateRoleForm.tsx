@@ -1,8 +1,8 @@
 'use client'
 
 import { updateRole } from '@/actions/permissions'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
@@ -35,9 +35,8 @@ const permissionCategories: PermissionCategory[] = [
     {
         title: '«Bulshit» og «Omega Quotes»',
         permissions: [
-            { permission: 'POST_BULSHIT', name: 'Legge ut «Bulshit»-er' },
-            { permission: 'VIEW_BULSHIT', name: 'Lese «Bulshit»-er' },
-            { permission: 'USE_OMEGA_QUOTES', name: 'Lese og legge ut sitater på «Omega Quotes»' },
+            { permission: 'OMEGAQUOTES_READ', name: 'Lese omegaquotes' },
+            { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
         ],
     },
     {
