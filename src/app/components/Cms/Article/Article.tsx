@@ -4,6 +4,7 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ReturnType } from '@/cms/articles/ReturnType'
 import AddSection from './AddSection'
+import SectionMover from './SectionMover'
 
 type PropTypes = {
     article: ReturnType,
@@ -22,7 +23,10 @@ export default function Article({ article } : PropTypes) {
                 {
                     article.articleSections.sort((a, b) => (a.order - b.order)).map(section => (
                         <SlideInOnView direction="left" key={section.id}>
-                            <ArticleSection articleSection={section} />
+                            <span className={styles.moveSection}>
+                                <ArticleSection articleSection={section} />
+                                <SectionMover />
+                            </span>
                         </SlideInOnView>
                     ))
                 }
