@@ -4,9 +4,10 @@ import errorHandler from '@/prisma/errorHandler'
 import { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 
-export default async function update(id: number, config: {
-    name?: string,
-}) : Promise<ActionReturn<ReturnType>> {
+export async function updateArticle(
+    id: number,
+    config: { name?: string }
+): Promise<ActionReturn<ReturnType>> {
     try {
         const article = await prisma.article.update({
             where: {

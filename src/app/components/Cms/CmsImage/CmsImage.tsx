@@ -1,8 +1,8 @@
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import Image from '@/components/Image/Image'
-import read from '@/cms/images/read'
-import readImage from '@/actions/images/read'
+import { readCmsImage } from '@/cms/images/read'
+import { readImage } from '@/actions/images/read'
 import React from 'react'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
@@ -14,7 +14,7 @@ export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeS
 
 export default async function CmsImage({ name, children, ...props }: PropTypes) {
     let image : ImageT | null = null
-    const res = await read(name)
+    const res = await readCmsImage(name)
 
     //The read inageLink action should always return a CmsImage (it creates it if it does not exist)
     if (!res.success) throw new Error(`An error with creating or loading cms image: ${name}`)

@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageControls.module.scss'
-import update from '@/cms/articleSections/update'
+import { updateArticleSection } from '@/cms/articleSections/update'
 import { EditModeContext } from '@/context/EditMode'
 import { increment, maxImageSize, minImageSize } from '@/actions/cms/articleSections/ConfigVars'
 import { useContext } from 'react'
@@ -30,22 +30,22 @@ export default function ImageControls({ articleSection, className } : PropTypes)
     if (!editModeContext?.editMode) return null
 
     const moveLeft = async () => {
-        await update(articleSection.name, { imagePosition: 'LEFT' })
+        await updateArticleSection(articleSection.name, { imagePosition: 'LEFT' })
         refresh()
     }
 
     const moveRight = async () => {
-        await update(articleSection.name, { imagePosition: 'RIGHT' })
+        await updateArticleSection(articleSection.name, { imagePosition: 'RIGHT' })
         refresh()
     }
 
     const increaseSize = async () => {
-        await update(articleSection.name, { imageSize: articleSection.imageSize + increment })
+        await updateArticleSection(articleSection.name, { imageSize: articleSection.imageSize + increment })
         refresh()
     }
 
     const decreaseSize = async () => {
-        await update(articleSection.name, { imageSize: articleSection.imageSize - increment })
+        await updateArticleSection(articleSection.name, { imageSize: articleSection.imageSize - increment })
         refresh()
     }
 

@@ -6,7 +6,7 @@ import { z } from 'zod'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
-export default async function update(id: number, rawData: FormData) : Promise<ActionReturn<CmsLink>> {
+export async function updateCmsLink(id: number, rawData: FormData) : Promise<ActionReturn<CmsLink>> {
     const schema = z.object({
         text: z.string().min(2, 'Linken må ha navn på mer enn 1 bokstav').max(30, 'Max lengde er 30'),
         url: z.string().refine(value => {

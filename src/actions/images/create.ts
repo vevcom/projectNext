@@ -85,7 +85,7 @@ async function createOne(file: File, meta: {
     }
 }
 
-export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
+export async function createImage(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
         file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
         name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
@@ -101,7 +101,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
     return await createOne(file, { ...data, collectionId })
 }
 
-export async function createMany(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
+export async function createImages(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
     const schema = z.object({
         files: z.array(z.instanceof(File)).refine(
             files => files.every(file => file.size < maxFileSize),

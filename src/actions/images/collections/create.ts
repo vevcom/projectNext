@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
-export default async function create(rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
+export async function createImageCollection(rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
     const schema = z.object({
         name: z.string().max(40).min(2).trim(),
         description: z.string().max(500).min(2).trim(),

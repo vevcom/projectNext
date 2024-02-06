@@ -2,16 +2,16 @@
 import { maxImageSize, minImageSize } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { default as createCmsImage } from '@/actions/cms/images/create'
-import { default as createCmsParagraph } from '@/actions/cms/paragraphs/create'
-import { default as createCmsLink } from '@/actions/cms/links/create'
+import { createCmsImage } from '@/actions/cms/images/create'
+import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
+import { createCmsLink } from '@/actions/cms/links/create'
 import { ImageSize } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import type { ArticleSection, Position } from '@prisma/client'
 
 
-export default async function update(name: string, changes: {
+export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }) : Promise<ActionReturn<ReturnType>> {
