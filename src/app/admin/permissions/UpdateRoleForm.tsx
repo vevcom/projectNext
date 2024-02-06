@@ -35,9 +35,8 @@ const permissionCategories: PermissionCategory[] = [
     {
         title: '«Bulshit» og «Omega Quotes»',
         permissions: [
-            { permission: 'POST_BULSHIT', name: 'Legge ut «Bulshit»-er' },
-            { permission: 'VIEW_BULSHIT', name: 'Lese «Bulshit»-er' },
-            { permission: 'USE_OMEGA_QUOTES', name: 'Lese og legge ut sitater på «Omega Quotes»' },
+            { permission: 'OMEGAQUOTES_READ', name: 'Lese omegaquotes' },
+            { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
         ],
     },
     {

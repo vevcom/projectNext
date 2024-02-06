@@ -13,27 +13,30 @@ datasource db {
 }
 
 model User {
-  id        Int          @id @default(autoincrement())
-  username  String       @unique
-  email     String       @unique
-  password  String // Dette er kun for testing
-  firstname String       @default("[Fjernet]")
-  lastname  String       @default("[Fjernet]")
-  roles     RolesUsers[]
+  id         Int          @id @default(autoincrement())
+  username   String       @unique
+  email      String       @unique
+  password   String // Dette er kun for testing
+  firstname  String       @default("[Fjernet]")
+  lastname   String       @default("[Fjernet]")
+  roles      RolesUsers[]
+  OmegaQuote OmegaQuote[]
 
   @@map("users")
 }
 
 enum Permission {
+
+  // Omega Quotes
+  OMEGAQUOTES_WRITE
+  OMEGAQUOTES_READ
+
   // Her kommer masse eksempler på tillganger, for nå er de bare for testing
 
   // Fridge
   USE_MONEY
   USE_FRIDGE
   INFINITE_MONEY
-
-  // Quotes
-  USE_OMEGA_QUOTES
 
   // Bulshit
   POST_BULSHIT
@@ -168,7 +171,7 @@ model ArticleSection {
   imagePosition  Position      @default(RIGHT) @map("image_position")
   imageSize      Int           @default(200)
   article        Article?      @relation(fields: [articleId], references: [id])
-  articleId      Int?          
+  articleId      Int?
   order          Int           @default(autoincrement()) //The order "position" of the article section in the article
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
@@ -185,4 +188,15 @@ model Article {
   coverImageId    Int              @unique
 
   @@map("articles")
+}
+
+model OmegaQuote {
+  id           Int      @id @default(autoincrement())
+  author       String
+  quote        String
+  timestamp    DateTime @default(now())
+  userPoster   User     @relation(fields: [userPosterId], references: [id])
+  userPosterId Int
+
+  @@map("omega_quotes")
 }
