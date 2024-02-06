@@ -76,6 +76,7 @@ $cover-height: min(300px, 40vh);
 
         .moveSection {
             position: relative;
+            display: block;
             > .moverComponent {
                 position: absolute;
                 bottom: 0;
