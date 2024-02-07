@@ -40,7 +40,6 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         setNoChange(false)
-        console.log(value)
         setValue(e.currentTarget.textContent || '')
     }
 
@@ -63,15 +62,13 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
                         `${styles.input} ${submitButton.className}`
                     )}
                 submitText={submitButton.text} {...formProps}
-                successCallback={() => {
+                successCallback={(data: ReturnType | undefined) => {
                     setNoChange(true)
-                    formProps.successCallback?.()
-                    refresh()
+                    formProps.successCallback?.(data)
                 }}
             >
                 <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
             </Form>
         </div>
-
     )
 }

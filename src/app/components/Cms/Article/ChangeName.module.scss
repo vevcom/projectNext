@@ -1,0 +1,14 @@
+@use '@/styles/ohma';
+.title {
+    font-size: ohma.$fonts-xxl;
+    font-family: ohma.$fonts-secondary;
+    text-transform: uppercase;
+    color: ohma.$colors-white;
+    z-index: 2;
+}
+.submitNameButton {
+   position: absolute;
+   top: 0;
+   left: 0;
+   transform: translate(0, -100%);
+}

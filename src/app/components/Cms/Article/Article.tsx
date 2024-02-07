@@ -4,11 +4,10 @@ import SectionMover from './SectionMover'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
-import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateArticle } from '@/actions/cms/articles/update'
 import type { ReturnType } from '@/cms/articles/ReturnType'
+import ChangeName from './ChangeName'
 
-type PropTypes = {
+export type PropTypes = {
     article: ReturnType,
 }
 
@@ -18,21 +17,7 @@ export default function Article({ article }: PropTypes) {
             <span className={styles.coverImage}>
                 <CmsImage width={500} name={article.coverImage.name} />
                 <SlideInOnView direction="bottom">
-                    <EditableTextField
-                        formProps={
-                            {
-                                action: updateArticle.bind(null, article.id),
-                            }
-                        }
-                        submitButton={{
-                            name: 'name',
-                            text: 'lagre',
-                            className: styles.submitNameButton
-                        }}
-                        editable={true}
-                    >
-                        <h1 className={styles.title}>{article.name}</h1>
-                    </EditableTextField>
+                    <ChangeName article={article} />
                 </SlideInOnView>
             </span>
             <article>

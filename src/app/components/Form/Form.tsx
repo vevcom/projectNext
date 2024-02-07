@@ -161,7 +161,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         setInputs(() => inputs_)
 
         const res = await action(formData)
-
+        
         if (res.success) {
             setSuccess(true)
             successCallback?.(res.data)
