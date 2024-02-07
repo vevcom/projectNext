@@ -5,12 +5,14 @@
     isolation: isolate;
     overflow-y: hidden;
     > aside {
-        position: absolute;
+        height: 100%;
+        width: 300px;
+        position: fixed;
         left: 0;
         z-index: 2;
         height: 100%;
-        max-height: calc(100vh - 55px);
         width: 300px;
+        max-height: calc(100vh - 60px);
     }
     main {
         z-index: 1;

@@ -20,6 +20,7 @@ export default async function ArticleCategoryLayout({ params, children }: PropTy
             <aside>
                 <SideBar category={category} />
             </aside>
+            
             <main>
                 {children}
             </main>
