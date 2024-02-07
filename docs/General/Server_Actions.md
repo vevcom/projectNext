@@ -1,7 +1,7 @@
 # General Note on Using Server Actions
 In this project we use server actions as a way to fetch data both on the client and server. You should think of server actions as a layer of abstraction between prisma and getting data.
 
-The main thing that makes server actions quite unique is that you can call them both on the client and the server. They are also often used in forms i.e. they are called on form submission.
+The main thing that makes server actions quite unique is that you can call them both on the client and the server. They are also often used in forms i.e. they are called on form submission. Note that we have our own [Form component](./Form_Component.md)
 
 ## Structure
 We write server actions in the src/actions directory. Here we have different routes that in large part reflect the structure of the database and urls. In each route you have 4 files Create, Read, Update, Destroy, each exporting at least one (default) function with the same name. Some might also export more for example to read more, less or slightly different data. For instance: readPage is a special type of read that you can learn about [here](./Paging.md)
