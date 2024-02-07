@@ -1,5 +1,4 @@
 'use server'
-
 import prisma from "@/prisma"
 import type { ActionReturn } from "@/actions/type"
 import type { ArticleCategory } from '@prisma/client'
