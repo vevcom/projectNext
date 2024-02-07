@@ -60,13 +60,13 @@ const standardCmsContents : CmsContent = {
     ],
     articleSections: [
         {
-            name: 'statutter_1',
+            name: 'tjoho',
             cmsParagraph: {
-                name: 'statutter_1_paragraph',
-                file: 'statutter/statutter_1.md'
+                name: 'tjoho_paragraph',
+                file: 'tjoho/tjoho_1.md'
             },
             cmsLink: {
-                name: 'statutter_1_link',
+                name: 'tjoho_1_link',
                 url: 'https://omega.ntnu.no',
             }
         },
@@ -74,6 +74,8 @@ const standardCmsContents : CmsContent = {
     articles: [
         {
             name: 'om omega',
+            category: 'news',
+            description: 'ny vev',
             coverImage: {
                 name: 'about_cover',
                 imageName: 'ohma',
@@ -107,6 +109,7 @@ const standardCmsContents : CmsContent = {
         },
         {
             name: 'statutter',
+            category: 'guides',
             coverImage: {
                 name: 'statutter_cover',
                 imageName: 'ov',
@@ -141,3 +144,10 @@ const standardCmsContents : CmsContent = {
     ]
 }
 ```
+Note how the article "om omega" contains its sections and all of these sections again contain cmsImages, cmsLinks and cmsParagraphs. The articleSection "tjoho" will here be added with no relation to any article
+
+Note also that each article also has a catepory. This can be 
+1. a standardArticleCategory decleared in the same file, in which case it will get seeded into with a relation to that category, or
+2. "news" in which case a NewsArticle will also be created that links to the article. When using category: "news" we also need to specify description which is the description in the newsArticle model.
+
+Finally se that every cmsParagraph points to a .md file This is the location of the file inside the /cms_paragraphs directory. And will be the content of the paragraph.
