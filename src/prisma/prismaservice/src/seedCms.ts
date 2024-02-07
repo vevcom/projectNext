@@ -13,7 +13,9 @@ import type {
     SeedCmsLink,
     SeedArticleSection,
     SeedArticle,
+    SeedCategories
 } from './standardCmsContents'
+import { standardCategories } from './standardCmsContents'
 
 export default async function seedCms(prisma: PrismaClient) {
     await Promise.all(standardCmsContents.cmsImages.map(async (cmsimage) => {
@@ -30,6 +32,10 @@ export default async function seedCms(prisma: PrismaClient) {
 
     await Promise.all(standardCmsContents.articleSections.map(async (articleSection) => {
         await seedArticleSection(articleSection, prisma)
+    }))
+
+    await Promise.all(standardCategories.map(async (category) => {
+        await seedArticleCategories(category, prisma)
     }))
 
     await Promise.all(standardCmsContents.articles.map(async (article) => {
@@ -163,6 +169,20 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
             articleSections: {
                 connect: articleSections.map(section => ({ id: section.id }))
             }
+        }
+    })
+}
+
+async function seedArticleCategories(category: SeedCategories, prisma: PrismaClient) {
+    return await prisma.articleCategory.upsert({
+        where: {
+            name: category.name
+        },
+        update: {
+            name: category.name,
+        },
+        create: {
+            ...category
         }
     })
 }

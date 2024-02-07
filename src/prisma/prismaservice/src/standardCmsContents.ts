@@ -25,8 +25,19 @@ export type SeedArticleSection = {
     imageSize?: number,
 }
 
-const standardCategories = ['about', 'guides'] as const
-type Categories = typeof standardCategories[number]
+export const standardCategories = [
+    {
+        name: 'about',
+        description: 'lær om omega',
+    }, 
+    {
+        name: 'guides',
+        description: 'få hjelp til ting',
+    }
+] as const
+
+export type SeedCategories = typeof standardCategories[number]
+type Categories = typeof standardCategories[number]['name']
 
 export type SeedArticle = {
     name: string,
