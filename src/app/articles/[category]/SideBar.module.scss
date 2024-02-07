@@ -1,6 +1,13 @@
 @use '@/styles/ohma';
 
+.measure {
+    height: calc(100% - 2em);
+    
+}
 .SideBar {
+    height: calc(100% - 2em);
+    transition: transform 0.05s ease-out;
+    overflow: auto;
     color: ohma.$colors-white;
     margin: 1em 0em 1em 2em;
     @include ohma.card();
@@ -9,7 +16,6 @@
         rgba(ohma.$colors-secondary, 0.8) 50%, 
         rgba(ohma.$colors-secondary, 0.65) 100%);
     backdrop-filter: blur(10px);
-    height: calc(100% - 2em);
     h2 {
         font-size: ohma.$fonts-l;
     }
