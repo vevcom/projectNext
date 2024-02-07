@@ -25,10 +25,14 @@ export type SeedArticleSection = {
     imageSize?: number,
 }
 
+const standardCategories = ['about', 'guides'] as const
+type Categories = typeof standardCategories[number]
+
 export type SeedArticle = {
     name: string,
     coverImage: SeedCmsImage,
     articleSections: SeedArticleSection[]
+    category: Categories | 'news'
 }
 
 export type CmsContent = {
@@ -131,6 +135,7 @@ const standardCmsContents: CmsContent = {
     articles: [
         {
             name: 'om omega',
+            category: 'about',
             coverImage: {
                 name: 'about_cover',
                 imageName: 'ohma',
@@ -164,6 +169,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'statutter',
+            category: 'about',
             coverImage: {
                 name: 'statutter_cover',
                 imageName: 'ov',
@@ -190,6 +196,52 @@ const standardCmsContents: CmsContent = {
                     cmsImage: {
                         name: 'statutter_2_image',
                         imageName: 'traktat',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
+        },
+        {
+            name: 'prikkreglement',
+            category: 'guides',
+            coverImage: {
+                name: 'prikkreglement_cover',
+                imageName: 'ov',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'prikkreglement_1',
+                    cmsParagraph: {
+                        name: 'prikkreglement_1_paragraph',
+                        file: 'prikkreglement/prikkreglement_1.md'
+                    },
+                    cmsImage: {
+                        name: 'prikkreglement_1_image',
+                        imageName: 'traktat',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
+        },
+        {
+            name: 'søknadsguide',
+            category: 'guides',
+            coverImage: {
+                name: 'søknadsguide_cover',
+                imageName: 'ov',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'søknadsguide_1',
+                    cmsParagraph: {
+                        name: 'søknadsguide_1_paragraph',
+                        file: 'soknadsguide/soknadsguide_1.md'
+                    },
+                    cmsImage: {
+                        name: 'søknadsguide_1_image',
+                        imageName: 'kappemann',
                         imageSize: 'MEDIUM'
                     }
                 }
