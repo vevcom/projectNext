@@ -1,8 +1,9 @@
 'use server'
 import prisma from "@/prisma"
 import type { ActionReturn } from "@/actions/type"
-import type { Article, ArticleCategory } from '@prisma/client'
+import type { ArticleCategory } from '@prisma/client'
 import errorHandler from '@/prisma/errorHandler'
+import type { ReturnType } from './ReturnType'
 
 export async function readArticleCategories(): Promise<ActionReturn<ArticleCategory[]>> {
     try {
@@ -13,9 +14,7 @@ export async function readArticleCategories(): Promise<ActionReturn<ArticleCateg
     }
 }
 
-type ReturnType = ArticleCategory & {
-    articles: Article[]
-}
+
 export async function readArticleCategory(name: string): Promise<ActionReturn<ReturnType>> {
     try {
         const category = await prisma.articleCategory.findUnique({

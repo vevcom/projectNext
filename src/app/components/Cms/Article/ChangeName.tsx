@@ -5,11 +5,12 @@ import styles from './ChangeName.module.scss'
 import type { PropTypes } from './Article'
 import { updateArticle } from '@/actions/cms/articles/update'
 import { ReturnType } from '@/actions/cms/articles/ReturnType'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function ChangeName({ article }: PropTypes) {
     const changeName = updateArticle.bind(null, article.id)
     const currentPath = usePathname()
+    const router = useRouter()
     const [currentName, setCurrentName] = useState(article.name)
     const successCallback = (data: ReturnType | undefined) => {
         const oldName = encodeURIComponent(currentName);

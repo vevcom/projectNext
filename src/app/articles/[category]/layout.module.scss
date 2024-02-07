@@ -1,5 +1,18 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    
+    position: relative;
+    isolation: isolate;
+    overflow-y: hidden;
+    > aside {
+        position: absolute;
+        left: 0;
+        z-index: 2;
+        height: 100%;
+        max-height: calc(100vh - 55px);
+        width: 300px;
+    }
+    main {
+        z-index: 1;
+    }
 }

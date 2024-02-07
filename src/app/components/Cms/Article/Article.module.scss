@@ -37,7 +37,7 @@ $cover-height: min(300px, 40vh);
                     top: 0;
                     left: 0;
                     width: 100% !important;
-                    height: $cover-height !important; // Add this line
+                    height: $cover-height !important;
                     object-fit: cover;
                 }
             }
