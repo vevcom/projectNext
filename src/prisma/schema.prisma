@@ -192,7 +192,7 @@ model Article {
   newsArticle       NewsArticle?    
 
   articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
-  articleCategoryId Int?             @unique
+  articleCategoryId Int?             
 
   @@map("articles")
 }
