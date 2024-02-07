@@ -12,3 +12,17 @@ export async function readArticleCategories(): Promise<ActionReturn<ArticleCateg
         return errorHandler(error)
     }
 }
+
+export async function readArticleCategory(name: string): Promise<ActionReturn<ArticleCategory>> {
+    try {
+        const category = await prisma.articleCategory.findUnique({
+            where: {
+                name
+            }
+        })
+        if (!category) return { success: false, error: [{ message: `Category ${name} not found` }] }
+        return { success: true, data: category }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}

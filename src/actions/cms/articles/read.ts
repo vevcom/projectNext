@@ -27,3 +27,26 @@ export async function readArticle(id: number): Promise<ActionReturn<ReturnType>>
         return errorHandeler(error)
     }
 }
+
+export async function readArticles(articleCategoryId: number) : Promise<ActionReturn<ReturnType[]>> {
+    try {
+        const articles = await prisma.article.findMany({
+            where: {
+                articleCategoryId
+            },
+            include: {
+                articleSections: {
+                    include: {
+                        cmsImage: true,
+                        cmsParagraph: true,
+                        cmsLink: true
+                    }
+                },
+                coverImage: true,
+            }
+        })
+        return { success: true, data: articles }
+    } catch (error) {
+        return errorHandeler(error)
+    }
+}
