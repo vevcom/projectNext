@@ -43,8 +43,12 @@ export type SeedArticle = {
     name: string,
     coverImage: SeedCmsImage,
     articleSections: SeedArticleSection[]
-    category: Categories | 'news'
-}
+} & ({
+    category: Categories
+} | {
+    category: 'news'
+    description: string
+})
 
 export type CmsContent = {
     cmsImages: SeedCmsImage[], //this is a cmsImage without a connection to a cmsArticleSection
@@ -144,6 +148,30 @@ const standardCmsContents: CmsContent = {
 
     ],
     articles: [
+        {
+            name: 'velkommen til nye veven',
+            category: 'news',
+            description: 'ny vev',
+            coverImage: {
+                name: 'velkommen_til_nye_veven_cover',
+                imageName: 'logo_simple',
+                imageSize: 'LARGE'
+            },
+            articleSections: [
+                {
+                    name: 'velkommen_til_nye_veven_1',
+                    cmsParagraph: {
+                        name: 'velkommen_til_nye_veven_1_paragraph',
+                        file: 'news/velkommen_til_nye_veven_1.md'
+                    },
+                    cmsImage: {
+                        name: 'velkommen_til_nye_veven_1_image',
+                        imageName: 'kappemann',
+                        imageSize: 'LARGE'
+                    }
+                }
+            ]
+        },
         {
             name: 'om omega',
             category: 'about',

@@ -154,6 +154,18 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
             seedArticleSection({ ...articleSection, order: i }, prisma)
     ))
 
+    const connection = article.category === 'news' ? {
+        newsArticle: {
+            create: {}
+        }
+    } : {
+        articleCategory: {
+            connect: {
+                name: article.category
+            }
+        }
+    }
+    
     return prisma.article.upsert({
         where: {
             name: article.name
@@ -168,7 +180,19 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
             },
             articleSections: {
                 connect: articleSections.map(section => ({ id: section.id }))
-            }
+            },
+            newsArticle: 
+                article.category === 'news' ? {
+                    create: {
+                        description: article.description
+                    }
+                } : undefined,
+            articleCategory:
+                article.category === 'news' ? undefined : {
+                    connect: {
+                        name: article.category,
+                    }
+                },
         }
     })
 }
