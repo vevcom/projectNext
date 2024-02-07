@@ -6,7 +6,7 @@ import type { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist
-export async function readArticle(name: string): Promise<ActionReturn<ReturnType>> {
+export async function readArticleSection(name: string): Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: {
