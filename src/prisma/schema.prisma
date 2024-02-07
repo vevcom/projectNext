@@ -26,7 +26,6 @@ model User {
 }
 
 enum Permission {
-
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
@@ -190,7 +189,30 @@ model Article {
   coverImage      CmsImage         @relation(fields: [coverImageId], references: [id])
   coverImageId    Int              @unique
 
+  newsArticle       NewsArticle?    
+
+  articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
+  articleCategoryId Int?             @unique
+
   @@map("articles")
+}
+
+model NewsArticle {
+  id          Int     @id @default(autoincrement())
+  description String?
+  article     Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId   Int     @unique
+
+  @@map("news_articles")
+}
+
+model ArticleCategory {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  articles    Article[]
+
+  @@map("article_categories")
 }
 
 model OmegaQuote {
