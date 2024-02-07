@@ -1,8 +1,9 @@
-import styles from './layout.module.css';
+import styles from './layout.module.scss';
 import { notFound } from 'next/navigation';
 import { readArticleCategory } from '@/cms/articleCategories/read';
+import Link from 'next/link';
 
-export type PropTypes = {
+type PropTypes = {
     params: {
         category: string
     },
@@ -18,6 +19,28 @@ export default async function ArticleCategoryLayout({ params, children }: PropTy
         <div className={styles.wrapper}>
             <aside>
                 <h2>{category.name}</h2>
+                {
+                    category.articles.length ? (
+                        <ul>
+                        {
+                            category.articles.map((article) => (
+                                <li>
+                                    <Link 
+                                        href={`/articles/${category.name}/${article.name}`} 
+                                        key={article.id}
+                                    >
+                                        {article.name}
+                                    </Link>
+                                </li>
+                            ))
+                        }
+                        </ul>
+                    ) : (
+                        <p>
+                            Ingen artikler å vise
+                        </p>
+                    )
+                }
             </aside>
             {children}
         </div>

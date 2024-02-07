@@ -1,4 +1,8 @@
-import type { PropTypes } from "./layout";
+type PropTypes = {
+    params: {
+        category: string
+    },
+}
 
 export default async function ArticleCategory({ params }: PropTypes) {
     return (
