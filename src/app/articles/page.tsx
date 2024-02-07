@@ -12,7 +12,7 @@ export default async function ArticleCategoryList() {
                 categories.length ? (
                     categories.map((category) => (
                         <li key={category.id}>
-                            <Link href={`/${category.name}`}>
+                            <Link href={`/articles/${category.name}`}>
                                 {category.name}
                             </Link>
                         </li>
