@@ -190,7 +190,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     }
 
     return (
-        <form {...props} className={`${styles.Form} ${props.className}`} action={actionWithError}>
+        <form className={`${styles.Form} ${props.className}`} {...props} action={actionWithError}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (

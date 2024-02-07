@@ -5,10 +5,14 @@
     text-transform: uppercase;
     color: ohma.$colors-white;
     z-index: 2;
+    position: relative;
 }
 .submitNameButton {
    position: absolute;
-   top: 0;
+   bottom: 100%;
    left: 0;
-   transform: translate(0, -100%);
+   width: 200px;
+   button {
+        margin: ohma.$gap 0;
+   }
 }

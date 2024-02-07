@@ -1,12 +1,11 @@
-'use client'
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import { EditModeContext } from '@/context/EditMode'
 import React, { useContext, useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
+import useKeyPress from '@/hooks/useKeyPress'
 
 type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
@@ -32,7 +31,12 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     const [noChange, setNoChange] = useState(true)
     const editMode = useContext(EditModeContext)
     const ref = useRef<HTMLInputElement>(null)
-    const { refresh } = useRouter()
+    const submitRef = useRef<HTMLButtonElement>(null)
+    useKeyPress('Enter', () => {
+        console.log(!!ref.current)
+        if (noChange) return
+        submitRef.current?.click()
+    })
 
     useEffect(() => {
         setNoChange(true)
@@ -50,24 +54,32 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     if (!editMode?.editMode || !editable) return (children)
     return (
         <div className={styles.EditableTextField}>
-            <div className={styles.text} contentEditable={true} onInput={handleInput} {...props}>
+            <div 
+                className={styles.text} 
+                contentEditable={true} 
+                onInput={handleInput} 
+                {...props}
+                onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }} 
+            >
                 {children}
             </div>
             <FontAwesomeIcon className={styles.icon} icon={faPencil} />
             <Form
+                {...formProps}
                 className={
                     noChange ? (
                         `${styles.hiddenInput} ${submitButton.className}`
                     ) : (
                         `${styles.input} ${submitButton.className}`
                     )}
-                submitText={submitButton.text} {...formProps}
+                submitText={submitButton.text} 
                 successCallback={(data: ReturnType | undefined) => {
                     setNoChange(true)
                     formProps.successCallback?.(data)
                 }}
             >
                 <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
+                <button className={styles.hiddenInput} ref={submitRef}  type="submit"></button>
             </Form>
         </div>
     )
