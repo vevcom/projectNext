@@ -1,13 +1,13 @@
 'use client'
 
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readPage } from '@/actions/images/read'
-import { ReadPageInput } from '@/actions/type'
+import { readImagesPage } from '@/actions/images/read'
+import type { ReadPageInput } from '@/actions/type'
 import type { Image } from '@prisma/client'
 
 export type PageSizeImage = 30
 const fetcher = async (x: ReadPageInput<PageSizeImage, {collectionId: number}>) => {
-    const ret = await readPage(x)
+    const ret = await readImagesPage(x)
     return ret
 }
 

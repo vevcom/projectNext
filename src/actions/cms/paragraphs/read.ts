@@ -1,10 +1,6 @@
 'use server'
-import create from './create'
-<<<<<<< HEAD
-import { ActionReturn } from '../../type'
-=======
+import { createCmsParagraph } from './create'
 import { ActionReturn } from '@/actions/type'
->>>>>>> main
 import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { CmsParagraph } from '@prisma/client'
@@ -22,7 +18,7 @@ export default async function read(name: string) : Promise<ActionReturn<CmsParag
                 data: paragraph
             }
         }
-        return create(name)
+        return createCmsParagraph(name)
     } catch (error) {
         return errorHandler(error)
     }

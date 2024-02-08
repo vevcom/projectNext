@@ -8,10 +8,10 @@ type PropTypes = {
 
 export const EditModeContext = createContext<{
     editMode: boolean,
-    setEditMode:(editMode: boolean) => void,
+    setEditMode: (editMode: boolean) => void,
         } | null>(null)
 
-export default function EditModeProvider({ defaultValue = false, children } : PropTypes) {
+export default function EditModeProvider({ defaultValue = false, children }: PropTypes) {
     const [editMode, setEditMode] = useState(defaultValue)
 
     return (
