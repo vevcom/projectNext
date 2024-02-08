@@ -7,7 +7,7 @@ The main branch is called main. We merge pull requests into main using github, i
 The branch called prod (NOT YET IMPLEMENTED) should always contain the code currently in production. This branch has a CD pipeline to our server (NOT IMPLEMENTED) so be extremely careful when merging anything to prod. (VERSIONING ON PROD)
 
 ## On gitignore
-As stated in [Getting Started](/Getting_Started.md) env's and the next-env.d.ts file are gitignored. This is for security reasons and the specifics of environment variables could be sensitive, if you belive that:
+As stated in [Getting Started](/Getting_Started.md) envs and the next-env.d.ts file are gitignored. This is for security reasons and the specifics of environment variables could be sensitive, if you believe that:
 
 1. There is a variable that is specific to where projectnext is run, or
 2. There is a variable with sensitive information.
@@ -25,5 +25,7 @@ Projectnext contains three workflows: all of which run when a PR on main is crea
 1. linter
 2. build
 3. test [read more](/Testing.md) (NOT IMPLEMENTED)
+
+[more on workflows](./Workflows.md)
 
 A PR should never be merged if a test fails!

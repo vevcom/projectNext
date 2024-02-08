@@ -14,6 +14,12 @@ We have a linting workflow that needs to pass before merging any PR. Remember th
 ```
 Avoid using thing like lint-ignore to fix your issues.
 
+## Versioning and pull on prod
+When a new version is ready you should create a PR from main on prod (NOT IMPLEMENTED)
+
+## CD
+When a new version is realized on prod the CD pipeline starts.
+
 ## Dependabot
 We have configured dependabot to chack deps in projectnext and prismaservice. Merging deps upgrades should be prioritized. Merging a dependabot PR is done in the 
 
