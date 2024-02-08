@@ -1,11 +1,11 @@
 'use server'
 import { createCmsParagraph } from './create'
-import { ActionReturn } from '@/actions/type'
 import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { CmsParagraph } from '@prisma/client'
+import type { ActionReturn } from '@/actions/type'
+import type { CmsParagraph } from '@prisma/client'
 
-export default async function read(name: string) : Promise<ActionReturn<CmsParagraph>> {
+export default async function read(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {
         const paragraph = await prisma.cmsParagraph.findUnique({
             where: {
