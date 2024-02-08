@@ -31,6 +31,8 @@ Run this to deploy:
     docker compose up
 ```
 
+Also make sure your own system is running node20 to avoid conflicts when installing deps locally.
+
 ## Roadmap to understand projectnext
 1. **General Knowledge** First you should familiarize yourself with react, next.js then move on to understanding the basics of typescript and scss. You should also be somewhat familiar with Prisma and the general use of sql databases.
 
