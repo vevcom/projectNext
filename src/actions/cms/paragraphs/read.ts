@@ -5,7 +5,7 @@ import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/type'
 import type { CmsParagraph } from '@prisma/client'
 
-export default async function read(name: string): Promise<ActionReturn<CmsParagraph>> {
+export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {
         const paragraph = await prisma.cmsParagraph.findUnique({
             where: {
