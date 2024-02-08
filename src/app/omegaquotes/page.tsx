@@ -1,19 +1,20 @@
 import styles from './page.module.scss'
 import OmegaquoteList from './omegaquotesQuoteList'
 import OmegaquoteQuote from './omegaquotesQuote'
-import OmegaquotePagingProvider, { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
+import OmegaquotePagingProvider from '@/context/paging/omegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import PopUp from '@/components/PopUp/PopUp'
 import Form from '@/components/Form/Form'
-import create from '@/actions/quotes/create'
+import { createQuote } from '@/actions/quotes/create'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import { readPage } from '@/actions/quotes/read'
+import { readQuotesPage } from '@/actions/quotes/read'
 import { requireUser } from '@/auth'
-import { readPermissionsOfUser } from '@/actions/permissions'
+import { readPermissionsOfUser } from '@/actions/permissions/read'
 import { notFound } from 'next/navigation'
 import { Permission } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
+import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const user = await requireUser({
@@ -23,9 +24,9 @@ export default async function OmegaQuotes() {
     const userPermissions = await readPermissionsOfUser(user.id)
     const showCreateButton = (userPermissions.success && userPermissions.data.has('OMEGAQUOTES_WRITE'))
 
-    const pageSize : PageSizeOmegaquote = 20
+    const pageSize: PageSizeOmegaquote = 20
 
-    const readQuotes = await readPage({ page: { pageSize, page: 0 }, details: undefined })
+    const readQuotes = await readQuotesPage({ page: { pageSize, page: 0 }, details: undefined })
     if (!readQuotes.success) notFound()
     const quotes = readQuotes.data
 
@@ -36,7 +37,7 @@ export default async function OmegaQuotes() {
                 showButtonContent="Ny Omegaquote"
                 showButtonClass={styles.button}
             >
-                <Form title="Ny Omegaquote" submitText="Legg til" action={create} className={styles.popupForm}>
+                <Form title="Ny Omegaquote" submitText="Legg til" action={createQuote} className={styles.popupForm}>
                     <Textarea
                         name="quote"
                         label="Omegaquote"

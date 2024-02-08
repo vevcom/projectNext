@@ -9,7 +9,7 @@ export type PropTypes = {
     serverRendered?: React.ReactNode,
 }
 
-export default function OmegaquoteList({ serverRendered } : PropTypes) {
+export default function OmegaquoteList({ serverRendered }: PropTypes) {
     const context = useContext(OmegaquotePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider

@@ -1,6 +1,6 @@
 import styles from './TextInput.module.scss'
 import { v4 as uuid } from 'uuid'
-import { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes } from 'react'
 
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
@@ -9,7 +9,7 @@ type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     color?: 'primary' | 'secondary' | 'red' | 'black',
 }
 
-export default function TextInput({ label = 'default', type = 'text', color = 'black', className, ...props } : PropTypes) {
+export default function TextInput({ label = 'default', type = 'text', color = 'black', className, ...props }: PropTypes) {
     props.id ??= `id_input_${uuid()}`
 
     return (

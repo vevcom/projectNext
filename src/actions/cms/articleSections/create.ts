@@ -1,11 +1,11 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
 
 
-export default async function create(name: string): Promise<ActionReturn<ReturnType>> {
+export async function createArticleSection(name: string): Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.create({
             data: {

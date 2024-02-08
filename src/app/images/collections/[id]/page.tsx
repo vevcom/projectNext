@@ -1,14 +1,15 @@
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
-import { readPage } from '@/actions/images/read'
-import read from '@/actions/images/collections/read'
-import ImageList from '@/components/Image/ImageList/ImageList'
-import ImagePagingProvider, { PageSizeImage } from '@/context/paging/ImagePaging'
+import { readImagesPage } from '@/actions/images/read'
+import { readImageCollection } from '@/actions/images/collections/read'
+import ImageList from '@/app/components/Image/ImageList/ImageList'
+import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { getUser } from '@/auth'
 import { notFound } from 'next/navigation'
+import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 type PropTypes = {
     params: {
@@ -16,16 +17,16 @@ type PropTypes = {
     }
 }
 
-export default async function Collection({ params } : PropTypes) {
+export default async function Collection({ params }: PropTypes) {
     const user = await getUser()
 
-    const pageSize : PageSizeImage = 30
+    const pageSize: PageSizeImage = 30
 
-    const readCollection = await read(Number(params.id))
+    const readCollection = await readImageCollection(Number(params.id))
     if (!readCollection.success) notFound()
     const collection = readCollection.data
 
-    const readImages = await readPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
+    const readImages = await readImagesPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
     if (!readImages.success) notFound()
     const images = readImages.data
     const isAdmin = user?.username === 'Harambe104' //temp

@@ -1,8 +1,9 @@
 'use client'
 
-import { addUserToRole, removeUserFromRole } from '@/actions/permissions'
-import Form from '@/components/Form/Form'
-import TextInput from '@/components/UI/TextInput'
+import { addUserToRole } from '@/actions/permissions/create'
+import { removeUserFromRole } from '@/actions/permissions/destroy'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 

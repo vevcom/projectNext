@@ -5,14 +5,14 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import update from '@/actions/cms/articles/update'
+import { updateArticle } from '@/actions/cms/articles/update'
 import type { ReturnType } from '@/cms/articles/ReturnType'
 
 type PropTypes = {
     article: ReturnType,
 }
 
-export default function Article({ article } : PropTypes) {
+export default function Article({ article }: PropTypes) {
     return (
         <span className={styles.Article}>
             <span className={styles.coverImage}>
@@ -21,7 +21,7 @@ export default function Article({ article } : PropTypes) {
                     <EditableTextField
                         formProps={
                             {
-                                action: update.bind(null, article.id),
+                                action: updateArticle.bind(null, article.id),
                             }
                         }
                         submitButton={{
