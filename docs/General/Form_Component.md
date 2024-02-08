@@ -48,4 +48,23 @@ The EditableTextArea is sometimes a good alternative to using a Form when you wa
 
 ## How it works
 *This is a technical overview* 
-The main technical part of the Form component is how it handles errors. When the action returns success false it lookas at what the error is in ActionReturn. If there is no error it gives a generalError. But if there are errors, it loops through them and maps them to the correct input field. If it does not find a field the error is connected to, it sets the error as "generalErrors".All generalErrors are displayed under the submit button while the errors connected to a field are displayed under their respective input field. The way the form matches a error of type ActionError to a field is by looking at tha "path" attribute and the name attribute of the errors and input fields respectively. 
+The main technical part of the Form component is how it handles errors. When the action returns success false it lookas at what the error is in ActionReturn. If there is no error it gives a generalError. But if there are errors, it loops through them and maps them to the correct input field. If it does not find a field the error is connected to, it sets the error as "generalErrors".All generalErrors are displayed under the submit button while the errors connected to a field are displayed under their respective input field. The way the form matches a error of type ActionError to a field is by looking at tha "path" attribute and the name attribute of the errors and input fields respectively.
+
+Thus it is important that the path property used when returning errors in an action maps to the apropriate input field, but note that this is how zod does it by default. As long as the names in the FormData (and thus the form) matches the names in the zod schema, zod will baseically do this for you. 
+
+Here is an example action
+```javascript
+const schema = z.object({
+    name: z.string().max(40).min(2).trim()
+    description: z.string().max(500).min(2).trim()
+})
+const parse = schema.safeParse({
+        name: rawdata.get('name'),
+        description: rawdata.get('description'),
+    })
+
+if (!parse.success) {
+    return { success: false, error: parse.error.issues }
+}
+```
+Note how the schema field-names matches the Form field-names. So here returning parse.error.issues directly will have the path attribute in the correct format so the Form component can map the paths of the error(s) to the input-fields.
