@@ -10,7 +10,7 @@ The build workflow just builds projectnext and then deploys the container for pr
 ## Linting
 We have a linting workflow that needs to pass before merging any PR. Remember that linting can be autofixed to a degree using:
 ```bash
-    npm run lint -- --fix
+npm run lint -- --fix
 ```
 Avoid using thing like lint-ignore to fix your issues.
 
