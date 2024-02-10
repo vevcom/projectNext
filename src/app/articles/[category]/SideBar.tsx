@@ -6,19 +6,7 @@ import styles from './SideBar.module.scss'
 import Link from 'next/link'
 import { useRef } from 'react'
 import useScroll from '@/hooks/useScroll'
-
-function debounce(func: () => void, wait: number) {
-    let timeout: NodeJS.Timeout;
-    return function executedFunction() {
-        const later = () => {
-            clearTimeout(timeout);
-            func();
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-};
-
+import useOnNavigation from '@/hooks/useOnNavigation'
 
 type PropTypes = {
     category: ReturnType
@@ -29,7 +17,7 @@ export default function SideBar({ category }: PropTypes) {
     const measure = useRef<HTMLDivElement>(null)
 
     //Makes sure the sidebar does not go under the footer
-    useScroll((_, y) => {
+    const handleHeight = (x: number, y: number) => {
         const mainRect = document.querySelector('main')?.getBoundingClientRect()
         const sidebarRect = measure.current?.getBoundingClientRect()
         const docHeight = document.documentElement.scrollHeight;
@@ -40,7 +28,10 @@ export default function SideBar({ category }: PropTypes) {
         } else {
             ref.current.style.maxHeight = `100%`
         }
-    })
+    }
+
+    useScroll(handleHeight)
+    useOnNavigation(() => handleHeight(window.screenX, window.scrollY))
 
     return (
         <div ref={measure} className={styles.measure}>
