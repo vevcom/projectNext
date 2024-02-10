@@ -16,7 +16,9 @@
     > main {
         z-index: 1;
         transform: translateX(300px);
-        width: calc(100% - 300px);
+        width: calc(100% - 300px - 2em);
+        margin: 1em;
+        overflow: hidden;
     }
 }
 

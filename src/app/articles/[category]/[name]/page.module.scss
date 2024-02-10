@@ -3,10 +3,7 @@
 .wrapper {
     // adjust for sidebar
     .coverImage {
-        transform: translateX(-300px);
-        width: 100vw !important;
-        h1 {
-            transform: translateX(300px);
-        }
+       @include ohma.card;
+       padding: 0;
     }
 }
