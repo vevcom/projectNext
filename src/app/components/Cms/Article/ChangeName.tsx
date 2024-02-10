@@ -2,10 +2,13 @@
 import React, { useState } from 'react'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import styles from './ChangeName.module.scss'
-import type { PropTypes } from './Article'
 import { updateArticle } from '@/actions/cms/articles/update'
 import { ReturnType } from '@/actions/cms/articles/ReturnType'
 import { usePathname } from 'next/navigation'
+
+type PropTypes = {
+    article: ReturnType
+}
 
 export default function ChangeName({ article }: PropTypes) {
     const changeName = updateArticle.bind(null, article.id)

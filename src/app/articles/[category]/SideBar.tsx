@@ -10,9 +10,10 @@ import useOnNavigation from '@/hooks/useOnNavigation'
 
 type PropTypes = {
     category: ReturnType
+    children: React.ReactNode
 }
 
-export default function SideBar({ category }: PropTypes) {
+export default function SideBar({ category, children }: PropTypes) {
     const ref = useRef<HTMLDivElement>(null)
     const measure = useRef<HTMLDivElement>(null)
 
@@ -24,7 +25,7 @@ export default function SideBar({ category }: PropTypes) {
         const overscroll =  Math.max(0, window.innerHeight + y - docHeight)
         if (!mainRect || !sidebarRect || !ref.current) return;
         if (mainRect.bottom < sidebarRect.bottom) {
-            ref.current.style.maxHeight = `${mainRect.bottom - sidebarRect.top + overscroll}px`
+            ref.current.style.maxHeight = `${mainRect.bottom - sidebarRect.top - 10 + overscroll}px`
         } else {
             ref.current.style.maxHeight = `100%`
         }
@@ -34,21 +35,30 @@ export default function SideBar({ category }: PropTypes) {
     useOnNavigation(() => handleHeight(window.screenX, window.scrollY))
 
     return (
-        <div ref={measure} className={styles.measure}>
-            <div ref={ref} className={styles.SideBar}>
-                <h2>{category.name.toUpperCase()}</h2>
-                <ul>
-                {
-                    category.articles.map(article => (
-                        <li key={article.id}>
-                            <Link href={`/articles/${category.name}/${article.name}`}>
-                                {article.name.toUpperCase()}
-                            </Link>
-                        </li>
-                    ))
-                }
-                </ul>
-            </div> 
-        </div>     
+        <div className={styles.SideBar}>
+            <aside>
+                <div ref={measure} className={styles.measure}>
+                    <div ref={ref} className={styles.SideBarContent}>
+                        <h2>{category.name.toUpperCase()}</h2>
+                        <ul>
+                        {
+                            category.articles.map(article => (
+                                <li key={article.id}>
+                                    <Link href={`/articles/${category.name}/${article.name}`}>
+                                        {article.name.toUpperCase()}
+                                    </Link>
+                                </li>
+                            ))
+                        }
+                        </ul>
+                    </div> 
+                </div> 
+            </aside>
+              
+            <main>
+                {children}
+            </main>
+        </div>
+          
     )
 }

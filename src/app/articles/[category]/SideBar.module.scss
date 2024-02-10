@@ -1,10 +1,30 @@
 @use '@/styles/ohma';
 
+.SideBar {
+    display: flex;
+    position: relative;
+    > aside {
+        height: 100%;
+        width: 300px;
+        position: fixed;
+        left: 0;
+        z-index: 2;
+        height: 100%;
+        width: 300px;
+        max-height: calc(100vh - 40px);
+    }
+    > main {
+        z-index: 1;
+        transform: translateX(300px);
+        width: calc(100% - 300px);
+    }
+}
+
 .measure {
     height: calc(100% - 2em);
     
 }
-.SideBar {
+.SideBarContent {
     height: calc(100% - 2em);
     transition: transform 0.05s ease-out;
     overflow: auto;

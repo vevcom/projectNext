@@ -18,7 +18,7 @@ export default async function ArticleCategory({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <Article article={res.data} />
+            <Article coverImageClass={styles.coverImage} article={res.data} />
         </div>
     );
 

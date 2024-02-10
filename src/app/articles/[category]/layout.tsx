@@ -17,13 +17,9 @@ export default async function ArticleCategoryLayout({ params, children }: PropTy
 
     return (
         <div className={styles.wrapper}>
-            <aside>
-                <SideBar category={category} />
-            </aside>
-            
-            <main>
+            <SideBar category={category}>
                 {children}
-            </main>
+            </SideBar>
         </div>
     );
 }

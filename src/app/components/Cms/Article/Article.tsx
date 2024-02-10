@@ -9,12 +9,13 @@ import ChangeName from './ChangeName'
 
 export type PropTypes = {
     article: ReturnType,
+    coverImageClass?: string
 }
 
-export default function Article({ article }: PropTypes) {
+export default function Article({ article, coverImageClass }: PropTypes) {
     return (
         <span className={styles.Article}>
-            <span className={styles.coverImage}>
+            <span className={`${coverImageClass} ${styles.coverImage}`}>
                 <CmsImage width={500} name={article.coverImage.name} />
                 <SlideInOnView direction="bottom">
                     <ChangeName article={article} />
