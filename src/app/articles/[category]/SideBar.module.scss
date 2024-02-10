@@ -31,12 +31,9 @@
     transition: transform 0.05s ease-out;
     overflow: auto;
     color: ohma.$colors-white;
-    margin: 1em 0em 1em 2em;
+    margin: 1em 0em 1em 1em;
     @include ohma.card();
-    background: radial-gradient(circle, 
-        rgba(ohma.$colors-secondary, 0.65) 0%, 
-        rgba(ohma.$colors-secondary, 0.8) 50%, 
-        rgba(ohma.$colors-secondary, 0.65) 100%);
+    background: rgba(ohma.$colors-secondary, 0.65);
     backdrop-filter: blur(10px);
     h2 {
         font-size: ohma.$fonts-l;
