@@ -10,6 +10,9 @@ import useOnNavigation from '@/hooks/useOnNavigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import useViewPort from '@/hooks/useViewPort'
+import { createArticle } from '@/actions/cms/articles/create'
+import { useRouter } from 'next/navigation'
+import Form from '@/app/components/Form/Form'
 
 type PropTypes = {
     category: ReturnType
@@ -38,6 +41,7 @@ export default function SideBar({ category, children }: PropTypes) {
 
     useScroll(handleHeight)
     useOnNavigation(() => handleHeight(window.screenX, window.scrollY))
+    useOnNavigation(() => setOpenMobile(false))
     useViewPort(() => handleHeight(window.screenX, window.scrollY))
 
     return (
@@ -71,14 +75,28 @@ export default function SideBar({ category, children }: PropTypes) {
 }
 
 function MainListContent({ category }: { category: ReturnType }) {
-    return category.articles.map(article => (
+    const { refresh } = useRouter()
+
+    return (
         <ul className={styles.MainListContent}>
-            <li key={article.id}>
-                <Link href={`/articles/${category.name}/${article.name}`}>
-                    {article.name.toUpperCase()}
-                </Link>
+        {
+            category.articles.map(article => (
+                <li key={article.id}>
+                    <Link href={`/articles/${category.name}/${article.name}`}>
+                        {article.name.toUpperCase()}
+                    </Link>
+                </li>
+            ))
+        }
+            <li className={styles.newArticle}>
+                <Form
+                    action={createArticle.bind(null, null).bind(null, {
+                        categoryId: category.id,
+                    })}
+                    successCallback={refresh}
+                    submitText='Lag ny artikkel'
+                />
             </li>
         </ul>
-        
-    ))
+    )
 }

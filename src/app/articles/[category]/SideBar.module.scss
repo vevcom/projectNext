@@ -48,21 +48,6 @@
     }
 }
 
-.MainListContent {
-    list-style: none;
-    padding: 0;
-    li {
-        margin: 1em 0;
-        a {
-            color: ohma.$colors-white;
-            text-decoration: none;
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-}
-
 @media screen and (max-width: ohma.$mobileBreakpoint) {
     .SideBarMobile {
         display: block;
@@ -71,12 +56,12 @@
         left: 0;
         width: 100vw;
         background-color: rgba(ohma.$colors-secondary, 0.9); 
-        transition: height 0.35s, padding-bottom 0.35s;
+        transition: padding-bottom 0.35s;
         &.SideBarMobileClosed {
             height: 110px;
         }
         &.SideBarMobileOpen {
-            padding-bottom: 110px;
+            padding-bottom: 60px;
             svg {
                 transform: rotateX(180deg);
             }
@@ -108,5 +93,20 @@
     }
     .SideBarContent {
         display: none;
+    }
+}
+
+.MainListContent {
+    list-style: none;
+    padding: 0;
+    li {
+        margin: 1em 0;
+        a {
+            color: ohma.$colors-white;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
