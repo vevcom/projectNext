@@ -1,9 +1,12 @@
 @use '@/styles/ohma';
 
+.SideBar {
+    display: flex;
+    position: relative;
+}
+
 @media screen and not (max-width: ohma.$mobileBreakpoint) {
     .SideBar {
-        display: flex;
-        position: relative;
         > aside {
             height: 100%;
             width: 300px;
@@ -20,6 +23,7 @@
             width: calc(100% - 300px - 2em);
             margin: 1em;
             overflow: hidden;
+            min-height: 80vh;
         }
     }
     
@@ -49,6 +53,12 @@
 }
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
+    .SideBar {
+        > main {
+            min-height: 100vh;
+            width: 100%;
+        }
+    }
     .SideBarMobile {
         display: block;
         position: fixed;
