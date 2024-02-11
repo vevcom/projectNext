@@ -71,13 +71,12 @@
         left: 0;
         width: 100vw;
         background-color: rgba(ohma.$colors-secondary, 0.9); 
-        transition: height 0.35s, padding 0.35s;
+        transition: height 0.35s, padding-bottom 0.35s;
         &.SideBarMobileClosed {
-            height: 100px;
+            height: 110px;
         }
         &.SideBarMobileOpen {
-            max-height: calc(100vh - 0px);
-            height: 100vh;
+            padding-bottom: 110px;
             svg {
                 transform: rotateX(180deg);
             }
@@ -89,6 +88,7 @@
             height: 40px;
             background-color: transparent;
             border: none;
+            margin: ohma.$gap 0;
             svg {
                 width: 40px;
                 height: 40px;

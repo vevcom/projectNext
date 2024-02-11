@@ -2,8 +2,10 @@
 
 .wrapper {
     // adjust for sidebar
-    .coverImage {
-       @include ohma.card;
-       padding: 0;
+    @media screen and not (max-width: ohma.$mobileBreakpoint) {
+        .coverImage {
+            @include ohma.card;
+            padding: 0;
+         }
     }
 }
