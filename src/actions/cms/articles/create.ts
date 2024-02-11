@@ -11,9 +11,9 @@ export async function createArticle(name: string | null, config: {
         // if name not given, create a unique new name
         if (name === null) {
             let i = 1;
-            name = 'new article';
+            name = 'nt artikkel';
             while (await prisma.article.findUnique({ where: { name } })) {
-                name = `new article ${i++}`;
+                name = `ny artikkel ${i++}`;
             }
         }
 

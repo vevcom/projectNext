@@ -77,6 +77,9 @@ export default function SideBar({ category, children }: PropTypes) {
 function MainListContent({ category }: { category: ReturnType }) {
     const { refresh } = useRouter()
 
+    // Make a visibility check for edit
+    const canEditCategory = true
+
     return (
         <ul className={styles.MainListContent}>
         {
@@ -88,15 +91,19 @@ function MainListContent({ category }: { category: ReturnType }) {
                 </li>
             ))
         }
-            <li className={styles.newArticle}>
-                <Form
-                    action={createArticle.bind(null, null).bind(null, {
-                        categoryId: category.id,
-                    })}
-                    successCallback={refresh}
-                    submitText='Lag ny artikkel'
-                />
-            </li>
+        {
+            canEditCategory && (
+                <li className={styles.newArticle}>
+                    <Form
+                        action={createArticle.bind(null, null).bind(null, {
+                            categoryId: category.id,
+                        })}
+                        successCallback={refresh}
+                        submitText='Lag ny artikkel'
+                    />
+                </li>
+            )
+        }
         </ul>
     )
 }

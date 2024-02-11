@@ -56,7 +56,7 @@
         left: 0;
         width: 100vw;
         background-color: rgba(ohma.$colors-secondary, 0.9); 
-        transition: padding-bottom 0.35s;
+        transition: padding-bottom 0.35s, height 0.35s;
         &.SideBarMobileClosed {
             height: 110px;
         }
@@ -87,7 +87,7 @@
             }
 
         }    
-        li {
+        ul > li {
             margin-left: calc(50px + ohma.$gap);
         }
     }
@@ -99,6 +99,7 @@
 .MainListContent {
     list-style: none;
     padding: 0;
+    position: relative;
     li {
         margin: 1em 0;
         a {
@@ -109,4 +110,5 @@
             }
         }
     }
+    height: 100%;
 }
