@@ -43,24 +43,25 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
         h2 {
             font-size: ohma.$fonts-l;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-            li {
-                margin: 1em 0;
-                a {
-                    color: ohma.$colors-white;
-                    text-decoration: none;
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                }
-            }
-        }
     }
     
     .openSideBarMobile {
         display: none;
+    }
+}
+
+.MainListContent {
+    list-style: none;
+    padding: 0;
+    li {
+        margin: 1em 0;
+        a {
+            color: ohma.$colors-white;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
 
@@ -78,6 +79,9 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
         }
         &.SideBarMobileOpen {
             padding-bottom: 100px;
+            svg {
+                transform: rotateX(180deg);
+            }
         }
         > button {
             display: flex;
@@ -91,6 +95,7 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
                 height: 40px;
                 margin: 5px;
                 color: ohma.$colors-white;
+                transition: transform 0.35s;
             }
             h1 {
                 margin: 0 ohma.$gap;
@@ -98,6 +103,9 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
             }
 
         }    
+        li {
+            color: ohma.$colors-white;
+        }
     }
     .SideBarContent {
         display: none;

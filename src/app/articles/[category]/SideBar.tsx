@@ -46,9 +46,7 @@ export default function SideBar({ category, children }: PropTypes) {
                 <div ref={measure} className={styles.measure}>
                     <div ref={ref} className={styles.SideBarContent}>
                         <h2>{category.name.toUpperCase()}</h2>
-                        <ul>
-                        <MainContent category={category} />
-                        </ul>
+                        <MainListContent category={category} />
                     </div> 
                 </div> 
             </aside>
@@ -64,19 +62,22 @@ export default function SideBar({ category, children }: PropTypes) {
                     <FontAwesomeIcon icon={faChevronUp} />
                     <h1>{category.name.toUpperCase()}</h1>
                 </button>
-                <MainContent category={category} />
+                <MainListContent category={category} />
             </span>
         </div>
           
     )
 }
 
-function MainContent({ category }: { category: ReturnType }) {
+function MainListContent({ category }: { category: ReturnType }) {
     return category.articles.map(article => (
-        <li key={article.id}>
-            <Link href={`/articles/${category.name}/${article.name}`}>
-                {article.name.toUpperCase()}
-            </Link>
-        </li>
+        <ul className={styles.MainListContent}>
+            <li key={article.id}>
+                <Link href={`/articles/${category.name}/${article.name}`}>
+                    {article.name.toUpperCase()}
+                </Link>
+            </li>
+        </ul>
+        
     ))
 }
