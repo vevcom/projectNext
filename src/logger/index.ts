@@ -7,11 +7,11 @@ const logger = winston.createLogger({
         new winston.transports.Console(),
         new winston.transports.DailyRotateFile({
             dirname: process.env.LOG_DIRECTORY,
-            filename: "%DATE%.log",
-            datePattern: "YYYY-MM-DD",
+            filename: '%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
             maxFiles: process.env.LOG_MAX_FILES,
         })
     ]
-}) 
+})
 
 export default logger
