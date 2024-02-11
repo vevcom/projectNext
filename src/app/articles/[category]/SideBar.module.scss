@@ -1,57 +1,92 @@
 @use '@/styles/ohma';
 
-.SideBar {
-    display: flex;
-    position: relative;
-    > aside {
-        height: 100%;
-        width: 300px;
-        position: fixed;
-        left: 0;
-        z-index: 2;
-        height: 100%;
-        width: 300px;
-        max-height: calc(100vh - 40px);
-    }
-    > main {
-        z-index: 1;
-        transform: translateX(300px);
-        width: calc(100% - 300px - 2em);
-        margin: 1em;
-        overflow: hidden;
-    }
-}
+$side-bar-color: rgba(ohma.$colors-secondary, 0.65);
 
-.measure {
-    height: calc(100% - 2em);
+@media screen and not (max-width: ohma.$mobileBreakpoint) {
+    .SideBar {
+        display: flex;
+        position: relative;
+        > aside {
+            height: 100%;
+            width: 300px;
+            position: fixed;
+            left: 0;
+            z-index: 2;
+            height: 100%;
+            width: 300px;
+            max-height: calc(100vh - 40px);
+        }
+        > main {
+            z-index: 1;
+            transform: translateX(300px);
+            width: calc(100% - 300px - 2em);
+            margin: 1em;
+            overflow: hidden;
+        }
+    }
     
-}
-.SideBarContent {
-    opacity: 0; // hide before handleHeight has run once
-
-    height: calc(100% - 2em);
-    transition: opacity 0.2s, transform 0.05s ease-out;
-    overflow: auto;
-    color: ohma.$colors-white;
-    margin: 1em 0em 1em 1em;
-    @include ohma.card();
-    background: rgba(ohma.$colors-secondary, 0.65);
-    backdrop-filter: blur(10px);
-    h2 {
-        font-size: ohma.$fonts-l;
+    .measure {
+        height: calc(100% - 2em);
+        
     }
-    ul {
-        list-style: none;
-        padding: 0;
-        li {
-            margin: 1em 0;
-            a {
-                color: ohma.$colors-white;
-                text-decoration: none;
-                &:hover {
-                    text-decoration: underline;
+    .SideBarContent {
+        opacity: 0; // hide before handleHeight has run once
+    
+        height: calc(100% - 2em);
+        transition: opacity 0.35s, transform 0.05s ease-out;
+        overflow: auto;
+        color: ohma.$colors-white;
+        margin: 1em 0em 1em 1em;
+        @include ohma.card();
+        background: $side-bar-color;
+        backdrop-filter: blur(10px);
+        h2 {
+            font-size: ohma.$fonts-l;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            li {
+                margin: 1em 0;
+                a {
+                    color: ohma.$colors-white;
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
         }
+    }
+    
+    .openSideBarMobile {
+        display: none;
+    }
+}
+
+@media screen and (max-width: ohma.$mobileBreakpoint) {
+    .openSideBarMobile {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100px;
+        background-color: $side-bar-color;
+        button {
+            background-color: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            svg {
+                width: 100%;
+                height: 100%;
+                color: ohma.$colors-white;
+            }
+        }
+    }
+    .SideBarContent {
+        display: none;
     }
 }

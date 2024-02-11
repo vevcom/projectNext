@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { useRef, useLayoutEffect } from 'react'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     category: ReturnType
@@ -55,10 +57,16 @@ export default function SideBar({ category, children }: PropTypes) {
                     </div> 
                 </div> 
             </aside>
-              
+         
             <main>
                 {children}
             </main>
+
+            <span className={styles.openSideBarMobile}>
+                <button>
+                    <FontAwesomeIcon icon={faChevronUp} />
+                </button>
+            </span>
         </div>
           
     )

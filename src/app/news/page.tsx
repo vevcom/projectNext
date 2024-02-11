@@ -3,7 +3,7 @@ import Article from '@/cms/Article/Article'
 import { readArticle } from '@/cms/articles/read'
 
 export default async function Articles() {
-    const article = await readArticle(1)
+    const article = await readArticle('om omega')
     if (!article.success) return (<div>{article.error ? article.error[9].message : 'error'}</div>)
 
     return (
