@@ -4,7 +4,7 @@ import { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 import React from 'react'
 import styles from './SideBar.module.scss'
 import Link from 'next/link'
-import { useRef } from 'react'
+import { useRef, useLayoutEffect } from 'react'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 
@@ -24,6 +24,7 @@ export default function SideBar({ category, children }: PropTypes) {
         const docHeight = document.documentElement.scrollHeight;
         const overscroll =  Math.max(0, window.innerHeight + y - docHeight)
         if (!mainRect || !sidebarRect || !ref.current) return;
+        ref.current.style.opacity = '1'
         if (mainRect.bottom < sidebarRect.bottom) {
             ref.current.style.maxHeight = `${mainRect.bottom - sidebarRect.top - 10 + overscroll}px`
         } else {

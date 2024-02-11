@@ -1,4 +1,4 @@
-import { use, useEffect } from 'react'
+import { useEffect } from 'react'
 
 export default function useScroll(callback: (width: number, height: number) => void) {
     useEffect(() => {

@@ -27,8 +27,10 @@
     
 }
 .SideBarContent {
+    opacity: 0; // hide before handleHeight has run once
+
     height: calc(100% - 2em);
-    transition: transform 0.05s ease-out;
+    transition: opacity 0.2s, transform 0.05s ease-out;
     overflow: auto;
     color: ohma.$colors-white;
     margin: 1em 0em 1em 1em;
