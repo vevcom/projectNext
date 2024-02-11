@@ -1,7 +1,5 @@
 @use '@/styles/ohma';
 
-$side-bar-color: rgba(ohma.$colors-secondary, 0.65);
-
 @media screen and not (max-width: ohma.$mobileBreakpoint) {
     .SideBar {
         display: flex;
@@ -38,7 +36,7 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
         color: ohma.$colors-white;
         margin: 1em 0em 1em 1em;
         @include ohma.card();
-        background: $side-bar-color;
+        background: rgba(ohma.$colors-secondary, 0.65);
         backdrop-filter: blur(10px);
         h2 {
             font-size: ohma.$fonts-l;
@@ -72,7 +70,7 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
         bottom: 0;
         left: 0;
         width: 100vw;
-        background-color: $side-bar-color; 
+        background-color: rgba(ohma.$colors-secondary, 0.9); 
         transition: height 0.35s, padding 0.35s;
         &.SideBarMobileClosed {
             height: 100px;
@@ -104,7 +102,7 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
 
         }    
         li {
-            color: ohma.$colors-white;
+            margin-left: calc(50px + ohma.$gap);
         }
     }
     .SideBarContent {
