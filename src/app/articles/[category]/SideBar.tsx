@@ -4,11 +4,12 @@ import { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 import React from 'react'
 import styles from './SideBar.module.scss'
 import Link from 'next/link'
-import { useRef, useLayoutEffect } from 'react'
+import { useRef, useState } from 'react'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import useViewPort from '@/hooks/useViewPort'
 
 type PropTypes = {
     category: ReturnType
@@ -18,6 +19,7 @@ type PropTypes = {
 export default function SideBar({ category, children }: PropTypes) {
     const ref = useRef<HTMLDivElement>(null)
     const measure = useRef<HTMLDivElement>(null)
+    const [openMobile, setOpenMobile] = useState(false)
 
     //Makes sure the sidebar does not go under the footer
     const handleHeight = (x: number, y: number) => {
@@ -36,6 +38,7 @@ export default function SideBar({ category, children }: PropTypes) {
 
     useScroll(handleHeight)
     useOnNavigation(() => handleHeight(window.screenX, window.scrollY))
+    useViewPort(() => handleHeight(window.screenX, window.scrollY))
 
     return (
         <div className={styles.SideBar}>
@@ -44,15 +47,7 @@ export default function SideBar({ category, children }: PropTypes) {
                     <div ref={ref} className={styles.SideBarContent}>
                         <h2>{category.name.toUpperCase()}</h2>
                         <ul>
-                        {
-                            category.articles.map(article => (
-                                <li key={article.id}>
-                                    <Link href={`/articles/${category.name}/${article.name}`}>
-                                        {article.name.toUpperCase()}
-                                    </Link>
-                                </li>
-                            ))
-                        }
+                        <MainContent category={category} />
                         </ul>
                     </div> 
                 </div> 
@@ -62,12 +57,26 @@ export default function SideBar({ category, children }: PropTypes) {
                 {children}
             </main>
 
-            <span className={styles.openSideBarMobile}>
-                <button>
+            <span className={ openMobile ? 
+                styles.SideBarMobileOpen : styles.SideBarMobileClosed
+            }>
+                <button onClick={() => setOpenMobile(x => !x)}>
                     <FontAwesomeIcon icon={faChevronUp} />
+                    <h1>{category.name.toUpperCase()}</h1>
                 </button>
+                <MainContent category={category} />
             </span>
         </div>
           
     )
+}
+
+function MainContent({ category }: { category: ReturnType }) {
+    return category.articles.map(article => (
+        <li key={article.id}>
+            <Link href={`/articles/${category.name}/${article.name}`}>
+                {article.name.toUpperCase()}
+            </Link>
+        </li>
+    ))
 }

@@ -65,26 +65,39 @@ $side-bar-color: rgba(ohma.$colors-secondary, 0.65);
 }
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
-    .openSideBarMobile {
+    .SideBarMobileOpen, .SideBarMobileClosed {
         display: block;
         position: fixed;
         bottom: 0;
         left: 0;
         width: 100vw;
-        height: 100px;
-        background-color: $side-bar-color;
-        button {
+        background-color: $side-bar-color; 
+        transition: height 0.35s, padding 0.35s;
+        &.SideBarMobileClosed {
+            height: 100px;
+        }
+        &.SideBarMobileOpen {
+            padding-bottom: 100px;
+        }
+        > button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
             background-color: transparent;
             border: none;
-            width: 40px;
-            height: 40px;
-            margin: 5px;
             svg {
-                width: 100%;
-                height: 100%;
+                width: 40px;
+                height: 40px;
+                margin: 5px;
                 color: ohma.$colors-white;
             }
-        }
+            h1 {
+                margin: 0 ohma.$gap;
+                color: ohma.$colors-white;
+            }
+
+        }    
     }
     .SideBarContent {
         display: none;
