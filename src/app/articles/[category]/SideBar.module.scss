@@ -43,7 +43,7 @@
         }
     }
     
-    .openSideBarMobile {
+    .SideBarMobile {
         display: none;
     }
 }
@@ -64,7 +64,7 @@
 }
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
-    .SideBarMobileOpen, .SideBarMobileClosed {
+    .SideBarMobile {
         display: block;
         position: fixed;
         bottom: 0;
@@ -76,7 +76,8 @@
             height: 100px;
         }
         &.SideBarMobileOpen {
-            padding-bottom: 100px;
+            max-height: calc(100vh - 0px);
+            height: 100vh;
             svg {
                 transform: rotateX(180deg);
             }

@@ -56,7 +56,8 @@ export default function SideBar({ category, children }: PropTypes) {
             </main>
 
             <span className={ openMobile ? 
-                styles.SideBarMobileOpen : styles.SideBarMobileClosed
+                `${styles.SideBarMobile} ${styles.SideBarMobileOpen}` : 
+                `${styles.SideBarMobile} ${styles.SideBarMobileClosed}`
             }>
                 <button onClick={() => setOpenMobile(x => !x)}>
                     <FontAwesomeIcon icon={faChevronUp} />
