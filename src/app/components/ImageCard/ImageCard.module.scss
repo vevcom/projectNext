@@ -1,15 +1,21 @@
 @use "@/styles/ohma";
 
+$padding: 1em;
+$imageHeight: 170px;
+$contentHeight: 230px;
+$height: $imageHeight + $contentHeight;
+
 .ImageCard {
     min-width: 200px; 
     max-width: 300px;
     border-radius: ohma.$cardRounding;
+    padding: $padding;
     position: relative;
     overflow: hidden;
     color: inherit;
     text-decoration: none;
     display: block;
-    height: 400px;
+    height: $height;
     background-color: rgba(ohma.$colors-secondary, 0.4);
     isolation: isolate;
     > .image {
@@ -17,7 +23,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 200px;
+        height: $imageHeight;
         z-index: 1;
         > * {
             width: 100% !important;
@@ -33,8 +39,11 @@
     > .content {
         z-index: 2;
         position: absolute;
-        border-radius: ohma.$rounding;
+        border-radius: calc(ohma.$cardRounding - $padding);
         background-color: ohma.$colors-white;
-        width: 100%;
+        width: calc(100% - #{$padding} * 2);
+        padding: $padding;
+        top: calc($imageHeight - $padding);
+        height: $contentHeight;
     }
 }
