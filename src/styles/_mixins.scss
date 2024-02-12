@@ -9,7 +9,7 @@
 }
 
 @mixin card {
-    border-radius: 3*variables.$rounding;
+    border-radius: variables.$cardRounding;
     padding: 5*variables.$rounding;
 }
 
