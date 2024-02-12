@@ -1,9 +1,13 @@
-import styles from './page.module.css';
+import styles from './page.module.scss';
+import PageWrapper from '../components/PageWrapper/PageWrapper';
 
 export default function JobAds() {
     return (
-        <div className={styles.wrapper}>
-            job ad
-        </div>
+        <PageWrapper title="Job ads">
+            <div className={styles.wrapper}>
+                job ad
+            </div>
+        </PageWrapper>
+        
     );
 }
