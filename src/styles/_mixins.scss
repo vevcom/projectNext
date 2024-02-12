@@ -85,7 +85,7 @@
     }
 }
 
-@mixin pagePadding($max-width: 800px) {
+@mixin pagePadding($max-width: 900px) {
     $width: 100%;
 
     width: $width;
