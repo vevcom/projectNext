@@ -9,7 +9,7 @@ export default async function JobAds() {
     const testImage = testImageRes.data
 
     return (
-        <PageWrapper title="Job ads">
+        <PageWrapper title="jobbannonser">
             <div className={styles.wrapper}>
                 <ImageCard href="/jobads/kongsberg" title="Kongsberg" image={testImage}>
                     <p>Sommerjobb ellerno</p>
