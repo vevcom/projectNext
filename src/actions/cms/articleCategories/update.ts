@@ -2,7 +2,7 @@
 import type { ReturnType } from "./ReturnType"
 import { ActionReturn } from "@/actions/type"
 
-export default function updateArticleVisibility(
+export default async function updateArticleVisibility(
     id: number, 
     visibility: unknown
 ): Promise<ActionReturn<ReturnType>> {
