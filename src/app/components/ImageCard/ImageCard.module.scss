@@ -1,9 +1,10 @@
 @use "@/styles/ohma";
 
-$padding: 1em;
+$padding: 1.5em;
 $imageHeight: 170px;
 $contentHeight: 230px;
 $height: $imageHeight + $contentHeight;
+$background: lighten(ohma.$colors-secondary, 15%);
 
 .ImageCard {
     min-width: 200px; 
@@ -11,13 +12,18 @@ $height: $imageHeight + $contentHeight;
     border-radius: ohma.$cardRounding;
     padding: $padding;
     position: relative;
-    overflow: hidden;
     color: inherit;
     text-decoration: none;
     display: block;
     height: $height;
-    background-color: rgba(ohma.$colors-secondary, 0.4);
+    background-color: $background;
     isolation: isolate;
+    overflow: hidden;
+    &:hover {
+        img {
+            scale: 1.1;
+        }
+    }
     > .image {
         position: absolute;
         top: 0;
@@ -33,8 +39,21 @@ $height: $imageHeight + $contentHeight;
                 width: 100% !important;
                 height: 100%;
                 object-fit: cover;
+                transition: scale 0.3s;
             }
         } 
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center bottom, transparent 40%, $background 70%, $background 100%);
+            rotate: 180deg;
+            scale: 1.5;
+            z-index: 0;
+        }
     }
     > .content {
         z-index: 2;
@@ -45,5 +64,8 @@ $height: $imageHeight + $contentHeight;
         padding: $padding;
         top: calc($imageHeight - $padding);
         height: $contentHeight;
+        box-shadow: ohma.$colors-secondary 0 0 40px;
     }
+
+    box-shadow: ohma.$colors-gray-800 0 0 10px;
 }
