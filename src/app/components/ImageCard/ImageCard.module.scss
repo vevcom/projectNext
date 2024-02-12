@@ -23,6 +23,9 @@ $background: lighten(ohma.$colors-secondary, 15%);
         img {
             scale: 1.1;
         }
+        > .content {
+            color: ohma.$colors-gray-600;
+        }
     }
     > .image {
         position: absolute;
@@ -65,6 +68,15 @@ $background: lighten(ohma.$colors-secondary, 15%);
         top: calc($imageHeight - $padding);
         height: $contentHeight;
         box-shadow: ohma.$colors-secondary 0 0 40px;
+        color: ohma.$colors-gray-900;
+        transition: color 0.3s;
+        > h2 {
+            text-decoration: underline;
+            text-underline-offset: 0.1em;
+            text-decoration-thickness: 2px;
+            text-decoration-color: ohma.$colors-secondary;
+            margin-bottom: ohma.$gap;
+        }
     }
 
     box-shadow: ohma.$colors-gray-800 0 0 10px;
