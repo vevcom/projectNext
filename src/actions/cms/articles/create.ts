@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 
@@ -11,7 +11,7 @@ export async function createArticle(name: string | null, config: {
         // if name not given, create a unique new name
         if (name === null) {
             let i = 1;
-            name = 'nt artikkel';
+            name = 'ny artikkel';
             while (await prisma.article.findUnique({ where: { name } })) {
                 name = `ny artikkel ${i++}`;
             }
@@ -45,6 +45,6 @@ export async function createArticle(name: string | null, config: {
         })
         return { success: true, data: article }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
