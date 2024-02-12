@@ -11,7 +11,9 @@ export default async function JobAds() {
     return (
         <PageWrapper title="Job ads">
             <div className={styles.wrapper}>
-                <ImageCard image={testImage} />
+                <ImageCard title='Kongsberg' image={testImage}>
+                    <p>Sommerjobb ellerno</p>
+                </ImageCard>
             </div>
         </PageWrapper>
         
