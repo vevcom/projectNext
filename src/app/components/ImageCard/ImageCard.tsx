@@ -9,8 +9,12 @@ type PropTypes = {
 export default function ImageCard({ image }: PropTypes) {
     return (
         <div className={styles.ImageCard}>
-            ImageCard
-            <Image width={200} image={image} />
+            <div className={styles.image}>
+                <Image width={240} image={image} />
+            </div>
+            <div>
+
+            </div>
         </div>
     )
 }
