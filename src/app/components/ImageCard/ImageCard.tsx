@@ -17,7 +17,7 @@ export default function ImageCard({ image, title, children, href }: PropTypes) {
             <div className={styles.image}>
                 <Image width={240} image={image} />
             </div>
-            <div>
+            <div className={styles.content}>
                 <h3>{title}</h3>
                 {children}
             </div>
