@@ -1,8 +1,8 @@
-import { Image as ImageT } from '@prisma/client';
-import styles from './ImageCard.module.scss';
-import Image from '@/components/Image/Image';
-import type { ReactNode } from 'react';
-import Link from 'next/link';
+import styles from './ImageCard.module.scss'
+import Image from '@/components/Image/Image'
+import Link from 'next/link'
+import type { Image as ImageT } from '@prisma/client'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     image: ImageT,
