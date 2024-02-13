@@ -9,6 +9,7 @@ import { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 import { updateArticleCategory } from '@/actions/cms/articleCategories/update'
 import { createArticle } from '@/actions/cms/articles/create'
 import { useRouter } from 'next/navigation'
+import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
 
 type PropTypes = {
     category: ReturnType

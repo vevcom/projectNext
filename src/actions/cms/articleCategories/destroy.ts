@@ -5,7 +5,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 
-export default async function destroyArticleCategory(id: number): Promise<ActionReturn<ReturnType>> {
+export async function destroyArticleCategory(id: number): Promise<ActionReturn<ReturnType>> {
     try {
         // TODO: Cheek for visibility type edit of user.
         const articleCategory = await prisma.articleCategory.delete({

@@ -5,7 +5,7 @@ import prisma from "@/prisma"
 import errorHandler from "@/prisma/errorHandler"
 import schema from "./schema"
 
-export default async function createArticleCategory(
+export async function createArticleCategory(
     rawData: FormData
 ): Promise<ActionReturn<ReturnType>> {
     
