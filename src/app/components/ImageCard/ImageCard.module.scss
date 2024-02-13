@@ -53,8 +53,7 @@ $textBoxTransparency: 75%;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center bottom, transparent 40%, $background 70%, $background 100%);
-            rotate: 180deg;
+            background: radial-gradient(ellipse at center top, transparent 40%, $background 70%, $background 100%);
             scale: 1.5 1;
             z-index: 0;
         }
