@@ -1,5 +1,7 @@
 import { readArticleCategories } from "@/cms/articleCategories/read";
 import Link from "next/link";
+import styles from './page.module.scss';
+import PageWrapper from '@/components/PageWrapper/PageWrapper';
 
 export default async function ArticleCategoryList() {
     const res = await readArticleCategories();
@@ -7,22 +9,26 @@ export default async function ArticleCategoryList() {
     const categories = res.data;
 
     return (
-        <ul>
-            {
-                categories.length ? (
-                    categories.map((category) => (
-                        <li key={category.id}>
-                            <Link href={`/articles/${category.name}`}>
-                                {category.name}
-                            </Link>
+        <PageWrapper title="Artikler">
+            <main className={styles.wrapper}>
+                <ul>
+                {
+                    categories.length ? (
+                        categories.map((category) => (
+                            <li key={category.id}>
+                                <Link href={`/articles/${category.name}`}>
+                                    {category.name}
+                                </Link>
+                            </li>
+                        ))
+                    ) : (
+                        <li>
+                            Ingen kategorier å vise
                         </li>
-                    ))
-                ) : (
-                    <li>
-                        Ingen kategorier å vise
-                    </li>
-                )
-            }
-        </ul>
+                    )
+                }
+                </ul>
+            </main>
+        </PageWrapper>
     );
 }
