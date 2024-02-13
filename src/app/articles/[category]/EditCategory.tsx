@@ -16,9 +16,13 @@ type PropTypes = {
 }
 
 export default function EditCategory({ category }: PropTypes) {
-    const { refresh } = useRouter()
+    const { refresh, push } = useRouter()
     // Make a visibility check for edit
     const canEditCategory = true
+
+    const handleSuccessDestroy = () => {
+        push('/articles')
+    }
 
     if (!canEditCategory) return null
 
@@ -55,10 +59,8 @@ export default function EditCategory({ category }: PropTypes) {
         </PopUp>
         <li>
             <Form
-                action={createArticle.bind(null, null).bind(null, {
-                    categoryId: category.id,
-                })}
-                successCallback={refresh}
+                action={destroyArticleCategory.bind(null, category.id)}
+                successCallback={handleSuccessDestroy}
                 submitText='Slett kategori'
                 submitColor='red'
                 confirmation={{
