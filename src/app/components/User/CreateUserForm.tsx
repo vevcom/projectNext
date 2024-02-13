@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import create from '@/actions/users/create'
+import { createUser } from '@/actions/users/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { v4 as uuid } from 'uuid'
@@ -16,7 +16,7 @@ export default function CreateUserForm() {
             <Form 
                 title="Lag en bruker" 
                 submitText="Create user" 
-                action={create} 
+                action={createUser} 
                 successCallback={refresh}
             >
                 <TextInput label="username" name="username" key={uuid()}/>

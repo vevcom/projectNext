@@ -7,6 +7,6 @@ import type { UserDetails, UserFiltered } from '@/actions/users/Types'
 export type PageSizeUsers = 20;
 const fetcher = async (x: ReadPageInput<PageSizeUsers, UserDetails>) => await readUserPage(x)
 
-export const UserPagingContext = generatePagingContext<UserFiltered, PageSizeUsers>()
+export const UserPagingContext = generatePagingContext<UserFiltered, PageSizeUsers, UserDetails>()
 const UserPagingProvider = generatePagingProvider({ Context: UserPagingContext, fetcher })
 export default UserPagingProvider

@@ -11,10 +11,11 @@ export type StateTypes<Data, PageSize extends number> = {
     loading: boolean,
 }
 
-export type PagingContextType<Data, PageSize extends number> = ReactContextType<{
+export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
     state: StateTypes<Data, PageSize>,
     loadMore: () => Promise<Data[]>,
     refetch: () => Promise<Data[]>,
+    setDetails: (details: FetcherDetails) => void,
     serverRenderedData: Data[],
 } | null>
 
@@ -27,7 +28,7 @@ export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
 
 export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
     fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
-    Context: PagingContextType<Data, PageSize>,
+    Context: PagingContextType<Data, PageSize, FetcherDetails>,
 }
 
 type ActionTypes<Data, PageSize extends number, DataGuarantee extends boolean> = {
@@ -77,7 +78,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 }: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>
 ) {
     return function PagingProvider(
-        { serverRenderedData, startPage, children, details }: PropTypes<Data, PageSize, FetcherDetails>
+        { serverRenderedData, startPage, children, details:givenDetails }: PropTypes<Data, PageSize, FetcherDetails>
     ) {
         const [state, dispatch] = useReducer(
             fetchReducer<Data, PageSize, DataGuarantee>,
@@ -90,11 +91,12 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         )
 
         const stateRef = useRef(state)
-        const detailsRef = useRef(details)
-        useEffect(() => {
+        const detailsRef = useRef(givenDetails)
+        const setDetails = (details: FetcherDetails) => {
             dispatch({ type: 'clearAll', startPage, serverRenderedData })
             detailsRef.current = details
-        }, [details])
+        }
+        useEffect(() => setDetails(givenDetails), [givenDetails])
 
         stateRef.current = state
         useEffect(() => {
@@ -129,17 +131,18 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         }
 
         return (
-            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData }}>
+            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, setDetails }}>
                 {children}
             </Context.Provider>
         )
     }
 }
-function generatePagingContext<Data, const PageSize extends number>(): PagingContextType<Data, PageSize> {
+function generatePagingContext<Data, const PageSize extends number, FetcherDetails = undefined>(): PagingContextType<Data, PageSize, FetcherDetails> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: () => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
+        setDetails: (details: FetcherDetails) => void,
         serverRenderedData: Data[],
             } | null>(null)
     return context
