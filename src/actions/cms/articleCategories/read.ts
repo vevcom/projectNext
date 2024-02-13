@@ -18,7 +18,10 @@ export async function readArticleCategories(): Promise<ActionReturn<ReturnTypeMa
                     include: {
                         coverImage: true
                     }
-                }
+                },
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         })
         const categoriesWithCover = await Promise.all(categories.map(async category => (
@@ -41,7 +44,11 @@ export async function readArticleCategory(name: string): Promise<ActionReturn<Re
                 name
             },
             include: {
-                articles: true
+                articles: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    }
+                }
             },
         })
         if (!category) return { success: false, error: [{ message: `Category ${name} not found` }] }

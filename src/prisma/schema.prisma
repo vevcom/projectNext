@@ -77,18 +77,18 @@ model RolesUsers {
 }
 
 model Image {
-  id                   Int               @id @default(autoincrement())
-  fsLocation           String            @unique
-  fsLocationSmallSize  String?           @unique
-  fsLocationMediumSize String?           @unique
-  name                 String            @unique
+  id                   Int              @id @default(autoincrement())
+  fsLocation           String           @unique
+  fsLocationSmallSize  String?          @unique
+  fsLocationMediumSize String?          @unique
+  name                 String           @unique
   ext                  String
   alt                  String
-  collection           ImageCollection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  coverImageFor        ImageCollection?  @relation(name: "coverImage")
+  collection           ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageFor        ImageCollection? @relation(name: "coverImage")
   collectionId         Int
-  createdAt            DateTime          @default(now()) @map("created_at")
-  updatedAt            DateTime          @updatedAt @map("updated_at")
+  createdAt            DateTime         @default(now()) @map("created_at")
+  updatedAt            DateTime         @updatedAt @map("updated_at")
   cmsImages            CmsImage[]
 
   @@map("images")
@@ -207,10 +207,12 @@ model NewsArticle {
 }
 
 model ArticleCategory {
-  id           Int       @id @default(autoincrement())
-  name         String    @unique
-  description  String?
-  articles     Article[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  articles    Article[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@map("article_categories")
 }

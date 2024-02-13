@@ -2,6 +2,7 @@ import { readArticleCategories } from "@/cms/articleCategories/read";
 import Link from "next/link";
 import styles from './page.module.scss';
 import PageWrapper from '@/components/PageWrapper/PageWrapper';
+import ImageCard from "../components/ImageCard/ImageCard";
 
 export default async function ArticleCategoryList() {
     const res = await readArticleCategories();
@@ -14,11 +15,13 @@ export default async function ArticleCategoryList() {
                 {
                     categories.length ? (
                         categories.map((category) => (
-                            <li key={category.id}>
-                                <Link href={`/articles/${category.name}`}>
-                                    {category.name}
-                                </Link>
-                            </li>
+                            <ImageCard 
+                                title={category.name} 
+                                href={`/articles/${category.name}`}
+                                image={category.coverImage}
+                            >
+                                {category.description}
+                            </ImageCard>
                         ))
                     ) : (
                         <i>
