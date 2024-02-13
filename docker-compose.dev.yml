@@ -21,6 +21,8 @@ services:
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
+      FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
+      FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
     depends_on:
       - db
       - prisma
@@ -62,7 +64,6 @@ services:
   
   nginx:
     image: nginx:1.21.3-alpine
-    restart: always
     ports:
       - 80:80
     volumes:

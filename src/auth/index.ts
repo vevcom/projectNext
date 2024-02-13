@@ -4,6 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Permission } from '@prisma/client'
+import FeideProvider from './feideProvider'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -27,6 +28,10 @@ export const authOptions: AuthOptions = {
                 }
                 return null
             }
+        }),
+        FeideProvider({
+            clientId: process.env.FEIDE_CLIENT_ID ?? "no_id",
+            clientSecret: process.env.FEIDE_CLIENT_SECRET ?? "no_secret",
         })
     ],
     session: {
