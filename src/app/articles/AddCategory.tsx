@@ -15,7 +15,7 @@ export default function AddCategory() {
             successCallback={refresh}
         >
             <TextInput label="Navn" name="name" />
-            <Textarea label="Beskrivelse" name="description" />
+            <Textarea className={styles.description} label="Beskrivelse" name="description" />
         </Form>
     )
 }

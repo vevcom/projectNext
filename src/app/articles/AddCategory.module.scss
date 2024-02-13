@@ -2,5 +2,7 @@
 
 .AddCategory {
     min-width: 50vw;
-    min-height: 50vh;
+    .description {
+        min-height: 100px;
+    }
 }

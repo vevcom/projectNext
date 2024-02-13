@@ -10,8 +10,9 @@ type PropTypes = {
     children: React.ReactNode,
 }
 
-export default async function ArticleCategoryLayout({ params, children }: PropTypes) { 
-    const res = await readArticleCategory(params.category);
+export default async function ArticleCategoryLayout({ params, children }: PropTypes) {
+    const categoryName = decodeURIComponent(params.category); 
+    const res = await readArticleCategory(categoryName);
     if (!res.success) return notFound();
     const category = res.data;
 
