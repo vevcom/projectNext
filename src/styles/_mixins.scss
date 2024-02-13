@@ -9,7 +9,7 @@
 }
 
 @mixin card {
-    border-radius: 3*variables.$rounding;
+    border-radius: variables.$cardRounding;
     padding: 5*variables.$rounding;
 }
 
@@ -85,7 +85,7 @@
     }
 }
 
-@mixin pagePadding($max-width: 800px) {
+@mixin pagePadding($max-width: 900px) {
     $width: 100%;
 
     width: $width;
