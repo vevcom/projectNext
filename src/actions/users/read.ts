@@ -10,6 +10,9 @@ export async function readUserPage<const PageSize extends number>({
     details 
 }: ReadPageInput<PageSize, UserDetails>): Promise<ActionReturn<UserFiltered[]>> {
     const words = details.partOfName.split(' ');
+    console.log(words)
+
+
     try {
         const users = await prisma.user.findMany({
             skip: page.page * page.pageSize,
@@ -19,13 +22,13 @@ export async function readUserPage<const PageSize extends number>({
                 [field]: true
             }), {} as { [key in typeof userFieldsToExpose[number]]: true }),
             where: {
-                OR: words.map(word => ({
+                AND: words.map(word => ({
                     OR: [
-                        { firstname: { contains: word } },
-                        { lastname: { contains: word } },
-                        { username: { contains: word } },
+                        { firstname: { contains: word, mode: 'insensitive' } },
+                        { lastname: { contains: word, mode: 'insensitive' } },
+                        { username: { contains: word, mode: 'insensitive' } },
                     ],
-                }))
+                })),
                 //TODO select on groups
             }
         })

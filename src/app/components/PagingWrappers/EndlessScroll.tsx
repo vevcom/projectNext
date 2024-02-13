@@ -5,15 +5,15 @@ import React, { useContext, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 
-type PropTypes<Data, PageSize extends number> = {
-    pagingContext: PagingContextType<Data, PageSize>,
-    renderer: (data: Data) => React.ReactNode,
+type PropTypes<Data, PageSize extends number, FetcherDetails> = {
+    pagingContext: PagingContextType<Data, PageSize, FetcherDetails>,
+    renderer: (data: Data, i: number) => React.ReactNode,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number>({
+export default function EndlessScroll<Data, const PageSize extends number, FetcherDetails>({
     pagingContext,
     renderer
-}: PropTypes<Data, PageSize>) {
+}: PropTypes<Data, PageSize, FetcherDetails>) {
     const context = useContext(pagingContext)
 
     //This component must be rendered inside ContextProvider
@@ -28,9 +28,9 @@ export default function EndlessScroll<Data, const PageSize extends number>({
         }
     }, [inView])
 
-    const renderedPageData = useMemo(() => context.state.data.map(dataEntry => {
+    const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
         if (context.serverRenderedData.includes(dataEntry)) return null
-        return renderer(dataEntry)
+        return renderer(dataEntry, i)
     }), [context.state.data, renderer])
 
     return (
