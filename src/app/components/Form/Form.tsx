@@ -66,10 +66,11 @@ function SubmitButton({
         return children
     }
     const button = (
-        <Button aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
+        <Button className={styles.submitButton} aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
             {btnContent()}
         </Button>
     )
+
 
     const mainContent = () => (confirmedOpen ? (
         <div className={styles.confirm}>
@@ -145,6 +146,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     },
     action,
     successCallback,
+    className,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
@@ -190,7 +192,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     }
 
     return (
-        <form className={`${styles.Form} ${props.className}`} {...props} action={actionWithError}>
+        <form className={`${styles.Form} ${className}`} {...props} action={actionWithError}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (
