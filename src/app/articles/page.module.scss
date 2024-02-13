@@ -1,1 +1,10 @@
 @use '@/styles/ohma';
+.wrapper {
+    margin: 1em 0;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1em;
+    > * {
+        flex: 1 1 100%;
+    }
+}
