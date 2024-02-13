@@ -22,9 +22,7 @@ export async function createArticle(name: string | null, config: {
             data: {
                 name,
                 coverImage: {
-                    create: {
-                        name: `${name}_cover`,
-                    }
+                    create: {}
                 },
                 articleCategory: {
                     connect: {

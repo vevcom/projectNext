@@ -115,7 +115,7 @@ enum ImageSize {
 
 model CmsImage {
   id             Int             @id @default(autoincrement())
-  name           String          @unique
+  name           String          @unique @default(cuid())
   image          Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
   imageId        Int?
   createdAt      DateTime        @default(now()) @map("created_at")
@@ -129,7 +129,7 @@ model CmsImage {
 
 model CmsParagraph {
   id             Int             @id @default(autoincrement())
-  name           String          @unique
+  name           String          @unique @default(cuid())
   contentMd      String          @default("")
   contentHtml    String          @default("")
   createdAt      DateTime        @default(now()) @map("created_at")
@@ -141,7 +141,7 @@ model CmsParagraph {
 
 model CmsLink {
   id             Int             @id @default(autoincrement())
-  name           String          @unique
+  name           String          @unique @default(cuid())
   url            String          @default("/")
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
@@ -158,7 +158,7 @@ enum Position {
 
 model ArticleSection {
   id             Int           @id @default(autoincrement())
-  name           String        @unique
+  name           String        @unique @default(cuid())
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
   cmsImage       CmsImage?     @relation(fields: [cmsImageId], references: [id], onDelete: SetNull)
