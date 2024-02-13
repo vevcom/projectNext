@@ -17,7 +17,7 @@ type PropTypes = {
     }
 }
 
-export default async function Collection({ params } : PropTypes) {
+export default async function Collection({ params }: PropTypes) {
     const { user } = await getUser()
 
     const pageSize: PageSizeImage = 30
