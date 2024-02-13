@@ -5,6 +5,7 @@ import PopUp from '@/components/PopUp/PopUp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CreateUserForm from '@/components/User/CreateUserForm';
+import UserPagingProvider from '@/context/paging/UserPaging';
 
 export default async function Users() {
     return (
@@ -20,7 +21,19 @@ export default async function Users() {
             </PopUp>
         }>
             <div className={styles.wrapper}>
-                <UserList />
+                <UserPagingProvider
+                    serverRenderedData={[]}
+                    startPage={{
+                        pageSize: 20,
+                        page: 1
+                    }}
+                    details={{
+                        groups: [],
+                        partOfName: ''
+                    }}
+                >
+                    <UserList />
+                </UserPagingProvider>
             </div>
         </PageWrapper>
         

@@ -1,2 +1,12 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
+import { readUserPage } from '@/actions/users/read'
+import type { ReadPageInput } from '@/actions/type'
+import type { UserDetails, UserFiltered } from '@/actions/users/Types'
+
+export type PageSizeUsers = 20;
+const fetcher = async (x: ReadPageInput<PageSizeUsers, UserDetails>) => await readUserPage(x)
+
+export const UserPagingContext = generatePagingContext<UserFiltered, PageSizeUsers>()
+const UserPagingProvider = generatePagingProvider({ Context: UserPagingContext, fetcher })
+export default UserPagingProvider
