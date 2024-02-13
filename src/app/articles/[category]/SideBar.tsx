@@ -1,5 +1,4 @@
 'use client'
-
 import { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 import React from 'react'
 import styles from './SideBar.module.scss'
