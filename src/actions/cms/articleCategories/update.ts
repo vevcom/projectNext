@@ -1,6 +1,7 @@
 'use server'
 import type { ReturnType } from "./ReturnType"
 import { ActionReturn } from "@/actions/type"
+import schema from "./schema"
 
 export default async function updateArticleCategoryVisibility(
     id: number, 
@@ -8,3 +9,7 @@ export default async function updateArticleCategoryVisibility(
 ): Promise<ActionReturn<ReturnType>> {
     throw new Error('Not implemented')
 }
+
+export default async function updateArticleCategory(
+
+)

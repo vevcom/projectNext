@@ -7,7 +7,6 @@ import Textarea from '@/app/components/UI/Textarea'
 import TextInput from '@/app/components/UI/TextInput'
 
 export default function EditCategory() {
-
     //TODO: check if user has edit visibility
     const canEditArticle = true
 
@@ -21,7 +20,7 @@ export default function EditCategory() {
             >
                 <Form
                     className={styles.EditCategory}
-                    action={}
+                    action={update}
                 >
                     <TextInput label="navn" name="name" defaultValue={"hei"} />
                     <Textarea label="beskrivelse" name="description" defaultValue={"hei"} />
