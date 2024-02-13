@@ -2,12 +2,12 @@ import Section from './Section'
 import styles from './page.module.scss'
 import InfoBubbles from './InfoBubbles'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
-import { getUser } from '@/auth'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getUser } from '@/auth'
 import Link from 'next/link'
 
 export default async function Home() {
@@ -19,10 +19,8 @@ export default async function Home() {
                 <div className={styles.frontInfo}>
                     <div>
                         <CmsImage name="frontpage_logo" width={300}/>
-                        {user === null && <>
-                            <Link href="login">Logg inn</Link>
-                            <Link href="infopages/nystudent">Ny student</Link>
-                        </>}
+                        <Link href="login">Logg inn</Link>
+                        <Link href="infopages/nystudent">Ny student</Link>
                         <div className={styles.socials}>
                             <SocialIcons />
                         </div>

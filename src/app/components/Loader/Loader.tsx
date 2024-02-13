@@ -1,5 +1,5 @@
 import styles from './Loader.module.scss'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 
 function Loader() {
     return (

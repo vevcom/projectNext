@@ -1,5 +1,6 @@
 import styles from './BorderButton.module.scss'
-import React, { ButtonHTMLAttributes } from 'react'
+import React from 'react'
+import type { ButtonHTMLAttributes } from 'react'
 
 
 type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -7,6 +8,6 @@ type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
     color?: 'primary' | 'secondary',
 }
 
-export default function BorderButton({ color = 'primary', children, ...props } : PropTypes) {
+export default function BorderButton({ color = 'primary', children, ...props }: PropTypes) {
     return <button className={styles[color]} {...props}>{ children }</button>
 }

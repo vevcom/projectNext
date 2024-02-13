@@ -1,12 +1,12 @@
 import styles from './layout.module.scss'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode
 }
 
-export default function AuthLayout({ children } : PropTypes) {
+export default function AuthLayout({ children }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
