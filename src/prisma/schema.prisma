@@ -90,7 +90,6 @@ model Image {
   createdAt            DateTime          @default(now()) @map("created_at")
   updatedAt            DateTime          @updatedAt @map("updated_at")
   cmsImages            CmsImage[]
-  ArticleCategory      ArticleCategory[]
 
   @@map("images")
 }
@@ -212,8 +211,6 @@ model ArticleCategory {
   name         String    @unique
   description  String?
   articles     Article[]
-  coverImage   Image?    @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
-  coverImageId Int?
 
   @@map("article_categories")
 }
