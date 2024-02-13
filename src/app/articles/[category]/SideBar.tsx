@@ -9,9 +9,7 @@ import useOnNavigation from '@/hooks/useOnNavigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import useViewPort from '@/hooks/useViewPort'
-import { createArticle } from '@/actions/cms/articles/create'
-import { useRouter } from 'next/navigation'
-import Form from '@/app/components/Form/Form'
+import EditCategory from './EditCategory'
 
 type PropTypes = {
     category: ReturnType
@@ -74,10 +72,6 @@ export default function SideBar({ category, children }: PropTypes) {
 }
 
 function MainListContent({ category }: { category: ReturnType }) {
-    const { refresh } = useRouter()
-
-    // Make a visibility check for edit
-    const canEditCategory = true
 
     return (
         <ul className={styles.MainListContent}>
@@ -90,19 +84,7 @@ function MainListContent({ category }: { category: ReturnType }) {
                 </li>
             ))
         }
-        {
-            canEditCategory && (
-                <li className={styles.newArticle}>
-                    <Form
-                        action={createArticle.bind(null, null).bind(null, {
-                            categoryId: category.id,
-                        })}
-                        successCallback={refresh}
-                        submitText='Lag ny artikkel'
-                    />
-                </li>
-            )
-        }
+        <EditCategory category={category} />
         </ul>
     )
 }

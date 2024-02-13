@@ -74,14 +74,14 @@ function SubmitButton({
 
     const mainContent = () => (confirmedOpen ? (
         <div className={styles.confirm}>
-            <p>{confirmation.text || 'Are you sure?'}</p>
+            <p>{confirmation.text || 'Er du sikker?'}</p>
             <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
                 <FontAwesomeIcon icon={faX} />
             </button>
             {button}
         </div>
     ) : (
-        <Button color={color} onClick={() => setConfirmedOpen(true)}>
+        <Button className={styles.submitButton} color={color} onClick={() => setConfirmedOpen(true)}>
             {children}
         </Button>
     ))

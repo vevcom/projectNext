@@ -6,3 +6,18 @@
         min-height: 150px;
     }
 }
+.openEditCategory {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    background-color: transparent;
+    border: none;
+    color: ohma.$colors-white;
+    transition: color .3s ease-in-out;
+    &:hover {
+        cursor: pointer;
+        color: ohma.$colors-primary;
+    }
+}
