@@ -4,8 +4,13 @@ $padding: 1.5em;
 $imageHeight: 170px;
 $contentHeight: 230px;
 $height: $imageHeight + $contentHeight;
+
 $background: lighten(ohma.$colors-secondary, 15%);
-$textBoxTransparency: 75%;
+
+$textBoxTransparency: 60%;
+$textColor: ohma.$colors-gray-900;
+$textUnderlineColor: ohma.$colors-secondary;
+$textBoxBackgroundColor: ohma.$colors-white;
 
 .ImageCard {
     min-width: 200px; 
@@ -25,7 +30,7 @@ $textBoxTransparency: 75%;
             scale: 1.1;
         }
         > .content {
-            color: ohma.$colors-gray-600;
+            background-color: rgba($textBoxBackgroundColor, 90%);
         }
     }
     > .image {
@@ -62,20 +67,20 @@ $textBoxTransparency: 75%;
         z-index: 2;
         position: absolute;
         border-radius: calc(ohma.$cardRounding - $padding);
-        background-color: rgba(ohma.$colors-white, $textBoxTransparency);
+        background-color: rgba($textBoxBackgroundColor, $textBoxTransparency);
         width: calc(100% - #{$padding} * 2);
         padding: $padding;
         top: calc($imageHeight - $padding);
         height: $contentHeight;
         box-shadow: ohma.$colors-secondary 0 0 40px;
-        color: ohma.$colors-gray-900;
-        transition: color 0.3s;
+        color: $textColor;
+        transition: 0.3s;
         > h2 {
             opacity: 100%;
             text-decoration: underline;
             text-underline-offset: 0.1em;
             text-decoration-thickness: 2px;
-            text-decoration-color: ohma.$colors-secondary;
+            text-decoration-color: $textUnderlineColor;
             margin-bottom: ohma.$gap;
         }
     }
