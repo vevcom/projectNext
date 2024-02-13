@@ -21,7 +21,6 @@ type PropTypes = {
     }
 }
 
-
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
@@ -50,10 +49,12 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                     <PopUpProvider>
                         <div className={styles.CmsImageEditor}>
                             <div className={styles.currentCmsImage}>
-                                <h2>Edit image link</h2>
-                                <div className={styles.meta}>
-                                    <p>name: {cmsImage.name}</p>
-                                    <i>id: {cmsImage.id}</i>
+                                <div className={styles.info}>
+                                    <h2>Edit image link</h2>
+                                    <div className={styles.meta}>
+                                        <p>name: {cmsImage.name}</p>
+                                        <i>id: {cmsImage.id}</i>
+                                    </div>
                                 </div>
                                 <ChangeImage
                                     currentImageSize={cmsImage.imageSize}
