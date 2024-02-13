@@ -27,11 +27,11 @@ export type SeedArticleSection = {
 
 export const standardCategories = [
     {
-        name: 'about',
+        name: 'om omega',
         description: 'lær om omega',
     }, 
     {
-        name: 'guides',
+        name: 'guider',
         description: 'få hjelp til ting',
     }
 ] as const
@@ -174,7 +174,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'om omega',
-            category: 'about',
+            category: 'om omega',
             coverImage: {
                 name: 'about_cover',
                 imageName: 'ohma',
@@ -208,7 +208,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'statutter',
-            category: 'about',
+            category: 'om omega',
             coverImage: {
                 name: 'statutter_cover',
                 imageName: 'ov',
@@ -242,7 +242,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'prikkreglement',
-            category: 'guides',
+            category: 'guider',
             coverImage: {
                 name: 'prikkreglement_cover',
                 imageName: 'ov',
@@ -265,7 +265,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'søknadsguide',
-            category: 'guides',
+            category: 'guider',
             coverImage: {
                 name: 'søknadsguide_cover',
                 imageName: 'ov',
