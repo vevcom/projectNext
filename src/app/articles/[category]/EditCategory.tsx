@@ -22,9 +22,19 @@ export default function EditCategory({ category }: PropTypes) {
 
     const handleSuccessDestroy = () => {
         push('/articles')
+        refresh()
+    }
+
+    const handleSuccessUpdate = (data : ReturnType | undefined) => {
+        if (data) {
+            push(`/articles/${data.name}`)
+        }
+        refresh()
     }
 
     if (!canEditCategory) return null
+
+    const updateCategory = updateArticleCategory.bind(null, category.id)
 
     return (
         <>
@@ -46,7 +56,8 @@ export default function EditCategory({ category }: PropTypes) {
         >
             <Form
                 className={styles.EditCategory}
-                action={updateArticleCategory.bind(null, category.id)}
+                action={updateCategory}
+                successCallback={handleSuccessUpdate}
             >
                 <TextInput label="navn" name="name" defaultValue={"hei"} />
                 <Textarea 

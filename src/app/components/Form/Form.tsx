@@ -24,7 +24,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
-}
+} 
 type InputType = {
     input: ReactNode & { label?: string },
     errors: ActionError[],
