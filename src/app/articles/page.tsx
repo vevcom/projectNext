@@ -11,7 +11,6 @@ export default async function ArticleCategoryList() {
     return (
         <PageWrapper title="Artikler">
             <main className={styles.wrapper}>
-                <ul>
                 {
                     categories.length ? (
                         categories.map((category) => (
@@ -22,12 +21,11 @@ export default async function ArticleCategoryList() {
                             </li>
                         ))
                     ) : (
-                        <li>
+                        <i>
                             Ingen kategorier å vise
-                        </li>
+                        </i>
                     )
                 }
-                </ul>
             </main>
         </PageWrapper>
     );
