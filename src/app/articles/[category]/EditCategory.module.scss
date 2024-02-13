@@ -1,5 +1,8 @@
 @use '@/styles/ohma';
 
 .EditCategory {
-
+    width: 50vw;
+    .description {
+        min-height: 150px;
+    }
 }
