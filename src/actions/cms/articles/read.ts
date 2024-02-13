@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandeler from '@/prisma/errorHandler'
+import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 
@@ -25,7 +25,7 @@ export async function readArticle(idOrName: number | string): Promise<ActionRetu
         if (!article) return { success: false, error: [{ message: `Article ${name} not found` }] }
         return { success: true, data: article }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }
 
@@ -48,6 +48,6 @@ export async function readArticles(articleCategoryId: number) : Promise<ActionRe
         })
         return { success: true, data: articles }
     } catch (error) {
-        return errorHandeler(error)
+        return errorHandler(error)
     }
 }

@@ -186,13 +186,13 @@ model Article {
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @updatedAt @map("updated_at")
   articleSections ArticleSection[]
-  coverImage      CmsImage         @relation(fields: [coverImageId], references: [id])
+  coverImage      CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId    Int              @unique
 
-  newsArticle       NewsArticle?    
+  newsArticle NewsArticle?
 
   articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
-  articleCategoryId Int?             
+  articleCategoryId Int?
 
   @@map("articles")
 }
