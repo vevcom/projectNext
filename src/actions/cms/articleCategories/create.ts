@@ -9,6 +9,7 @@ export default async function createArticleCategory(
     description?: string
 ): Promise<ActionReturn<ReturnType>> {
     try {
+        // TODO: Check for permission to create article category
         const articleCategory = await prisma.articleCategory.create({
             data: {
                 name,
