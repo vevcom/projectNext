@@ -29,7 +29,7 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
     }, [inView])
 
     const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
-        if (context.serverRenderedData.includes(dataEntry)) return null
+        if (i < context.startPage.pageSize * context.startPage.page) return null
         return renderer(dataEntry, i)
     }), [context.state.data, renderer])
 

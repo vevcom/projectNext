@@ -35,8 +35,12 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     if (!shouldRender) return null
 
     const refreshImages = () => {
+        if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
+            pagingContext?.refetch()
+        } else {
+            router.refresh()
+        }
         pagingContext?.refetch()
-        router.refresh()
     }
 
     return (

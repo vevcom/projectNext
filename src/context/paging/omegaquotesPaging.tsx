@@ -1,5 +1,4 @@
 'use client'
-
 import generatePagingProvider, { generatePagingContext } from '@/context/paging/PagingGenerator'
 import { readQuotesPage } from '@/actions/quotes/read'
 import type { ReadPageInput } from '@/actions/type'

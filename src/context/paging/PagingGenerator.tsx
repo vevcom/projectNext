@@ -1,9 +1,8 @@
 'use client'
 
-import React, { createContext, useState, useRef, useEffect } from 'react'
+import React, { createContext, useState, useRef, useEffect, use } from 'react'
 import type { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import type { Context as ReactContextType } from 'react'
-import { set } from 'zod'
 
 export type StateTypes<Data, PageSize extends number> = {
     page: Page<PageSize>,
@@ -18,6 +17,7 @@ export type PagingContextType<Data, PageSize extends number, FetcherDetails> = R
     refetch: () => Promise<Data[]>,
     setDetails: (details: FetcherDetails) => void,
     serverRenderedData: Data[],
+    startPage: Page<PageSize>,
 } | null>
 
 export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
@@ -32,45 +32,6 @@ export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails, Da
     Context: PagingContextType<Data, PageSize, FetcherDetails>,
 }
 
-type ActionTypes<Data, PageSize extends number, DataGuarantee extends boolean> = {
-    type: 'loadMoreStart',
-} | {
-    type: 'loadMoreSuccess' | 'loadMoreFailure',
-    fetchReturn: ActionReturn<Data[], DataGuarantee>,
-} | {
-    type: 'clearAll',
-    startPage: Page<PageSize>,
-    serverRenderedData: Data[],
-}
-
-function fetchReducer<Data, const PageSize extends number, DataGuarantee extends boolean>(
-    state: StateTypes<Data, PageSize>,
-    action: ActionTypes<Data, PageSize, DataGuarantee>
-): StateTypes<Data, PageSize> {
-    switch (action.type) {
-        case 'loadMoreStart':
-            return { ...state, loading: true }
-        case 'loadMoreSuccess':
-            if (!action.fetchReturn.success) throw new Error('loadMoreSuccess called with unsuccessful fetchReturn')
-            if (!action.fetchReturn.data || action.fetchReturn.data.length === 0) {
-                return { ...state, allLoaded: true, loading: false }
-            }
-            return {
-                ...state,
-                data: [...state.data, ...action.fetchReturn.data],
-                loading: false,
-                page: {
-                    ...state.page,
-                    page: state.page.page + 1,
-                }
-            }
-        case 'loadMoreFailure':
-            return { ...state, allLoaded: true, loading: false }
-        default:
-            return state
-    }
-}
-
 function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
     fetcher,
     Context
@@ -79,69 +40,77 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
     return function PagingProvider(
         { serverRenderedData, startPage, children, details:givenDetails }: PropTypes<Data, PageSize, FetcherDetails>
     ) {
-        const [state, setState] = useState(
-            {
+        const [state, setState_] = useState<StateTypes<Data, PageSize>>({
+                data: serverRenderedData,
+                page: startPage,
+                loading: false,
+                allLoaded: false
+        })
+
+
+        //Update state if you want to cause a rerender, else update ref.current
+        const stateRef = useRef(state)
+        const setState = (newState: StateTypes<Data, PageSize>) => {
+            stateRef.current = newState
+            setState_(newState)
+        }
+        const resetState = () => {
+            stateRef.current = {
                 data: serverRenderedData,
                 page: startPage,
                 loading: false,
                 allLoaded: false
             }
-        )
-
-        const stateRef = useRef(state)
-        const detailsRef = useRef(givenDetails)
-        const setDetails = (details: FetcherDetails) => {
-            setState({ ...state, data: [], page: startPage, allLoaded: false })
-            detailsRef.current = details
         }
-        useEffect(() => setDetails(givenDetails), [givenDetails])
 
-        stateRef.current = state
+        const details = useRef(givenDetails)
         useEffect(() => {
-            stateRef.current = state
-        }, [state])
-
+            setDetails(givenDetails)
+        }, [givenDetails])
+        const setDetails = (newDetails: FetcherDetails) => {
+            details.current = newDetails
+            resetState()
+        }
         const loadMore = async () => {
             if (stateRef.current.loading || stateRef.current.allLoaded) return []
-            setState({ ...state, loading: true })
-
-            const fetchReturn = await fetcher({
-                page: stateRef.current.page,
-                details: detailsRef.current,
+            setState({ ...stateRef.current, loading: true })
+            const result = await fetcher({ 
+                page: stateRef.current.page, 
+                details: details.current 
             })
-            if (!fetchReturn.success) {
-                setState({ ...state, allLoaded: true, loading: false })
+            if (!result.success || !result.data) {
+                setState({ ...stateRef.current, loading: false })
                 return []
             }
-            if (!fetchReturn.data || fetchReturn.data.length === 0) {
-                setState({ ...state, allLoaded: true, loading: false })
+            if (!result.data.length) {
+                setState({ ...stateRef.current, loading: false, allLoaded: true })
                 return []
             }
-            setState({
-                ...state,
-                data: [...state.data, ...fetchReturn.data],
+            const newState = {
+                data: [...stateRef.current.data, ...result.data],
+                page: { ...stateRef.current.page, page: stateRef.current.page.page + 1 },
                 loading: false,
-                page: {
-                    ...state.page,
-                    page: state.page.page + 1,
-                }
-            })
-            return fetchReturn.data || []
+                allLoaded: false
+            }
+            setState(newState)
+            return result.data
         }
 
+        useEffect(() => {
+            console.log(state)
+        }, [state])
         const refetch = async () => {
-            const goToPage = stateRef.current.page.page
-            setState({ ...state, data: [], page: startPage, allLoaded: false })
-            const data: Data[] = []
-            while (stateRef.current.page.page < goToPage) {
-                const newData = await loadMore()
-                data.push(...newData)
+            const toPage = stateRef.current.page.page
+            resetState()
+            let data : Data[] = []
+            for (let i = 0; i < toPage; i++) {
+                data = [...data, ...(await loadMore())]
             }
             return data
         }
 
         return (
-            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, setDetails }}>
+            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, startPage, setDetails}}>
                 {children}
             </Context.Provider>
         )
@@ -154,7 +123,8 @@ function generatePagingContext<Data, const PageSize extends number, FetcherDetai
         refetch: () => Promise<Data[]>,
         setDetails: (details: FetcherDetails) => void,
         serverRenderedData: Data[],
-            } | null>(null)
+        startPage: Page<PageSize>,
+    } | null>(null)
     return context
 }
 

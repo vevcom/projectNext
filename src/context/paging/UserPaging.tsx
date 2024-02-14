@@ -7,7 +7,6 @@ import type { UserDetails, UserFiltered } from '@/actions/users/Types'
 export type PageSizeUsers = 20;
 const fetcher = async (x: ReadPageInput<PageSizeUsers, UserDetails>) => {
     const users = await readUserPage(x)
-    console.log(users)
     return users
 }
 

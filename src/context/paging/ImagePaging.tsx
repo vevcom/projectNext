@@ -1,5 +1,4 @@
 'use client'
-
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readImagesPage } from '@/actions/images/read'
 import type { ReadPageInput } from '@/actions/type'
