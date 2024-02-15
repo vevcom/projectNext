@@ -1,7 +1,14 @@
 'use client'
 import styles from './EndlessScroll.module.scss'
 import Button from '@/components/UI/Button'
-import React, { useContext, useEffect, useMemo, useCallback } from 'react'
+import React, { 
+    useContext, 
+    useEffect, 
+    useMemo, 
+    useCallback, 
+    useState, 
+    useRef 
+} from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 
@@ -38,18 +45,29 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
         return renderer(dataEntry, i)
     }), [context.state.data, renderer, context.state.allLoaded])
 
+    // Do not show button right away if allLoaded is true, it can cause flicker
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [showButton, setShowButton] = useState(false);
+
+    useEffect(() => {
+        if (!context.state.allLoaded) {
+            timerRef.current = setTimeout(() => {
+                setShowButton(true);
+            }, 500);
+        } else {
+            setShowButton(false);
+        }
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+        };
+    }, [context.state.allLoaded]);
+
     return (
         <>
             {renderedPageData}
-            <span className={styles.loadingControl}>
-                {
-                    context.state.allLoaded ? (
-                        <i>Ingen flere å laste inn</i>
-                    ) :
-                        <div ref={ref}>
-                            <Button onClick={() => context.loadMore()}>Last inn flere</Button>
-                        </div>
-                }
+            <span ref={ref} className={styles.loadingControl}>
+                <i style={{opacity: showButton ? 0 : 1}}>Ingen flere å laste inn</i>
+                <Button style={{opacity: showButton ? 1 : 0}} onClick={loadMore}>Last inn flere</Button>
             </span>
         </>
     )
