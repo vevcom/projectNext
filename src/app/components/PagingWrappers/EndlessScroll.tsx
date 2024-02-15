@@ -1,7 +1,7 @@
 'use client'
 import styles from './EndlessScroll.module.scss'
 import Button from '@/components/UI/Button'
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useCallback } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 
@@ -22,16 +22,21 @@ export default function EndlessScroll<Data, const PageSize extends number, Fetch
         threshold: 0,
     })
 
+    const loadMore = useCallback(async () => {
+        if (context.state.allLoaded) return
+        if (!inView) return
+        await context.loadMore()
+    }, [context.state.allLoaded, inView, context.loadMore])
+
     useEffect(() => {
-        if (inView) {
-            context.loadMore()
-        }
-    }, [inView])
+        loadMore()
+    }, [inView, loadMore])
+
 
     const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
         if (i < context.startPage.pageSize * context.startPage.page) return null
         return renderer(dataEntry, i)
-    }), [context.state.data, renderer])
+    }), [context.state.data, renderer, context.state.allLoaded])
 
     return (
         <>
