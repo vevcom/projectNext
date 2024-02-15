@@ -28,7 +28,7 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
     const { quote, author } = parse.data
 
     // REFACTOR when new permission system is working
-    const user = await getUser()
+    const { user } = await getUser()
 
     if (!user) {
         return {
@@ -49,7 +49,7 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
         }
     }
 
-    if (!permissions.data.has('OMEGAQUOTES_WRITE')) {
+    if (!permissions.data.includes('OMEGAQUOTES_WRITE')) {
         return {
             success: false,
             error: [{

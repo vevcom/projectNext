@@ -22,7 +22,7 @@ export default async function OmegaQuotes() {
     })
 
     const userPermissions = await readPermissionsOfUser(user.id)
-    const showCreateButton = (userPermissions.success && userPermissions.data.has('OMEGAQUOTES_WRITE'))
+    const showCreateButton = (userPermissions.success && userPermissions.data.includes('OMEGAQUOTES_WRITE'))
 
     const pageSize: PageSizeOmegaquote = 20
 

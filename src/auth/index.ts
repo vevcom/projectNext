@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { AuthOptions } from 'next-auth'
-import type { Permission } from '@prisma/client'
+import type { Permission, User } from '@prisma/client'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -15,18 +15,26 @@ export const authOptions: AuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             authorize: async (credentials) => {
+                // Dette burde være en action
                 const user = await prisma.user.findUnique({
                     where: {
                         username: credentials?.username
                     }
                 })
+
+                if (!user) return null
+
                 // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (user?.password === credentials?.password) {
-                    if (typeof user?.id === 'number') {
-                        return { ...user }
-                    }
+                if (user.password !== credentials?.password) return null
+
+                const permissionsRes = await readPermissionsOfUser(user.id)
+
+                if (!permissionsRes.success) return null
+
+                return {
+                    ...user,
+                    permissions: permissionsRes.data
                 }
-                return null
             }
         })
     ],
@@ -39,14 +47,24 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user }) {
-            if (typeof user?.id === 'number' && user?.email) {
+            // The user object is only set when the token is created upon
+            // login. 
+            //
+            // We also need type guarding for user.id and user.email
+            // because the default next auth types are different from our
+            // prisma model.
+            if (user && typeof user.id === 'number' && user.email) {
+                // Here we have to manually type out all the properties of
+                // the user object because typescript doesn't recognize
+                // the typeguard for some reason
                 token.user = {
                     id: user.id,
                     username: user.username,
                     email: user.email,
                     password: user.password,
                     firstname: user.firstname,
-                    lastname: user.lastname
+                    lastname: user.lastname,
+                    permissions: user.permissions,
                 }
             }
             return token
@@ -58,10 +76,10 @@ export const authOptions: AuthOptions = {
     }
 }
 
-type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
+export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
 
-type UserWithPermissions = User & {
-    permissions: Set<Permission>
+export type UserWithPermissions = User & {
+    permissions: Permission[]
 }
 
 type GetUserArgsType = {
@@ -85,22 +103,16 @@ type GetUserReturnType = {
 export async function getUser({ permissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user
 
-    if (!user) {return { user: null, status: 'unauthenticated' }}
-
-    const userPermissions = await readPermissionsOfUser(user.id)
-
-    if (!userPermissions.success) {throw new Error('Could not read permissions of user')}
+    if (!user) {
+        return { user: null, status: 'unauthenticated' }
+    }
 
     // Check if user has all required permissions
-    if (permissions && !permissions.every(permission => userPermissions.data.has(permission))) {return { user: null, status: 'unauthorized' }}
-
-    return {
-        user: {
-            ...user,
-            permissions: userPermissions.data,
-        },
-        status: 'authorized',
+    if (permissions && !permissions.every(permission => user.permissions.includes(permission))) {
+        return { user: null, status: 'unauthorized' }
     }
+
+    return { user, status: 'authorized' }
 }
 
 type RequireUserArgsType = {

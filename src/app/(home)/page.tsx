@@ -13,13 +13,15 @@ import Link from 'next/link'
 export default async function Home() {
     const { user } = await getUser()
 
+    console.log(user);
+
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
                         <CmsImage name="frontpage_logo" width={300}/>
-                        {user &&
+                        {!user &&
                             <>
                                 <Link href="login">Logg inn</Link>
                                 <Link href="infopages/nystudent">Ny student</Link>
