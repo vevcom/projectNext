@@ -86,12 +86,10 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         const loadMore = async () => {
             if (stateRef.current.loading || stateRef.current.allLoaded) return []
             setState({ ...stateRef.current, loading: true })
-            console.log('loading more ' + stateRef.current.page.page)
             const result = await fetcher({ 
                 page: stateRef.current.page, 
                 details: details.current 
             })
-            console.log(result)
             if (!result.success || !result.data) {
                 setState({ ...stateRef.current, loading: false })
                 return []

@@ -4,7 +4,7 @@ import styles from './UserList.module.scss'
 import { UserPagingContext } from '@/context/paging/UserPaging'
 import { useMemo, useContext, useEffect, useState } from 'react'
 import { ChangeEvent } from 'react'
-import EndlessScroll from '../../PagingWrappers/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 
 export default function UserList({  }) {
     const userPaging = useContext(UserPagingContext)
