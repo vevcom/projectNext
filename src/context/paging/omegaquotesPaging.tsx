@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from '@/context/paging/PagingGenerator'
-import { readQuotesPage } from '@/actions/quotes/read'
+import { readQuotesPage } from '@/actions/omegaquotes/read'
 import type { ReadPageInput } from '@/actions/type'
-import type { OmegaquoteFiltered } from '@/actions/quotes/read'
+import type { OmegaquoteFiltered } from '@/actions/omegaquotes/read'
 
 export type PageSizeOmegaquote = 20;
 const fetcher = async (x: ReadPageInput<PageSizeOmegaquote>) => await readQuotesPage(x)
