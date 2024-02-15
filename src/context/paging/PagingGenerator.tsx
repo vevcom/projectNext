@@ -3,12 +3,12 @@
 import React, { createContext, useState, useRef, useEffect } from 'react'
 import type { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import type { Context as ReactContextType } from 'react'
+import { set } from 'zod'
 
 export type StateTypes<Data, PageSize extends number> = {
     page: Page<PageSize>,
     data: Data[],
     allLoaded: boolean,
-    loading: boolean,
 }
 
 export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
@@ -43,9 +43,14 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         const [state, setState_] = useState<StateTypes<Data, PageSize>>({
                 data: serverRenderedData,
                 page: startPage,
-                loading: false,
                 allLoaded: false
         })
+        const [loading, setLoading_] = useState(false)
+        const loadingRef = useRef(loading)
+        const setLoading = (newLoading: boolean) => {
+            loadingRef.current = newLoading
+            setLoading_(newLoading)
+        }
 
 
         //Update state if you want to cause a rerender, else update ref.current
@@ -58,9 +63,9 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
             stateRef.current = {
                 data: serverRenderedData,
                 page: startPage,
-                loading: false,
                 allLoaded: false
             }
+            loadingRef.current = false
         }
 
         const details = useRef(givenDetails)
@@ -84,18 +89,20 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 
         
         const loadMore = async () => {
-            if (stateRef.current.loading || stateRef.current.allLoaded) return []
-            setState({ ...stateRef.current, loading: true })
+            if (loadingRef.current || stateRef.current.allLoaded) return []
+            loadingRef.current = true
             const result = await fetcher({ 
                 page: stateRef.current.page, 
                 details: details.current 
             })
             if (!result.success || !result.data) {
-                setState({ ...stateRef.current, loading: false })
+                setState({ ...stateRef.current})
+                setLoading(false)
                 return []
             }
             if (!result.data.length) {
-                setState({ ...stateRef.current, loading: false, allLoaded: true })
+                setState({ ...stateRef.current, allLoaded: true })
+                setLoading(false)
                 return []
             }
             const newState = {
@@ -105,6 +112,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
                 page: { ...stateRef.current.page, page: stateRef.current.page.page + 1}
             };
             setState(newState)
+            setLoading(false)
             return result.data
         }
         const refetch = async () => {

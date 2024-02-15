@@ -10,7 +10,6 @@ export async function readUserPage<const PageSize extends number>({
     details 
 }: ReadPageInput<PageSize, UserDetails>): Promise<ActionReturn<UserFiltered[]>> {
     const words = details.partOfName.split(' ');
-    console.log(words)
 
 
     try {
