@@ -19,30 +19,10 @@ type PermissionCategory = {
 // defines the layout of the role edit section
 const permissionCategories: PermissionCategory[] = [
     {
-        title: 'Hendelser',
-        permissions: [
-            { permission: 'CREATE_EVENTS', name: 'Lage hendelser' },
-            { permission: 'PARTICIPATE_IN_EVENTS', name: 'Delta på hendelser' },
-        ],
-    },
-    {
-        title: 'Konto og pengebruk',
-        permissions: [
-            { permission: 'USE_MONEY', name: 'Bruk penger' },
-            { permission: 'INFINITE_MONEY', name: 'Ubegrenset penger' },
-        ],
-    },
-    {
-        title: '«Bulshit» og «Omega Quotes»',
+        title: '«Bulshit» og «omegaquotes»',
         permissions: [
             { permission: 'OMEGAQUOTES_READ', name: 'Lese omegaquotes' },
             { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
-        ],
-    },
-    {
-        title: 'Annet',
-        permissions: [
-            { permission: 'CREATIVE_MODE', name: 'Kreativ-modus' },
         ],
     },
 ]

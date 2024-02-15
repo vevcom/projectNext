@@ -30,24 +30,6 @@ enum Permission {
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
-
-  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
-
-  // Fridge
-  USE_MONEY
-  USE_FRIDGE
-  INFINITE_MONEY
-
-  // Bulshit
-  POST_BULSHIT
-  VIEW_BULSHIT
-
-  // Events
-  PARTICIPATE_IN_EVENTS
-  CREATE_EVENTS
-
-  // Minecraft
-  CREATIVE_MODE
 }
 
 model Role {
