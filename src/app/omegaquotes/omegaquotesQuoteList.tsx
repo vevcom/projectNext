@@ -19,7 +19,7 @@ export default function OmegaquoteList({ serverRendered }: PropTypes) {
         {serverRendered} {/* Rendered on server homefully in the right way*/}
         <EndlessScroll
             pagingContext={OmegaquotePagingContext}
-            renderer={quote => <OmegaquoteQuote quote={quote}/>}
+            renderer={(quote, i) => <OmegaquoteQuote key={i} quote={quote}/>}
         />
     </>
 }
