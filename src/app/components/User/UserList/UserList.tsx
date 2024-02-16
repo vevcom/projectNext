@@ -21,7 +21,12 @@ export default function UserList({  }) {
             <input onChange={handleChange}></input>
             <table>
                 <thead>
-
+                    <tr>
+                        <th>Navn</th>
+                        <th>Brukernavn</th>
+                        <th>Linje</th>
+                        <th>Klasse</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
