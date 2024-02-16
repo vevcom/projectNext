@@ -7,8 +7,11 @@ type PropTypes = {
 
 export default function UserRow({ user }: PropTypes) {
     return (
-        <div className={styles.UserRow}>
-            UserListRow
-        </div>
+        <tr className={styles.UserRow}>
+            <td>{user.lastname}, {user.firstname}</td>
+            <td>{user.username}</td>
+            <td>MTTK</td>
+            <td>2</td>
+        </tr>
     )
 }

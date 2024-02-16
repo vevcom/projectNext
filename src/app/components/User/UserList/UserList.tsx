@@ -5,6 +5,7 @@ import { UserPagingContext } from '@/context/paging/UserPaging'
 import { useContext } from 'react'
 import { ChangeEvent } from 'react'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import UserRow from '../UserRow'
 
 export default function UserList({  }) {
     const userPaging = useContext(UserPagingContext)
@@ -18,14 +19,17 @@ export default function UserList({  }) {
         <div className={styles.UserList}>
             <button onClick={userPaging.loadMore}>heit mer</button>
             <input onChange={handleChange}></input>
-            <EndlessScroll pagingContext={UserPagingContext} renderer={(user, i) => (
-                <span key={user.id} className={styles.user}>
-                    <div>{user.id}</div>
-                    <div>{user.username}</div>
-                    <div>{user.firstname}</div>
-                    <div>{user.lastname}</div>
-                </span>
-            )} />
+            <table>
+                <thead>
+
+                </thead>
+                <tbody>
+                    <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
+                        <UserRow key={user.id} user={user} />
+                    )} />
+                </tbody>
+            </table>
+            
         </div>
     )
 }
