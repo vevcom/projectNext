@@ -24,7 +24,7 @@ export default async function Users() {
                 <UserPagingProvider
                     serverRenderedData={[]}
                     startPage={{
-                        pageSize: 20,
+                        pageSize: 50,
                         page: 0
                     }}
                     details={{

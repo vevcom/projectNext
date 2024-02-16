@@ -91,6 +91,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         const loadMore = async () => {
             if (loadingRef.current || stateRef.current.allLoaded) return []
             loadingRef.current = true
+            const oldDetails = details.current //if the user changes the details while loading, we should not set the data
             const result = await fetcher({ 
                 page: stateRef.current.page, 
                 details: details.current 
@@ -102,6 +103,11 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
             }
             if (!result.data.length) {
                 setState({ ...stateRef.current, allLoaded: true })
+                setLoading(false)
+                return []
+            }
+            // If the details have changed, we should not set the data
+            if (oldDetails !== details.current) {
                 setLoading(false)
                 return []
             }
