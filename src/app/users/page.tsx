@@ -17,7 +17,7 @@ export default async function Users() {
                     <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
                 }
             >
-                <CreateUserForm />
+                <CreateUserForm className={styles.makeUser} />
             </PopUp>
         }>
             <div className={styles.wrapper}>

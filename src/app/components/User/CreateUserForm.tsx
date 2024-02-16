@@ -1,5 +1,4 @@
 'use client'
-
 import React from 'react'
 import { createUser } from '@/actions/users/create'
 import TextInput from '@/components/UI/TextInput'
@@ -8,11 +7,15 @@ import { v4 as uuid } from 'uuid'
 import styles from './CreateUserForm.module.scss'
 import { useRouter } from 'next/navigation'
 
-export default function CreateUserForm() {
+type PropTypes = {
+    className?: string 
+}
+
+export default function CreateUserForm({ className }: PropTypes) {
     const { refresh } = useRouter()
 
     return (
-        <div className={styles.CreateUserForm}>
+        <div className={`${styles.CreateUserForm} ${className}`}>
             <Form 
                 title="Lag en bruker" 
                 submitText="Create user" 

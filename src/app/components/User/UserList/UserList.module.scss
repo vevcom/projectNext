@@ -5,9 +5,13 @@
         width: 100%;
     }
     > .list {
+        border-radius: ohma.$rounding;
+        background-color: ohma.$colors-white;
         width: 100%;
         > .head {
-            height: 40px;
+            padding: 2*ohma.$gap ohma.$gap;
+            border-radius: ohma.$rounding;
+            background-color: ohma.$colors-secondary;
         }
         span {
             display: grid;
