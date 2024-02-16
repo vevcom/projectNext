@@ -70,7 +70,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                         pageSize: 12,
                                         page: 0,
                                     }}
-                                    details={null}
+                                    details={undefined}
                                     serverRenderedData={[]}
                                 >
                                     <EndlessScroll
