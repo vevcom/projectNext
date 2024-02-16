@@ -4,14 +4,17 @@
     > .filters {
         width: 100%;
     }
-    > table {
+    > .list {
         width: 100%;
-        
-        th {
-            text-align: left;
-        }
-        thead {
+        > .head {
             height: 40px;
         }
+        span {
+            display: grid;
+            grid-template-columns: 3fr 2fr 1fr 1fr;
+            > * {
+                text-align: left;
+            }
+        } 
     }
 }
