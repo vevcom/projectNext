@@ -6,8 +6,9 @@ import { useContext } from 'react'
 import { ChangeEvent } from 'react'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '../UserRow'
+import { v4 as uuid } from 'uuid'
 
-export default function UserList({  }) {
+export default function UserList() {
     const userPaging = useContext(UserPagingContext)
     if (!userPaging) throw new Error('UserPagingContext not found')
 
@@ -17,8 +18,9 @@ export default function UserList({  }) {
 
     return (
         <div className={styles.UserList}>
-            <button onClick={userPaging.loadMore}>heit mer</button>
-            <input onChange={handleChange}></input>
+            <div className={styles.filters}>
+                <input onChange={handleChange}></input>
+            </div>
             <table>
                 <thead>
                     <tr>

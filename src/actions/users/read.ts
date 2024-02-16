@@ -32,9 +32,10 @@ export async function readUserPage<const PageSize extends number>({
                 })
                 //TODO select on groups
             },
-            orderBy: {
-                lastname: 'asc'
-            }
+            orderBy: [
+                { lastname: 'asc' },
+                { id: 'asc' }, //Important to make sure the order is consistent. Same last name - order by id
+            ]
         })
         return { success: true, data: users }
     } catch (error) {
