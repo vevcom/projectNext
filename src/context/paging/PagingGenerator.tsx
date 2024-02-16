@@ -3,7 +3,6 @@
 import React, { createContext, useState, useRef, useEffect } from 'react'
 import type { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import type { Context as ReactContextType } from 'react'
-import { set } from 'zod'
 
 export type StateTypes<Data, PageSize extends number> = {
     page: Page<PageSize>,
@@ -41,9 +40,9 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, PageSize, FetcherDetails>
     ) {
         const [state, setState_] = useState<StateTypes<Data, PageSize>>({
-                data: serverRenderedData,
-                page: startPage,
-                allLoaded: false
+            data: serverRenderedData,
+            page: startPage,
+            allLoaded: false
         })
         const [loading, setLoading_] = useState(false)
         const loadingRef = useRef(loading)
@@ -69,35 +68,17 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         }
 
         const details = useRef(givenDetails)
-        const setDetails = (newDetails: FetcherDetails, withFetch: boolean = true) => {
-            details.current = newDetails
-            resetState()
-            if (withFetch) {
-                loadMore()
-            }
-        }
 
-        const initialRender = useRef(true);
-        useEffect(() => {
-            if (initialRender.current) {
-                setDetails(givenDetails, false)
-                initialRender.current = false;
-            } else {
-                setDetails(givenDetails);
-            }
-        }, [givenDetails]);
-
-        
         const loadMore = async () => {
             if (loadingRef.current || stateRef.current.allLoaded) return []
             loadingRef.current = true
             const oldDetails = details.current //if the user changes the details while loading, we should not set the data
-            const result = await fetcher({ 
-                page: stateRef.current.page, 
-                details: details.current 
+            const result = await fetcher({
+                page: stateRef.current.page,
+                details: details.current
             })
             if (!result.success || !result.data) {
-                setState({ ...stateRef.current})
+                setState({ ...stateRef.current })
                 setLoading(false)
                 return []
             }
@@ -115,8 +96,8 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
                 data: [...stateRef.current.data, ...result.data],
                 loading: false,
                 allLoaded: false,
-                page: { ...stateRef.current.page, page: stateRef.current.page.page + 1}
-            };
+                page: { ...stateRef.current.page, page: stateRef.current.page.page + 1 }
+            }
             setState(newState)
             setLoading(false)
             return result.data
@@ -124,21 +105,47 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         const refetch = async () => {
             const toPage = stateRef.current.page.page
             resetState()
-            let data : Data[] = []
+            let data: Data[] = []
             for (let i = 0; i < toPage; i++) {
                 data = [...data, ...(await loadMore())]
             }
             return data
         }
 
+        const setDetails = (newDetails: FetcherDetails, withFetch: boolean = true) => {
+            details.current = newDetails
+            resetState()
+            if (withFetch) {
+                loadMore()
+            }
+        }
+
+        const initialRender = useRef(true)
+        useEffect(() => {
+            if (initialRender.current) {
+                setDetails(givenDetails, false)
+                initialRender.current = false
+            } else {
+                setDetails(givenDetails)
+            }
+        }, [givenDetails])
+
         return (
-            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, startPage, setDetails}}>
+            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, startPage, setDetails }}>
                 {children}
             </Context.Provider>
         )
     }
 }
-function generatePagingContext<Data, const PageSize extends number, FetcherDetails = undefined>(): PagingContextType<Data, PageSize, FetcherDetails> {
+function generatePagingContext<
+    Data,
+    const PageSize extends number,
+    FetcherDetails = undefined
+>(): PagingContextType<
+    Data,
+    PageSize,
+    FetcherDetails
+    > {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
         loadMore: () => Promise<Data[]>,
@@ -146,7 +153,7 @@ function generatePagingContext<Data, const PageSize extends number, FetcherDetai
         setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
         serverRenderedData: Data[],
         startPage: Page<PageSize>,
-    } | null>(null)
+            } | null>(null)
     return context
 }
 

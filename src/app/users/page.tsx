@@ -1,16 +1,16 @@
-import styles from './page.module.scss';
-import UserList from '@/components/User/UserList/UserList';
-import PageWrapper from '../components/PageWrapper/PageWrapper';
-import PopUp from '@/components/PopUp/PopUp';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import CreateUserForm from '@/components/User/CreateUserForm';
-import UserPagingProvider from '@/context/paging/UserPaging';
+import styles from './page.module.scss'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import UserList from '@/components/User/UserList/UserList'
+import PopUp from '@/components/PopUp/PopUp'
+import CreateUserForm from '@/components/User/CreateUserForm'
+import UserPagingProvider from '@/context/paging/UserPaging'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default async function Users() {
     return (
         <PageWrapper title="Brukere" headerItem={
-            <PopUp 
+            <PopUp
                 PopUpKey="userListAdd"
                 showButtonClass={styles.addUserButton}
                 showButtonContent = {
@@ -36,6 +36,6 @@ export default async function Users() {
                 </UserPagingProvider>
             </div>
         </PageWrapper>
-        
+
     )
 }

@@ -1,27 +1,30 @@
 'use server'
+import { userFieldsToExpose } from './Types'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { Image } from '@prisma/client'
+import type { UserFiltered, UserDetails } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
-import { UserFiltered, userFieldsToExpose, UserDetails } from './Types'
 
-export async function readUserPage<const PageSize extends number>({ 
-    page, 
-    details 
+export async function readUserPage<const PageSize extends number>({
+    page,
+    details
 }: ReadPageInput<PageSize, UserDetails>): Promise<ActionReturn<UserFiltered[]>> {
-    const words = details.partOfName.split(' ');
+    const words = details.partOfName.split(' ')
     try {
         const users = await prisma.user.findMany({
             skip: page.page * page.pageSize,
             take: page.pageSize,
-            select: userFieldsToExpose.reduce((prev, field) => ({ 
-                ...prev, 
+            select: userFieldsToExpose.reduce((prev, field) => ({
+                ...prev,
                 [field]: true
             }), {} as { [key in typeof userFieldsToExpose[number]]: true }),
             where: {
                 AND: words.map((word, i) => {
                     console.log(word)
-                    const condition = { [i === words.length - 1 ? 'contains' : 'equals']: word, mode: 'insensitive' } as const;
+                    const condition = {
+                        [i === words.length - 1 ? 'contains' : 'equals']: word,
+                        mode: 'insensitive'
+                    } as const
                     return {
                         OR: [
                             { firstname: condition },

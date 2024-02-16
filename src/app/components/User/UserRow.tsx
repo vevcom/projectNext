@@ -1,5 +1,5 @@
-import { UserFiltered } from '@/actions/users/Types'
 import styles from './UserRow.module.scss'
+import type { UserFiltered } from '@/actions/users/Types'
 
 type PropTypes = {
     user: UserFiltered
