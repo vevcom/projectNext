@@ -7,7 +7,7 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
     if (!user) {
         throw Error('Failed to seed permissions because no users exist')
     }
-    
+
     const allPermissions = Object.values(Permission).map(permission => ({ permission }))
 
     await prisma.role.create({

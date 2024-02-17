@@ -5,7 +5,6 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { AuthOptions } from 'next-auth'
 import type { Permission, User } from '@prisma/client'
-import logger from '@/logger'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -16,7 +15,7 @@ export const authOptions: AuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             authorize: async (credentials) => {
-                if(!credentials?.username || !credentials.password) return null
+                if (!credentials?.username || !credentials.password) return null
 
                 // Dette burde være en action
                 const user = await prisma.user.findUnique({
@@ -59,9 +58,8 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user }) {
-            logger.debug(token)
             // The user object is only set when the token is created upon
-            // login. 
+            // login.
             //
             // We also need type guarding for user.id and user.email
             // because the default next auth types are different from our

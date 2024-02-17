@@ -2,6 +2,7 @@ import prisma from '@/prisma'
 import { requireUser } from '@/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     params: {
@@ -34,7 +35,7 @@ export default async function User({ params }: PropTypes) {
             <p>{`Bruker-ID: ${user.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
-                {me && user.permissions.map(permission => <li>{permission}</li>)}
+                {me && user.permissions.map(permission => <li key={uuid()}>{permission}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
         </>

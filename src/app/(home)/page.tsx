@@ -13,8 +13,6 @@ import Link from 'next/link'
 export default async function Home() {
     const { user } = await getUser()
 
-    console.log(user);
-
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
