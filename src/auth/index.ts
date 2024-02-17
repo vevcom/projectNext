@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { AuthOptions } from 'next-auth'
 import type { Permission, User } from '@prisma/client'
+import logger from '@/logger'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -15,17 +16,28 @@ export const authOptions: AuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             authorize: async (credentials) => {
+                if(!credentials?.username || !credentials.password) return null
+
                 // Dette burde være en action
                 const user = await prisma.user.findUnique({
                     where: {
-                        username: credentials?.username
-                    }
+                        username: credentials?.username,
+                    },
                 })
 
                 if (!user) return null
 
+                const userCredentials = await prisma.credentials.findUnique({
+                    where: {
+                        userId: user.id,
+                    },
+                    select: {
+                        passwordHash: true,
+                    }
+                })
+
                 // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (user.password !== credentials?.password) return null
+                if (userCredentials?.passwordHash !== credentials?.password) return null
 
                 const permissionsRes = await readPermissionsOfUser(user.id)
 
@@ -47,6 +59,7 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user }) {
+            logger.debug(token)
             // The user object is only set when the token is created upon
             // login. 
             //
@@ -61,7 +74,6 @@ export const authOptions: AuthOptions = {
                     id: user.id,
                     username: user.username,
                     email: user.email,
-                    password: user.password,
                     firstname: user.firstname,
                     lastname: user.lastname,
                     permissions: user.permissions,

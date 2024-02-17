@@ -27,14 +27,16 @@ export default async function User({ params }: PropTypes) {
         notFound()
     }
 
-    console.log(user)
-
     return (
         <>
             <h1>{`${user.firstname} ${user.lastname}`}</h1>
-            <p>{`E-post: '${user.email}'`}<br/>{`Passord: '${user.password}'`}</p>
+            <p>{`E-post: '${user.email}'`}</p>
+            <p>{`Bruker-ID: ${user.id}`}</p>
+            <h2>Tillganger:</h2>
+            <ul>
+                {me && user.permissions.map(permission => <li>{permission}</li>)}
+            </ul>
             {me && <Link href="/logout">Logg ut</Link>}
-            {me && Array.from(user.permissions).map(permission => <p>{permission}</p>)}
         </>
     )
 }
