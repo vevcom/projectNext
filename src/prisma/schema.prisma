@@ -29,25 +29,52 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-
   @@map("accounts")
 }
 
 model User {
-  id            Int          @id @default(autoincrement())
-  username      String       @unique
-  email         String       @unique
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
   emailVerified DateTime?
-  password      String // Dette er kun for testing
-  firstname     String       @default("[Fjernet]")
-  lastname      String       @default("[Fjernet]")
-  boi          String?
+  password      String? // Dette er kun for testing
+  firstname     String    @default("[Fjernet]")
+  lastname      String    @default("[Fjernet]")
+  boi           String    @default("")
+  sex           String?
+  yearOfStudy   Int?
 
-  roles         RolesUsers[]
-  OmegaQuote    OmegaQuote[]
-  accounts      Account[]
+  studyProgramId Int?
+  studyProgram   StudyProgram? @relation(fields: [studyProgramId], references: [id])
+
+  roles      RolesUsers[]
+  OmegaQuote OmegaQuote[]
+  accounts   Account[]
 
   @@map("users")
+}
+
+model StudyProgram {
+  id            Int     @id @default(autoincrement())
+  name          String
+  code          String  @unique
+  years         Int? // This is not stored in Feide, therefore it is optional
+  instituteCode String? @map("institute_code")
+  archived      Boolean @default(false)
+
+  users        User[]
+  defaultRoles StudyProgramRole[]
+
+  @@map("study_programs")
+}
+
+model StudyProgramRole {
+  studyProgram   StudyProgram @relation(fields: [studyProgramId], references: [id])
+  studyProgramId Int          @map("study_program_id")
+  role           Role         @relation(fields: [roleId], references: [id])
+  roleId         Int          @map("role_id")
+
+  @@id([studyProgramId, roleId])
 }
 
 enum Permission {
@@ -75,10 +102,11 @@ enum Permission {
 }
 
 model Role {
-  id          Int              @id @default(autoincrement())
-  name        String           @unique
-  users       RolesUsers[]
-  permissions RolePermission[]
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  users            RolesUsers[]
+  permissions      RolePermission[]
+  StudyProgramRole StudyProgramRole[]
 
   @@map("role")
 }

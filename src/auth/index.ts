@@ -43,7 +43,28 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, profile }) {
+
+            if (trigger === 'signUp') {
+                console.log("SIGN UP!")
+                console.log(profile)
+
+                if ((profile as any).studyProgram) {
+                    prisma.user.update({
+                        where: {
+                            id: Number(user.id)
+                        },
+                        data: {
+                            studyProgram: {
+                                connect: {
+                                    id: (profile as any).studyProgram.id
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+
             if (typeof user?.id === 'number' && user?.email) {
                 token.user = {
                     id: user.id,
@@ -54,6 +75,7 @@ export const authOptions: AuthOptions = {
                     lastname: user.lastname
                 }
             }
+
             return token
         }
     },

@@ -1,9 +1,19 @@
+import { Awaitable } from "next-auth";
 import type { Provider } from "next-auth/providers/index"
+import type { User } from "next-auth"
 
 export type PropType = {
     clientId: string,
     clientSecret: string,
 }
+
+type FeideGroup = {
+    id: string,
+    displayName: string,
+    type: string,
+}
+
+type FeideGroups = Array<FeideGroup>
 
 export default function FeideProvider({clientId, clientSecret} : PropType) : Provider {
     return {
@@ -22,6 +32,8 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
             async request(context) {
                 const { tokens } = context;
 
+                console.log(tokens);
+
                 const userinfoBasicRequest = fetch("https://auth.dataporten.no/openid/userinfo", {
                     headers: {
                         Authorization: `Bearer ${tokens.access_token}`,
@@ -29,6 +41,12 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                 })
 
                 const userinfoExtendedRequest = fetch("https://api.dataporten.no/userinfo/v1/userinfo", {
+                    headers: {
+                        Authorization: `Bearer ${tokens.access_token}`,
+                    }
+                })
+
+                const userinfoGroupsRequest = fetch("https://groups-api.dataporten.no/groups/me/groups", {
                     headers: {
                         Authorization: `Bearer ${tokens.access_token}`,
                     }
@@ -44,9 +62,9 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                     throw new Error("The audience for the response from Feide is incorrect");
                 }
 
-                const [ userinfoBasic, userinfoExtended ] = await Promise.all([userinfoBasicRequest, userinfoExtendedRequest])
+                const [ userinfoBasic, userinfoExtended, userinfoGroups ] = await Promise.all([userinfoBasicRequest, userinfoExtendedRequest, userinfoGroupsRequest])
 
-                if (!userinfoBasic.ok || !userinfoExtended.ok) {
+                if (!userinfoBasic.ok || !userinfoExtended.ok || !userinfoGroups.ok) {
                     throw new Error("Failed to fetch user information");
                 }
 
@@ -54,18 +72,44 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
 
                 const profileExtended = await userinfoExtended.json();
 
-                return { ...profile, extended: profileExtended, iat: clientIdData.iat };
+                const groups : FeideGroups = await userinfoGroups.json();
+
+                let studyProgram;
+
+                for (let group of groups) {
+                    const groupSplit = group.id.split(":");
+                    if (group.type == "fc:fs:fs:prg" && groupSplit[4] == "ntnu.no") {
+                        const studyProgramCode = groupSplit[5];
+                        
+                        studyProgram = await prisma.studyProgram.findUnique({
+                            where: {
+                                code: studyProgramCode,
+                            }
+                        })
+
+                        if (!studyProgram) {
+                            studyProgram = await prisma.studyProgram.create({
+                                data: {
+                                    name: group.displayName,
+                                    code: studyProgramCode,
+                                }
+                            })
+                        }
+                        break;
+                    }
+                }
+
+                return { ...profile, extended: profileExtended, groups, studyProgram, iat: clientIdData.iat };
             }
         },
-        profile(profile, token) {
+        profile(profile, token) : Awaitable<User> {
+
             return {
                 id: profile.sub,
                 email: profile.email,
-                emailVerified: null,
                 username: profile.email.split("@")[0],
                 firstname: profile.extended.givenName.join(" "),
                 lastname: profile.extended.sn.join(" "),
-                password: ""
             }
         },
         clientId,
