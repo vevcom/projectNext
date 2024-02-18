@@ -3,7 +3,7 @@ import { ReturnType } from "./ReturnType"
 import { ActionReturn } from '@/actions/type'
 import { z } from "zod"
 import prisma from '@/prisma'
-import { createArticle } from "../cms/articles/create"
+import { createArticle } from "@/cms/articles/create"
 import errorHandler from "@/prisma/errorHandler"
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
