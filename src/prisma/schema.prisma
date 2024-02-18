@@ -13,20 +13,30 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  username   String       @unique
-  email      String       @unique
-  password   String // Dette er kun for testing
-  firstname  String       @default("[Fjernet]")
-  lastname   String       @default("[Fjernet]")
-  roles      RolesUsers[]
-  OmegaQuote OmegaQuote[]
+  id                Int                @id @default(autoincrement()) // cuid ??
+  username          String             @unique
+  email             String             @unique
+  password          String // Dette er kun for testing
+  firstname         String             @default("[Fjernet]")
+  lastname          String             @default("[Fjernet]")
+  roles             RolesUsers[]
+  OmegaQuote        OmegaQuote[]
+  FeideAuthProvider FeideAuthProvider?
 
   @@map("users")
 }
 
-enum Permission {
+model FeideAuthProvider {
+  feideUserId          String   @unique @map("feide_user_id")
+  issuedAt             DateTime @default(now()) @map("issued_at")
+  accessToken          String   @map("access_token")
+  accessTokenExpiresAt DateTime @map("access_token_expires_at")
+  mustReauthenticate   Boolean  @default(false) @map("must_reauthenticate")
+  user                 User     @relation(fields: [userId], references: [id])
+  userId               Int      @id @map("user_id")
+}
 
+enum Permission {
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ

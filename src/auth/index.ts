@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Permission } from '@prisma/client'
-import FeideProvider from './feideProvider'
+import FeideProvider from './FeideProvider'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -55,6 +55,14 @@ export const authOptions: AuthOptions = {
             }
             return token
         },
+        async signIn({ user, account, profile }) {
+            console.log("User Account Profile");
+            console.log(user);
+            console.log(account);
+            console.log(profile);
+
+            return true;
+        }
     },
     pages: {
         signIn: '/login',
