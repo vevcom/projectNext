@@ -5,8 +5,7 @@ import type { ReturnType } from './ReturnType'
 import type { NewsArticle } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
-type SimpleReturnTypeReadMany = NewsArticle & { name: string } //the name is connected to article not newsarticle
-export async function readNews(): Promise<ActionReturn<SimpleReturnTypeReadMany[]>> {
+export async function readNews(): Promise<ActionReturn<NewsArticle[]>> {
     try {
         const news = await prisma.newsArticle.findMany({
             include: {
@@ -24,6 +23,36 @@ export async function readNews(): Promise<ActionReturn<SimpleReturnTypeReadMany[
                 name: n.article.name
             }))
         }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}
+
+export async function readNewsByIdOrName(idOrName: number | string): Promise<ActionReturn<ReturnType>> {
+    try {
+        const news = await prisma.newsArticle.findUnique({
+            where: typeof idOrName === 'number' ? { 
+                id: idOrName 
+            } : { 
+                articleName: idOrName
+            },
+            include: {
+                article: {
+                    include: {
+                        coverImage: true,
+                        articleSections: {
+                            include: {
+                                cmsImage: true,
+                                cmsParagraph: true,
+                                cmsLink: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        if (!news) return { success: false, error: [{message: `article ${idOrName} not found`}] }
+        return { success: true, data: news }
     } catch (error) {
         return errorHandler(error)
     }
