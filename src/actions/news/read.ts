@@ -1,17 +1,20 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType } from './ReturnType'
-import type { NewsArticle } from '@prisma/client'
+import type { ReturnType, SimpleReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 
-export async function readNews(): Promise<ActionReturn<NewsArticle[]>> {
+export async function readNews(): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
         const news = await prisma.newsArticle.findMany({
             include: {
                 article: {
-                    select: {
-                        name: true
+                    include: {
+                        coverImage: {
+                            include: {
+                                image: true
+                            }
+                        }
                     }
                 }
             }
@@ -20,7 +23,7 @@ export async function readNews(): Promise<ActionReturn<NewsArticle[]>> {
             success: true, 
             data: news.map(n => ({
                 ...n,
-                name: n.article.name
+                coverImage: n.article.coverImage.image
             }))
         }
     } catch (error) {
