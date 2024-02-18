@@ -20,7 +20,9 @@ export default async function NewsArtilces() {
                             image={n.coverImage} 
                             title={n.articleName} 
                             href={`/news/${n.articleName}`}
-                        />
+                        >
+                            {n.description}
+                        </ImageCard>
                     ))
                 }
             </main>
