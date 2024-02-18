@@ -3,7 +3,7 @@ import PageWrapper from '../components/PageWrapper/PageWrapper'
 import { readNews } from '@/actions/news/read'
 import ImageCard from '../components/ImageCard/ImageCard'
 
-export default async function Articles() {
+export default async function NewsArtilces() {
     const res = await readNews()
     if (!res.success) throw res.error ? 
         new Error(res.error[0].message) : 
