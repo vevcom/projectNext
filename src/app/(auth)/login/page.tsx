@@ -30,6 +30,6 @@ export default function LogIn() {
             <BorderButton>Logg inn</BorderButton>
             <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
         </form>
-        <button onClick={() => signIn('feide')}>Logg inn med Feide</button>
+        <BorderButton onClick={() => signIn('feide')}>Logg inn med Feide</BorderButton>
     </>
 }

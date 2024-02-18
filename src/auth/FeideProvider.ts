@@ -61,6 +61,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
             return {
                 id: profile.sub,
                 email: profile.email,
+                emailVerified: null,
                 username: profile.email.split("@")[0],
                 firstname: profile.extended.givenName.join(" "),
                 lastname: profile.extended.sn.join(" "),

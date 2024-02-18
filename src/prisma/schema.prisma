@@ -12,28 +12,42 @@ datasource db {
   url      = env("DB_URI")
 }
 
-model User {
-  id                Int                @id @default(autoincrement()) // cuid ??
-  username          String             @unique
-  email             String             @unique
-  password          String // Dette er kun for testing
-  firstname         String             @default("[Fjernet]")
-  lastname          String             @default("[Fjernet]")
-  roles             RolesUsers[]
-  OmegaQuote        OmegaQuote[]
-  FeideAuthProvider FeideAuthProvider?
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  @@map("users")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+
+  @@map("accounts")
 }
 
-model FeideAuthProvider {
-  feideUserId          String   @unique @map("feide_user_id")
-  issuedAt             DateTime @default(now()) @map("issued_at")
-  accessToken          String   @map("access_token")
-  accessTokenExpiresAt DateTime @map("access_token_expires_at")
-  mustReauthenticate   Boolean  @default(false) @map("must_reauthenticate")
-  user                 User     @relation(fields: [userId], references: [id])
-  userId               Int      @id @map("user_id")
+model User {
+  id            Int          @id @default(autoincrement())
+  username      String       @unique
+  email         String       @unique
+  emailVerified DateTime?
+  password      String // Dette er kun for testing
+  firstname     String       @default("[Fjernet]")
+  lastname      String       @default("[Fjernet]")
+  boi          String?
+
+  roles         RolesUsers[]
+  OmegaQuote    OmegaQuote[]
+  accounts      Account[]
+
+  @@map("users")
 }
 
 enum Permission {
