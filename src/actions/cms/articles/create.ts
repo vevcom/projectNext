@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 
-export async function createArticle(name: string | null, config: {
+export async function createArticle(name: string | null, config?: {
     categoryId: number,
 }): Promise<ActionReturn<ReturnType>> {
     try {
@@ -24,11 +24,11 @@ export async function createArticle(name: string | null, config: {
                 coverImage: {
                     create: {}
                 },
-                articleCategory: {
+                articleCategory: config ? {
                     connect: {
                         id: config.categoryId
                     }
-                }
+                } : undefined
             },
             include: {
                 articleSections: {
