@@ -1,17 +1,13 @@
 'use server'
 import { ReturnType } from "./ReturnType"
 import { ActionReturn } from '@/actions/type'
-import { z } from "zod"
 import prisma from '@/prisma'
 import { createArticle } from "@/cms/articles/create"
 import errorHandler from "@/prisma/errorHandler"
+import schema from "../cms/articleCategories/schema"
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
     //TODO: check for can create news permission
-    const schema = z.object({
-        name: z.string().max(20, 'max lengde 20').min(2, 'min lengde 2'),
-        description: z.string().max(250, 'max lengde 250').min(2, 'min lengde 2'),
-    })
     const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
