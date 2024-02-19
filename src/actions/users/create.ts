@@ -42,10 +42,14 @@ export async function createUser(rawdata: FormData): Promise<ActionReturn<User>>
             data: {
                 username,
                 email,
-                password,
                 firstname,
                 lastname,
-            }
+                credentials: {
+                    create: {
+                        passwordHash: password, // TEMPORARY!
+                    },
+                },
+            },
         })
 
         return { success: true, data: user }

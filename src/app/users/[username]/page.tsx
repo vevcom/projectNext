@@ -3,8 +3,6 @@ import { requireUser } from '@/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import logger from '@/logger'
-import { readUsersOfRole } from '@/actions/permissions/read'
 
 type PropTypes = {
     params: {

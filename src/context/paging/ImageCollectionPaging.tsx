@@ -5,7 +5,7 @@ import type { ReadPageInput } from '@/actions/type'
 import type { ImageCollectionPageReturn } from '@/actions/images/collections/read'
 
 export type PageSizeImageCollection = 12
-const fetcher = async (x: ReadPageInput<PageSizeImageCollection, null>) => {
+const fetcher = async (x: ReadPageInput<PageSizeImageCollection>) => {
     const ret = await readImageCollectionsPage(x)
     return ret
 }

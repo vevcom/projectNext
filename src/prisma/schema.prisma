@@ -13,13 +13,15 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  username    String       @unique
-  email       String       @unique
-  firstname   String       @default("[Fjernet]")
-  lastname    String       @default("[Fjernet]")
-  roles       RolesUsers[]
-  OmegaQuote  OmegaQuote[]
+  id         Int          @id @default(autoincrement())
+  username   String       @unique
+  email      String       @unique
+  firstname  String       @default("[Fjernet]")
+  lastname   String       @default("[Fjernet]")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  roles      RolesUsers[]
+  OmegaQuote OmegaQuote[]
   credentials Credentials?
 
   @@map("users")
@@ -33,7 +35,6 @@ model Credentials {
 }
 
 enum Permission {
-
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ

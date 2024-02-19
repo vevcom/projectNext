@@ -18,7 +18,7 @@ export default async function Images() {
             pageSize,
             page: 0
         },
-        details: null,
+        details: undefined,
     })
 
     if (!collectionPage.success) {
@@ -35,7 +35,7 @@ export default async function Images() {
                         pageSize,
                         page: 1,
                     }}
-                    details={null}
+                    details={undefined}
                     serverRenderedData={collections}
                 >
                     <span className={styles.header}>

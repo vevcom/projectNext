@@ -3,9 +3,9 @@ import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
+import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
 import type { Permission, User } from '@prisma/client'
-import { decode, encode, getToken } from 'next-auth/jwt'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -56,11 +56,11 @@ export const authOptions: AuthOptions = {
     jwt: {
         async decode(params) {
             const token = await decode(params)
-            
-            
+
+
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
-            
+
             const credentials = await prisma.credentials.findUnique({
                 where: {
                     userId: token.user.id
@@ -68,9 +68,9 @@ export const authOptions: AuthOptions = {
                 select: {
                     updatedAt: true
                 }
-            }) 
-            
-            if (!credentials || token.iat*1000 < credentials.updatedAt.getTime()) return null
+            })
+
+            if (!credentials || token.iat * 1000 < credentials.updatedAt.getTime()) return null
 
             return token
         },
@@ -98,6 +98,8 @@ export const authOptions: AuthOptions = {
                     firstname: user.firstname,
                     lastname: user.lastname,
                     permissions: user.permissions,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 }
             }
             return token

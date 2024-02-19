@@ -17,10 +17,10 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
             <EndlessScroll
                 pagingContext={ImageCollectionPagingContext}
                 renderer={
-                    collection => (
+                    (collection, i) => (
                         <CollectionCard
                             className={styles.collectionCard}
-                            key={collection.id}
+                            key={i}
                             collection={collection}
                         />
                     )
