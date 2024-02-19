@@ -3,10 +3,78 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType, SimpleReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
+import type { ReadPageInput } from '@/actions/type'
+import { currentVsOldCutOff } from './ConfigVars'
 
-export async function readNews(): Promise<ActionReturn<SimpleReturnType[]>> {
+function getCutoff() {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - currentVsOldCutOff);
+    return oneWeekAgo;
+}
+
+export async function readNewsPage<const PageSize extends number>(
+    { page }: ReadPageInput<PageSize>
+): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
+        const oneWeekAgo = getCutoff();
+
         const news = await prisma.newsArticle.findMany({
+            where: {
+                article: {
+                    createdAt: {
+                        lt: oneWeekAgo,
+                    },
+                }
+            },
+            skip: 6 + page.page * page.pageSize,
+            take: page.pageSize,
+            orderBy: {
+                article: {
+                    createdAt: 'desc',
+                }
+            },
+            include: {
+                article: {
+                    include: {
+                        coverImage: {
+                            include: {
+                                image: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return { 
+            success: true, 
+            data: news.map(n => ({
+                ...n,
+                coverImage: n.article.coverImage.image
+            })),
+        }
+    } catch (error) {
+        return errorHandler(error);
+    }
+}
+
+export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]>> {
+    try {
+        const oneWeekAgo = getCutoff();
+
+        const news = await prisma.newsArticle.findMany({
+            where: {
+                article: {
+                    createdAt: {
+                        gte: oneWeekAgo,
+                    },
+                },
+            },
+            take: 6,
+            orderBy: {
+                article: {
+                    createdAt: 'desc',
+                },
+            },
             include: {
                 article: {
                     include: {
