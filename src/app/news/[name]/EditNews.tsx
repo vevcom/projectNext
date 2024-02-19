@@ -12,14 +12,20 @@ import Textarea from '@/components/UI/Textarea'
 
 type PropTypes = {
     news: ReturnType
+    children?: React.ReactNode
+    not: number
 }
 
-export default function EditNews({ news }: PropTypes) {
+/**
+ * This component renders children if editmode is off and news admin tools if editmode is on
+ * pass it not: id of article to make sure not to display that article
+ */
+export default function EditNews({ news, children, not }: PropTypes) {
     const editModeCtx = useContext(EditModeContext)
     const { refresh, push } = useRouter()
     //TODO: chack visibility
     const canEdit = true //temp
-    if (!editModeCtx?.editMode) return null
+    if (!editModeCtx?.editMode) return children
 
     //TODO: add publish functionality with visibility
     const isPublished = false //temp

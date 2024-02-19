@@ -1,6 +1,6 @@
 @use "@/styles/ohma";
 
-$padding: 4rem;
+$padding: min(4rem, 4vw);
 $cover-height: min(300px, 40vh);
 
 .Article {

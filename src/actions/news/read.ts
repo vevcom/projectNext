@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType, SimpleReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import type { ReadPageInput } from '@/actions/type'
-import { currentVsOldCutOff } from './ConfigVars'
+import { currentVsOldCutOff, maxCurrentNews } from './ConfigVars'
 
 function getCutoff() {
     const oneWeekAgo = new Date();
@@ -26,7 +26,7 @@ export async function readNewsPage<const PageSize extends number>(
                     },
                 }
             },
-            skip: 6 + page.page * page.pageSize,
+            skip: maxCurrentNews + page.page * page.pageSize,
             take: page.pageSize,
             orderBy: {
                 article: {
@@ -69,7 +69,7 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]
                     },
                 },
             },
-            take: 6,
+            take: maxCurrentNews,
             orderBy: {
                 article: {
                     createdAt: 'desc',
