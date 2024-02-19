@@ -2,6 +2,7 @@ import { readNewsByIdOrName } from "@/actions/news/read"
 import { notFound } from "next/navigation"
 import Article from "@/cms/Article/Article"
 import styles from './page.module.scss'
+import EditNews from './EditNews'
 
 type PropTypes = {
     params: {
@@ -19,6 +20,7 @@ export default async function NewsArticle({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <Article article={news.article} />
+            <EditNews news={news} />
         </div>
     )
 }

@@ -5,12 +5,12 @@ import type { SimpleReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
 import { schema } from './schema'
 
-export async function publishNews(id: number) : Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+export async function publishNews(id: number, shouldPublish: boolean) : Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
     try {
         const news = await prisma.newsArticle.update({
             where: { id },
             data: {},
-            //data: { published: true } //TODO: add published field to news
+            //data: { published: shouldPublish } //TODO: add published field to news
         })
         return { 
             success: true, 
@@ -46,4 +46,8 @@ export async function updateNews(id: number, rawdata: FormData) : Promise<Action
     } catch (error) {
         return errorHandler(error)
     }
+}
+
+export async function updateVisibility(id: number, visible: unknown) {
+    //TODO: add visible field to news
 }
