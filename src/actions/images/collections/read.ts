@@ -27,7 +27,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
 }
 
 export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize, null>
+    { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page

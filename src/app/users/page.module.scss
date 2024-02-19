@@ -1,0 +1,24 @@
+@use '@/styles/ohma';
+
+.wrapper {
+
+}
+
+.addIcon {
+    width: 30px;
+    height: 30px;
+}
+.addUserButton {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+}
+
+.makeUser {
+    min-width: 30vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

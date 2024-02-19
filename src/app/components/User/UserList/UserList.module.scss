@@ -1,0 +1,24 @@
+@use '@/styles/ohma';
+
+.UserList {
+    > .filters {
+        width: 100%;
+    }
+    > .list {
+        border-radius: ohma.$rounding;
+        background-color: ohma.$colors-white;
+        width: 100%;
+        > .head {
+            padding: 2*ohma.$gap ohma.$gap;
+            border-radius: ohma.$rounding;
+            background-color: ohma.$colors-secondary;
+        }
+        span {
+            display: grid;
+            grid-template-columns: 3fr 2fr 1fr 1fr;
+            > * {
+                text-align: left;
+            }
+        } 
+    }
+}
