@@ -1,20 +1,12 @@
 import styles from './page.module.scss'
 import PageWrapper from '../components/PageWrapper/PageWrapper'
-import { readNews } from '@/actions/news/read'
-import ImageCard from '@/components/ImageCard/ImageCard'
 import PopUp from '@/components/PopUp/PopUp'
 import AddNews from './AddNews'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import CurrentNews from './CurrentNews'
 
 export default async function NewsArtilces() {
-    const res = await readNews()
-    if (!res.success) throw res.error ? 
-        new Error(res.error[0].message) : 
-        new Error('unknown error reading news')
-
-    const news = res.data
-
     //TODO: add can create news permission
     const canCreateNews = true //temp
 
@@ -35,18 +27,7 @@ export default async function NewsArtilces() {
             }
         >
             <main className={styles.wrapper}>
-                {
-                    news.map(n => (
-                        <ImageCard 
-                            key={n.id} 
-                            image={n.coverImage} 
-                            title={n.articleName} 
-                            href={`/news/${n.articleName}`}
-                        >
-                            {n.description}
-                        </ImageCard>
-                    ))
-                }
+                <CurrentNews />
             </main>
         </PageWrapper>
     )
