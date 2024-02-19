@@ -4,10 +4,22 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
+import { destroyArticle } from '../articles/destroy'
 
 export async function destroyArticleCategory(id: number): Promise<ActionReturn<ReturnType>> {
     try {
         // TODO: Cheek for visibility type edit of user.
+        // destroy all articles in articleCategory using destroyArticle function, to make sure all articleSections are destroyed
+        // with relation to cmsLink, cmsParagraph and cmsImage
+        const articles = await prisma.article.findMany({
+            where: {
+                articleCategoryId: id
+            }
+        })
+        for (const article of articles) {
+            await destroyArticle(article.id)
+        }
+
         const articleCategory = await prisma.articleCategory.delete({
             where: {
                 id

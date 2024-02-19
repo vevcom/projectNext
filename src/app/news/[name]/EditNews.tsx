@@ -4,6 +4,7 @@ import { useContext } from "react"
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
 import { publishNews, updateNews } from '@/actions/news/update'
+import { destroyNews } from "@/actions/news/destroy"
 import type { ReturnType } from '@/actions/news/ReturnType'
 import { useRouter } from "next/navigation"
 import TextInput from '@/components/UI/TextInput'
@@ -41,7 +42,19 @@ export default function EditNews({ news }: PropTypes) {
                     <TextInput color="white" defaultValue={news.articleName} label="navn" name="name" />
                     <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
-
+                <Form
+                    action={destroyNews.bind(null, news.id)}
+                    successCallback={() => {
+                        push('/news')
+                    }}
+                    submitText="slett nyhet"
+                    confirmation={{
+                        confirm: true,
+                        text: 'Er du sikker på at du vil slette denne nyheten? Dette kan ikke angres.'
+                    }}
+                    submitColor="red"
+                >
+                </Form>
             </div>
 
             <div className={styles.publish}>
