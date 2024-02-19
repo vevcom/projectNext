@@ -1,5 +1,10 @@
 @use "@/styles/ohma";
 
 .EditNews {
+    margin: .5em 2em;
+    @include ohma.card;
+    background-color: ohma.$colors-secondary;
+    color: ohma.$colors-white;
+    display: flex;
     
 }

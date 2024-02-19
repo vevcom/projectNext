@@ -83,5 +83,9 @@ $cover-height: min(300px, 40vh);
     .addSection {
         margin: 0 $padding;
     }
+    .empty {
+        display: flex;
+        height: 2em;
+    }
 }   
 

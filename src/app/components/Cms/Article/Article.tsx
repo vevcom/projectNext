@@ -22,7 +22,8 @@ export default function Article({ article, coverImageClass }: PropTypes) {
                 </SlideInOnView>
             </span>
             <article>
-                {
+            {
+                article.articleSections.length ? (
                     article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
                         <SlideInOnView direction="left" key={section.id}>
                             <span className={styles.moveSection}>
@@ -37,7 +38,10 @@ export default function Article({ article, coverImageClass }: PropTypes) {
                             </span>
                         </SlideInOnView>
                     ))
-                }
+                ) : (
+                    <i className={styles.empty}>Denne artikkelen er tom</i>
+                )
+            }
             </article>
             <div className={styles.addSection}>
                 <AddSection articleId={article.id} currentNumberSections={article.articleSections.length} />

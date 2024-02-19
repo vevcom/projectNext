@@ -36,9 +36,10 @@ export default function EditNews({ news }: PropTypes) {
                     successCallback={(data) => {
                         push(`/news/${data?.articleName}`)
                     }}
+                    submitText="oppdater"
                 >
-                    <TextInput label="navn" name="name" />
-                    <Textarea label="beskrivelse" name="description" />
+                    <TextInput color="white" defaultValue={news.articleName} label="navn" name="name" />
+                    <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
 
             </div>

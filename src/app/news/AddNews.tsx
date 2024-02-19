@@ -6,10 +6,14 @@ import { useRouter } from 'next/navigation'
 import { ReturnType } from '@/actions/news/ReturnType'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '../components/UI/Textarea'
+import { EditModeContext } from '@/context/EditMode'
+import { useContext } from 'react'
 
 export default function AddNews() {
     const { push } = useRouter()
+    const editModeCtx = useContext(EditModeContext)
     const handleCreate = (data?: ReturnType) => {
+        editModeCtx?.setEditMode(true)
         push(`/news/${data?.articleName}`)
     }
 

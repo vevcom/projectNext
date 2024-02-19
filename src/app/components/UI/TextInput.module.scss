@@ -77,3 +77,9 @@
     color: ohma.$colors-red;
     border-color: ohma.$colors-red;
 }
+
+.white .labe,.red .field,.white:focus ~ .labe,
+.white:not(:placeholder-shown) ~ .labe {
+    color: ohma.$colors-white;
+    border-color: ohma.$colors-white;
+}
