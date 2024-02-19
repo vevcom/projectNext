@@ -22,6 +22,7 @@ export default function AddNews() {
             <Form
                 action={createNews}
                 successCallback={handleCreate}
+                submitText='Lag nyhet'
             >
                 <TextInput label="navn" name="name" />
                 <Textarea label="beskrivelse" name="description" />

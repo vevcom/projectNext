@@ -54,32 +54,27 @@
     z-index: 0;
 }
 
-.primary .labe,.primary .field,.primary:focus ~ .labe, 
-.primary:not(:placeholder-shown) ~ .labe {
+.primary > .field {
     color: ohma.$colors-primary;
     border-color: ohma.$colors-primary;
 }
 
-.secondary .labe,.secondary .field,.secondary:focus ~ .labe, 
-.secondary:not(:placeholder-shown) ~ .labe {
+.secondary > .field, .secondary > .labe{
     color: ohma.$colors-secondary;
     border-color: ohma.$colors-secondary;
 }
 
-.black .labe,.black .field,.black:focus ~ .labe,
-.black:not(:placeholder-shown) ~ .labe {
+.black > .field, .black > .labe{
     color: ohma.$colors-black;
     border-color: ohma.$colors-black;
 }
 
-.red .labe,.red .field,.red:focus ~ .labe,
-.red:not(:placeholder-shown) ~ .labe {
+.red > .field, .red > .labe {
     color: ohma.$colors-red;
     border-color: ohma.$colors-red;
 }
 
-.white .labe,.red .field,.white:focus ~ .labe,
-.white:not(:placeholder-shown) ~ .labe {
+.white > .field, .white > .labe{
     color: ohma.$colors-white;
     border-color: ohma.$colors-white;
 }
