@@ -37,7 +37,11 @@ export async function readUserPage<const PageSize extends number>({
             },
             orderBy: [
                 { lastname: 'asc' },
-                { id: 'asc' }, //Important to make sure the order is consistent. Same last name - order by id
+                { firstname: 'asc' },
+                // We have to sort with at least one unique field to have a
+                // consistent order. Sorting rows by fieds that have the same
+                // value is undefined behaviour in postgresql.
+                { username: 'asc' },
             ]
         })
         return { success: true, data: users }
