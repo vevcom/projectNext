@@ -12,7 +12,10 @@ export async function destroyNews(id: number) : Promise<ActionReturn<Omit<Simple
             where: { id }
         })
         if (!news) throw new Error('News not found')
-        if (news.articleId) await destroyArticle(news.articleId)
+        if (news.articleId) {
+            const res = await destroyArticle(news.articleId)
+            if (!res.success) return res
+        }
         // this will destroy the newsArticle on cascade
 
         return { 

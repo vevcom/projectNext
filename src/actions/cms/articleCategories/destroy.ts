@@ -17,7 +17,9 @@ export async function destroyArticleCategory(id: number): Promise<ActionReturn<R
             }
         })
         for (const article of articles) {
-            await destroyArticle(article.id)
+            const res = await destroyArticle(article.id)
+            console.log(res)
+            if (!res.success) return res
         }
 
         const articleCategory = await prisma.articleCategory.delete({

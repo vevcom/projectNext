@@ -15,9 +15,15 @@ export async function destroyArticle(id: number) : Promise<ActionReturn<Article>
 
         // destroy all articlesections in article
         for (const articleSection of article.articleSections) {
-            await destroyArticleSection(articleSection.name)
+            const res = await destroyArticleSection(articleSection.name)
+            if (!res.success) return res
         }
-        
+
+        // destroy article
+        await prisma.article.delete({
+            where: { id }
+        })
+
         // destroy coverimage
         if (article.coverImageId) {
             await prisma.cmsImage.delete({
@@ -25,15 +31,12 @@ export async function destroyArticle(id: number) : Promise<ActionReturn<Article>
             })
         }
 
-        await prisma.article.delete({
-            where: { id }
-        })
-
         return { 
             success: true, 
             data: article
         }
     } catch (error) {
+        console.log('hhuuhuuhu')
         return errorHandler(error)
     }
 }
