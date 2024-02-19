@@ -1,7 +1,11 @@
 import styles from './page.module.scss'
 import PageWrapper from '../components/PageWrapper/PageWrapper'
 import { readNews } from '@/actions/news/read'
-import ImageCard from '../components/ImageCard/ImageCard'
+import ImageCard from '@/components/ImageCard/ImageCard'
+import PopUp from '@/components/PopUp/PopUp'
+import AddNews from './AddNews'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default async function NewsArtilces() {
     const res = await readNews()
@@ -10,8 +14,26 @@ export default async function NewsArtilces() {
         new Error('unknown error reading news')
 
     const news = res.data
+
+    //TODO: add can create news permission
+    const canCreateNews = true //temp
+
     return (
-        <PageWrapper title="Nyheter">
+        <PageWrapper title="Nyheter"
+            headerItem={
+                canCreateNews && (
+                    <PopUp
+                        PopUpKey="CreateCategory"
+                        showButtonContent={
+                            <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
+                        }
+                        showButtonClass={styles.addCategory}
+                    >
+                        <AddNews />
+                    </PopUp>
+                )
+            }
+        >
             <main className={styles.wrapper}>
                 {
                     news.map(n => (

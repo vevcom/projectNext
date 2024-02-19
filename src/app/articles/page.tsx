@@ -13,6 +13,7 @@ export default async function ArticleCategoryList() {
 
     const categories = res.data;
 
+    //TODO: add can create categoies permission
     const canCreateArticleCategories = true; //temp
 
     return (
