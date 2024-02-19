@@ -71,9 +71,14 @@ export const authOptions: AuthOptions = {
                     id: user.id,
                     username: user.username,
                     email: user.email,
+                    emailVerified: user.emailVerified,
                     password: user.password,
                     firstname: user.firstname,
-                    lastname: user.lastname
+                    lastname: user.lastname,
+                    sex: user.sex,
+                    bio: user.bio,
+                    yearOfStudy: user.yearOfStudy,
+                    studyProgramId: user.studyProgramId,
                 }
             }
 

@@ -1,6 +1,7 @@
 import { Awaitable } from "next-auth";
 import type { Provider } from "next-auth/providers/index"
 import type { User } from "next-auth"
+import type { StudyProgram } from "@prisma/client";
 
 export type PropType = {
     clientId: string,
@@ -20,6 +21,20 @@ type FeideGroup = {
 
 type FeideGroups = Array<FeideGroup>
 
+type ExtendedFeideUser = {
+    aud: string,
+    sub: string,
+    name: string,
+    email: string,
+    email_verified: boolean,
+    extended: {
+        givenName: Array<string>,
+        sn: Array<string>,
+    },
+    groups: FeideGroups,
+    studyProgram?: StudyProgram,
+}
+
 export default function FeideProvider({clientId, clientSecret} : PropType) : Provider {
     return {
         id: "feide",
@@ -34,7 +49,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
         checks: ["pkce", "state"],
         userinfo: {
             url: "https://auth.dataporten.no/openid/userinfo",
-            async request(context) {
+            async request(context) : Promise<ExtendedFeideUser> {
                 const { tokens } = context;
 
                 console.log(tokens);
@@ -109,12 +124,12 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                 return { ...profile, extended: profileExtended, groups, studyProgram };
             }
         },
-        profile(profile, token) : Awaitable<User> {
+        profile(profile : ExtendedFeideUser, token) : Awaitable<User> {
 
             return {
                 id: profile.sub,
                 email: profile.email,
-                username: profile.email.split("@")[0], //
+                username: profile.email.split("@")[0],
                 firstname: profile.extended.givenName.join(" "),
                 lastname: profile.extended.sn.join(" "),
             }

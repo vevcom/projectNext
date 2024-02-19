@@ -40,14 +40,37 @@ export async function registerOwnUser(rawdata: FormData) : Promise<ActionReturn<
     }
 
     try {
-        const results = await prisma.user.update({
-            where: {
-                id: user.id
-            },
-            data: {
-                yearOfStudy: parse.data.yearOfStudy,
-                password: parse.data.password,
+        const results = await prisma.$transaction(async (p) => {
+            const updatedUser = await p.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    yearOfStudy: parse.data.yearOfStudy,
+                    password: parse.data.password,
+                }
+            })
+
+            if (updatedUser.studyProgramId) {
+                const rolesReturn = await p.studyProgramRole.findMany({
+                    where: {
+                        studyProgramId: {
+                            equals: updatedUser.studyProgramId
+                        }
+                    }
+                })
+
+                await p.rolesUsers.createMany({
+                    data: rolesReturn.map(role => {
+                        return {
+                            userId: updatedUser.id,
+                            roleId: role.roleId
+                        }
+                    })
+                })
             }
+
+            return updatedUser;
         })
 
         return { success: true, data: results }

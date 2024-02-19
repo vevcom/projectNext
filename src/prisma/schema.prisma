@@ -36,15 +36,15 @@ model User {
   id            Int       @id @default(autoincrement())
   username      String    @unique
   email         String    @unique
-  emailVerified DateTime?
+  emailVerified DateTime? @map("email_verified")
   password      String? // Dette er kun for testing
   firstname     String    @default("[Fjernet]")
   lastname      String    @default("[Fjernet]")
-  boi           String    @default("")
+  bio           String    @default("")
   sex           String?
-  yearOfStudy   Int?
+  yearOfStudy   Int?      @map("year_of_study")
 
-  studyProgramId Int?
+  studyProgramId Int?          @map("study_program_id")
   studyProgram   StudyProgram? @relation(fields: [studyProgramId], references: [id])
 
   roles      RolesUsers[]
@@ -75,6 +75,7 @@ model StudyProgramRole {
   roleId         Int          @map("role_id")
 
   @@id([studyProgramId, roleId])
+  @@map("study_program_roles")
 }
 
 enum Permission {
