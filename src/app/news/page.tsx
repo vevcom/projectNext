@@ -27,7 +27,7 @@ export default async function NewsArtilces() {
                         showButtonContent={
                             <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
                         }
-                        showButtonClass={styles.addCategory}
+                        showButtonClass={styles.addNews}
                     >
                         <AddNews />
                     </PopUp>
