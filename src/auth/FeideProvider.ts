@@ -11,6 +11,11 @@ type FeideGroup = {
     id: string,
     displayName: string,
     type: string,
+    membership: {
+        basic: string,
+        active: boolean,
+        displayName: string,
+    }
 }
 
 type FeideGroups = Array<FeideGroup>
@@ -78,7 +83,8 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
 
                 for (let group of groups) {
                     const groupSplit = group.id.split(":");
-                    if (group.type == "fc:fs:fs:prg" && groupSplit[4] == "ntnu.no") {
+                    // I wonder id a user can have mulitple study programs
+                    if (group.type == "fc:fs:prg" && groupSplit[4] == "ntnu.no" && group.membership.active) {
                         const studyProgramCode = groupSplit[5];
                         
                         studyProgram = await prisma.studyProgram.findUnique({
@@ -94,12 +100,13 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                                     code: studyProgramCode,
                                 }
                             })
+                            console.log("Created new study program: ", studyProgram);
                         }
                         break;
                     }
                 }
 
-                return { ...profile, extended: profileExtended, groups, studyProgram, iat: clientIdData.iat };
+                return { ...profile, extended: profileExtended, groups, studyProgram };
             }
         },
         profile(profile, token) : Awaitable<User> {
@@ -107,7 +114,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
             return {
                 id: profile.sub,
                 email: profile.email,
-                username: profile.email.split("@")[0],
+                username: profile.email.split("@")[0], //
                 firstname: profile.extended.givenName.join(" "),
                 lastname: profile.extended.sn.join(" "),
             }

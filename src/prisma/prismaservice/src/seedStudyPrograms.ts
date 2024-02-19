@@ -2,7 +2,7 @@ import type { PrismaClient } from '@prisma/client'
 
 export default async function seedStudyPrograms(prisma: PrismaClient) {
 
-    prisma.studyProgram.createMany({
+    await prisma.studyProgram.createMany({
         data: [
             {
                 name: 'Kybernetikk og Robotikk',

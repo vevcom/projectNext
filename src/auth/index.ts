@@ -48,9 +48,10 @@ export const authOptions: AuthOptions = {
             if (trigger === 'signUp') {
                 console.log("SIGN UP!")
                 console.log(profile)
+                console.log(user)
 
                 if ((profile as any).studyProgram) {
-                    prisma.user.update({
+                    await prisma.user.update({
                         where: {
                             id: Number(user.id)
                         },
@@ -82,6 +83,7 @@ export const authOptions: AuthOptions = {
     pages: {
         signIn: '/login',
         signOut: '/logout',
+        newUser: '/register'
     },
     adapter: PrismaAdapter(prisma)
 }

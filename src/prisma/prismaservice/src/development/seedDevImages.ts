@@ -14,6 +14,5 @@ export default async function seedDevImages(prisma: PrismaClient) {
                 description: 'just a test',
             }
         })
-        console.log(collection)
     }
 }

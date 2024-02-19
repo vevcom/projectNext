@@ -78,6 +78,5 @@ export default async function seedImages(prisma: PrismaClient) {
                 }
             }
         })
-        console.log(image)
     }))
 }
