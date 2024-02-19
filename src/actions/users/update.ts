@@ -77,5 +77,25 @@ export async function registerOwnUser(rawdata: FormData) : Promise<ActionReturn<
     } catch (error) {
         return errorHandler(error)
     }
+}
 
+export async function linkUserToStudyProgram(userId: number, studyProgramId: number) : Promise<ActionReturn<User>> {
+    try {
+        const results = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                studyProgram: {
+                    connect: {
+                        id: studyProgramId,
+                    }
+                }
+            }
+        })
+
+        return { success: true, data: results }
+    } catch (error) {
+        return errorHandler(error)
+    }
 }

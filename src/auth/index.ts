@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation'
 import type { Permission } from '@prisma/client'
 import FeideProvider from './FeideProvider'
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { linkUserToStudyProgram } from '@/actions/users/update'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -51,18 +52,7 @@ export const authOptions: AuthOptions = {
                 console.log(user)
 
                 if ((profile as any).studyProgram) {
-                    await prisma.user.update({
-                        where: {
-                            id: Number(user.id)
-                        },
-                        data: {
-                            studyProgram: {
-                                connect: {
-                                    id: (profile as any).studyProgram.id
-                                }
-                            }
-                        }
-                    })
+                    await linkUserToStudyProgram(Number(user.id), (profile as any).studyProgram.id);
                 }
             }
 

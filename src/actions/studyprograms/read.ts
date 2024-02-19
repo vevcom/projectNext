@@ -27,3 +27,26 @@ export default async function read(studyProgramId: Number) : Promise<ActionRetur
         return errorHandler(error)
     }
 }
+
+export async function readByCode(code : string) : Promise<ActionReturn<StudyProgram>> {
+    try {
+        const results = await prisma.studyProgram.findUnique({
+            where: {
+                code
+            }
+        })
+
+        if(!results) {
+            return {
+                success: false,
+                error: [{
+                    message: `404: Study program with code ${code} not found`
+                }]
+            }
+        }
+
+        return { success: true, data: results }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}

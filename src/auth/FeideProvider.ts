@@ -2,6 +2,9 @@ import { Awaitable } from "next-auth";
 import type { Provider } from "next-auth/providers/index"
 import type { User } from "next-auth"
 import type { StudyProgram } from "@prisma/client";
+import { readByCode } from "@/actions/studyprograms/read";
+import { ActionReturn } from "@/actions/type";
+import { upsert } from "@/actions/studyprograms/create";
 
 export type PropType = {
     clientId: string,
@@ -94,7 +97,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
 
                 const groups : FeideGroups = await userinfoGroups.json();
 
-                let studyProgram;
+                let studyProgram : ActionReturn<StudyProgram> | null = null;
 
                 for (let group of groups) {
                     const groupSplit = group.id.split(":");
@@ -102,26 +105,21 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                     if (group.type == "fc:fs:prg" && groupSplit[4] == "ntnu.no" && group.membership.active) {
                         const studyProgramCode = groupSplit[5];
                         
-                        studyProgram = await prisma.studyProgram.findUnique({
-                            where: {
-                                code: studyProgramCode,
-                            }
-                        })
+                        studyProgram = await readByCode(studyProgramCode);
 
-                        if (!studyProgram) {
-                            studyProgram = await prisma.studyProgram.create({
-                                data: {
-                                    name: group.displayName,
-                                    code: studyProgramCode,
-                                }
-                            })
+                        if (!studyProgram.success) {
+                            studyProgram = await upsert({
+                                name: group.displayName,
+                                code: studyProgramCode,
+                            });
+                            
                             console.log("Created new study program: ", studyProgram);
                         }
                         break;
                     }
                 }
 
-                return { ...profile, extended: profileExtended, groups, studyProgram };
+                return { ...profile, extended: profileExtended, groups, studyProgram: (studyProgram?.success ? studyProgram.data : null)};
             }
         },
         profile(profile : ExtendedFeideUser, token) : Awaitable<User> {
