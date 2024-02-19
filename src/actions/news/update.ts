@@ -48,6 +48,8 @@ export async function updateNews(id: number, rawdata: FormData) : Promise<Action
     }
 }
 
-export async function updateVisibility(id: number, visible: unknown) {
+export async function updateVisibility(id: number, visible: unknown) : Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
+    console.log(id, visible)
+    return { success: false, error: [{message: 'Not implemented'}] }
 }

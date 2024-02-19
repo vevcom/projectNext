@@ -3,7 +3,7 @@ import { EditModeContext } from "@/context/EditMode"
 import { useContext } from "react"
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
-import { publishNews, updateNews } from '@/actions/news/update'
+import { publishNews, updateNews, updateVisibility } from '@/actions/news/update'
 import { destroyNews } from "@/actions/news/destroy"
 import type { ReturnType } from '@/actions/news/ReturnType'
 import { useRouter } from "next/navigation"
@@ -27,6 +27,7 @@ export default function EditNews({ news }: PropTypes) {
     const publishAction = publishNews.bind(null, news.id).bind(null, true)
     const unpublishAction = publishNews.bind(null, news.id).bind(null, false)
     const updateAction = updateNews.bind(null, news.id)
+    const updateVisibilityAction = updateVisibility.bind(null, news.id).bind(null, true)
 
 
     return (
@@ -54,6 +55,16 @@ export default function EditNews({ news }: PropTypes) {
                     }}
                     submitColor="red"
                 >
+                </Form>
+            </div>
+            <div className={styles.visibility}>
+                Her kommer visibility settings
+                <Form
+                    action={updateVisibilityAction}
+                    submitText="oppdater synlighet"
+
+                >
+
                 </Form>
             </div>
 
