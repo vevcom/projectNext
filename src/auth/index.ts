@@ -18,35 +18,23 @@ export const authOptions: AuthOptions = {
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials.password) return null
 
-                // Dette burde være en action
-                const user = await prisma.user.findUnique({
-                    where: {
-                        username: credentials?.username,
-                    },
-                })
-
-                if (!user) return null
-
+                // This should be an action
                 const userCredentials = await prisma.credentials.findUnique({
                     where: {
-                        userId: user.id,
+                        username: credentials.username,
                     },
                     select: {
+                        userId: true,
                         passwordHash: true,
-                    }
+                    },
                 })
 
+                if (!userCredentials) return null
+
                 // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (userCredentials?.passwordHash !== credentials?.password) return null
+                if (userCredentials.passwordHash !== credentials.password) return null
 
-                const permissionsRes = await readPermissionsOfUser(user.id)
-
-                if (!permissionsRes.success) return null
-
-                return {
-                    ...user,
-                    permissions: permissionsRes.data
-                }
+                return { id: userCredentials.userId }
             }
         })
     ],
@@ -56,7 +44,6 @@ export const authOptions: AuthOptions = {
     jwt: {
         async decode(params) {
             const token = await decode(params)
-
 
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
@@ -70,6 +57,10 @@ export const authOptions: AuthOptions = {
                 }
             })
 
+            // Check if the users credentials were updated after the token was
+            // created. I.e. if the user updates their password you don't want
+            // their old token to be valid. 'iat' is given in seconds so we
+            // have to convert it to milliseconds.
             if (!credentials || token.iat * 1000 < credentials.updatedAt.getTime()) return null
 
             return token
@@ -80,28 +71,30 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user }) {
-            // The user object is only set when the token is created upon
-            // login.
-            //
-            // We also need type guarding for user.id and user.email
-            // because the default next auth types are different from our
-            // prisma model.
-            if (user && typeof user.id === 'number' && user.email) {
-                // Here we have to manually type out all the properties of
-                // the user object because typescript doesn't recognize
-                // the typeguard for some reason
-                token.user = {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    firstname: user.firstname,
-                    lastname: user.lastname,
-                    permissions: user.permissions,
-                    createdAt: user.createdAt,
-                    updatedAt: user.updatedAt,
-                }
+        async jwt({ token, user, trigger }) {
+            if (trigger !== 'signIn' && trigger !== 'update') return token
+
+            // The 'user' object will only be set when the trigger is 'signIn'.
+            // We also have to type guard 'user.id' because the default next
+            // auth type for it is different from our model.
+            const userId = user && typeof user.id === 'number' ? user.id : token?.user.id 
+
+            // TODO - refactor when read user action exists
+            const userInfo = await prisma.user.findUnique({
+                where: {
+                    id: userId,
+                },
+            })
+
+            const userPermissions = await readPermissionsOfUser(userId)
+
+            if (!userInfo || !userPermissions.success) throw Error('Could not read user from database when setting jwt')
+            
+            token.user = {
+                ...userInfo,
+                permissions: userPermissions.data
             }
+
             return token
         },
     },

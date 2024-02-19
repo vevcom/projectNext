@@ -4,7 +4,9 @@ import 'next-auth'
 import 'next-auth/adapters'
 
 declare module 'next-auth' {
-    interface User extends UserWithPermissions { id: number }
+    interface User {
+        id: number,
+    }
 
     interface Session {
         user: UserWithPermissions,

@@ -24,14 +24,23 @@ model User {
   OmegaQuote OmegaQuote[]
   credentials Credentials?
 
+  // We need to explicitly mark the combination of 'id' and 'username' as
+  // unique to make the relation to 'Credentials' work.
+  @@unique([id, username])
   @@map("users")
 }
 
 model Credentials {
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user         User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
   userId       Int      @unique
+  username     String   @unique
   passwordHash String
   updatedAt    DateTime @updatedAt
+
+  // We need to explicitly mark the combination of 'userId' and 'username' as
+  // unique to make the relation to 'User' work.
+  @@unique([userId, username])
+  @@map("credentials")
 }
 
 enum Permission {
