@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    @include ohma.ImageCardListLayout;
+    display: block;
 }
 
 .addNews {
