@@ -11,7 +11,7 @@ export async function destroyNews(id: number) : Promise<ActionReturn<Omit<Simple
         const news = await prisma.newsArticle.findUnique({
             where: { id }
         })
-        if (!news) throw new Error('News not found')
+        if (!news) return { success: false, error: [{message: 'News not found'}] }
         if (news.articleId) {
             const res = await destroyArticle(news.articleId)
             if (!res.success) return res
