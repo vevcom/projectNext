@@ -9,23 +9,26 @@ export async function destroyArticleSection(name: string): Promise<ActionReturn<
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
         })
-        if (!articleSection) return { success: false, error: [{message: 'ArticleSection not found'}] }
+        if (!articleSection) return { success: false, error: [{ message: 'ArticleSection not found' }] }
 
         // destroy cms link, paragraph and image relations
         // prisma cant handle cascades for these types of one waay optional cascades
-        if (articleSection.cmsLinkId)
+        if (articleSection.cmsLinkId) {
             await prisma.cmsLink.delete({
                 where: { id: articleSection.cmsLinkId },
             })
-        if (articleSection.cmsParagraphId)
+        }
+        if (articleSection.cmsParagraphId) {
             await prisma.cmsParagraph.delete({
                 where: { id: articleSection.cmsParagraphId },
             })
-        if (articleSection.cmsImageId)
+        }
+        if (articleSection.cmsImageId) {
             await prisma.cmsImage.delete({
                 where: { id: articleSection.cmsImageId },
             })
-        
+        }
+
         await prisma.articleSection.delete({
             where: { name },
         })

@@ -29,7 +29,7 @@ export const standardCategories = [
     {
         name: 'om omega',
         description: 'lær om omega',
-    }, 
+    },
     {
         name: 'guider',
         description: 'få hjelp til ting',

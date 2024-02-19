@@ -1,14 +1,13 @@
 'use server'
-import type { ReturnType } from "./ReturnType"
-import { ActionReturn } from "@/actions/type"
-import prisma from "@/prisma"
-import errorHandler from "@/prisma/errorHandler"
-import schema from "./schema"
+import schema from './schema'
+import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
+import type { ReturnType } from './ReturnType'
 
 export async function createArticleCategory(
     rawData: FormData
 ): Promise<ActionReturn<ReturnType>> {
-    
     const parse = schema.safeParse({
         name: rawData.get('name'),
         description: rawData.get('description'),
@@ -32,5 +31,4 @@ export async function createArticleCategory(
     } catch (error) {
         return errorHandler(error)
     }
-
 }

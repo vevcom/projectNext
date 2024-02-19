@@ -1,10 +1,10 @@
 'use client'
-import React, { useState } from 'react'
-import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import styles from './ChangeName.module.scss'
+import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateArticle } from '@/actions/cms/articles/update'
-import { ReturnType } from '@/actions/cms/articles/ReturnType'
+import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import type { ReturnType } from '@/actions/cms/articles/ReturnType'
 
 type PropTypes = {
     article: ReturnType
@@ -15,12 +15,12 @@ export default function ChangeName({ article }: PropTypes) {
     const currentPath = usePathname()
     const [currentName, setCurrentName] = useState(article.name)
     const successCallback = (data: ReturnType | undefined) => {
-        const oldName = encodeURIComponent(currentName);
-        const newName = encodeURIComponent(data ? data.name : '');
-        const newPath = currentPath.replace(oldName, newName);
-        setCurrentName(data ? data.name : article.name);
+        const oldName = encodeURIComponent(currentName)
+        const newName = encodeURIComponent(data ? data.name : '')
+        const newPath = currentPath.replace(oldName, newName)
+        setCurrentName(data ? data.name : article.name)
         if (typeof window !== 'undefined') {
-            window.history.replaceState({}, '', newPath);
+            window.history.replaceState({}, '', newPath)
         }
     }
     return (
@@ -28,7 +28,7 @@ export default function ChangeName({ article }: PropTypes) {
             formProps={
                 {
                     action: changeName,
-                    successCallback: successCallback
+                    successCallback
                 }
             }
             submitButton={{

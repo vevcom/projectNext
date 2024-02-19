@@ -1,13 +1,13 @@
 'use client'
 import styles from './AddNews.module.scss'
+import Textarea from '@/components/UI/Textarea'
 import { createNews } from '@/actions/news/create'
 import Form from '@/components/Form/Form'
-import { useRouter } from 'next/navigation'
-import { ReturnType } from '@/actions/news/ReturnType'
 import TextInput from '@/components/UI/TextInput'
-import Textarea from '../components/UI/Textarea'
 import { EditModeContext } from '@/context/EditMode'
+import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
+import type { ReturnType } from '@/actions/news/ReturnType'
 
 export default function AddNews() {
     const { push } = useRouter()
@@ -22,7 +22,7 @@ export default function AddNews() {
             <Form
                 action={createNews}
                 successCallback={handleCreate}
-                submitText='Lag nyhet'
+                submitText="Lag nyhet"
             >
                 <TextInput label="navn" name="name" />
                 <Textarea label="beskrivelse" name="description" />

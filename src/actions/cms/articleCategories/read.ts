@@ -1,8 +1,8 @@
 'use server'
-import prisma from "@/prisma"
-import type { ActionReturn } from "@/actions/type"
-import type { ArticleCategory, Image } from '@prisma/client'
+import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
+import type { Image } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
 
 type ReturnWithCover = ReturnType & { coverImage: Image | null }
@@ -13,7 +13,7 @@ export async function readArticleCategories(): Promise<ActionReturn<ReturnTypeMa
     try {
         const categories = await prisma.articleCategory.findMany({
             include: {
-                articles:{
+                articles: {
                     take: 1,
                     include: {
                         coverImage: true
@@ -66,7 +66,7 @@ export async function readArticleCategory(name: string): Promise<ActionReturn<Re
  * Get cover image for article category
  * Returns coverImage of a article in the category
  */
-async function getCoverImage(category: ReturnType) : Promise<Image | null> {
+async function getCoverImage(category: ReturnType): Promise<Image | null> {
     if (category.articles.length === 0) return null
     const coverImage = await prisma.cmsImage.findUnique({
         where: {

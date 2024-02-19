@@ -10,7 +10,6 @@ import {
     faQuestionCircle,
     faCamera,
     faList,
-    faUsers,
     faCircleInfo,
     faNewspaper,
     faCalendar,

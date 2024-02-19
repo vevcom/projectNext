@@ -1,4 +1,4 @@
-import type { Article, ArticleCategory, Image } from '@prisma/client'
+import type { Article, ArticleCategory } from '@prisma/client'
 
 export type ReturnType = ArticleCategory & {
     articles: Article[]

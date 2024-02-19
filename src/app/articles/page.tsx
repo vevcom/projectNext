@@ -1,20 +1,20 @@
-import { readArticleCategories } from "@/cms/articleCategories/read";
-import styles from './page.module.scss';
-import PageWrapper from '@/components/PageWrapper/PageWrapper';
-import ImageCard from "../components/ImageCard/ImageCard";
-import PopUp from "../components/PopUp/PopUp";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AddCategory from "./AddCategory";
+import styles from './page.module.scss'
+import AddCategory from './AddCategory'
+import ImageCard from '@/components/ImageCard/ImageCard'
+import PopUp from '@/components/PopUp/PopUp'
+import { readArticleCategories } from '@/cms/articleCategories/read'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default async function ArticleCategoryList() {
-    const res = await readArticleCategories();
-    if (!res.success) throw new Error(res.error ? res.error[0].message : 'Noe uforutsett skjedde');
+    const res = await readArticleCategories()
+    if (!res.success) throw new Error(res.error ? res.error[0].message : 'Noe uforutsett skjedde')
 
-    const categories = res.data;
+    const categories = res.data
 
     //TODO: add can create categoies permission
-    const canCreateArticleCategories = true; //temp
+    const canCreateArticleCategories = true //temp
 
     return (
         <PageWrapper title="Artikler" headerItem={
@@ -34,8 +34,9 @@ export default async function ArticleCategoryList() {
                 {
                     categories.length ? (
                         categories.map((category) => (
-                            <ImageCard 
-                                title={category.name} 
+                            <ImageCard
+                                key={category.id}
+                                title={category.name}
                                 href={`/articles/${category.name}`}
                                 image={category.coverImage}
                             >
@@ -50,5 +51,5 @@ export default async function ArticleCategoryList() {
                 }
             </main>
         </PageWrapper>
-    );
+    )
 }

@@ -15,5 +15,4 @@ export default function useScroll(callback: (width: number, height: number) => v
             window.removeEventListener('scroll', handleScroll)
         }
     }, [callback])
-
 }

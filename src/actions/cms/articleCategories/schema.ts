@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 const schema = z.object({
     name: z.string().min(2, 'Minmum lengde på 2').max(18, 'Maks lengde på navn er 18').trim(),

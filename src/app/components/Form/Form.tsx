@@ -24,7 +24,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
-} 
+}
 type InputType = {
     input: ReactNode & { label?: string },
     errors: ActionError[],
@@ -66,7 +66,12 @@ function SubmitButton({
         return children
     }
     const button = (
-        <Button className={styles.submitButton} aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
+        <Button
+            className={styles.submitButton}
+            aria-disabled={pending || success}
+            color={success ? 'green' : color}
+            type="submit"
+        >
             {btnContent()}
         </Button>
     )
@@ -163,7 +168,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         setInputs(() => inputs_)
 
         const res = await action(formData)
-        
+
         if (res.success) {
             setSuccess(true)
             successCallback?.(res.data)

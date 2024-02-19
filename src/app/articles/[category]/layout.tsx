@@ -1,20 +1,21 @@
-import styles from './layout.module.scss';
-import { notFound } from 'next/navigation';
-import { readArticleCategory } from '@/cms/articleCategories/read';
-import SideBar from './SideBar';
+import styles from './layout.module.scss'
+import SideBar from './SideBar'
+import { readArticleCategory } from '@/cms/articleCategories/read'
+import { notFound } from 'next/navigation'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     params: {
         category: string
     }
-    children: React.ReactNode,
+    children: ReactNode,
 }
 
 export default async function ArticleCategoryLayout({ params, children }: PropTypes) {
-    const categoryName = decodeURIComponent(params.category); 
-    const res = await readArticleCategory(categoryName);
-    if (!res.success) return notFound();
-    const category = res.data;
+    const categoryName = decodeURIComponent(params.category)
+    const res = await readArticleCategory(categoryName)
+    if (!res.success) return notFound()
+    const category = res.data
 
     return (
         <div className={styles.wrapper}>
@@ -22,5 +23,5 @@ export default async function ArticleCategoryLayout({ params, children }: PropTy
                 {children}
             </SideBar>
         </div>
-    );
+    )
 }

@@ -1,16 +1,16 @@
+import { destroyArticleSection } from '@/cms/articleSections/destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/type'
 import type { Article } from '@prisma/client'
-import { ActionReturn } from '@/actions/type'
-import { destroyArticleSection } from '../articleSections/destroy'
 
-export async function destroyArticle(id: number) : Promise<ActionReturn<Article>> {
+export async function destroyArticle(id: number): Promise<ActionReturn<Article>> {
     try {
         const article = await prisma.article.findUnique({
             where: { id },
             include: { articleSections: true }
         })
-        if (!article) return { success: false, error: [{message: 'Article not found'}] }
+        if (!article) return { success: false, error: [{ message: 'Article not found' }] }
 
 
         // destroy all articlesections in article
@@ -31,8 +31,8 @@ export async function destroyArticle(id: number) : Promise<ActionReturn<Article>
             })
         }
 
-        return { 
-            success: true, 
+        return {
+            success: true,
             data: article
         }
     } catch (error) {

@@ -1,31 +1,31 @@
 'use client'
-import { EditModeContext } from "@/context/EditMode"
-import { useContext } from "react"
 import styles from './EditNews.module.scss'
+import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import { publishNews, updateNews, updateVisibility } from '@/actions/news/update'
-import { destroyNews } from "@/actions/news/destroy"
-import type { ReturnType } from '@/actions/news/ReturnType'
-import { useRouter } from "next/navigation"
+import { destroyNews } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
+import { useRouter } from 'next/navigation'
+import { useContext } from 'react'
+import type { ReturnType } from '@/actions/news/ReturnType'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     news: ReturnType
-    children?: React.ReactNode
-    not: number
+    children?: ReactNode
 }
 
 /**
  * This component renders children if editmode is off and news admin tools if editmode is on
  * pass it not: id of article to make sure not to display that article
  */
-export default function EditNews({ news, children, not }: PropTypes) {
+export default function EditNews({ news, children }: PropTypes) {
     const editModeCtx = useContext(EditModeContext)
     const { refresh, push } = useRouter()
     //TODO: chack visibility
     const canEdit = true //temp
-    if (!editModeCtx?.editMode) return children
+    if (!editModeCtx?.editMode || !canEdit) return children
 
     //TODO: add publish functionality with visibility
     const isPublished = false //temp
@@ -77,25 +77,25 @@ export default function EditNews({ news, children, not }: PropTypes) {
             <div className={styles.publish}>
                 {
                     isPublished ? (
-                    <>
-                        <p>Denne nyheten er publisert</p>
-                        <Form
-                            action={unpublishAction}
-                            successCallback={refresh}
-                            submitText="avpubliser"
-                        />
-                    </> 
+                        <>
+                            <p>Denne nyheten er publisert</p>
+                            <Form
+                                action={unpublishAction}
+                                successCallback={refresh}
+                                submitText="avpubliser"
+                            />
+                        </>
                     ) : (
-                    <>
-                        <p>Denne nyheten er ikke publisert enda</p>
-                        <Form
-                            action={publishAction}
-                            successCallback={refresh}
-                            submitText="publiser"
-                        />
-                    </>
+                        <>
+                            <p>Denne nyheten er ikke publisert enda</p>
+                            <Form
+                                action={publishAction}
+                                successCallback={refresh}
+                                submitText="publiser"
+                            />
+                        </>
                     )
-                    
+
                 }
             </div>
         </div>

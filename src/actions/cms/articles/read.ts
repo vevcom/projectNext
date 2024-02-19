@@ -29,7 +29,7 @@ export async function readArticle(idOrName: number | string): Promise<ActionRetu
     }
 }
 
-export async function readArticles(articleCategoryId: number) : Promise<ActionReturn<ReturnType[]>> {
+export async function readArticles(articleCategoryId: number): Promise<ActionReturn<ReturnType[]>> {
     try {
         const articles = await prisma.article.findMany({
             where: {

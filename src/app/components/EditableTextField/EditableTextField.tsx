@@ -1,11 +1,11 @@
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import { EditModeContext } from '@/context/EditMode'
+import useKeyPress from '@/hooks/useKeyPress'
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
-import useKeyPress from '@/hooks/useKeyPress'
 
 type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
@@ -54,12 +54,12 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     if (!editMode?.editMode || !editable) return (children)
     return (
         <div className={styles.EditableTextField}>
-            <div 
-                className={styles.text} 
-                contentEditable={true} 
-                onInput={handleInput} 
+            <div
+                className={styles.text}
+                contentEditable={true}
+                onInput={handleInput}
                 {...props}
-                onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }} 
+                onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault() }}
             >
                 {children}
             </div>
@@ -72,14 +72,14 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
                     ) : (
                         `${styles.input} ${submitButton.className}`
                     )}
-                submitText={submitButton.text} 
+                submitText={submitButton.text}
                 successCallback={(data: ReturnType | undefined) => {
                     setNoChange(true)
                     formProps.successCallback?.(data)
                 }}
             >
                 <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
-                <button className={styles.hiddenInput} ref={submitRef}  type="submit"></button>
+                <button className={styles.hiddenInput} ref={submitRef} type="submit"></button>
             </Form>
         </div>
     )

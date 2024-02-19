@@ -1,19 +1,23 @@
 'use server'
+import { schema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { SimpleReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/type'
-import { schema } from './schema'
 
-export async function publishNews(id: number, shouldPublish: boolean) : Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+export async function publishNews(
+    id: number,
+    shouldPublish: boolean
+): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+    console.log(id, shouldPublish)
     try {
         const news = await prisma.newsArticle.update({
             where: { id },
             data: {},
             //data: { published: shouldPublish } //TODO: add published field to news
         })
-        return { 
-            success: true, 
+        return {
+            success: true,
             data: news
         }
     } catch (error) {
@@ -21,7 +25,10 @@ export async function publishNews(id: number, shouldPublish: boolean) : Promise<
     }
 }
 
-export async function updateNews(id: number, rawdata: FormData) : Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+export async function updateNews(
+    id: number,
+    rawdata: FormData
+): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
     try {
         const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
         if (!parse.success) {
@@ -39,8 +46,8 @@ export async function updateNews(id: number, rawdata: FormData) : Promise<Action
                 }
             }
         })
-        return { 
-            success: true, 
+        return {
+            success: true,
             data: news
         }
     } catch (error) {
@@ -48,8 +55,8 @@ export async function updateNews(id: number, rawdata: FormData) : Promise<Action
     }
 }
 
-export async function updateVisibility(id: number, visible: unknown) : Promise<ActionReturn<unknown>> {
+export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
     console.log(id, visible)
-    return { success: false, error: [{message: 'Not implemented'}] }
+    return { success: false, error: [{ message: 'Not implemented' }] }
 }

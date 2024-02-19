@@ -1,9 +1,9 @@
-import { readNewsByIdOrName } from "@/actions/news/read"
-import { notFound } from "next/navigation"
-import Article from "@/cms/Article/Article"
 import styles from './page.module.scss'
 import EditNews from './EditNews'
-import CurrentNews from "../CurrentNews"
+import CurrentNews from '@/app/news/CurrentNews'
+import Article from '@/cms/Article/Article'
+import { readNewsByIdOrName } from '@/actions/news/read'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {

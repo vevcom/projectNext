@@ -1,6 +1,5 @@
-import type { ReturnType as AricleReturnType } from "@/cms/articles/ReturnType"
-import type { NewsArticle } from "@prisma/client"
-import type { Image } from "@prisma/client"
+import type { ReturnType as AricleReturnType } from '@/cms/articles/ReturnType'
+import type { NewsArticle, Image } from '@prisma/client'
 
 export type ReturnType = NewsArticle & {
     article: AricleReturnType

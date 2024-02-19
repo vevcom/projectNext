@@ -1,22 +1,21 @@
 'use server'
+import { currentVsOldCutOff, maxCurrentNews } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType, SimpleReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/type'
-import type { ReadPageInput } from '@/actions/type'
-import { currentVsOldCutOff, maxCurrentNews } from './ConfigVars'
+import type { ActionReturn, ReadPageInput } from '@/actions/type'
 
 function getCutoff() {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - currentVsOldCutOff);
-    return oneWeekAgo;
+    const oneWeekAgo = new Date()
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - currentVsOldCutOff)
+    return oneWeekAgo
 }
 
 export async function readNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
-        const oneWeekAgo = getCutoff();
+        const oneWeekAgo = getCutoff()
 
         const news = await prisma.newsArticle.findMany({
             where: {
@@ -45,21 +44,21 @@ export async function readNewsPage<const PageSize extends number>(
                 }
             }
         })
-        return { 
-            success: true, 
+        return {
+            success: true,
             data: news.map(n => ({
                 ...n,
                 coverImage: n.article.coverImage.image
             })),
         }
     } catch (error) {
-        return errorHandler(error);
+        return errorHandler(error)
     }
 }
 
 export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
-        const oneWeekAgo = getCutoff();
+        const oneWeekAgo = getCutoff()
 
         const news = await prisma.newsArticle.findMany({
             where: {
@@ -88,7 +87,7 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]
             }
         })
         return {
-            success: true, 
+            success: true,
             data: news.map(n => ({
                 ...n,
                 coverImage: n.article.coverImage.image
@@ -102,9 +101,9 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]
 export async function readNewsByIdOrName(idOrName: number | string): Promise<ActionReturn<ReturnType>> {
     try {
         const news = await prisma.newsArticle.findUnique({
-            where: typeof idOrName === 'number' ? { 
-                id: idOrName 
-            } : { 
+            where: typeof idOrName === 'number' ? {
+                id: idOrName
+            } : {
                 articleName: idOrName
             },
             include: {
@@ -122,7 +121,7 @@ export async function readNewsByIdOrName(idOrName: number | string): Promise<Act
                 }
             }
         })
-        if (!news) return { success: false, error: [{message: `article ${idOrName} not found`}] }
+        if (!news) return { success: false, error: [{ message: `article ${idOrName} not found` }] }
         return { success: true, data: news }
     } catch (error) {
         return errorHandler(error)
