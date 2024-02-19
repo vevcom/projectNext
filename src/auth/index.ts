@@ -46,7 +46,9 @@ export const authOptions: AuthOptions = {
                     email: user.email,
                     password: user.password,
                     firstname: user.firstname,
-                    lastname: user.lastname
+                    lastname: user.lastname,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 }
             }
             return token

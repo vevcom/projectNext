@@ -5,7 +5,8 @@ $image-size: 150px;
 .ImageListImage {
     width: $image-size;
     height: $image-size;
-    margin: 0.5*ohma.$gap;
+    margin: ohma.$gap;
+    margin-left: 0;
     overflow: hidden;
     @include ohma.round;
     position: relative;
