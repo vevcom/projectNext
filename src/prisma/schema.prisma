@@ -30,7 +30,7 @@ model User {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   roles      RolesUsers[]
-  OmegaQuote OmegaQuote[]
+  omegaQuote OmegaQuote[]
 }
 
 /////////////////
@@ -135,7 +135,7 @@ model CmsImage {
   updatedAt      DateTime        @updatedAt
   imageSize      ImageSize       @default(MEDIUM)
   articleSection ArticleSection?
-  Article        Article? //Can be cover image for an article
+  article        Article? //Can be cover image for an article
 }
 
 model CmsParagraph {
