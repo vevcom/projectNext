@@ -27,12 +27,10 @@ model User {
   password   String // Dette er kun for testing
   firstname  String       @default("[Fjernet]")
   lastname   String       @default("[Fjernet]")
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @updatedAt @map("updated_at")
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
   roles      RolesUsers[]
   OmegaQuote OmegaQuote[]
-
-  @@map("users")
 }
 
 /////////////////
@@ -68,22 +66,19 @@ model Role {
   name        String           @unique
   users       RolesUsers[]
   permissions RolePermission[]
-
-  @@map("role")
 }
 
 model RolePermission {
   role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId     Int        @map("role_id")
+  roleId     Int
   permission Permission
 
   @@unique([roleId, permission])
-  @@map("role_permission")
 }
 
 model RolesUsers {
   user   User @relation(fields: [userId], references: [id])
-  userId Int  @map("user_id")
+  userId Int
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int
 
@@ -105,11 +100,9 @@ model Image {
   collection           ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageFor        ImageCollection? @relation(name: "coverImage")
   collectionId         Int
-  createdAt            DateTime         @default(now()) @map("created_at")
-  updatedAt            DateTime         @updatedAt @map("updated_at")
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
   cmsImages            CmsImage[]
-
-  @@map("images")
 }
 
 model ImageCollection {
@@ -119,10 +112,8 @@ model ImageCollection {
   images       Image[]
   coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImage")
   coverImageId Int?     @unique
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  @@map("image_collections")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum ImageSize {
@@ -140,13 +131,11 @@ model CmsImage {
   name           String          @unique
   image          Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
   imageId        Int?
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  imageSize      ImageSize       @default(MEDIUM) @map("small_image")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  imageSize      ImageSize       @default(MEDIUM)
   articleSection ArticleSection?
   Article        Article? //Can be cover image for an article
-
-  @@map("cms_images")
 }
 
 model CmsParagraph {
@@ -154,23 +143,19 @@ model CmsParagraph {
   name           String          @unique
   contentMd      String          @default("")
   contentHtml    String          @default("")
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   articleSection ArticleSection?
-
-  @@map("cms_paragraphs")
 }
 
 model CmsLink {
   id             Int             @id @default(autoincrement())
   name           String          @unique
   url            String          @default("/")
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   text           String          @default("Link")
   articleSection ArticleSection?
-
-  @@map("cms_links")
 }
 
 enum Position {
@@ -181,37 +166,34 @@ enum Position {
 model ArticleSection {
   id             Int           @id @default(autoincrement())
   name           String        @unique
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   cmsImage       CmsImage?     @relation(fields: [cmsImageId], references: [id], onDelete: SetNull)
   cmsImageId     Int?          @unique
   cmsLink        CmsLink?      @relation(fields: [cmsLinkId], references: [id], onDelete: SetNull)
   cmsLinkId      Int?          @unique
   cmsParagraph   CmsParagraph? @relation(fields: [cmsParagraphId], references: [id], onDelete: SetNull)
   cmsParagraphId Int?          @unique
-  imagePosition  Position      @default(RIGHT) @map("image_position")
+  imagePosition  Position      @default(RIGHT)
   imageSize      Int           @default(200)
   article        Article?      @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId      Int?
   order          Int           @default(autoincrement()) //The order "position" of the article section in the article
 
   //If true, the article section will be deleted if it is empty, ie has no relation to paragraph, link or image
-  destroyOnEmpty Boolean @default(true) @map("distroy_on_empty")
+  destroyOnEmpty Boolean @default(true)
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
-  @@map("article_sections")
 }
 
 model Article {
   id              Int              @id @default(autoincrement())
   name            String           @unique
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   articleSections ArticleSection[]
   coverImage      CmsImage         @relation(fields: [coverImageId], references: [id])
   coverImageId    Int              @unique
-
-  @@map("articles")
 }
 
 /////////////////
@@ -225,6 +207,4 @@ model OmegaQuote {
   timestamp    DateTime @default(now())
   userPoster   User     @relation(fields: [userPosterId], references: [id])
   userPosterId Int
-
-  @@map("omega_quotes")
 }
