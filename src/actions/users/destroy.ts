@@ -5,7 +5,7 @@ import type { User } from '@prisma/client'
 import errorHandler from '@/prisma/errorHandler';
 
 
-export default async function destroy(id: number) : Promise<ActionReturn<User>> {
+export async function destroyUser(id: number) : Promise<ActionReturn<User>> {
     try {
         const user = await prisma.user.delete( {
             where: {

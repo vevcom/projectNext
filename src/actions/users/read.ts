@@ -4,7 +4,7 @@ import { ActionReturn } from "../type";
 import type { User } from '@prisma/client'
 import errorHandler from '@/prisma/errorHandler';
 
-export default async function read(id: number) : Promise<ActionReturn<User>> {
+export async function readUserById(id: number) : Promise<ActionReturn<User>> {
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -25,8 +25,7 @@ export default async function read(id: number) : Promise<ActionReturn<User>> {
 }
 
 
-
-export async function readByEmail(email: string) : Promise<ActionReturn<User>> {
+export async function readUserByEmail(email: string) : Promise<ActionReturn<User>> {
     try {
         const user = await prisma.user.findUnique({
             where: {
