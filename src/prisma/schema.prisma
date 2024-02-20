@@ -1,3 +1,7 @@
+///////////
+// SETUP //
+///////////
+
 generator projectnext {
   provider = "prisma-client-js"
 }
@@ -11,6 +15,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DB_URI")
 }
+
+///////////
+// USERS //
+///////////
 
 model User {
   id         Int          @id @default(autoincrement())
@@ -26,6 +34,10 @@ model User {
 
   @@map("users")
 }
+
+/////////////////
+// PERMISSIONS //
+/////////////////
 
 enum Permission {
   // Omega Quotes
@@ -78,6 +90,10 @@ model RolesUsers {
   @@id([userId, roleId])
 }
 
+////////////
+// Images //
+////////////
+
 model Image {
   id                   Int              @id @default(autoincrement())
   fsLocation           String           @unique
@@ -114,6 +130,10 @@ enum ImageSize {
   MEDIUM
   LARGE
 }
+
+/////////
+// CMS //
+/////////
 
 model CmsImage {
   id             Int             @id @default(autoincrement())
@@ -193,6 +213,10 @@ model Article {
 
   @@map("articles")
 }
+
+/////////////////
+// OMEGAQUOTES //
+/////////////////
 
 model OmegaQuote {
   id           Int      @id @default(autoincrement())
