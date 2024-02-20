@@ -17,7 +17,8 @@ export default function OldNewsList({ serverRendered }: PropTypes) {
                 pagingContext={OldNewsPagingContext} 
                 renderer={news => (
                     <NewsCard news={news} />
-                )} />
+                )} 
+            />
         </div>
     )
 }
