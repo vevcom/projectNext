@@ -1,9 +1,4 @@
 @use "@/styles/ohma";
 
-.CurrentNews {
-    width: 100%;
-    @include ohma.ImageCardListLayout;
-    > i {
-        height: 40px;
-    }
+.nonews {
 }

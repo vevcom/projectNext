@@ -1,5 +1,13 @@
+@use "@/styles/ohma";
 
 .moreNews {
-    display: block;
+    display: flex;
+    flex-direction: column;
     margin: 0 4em;
+    > h1 {
+        margin-bottom: 2*ohma.$gap;
+    }
+    > div {
+
+    }
 }

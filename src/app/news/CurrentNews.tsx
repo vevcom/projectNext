@@ -21,23 +21,19 @@ export default async function CurrentNews({ not }: PropTypes) {
     const news = res.data.filter(n => n.id !== not)
 
     return (
-        <div className={styles.CurrentNews}>
-            {
-                news.length ? (
-                    news.map(n => (
-                        <ImageCard
-                            key={n.id}
-                            image={n.coverImage}
-                            title={n.articleName}
-                            href={`/news/${n.articleName}`}
-                        >
-                            {n.description}
-                        </ImageCard>
-                    ))
-                ) : (
-                    <i>Det er for tiden ingen nyheter</i>
-                )
-            }
-        </div>
+        news.length ? (
+            news.map(n => (
+                <ImageCard
+                    key={n.id}
+                    image={n.coverImage}
+                    title={n.articleName}
+                    href={`/news/${n.articleName}`}
+                >
+                    {n.description}
+                </ImageCard>
+            ))
+        ) : (
+            <i className={styles.nonews}>Det er for tiden ingen nyheter</i>
+        )
     )
 }

@@ -4,6 +4,7 @@ import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
 import { readNewsByIdOrName } from '@/actions/news/read'
 import { notFound } from 'next/navigation'
+import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 
 type PropTypes = {
     params: {
@@ -21,12 +22,16 @@ export default async function NewsArticle({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <Article article={news.article} />
-            <EditNews news={news}>
-                <span className={styles.moreNews}>
-                    <h1>Flere nyheter</h1>
-                    <CurrentNews not={news.id} />
-                </span>
-            </EditNews>
+            <SlideInOnView>
+                <EditNews news={news}>
+                    <span className={styles.moreNews}>
+                        <h1>Flere nyheter</h1>
+                        <div>
+                            <CurrentNews not={news.id} />
+                        </div>
+                    </span>
+                </EditNews>
+            </SlideInOnView>
         </div>
     )
 }
