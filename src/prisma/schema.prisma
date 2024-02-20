@@ -136,7 +136,7 @@ model CmsImage {
   imageSize            ImageSize       @default(MEDIUM)
   articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?            @unique
-  coverImageforArticle Article?        @relation(name: "coverImage")
+  coverImageforArticle Article?
 }
 
 model CmsParagraph {
@@ -195,24 +195,22 @@ model Article {
   articleSections   ArticleSection[]
   newsArticle       NewsArticle?
   articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
-  articleCategoryId Int?
-  coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], name: "coverImage")
+  articleCategoryId Int?             
+  coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId      Int              @unique
 
   @@unique([name, id])
-  @@map("articles")
 }
 
 model NewsArticle {
   id          Int      @id @default(autoincrement())
   description String?
-  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
+  endDateTime DateTime //when the article is no longer considered current
+  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
   articleId   Int      @unique
   articleName String   @unique
-  endDateTime DateTime //when the article is no longer considered current
 
   @@unique([articleId, articleName])
-  @@map("news_articles")
 }
 
 model ArticleCategory {
@@ -222,8 +220,6 @@ model ArticleCategory {
   articles    Article[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  @@map("article_categories")
 }
 
 /////////////////

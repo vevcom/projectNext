@@ -8,9 +8,17 @@ import type { SimpleReturnType } from './ReturnType'
 export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
     try {
         // destroying an news article also destroys the cover image, and all cms parts!
-        const news = await prisma.newsArticle.delete({
+        // Musy destroy the article as that will destoy everything
+        const news = await prisma.newsArticle.findUnique({
             where: { id }
         })
+        if (!news) {
+            return { success: false, error: [{ message: `News ${id} not found` }] }
+        }
+        const res = await destroyArticle(news.articleId)
+        if (!res.success) {
+            return res
+        }
 
         return {
             success: true,

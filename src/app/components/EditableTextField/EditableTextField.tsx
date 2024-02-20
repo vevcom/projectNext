@@ -33,7 +33,6 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     const ref = useRef<HTMLInputElement>(null)
     const submitRef = useRef<HTMLButtonElement>(null)
     useKeyPress('Enter', () => {
-        console.log(!!ref.current)
         if (noChange) return
         submitRef.current?.click()
     })

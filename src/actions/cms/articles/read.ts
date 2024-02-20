@@ -23,7 +23,12 @@ export async function readArticle(idOrName: number | string): Promise<ActionRetu
             }
         })
         if (!article) return { success: false, error: [{ message: `Article ${name} not found` }] }
-        return { success: true, data: article }
+        if (!article.coverImage) return { success: false, error: [{ message: `Article ${name} has no cover image` }] }
+        const ret : ReturnType = {
+            ...article,
+            coverImage: article.coverImage
+        }
+        return { success: true, data: ret }
     } catch (error) {
         return errorHandler(error)
     }

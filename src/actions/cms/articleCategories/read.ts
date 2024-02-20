@@ -71,7 +71,7 @@ async function getCoverImage(category: ReturnType): Promise<Image | null> {
     if (category.articles.length === 0) return null
     const coverImage = await prisma.cmsImage.findUnique({
         where: {
-            id: category.articles[0].coverImageId,
+            id: category.articles[0].coverImageId
         },
         include: {
             image: true

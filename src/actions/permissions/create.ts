@@ -57,7 +57,6 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
     const { roleId, username } = parse.data
-    console.log(roleId)
 
     try {
         const user = await prisma.user.findUnique({

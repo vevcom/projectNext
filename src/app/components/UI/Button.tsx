@@ -9,6 +9,5 @@ export type PropTypes = ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 export default function Button({ color = 'primary', children, className, ...props }: PropTypes) {
-    console.log(className)
     return <button className={`${styles[color]} ${className}`} {...props}>{ children }</button>
 }
