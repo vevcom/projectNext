@@ -4,7 +4,7 @@ import { defaultCurrentVsOldCutOff } from './ConfigVars'
 import prisma from '@/prisma'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { ReturnType } from './ReturnType'
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {

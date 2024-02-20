@@ -1,7 +1,7 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readImageCollectionsPage } from '@/actions/images/collections/read'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/actions/Typess'
 import type { ImageCollectionPageReturn } from '@/actions/images/collections/read'
 
 export type PageSizeImageCollection = 12

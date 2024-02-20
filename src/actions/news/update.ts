@@ -3,7 +3,7 @@ import schema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { SimpleReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function publishNews(
     id: number,

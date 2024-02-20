@@ -3,7 +3,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ActionReturn, ReadPageInput } from '@/actions/Typess'
 import type { OmegaquoteFiltered } from './Types'
 
 export async function readQuotesPage<const PageSize extends number>(

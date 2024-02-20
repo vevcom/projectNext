@@ -3,7 +3,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
 import { z } from 'zod'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Typess'
 import type { OmegaQuote } from '@prisma/client'
 
 export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {

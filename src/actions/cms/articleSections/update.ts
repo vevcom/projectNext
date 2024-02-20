@@ -8,7 +8,7 @@ import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
 import type { ReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Typess'
 
 
 export async function updateArticleSection(name: string, changes: {

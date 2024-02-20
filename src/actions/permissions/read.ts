@@ -3,7 +3,7 @@
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import type { Permission, Prisma, User } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Typess'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 

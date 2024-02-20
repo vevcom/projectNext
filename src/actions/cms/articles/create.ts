@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Typess'
 
 export async function createArticle(name: string | null, config?: {
     categoryId: number,

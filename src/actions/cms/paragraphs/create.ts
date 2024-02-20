@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { CmsParagraph } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Typess'
 
 export async function createCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {

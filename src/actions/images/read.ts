@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ActionReturn, ReadPageInput } from '@/actions/Typess'
 import type { ImageDetails } from './Types'
 
 export async function readImagesPage<const PageSize extends number>(
