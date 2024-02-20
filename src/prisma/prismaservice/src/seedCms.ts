@@ -171,7 +171,12 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
             newsArticle:
                 article.category === 'news' ? {
                     create: {
-                        description: article.description
+                        description: article.description,
+                        endDateTime: (() => {
+                            const date = new Date();
+                            date.setDate(date.getDate() + 7);
+                            return date;
+                        })()
                     }
                 } : undefined,
             articleCategory:
