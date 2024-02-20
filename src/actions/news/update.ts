@@ -44,7 +44,7 @@ export async function updateNews(
                         name: data.name
                     }
                 },
-                endDateTime: data.endDateTime,
+                endDateTime: data.endDateTime || undefined,
             }
         })
         return {

@@ -6,7 +6,7 @@ export default function DateInput({
     color = 'black', 
     className, 
     ...props 
-}: Omit<PropTypes, 'type'>) {
+} : Omit<PropTypes, 'type'>) {
     return (
         <div className={`${styles.DateInput} ${styles[color]} ${className}`}>
             <label className={styles.label}>{label}</label>
