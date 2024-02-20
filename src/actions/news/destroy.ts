@@ -3,9 +3,9 @@ import { destroyArticle } from '@/cms/articles/destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { SimpleReturnType } from './Types'
+import type { SimpleNewsArticle } from './Types'
 
-export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
         // destroying an news article also destroys the cover image, and all cms parts!
         // Musy destroy the article as that will destoy everything

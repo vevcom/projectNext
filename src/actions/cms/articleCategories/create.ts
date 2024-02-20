@@ -3,11 +3,11 @@ import schema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './Types'
+import type { ExpandedArticleCategory } from './Types'
 
 export async function createArticleCategory(
     rawData: FormData
-): Promise<ActionReturn<ReturnType>> {
+): Promise<ActionReturn<ExpandedArticleCategory>> {
     const parse = schema.safeParse({
         name: rawData.get('name'),
         description: rawData.get('description'),

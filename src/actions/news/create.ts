@@ -1,16 +1,16 @@
 'use server'
 import schema from './schema'
-import { defaultCurrentVsOldCutOff } from './ConfigVars'
+import { defaultNewsArticleOldCutoff } from './ConfigVars'
 import prisma from '@/prisma'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './Types'
+import type { ExpandedNewsArticle } from './Types'
 
-export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
+export async function createNews(rawdata: FormData): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
     const endDateTime = new Date()
-    endDateTime.setDate(endDateTime.getDate() + defaultCurrentVsOldCutOff)
+    endDateTime.setDate(endDateTime.getDate() + defaultNewsArticleOldCutoff)
 
     const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
     if (!parse.success) {

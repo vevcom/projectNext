@@ -3,6 +3,10 @@ import type { UserWithPermissions } from '@/auth'
 import 'next-auth'
 import 'next-auth/adapters'
 
+declare global {
+    
+}
+
 declare module 'next-auth' {
     interface User {
         id: number,

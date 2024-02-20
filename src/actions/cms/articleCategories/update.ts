@@ -1,14 +1,14 @@
 'use server'
-import schema from './schema'
+import articleSchema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './Types'
+import type { ExpandedArticleCategory } from './Types'
 
 export async function updateArticleCategoryVisibility(
     id: number,
     visibility: unknown
-): Promise<ActionReturn<ReturnType>> {
+): Promise<ActionReturn<ExpandedArticleCategory>> {
     console.log(id, visibility)
     throw new Error('Not implemented')
 }
@@ -16,8 +16,8 @@ export async function updateArticleCategoryVisibility(
 export async function updateArticleCategory(
     id: number,
     rawData: FormData
-): Promise<ActionReturn<ReturnType>> {
-    const parse = schema.safeParse({
+): Promise<ActionReturn<ExpandedArticleCategory>> {
+    const parse = articleSchema.safeParse({
         name: rawData.get('name'),
         description: rawData.get('description'),
     })

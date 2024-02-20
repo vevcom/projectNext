@@ -1,11 +1,11 @@
-import type { ReturnType as AricleReturnType } from '@/cms/articles/Types'
+import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { NewsArticle, Image } from '@prisma/client'
 
-export type ReturnType = NewsArticle & {
-    article: AricleReturnType
+export type ExpandedNewsArticle = NewsArticle & {
+    article: ExpandedArticle
 }
 
 //used for read many actions
-export type SimpleReturnType = NewsArticle & {
+export type SimpleNewsArticle = NewsArticle & {
     coverImage: Image | null
 }

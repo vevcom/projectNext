@@ -1,10 +1,10 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType } from './Types'
+import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function readArticle(idOrName: number | string): Promise<ActionReturn<ReturnType>> {
+export async function readArticle(idOrName: number | string): Promise<ActionReturn<ExpandedArticle>> {
     try {
         const article = await prisma.article.findUnique({
             where: {
@@ -24,7 +24,7 @@ export async function readArticle(idOrName: number | string): Promise<ActionRetu
         })
         if (!article) return { success: false, error: [{ message: `Article ${name} not found` }] }
         if (!article.coverImage) return { success: false, error: [{ message: `Article ${name} has no cover image` }] }
-        const ret: ReturnType = {
+        const ret: ExpandedArticle = {
             ...article,
             coverImage: article.coverImage
         }
@@ -34,7 +34,7 @@ export async function readArticle(idOrName: number | string): Promise<ActionRetu
     }
 }
 
-export async function readArticles(articleCategoryId: number): Promise<ActionReturn<ReturnType[]>> {
+export async function readArticles(articleCategoryId: number): Promise<ActionReturn<ExpandedArticle[]>> {
     try {
         const articles = await prisma.article.findMany({
             where: {

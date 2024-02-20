@@ -1,10 +1,10 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType } from './Types'
+import type { ExpandedArticleCategory } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function destroyArticleCategory(id: number): Promise<ActionReturn<ReturnType>> {
+export async function destroyArticleCategory(id: number): Promise<ActionReturn<ExpandedArticleCategory>> {
     try {
         // TODO: Cheek for visibility type edit of user.
 

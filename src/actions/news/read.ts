@@ -1,12 +1,12 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType, SimpleReturnType } from './Types'
+import type { ExpandedNewsArticle, SimpleNewsArticle } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
-): Promise<ActionReturn<SimpleReturnType[]>> {
+): Promise<ActionReturn<SimpleNewsArticle[]>> {
     try {
         const news = await prisma.newsArticle.findMany({
             where: {
@@ -45,7 +45,7 @@ export async function readOldNewsPage<const PageSize extends number>(
     }
 }
 
-export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]>> {
+export async function readNewsCurrent(): Promise<ActionReturn<SimpleNewsArticle[]>> {
     try {
         const news = await prisma.newsArticle.findMany({
             where: {
@@ -82,7 +82,7 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]
     }
 }
 
-export async function readNewsByIdOrName(idOrName: number | string): Promise<ActionReturn<ReturnType>> {
+export async function readNewsByIdOrName(idOrName: number | string): Promise<ActionReturn<ExpandedNewsArticle>> {
     try {
         const news = await prisma.newsArticle.findUnique({
             where: typeof idOrName === 'number' ? {

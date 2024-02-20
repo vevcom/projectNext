@@ -1,5 +1,7 @@
-import type { Article, ArticleCategory } from '@prisma/client'
+import type { Article, ArticleCategory, Image } from '@prisma/client'
 
-export type ReturnType = ArticleCategory & {
-    articles: Article[]
-}
+export type ExpandedArticleCategory = ArticleCategory & { articles: Article[] }
+
+export type ExpandedArticleCategoryWithCover = ExpandedArticleCategory & { coverImage: Image | null }
+
+export type ArticleCategoryWithCover = ArticleCategory & { coverImage: Image | null }

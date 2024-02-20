@@ -7,9 +7,9 @@ import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { Part } from '@/cms/articleSections/update'
-import type { ReturnType } from './Types'
+import type { ExpandedArticle } from './Types'
 
-export async function updateArticle(id: number, rawData: FormData): Promise<ActionReturn<ReturnType>> {
+export async function updateArticle(id: number, rawData: FormData): Promise<ActionReturn<ExpandedArticle>> {
     const schema = z.object({
         name: z.string().min(2).max(20)
     })
@@ -53,7 +53,7 @@ export async function updateArticle(id: number, rawData: FormData): Promise<Acti
 export async function addSectionToArticle(
     id: number,
     include: Partial<Record<Part, boolean>>
-): Promise<ActionReturn<ReturnType>> {
+): Promise<ActionReturn<ExpandedArticle>> {
     try {
         const article = await prisma.article.findUnique({
             where: {
