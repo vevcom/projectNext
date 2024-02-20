@@ -5,6 +5,7 @@ import prisma from '@/prisma'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 import type { Prisma } from '@prisma/client'
+import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/actions/users/update'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -21,9 +22,18 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
                     select: {
                         permission: true
                     }
+                },
+                users: {
+                    select: {
+                        userId: true
+                    }
                 }
             }
         })
+
+        const res = await invalidateManyUserSessionData(role.users.map(user => user.userId))
+
+        if (!res.success) return res
 
         return { success: true, data: role }
     } catch (e) {
@@ -66,6 +76,11 @@ export async function removeUserFromRole(data: FormData): Promise<ActionReturn<v
                 }
             },
         })
+        
+        const res = await invalidateOneUserSessionData(user.id)
+
+        if (!res.success) return res
+
     } catch (e) {
         return errorHandeler(e)
     }

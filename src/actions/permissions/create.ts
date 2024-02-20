@@ -5,6 +5,7 @@ import prisma from '@/prisma'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 import type { Prisma } from '@prisma/client'
+import { invalidateOneUserSessionData } from '@/actions/users/update'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -57,7 +58,6 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
     const { roleId, username } = parse.data
-    console.log(roleId)
 
     try {
         const user = await prisma.user.findUnique({
@@ -77,6 +77,11 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
                 userId: user.id,
             },
         })
+
+        const res = await invalidateOneUserSessionData(user.id)
+       
+        if (!res.success) return res
+
     } catch (e) {
         return errorHandeler(e)
     }
