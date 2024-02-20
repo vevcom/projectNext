@@ -2,7 +2,7 @@
 import { createArticleSection } from './create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist

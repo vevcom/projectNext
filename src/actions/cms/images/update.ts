@@ -1,7 +1,7 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage, ImageSize } from '@prisma/client'
 
 export async function updateCmsImage(linkId: number, imageId: number): Promise<ActionReturn<CmsImage>> {

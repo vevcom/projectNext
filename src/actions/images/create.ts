@@ -7,7 +7,7 @@ import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb

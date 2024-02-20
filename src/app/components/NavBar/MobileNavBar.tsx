@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 export default async function MobileNavBar() {
-    const user = await getUser()
+    const { user } = await getUser()
     const isLoggedIn = user !== null
     const applicationPeriod = false //temp
     const isAdmin = user?.username === 'Harambe104' // temp

@@ -4,7 +4,7 @@ export default async function seedDevOmegaquotes(prisma: PrismaClient) {
     const user = await prisma.user.findFirst()
 
     if (!user) {
-        throw new Error('Failed to seed omegaquotes due to users is existing')
+        throw new Error('Failed to seed omegaquotes because no users exist')
     }
 
     const berries = ['blåbær', 'bringebær', 'bjørnebær', 'kake', 'multer', 'stikkelsbær', 'jordbær']

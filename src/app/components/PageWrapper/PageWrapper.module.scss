@@ -5,7 +5,7 @@
     align-self: flex-start;
     margin-top: 1rem;
     margin-bottom: 1rem;
-
+    padding: 0 2em;
     h1 {
         font-family: ohma.$fonts-secondary;
         font-size: ohma.$fonts-xxl;
@@ -16,5 +16,6 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
     }
 }

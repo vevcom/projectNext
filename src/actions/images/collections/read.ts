@@ -1,7 +1,7 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 
 export async function readImageCollection(id: number): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
@@ -27,7 +27,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
 }
 
 export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize, null>
+    { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     try {
         const { page: pageNumber, pageSize } = page

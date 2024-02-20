@@ -8,7 +8,7 @@ import { getUser } from '@/auth'
 import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
-    const user = await getUser()
+    const { user } = await getUser()
 
     const isAdmin = user?.username === 'Harambe104' //temp
     const pageSize: PageSizeImageCollection = 12
@@ -18,7 +18,7 @@ export default async function Images() {
             pageSize,
             page: 0
         },
-        details: null,
+        details: undefined,
     })
 
     if (!collectionPage.success) {
@@ -35,7 +35,7 @@ export default async function Images() {
                         pageSize,
                         page: 1,
                     }}
-                    details={null}
+                    details={undefined}
                     serverRenderedData={collections}
                 >
                     <span className={styles.header}>

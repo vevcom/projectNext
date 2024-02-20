@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import { parseToFormData } from '../utils'
 
@@ -45,10 +45,14 @@ export default async function createUser(rawdata: FormData | User) : Promise<Act
             data: {
                 username,
                 email,
-                password,
                 firstname,
                 lastname,
-            }
+                credentials: {
+                    create: {
+                        passwordHash: password, // TEMPORARY!
+                    },
+                },
+            },
         })
 
         return { success: true, data: user }

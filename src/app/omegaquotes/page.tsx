@@ -2,22 +2,19 @@ import OmegaquoteList from './omegaquotesQuoteList'
 import OmegaquoteQuote from './omegaquotesQuote'
 import OmegaquotePagingProvider from '@/context/paging/omegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
-import { readQuotesPage } from '@/actions/quotes/read'
+import { readQuotesPage } from '@/actions/omegaquotes/read'
 import { requireUser } from '@/auth'
-import { readPermissionsOfUser } from '@/actions/permissions/read'
 import { notFound } from 'next/navigation'
-import { Permission } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
 import CreateOmegaquoteForm from './CreateOmegaquoteForm'
+import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const user = await requireUser({
-        permissions: [Permission.OMEGAQUOTES_READ]
+        permissions: ['OMEGAQUOTES_READ']
     })
 
-    const userPermissions = await readPermissionsOfUser(user.id)
-    const showCreateButton = (userPermissions.success && userPermissions.data.has('OMEGAQUOTES_WRITE'))
+    const showCreateButton = user.permissions.includes('OMEGAQUOTES_WRITE')
 
     const pageSize: PageSizeOmegaquote = 20
 

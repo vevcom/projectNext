@@ -86,7 +86,7 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                     <h2>{currentImage.current.name}</h2>
                     <i>{currentImage.current.alt}</i>
                     {
-                        context?.state.loading ? (
+                        context?.loading ? (
                             <div className={styles.loading}></div>
                         ) : (
                             <Image width={200} image={currentImage.current} />
