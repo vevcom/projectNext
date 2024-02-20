@@ -13,18 +13,104 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  username   String       @unique
-  email      String       @unique
-  password   String // Dette er kun for testing
-  firstname  String       @default("[Fjernet]")
-  lastname   String       @default("[Fjernet]")
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @updatedAt @map("updated_at")
-  roles      RolesUsers[]
-  OmegaQuote OmegaQuote[]
+  id          Int          @id @default(autoincrement())
+  username    String       @unique
+  email       String       @unique
+  password    String // Dette er kun for testing
+  firstname   String       @default("[Fjernet]")
+  lastname    String       @default("[Fjernet]")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  roles       RolesUsers[]
+  OmegaQuote  OmegaQuote[]
+  memberships Membership[]
 
   @@map("users")
+}
+
+////////////
+// Groups //
+////////////
+
+model Membership {
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId     Int
+  group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId    Int
+  admin      Boolean
+  active     Boolean
+  startOrder Int
+  endOrder   Int
+
+  @@unique([userId, groupId])
+}
+
+// Currently prisma doesn't support table inheritance. What comes beneath is
+// the best approximation we can make with the current system. This NEEDS
+// to be refactored when/if prisma adds support for inheritance.
+
+// To make things the 'Group' model contains a field indicating what type of
+// group it is.
+enum GroupType {
+  CLASS
+  COMMITEE
+  INTEREST_GROUP
+  OMEGA_MEMBERSHIP
+  STUDY_PROGRAMME
+}
+
+// The model 'Group' should be treated as an abstract table. I.e. a generic
+// 'Group' should never be created by itself. It should always be created
+// with a reference to one specific type of group.
+model Group {
+  id                Int              @id @default(autoincrement())
+  name              String
+  memberships       Membership[]
+  membershipRenewal Boolean
+  roles             RolesGroups[]
+  groupType         GroupType
+  class             Class?
+  commitee          Commitee?
+  interestGroup     InterestGroup?
+  omegaMembership   OmegaMembership?
+  studyProgramme    StudyProgramme?
+}
+
+// Bellow are all the specific types of groups. These models should contain
+// the specific information that only that type of group requires.
+
+model Class {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  year    Int
+}
+
+model Commitee {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+}
+
+model InterestGroup {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+}
+
+enum OmegaMembershipLevel {
+  SOELLE // Avsky!
+  MEMBER
+  EXTERNAL
+}
+
+model OmegaMembership {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+
+}
+
+model StudyProgramme {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  // TODO - Add study program model when finnished
 }
 
 enum Permission {
@@ -54,7 +140,8 @@ enum Permission {
 model Role {
   id          Int              @id @default(autoincrement())
   name        String           @unique
-  users       RolesUsers[]
+  users       RolesUsers[] // Will be removed when groups are finnished
+  groups      RolesGroups[]
   permissions RolePermission[]
 
   @@map("role")
@@ -69,6 +156,7 @@ model RolePermission {
   @@map("role_permission")
 }
 
+// Will be removed when groups are finnished
 model RolesUsers {
   user   User @relation(fields: [userId], references: [id])
   userId Int  @map("user_id")
@@ -76,6 +164,15 @@ model RolesUsers {
   roleId Int
 
   @@id([userId, roleId])
+}
+
+model RolesGroups {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+  role    Role  @relation(fields: [roleId], references: [id])
+  roleId  Int
+
+  @@unique([groupId, roleId])
 }
 
 model Image {
