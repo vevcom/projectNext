@@ -11,7 +11,7 @@ const __dirname = dirname(__filename)
 export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.upsert({
         where: {
-            name: 'standard_images'
+            name: 'standard images'
         },
         update: {
 

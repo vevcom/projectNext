@@ -9,6 +9,9 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import type { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
+import Form from '@/app/components/Form/Form'
+import { destroyArticle } from '@/actions/cms/articles/destroy'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     category: ReturnType
@@ -71,6 +74,16 @@ export default function SideBar({ category, children }: PropTypes) {
 }
 
 function MainListContent({ category }: { category: ReturnType }) {
+    // Make a visibility check for edit
+    const canEditCategory = true
+    const { push } = useRouter()
+
+    const handleDestroy = async (id: number) => {
+        const res = await destroyArticle(id)
+        if (!res.success) throw new Error('could not destroy article')
+        push(`/articles/${category.name}`)
+    }
+
     return (
         <ul className={styles.MainListContent}>
             {
@@ -79,6 +92,15 @@ function MainListContent({ category }: { category: ReturnType }) {
                         <Link href={`/articles/${category.name}/${article.name}`}>
                             {article.name.toUpperCase()}
                         </Link>
+                        {
+                            canEditCategory && (
+                                <button
+                                    onClick={() => handleDestroy(article.id)}
+                                >
+
+                                </button>
+                            )
+                        }
                     </li>
                 ))
             }
