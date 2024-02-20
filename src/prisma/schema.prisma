@@ -1,5 +1,5 @@
 ///////////
-// SETUP //
+// Setup //
 ///////////
 
 generator projectnext {
@@ -17,48 +17,47 @@ datasource db {
 }
 
 ///////////
-// USERS //
+// Users //
 ///////////
 
 model User {
-  id         Int          @id @default(autoincrement())
-  username   String       @unique
-  email      String       @unique
-  password   String // Dette er kun for testing
-  firstname  String       @default("[Fjernet]")
-  lastname   String       @default("[Fjernet]")
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  roles      RolesUsers[]
-  omegaQuote OmegaQuote[]
+  id                   Int          @id @default(autoincrement())
+  username             String       @unique
+  email                String       @unique
+  firstname            String       @default("[Fjernet]")
+  lastname             String       @default("[Fjernet]")
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt // is also updated manually
+  roles                RolesUsers[]
+  omegaQuote           OmegaQuote[]
+  credentials          Credentials?
+
+  // We need to explicitly mark the combination of 'id' and 'username' as
+  // unique to make the relation to 'Credentials' work.
+  @@unique([id, username])
+}
+
+model Credentials {
+  user                 User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  userId               Int      @unique
+  username             String   @unique
+  passwordHash         String
+  credentialsUpdatedAt DateTime @updatedAt
+
+  // We need to explicitly mark the combination of 'userId' and 'username' as
+  // unique to make the relation to 'User' work.
+  @@unique([userId, username])
+  @@map("Authentication")
 }
 
 /////////////////
-// PERMISSIONS //
+// Permissions //
 /////////////////
 
 enum Permission {
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
-
-  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
-
-  // Fridge
-  USE_MONEY
-  USE_FRIDGE
-  INFINITE_MONEY
-
-  // Bulshit
-  POST_BULSHIT
-  VIEW_BULSHIT
-
-  // Events
-  PARTICIPATE_IN_EVENTS
-  CREATE_EVENTS
-
-  // Minecraft
-  CREATIVE_MODE
 }
 
 model Role {

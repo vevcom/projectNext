@@ -7,11 +7,11 @@ The main thing that makes server actions quite unique is that you can call them 
 We write server actions in the src/actions directory. Here we have different routes that in large part reflect the structure of the database and urls. In each route you have 4 files Create, Read, Update, Destroy, each exporting at least one (default) function with the same name. Some might also export more for example to read more, less or slightly different data. For instance: readPage is a special type of read that you can learn about [here](./Paging.md)
 
 ## Return typing
-All server actions should return generic type ```ActionReturn<ReturnType, DataGuarantee>``` declared in actions/type.ts. ActionReturn just provides a known, standard way for the Client side (and when server uses server actions) to interact with serverActions, the [Form component](./Form_Component.md) for example expects a server action that has this generic return type.
+All server actions should return generic type ```ActionReturn<ReturnType, DataGuarantee>``` declared in actions/Types.ts. ActionReturn just provides a known, standard way for the Client side (and when server uses server actions) to interact with serverActions, the [Form component](./Form_Component.md) for example expects a server action that has this generic return type.
 
 When you get a response from a server action, i.e ```const res = read()``` you have two possibilities: 
 1. res.success is true and you may access res.data. res.data will have type ReturnType, or
-2. res.success is false and you may access res.error. res.error that is an array of type ActionError, also declared in actions/type.ts. each error in the array has a message and may have a path. The path, when used, is supposed to be the name of the field (in a Form) that caused the problem
+2. res.success is false and you may access res.error. res.error that is an array of type ActionError, also declared in actions/Types.ts. each error in the array has a message and may have a path. The path, when used, is supposed to be the name of the field (in a Form) that caused the problem
 
 The DataGuarantee is just a bool that is true by default and not that important. It only says if you can always expect data if success is true.
 

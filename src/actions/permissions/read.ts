@@ -3,7 +3,7 @@
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import type { Permission, Prisma, User } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -75,7 +75,7 @@ export async function readRolesOfUser(userId: number): Promise<ActionReturn<Role
     }
 }
 
-export async function readPermissionsOfUser(userId: number): Promise<ActionReturn<Set<Permission>>> {
+export async function readPermissionsOfUser(userId: number): Promise<ActionReturn<Permission[]>> {
     const rolesResult = await readRolesOfUser(userId)
 
     if (!rolesResult.success) return rolesResult
@@ -88,5 +88,5 @@ export async function readPermissionsOfUser(userId: number): Promise<ActionRetur
     )
 
 
-    return { success: true, data: new Set(permissions) }
+    return { success: true, data: permissions }
 }

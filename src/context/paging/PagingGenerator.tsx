@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useState, useRef, useEffect } from 'react'
-import type { ActionReturn, Page, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, Page, ReadPageInput } from '@/actions/Types'
 import type { Context as ReactContextType } from 'react'
 
 export type StateTypes<Data, PageSize extends number> = {

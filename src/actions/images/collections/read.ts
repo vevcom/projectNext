@@ -1,7 +1,7 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 
 export async function readImageCollection(

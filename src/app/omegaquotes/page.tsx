@@ -10,19 +10,16 @@ import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import { readQuotesPage } from '@/actions/omegaquotes/read'
 import { requireUser } from '@/auth'
-import { readPermissionsOfUser } from '@/actions/permissions/read'
 import { notFound } from 'next/navigation'
-import { Permission } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
 import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const user = await requireUser({
-        permissions: [Permission.OMEGAQUOTES_READ]
+        permissions: ['OMEGAQUOTES_READ']
     })
 
-    const userPermissions = await readPermissionsOfUser(user.id)
-    const showCreateButton = (userPermissions.success && userPermissions.data.has('OMEGAQUOTES_WRITE'))
+    const showCreateButton = user.permissions.includes('OMEGAQUOTES_WRITE')
 
     const pageSize: PageSizeOmegaquote = 20
 
