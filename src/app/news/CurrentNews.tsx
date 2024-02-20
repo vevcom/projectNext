@@ -1,7 +1,7 @@
 import styles from './CurrentNews.module.scss'
 import { readNewsCurrent } from '@/actions/news/read'
-import ImageCard from '@/components/ImageCard/ImageCard'
 import React from 'react'
+import NewsCard from './NewsCard'
 
 type PropTypes = {
     not?: number
@@ -22,16 +22,7 @@ export default async function CurrentNews({ not }: PropTypes) {
 
     return (
         news.length ? (
-            news.map(n => (
-                <ImageCard
-                    key={n.id}
-                    image={n.coverImage}
-                    title={n.articleName}
-                    href={`/news/${n.articleName}`}
-                >
-                    {n.description}
-                </ImageCard>
-            ))
+            news.map(n => <NewsCard news={n} />)
         ) : (
             <i className={styles.nonews}>Det er for tiden ingen nyheter</i>
         )

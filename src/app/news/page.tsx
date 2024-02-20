@@ -5,6 +5,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import PopUp from '@/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
 
 export default async function NewsArtilces() {
     //TODO: add can create news permission
@@ -28,6 +29,7 @@ export default async function NewsArtilces() {
         >
             <main className={styles.wrapper}>
                 <CurrentNews />
+                <Link href="news/archive">Arkivet</Link>
             </main>
         </PageWrapper>
     )
