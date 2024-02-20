@@ -80,18 +80,18 @@ model Group {
 // the specific information that only that type of group requires.
 
 model Class {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
   year    Int
 }
 
 model Commitee {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
 }
 
 model InterestGroup {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
 }
 
@@ -102,13 +102,13 @@ enum OmegaMembershipLevel {
 }
 
 model OmegaMembership {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
 
 }
 
 model StudyProgramme {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
   // TODO - Add study program model when finnished
 }
@@ -148,7 +148,7 @@ model Role {
 }
 
 model RolePermission {
-  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId     Int        @map("role_id")
   permission Permission
 
@@ -158,18 +158,18 @@ model RolePermission {
 
 // Will be removed when groups are finnished
 model RolesUsers {
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId Int  @map("user_id")
-  role   Role @relation(fields: [roleId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId Int
 
   @@id([userId, roleId])
 }
 
 model RolesGroups {
-  group   Group @relation(fields: [groupId], references: [id])
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int
-  role    Role  @relation(fields: [roleId], references: [id])
+  role    Role  @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId  Int
 
   @@unique([groupId, roleId])
