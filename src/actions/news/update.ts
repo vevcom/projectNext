@@ -1,5 +1,5 @@
 'use server'
-import { schema } from './schema'
+import schema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { SimpleReturnType } from './ReturnType'
@@ -43,7 +43,8 @@ export async function updateNews(
                     update: {
                         name: data.name
                     }
-                }
+                },
+                endDateTime: data.endDateTime,
             }
         })
         return {

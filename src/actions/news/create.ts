@@ -1,5 +1,5 @@
 'use server'
-import schema from '@/cms/articleCategories/schema'
+import schema from './schema'
 import prisma from '@/prisma'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
@@ -30,7 +30,7 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
                         id: article.data.id
                     }
                 },
-                endDateTime
+                endDateTime: data.endDateTime || endDateTime,
             },
             include: {
                 article: {
