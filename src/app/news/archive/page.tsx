@@ -1,16 +1,16 @@
-import OldNewsPagingProvider from "@/context/paging/OldNewsPaging";
-import type { PageSizeOldNews } from "@/context/paging/OldNewsPaging";
-import { readOldNewsPage } from "@/actions/news/read";
-import NewsCard from "../NewsCard";
-import OldNewsList from "./OldNewsList";
-import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
+import OldNewsList from './OldNewsList'
+import NewsCard from '@/app/news/NewsCard'
+import OldNewsPagingProvider from '@/context/paging/OldNewsPaging'
+import { readOldNewsPage } from '@/actions/news/read'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import type { PageSizeOldNews } from '@/context/paging/OldNewsPaging'
 
 export default async function NewsArchive() {
-    const pageSize : PageSizeOldNews = 20
+    const pageSize: PageSizeOldNews = 20
     const res = await readOldNewsPage<PageSizeOldNews>({
         page: {
             page: 0,
-            pageSize: pageSize
+            pageSize
         },
         details: undefined
     })
@@ -22,12 +22,12 @@ export default async function NewsArchive() {
             <OldNewsPagingProvider
                 startPage={{
                     page: 1,
-                    pageSize: pageSize,
+                    pageSize,
                 }}
                 details={undefined}
                 serverRenderedData={serverRendered}
             >
-                <OldNewsList serverRendered={serverRendered.map(news => <NewsCard news={news} />)} />
+                <OldNewsList serverRendered={serverRendered.map(news => <NewsCard key={news.id} news={news} />)} />
             </OldNewsPagingProvider>
         </PageWrapper>
     )

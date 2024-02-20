@@ -15,20 +15,20 @@ export default async function NewsArtilces() {
         <PageWrapper title="Nyheter"
             headerItem={
                 <div className={styles.head}>
-                <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
-                {
-                canCreateNews && (
-                    <PopUp
-                        PopUpKey="CreateCategory"
-                        showButtonContent={
-                            <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
-                        }
-                        showButtonClass={styles.addNews}
-                    >
-                        <AddNews />
-                    </PopUp>
-                )
-                }
+                    <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
+                    {
+                        canCreateNews && (
+                            <PopUp
+                                PopUpKey="CreateCategory"
+                                showButtonContent={
+                                    <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
+                                }
+                                showButtonClass={styles.addNews}
+                            >
+                                <AddNews />
+                            </PopUp>
+                        )
+                    }
                 </div>
             }
         >

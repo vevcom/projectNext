@@ -4,14 +4,13 @@ import EditCategory from './EditCategory'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
+import { destroyArticle } from '@/actions/cms/articles/destroy'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
-import type { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
-import Form from '@/app/components/Form/Form'
-import { destroyArticle } from '@/actions/cms/articles/destroy'
 import { useRouter } from 'next/navigation'
+import type { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 
 type PropTypes = {
     category: ReturnType

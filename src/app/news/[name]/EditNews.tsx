@@ -6,11 +6,11 @@ import { publishNews, updateNews, updateVisibility } from '@/actions/news/update
 import { destroyNews } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
+import DateInput from '@/app/components/UI/DateInput'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import type { ReturnType } from '@/actions/news/ReturnType'
 import type { ReactNode } from 'react'
-import DateInput from '@/app/components/UI/DateInput'
 
 type PropTypes = {
     news: ReturnType
@@ -48,7 +48,12 @@ export default function EditNews({ news, children }: PropTypes) {
                     submitText="oppdater"
                 >
                     <TextInput color="white" defaultValue={news.articleName} label="navn" name="name" />
-                    <DateInput color="white" defaultValue={news.endDateTime.toISOString().substring(0, 10)} label="sluttdato" name="endDateTime" />
+                    <DateInput
+                        color="white"
+                        defaultValue={news.endDateTime.toISOString().substring(0, 10)}
+                        label="sluttdato"
+                        name="endDateTime"
+                    />
                     <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
                 <Form

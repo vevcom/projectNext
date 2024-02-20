@@ -1,6 +1,4 @@
 'use server'
-
-import { destroyArticle } from '@/cms/articles/destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'

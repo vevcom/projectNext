@@ -181,9 +181,9 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
                     create: {
                         description: article.description,
                         endDateTime: (() => {
-                            const date = new Date();
-                            date.setDate(date.getDate() + 7);
-                            return date;
+                            const date = new Date()
+                            date.setDate(date.getDate() + 7)
+                            return date
                         })()
                     }
                 } : undefined,
