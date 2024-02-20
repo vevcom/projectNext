@@ -3,6 +3,7 @@
 .CmsParagraph {
     width: 100%;
     position: relative;
+    margin-bottom: 2*ohma.$gap;
     > .HTMLcontent {
         width: 100%;
         * {

@@ -1,4 +1,3 @@
-import { } from '@prisma/client'
 import type { Position, ImageSize } from '@prisma/client'
 
 export type SeedCmsImage = {
@@ -43,7 +42,7 @@ export type CmsContent = {
 }
 
 //this object describes the starting state of all cmsimages
-const standardCmsContents : CmsContent = {
+const standardCmsContents: CmsContent = {
     cmsImages: [
         {
             name: 'frontpage_logo',

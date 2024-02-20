@@ -12,8 +12,8 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
-import { CmsImage, Image as ImageT } from '@prisma/client'
 import Link from 'next/link'
+import type { CmsImage, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     cmsImage: CmsImage & {

@@ -1,7 +1,7 @@
 'use client'
 
-import { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import React, { createContext, useReducer, useRef, useEffect } from 'react'
+import type { ActionReturn, Page, ReadPageInput } from '@/actions/type'
 import type { Context as ReactContextType } from 'react'
 
 export type StateTypes<Data, PageSize extends number> = {
@@ -44,7 +44,7 @@ type ActionTypes<Data, PageSize extends number, DataGuarantee extends boolean> =
 function fetchReducer<Data, const PageSize extends number, DataGuarantee extends boolean>(
     state: StateTypes<Data, PageSize>,
     action: ActionTypes<Data, PageSize, DataGuarantee>
-) : StateTypes<Data, PageSize> {
+): StateTypes<Data, PageSize> {
     switch (action.type) {
         case 'loadMoreStart':
             return { ...state, loading: true }
@@ -120,7 +120,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         const refetch = async () => {
             const goToPage = stateRef.current.page.page
             dispatch({ type: 'clearAll', startPage, serverRenderedData })
-            const data : Data[] = []
+            const data: Data[] = []
             while (stateRef.current.page.page < goToPage) {
                 const newData = await loadMore()
                 data.push(...newData)
@@ -135,11 +135,10 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         )
     }
 }
-function generatePagingContext<Data, const PageSize extends number>()
-: PagingContextType<Data, PageSize> {
+function generatePagingContext<Data, const PageSize extends number>(): PagingContextType<Data, PageSize> {
     const context = createContext<{
         state: StateTypes<Data, PageSize>,
-        loadMore:() => Promise<Data[]>,
+        loadMore: () => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
         serverRenderedData: Data[],
             } | null>(null)

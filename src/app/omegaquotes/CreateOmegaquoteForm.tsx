@@ -3,7 +3,7 @@
 import styles from './CreateOmegaquoteFrom.module.scss'
 import PopUp from '@/components/PopUp/PopUp'
 import Form from '@/components/Form/Form'
-import create from '@/actions/quotes/create'
+import { createQuote } from '@/actions/quotes/create'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import { useRouter } from 'next/navigation'
@@ -17,7 +17,7 @@ export default function CreateOmegaquoteForm() {
             showButtonContent="Ny Omegaquote"
             showButtonClass={styles.button}
         >
-            <Form title="Ny Omegaquote" submitText="Legg til" action={create} successCallback={refresh} className={styles.popupForm}>
+            <Form title="Ny Omegaquote" submitText="Legg til" action={createQuote} successCallback={refresh} className={styles.popupForm}>
                 <Textarea
                     name="quote"
                     label="Omegaquote"

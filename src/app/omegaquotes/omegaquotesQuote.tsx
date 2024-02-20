@@ -1,11 +1,11 @@
 import styles from './omegaquotesQuote.module.scss'
-import { OmegaquoteFiltered } from '@/actions/quotes/read'
+import type { OmegaquoteFiltered } from '@/actions/quotes/read'
 
 export type OmegaquoteQuotePropTypes = {
     quote: OmegaquoteFiltered
 }
 
-export default function OmegaquoteQuote({ quote } : OmegaquoteQuotePropTypes) {
+export default function OmegaquoteQuote({ quote }: OmegaquoteQuotePropTypes) {
     const dateString = `${quote.timestamp.getDay()}.${quote.timestamp.getMonth()}.${quote.timestamp.getFullYear()}`
 
     return <div className={styles.OmegaquoteQuote}>

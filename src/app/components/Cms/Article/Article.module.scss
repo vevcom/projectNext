@@ -57,10 +57,44 @@ $cover-height: min(300px, 40vh);
         
     }
     article {
+        isolation: isolate;  
         > * {
             margin: 2em $padding;
             isolation: isolate;
+            position: relative;
+            &:last-child {
+                margin-bottom: 1em;
+            }
+        }  
+        
+        //This makes sure the the confirmation for deletion does not lay underneath section 
+        @for $i from 1 through 15 { 
+            > *:nth-child(#{$i}) {
+                z-index: calc(15 - $i); 
+            }
         }
+
+        .moveSection {
+            position: relative;
+            display: block;
+            > .moverComponent {
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translate(-50%, 40%);
+                z-index: 2;
+            }
+        }
+    }
+    .addSection {
+        margin: 0 $padding;
+    }
+
+    .submitNameButton {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0, -100%);
     }
 }   
 

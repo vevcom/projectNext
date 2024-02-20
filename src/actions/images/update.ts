@@ -5,7 +5,7 @@ import { z } from 'zod'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/type'
 
-export default async function update(imageId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
+export async function updateImage(imageId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
         name: z.string().max(50, 'max length in 50').min(2, 'min length is 2').trim()
             .or(z.literal('')),

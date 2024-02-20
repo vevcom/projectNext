@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageList({ serverRendered, disableEditing } : PropTypes) {
+export default function ImageList({ serverRendered, disableEditing }: PropTypes) {
     const context = useContext(ImagePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider

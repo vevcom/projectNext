@@ -12,7 +12,6 @@ import {
     faList,
     faUsers,
     faCircleInfo,
-    IconDefinition,
     faNewspaper,
     faCalendar,
     faSuitcase,
@@ -23,6 +22,8 @@ import {
     faTools,
     faChartLine,
 } from '@fortawesome/free-solid-svg-icons'
+import type {
+    IconDefinition } from '@fortawesome/free-solid-svg-icons'
 
 type showTypes = 'all' | 'loggedOut' | 'loggedIn' | 'applicationPeriodAndLoggedIn' | 'admin'
 export type NavItem = {
@@ -32,7 +33,7 @@ export type NavItem = {
     icon: IconDefinition,
 }
 
-export const itemsForMenu : NavItem[] = [
+export const itemsForMenu: NavItem[] = [
     {
         name: 'Hvad der hender',
         href: '/events',
@@ -149,7 +150,7 @@ export const itemsForMenu : NavItem[] = [
     }
 ]
 
-export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean) : NavItem[] {
+export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean): NavItem[] {
     return itemsForMenu.filter(item => {
         switch (item.show) {
             case 'all':

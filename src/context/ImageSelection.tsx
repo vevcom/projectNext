@@ -5,7 +5,7 @@ import type { Image } from '@prisma/client'
 
 export const ImageSelectionContext = createContext<{
     selectionMode: boolean,
-    setSelectionMode:(selectionMode: boolean) => void,
+    setSelectionMode: (selectionMode: boolean) => void,
     selectedImage: Image | null,
     setSelectedImage: (image: Image | null) => void,
         } | null>(null)
@@ -16,7 +16,7 @@ type PropTypes = {
     defaultImage?: Image,
 }
 
-export default function ImageSelectionProvider({ children, defaultSelectionMode = false, defaultImage } : PropTypes) {
+export default function ImageSelectionProvider({ children, defaultSelectionMode = false, defaultImage }: PropTypes) {
     const [image, setImage] = useState<Image | null>(defaultImage || null)
     const [selectionModeActive, setSelectionModeActive] = useState(defaultSelectionMode)
 
