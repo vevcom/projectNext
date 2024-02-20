@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import type { ReturnType } from '@/actions/news/ReturnType'
 import type { ReactNode } from 'react'
+import DateInput from '@/app/components/UI/DateInput'
 
 type PropTypes = {
     news: ReturnType
@@ -47,6 +48,7 @@ export default function EditNews({ news, children }: PropTypes) {
                     submitText="oppdater"
                 >
                     <TextInput color="white" defaultValue={news.articleName} label="navn" name="name" />
+                    <DateInput defaultValue={news.endDateTime.toString()} label="sluttdato" name="endDateTime" />
                     <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
                 <Form

@@ -133,9 +133,11 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
             imagePosition: articleSection.imagePosition,
             imageSize: articleSection.imageSize,
             order: articleSection.order,
-            cmsImage: {
-                connect: cmsImage
-            },
+            cmsImage: cmsImage ? {
+                connect: {
+                    id: cmsImage.id
+                }
+            } : {},
             cmsLink: {
                 connect: cmsLink
             },
@@ -163,7 +165,9 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
         create: {
             name: article.name,
             coverImage: {
-                connect: coverImage
+                connect: {
+                    id: coverImage.id
+                }
             },
             articleSections: {
                 connect: articleSections.map(section => ({ id: section.id }))

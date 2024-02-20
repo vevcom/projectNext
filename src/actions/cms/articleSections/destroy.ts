@@ -23,11 +23,6 @@ export async function destroyArticleSection(name: string): Promise<ActionReturn<
                 where: { id: articleSection.cmsParagraphId },
             })
         }
-        if (articleSection.cmsImageId) {
-            await prisma.cmsImage.delete({
-                where: { id: articleSection.cmsImageId },
-            })
-        }
 
         await prisma.articleSection.delete({
             where: { name },

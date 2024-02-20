@@ -127,35 +127,39 @@ enum ImageSize {
 /////////
 
 model CmsImage {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique @default(cuid())
-  image          Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  imageId        Int?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  imageSize      ImageSize       @default(MEDIUM)
-  articleSection ArticleSection?
-  article        Article? //Can be cover image for an article
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @default(cuid())
+  image            Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  imageId          Int?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  imageSize        ImageSize       @default(MEDIUM)
+  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?            @unique
+  coverImageFor    Article?        @relation(fields: [coverImageForId], references: [id], onDelete: Cascade)
+  coverImageForId  Int?  @unique//can be cover image for a article.
 }
 
 model CmsParagraph {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique @default(cuid())
-  contentMd      String          @default("")
-  contentHtml    String          @default("")
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  articleSection ArticleSection?
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @default(cuid())
+  contentMd        String          @default("")
+  contentHtml      String          @default("")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?            @unique
 }
 
 model CmsLink {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique @default(cuid())
-  url            String          @default("/")
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  text           String          @default("Link")
-  articleSection ArticleSection?
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @default(cuid())
+  url              String          @default("/")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  text             String          @default("Link")
+  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?            @unique
 }
 
 enum Position {
@@ -164,24 +168,22 @@ enum Position {
 }
 
 model ArticleSection {
-  id             Int           @id @default(autoincrement())
-  name           String        @unique @default(cuid())
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  cmsImage       CmsImage?     @relation(fields: [cmsImageId], references: [id], onDelete: SetNull)
-  cmsImageId     Int?          @unique
-  cmsLink        CmsLink?      @relation(fields: [cmsLinkId], references: [id], onDelete: SetNull)
-  cmsLinkId      Int?          @unique
-  cmsParagraph   CmsParagraph? @relation(fields: [cmsParagraphId], references: [id], onDelete: SetNull)
-  cmsParagraphId Int?          @unique
-  imagePosition  Position      @default(RIGHT)
-  imageSize      Int           @default(200)
-  article        Article?      @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  articleId      Int?
-  order          Int           @default(autoincrement()) //The order "position" of the article section in the article
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  imagePosition Position @default(RIGHT)
+  imageSize     Int      @default(200)
+  article       Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId     Int?
+  order         Int      @default(autoincrement()) //The order "position" of the article section in the article
 
   //If true, the article section will be deleted if it is empty, ie has no relation to paragraph, link or image
-  destroyOnEmpty Boolean @default(true)
+  destroyOnEmpty Boolean       @default(true)
+  cmsImage       CmsImage?
+  cmsParagraph   CmsParagraph?
+  cmsLink        CmsLink?
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
 }
@@ -192,8 +194,7 @@ model Article {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   articleSections ArticleSection[]
-  coverImage      CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
-  coverImageId    Int              @unique
+  coverImage CmsImage?
 
   newsArticle NewsArticle?
 
@@ -210,7 +211,7 @@ model NewsArticle {
   article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
   articleId   Int      @unique
   articleName String   @unique
-  endDateTime DateTime  //when the article is no longer considered current
+  endDateTime DateTime //when the article is no longer considered current
 
   @@unique([articleId, articleName])
   @@map("news_articles")
