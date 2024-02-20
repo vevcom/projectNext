@@ -9,6 +9,7 @@ export default function Admin() {
             <Link href="admin/cms">Edit cms</Link>
             <Link href="admin/users">Users</Link>
             <Link href="admin/permissions">Permissions</Link>
+            <Link href="admin/groups">Grupper</Link>
         </div>
     )
 }
