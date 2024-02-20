@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.username || !credentials.password) return null
 
                 // This should be an action
-                const userCredentials = await prisma.credentials.findUnique({
+                const userCredentials = await prisma.authentication.findUnique({
                     where: {
                         username: credentials.username,
                     },
@@ -48,12 +48,12 @@ export const authOptions: AuthOptions = {
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
 
-            const credentials = await prisma.credentials.findUnique({
+            const credentials = await prisma.authentication.findUnique({
                 where: {
                     userId: token.user.id
                 },
                 select: {
-                    updatedAt: true
+                    credentialsUpdatedAt: true
                 }
             })
 
@@ -61,7 +61,7 @@ export const authOptions: AuthOptions = {
             // created. I.e. if the user updates their password you don't want
             // their old token to be valid. 'iat' is given in seconds so we
             // have to convert it to milliseconds.
-            if (!credentials || token.iat * 1000 < credentials.updatedAt.getTime()) return null
+            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime()) return null
 
             return token
         },
@@ -77,7 +77,7 @@ export const authOptions: AuthOptions = {
             // The 'user' object will only be set when the trigger is 'signIn'.
             // We also have to type guard 'user.id' because the default next
             // auth type for it is different from our model.
-            const userId = user && typeof user.id === 'number' ? user.id : token?.user.id 
+            const userId = user && typeof user.id === 'number' ? user.id : token?.user.id
 
             // TODO - refactor when read user action exists
             const userInfo = await prisma.user.findUnique({
@@ -89,7 +89,7 @@ export const authOptions: AuthOptions = {
             const userPermissions = await readPermissionsOfUser(userId)
 
             if (!userInfo || !userPermissions.success) throw Error('Could not read user from database when setting jwt')
-            
+
             token.user = {
                 ...userInfo,
                 permissions: userPermissions.data

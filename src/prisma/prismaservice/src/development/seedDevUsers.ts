@@ -36,7 +36,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     lastname: l,
                     email: uuid(),
                     username: `${f}${i}${j}`,
-                    credentials: {
+                    authentication: {
                         create: {
                             passwordHash: 'password',
                         },
@@ -58,7 +58,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
             username: 'Harambe104',
-            credentials: {
+            authentication: {
                 create: {
                     passwordHash: 'password',
                 },

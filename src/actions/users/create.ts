@@ -44,7 +44,7 @@ export async function createUser(rawdata: FormData): Promise<ActionReturn<User>>
                 email,
                 firstname,
                 lastname,
-                credentials: {
+                authentication: {
                     create: {
                         passwordHash: password, // TEMPORARY!
                     },

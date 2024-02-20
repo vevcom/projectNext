@@ -21,28 +21,29 @@ datasource db {
 ///////////
 
 model User {
-  id         Int          @id @default(autoincrement())
-  username   String       @unique
-  email      String       @unique
-  firstname  String       @default("[Fjernet]")
-  lastname   String       @default("[Fjernet]")
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  roles      RolesUsers[]
-  omegaQuote OmegaQuote[]
-  credentials Credentials?
+  id             Int             @id @default(autoincrement())
+  username       String          @unique
+  email          String          @unique
+  firstname      String          @default("[Fjernet]")
+  lastname       String          @default("[Fjernet]")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  roles          RolesUsers[]
+  omegaQuote     OmegaQuote[]
+  authentication Authentication?
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
   @@unique([id, username])
 }
 
-model Credentials {
-  user         User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
-  userId       Int      @unique
-  username     String   @unique
-  passwordHash String
-  updatedAt    DateTime @updatedAt
+model Authentication {
+  user                 User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  userId               Int      @unique
+  username             String   @unique
+  passwordHash         String
+  credentialsUpdatedAt DateTime @default(now()) // update when password or username changes
+  sessionDataUpdatedAt DateTime @default(now()) // update when jwt payload changes
 
   // We need to explicitly mark the combination of 'userId' and 'username' as
   // unique to make the relation to 'User' work.
