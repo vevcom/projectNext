@@ -79,15 +79,15 @@ export const authOptions: AuthOptions = {
                         id: token.user.id,
                     },
                     select: {
-                        sessionDataUpdatedAt: true,
+                        updatedAt: true,
                     },
                 })
-            
+
                 // Check if the user data that is on the jwt was changed
                 // after the token was created. If so get new data from db.
                 // 'iat' is given in seconds so we have to convert it to
                 // milliseconds.
-                if (token.iat && token.iat * 1000 > dbUser?.sessionDataUpdatedAt.getTime()) {
+                if (token.iat && token.iat * 1000 > dbUser?.updatedAt.getTime()) {
                     return token
                 }
             }

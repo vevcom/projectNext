@@ -27,8 +27,7 @@ model User {
   firstname            String       @default("[Fjernet]")
   lastname             String       @default("[Fjernet]")
   createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
-  sessionDataUpdatedAt DateTime     @updatedAt // needs to be updated manually
+  updatedAt            DateTime     @updatedAt // is also updated manually
   roles                RolesUsers[]
   omegaQuote           OmegaQuote[]
   credentials          Credentials?
