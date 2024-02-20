@@ -138,12 +138,16 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
                     id: cmsImage.id
                 }
             } : {},
-            cmsLink: {
-                connect: cmsLink
-            },
-            cmsParagraph: {
-                connect: cmsParagraph
-            }
+            cmsLink: cmsLink ? {
+                connect: {
+                    id: cmsLink.id
+                }
+            } : {},
+            cmsParagraph: cmsParagraph ? {
+                connect: {
+                    id: cmsParagraph.id
+                }
+            } : {},
         }
     })
 }
