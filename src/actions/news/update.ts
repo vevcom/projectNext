@@ -7,7 +7,8 @@ import type { ActionReturn } from '@/actions/Types'
 
 export async function publishNews(
     id: number,
-    shouldPublish: boolean
+    // disable eslint rule temporarily until todo is resolved
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
         const news = await prisma.newsArticle.update({
@@ -55,6 +56,8 @@ export async function updateNews(
     }
 }
 
+// disable eslint rule temporarily until todo is resolved
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
     return { success: false, error: [{ message: 'Not implemented' }] }
