@@ -1,2 +1,1 @@
-export const currentVsOldCutOff = 7
-export const maxCurrentNews = 6
+export const defaultCurrentVsOldCutOff = 7 // default a newsarticle is considered old after 7 days

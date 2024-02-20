@@ -5,9 +5,13 @@ import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/type'
 import type { ReturnType } from './ReturnType'
+import { defaultCurrentVsOldCutOff } from './ConfigVars'
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
     //TODO: check for can create news permission
+    const endDateTime = new Date()
+    endDateTime.setDate(endDateTime.getDate() + defaultCurrentVsOldCutOff)
+
     const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
@@ -25,7 +29,8 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
                     connect: {
                         id: article.data.id
                     }
-                }
+                },
+                endDateTime
             },
             include: {
                 article: {

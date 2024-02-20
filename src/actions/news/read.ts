@@ -1,31 +1,20 @@
 'use server'
-import { currentVsOldCutOff, maxCurrentNews } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType, SimpleReturnType } from './ReturnType'
 import type { ActionReturn, ReadPageInput } from '@/actions/type'
 
-function getCutoff() {
-    const oneWeekAgo = new Date()
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - currentVsOldCutOff)
-    return oneWeekAgo
-}
-
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
-        const oneWeekAgo = getCutoff()
-
         const news = await prisma.newsArticle.findMany({
             where: {
-                article: {
-                    createdAt: {
-                        lt: oneWeekAgo,
-                    },
+                endDateTime: {
+                    lt: new Date(),
                 }
             },
-            skip: maxCurrentNews + page.page * page.pageSize,
+            skip: page.page * page.pageSize,
             take: page.pageSize,
             orderBy: {
                 article: {
@@ -58,17 +47,12 @@ export async function readOldNewsPage<const PageSize extends number>(
 
 export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
-        const oneWeekAgo = getCutoff()
-
         const news = await prisma.newsArticle.findMany({
             where: {
-                article: {
-                    createdAt: {
-                        gte: oneWeekAgo,
-                    },
-                },
+                endDateTime: {
+                    gte: new Date(),
+                }
             },
-            take: maxCurrentNews,
             orderBy: {
                 article: {
                     createdAt: 'desc',
