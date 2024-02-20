@@ -32,6 +32,7 @@ export async function readArticleCategories(): Promise<ActionReturn<ReturnTypeMa
         )))
         return { success: true, data: categoriesWithCover }
     } catch (error) {
+        console.error(error)
         return errorHandler(error)
     }
 }

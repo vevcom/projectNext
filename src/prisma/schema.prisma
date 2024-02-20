@@ -127,17 +127,16 @@ enum ImageSize {
 /////////
 
 model CmsImage {
-  id               Int             @id @default(autoincrement())
-  name             String          @unique @default(cuid())
-  image            Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  imageId          Int?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  imageSize        ImageSize       @default(MEDIUM)
-  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
-  articleSectionId Int?            @unique
-  coverImageFor    Article?        @relation(fields: [coverImageForId], references: [id], onDelete: Cascade)
-  coverImageForId  Int?  @unique//can be cover image for a article.
+  id                   Int             @id @default(autoincrement())
+  name                 String          @unique @default(cuid())
+  image                Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  imageId              Int?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  imageSize            ImageSize       @default(MEDIUM)
+  articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId     Int?            @unique
+  coverImageforArticle Article?        @relation(name: "coverImage")
 }
 
 model CmsParagraph {
@@ -189,17 +188,16 @@ model ArticleSection {
 }
 
 model Article {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  articleSections ArticleSection[]
-  coverImage CmsImage?
-
-  newsArticle NewsArticle?
-
+  id                Int              @id @default(autoincrement())
+  name              String           @unique
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  articleSections   ArticleSection[]
+  newsArticle       NewsArticle?
   articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
   articleCategoryId Int?
+  coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], name: "coverImage")
+  coverImageId      Int              @unique
 
   @@unique([name, id])
   @@map("articles")
