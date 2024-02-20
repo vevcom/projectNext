@@ -1,5 +1,6 @@
 import seedImages from './seedImages'
 import seedDevUsers from './development/seedDevUsers'
+import seedDevPermissions from './development/seedDevPermissions'
 import seedDevImages from './development/seedDevImages'
 import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
@@ -16,6 +17,7 @@ async function seed() {
     if (process.env.NODE_ENV !== 'development') return
     console.log('seeding dev data....')
     await seedDevUsers(prisma)
+    await seedDevPermissions(prisma)
     await seedDevImages(prisma)
     await seedDevOmegaquotes(prisma)
     console.log('seed dev done')

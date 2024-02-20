@@ -2,6 +2,7 @@
 
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
+import { invalidateManyUserSessionData } from '@/actions/users/update'
 import { Permission } from '@prisma/client'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
@@ -23,16 +24,27 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
 
     const { id, name, permissions } = parse.data
 
+    let userIds: number[]
+
     // Update name of role
     try {
-        await prisma.role.update({
+        const role = await prisma.role.update({
             where: {
                 id
             },
             data: {
                 name
             },
+            select: {
+                users: {
+                    select: {
+                        userId: true,
+                    },
+                },
+            },
         })
+
+        userIds = role.users.map(user => user.userId)
     } catch (e) {
         return errorHandeler(e)
     }
@@ -65,6 +77,10 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
     } catch (e) {
         return errorHandeler(e)
     }
+
+    const res = await invalidateManyUserSessionData(userIds)
+
+    if (!res.success) return res
 
     return { success: true }
 }

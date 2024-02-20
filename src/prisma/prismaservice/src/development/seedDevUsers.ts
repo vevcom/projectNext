@@ -35,8 +35,12 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     firstname: f,
                     lastname: l,
                     email: uuid(),
-                    password: 'password',
                     username: `${f}${i}${j}`,
+                    credentials: {
+                        create: {
+                            passwordHash: 'password',
+                        },
+                    },
                 },
             })
         }))
@@ -53,8 +57,12 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Harambe',
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
-            password: 'password',
             username: 'Harambe104',
+            credentials: {
+                create: {
+                    passwordHash: 'password',
+                },
+            },
         },
     })
     console.log(harambe)
