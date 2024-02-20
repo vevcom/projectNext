@@ -11,7 +11,7 @@ function getCutoff() {
     return oneWeekAgo
 }
 
-export async function readNewsPage<const PageSize extends number>(
+export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<SimpleReturnType[]>> {
     try {
