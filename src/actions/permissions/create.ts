@@ -81,5 +81,5 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
         return errorHandeler(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

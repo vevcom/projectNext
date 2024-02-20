@@ -66,5 +66,5 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
         return errorHandeler(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

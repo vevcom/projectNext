@@ -70,5 +70,5 @@ export async function removeUserFromRole(data: FormData): Promise<ActionReturn<v
         return errorHandeler(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }
