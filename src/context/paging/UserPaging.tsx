@@ -1,7 +1,7 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readUserPage } from '@/actions/users/read'
-import type { ReadPageInput } from '@/actions/Typess'
+import type { ReadPageInput } from '@/actions/Types'
 import type { UserDetails, UserFiltered } from '@/actions/users/Types'
 
 export type PageSizeUsers = 50;

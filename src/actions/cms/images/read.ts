@@ -3,7 +3,7 @@ import { createCmsImage } from './create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image, CmsImage } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function readCmsImage(name: string): Promise<ActionReturn<CmsImage & {image: Image | null}>> {
     //Note this action reates a image link if it does not exist and returns it

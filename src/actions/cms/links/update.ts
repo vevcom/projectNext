@@ -4,7 +4,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { CmsLink } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function updateCmsLink(id: number, rawData: FormData): Promise<ActionReturn<CmsLink>> {
     const schema = z.object({

@@ -4,7 +4,7 @@ import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/actions/users/update'
 import { z } from 'zod'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>

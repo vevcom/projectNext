@@ -1,6 +1,6 @@
 import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {

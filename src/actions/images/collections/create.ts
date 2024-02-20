@@ -3,7 +3,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { ImageCollection } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function createImageCollection(rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
     const schema = z.object({

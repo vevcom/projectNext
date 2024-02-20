@@ -6,7 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
-import type { Action, ActionError } from '@/actions/Typess'
+import type { Action, ActionError } from '@/actions/Types'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 type Colors = ButtonPropTypes['color']

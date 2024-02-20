@@ -8,7 +8,7 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import type { CmsParagraph } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Typess'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function updateCmsParagraph(id: number, contentMd: string): Promise<ActionReturn<CmsParagraph>> {
     //This function expects to get valid md
