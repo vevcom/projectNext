@@ -2,10 +2,10 @@
 
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { z } from 'zod'
-import type { ActionReturn } from '@/actions/type'
-import type { Prisma } from '@prisma/client'
 import { invalidateOneUserSessionData } from '@/actions/users/update'
+import { z } from 'zod'
+import type { ActionReturn } from '@/actions/Types'
+import type { Prisma } from '@prisma/client'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -79,12 +79,11 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
         })
 
         const res = await invalidateOneUserSessionData(user.id)
-       
-        if (!res.success) return res
 
+        if (!res.success) return res
     } catch (e) {
         return errorHandeler(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

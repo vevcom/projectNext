@@ -2,10 +2,10 @@
 
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
+import { invalidateManyUserSessionData } from '@/actions/users/update'
 import { Permission } from '@prisma/client'
 import { z } from 'zod'
-import type { ActionReturn } from '@/actions/type'
-import { invalidateManyUserSessionData } from '@/actions/users/update'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function updateRole(data: FormData): Promise<ActionReturn<void, false>> {
     const schema = z.object({
@@ -24,7 +24,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
 
     const { id, name, permissions } = parse.data
 
-    let userIds: number[];
+    let userIds: number[]
 
     // Update name of role
     try {
@@ -74,7 +74,6 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
             })),
             skipDuplicates: true
         })
-
     } catch (e) {
         return errorHandeler(e)
     }
@@ -83,5 +82,5 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
 
     if (!res.success) return res
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

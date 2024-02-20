@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandeler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function createArticle(name: string): Promise<ActionReturn<ReturnType>> {
     try {
