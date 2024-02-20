@@ -4,7 +4,7 @@ import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { Permission } from '@prisma/client'
 import { z } from 'zod'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function updateRole(data: FormData): Promise<ActionReturn<void, false>> {
     const schema = z.object({
@@ -66,5 +66,5 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
         return errorHandeler(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

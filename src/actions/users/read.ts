@@ -3,7 +3,7 @@ import { userFieldsToExpose } from './Types'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { UserFiltered, UserDetails } from './Types'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 export async function readUserPage<const PageSize extends number>({
     page,
