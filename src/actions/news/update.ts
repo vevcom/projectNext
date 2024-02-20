@@ -9,7 +9,6 @@ export async function publishNews(
     id: number,
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    console.log(id, shouldPublish)
     try {
         const news = await prisma.newsArticle.update({
             where: { id },
@@ -58,6 +57,5 @@ export async function updateNews(
 
 export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
-    console.log(id, visible)
     return { success: false, error: [{ message: 'Not implemented' }] }
 }

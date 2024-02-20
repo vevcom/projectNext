@@ -9,7 +9,6 @@ export async function updateArticleCategoryVisibility(
     id: number,
     visibility: unknown
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
-    console.log(id, visibility)
     throw new Error('Not implemented')
 }
 

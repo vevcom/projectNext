@@ -222,7 +222,6 @@ export async function moveSectionOrder(
 
         return { success: true, data: updatedSection }
     } catch (error) {
-        console.log(error)
         return errorHandler(error)
     }
 }
