@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.username || !credentials.password) return null
 
                 // This should be an action
-                const userCredentials = await prisma.authentication.findUnique({
+                const userCredentials = await prisma.credentials.findUnique({
                     where: {
                         username: credentials.username,
                     },
@@ -48,7 +48,7 @@ export const authOptions: AuthOptions = {
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
 
-            const credentials = await prisma.authentication.findUnique({
+            const credentials = await prisma.credentials.findUnique({
                 where: {
                     userId: token.user.id
                 },
@@ -72,7 +72,25 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user, trigger }) {
-            if (trigger !== 'signIn' && trigger !== 'update') return token
+            if (trigger !== 'signIn' && trigger !== 'update') {
+                // TODO - refactor when read user action exists
+                const dbUser = await prisma.user.findUniqueOrThrow({
+                    where: {
+                        id: token.user.id,
+                    },
+                    select: {
+                        sessionDataUpdatedAt: true,
+                    },
+                })
+            
+                // Check if the user data that is on the jwt was changed
+                // after the token was created. If so get new data from db.
+                // 'iat' is given in seconds so we have to convert it to
+                // milliseconds.
+                if (token.iat && token.iat * 1000 > dbUser?.sessionDataUpdatedAt.getTime()) {
+                    return token
+                }
+            }
 
             // The 'user' object will only be set when the trigger is 'signIn'.
             // We also have to type guard 'user.id' because the default next
