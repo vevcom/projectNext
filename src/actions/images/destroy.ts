@@ -2,9 +2,9 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function destroy(imageId: number): Promise<ActionReturn<Image>> {
+export async function destroyImage(imageId: number): Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.delete({
             where: {

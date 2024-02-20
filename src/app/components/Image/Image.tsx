@@ -1,5 +1,5 @@
 import styles from './Image.module.scss'
-import { ImageProps } from 'next/image'
+import type { ImageProps } from 'next/image'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
@@ -13,7 +13,7 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     | { imageSize?: ImageSize, smallSize?: never, largeSize?: never }
 );
 
-export default function Image({ alt, image, width, smallSize, largeSize, imageSize, ...props } : PropTypes) {
+export default function Image({ alt, image, width, smallSize, largeSize, imageSize, ...props }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
     if (imageSize) {
         switch (imageSize) {

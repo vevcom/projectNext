@@ -2,11 +2,12 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ImageDetails } from './Types'
 
-export async function readPage<const PageSize extends number>(
-    { page, details }: ReadPageInput<PageSize, {collectionId: number}>
-) : Promise<ActionReturn<Image[]>> {
+export async function readImagesPage<const PageSize extends number>(
+    { page, details }: ReadPageInput<PageSize, ImageDetails>
+): Promise<ActionReturn<Image[]>> {
     const { collectionId } = details
     const { page: pageNumber, pageSize } = page
     try {
@@ -25,7 +26,7 @@ export async function readPage<const PageSize extends number>(
 }
 
 
-export async function readById(id: number) : Promise<ActionReturn<Image>> {
+export async function readImageById(id: number): Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
@@ -39,7 +40,7 @@ export async function readById(id: number) : Promise<ActionReturn<Image>> {
     }
 }
 
-export async function readByName(name: string) : Promise<ActionReturn<Image>> {
+export async function readImageByName(name: string): Promise<ActionReturn<Image>> {
     try {
         const image = await prisma.image.findUnique({
             where: {
@@ -53,8 +54,8 @@ export async function readByName(name: string) : Promise<ActionReturn<Image>> {
     }
 }
 
-export default async function read(nameOrId: string | number) : Promise<ActionReturn<Image>> {
-    if (typeof nameOrId === 'number') return readById(nameOrId)
-    return readByName(nameOrId)
+export async function readImage(nameOrId: string | number): Promise<ActionReturn<Image>> {
+    if (typeof nameOrId === 'number') return readImageById(nameOrId)
+    return readImageByName(nameOrId)
 }
 

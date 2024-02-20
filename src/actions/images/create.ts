@@ -1,5 +1,4 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
@@ -8,6 +7,7 @@ import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
+import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
@@ -17,7 +17,7 @@ async function createOne(file: File, meta: {
     name: string,
     alt: string,
     collectionId: number,
-}) : Promise<ActionReturn<Image>> {
+}): Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
@@ -85,7 +85,7 @@ async function createOne(file: File, meta: {
     }
 }
 
-export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
+export async function createImage(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
     const schema = z.object({
         file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
         name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
@@ -101,7 +101,7 @@ export default async function create(collectionId: number, rawdata: FormData): P
     return await createOne(file, { ...data, collectionId })
 }
 
-export async function createMany(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
+export async function createImages(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
     const schema = z.object({
         files: z.array(z.instanceof(File)).refine(
             files => files.every(file => file.size < maxFileSize),
@@ -123,7 +123,7 @@ export async function createMany(collectionId: number, rawdata: FormData): Promi
 
     const data = parse.data
 
-    let finalReturn : ActionReturn<Image[]> = { success: true, data: [] }
+    let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
         const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
         if (!ret.success) return ret

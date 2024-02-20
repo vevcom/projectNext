@@ -6,10 +6,13 @@ export type ActionError = {
 export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = {
     success: false,
     error?: ActionError[],
-} | {
+} | (DataGuarantee extends true ? {
     success: true,
-    data: DataGuarantee extends true ? ReturnType : ReturnType | undefined,
-}
+    data: ReturnType,
+} : {
+    success: true,
+    data?: ReturnType,
+})
 
 export type Page<PageSize extends number> = {
     readonly pageSize: PageSize,

@@ -2,7 +2,7 @@
 import styles from './ImageList.module.scss'
 import ImageListImage from './ImageListImage'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
-import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import React, { useContext } from 'react'
 
 type PropTypes = {
@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 //Note that this component may take iniitial images as props fetched on server
-export default function ImageList({ serverRendered, disableEditing } : PropTypes) {
+export default function ImageList({ serverRendered, disableEditing }: PropTypes) {
     const context = useContext(ImagePagingContext)
 
     //This component must be rendered inside a ImagePagingContextProvider

@@ -2,10 +2,10 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
-import { ImageCollection } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import type { ImageCollection } from '@prisma/client'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function update(
+export async function updateImageCollection(
     collectionId: number,
     coverImageId: number | undefined,
     rawdata: FormData

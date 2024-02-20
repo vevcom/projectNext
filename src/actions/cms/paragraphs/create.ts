@@ -2,9 +2,9 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { CmsParagraph } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function create(name: string) : Promise<ActionReturn<CmsParagraph>> {
+export async function createCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {
         const created = await prisma.cmsParagraph.create({
             data: {

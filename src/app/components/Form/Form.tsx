@@ -1,11 +1,12 @@
 'use client'
 import styles from './Form.module.scss'
 import Button from '@/components/UI/Button'
-import { Children, FormHTMLAttributes, ReactNode, useEffect, DetailedHTMLProps, useState } from 'react'
+import { Children, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
-import type { Action, ActionError } from '@/actions/type'
+import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
+import type { Action, ActionError } from '@/actions/Types'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 type Colors = ButtonPropTypes['color']
@@ -15,7 +16,7 @@ type Confirmation = {
 }
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
+export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,
@@ -37,7 +38,7 @@ function SubmitButton({
     success,
     color,
     confirmation,
-} : {
+}: {
     children: ReactNode, generalErrors?:
     ActionError[],
     success: boolean,
@@ -120,8 +121,8 @@ function Input({ input, errors }: InputType) {
     )
 }
 
-const makeInputArray = (children: ReactNode) : Inputs =>
-    Children.toArray(children).map((child : ReactNode & { props?: {id?: string} }) => {
+const makeInputArray = (children: ReactNode): Inputs =>
+    Children.toArray(children).map((child: ReactNode & { props?: {id?: string} }) => {
         if (typeof child !== 'object') {
             return {
                 input: child,
@@ -145,7 +146,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     action,
     successCallback,
     ...props
-} : PropTypes<GiveActionReturn, DataGuarantee>) {
+}: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)

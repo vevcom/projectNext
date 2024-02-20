@@ -3,7 +3,7 @@ import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
 import EditOverlay from '@/cms/EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
-import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
 import { EditModeContext } from '@/context/EditMode'
@@ -12,8 +12,8 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
-import { CmsImage, Image as ImageT } from '@prisma/client'
 import Link from 'next/link'
+import type { CmsImage, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     cmsImage: CmsImage & {
@@ -70,7 +70,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                         pageSize: 12,
                                         page: 0,
                                     }}
-                                    details={null}
+                                    details={undefined}
                                     serverRenderedData={[]}
                                 >
                                     <EndlessScroll

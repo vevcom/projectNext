@@ -27,7 +27,7 @@ type PropTypes = {
     children: React.ReactNode
 }
 
-export default async function RootLayout({ children } : PropTypes) {
+export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
 
     return (

@@ -8,9 +8,14 @@ services:
       target: prod
     volumes:
       - store:/usr/src/app/store
+      - logs:/usr/src/app/logs
     environment:
       NODE_ENV: production
       DB_URI: ${DB_URI}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
+      LOG_TO_FOLDER: ${LOG_TO_FOLDER}
+      LOG_MAX_FILES: ${LOG_MAX_FILES}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
@@ -71,4 +76,6 @@ volumes:
   proddb:
     driver: local
   store:
+    driver: local
+  logs:
     driver: local

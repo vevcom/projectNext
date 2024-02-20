@@ -9,7 +9,7 @@
 }
 
 @mixin card {
-    border-radius: 3*variables.$rounding;
+    border-radius: variables.$cardRounding;
     padding: 5*variables.$rounding;
 }
 
@@ -83,6 +83,16 @@
         animation: rotate 10s linear infinite;
         scale: 10;
     }
+}
+
+@mixin pagePadding($max-width: 900px) {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
+    position: relative;
+    overflow-y: hidden;
 }
 
 @keyframes rotate {

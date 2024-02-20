@@ -1,12 +1,12 @@
 'use server'
-import create from './create'
-import { ActionReturn } from '@/actions/type'
+import { createArticleSection } from './create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/Types'
 import type { ReturnType } from './ReturnType'
 
 // Note that this function creates a new articleSection if it doesn't exist
-export default async function read(name: string): Promise<ActionReturn<ReturnType>> {
+export async function readArticle(name: string): Promise<ActionReturn<ReturnType>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: {
@@ -19,7 +19,7 @@ export default async function read(name: string): Promise<ActionReturn<ReturnTyp
             }
         })
         if (articleSection) return { success: true, data: articleSection }
-        const createRes = await create(name)
+        const createRes = await createArticleSection(name)
         return createRes
     } catch (error) {
         return errorHandler(error)

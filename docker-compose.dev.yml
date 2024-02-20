@@ -11,12 +11,17 @@ services:
     volumes:
       - devstore:/usr/src/app/store
       - ./src:/usr/src/app/src
+      - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
-      - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
+      - ./logs:/usr/src/app/logs
     environment:
       NODE_ENV: development
       DB_URI: ${DB_URI}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
+      LOG_TO_FOLDER: ${LOG_TO_FOLDER}
+      LOG_MAX_FILES: ${LOG_MAX_FILES}
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
@@ -29,7 +34,6 @@ services:
     
   db:
     image: postgres:16.0-alpine
-    restart: always
     ports:
       - 5432:5432
     environment:

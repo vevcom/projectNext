@@ -1,8 +1,9 @@
 import prisma from '@/prisma'
-import { readPermissionsOfUser } from '@/actions/permissions'
+import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { AuthOptions, getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
+import type { AuthOptions } from 'next-auth'
 import type { Permission } from '@prisma/client'
 
 export const authOptions: AuthOptions = {
@@ -45,7 +46,9 @@ export const authOptions: AuthOptions = {
                     email: user.email,
                     password: user.password,
                     firstname: user.firstname,
-                    lastname: user.lastname
+                    lastname: user.lastname,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 }
             }
             return token

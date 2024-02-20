@@ -1,8 +1,9 @@
 'use client'
 
 import styles from './FileInput.module.scss'
-import { useState, InputHTMLAttributes, ChangeEvent } from 'react'
+import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { InputHTMLAttributes, ChangeEvent } from 'react'
 
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
@@ -10,7 +11,7 @@ type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     color?: 'primary' | 'secondary' | 'red' | 'black',
 }
 
-export default function FileInput({ label = 'default', color, ...props } : PropTypes) {
+export default function FileInput({ label = 'default', color, ...props }: PropTypes) {
     props.id ??= `id_input_${uuid()}`
     color ??= 'black'
 

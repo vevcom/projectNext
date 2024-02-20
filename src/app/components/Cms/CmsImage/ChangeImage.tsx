@@ -3,7 +3,7 @@ import styles from './ChangeImage.module.scss'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import Form from '@/components/Form/Form'
-import update, { updateConfig } from '@/actions/cms/images/update'
+import { updateCmsImage, updateCmsImageConfig } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
@@ -16,7 +16,7 @@ type PropTypes = {
     currentImageSize: ImageSize,
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, currentImageSize } : PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId, currentImageSize }: PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
     const { refresh } = useRouter()
@@ -64,7 +64,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
             {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
                     <Form
-                        action={update.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
+                        action={updateCmsImage.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
                         submitText="change"
                         successCallback={refresh}
                     />
@@ -72,7 +72,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
                         <Form
-                            action={updateConfig.bind(null, cmsImageId).bind(null, { imageSize: changeToSize })}
+                            action={updateCmsImageConfig.bind(null, cmsImageId).bind(null, { imageSize: changeToSize })}
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             successCallback={refresh}
                             submitColor="secondary"
