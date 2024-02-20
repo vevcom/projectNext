@@ -3,10 +3,9 @@
 .moreNews {
     display: flex;
     flex-direction: column;
-    margin: 0 4em;
-    > h1 {
-        margin-bottom: 2*ohma.$gap;
-    }
+    min-height: 50px;
+    margin: 0 ohma.$minimalPagePadding;
+    
     > div {
 
     }

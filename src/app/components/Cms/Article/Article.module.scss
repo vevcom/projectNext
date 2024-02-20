@@ -1,7 +1,7 @@
 @use "@/styles/ohma";
 
-$padding: min(4rem, 4vw);
 $cover-height: min(300px, 40vh);
+$padding: ohma.$minimalPagePadding;
 
 .Article {
     .coverImage {
@@ -46,7 +46,6 @@ $cover-height: min(300px, 40vh);
             position: absolute;
             left: $padding;
             bottom: 1em;
-            
         }   
         
     }
