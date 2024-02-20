@@ -4,7 +4,7 @@ import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateArticle } from '@/actions/cms/articles/update'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import type { ReturnType } from '@/actions/cms/articles/ReturnType'
+import type { ReturnType } from '@/actions/cms/articles/Types'
 
 type PropTypes = {
     article: ReturnType

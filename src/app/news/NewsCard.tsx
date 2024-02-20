@@ -1,5 +1,5 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
-import type { SimpleReturnType } from '@/actions/news/ReturnType'
+import type { SimpleReturnType } from '@/actions/news/Types'
 
 type PropTypes = {
     news: SimpleReturnType

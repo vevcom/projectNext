@@ -9,7 +9,7 @@ import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/app/components/UI/DateInput'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ReturnType } from '@/actions/news/ReturnType'
+import type { ReturnType } from '@/actions/news/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

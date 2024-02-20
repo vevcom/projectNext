@@ -1,7 +1,7 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { ReturnType } from './ReturnType'
+import type { ReturnType } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createArticle(name: string | null, config?: {

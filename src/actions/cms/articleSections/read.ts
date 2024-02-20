@@ -3,7 +3,7 @@ import { createArticleSection } from './create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ReturnType } from './Types'
 
 // Note that this function creates a new articleSection if it doesn't exist
 export async function readArticleSection(name: string): Promise<ActionReturn<ReturnType>> {

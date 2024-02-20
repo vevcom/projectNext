@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
+import type { ReturnType } from '@/actions/cms/articleCategories/Types'
 
 type PropTypes = {
     category: ReturnType

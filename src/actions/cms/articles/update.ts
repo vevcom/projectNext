@@ -7,7 +7,7 @@ import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { Part } from '@/cms/articleSections/update'
-import type { ReturnType } from './ReturnType'
+import type { ReturnType } from './Types'
 
 export async function updateArticle(id: number, rawData: FormData): Promise<ActionReturn<ReturnType>> {
     const schema = z.object({

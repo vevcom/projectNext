@@ -7,7 +7,7 @@ import { createCmsImage } from '@/actions/cms/images/create'
 import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ReturnType } from './ReturnType'
+import type { ReturnType } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 

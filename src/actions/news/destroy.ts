@@ -3,7 +3,7 @@ import { destroyArticle } from '@/cms/articles/destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { SimpleReturnType } from './ReturnType'
+import type { SimpleReturnType } from './Types'
 
 export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
     try {

@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ReturnType } from './Types'
 
 
 export async function createArticleSection(name: string): Promise<ActionReturn<ReturnType>> {
