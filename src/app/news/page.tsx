@@ -14,6 +14,9 @@ export default async function NewsArtilces() {
     return (
         <PageWrapper title="Nyheter"
             headerItem={
+                <div className={styles.head}>
+                <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
+                {
                 canCreateNews && (
                     <PopUp
                         PopUpKey="CreateCategory"
@@ -25,11 +28,12 @@ export default async function NewsArtilces() {
                         <AddNews />
                     </PopUp>
                 )
+                }
+                </div>
             }
         >
             <main className={styles.wrapper}>
                 <CurrentNews />
-                <Link href="news/archive">Arkivet</Link>
             </main>
         </PageWrapper>
     )

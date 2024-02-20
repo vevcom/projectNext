@@ -1,6 +1,6 @@
 'use client'
-
 import { ReactNode } from 'react'
+import styles from './OldNewsList.module.scss'
 
 type PropTypes = {
     serverRendered: ReactNode
@@ -8,8 +8,8 @@ type PropTypes = {
 
 export default function OldNewsList({ serverRendered }: PropTypes) {
     return (
-        <div>
-            {serverRendered}
+        <div className={styles.OldNewsList}>
+            { serverRendered }
         </div>
     )
 }
