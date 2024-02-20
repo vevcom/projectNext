@@ -1,5 +1,6 @@
-import { ActionReturn } from '@/actions/type'
 import errorHandler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
+import type { ActionReturn } from '@/actions/type'
 
 export async function invalidateUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {
@@ -9,7 +10,7 @@ export async function invalidateUserSessionData(userId: number): Promise<ActionR
             },
             data: {}
         })
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 
