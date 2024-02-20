@@ -4,8 +4,11 @@ import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/type'
 import type { User } from '@prisma/client'
+import { parseToFormData } from '../utils'
 
-export default async function create(rawdata: FormData) : Promise<ActionReturn<User>> {
+export default async function create(rawdata: FormData | User) : Promise<ActionReturn<User>> {
+    rawdata = parseToFormData(rawdata);
+
     //TEST FOR WAIT
     await (new Promise((resolve) => {
         setTimeout(() => {

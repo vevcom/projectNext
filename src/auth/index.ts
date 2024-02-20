@@ -4,9 +4,9 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthOptions, getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Permission } from '@prisma/client'
-import FeideProvider from './FeideProvider'
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { linkUserToStudyProgram } from '@/actions/users/update'
+import FeideProvider, { ExtendedFeideUser } from './FeideProvider'
+import type { User } from '@prisma/client'
+import { JWT } from 'next-auth/jwt'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -44,16 +44,10 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user, trigger, profile }) {
+        async jwt({ token, user, trigger, profile } : {token: JWT, user: User, trigger: string, profile: ExtendedFeideUser}) {
 
             if (trigger === 'signUp') {
-                console.log("SIGN UP!")
-                console.log(profile)
-                console.log(user)
-
-                if ((profile as any).studyProgram) {
-                    await linkUserToStudyProgram(Number(user.id), (profile as any).studyProgram.id);
-                }
+                await signUp({profile, user});
             }
 
             if (typeof user?.id === 'number' && user?.email) {
@@ -61,7 +55,6 @@ export const authOptions: AuthOptions = {
                     id: user.id,
                     username: user.username,
                     email: user.email,
-                    emailVerified: user.emailVerified,
                     password: user.password,
                     firstname: user.firstname,
                     lastname: user.lastname,
@@ -79,8 +72,13 @@ export const authOptions: AuthOptions = {
         signIn: '/login',
         signOut: '/logout',
         newUser: '/register'
-    },
-    adapter: PrismaAdapter(prisma)
+    }
+}
+
+
+async function signUp({user , profile} : {user: User, profile: ExtendedFeideUser}) {
+    console.log(user);
+    console.log(profile);
 }
 
 /**

@@ -1,10 +1,5 @@
-import { Awaitable } from "next-auth";
+
 import type { Provider } from "next-auth/providers/index"
-import type { User } from "next-auth"
-import type { StudyProgram } from "@prisma/client";
-import { readByCode } from "@/actions/studyprograms/read";
-import { ActionReturn } from "@/actions/type";
-import { upsert } from "@/actions/studyprograms/create";
 
 export type PropType = {
     clientId: string,
@@ -22,9 +17,7 @@ type FeideGroup = {
     }
 }
 
-type FeideGroups = Array<FeideGroup>
-
-type ExtendedFeideUser = {
+export type ExtendedFeideUser = {
     aud: string,
     sub: string,
     name: string,
@@ -34,8 +27,7 @@ type ExtendedFeideUser = {
         givenName: Array<string>,
         sn: Array<string>,
     },
-    groups: FeideGroups,
-    studyProgram?: StudyProgram,
+    groups: Array<FeideGroup>,
 }
 
 export default function FeideProvider({clientId, clientSecret} : PropType) : Provider {
@@ -69,6 +61,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                     }
                 })
 
+                // This should maybe not run at every sign in
                 const userinfoGroupsRequest = fetch("https://groups-api.dataporten.no/groups/me/groups", {
                     headers: {
                         Authorization: `Bearer ${tokens.access_token}`,
@@ -95,42 +88,13 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
 
                 const profileExtended = await userinfoExtended.json();
 
-                const groups : FeideGroups = await userinfoGroups.json();
+                const groups : Array<FeideGroup> = await userinfoGroups.json();
 
-                let studyProgram : ActionReturn<StudyProgram> | null = null;
-
-                for (let group of groups) {
-                    const groupSplit = group.id.split(":");
-                    // I wonder id a user can have mulitple study programs
-                    if (group.type == "fc:fs:prg" && groupSplit[4] == "ntnu.no" && group.membership.active) {
-                        const studyProgramCode = groupSplit[5];
-                        
-                        studyProgram = await readByCode(studyProgramCode);
-
-                        if (!studyProgram.success) {
-                            studyProgram = await upsert({
-                                name: group.displayName,
-                                code: studyProgramCode,
-                            });
-                            
-                            console.log("Created new study program: ", studyProgram);
-                        }
-                        break;
-                    }
-                }
-
-                return { ...profile, extended: profileExtended, groups, studyProgram: (studyProgram?.success ? studyProgram.data : null)};
+                return { ...profile, extended: profileExtended, groups };
             }
         },
-        profile(profile : ExtendedFeideUser, token) : Awaitable<User> {
-
-            return {
-                id: profile.sub,
-                email: profile.email,
-                username: profile.email.split("@")[0],
-                firstname: profile.extended.givenName.join(" "),
-                lastname: profile.extended.sn.join(" "),
-            }
+        profile(profile : ExtendedFeideUser, token) {
+            return profile;
         },
         clientId,
         clientSecret,
