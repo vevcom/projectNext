@@ -4,17 +4,17 @@ import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateArticle } from '@/actions/cms/articles/update'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import type { ReturnType } from '@/actions/cms/articles/Types'
+import type { ExpandedArticle } from '@/actions/cms/articles/Types'
 
 type PropTypes = {
-    article: ReturnType
+    article: ExpandedArticle
 }
 
 export default function ChangeName({ article }: PropTypes) {
     const changeName = updateArticle.bind(null, article.id)
     const currentPath = usePathname()
     const [currentName, setCurrentName] = useState(article.name)
-    const successCallback = (data: ReturnType | undefined) => {
+    const successCallback = (data: ExpandedArticle | undefined) => {
         const oldName = encodeURIComponent(currentName)
         const newName = encodeURIComponent(data ? data.name : '')
         const newPath = currentPath.replace(oldName, newName)

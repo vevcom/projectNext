@@ -9,10 +9,10 @@ import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ReturnType } from '@/actions/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/actions/cms/articleCategories/Types'
 
 type PropTypes = {
-    category: ReturnType
+    category: ExpandedArticleCategory
 }
 
 export default function EditCategory({ category }: PropTypes) {
@@ -25,7 +25,7 @@ export default function EditCategory({ category }: PropTypes) {
         refresh()
     }
 
-    const handleSuccessUpdate = (data: ReturnType | undefined) => {
+    const handleSuccessUpdate = (data: ExpandedArticleCategory | undefined) => {
         if (data) {
             push(`/articles/${data.name}`)
         }

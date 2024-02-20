@@ -9,6 +9,7 @@ export async function publishNews(
     id: number,
     // disable eslint rule temporarily until todo is resolved
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
         const news = await prisma.newsArticle.update({

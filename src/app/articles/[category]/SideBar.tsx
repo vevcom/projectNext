@@ -10,10 +10,10 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ReturnType } from '@/actions/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/actions/cms/articleCategories/Types'
 
 type PropTypes = {
-    category: ReturnType
+    category: ExpandedArticleCategory
     children: React.ReactNode
 }
 
@@ -72,7 +72,7 @@ export default function SideBar({ category, children }: PropTypes) {
     )
 }
 
-function MainListContent({ category }: { category: ReturnType }) {
+function MainListContent({ category }: { category: ExpandedArticleCategory }) {
     // Make a visibility check for edit
     const canEditCategory = true
     const { push, refresh } = useRouter()
