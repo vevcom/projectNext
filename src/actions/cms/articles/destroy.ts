@@ -1,3 +1,4 @@
+'use server'
 import { destroyArticleSection } from '@/cms/articleSections/destroy'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'

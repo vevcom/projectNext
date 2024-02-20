@@ -7,7 +7,7 @@ import useViewPort from '@/hooks/useViewPort'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import type { ReturnType } from '@/actions/cms/articleCategories/ReturnType'
 import Form from '@/app/components/Form/Form'
 import { destroyArticle } from '@/actions/cms/articles/destroy'
@@ -76,12 +76,13 @@ export default function SideBar({ category, children }: PropTypes) {
 function MainListContent({ category }: { category: ReturnType }) {
     // Make a visibility check for edit
     const canEditCategory = true
-    const { push } = useRouter()
+    const { push, refresh } = useRouter()
 
     const handleDestroy = async (id: number) => {
         const res = await destroyArticle(id)
         if (!res.success) throw new Error('could not destroy article')
         push(`/articles/${category.name}`)
+        refresh()
     }
 
     return (
@@ -95,9 +96,10 @@ function MainListContent({ category }: { category: ReturnType }) {
                         {
                             canEditCategory && (
                                 <button
+                                    className={styles.destroyArticle}
                                     onClick={() => handleDestroy(article.id)}
                                 >
-
+                                    <FontAwesomeIcon icon={faX} />
                                 </button>
                             )
                         }

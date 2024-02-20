@@ -111,6 +111,8 @@
     padding: 0;
     li {
         margin: 1em 0;
+        display: flex;
+        justify-content: space-between;
         a {
             color: ohma.$colors-white;
             text-decoration: none;
@@ -119,4 +121,8 @@
             }
         }
     }
+}
+
+.destroyArticle {
+    @include ohma.roundBtn(ohma.$colors-red);
 }
