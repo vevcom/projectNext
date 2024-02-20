@@ -24,12 +24,12 @@ export default async function NewsArticle({ params }: PropTypes) {
             <Article article={news.article} />
             <SlideInOnView>
                 <EditNews news={news}>
-                    <span className={styles.moreNews}>
+                    <div className={styles.moreNews}>
                         <h1>Flere nyheter</h1>
                         <div>
                             <CurrentNews not={news.id} />
                         </div>
-                    </span>
+                    </div>
                 </EditNews>
             </SlideInOnView>
         </div>
