@@ -77,7 +77,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
     } catch (e) {
         return errorHandeler(e)
     }
-
+    
     const res = await invalidateManyUserSessionData(userIds)
 
     if (!res.success) return res
