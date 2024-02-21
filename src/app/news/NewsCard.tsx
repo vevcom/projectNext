@@ -8,7 +8,7 @@ type PropTypes = {
 export default function NewsCard({ news }: PropTypes) {
     return (
         <ImageCard
-            href={`/news/${news.articleName}`}
+            href={`/news/${news.orderPublished}/${news.articleName}`}
             title={news.articleName}
             image={news.coverImage}
         >
