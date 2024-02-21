@@ -7,14 +7,14 @@ import { createCmsImage } from '@/actions/cms/images/create'
 import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ReturnType } from './ReturnType'
+import type { ExpandedArticleSection } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 
 export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
-}): Promise<ActionReturn<ReturnType>> {
+}): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         //Sets the image resolution based on the image size
         let newCmsImageResolution: ImageSize | undefined = undefined
@@ -52,7 +52,7 @@ export async function updateArticleSection(name: string, changes: {
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
-export async function addArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ReturnType>> {
+export async function addArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },

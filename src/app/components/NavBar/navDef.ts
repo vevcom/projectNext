@@ -10,7 +10,6 @@ import {
     faQuestionCircle,
     faCamera,
     faList,
-    faUsers,
     faCircleInfo,
     faNewspaper,
     faCalendar,
@@ -21,6 +20,7 @@ import {
     faGraduationCap,
     faTools,
     faChartLine,
+    faSignature,
 } from '@fortawesome/free-solid-svg-icons'
 import type {
     IconDefinition } from '@fortawesome/free-solid-svg-icons'
@@ -101,8 +101,14 @@ export const itemsForMenu: NavItem[] = [
         icon: faComment,
     },
     {
+        name: 'Artikkler',
+        href: '/articles',
+        show: 'all',
+        icon: faSignature,
+    },
+    {
         name: 'Guider',
-        href: '/infopages/guides',
+        href: '/articles/guider',
         show: 'all',
         icon: faQuestionCircle,
     },
@@ -119,14 +125,8 @@ export const itemsForMenu: NavItem[] = [
         icon: faList,
     },
     {
-        name: 'Komitémedlemmer',
-        href: '/committees',
-        show: 'loggedIn',
-        icon: faUsers,
-    },
-    {
         name: 'Om Omega',
-        href: '/infopages/about',
+        href: '/articles/om%20omega',
         show: 'all',
         icon: faCircleInfo,
     },

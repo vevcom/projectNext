@@ -75,6 +75,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
         box-shadow: ohma.$colors-secondary 0 0 40px;
         color: $textColor;
         transition: 0.3s;
+        overflow: hidden;
         > h2 {
             opacity: 100%;
             text-decoration: underline;
