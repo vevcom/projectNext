@@ -30,4 +30,4 @@ export const adapterUserCutomFields = adapterUserCutomFieldsArr.reduce((prev, fi
     [field]: true
 }), {} as {[key in typeof adapterUserCutomFieldsArr[number]]: true })
 
-export interface AdapterUserCustom extends Pick<PrismaUser, typeof adapterUserCutomFieldsArr[number]> {}
+export interface AdapterUserCustom extends Omit<Pick<PrismaUser, typeof adapterUserCutomFieldsArr[number]>, 'id'> {id: number | string}

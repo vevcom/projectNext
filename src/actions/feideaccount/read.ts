@@ -1,6 +1,6 @@
 'use server'
 import prisma from "@/prisma";
-import { AdapterUserCustom, selectUserFields } from "@/auth/feide/Types";
+import { AdapterUserCustom, adapterUserCutomFields } from "@/auth/feide/Types";
 import { ActionReturn } from "../Types";
 import ErrorHandler from "@/prisma/errorHandler";
 
@@ -12,7 +12,7 @@ export async function getAdapterUserByFeideAccount(feideId: string): Promise<Act
             },
             select: {
                 user: {
-                    select: selectUserFields
+                    select: adapterUserCutomFields
                 }
             }
         });

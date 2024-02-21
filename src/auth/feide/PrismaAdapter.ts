@@ -23,6 +23,8 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
     return {
 
         async createUser(user: Omit<AdapterUser, 'id'>): Promise<AdapterUser> {
+            console.log("ADAPTER CREATE")
+            console.log(user);
             // REFACTOR
             const ret = await prisma.user.create({
                 data: {
@@ -38,6 +40,8 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
         },
 
         async getUser(id: string | number): Promise<AdapterUser | null> {
+            console.log("ADAPTER GET USER")
+            console.log(id)
             // REFACTOR
             const user = await prisma.user.findUnique({
                 where: {
@@ -50,18 +54,25 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
         },
 
         async getUserByEmail(email: string): Promise<AdapterUser | null> {
+            console.log("ADAPTER GET USER BY EMAIL")
+            console.log(email)
             // REFACTOR
-            console.log("Next auth is trying to get a user by email???")
+
             const user = await prisma.user.findUnique({
                 where: {
                     email
                 },
                 select: adapterUserCutomFields
             });
-            return HS_MAA_GAA(user);
+            const ret = HS_MAA_GAA(user);
+            console.log(ret)
+            return ret;
         },
 
         async getUserByAccount({ providerAccountId, provider }: { providerAccountId: string, provider: string }): Promise<AdapterUser | null> {
+            console.log("ADAPTER GET USER BY ACCOUNT")
+            console.log(providerAccountId, provider);
+            
             if (provider !== "feide") {
                 console.log(provider);
                 throw new Error("Unsupported provider");
@@ -73,15 +84,17 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
                 return null;
             }
 
-            return HS_MAA_GAA(user.data);
+            const ret = HS_MAA_GAA(user.data);
+            console.log(ret)
+            return ret;
         },
 
         async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, "id">): Promise<AdapterUser> {
 
-            // REFACTOR
-            console.warn("Next auth is trying to update a user???");
+            console.log("ADAPTER UPDATE USER")
+            console.log(user)
 
-            console.log(user);
+            // REFACTOR
 
             const ret = await prisma.user.findUnique({
                 where: {
@@ -93,14 +106,22 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
             return HS_MAA_GAA(ret) as AdapterUser;
         },
         async linkAccount(account : AdapterAccount) : Promise<void> {
-            const feideAccountFields = ['id', 'accessToken', 'expiresAt', 'issuedAt', 'userId'] as const;
+            console.log("ADAPTER LINK ACCOUNT")
+            console.log(account)
 
-            const feideAccount = feideAccountFields.reduce((prev, field) => ({
-                ...prev,
-                [field]: account[field]
-            }), {} as FeideAccount);
+            if (!account.access_token || !account.expires_at) {
+                throw Error("Missing required fields in account");
+            }
 
-            await createFeideAccount(feideAccount);
+            await createFeideAccount({
+                id: account.providerAccountId,
+                accessToken: account.access_token,
+                expiresAt: new Date(account.expires_at * 1000),
+                issuedAt: new Date(),
+                userId: Number(account.userId)
+            })
+
+            
         },
         async deleteUser(userId) {
             throw Error("Delete user from next uath is not implemented");

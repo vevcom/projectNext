@@ -1,6 +1,6 @@
 
 import type { Provider } from "next-auth/providers/index"
-import type { FeideGroup, ExtendedFeideUser } from "./Types"
+import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from "./Types"
 import { Awaitable } from "next-auth";
 
 export type PropType = {
@@ -24,8 +24,6 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
             url: "https://auth.dataporten.no/openid/userinfo",
             async request(context) : Promise<ExtendedFeideUser> {
                 const { tokens } = context;
-
-                console.log(tokens);
 
                 const userinfoBasicRequest = fetch("https://auth.dataporten.no/openid/userinfo", {
                     headers: {
@@ -71,8 +69,14 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                 return { ...profile, extended: profileExtended, groups };
             }
         },
-        profile(profile : ExtendedFeideUser, token) : Awaitable<User> {
-            return profile;
+        profile(profile : ExtendedFeideUser, token) : Awaitable<AdapterUserCustom> {
+            return {
+                id: profile.sub,
+                email: profile.email,
+                firstname: profile.extended.givenName.join(" "),
+                lastname: profile.extended.sn.join(" "),
+                username: profile.email.split("@")[0],
+            };
         },
         clientId,
         clientSecret,

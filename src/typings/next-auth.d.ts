@@ -9,7 +9,7 @@ import { FeideAccount } from '@/prisma/client'
 declare module 'next-auth' {
 
     interface User {
-        id: number,
+        id: number | string,
     }
 
     interface Session {

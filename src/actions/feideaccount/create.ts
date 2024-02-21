@@ -19,6 +19,9 @@ export async function createFeideAccount({id, accessToken, expiresAt, issuedAt, 
             }
         });
 
+        console.log("CREATED ACCOUNT")
+        console.log(ret);
+
         return { success: true, data: ret };
     } catch (e) {
         return errorHandler(e);

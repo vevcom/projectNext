@@ -8,7 +8,7 @@ import type { Account, AuthOptions, Awaitable, Profile } from 'next-auth'
 import type { Permission } from '@prisma/client'
 import FeideProvider from './feide/FeideProvider'
 import type { User } from '@prisma/client'
-import { AdapterUser } from 'next-auth/adapters'
+import PrismaAdapter from './feide/PrismaAdapter'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -64,6 +64,21 @@ export const authOptions: AuthOptions = {
                 }
             })
 
+            if (credentials == null) {
+                const hasFeide = await prisma.feideAccount.findUnique({
+                    where: {
+                        userId: token.user.id
+                    },
+                    select: {
+                        userId: true
+                    }
+                }) 
+
+                if (hasFeide) {
+                    return token
+                }
+            }
+
             // Check if the users credentials were updated after the token was
             // created. I.e. if the user updates their password you don't want
             // their old token to be valid. 'iat' is given in seconds so we
@@ -79,7 +94,8 @@ export const authOptions: AuthOptions = {
             return session
         },
         async jwt({ token, user, trigger, profile }) {
-            if (trigger !== 'signIn' && trigger !== 'update') {
+
+            if (trigger !== 'signIn' && trigger !== 'update' && trigger !== 'signUp') {
                 // TODO - refactor when read user action exists
                 const dbUser = await prisma.user.findUniqueOrThrow({
                     where: {
@@ -99,14 +115,16 @@ export const authOptions: AuthOptions = {
                 }
             }
 
-            if (trigger === 'signIn') {
+            if (trigger === 'signUp') {
+                token.email = undefined
+                user.id = Number(user.id)
                 signUp({user, profile});
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.
             // We also have to type guard 'user.id' because the default next
             // auth type for it is different from our model.
-            const userId = user && typeof user.id === 'number' ? user.id : token?.user.id
+            const userId = user ? Number(user.id) : token?.user.id
 
             // TODO - refactor when read user action exists
             const userInfo = await prisma.user.findUnique({
@@ -131,12 +149,12 @@ export const authOptions: AuthOptions = {
         signIn: '/login',
         signOut: '/logout',
         newUser: '/register'
-    }
+    },
+    adapter: PrismaAdapter(prisma),
 }
 
 async function signUp({user, profile}: {user: any, profile: any}) {
-    console.log(user);
-    console.log(profile);
+    console.log("SIGNUUUUUUUPPPP")
 }
 
 export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
