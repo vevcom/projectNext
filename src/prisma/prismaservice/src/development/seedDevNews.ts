@@ -4,10 +4,10 @@ export default async function seedDevNews(prisma: PrismaClient) {
     // seed old news
     const date = new Date()
     date.setDate(date.getDate() - 365) // Subtract 365 days from the current date
-    for (let i = 0; i < 60; i++) {
+    for (let i = 2000; i < 2060; i++) {
         await prisma.newsArticle.upsert({
             where: {
-                articleName: `test_article_${i}`
+                id: i,
             },
             update: {
 
@@ -25,14 +25,15 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: date,
+                orderPublished: i,
             }
         })
     }
     // seed current news
-    for (let i = 0; i < 10; i++) {
+    for (let i = 2060; i < 2070; i++) {
         await prisma.newsArticle.upsert({
             where: {
-                articleName: `test_article_${i}`
+                id: i,
             },
             update: {
 
@@ -48,6 +49,7 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: new Date(),
+                orderPublished: i,
             }
         })
     }
