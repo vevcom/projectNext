@@ -21,16 +21,17 @@ datasource db {
 ///////////
 
 model User {
-  id          Int          @id @default(autoincrement())
-  username    String       @unique
-  email       String       @unique
-  firstname   String       @default("[Fjernet]")
-  lastname    String       @default("[Fjernet]")
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt // is also updated manually
-  roles       RolesUsers[]
-  omegaQuote  OmegaQuote[]
-  credentials Credentials?
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  email        String        @unique
+  firstname    String        @default("[Fjernet]")
+  lastname     String        @default("[Fjernet]")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt // is also updated manually
+  roles        RolesUsers[]
+  omegaQuote   OmegaQuote[]
+  credentials  Credentials?
+  feideAccount FeideAccount?
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -55,18 +56,10 @@ model FeideAccount {
   accessToken String   @map("access_token") @db.Text
   expiresAt   DateTime @map("expires_at")
   issuedAt    DateTime @map("issued_at")
+  userId      Int      @unique @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("feide_accounts")
-}
-
-model StudyProgram {
-  id            Int     @id @default(autoincrement())
-  name          String
-  code          String  @unique
-  years         Int? // This is not stored in Feide, therefore it is optional
-  instituteCode String? @map("institute_code")
-
-  @@map("study_programs")
 }
 
 /////////////////

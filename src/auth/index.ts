@@ -3,12 +3,12 @@ import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
-import { decode } from 'next-auth/jwt'
-import type { AuthOptions } from 'next-auth'
+import { JWT, decode } from 'next-auth/jwt'
+import type { Account, AuthOptions, Awaitable, Profile } from 'next-auth'
 import type { Permission } from '@prisma/client'
-import FeideProvider, { ExtendedFeideUser } from './FeideProvider'
+import FeideProvider from './feide/FeideProvider'
 import type { User } from '@prisma/client'
-import { JWT } from 'next-auth/jwt'
+import { AdapterUser } from 'next-auth/adapters'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -78,7 +78,7 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user, trigger }) {
+        async jwt({ token, user, trigger, profile }) {
             if (trigger !== 'signIn' && trigger !== 'update') {
                 // TODO - refactor when read user action exists
                 const dbUser = await prisma.user.findUniqueOrThrow({
@@ -97,6 +97,10 @@ export const authOptions: AuthOptions = {
                 if (token.iat && token.iat * 1000 > dbUser?.updatedAt.getTime()) {
                     return token
                 }
+            }
+
+            if (trigger === 'signIn') {
+                signUp({user, profile});
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.
@@ -130,8 +134,7 @@ export const authOptions: AuthOptions = {
     }
 }
 
-
-async function signUp({user , profile} : {user: User, profile: ExtendedFeideUser}) {
+async function signUp({user, profile}: {user: any, profile: any}) {
     console.log(user);
     console.log(profile);
 }

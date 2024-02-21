@@ -1,33 +1,11 @@
 
 import type { Provider } from "next-auth/providers/index"
+import type { FeideGroup, ExtendedFeideUser } from "./Types"
+import { Awaitable } from "next-auth";
 
 export type PropType = {
     clientId: string,
     clientSecret: string,
-}
-
-type FeideGroup = {
-    id: string,
-    displayName: string,
-    type: string,
-    membership: {
-        basic: string,
-        active: boolean,
-        displayName: string,
-    }
-}
-
-export type ExtendedFeideUser = {
-    aud: string,
-    sub: string,
-    name: string,
-    email: string,
-    email_verified: boolean,
-    extended: {
-        givenName: Array<string>,
-        sn: Array<string>,
-    },
-    groups: Array<FeideGroup>,
 }
 
 export default function FeideProvider({clientId, clientSecret} : PropType) : Provider {
@@ -93,7 +71,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
                 return { ...profile, extended: profileExtended, groups };
             }
         },
-        profile(profile : ExtendedFeideUser, token) {
+        profile(profile : ExtendedFeideUser, token) : Awaitable<User> {
             return profile;
         },
         clientId,

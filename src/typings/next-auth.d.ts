@@ -3,7 +3,11 @@ import type { UserWithPermissions } from '@/auth'
 import 'next-auth'
 import 'next-auth/adapters'
 
+import type { User as PrismaUser } from '@prisma/client'
+import { nextAuthUserFields } from '@/auth/feide/Types'
+
 declare module 'next-auth' {
+
     interface User {
         id: number,
     }
@@ -11,6 +15,10 @@ declare module 'next-auth' {
     interface Session {
         user: UserWithPermissions,
     }
+}
+
+declare module 'next-auth/adapters' {
+    interface AdapterUser extends Pick<PrismaUser, typeof nextAuthUserFields[number]> {}
 }
 
 declare module 'next-auth/jwt' {
