@@ -14,7 +14,7 @@ export default function AddNews() {
     const editModeCtx = useContext(EditModeContext)
     const handleCreate = (data?: ExpandedNewsArticle) => {
         editModeCtx?.setEditMode(true)
-        push(`/news/${data?.articleName}`)
+        push(`/news/${data?.orderPublished}/${data?.articleName}`)
     }
 
     return (
