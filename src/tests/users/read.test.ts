@@ -1,3 +1,7 @@
 import { describe } from "node:test";
 
-describe
+describe('readUser', () => {
+    it('should read a user', () => {
+
+    })
+})
