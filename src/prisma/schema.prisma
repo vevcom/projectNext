@@ -21,16 +21,16 @@ datasource db {
 ///////////
 
 model User {
-  id                   Int          @id @default(autoincrement())
-  username             String       @unique
-  email                String       @unique
-  firstname            String       @default("[Fjernet]")
-  lastname             String       @default("[Fjernet]")
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt // is also updated manually
-  roles                RolesUsers[]
-  omegaQuote           OmegaQuote[]
-  credentials          Credentials?
+  id          Int          @id @default(autoincrement())
+  username    String       @unique
+  email       String       @unique
+  firstname   String       @default("[Fjernet]")
+  lastname    String       @default("[Fjernet]")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt // is also updated manually
+  roles       RolesUsers[]
+  omegaQuote  OmegaQuote[]
+  credentials Credentials?
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -188,28 +188,31 @@ model ArticleSection {
 
 model Article {
   id                Int              @id @default(autoincrement())
-  name              String           @unique
+  name              String
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
   articleSections   ArticleSection[]
   newsArticle       NewsArticle?
   articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
-  articleCategoryId Int?             
+  articleCategoryId Int?
   coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId      Int              @unique
 
   @@unique([name, id])
+  @@unique([articleCategoryId, name])
 }
 
 model NewsArticle {
-  id          Int      @id @default(autoincrement())
-  description String?
-  endDateTime DateTime //when the article is no longer considered current
-  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
-  articleId   Int      @unique
-  articleName String   @unique
+  id             Int      @id @default(autoincrement())
+  description    String?
+  endDateTime    DateTime //when the article is no longer considered current
+  article        Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
+  articleId      Int      @unique
+  articleName    String
+  orderPublished Int
 
   @@unique([articleId, articleName])
+  @@unique([articleId, orderPublished])
 }
 
 model ArticleCategory {
@@ -232,4 +235,14 @@ model OmegaQuote {
   timestamp    DateTime @default(now())
   userPoster   User     @relation(fields: [userPosterId], references: [id])
   userPosterId Int
+}
+
+///////////////////////////
+// Current year of omega //
+///////////////////////////
+
+model OmegaOrder {
+  order     Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

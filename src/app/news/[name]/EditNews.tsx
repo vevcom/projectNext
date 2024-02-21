@@ -36,7 +36,6 @@ export default function EditNews({ news, children }: PropTypes) {
     const updateAction = updateNews.bind(null, news.id)
     const updateVisibilityAction = updateVisibility.bind(null, news.id).bind(null, true)
 
-
     return (
         <div className={styles.EditNews}>
             <div className={styles.update}>
@@ -47,7 +46,12 @@ export default function EditNews({ news, children }: PropTypes) {
                     }}
                     submitText="oppdater"
                 >
-                    <TextInput color="white" defaultValue={news.articleName} label="navn" name="name" />
+                    <TextInput 
+                        color="white" 
+                        defaultValue={news.articleName} 
+                        label="navn" 
+                        name="name" 
+                    />
                     <DateInput
                         color="white"
                         defaultValue={news.endDateTime.toISOString().substring(0, 10)}
