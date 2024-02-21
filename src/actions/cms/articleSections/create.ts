@@ -2,10 +2,10 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ExpandedArticleSection } from './Types'
 
 
-export async function createArticleSection(name: string): Promise<ActionReturn<ReturnType>> {
+export async function createArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.create({
             data: {

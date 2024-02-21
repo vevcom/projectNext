@@ -6,5 +6,7 @@
         width: 100%;
         resize: vertical;
         margin-top: 0.5em;
+        max-height: 300px;
+        font-size: ohma.$fonts-s;
     }
 }

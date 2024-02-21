@@ -3,10 +3,10 @@ import { createArticleSection } from './create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ExpandedArticleSection } from './Types'
 
 // Note that this function creates a new articleSection if it doesn't exist
-export async function readArticle(name: string): Promise<ActionReturn<ReturnType>> {
+export async function readArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: {

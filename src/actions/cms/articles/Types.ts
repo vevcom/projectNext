@@ -1,7 +1,7 @@
-import type { ReturnType as ExpandedArticleSection } from '@/cms/articleSections/ReturnType'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { Article, CmsImage } from '@prisma/client'
 
-export type ReturnType = Article & {
+export type ExpandedArticle = Article & {
     articleSections: ExpandedArticleSection[],
     coverImage: CmsImage,
 }
