@@ -23,3 +23,9 @@ WORKDIR /usr/src/app
 COPY --from=base /usr/src/app/ .
 
 CMD ["npm", "run", "dev"]
+############################################################
+FROM node:20-alpine AS test
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app/ .
+
+CMD ["npm", "run", "test"]

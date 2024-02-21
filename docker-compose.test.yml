@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
-      target: prod
+      target: test
     volumes:
       - store:/usr/src/app/store
       - logs:/usr/src/app/logs
@@ -36,7 +36,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - proddb:/var/lib/postgresql/data
+      - testdb:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
       interval: 3s
@@ -59,21 +59,8 @@ services:
     links:
       - db
 
-  nginx:
-    image: nginx:1.21.3-alpine
-    restart: always
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - store:/usr/store
-    depends_on:
-      - projectnext
-    links:
-      - projectnext
-
 volumes:
-  proddb:
+  testdb:
     driver: local
   store:
     driver: local
