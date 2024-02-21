@@ -8,14 +8,18 @@ import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {
-        name: string
+        orderAndName: string[]
     }
 }
 
-
 export default async function NewsArticle({ params }: PropTypes) {
-    const name = decodeURIComponent(params.name)
-    const res = await readNewsByIdOrName(name)
+    const order = parseInt(decodeURIComponent(params.orderAndName[0]))
+    const name = decodeURIComponent(params.orderAndName[1])
+    if (!order || !name || params.orderAndName.length > 2) notFound()
+    const res = await readNewsByIdOrName({
+        articleName: name,
+        order,
+    })
     if (!res.success) notFound()
     const news = res.data
 
