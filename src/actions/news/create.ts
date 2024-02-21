@@ -1,17 +1,17 @@
 'use server'
 import schema from './schema'
-import { defaultCurrentVsOldCutOff } from './ConfigVars'
-import { getCurrenOmegaOrder } from '@/actions/omegaOrder/read'
+import { defaultNewsArticleOldCutoff } from './ConfigVars'
 import prisma from '@/prisma'
+import { readCurrenOmegaOrder } from '@/actions/omegaOrders/read'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ExpandedNewsArticle } from './Types'
 
-export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
+export async function createNews(rawdata: FormData): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
     const endDateTime = new Date()
-    endDateTime.setDate(endDateTime.getDate() + defaultCurrentVsOldCutOff)
+    endDateTime.setDate(endDateTime.getDate() + defaultNewsArticleOldCutoff)
 
     const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
     if (!parse.success) {
@@ -19,7 +19,7 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
     }
     const data = parse.data
 
-    const res = await getCurrenOmegaOrder()
+    const res = await readCurrenOmegaOrder()
     if (!res.success) return res
     const orderPublished = res.data.order
 

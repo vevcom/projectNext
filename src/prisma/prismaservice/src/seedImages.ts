@@ -17,7 +17,7 @@ export default async function seedImages(prisma: PrismaClient) {
 
         },
         create: {
-            name: 'standard_images',
+            name: 'standard images',
             description: 'standard images for the website',
         }
     })

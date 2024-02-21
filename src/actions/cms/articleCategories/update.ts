@@ -1,23 +1,25 @@
 'use server'
-import schema from './schema'
+import articleSchema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReturnType } from './ReturnType'
+import type { ExpandedArticleCategory } from './Types'
 
 export async function updateArticleCategoryVisibility(
+    // disable eslint rule temporarily until function is implemented
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     visibility: unknown
-): Promise<ActionReturn<ReturnType>> {
-    console.log(id, visibility)
+): Promise<ActionReturn<ExpandedArticleCategory>> {
     throw new Error('Not implemented')
 }
 
 export async function updateArticleCategory(
     id: number,
     rawData: FormData
-): Promise<ActionReturn<ReturnType>> {
-    const parse = schema.safeParse({
+): Promise<ActionReturn<ExpandedArticleCategory>> {
+    const parse = articleSchema.safeParse({
         name: rawData.get('name'),
         description: rawData.get('description'),
     })

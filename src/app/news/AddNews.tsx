@@ -7,12 +7,12 @@ import TextInput from '@/components/UI/TextInput'
 import { EditModeContext } from '@/context/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ReturnType } from '@/actions/news/ReturnType'
+import type { ExpandedNewsArticle } from '@/actions/news/Types'
 
 export default function AddNews() {
     const { push } = useRouter()
     const editModeCtx = useContext(EditModeContext)
-    const handleCreate = (data?: ReturnType) => {
+    const handleCreate = (data?: ExpandedNewsArticle) => {
         editModeCtx?.setEditMode(true)
         push(`/news/${data?.articleName}`)
     }

@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { OmegaOrder } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function getCurrenOmegaOrder(): Promise<ActionReturn<OmegaOrder>> {
+export async function readCurrenOmegaOrder(): Promise<ActionReturn<OmegaOrder>> {
     try {
         const omegaOrder = await prisma.omegaOrder.findFirst({
             orderBy: {

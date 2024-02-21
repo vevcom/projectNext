@@ -1,15 +1,16 @@
 'use server'
-import schema from './schema'
+import newsArticleSchema from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { SimpleReturnType } from './ReturnType'
+import type { SimpleNewsArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function publishNews(
     id: number,
+    // disable eslint rule temporarily until todo is resolved
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
-): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
-    console.log(id, shouldPublish)
+): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
         const news = await prisma.newsArticle.update({
             where: { id },
@@ -28,9 +29,9 @@ export async function publishNews(
 export async function updateNews(
     id: number,
     rawdata: FormData
-): Promise<ActionReturn<Omit<SimpleReturnType, 'coverImage'>>> {
+): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
-        const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
+        const parse = newsArticleSchema.safeParse(Object.fromEntries(rawdata.entries()))
         if (!parse.success) {
             return { success: false, error: parse.error.issues }
         }
@@ -56,8 +57,9 @@ export async function updateNews(
     }
 }
 
+// disable eslint rule temporarily until todo is resolved
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
-    console.log(id, visible)
     return { success: false, error: [{ message: 'Not implemented' }] }
 }

@@ -1,8 +1,8 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
-import type { SimpleReturnType } from '@/actions/news/ReturnType'
+import type { SimpleNewsArticle } from '@/actions/news/Types'
 
 type PropTypes = {
-    news: SimpleReturnType
+    news: SimpleNewsArticle
 }
 
 export default function NewsCard({ news }: PropTypes) {

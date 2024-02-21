@@ -5,10 +5,10 @@ import ChangeName from './ChangeName'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
-import type { ReturnType } from '@/cms/articles/ReturnType'
+import type { ExpandedArticle } from '@/cms/articles/Types'
 
 export type PropTypes = {
-    article: ReturnType,
+    article: ExpandedArticle,
     coverImageClass?: string
 }
 

@@ -3,13 +3,13 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
-import type { ReturnType } from './ReturnType'
+import type {
+    ExpandedArticleCategory,
+    ExpandedArticleCategoryWithCover,
+    ArticleCategoryWithCover,
+} from './Types'
 
-type ReturnWithCover = ReturnType & { coverImage: Image | null }
-
-type ReturnTypeMany = Omit<ReturnWithCover, 'articles'>[]
-
-export async function readArticleCategories(): Promise<ActionReturn<ReturnTypeMany>> {
+export async function readArticleCategories(): Promise<ActionReturn<ArticleCategoryWithCover[]>> {
     try {
         const categories = await prisma.articleCategory.findMany({
             include: {
@@ -38,7 +38,7 @@ export async function readArticleCategories(): Promise<ActionReturn<ReturnTypeMa
 }
 
 
-export async function readArticleCategory(name: string): Promise<ActionReturn<ReturnWithCover>> {
+export async function readArticleCategory(name: string): Promise<ActionReturn<ExpandedArticleCategoryWithCover>> {
     try {
         const category = await prisma.articleCategory.findUnique({
             where: {
@@ -67,7 +67,7 @@ export async function readArticleCategory(name: string): Promise<ActionReturn<Re
  * Get cover image for article category
  * Returns coverImage of a article in the category
  */
-async function getCoverImage(category: ReturnType): Promise<Image | null> {
+async function getCoverImage(category: ExpandedArticleCategory): Promise<Image | null> {
     if (category.articles.length === 0) return null
     const coverImage = await prisma.cmsImage.findUnique({
         where: {
