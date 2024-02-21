@@ -5,6 +5,7 @@ import seedDevImages from './development/seedDevImages'
 import seedDevNews from './development/seedDevNews'
 import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
+import seedOrder from './seedOrder'
 import { PrismaClient } from '@prisma/client'
 
 async function seed() {
@@ -13,6 +14,7 @@ async function seed() {
     console.log('seeding standard data....')
     await seedImages(prisma)
     await seedCms(prisma)
+    await seedOrder(prisma)
     console.log('seed standard done')
 
     if (process.env.NODE_ENV !== 'development') return
