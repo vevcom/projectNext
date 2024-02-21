@@ -12,9 +12,9 @@ async function seed() {
     const prisma = new PrismaClient()
 
     console.log('seeding standard data....')
+    await seedOrder(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
-    await seedOrder(prisma)
     console.log('seed standard done')
 
     if (process.env.NODE_ENV !== 'development') return

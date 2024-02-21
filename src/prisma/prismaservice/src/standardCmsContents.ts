@@ -46,8 +46,9 @@ export type SeedArticle = {
 } & ({
     category: Categories
 } | {
-    category: 'news'
-    description: string
+    category: 'news',
+    description: string,
+    orderPublished: number
 })
 
 export type CmsContent = {
@@ -152,6 +153,7 @@ const standardCmsContents: CmsContent = {
             name: 'velkommen til nye veven',
             category: 'news',
             description: 'ny vev',
+            orderPublished: 105,
             coverImage: {
                 name: 'velkommen_til_nye_veven_cover',
                 imageName: 'logo_simple',

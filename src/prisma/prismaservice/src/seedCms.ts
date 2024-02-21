@@ -37,8 +37,8 @@ export default async function seedCms(prisma: PrismaClient) {
         await seedArticleCategories(category, prisma)
     }))
 
-    await Promise.all(standardCmsContents.articles.map(async (article) => {
-        await seedArticle(article, prisma)
+    await Promise.all(standardCmsContents.articles.map(async (article, i) => {
+        await seedArticle({...article, id: i}, prisma)
     }))
 }
 
@@ -152,7 +152,7 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
     })
 }
 
-async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
+async function seedArticle(article: SeedArticle & {id: number}, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>
@@ -161,7 +161,7 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
 
     return prisma.article.upsert({
         where: {
-            name: article.name
+            id: article.id
         },
         update: {
             name: article.name,
@@ -184,7 +184,8 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
                             const date = new Date()
                             date.setDate(date.getDate() + 7)
                             return date
-                        })()
+                        })(),
+                        orderPublished: article.orderPublished,
                     }
                 } : undefined,
             articleCategory:
