@@ -1,7 +1,9 @@
-import { describe } from "node:test";
-
 describe('readUser', () => {
+    beforeAll(() => {})
     it('should read a user', () => {
 
+    })
+
+    afterAll(() => {
     })
 })
