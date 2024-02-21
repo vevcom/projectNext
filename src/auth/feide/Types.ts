@@ -1,3 +1,4 @@
+import type { User as PrismaUser } from '@prisma/client';
 
 export type FeideGroup = {
     id: string,
@@ -23,4 +24,10 @@ export type ExtendedFeideUser = {
     groups: Array<FeideGroup>,
 }
 
-export const nextAuthUserFields = ['id', 'username', 'email', 'firstname', 'lastname'] as const;
+export const adapterUserCutomFieldsArr = ['id', 'username', 'email', 'firstname', 'lastname'] as const;
+export const adapterUserCutomFields = adapterUserCutomFieldsArr.reduce((prev, field) => ({
+    ...prev,
+    [field]: true
+}), {} as {[key in typeof adapterUserCutomFieldsArr[number]]: true })
+
+export interface AdapterUserCustom extends Pick<PrismaUser, typeof adapterUserCutomFieldsArr[number]> {}
