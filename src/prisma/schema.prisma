@@ -193,13 +193,15 @@ model Article {
   updatedAt         DateTime         @updatedAt
   articleSections   ArticleSection[]
   newsArticle       NewsArticle?
-  articleCategory   ArticleCategory? @relation(fields: [articleCategoryId], references: [id], onDelete: Cascade)
+  articleCategory   ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
   articleCategoryId Int?
+  articleCategoryName String?
   coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId      Int              @unique
 
   @@unique([name, id])
   @@unique([articleCategoryId, name])
+  @@unique([articleCategoryName, name])
 }
 
 model NewsArticle {
@@ -222,6 +224,8 @@ model ArticleCategory {
   articles    Article[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@unique([id, name])
 }
 
 /////////////////
