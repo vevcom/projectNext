@@ -2,7 +2,7 @@
 import schema from './schema'
 import { defaultNewsArticleOldCutoff } from './ConfigVars'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/actions/omegaOrders/read'
+import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
