@@ -12,7 +12,7 @@ export async function createArticle(name: string | null, config?: {
         if (name === null) {
             let i = 1
             name = 'ny artikkel'
-            while (await prisma.article.findUnique({ where: { name } })) {
+            while (await prisma.article.findFirst({ where: { name } })) {
                 name = `ny artikkel ${i++}`
             }
         }

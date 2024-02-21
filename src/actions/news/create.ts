@@ -6,6 +6,7 @@ import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReturnType } from './ReturnType'
+import { getCurrenOmegaOrder } from '../omegaOrder/read'
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
     //TODO: check for can create news permission
@@ -17,6 +18,11 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
         return { success: false, error: parse.error.issues }
     }
     const data = parse.data
+
+    const res = await getCurrenOmegaOrder()
+    if (!res.success) return res
+    const orderPublished = res.data.order
+
     try {
         const article = await createArticle(data.name)
         if (!article.success) {
@@ -31,7 +37,7 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
                     }
                 },
                 endDateTime: data.endDateTime || endDateTime,
-                orderPublished: 0
+                orderPublished,
             },
             include: {
                 article: {
