@@ -5,7 +5,7 @@ import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function readArticle(idOrName: number | {
-    name: string, 
+    name: string,
     category: string
 }): Promise<ActionReturn<ExpandedArticle>> {
     try {
