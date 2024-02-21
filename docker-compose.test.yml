@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  projectnext:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: prod
+    volumes:
+      - store:/usr/src/app/store
+      - logs:/usr/src/app/logs
+    environment:
+      NODE_ENV: test
+      DB_URI: ${DB_URI}
+      LOG_LEVEL: ${LOG_LEVEL}
+      LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
+      LOG_TO_FOLDER: ${LOG_TO_FOLDER}
+      LOG_MAX_FILES: ${LOG_MAX_FILES}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
+    depends_on:
+      - db
+      - prisma
+    links:
+      - db
+
+  db:
+    image: postgres:16.0-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - proddb:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  prisma:
+    build: 
+      context: ./src/prisma
+      dockerfile: ./prismaservice/Dockerfile
+      target: prod
+    environment:
+      NODE_ENV: test
+      DB_URI: ${DB_URI}
+    volumes:
+      - store:/usr/src/app/prismaservice/store
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+
+  nginx:
+    image: nginx:1.21.3-alpine
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - store:/usr/store
+    depends_on:
+      - projectnext
+    links:
+      - projectnext
+
+volumes:
+  proddb:
+    driver: local
+  store:
+    driver: local
+  logs:
+    driver: local

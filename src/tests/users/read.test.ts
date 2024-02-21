@@ -23,7 +23,7 @@ describe('readUserPage', () => {
             password: `password${i}`,
             email: `email${i}@example.com`,
         }))
-
+        
         await prisma.user.createMany({
             data: users,
         })
