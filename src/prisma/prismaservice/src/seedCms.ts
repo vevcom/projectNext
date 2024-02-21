@@ -38,7 +38,7 @@ export default async function seedCms(prisma: PrismaClient) {
     }))
 
     await Promise.all(standardCmsContents.articles.map(async (article, i) => {
-        await seedArticle({...article, id: i}, prisma)
+        await seedArticle({ ...article, id: i }, prisma)
     }))
 }
 

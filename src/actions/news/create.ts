@@ -1,12 +1,12 @@
 'use server'
 import schema from './schema'
 import { defaultCurrentVsOldCutOff } from './ConfigVars'
+import { getCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 import prisma from '@/prisma'
 import { createArticle } from '@/cms/articles/create'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReturnType } from './ReturnType'
-import { getCurrenOmegaOrder } from '../omegaOrder/read'
 
 export async function createNews(rawdata: FormData): Promise<ActionReturn<ReturnType>> {
     //TODO: check for can create news permission

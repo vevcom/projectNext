@@ -46,11 +46,11 @@ export default function EditNews({ news, children }: PropTypes) {
                     }}
                     submitText="oppdater"
                 >
-                    <TextInput 
-                        color="white" 
-                        defaultValue={news.articleName} 
-                        label="navn" 
-                        name="name" 
+                    <TextInput
+                        color="white"
+                        defaultValue={news.articleName}
+                        label="navn"
+                        name="name"
                     />
                     <DateInput
                         color="white"
