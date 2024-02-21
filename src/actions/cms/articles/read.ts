@@ -4,10 +4,12 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ReturnType } from './ReturnType'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function readArticle(idOrName: {name: string, category: string}): Promise<ActionReturn<ReturnType>> {
+export async function readArticle(idOrName: number | {name: string, category: string}): Promise<ActionReturn<ReturnType>> {
     try {
         const article = await prisma.article.findUnique({
-            where: { 
+            where: typeof idOrName === 'number' ? { 
+                id: idOrName 
+            } : {
                 articleCategoryName_name: {
                    articleCategoryName: idOrName.category,
                     name: idOrName.name,

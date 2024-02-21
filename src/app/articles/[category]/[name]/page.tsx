@@ -13,7 +13,11 @@ type PropTypes = {
 export default async function ArticleCategory({ params }: PropTypes) {
     //This fixes æ, ø, å and spaces in the url
     const name = decodeURIComponent(params.name)
-    const res = await readArticle(name)
+    const category = decodeURIComponent(params.category)
+    const res = await readArticle({
+        name,
+        category
+    })
     if (!res.success) return notFound()
 
     return (

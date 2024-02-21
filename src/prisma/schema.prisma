@@ -200,7 +200,6 @@ model Article {
   coverImageId      Int              @unique
 
   @@unique([name, id])
-  @@unique([articleCategoryId, name])
   @@unique([articleCategoryName, name])
 }
 
