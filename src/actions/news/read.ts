@@ -82,13 +82,19 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleReturnType[]
     }
 }
 
-export async function readNewsByIdOrName(idOrName: number | string): Promise<ActionReturn<ReturnType>> {
+export async function readNewsByIdOrName(idOrName: number | {
+    articleName: string
+    order: number
+}): Promise<ActionReturn<ReturnType>> {
     try {
         const news = await prisma.newsArticle.findUnique({
             where: typeof idOrName === 'number' ? {
                 id: idOrName
             } : {
-                articleName: idOrName
+                articleName_orderPublished: {
+                    articleName: idOrName.articleName,
+                    orderPublished: idOrName.order
+                }
             },
             include: {
                 article: {

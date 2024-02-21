@@ -31,6 +31,7 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Return
                     }
                 },
                 endDateTime: data.endDateTime || endDateTime,
+                orderPublished: 0
             },
             include: {
                 article: {

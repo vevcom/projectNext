@@ -213,7 +213,7 @@ model NewsArticle {
   orderPublished Int
 
   @@unique([articleId, articleName])
-  @@unique([articleId, orderPublished])
+  @@unique([articleName, orderPublished])
 }
 
 model ArticleCategory {
