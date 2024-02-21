@@ -38,3 +38,11 @@ COPY --from=base /usr/src/app .
 WORKDIR /usr/src/app/prismaservice
 
 CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npm run seed"]
+########################################################
+# the projectnext tests check that seeding of standart data is done correctly
+FROM node:20-alpine AS test
+WORKDIR /usr/src/app
+COPY --from=base /usr/src/app .
+WORKDIR /usr/src/app/prismaservice
+
+CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npm run seed"]
