@@ -83,25 +83,30 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
                 acceptTerms: z.literal('on', {
                     errorMap: () => ({ message: "Du må godta vilkårene for å bruk siden." }),
                 }),
+                sex: z.enum(['FEMALE', 'MALE', 'OTHER']),
             })
             .refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
             .safeParse({
                 password: rawdata.get('password'),
                 confirmPassword: rawdata.get('confirmPassword'),
                 acceptTerms: rawdata.get('acceptTerms'),
+                sex: rawdata.get('sex')
             })
         
         if (!parse.success) {
             return { success: false, error: parse.error.issues }
         }
 
-        const alredyRegistered = await prisma.credentials.findUnique({
+        const alredyRegistered = await prisma.user.findUnique({
             where: {
-                userId: user.id
+                id: user.id
+            },
+            select: {
+                acceptedTerms: true
             }
         })
 
-        if (alredyRegistered) {
+        if (alredyRegistered?.acceptedTerms !== null) {
             return {
                 success: false,
                 error: [{
@@ -110,13 +115,26 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
             }
         }
 
-        await prisma.credentials.create({
-            data: {
-                passwordHash: parse.data.password,
-                userId: user.id,
-                username: user.username,
-            }
-        })
+        const results = await prisma.$transaction([
+            prisma.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    acceptedTerms: new Date(),
+                    sex: parse.data.sex
+                }
+            }),
+            prisma.credentials.create({
+                data: {
+                    passwordHash: parse.data.password,
+                    userId: user.id,
+                    username: user.username,
+                }
+            })
+        ])
+
+        console.log(results)
 
         return {success: true, data: null};
 
