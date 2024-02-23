@@ -19,7 +19,7 @@ function HS_MAA_GAA(user: AdapterUserCustom | null | undefined): AdapterUser | n
     return addALotOfFrustrationWithNextAuth(user);
 }
 
-async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'id'>) : string {
+async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'id'>) : Promise<string> {
 
     const results = await prisma.user.findMany({
         where: {
@@ -37,19 +37,19 @@ async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'i
         return username;
     }
 
-    const lastlastname = user.lastname.split(" ").pop() || "";
+    const lastlastname = user.lastname.toLowerCase().split(" ").pop() || "";
 
     // Find overlap in lastlastname
     let overlap = 0;
-    for (let i = 1; i <= lastlastname.length; i++) {
-        if (username.slice(-i, 1) !== lastlastname.slice(0, i)) {
-            overlap = i - 1;
+    for (let i = lastlastname.length; i >= 1; i--) {
+        if (username.slice(-i) === lastlastname.slice(0, i)) {
+            overlap = i;
             break;
         }
     }
 
-    for (let i = overlap; i <= lastlastname.length; i++) {
-        username = `${user.username}${lastlastname.slice(0, i)}`;
+    for (let i = overlap + 1; i <= lastlastname.length; i++) {
+        username = `${user.username}${lastlastname.slice(overlap, i)}`;
         if (!existingUsernames.has(username)) {
             return username;
         }
@@ -60,7 +60,6 @@ async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'i
     for(let i = 1; !existingUsernames.has(username); i++) {
         username = `${user.username}${i}`;
     }
-
     
     return username;
 }
