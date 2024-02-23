@@ -88,9 +88,9 @@ model RolePermission {
 }
 
 model RolesUsers {
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  role   Role @relation(fields: [roleId], references: [id])
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId Int
 
   @@id([userId, roleId])

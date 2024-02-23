@@ -1,6 +1,7 @@
 import { User as nextAuthUser } from 'next-auth'
 import { ExtendedFeideUser } from './Types'
 import { upsertManyStudyProgrammes } from '@/actions/studyprogrammes/create'
+import { addUserByIdToRoles } from '@/actions/permissions/create'
 
 export default async function signUp({user, profile}: {user: nextAuthUser, profile: ExtendedFeideUser}) {
     console.log('signUp', user, profile)
@@ -13,6 +14,7 @@ export default async function signUp({user, profile}: {user: nextAuthUser, profi
     }))
 
     const studyPrograms = await upsertManyStudyProgrammes(groups);
-
-    console.log(studyPrograms);
+    if (studyPrograms.success) {
+        await addUserByIdToRoles(Number(user.id), studyPrograms.data.map(program => program.id))
+    }
 }
