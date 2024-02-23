@@ -20,12 +20,20 @@ datasource db {
 // Users //
 ///////////
 
+enum SEX {
+  FEMALE
+  MALE
+  OTHER
+}
+
 model User {
   id           Int           @id @default(autoincrement())
   username     String        @unique
   email        String        @unique
   firstname    String        @default("[Fjernet]")
   lastname     String        @default("[Fjernet]")
+  acceptedTerms DateTime?
+  sex          SEX?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt // is also updated manually
   roles        RolesUsers[]

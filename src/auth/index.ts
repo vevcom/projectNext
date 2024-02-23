@@ -170,7 +170,8 @@ export const authOptions: AuthOptions = {
 
 export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
 
-export type UserWithPermissions = User & {
+export type UserWithPermissions = Omit<User, 'id'> & {
+    id: number,
     permissions: Permission[]
 }
 

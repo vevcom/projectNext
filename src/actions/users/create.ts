@@ -5,6 +5,7 @@ import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import { parseToFormData } from '../utils'
+import { getUser } from '@/auth'
 
 export default async function createUser(rawdata: FormData | User) : Promise<ActionReturn<User>> {
     rawdata = parseToFormData(rawdata);
@@ -56,6 +57,69 @@ export default async function createUser(rawdata: FormData | User) : Promise<Act
         })
 
         return { success: true, data: user }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}
+
+export async function registerUser(rawdata: FormData) : Promise<ActionReturn<null>> {
+    const { user, status } = await getUser()
+
+    if (!user) {
+        return {
+            success: false,
+            error: [{
+                message: status
+            }]
+        }
+    }
+
+    try {
+
+        const parse = z
+            .object({
+                password: z.string().max(50).min(2),
+                confirmPassword: z.string().max(50).min(2),
+                acceptTerms: z.literal('on', {
+                    errorMap: () => ({ message: "Du må godta vilkårene for å bruk siden." }),
+                }),
+            })
+            .refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
+            .safeParse({
+                password: rawdata.get('password'),
+                confirmPassword: rawdata.get('confirmPassword'),
+                acceptTerms: rawdata.get('acceptTerms'),
+            })
+        
+        if (!parse.success) {
+            return { success: false, error: parse.error.issues }
+        }
+
+        const alredyRegistered = await prisma.credentials.findUnique({
+            where: {
+                userId: user.id
+            }
+        })
+
+        if (alredyRegistered) {
+            return {
+                success: false,
+                error: [{
+                    message: 'User already registered'
+                }]
+            }
+        }
+
+        await prisma.credentials.create({
+            data: {
+                passwordHash: parse.data.password,
+                userId: user.id,
+                username: user.username,
+            }
+        })
+
+        return {success: true, data: null};
+
     } catch (error) {
         return errorHandler(error)
     }
