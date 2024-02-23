@@ -15,7 +15,7 @@ type PropTypes = {
 export default async function NewsArticle({ params }: PropTypes) {
     const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
     const name = decodeURIComponent(params.orderAndName[1])
-    if (!order || !name || params.orderAndName.length > 2) notFound()
+    if (!order || !name || params.orderAndName.length !== 2) notFound()
     const res = await readNewsByIdOrName({
         articleName: name,
         order,
