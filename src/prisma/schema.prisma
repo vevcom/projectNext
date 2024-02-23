@@ -76,7 +76,7 @@ model Role {
   users       RolesUsers[]
   permissions RolePermission[]
 
-  studyProgrammes StudyProgrammes?
+  studyProgram StudyProgram?
 }
 
 model RolePermission {
@@ -224,13 +224,12 @@ model OmegaQuote {
 // StudyPrograms //
 ///////////////////
 
-model StudyProgrammes {
-  id            Int     @id @default(autoincrement())
+model StudyProgram {
+  // Use the name field from the role instead
+  id            Int     @id
   code          String  @unique
-  name          String  @ignore // Use the name field from the role instead
   insititueCode String?
   yearsLength   Int?
-  yearsStart    Int?
-  roleId        Int     @unique
-  role          Role    @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  startYear     Int     @default(1)
+  role          Role    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
