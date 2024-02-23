@@ -134,8 +134,6 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
             })
         ])
 
-        console.log(results)
-
         return {success: true, data: null};
 
     } catch (error) {

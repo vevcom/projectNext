@@ -19,16 +19,63 @@ function HS_MAA_GAA(user: AdapterUserCustom | null | undefined): AdapterUser | n
     return addALotOfFrustrationWithNextAuth(user);
 }
 
+async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'id'>) : string {
+
+    const results = await prisma.user.findMany({
+        where: {
+            username: {
+                startsWith: user.username
+            
+            }
+        }
+    })
+
+    const existingUsernames = new Set(results.map(user => user.username));
+    let username = user.username;
+
+    if (!existingUsernames.has(username)) {
+        return username;
+    }
+
+    const lastlastname = user.lastname.split(" ").pop() || "";
+
+    // Find overlap in lastlastname
+    let overlap = 0;
+    for (let i = 1; i <= lastlastname.length; i++) {
+        if (username.slice(-i, 1) !== lastlastname.slice(0, i)) {
+            overlap = i - 1;
+            break;
+        }
+    }
+
+    for (let i = overlap; i <= lastlastname.length; i++) {
+        username = `${user.username}${lastlastname.slice(0, i)}`;
+        if (!existingUsernames.has(username)) {
+            return username;
+        }
+    }
+
+    // No overlap in lastname
+    // Add a number to the end
+    for(let i = 1; !existingUsernames.has(username); i++) {
+        username = `${user.username}${i}`;
+    }
+
+    
+    return username;
+}
+
 export default function PrismaAdapter(prisma: PrismaClient): Adapter {
     return {
 
         async createUser(user: Omit<AdapterUser, 'id'>): Promise<AdapterUser> {
             console.log("ADAPTER CREATE")
-            console.log(user);
+            
+            const username = await generateUsername(prisma, user);
             // REFACTOR
             const ret = await prisma.user.create({
                 data: {
-                    username: user.username,
+                    username: username,
                     email: user.email,
                     firstname: user.firstname,
                     lastname: user.lastname,
