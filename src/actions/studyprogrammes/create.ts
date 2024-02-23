@@ -61,10 +61,10 @@ export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Pr
 
         const existingStudyCodes = new Set(exists.map(program => program.code))
         const newStudyPrograms = programs.filter(program => !existingStudyCodes.has(program.code))
-        let createdStudyPrograms : Array<PrismaResults> | null = [];
+        let createdStudyPrograms : Array<{studyProgram: PrismaResults}> = [];
 
         if (newStudyPrograms.length > 0) {
-            createdStudyPrograms = await prisma.$transaction(
+            createdStudyPrograms = (await prisma.$transaction(
                 newStudyPrograms.map(program => prisma.role.create({
                     data: {
                         name: `STUDIE/${program.name}`,
@@ -74,15 +74,20 @@ export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Pr
                             }
                         }
                     },
-                    select: returnSelections
+                    select: {
+                        studyProgram: {
+                            select: returnSelections
+                        }
+                    }
                 }))
-            ) || [];
+            ) || []).filter(p => p !== null) as Array<{studyProgram: PrismaResults}>;
             
         }
 
         const allStudyPrograms = exists
             .map(unpackResults(false))
             .concat(createdStudyPrograms
+                .map(result => result.studyProgram)
                 .map(unpackResults(true))
             );
 
