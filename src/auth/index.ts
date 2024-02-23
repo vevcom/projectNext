@@ -4,11 +4,13 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import { JWT, decode } from 'next-auth/jwt'
-import type { Account, AuthOptions, Awaitable, Profile } from 'next-auth'
+import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
 import type { Permission } from '@prisma/client'
 import FeideProvider from './feide/FeideProvider'
 import type { User } from '@prisma/client'
 import PrismaAdapter from './feide/PrismaAdapter'
+import { ExtendedFeideUser } from './feide/Types'
+import signUp from './feide/signUp'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -93,9 +95,19 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user, trigger, profile }) {
+        async jwt({
+            token,
+            user,
+            trigger,
+            profile
+        } : {
+            token: JWT,
+            user: nextAuthUser,
+            trigger?: "update" | "signIn" | "signUp",
+            profile?: Profile,
+        }) {
 
-            if (trigger !== 'signIn' && trigger !== 'update' && trigger !== 'signUp') {
+            if (!trigger) {
                 // TODO - refactor when read user action exists
                 const dbUser = await prisma.user.findUniqueOrThrow({
                     where: {
@@ -118,7 +130,10 @@ export const authOptions: AuthOptions = {
             if (trigger === 'signUp') {
                 token.email = undefined
                 user.id = Number(user.id)
-                signUp({user, profile});
+                if (!profile || !profile.sub) {
+                    throw Error('No profile found when signing up')
+                }
+                signUp({user, profile} as {user: nextAuthUser, profile: ExtendedFeideUser});
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.
@@ -151,10 +166,6 @@ export const authOptions: AuthOptions = {
         newUser: '/register'
     },
     adapter: PrismaAdapter(prisma),
-}
-
-async function signUp({user, profile}: {user: any, profile: any}) {
-    console.log("SIGNUUUUUUUPPPP")
 }
 
 export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'

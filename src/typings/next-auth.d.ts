@@ -3,7 +3,7 @@ import type { UserWithPermissions } from '@/auth'
 import 'next-auth'
 import 'next-auth/adapters'
 
-import { AdapterUserCustom } from '@/auth/feide/Types'
+import { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
 import { FeideAccount } from '@/prisma/client'
 
 declare module 'next-auth' {
@@ -14,6 +14,10 @@ declare module 'next-auth' {
 
     interface Session {
         user: UserWithPermissions,
+    }
+
+    interface Profile extends ExtendedFeideUser {
+        sub: string,
     }
 }
 

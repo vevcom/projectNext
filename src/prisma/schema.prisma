@@ -53,13 +53,11 @@ model Credentials {
 
 model FeideAccount {
   id          String   @id
-  accessToken String   @map("access_token") @db.Text
-  expiresAt   DateTime @map("expires_at")
-  issuedAt    DateTime @map("issued_at")
-  userId      Int      @unique @map("user_id")
+  accessToken String   @db.Text
+  expiresAt   DateTime
+  issuedAt    DateTime
+  userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("feide_accounts")
 }
 
 /////////////////
@@ -77,6 +75,8 @@ model Role {
   name        String           @unique
   users       RolesUsers[]
   permissions RolePermission[]
+
+  studyProgrammes StudyProgrammes?
 }
 
 model RolePermission {
@@ -218,4 +218,19 @@ model OmegaQuote {
   timestamp    DateTime @default(now())
   userPoster   User     @relation(fields: [userPosterId], references: [id])
   userPosterId Int
+}
+
+///////////////////
+// StudyPrograms //
+///////////////////
+
+model StudyProgrammes {
+  id            Int     @id @default(autoincrement())
+  code          String  @unique
+  name          String  @ignore // Use the name field from the role instead
+  insititueCode String?
+  yearsLength   Int?
+  yearsStart    Int?
+  roleId        Int     @unique
+  role          Role    @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
