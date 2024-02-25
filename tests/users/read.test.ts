@@ -43,6 +43,21 @@ describe('readUserPage', () => {
         if (!res.success) return
         expect(res.data.length).toBe(10)
     })
+    it('should read a page of size 20 of users with no filter', async () => {
+        const page = {
+            page: 0,
+            pageSize: 20,
+        }
+        const details = {
+            partOfName: '',
+            groups: [],
+        }
+        const res = await readUserPage({page, details})
+        expect(res.success).toBe(true)
+        if (!res.success) return
+        expect(res.data.length).toBe(20)
+    })
+
     it('should order users by lastname, firstname and username', async () => {
         const page = {
             page: 0,
