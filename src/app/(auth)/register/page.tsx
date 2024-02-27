@@ -6,15 +6,29 @@ import Select from "@/app/components/UI/Select";
 import TextInput from "@/app/components/UI/TextInput";
 import { useUser } from "@/auth/client";
 import { signIn } from "next-auth/react";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default async function Register() {
     
     const searchParams = useSearchParams();
+    let callbackUrl = searchParams.get('callbackUrl') || 'users/me';
+
+    const router = useRouter();
+
+    if (callbackUrl.substring(0, 4) == 'http') {
+        let indexOfSlash = callbackUrl.search('/') + 2
+        callbackUrl = callbackUrl.substring(indexOfSlash)
+        indexOfSlash = callbackUrl.search('/')
+        callbackUrl = callbackUrl.substring(indexOfSlash)
+    }
 
     const userAuth = useUser()
     if (userAuth.status !== 'authenticated') {
-        redirect('/login')
+        router.push('/login')
+    }
+
+    if (userAuth.user?.acceptedTerms) {
+        router.push('/users/me')
     }
     
     const sexOptions = [
@@ -26,22 +40,13 @@ export default async function Register() {
     let lastUsername = userAuth.user?.username;
     let lastPassword : string = '';
 
-    const callbackUrl = searchParams.get('callbackUrl') || 'users/me';
-
     async function callback() {
-
-        console.log(lastPassword)
-
-        const response = await signIn('credentials', {
+        await signIn('credentials', {
             username: lastUsername,
             password: lastPassword,
-            redirect: false
+            redirect: true,
+            callbackUrl: callbackUrl
         })
-
-        console.log(response)
-        console.log(callbackUrl)
-
-        //redirect(callbackUrl)
     }
 
     return <Form

@@ -88,7 +88,8 @@ export const authOptions: AuthOptions = {
             // created. I.e. if the user updates their password you don't want
             // their old token to be valid. 'iat' is given in seconds so we
             // have to convert it to milliseconds.
-            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime()) return null
+            // Add 10 seconds to get time to login after a credentials update
+            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime() - 10000) return null
 
             return token
         },
