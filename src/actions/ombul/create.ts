@@ -4,9 +4,6 @@ import type { ActionReturn } from '@/actions/Types'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import ombulSchema from './schema'
-import { v4 as uuid } from 'uuid'
-import { join } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
 import createFile from '@/store/createFile'
 
 /**
@@ -52,7 +49,7 @@ export async function createOmbul(
     //upload the file to the store volume
     const ret = await createFile(data.ombulFile, 'ombul', ['pdf']);
     if (!ret.success) return ret
-    const fsLocation = ret.data
+    const fsLocation = ret.data.fsLocation
 
     try {
         const ombul = await prisma.ombul.create({

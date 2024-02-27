@@ -18,7 +18,10 @@ export default async function createFile(
     destination: StoreLocations, 
     allowedExt: string[] | undefined = undefined,
     prosessor: (buffer: Buffer) => Promise<Buffer> = async (buffer) => buffer,
-) : Promise<ActionReturn<string>> {
+) : Promise<ActionReturn<{
+    fsLocation: string,
+    ext: string
+}>> {
     const arrBuffer = await file.arrayBuffer()
     let buffer = await prosessor(Buffer.from(arrBuffer))
     const ext = file.type.split('/')[1]
@@ -39,6 +42,9 @@ export default async function createFile(
     await writeFile(join(destination_, fsLocation), buffer)
     return {
         success: true,
-        data: fsLocation
+        data: {
+            fsLocation,
+            ext
+        }
     }
 }

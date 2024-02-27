@@ -6,9 +6,9 @@ import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import { File } from 'buffer'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
+import createFile from '@/store/createFile'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
@@ -19,43 +19,32 @@ async function createOne(file: File, meta: {
     collectionId: number,
 }): Promise<ActionReturn<Image>> {
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
-    const ext = file.type.split('/')[1]
-    if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
-        return {
-            success: false, 
-            error: [
-                {
-                    path: ['file'],
-                    message: 'Invalid file type'
-                }
-            ]
-        }
-    }
 
-    const arrBuffer = await file.arrayBuffer()
-
-    const buffer = Buffer.from(arrBuffer)
-
-    try {
-        const fsLocation = `${uuid()}.${ext}`
-        const destination = join('store', 'images')
-        await mkdir(destination, { recursive: true })
-        await writeFile(join(destination, fsLocation), buffer)
-
-        const smallsize = await sharp(buffer).resize(250, 250, {
+    const smallRes = await createFile(file, 'images', allowedExt, async (buffer) => {
+        return await sharp(buffer).resize(250, 250, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toBuffer()
-        const fsLocationSmallSize = `${uuid()}.${ext}`
-        await writeFile(join(destination, fsLocationSmallSize), smallsize)
+    })
+    if (!smallRes.success) return smallRes
+    const fsLocationSmallSize = smallRes.data.fsLocation
 
-        const mediumSize = await sharp(buffer).resize(600, 600, {
+    const mediumRes = await createFile(file, 'images', allowedExt, async (buffer) => {
+        return await sharp(buffer).resize(500, 500, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
-        }).toBuffer() // Adjust the size as needed
-        const fsLocationMediumSize = `${uuid()}.${ext}`
-        await writeFile(join(destination, fsLocationMediumSize), mediumSize)
+        }).toBuffer()
+    })
+    if (!mediumRes.success) return mediumRes
+    const fsLocationMediumSize = mediumRes.data.fsLocation
 
+    const ret = await createFile(file, 'images', allowedExt)
+    if (!ret.success) return ret
+    const fsLocation = ret.data.fsLocation
+
+    const ext = ret.data.ext
+
+    try {
         try {
             const image = await prisma.image.create({
                 data: {
