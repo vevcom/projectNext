@@ -6,16 +6,14 @@ import errorHandler from '@/prisma/errorHandler'
 import ombulSchema from './schema'
 import createFile from '@/store/createFile'
 import { getUser } from '@/auth'
+import { createOneImage } from '@/actions/images/create'
 
 /**
  * Create a new Ombul. 
  * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber 
  * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
  */
-export async function createOmbul(
-    coverImageId: number, 
-    rewdata: FormData) 
-: Promise<ActionReturn<Ombul>>  {
+export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombul>>  {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_CREATE']
@@ -29,7 +27,7 @@ export async function createOmbul(
         }
     }
 
-    const parse = ombulSchema.safeParse(Object.fromEntries(rewdata.entries()))
+    const parse = ombulSchema.safeParse(Object.fromEntries(rawdata.entries()))
     if (!parse.success)  return {
         success: false,
         error: parse.error.issues
@@ -65,6 +63,11 @@ export async function createOmbul(
     if (!ret.success) return ret
     const fsLocation = ret.data.fsLocation
 
+    // create coverimage
+    const coverImageRes = await createOneImage(data.ombulCoverImage, { name: fsLocation, alt: 'cover of ' + name, collectionId: 1 })
+    if (!coverImageRes.success) return coverImageRes
+    const coverImage = coverImageRes.data
+
     try {
         const ombul = await prisma.ombul.create({
             data: {
@@ -73,7 +76,7 @@ export async function createOmbul(
                 name,
                 coverImage: {
                     connect: {
-                        id: coverImageId
+                        id: coverImage.id
                     }
                 },
                 fsLocation,

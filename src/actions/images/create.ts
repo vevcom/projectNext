@@ -1,7 +1,6 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { z } from 'zod'
 import sharp from 'sharp'
 
 import type { ActionReturn } from '@/actions/Types'
@@ -19,7 +18,7 @@ async function createOneInStore(file: File, allowedExt: string[], size: number) 
     return ret
 }
 
-async function createOne(file: File, meta: {
+export async function createOneImage(file: File, meta: {
     name: string,
     alt: string,
     collectionId: number,
@@ -80,7 +79,7 @@ export async function createImage(collectionId: number, rawdata: FormData): Prom
     })
     if (!parse.success) return { success: false, error: parse.error.issues }
     const { file, ...data } = parse.data
-    return await createOne(file, { ...data, collectionId })
+    return await createOneImage(file, { ...data, collectionId })
 }
 
 export async function createImages(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
@@ -94,7 +93,7 @@ export async function createImages(collectionId: number, rawdata: FormData): Pro
 
     let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
-        const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        const ret = await createOneImage(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
         if (!ret.success) return ret
         finalReturn = {
             ...finalReturn,

@@ -3,8 +3,6 @@
 import { createOmbul } from '@/actions/ombul/create'
 import Form from '@/components/Form/Form'
 import styles from './CreateOmbul.module.scss'
-import { ImageSelectionContext } from '@/context/ImageSelection'
-import { useContext } from 'react'
 
 /**
  * This component is for creating ombul issues. Since it needs to be able to choose a image
@@ -12,15 +10,12 @@ import { useContext } from 'react'
  * ImageSelectionProvider.
  */
 export default function CreateOmbul() {
-    const imageSelectionCtx = useContext(ImageSelectionContext)
-    if (!imageSelectionCtx) throw new Error('CreateOmbul must be rendered inside ImageSelectionProvider')
     
-    const handleCreate = createOmbul.bind(null, imageSelectionCtx.selectedImage.id)
 
     return (
         <div className={styles.CreateOmbul}>
             <Form
-                action={handleCreate}
+                action={createOmbul}
             >
 
             </Form>
