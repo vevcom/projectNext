@@ -1,6 +1,8 @@
+'use server'
+
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler';
-import { Group, GroupType,Prisma } from '@prisma/client/'
+import errorHandler from '@/prisma/errorHandler'
+import type { GroupType, Prisma } from '@prisma/client/'
 
 // Map between GroupType and properties of GroupCreateInput to get correct
 // typing for specific group data in createGroup.
@@ -10,7 +12,7 @@ const groupEnumToGroupCreateInputKey = {
     INTEREST_GROUP: 'interestGroup',
     OMEGA_MEMBERSHIP: 'omegaMembership',
     STUDY_PROGRAMME: 'studyProgramme',
-} as const;
+} as const
 
 type GroupEnumToGroupCreateInputKey = typeof groupEnumToGroupCreateInputKey;
 
@@ -23,7 +25,7 @@ type CreateGroupArgs<T extends GroupType> = {
 
 /**
  * Creats a group of a given type. The data required for each group depends on
- * which type of group it is. 
+ * which type of group it is.
  */
 export async function createGroup<T extends GroupType>({
     groupType,
@@ -47,7 +49,7 @@ export async function createGroup<T extends GroupType>({
         })
 
         return { success: true }
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 }
