@@ -7,6 +7,19 @@ import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 
 export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {
+    //Auth route
+    const { user, status } = await getUser({
+        permissions: ['OMEGAQUOTES_WRITE']
+    })
+    if (!user) {
+        return {
+            success: false,
+            error: [{
+                message: status
+            }]
+        }
+    }
+
     const shema = z.object({
         quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
         author: z.string().min(1, 'Noen må siteres'),
@@ -25,19 +38,6 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
     }
 
     const { quote, author } = parse.data
-
-    const { user, status } = await getUser({
-        permissions: ['OMEGAQUOTES_WRITE']
-    })
-
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
-    }
 
     try {
         const results = await prisma.omegaQuote.create({

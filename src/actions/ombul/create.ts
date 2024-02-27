@@ -5,6 +5,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import ombulSchema from './schema'
 import createFile from '@/store/createFile'
+import { getUser } from '@/auth'
 
 /**
  * Create a new Ombul. 
@@ -15,6 +16,19 @@ export async function createOmbul(
     coverImageId: number, 
     rewdata: FormData) 
 : Promise<ActionReturn<Ombul>>  {
+    //Auth route
+    const { user, status } = await getUser({
+        permissions: ['OMBUL_CREATE']
+    })
+    if (!user) {
+        return {
+            success: false,
+            error: [{
+                message: status
+            }]
+        }
+    }
+
     const parse = ombulSchema.safeParse(Object.fromEntries(rewdata.entries()))
     if (!parse.success)  return {
         success: false,
