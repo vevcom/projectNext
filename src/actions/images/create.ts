@@ -21,7 +21,8 @@ async function createOne(file: File, meta: {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {
-            success: false, error: [
+            success: false, 
+            error: [
                 {
                     path: ['file'],
                     message: 'Invalid file type'
@@ -43,7 +44,7 @@ async function createOne(file: File, meta: {
         const smallsize = await sharp(buffer).resize(250, 250, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
-        }).toBuffer() // Adjust the size as needed
+        }).toBuffer()
         const fsLocationSmallSize = `${uuid()}.${ext}`
         await writeFile(join(destination, fsLocationSmallSize), smallsize)
 

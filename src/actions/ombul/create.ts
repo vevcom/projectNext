@@ -4,6 +4,9 @@ import type { ActionReturn } from '@/actions/Types'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import ombulSchema from './schema'
+import { v4 as uuid } from 'uuid'
+import { join } from 'path'
+import { writeFile, mkdir } from 'fs/promises'
 
 /**
  * Create a new Ombul. 
@@ -16,33 +19,65 @@ export async function createOmbul(coverImageId: number, rewdata: FormData) : Pro
         success: false,
         error: parse.error.issues
     }
-    const { year, issueNumber, ombulFile } = parse.data
+    const data = parse.data
     
-    try {
-        
-        // find next issue number for the currentYear
-        if (!config || !config.issueNumber) {
-            const lastOmbul = await prisma.ombul.findFirst({
+    const year = data.year || new Date().getFullYear();
+
+    // Get the latest issue number if not provided
+    let latestIssueNumber = 1
+    if (!data.issueNumber) {
+        try {
+            const ombul = await prisma.ombul.findFirst({
                 where: {
-                    issue: {
-                        year: currentYear
-                    }
+                    year: year
                 },
                 orderBy: {
                     issueNumber: 'desc'
                 }
             })
-            if (lastOmbul) {
-                rewdata.append('issueNumber', (lastOmbul.issue.issueNumber + 1).toString())
-            } else {
-                rewdata.append('issueNumber', '1')
+            if (ombul) {
+                latestIssueNumber = ombul.issueNumber + 1
             }
+        } catch (error) {
+            return errorHandler(error)
         }
+    }
+    const issueNumber = data.issueNumber || latestIssueNumber
+    const name = data.name
 
+    //upload the file to the store volume
+    const arrBuffer = await data.ombulFile.arrayBuffer()
+    const buffer = Buffer.from(arrBuffer)
+    const ext = data.ombulFile.type.split('/')[1]
+    if (!['pdf'].includes(ext)) {
+        return {
+            success: false, 
+            error: [
+                {
+                    path: ['file'],
+                    message: 'Invalid file type'
+                }
+            ]
+        }
+    }
+
+    const fsLocation = `${uuid()}.${ext}`
+    const destination = join('store', 'ombul')
+    await mkdir(destination, { recursive: true })
+    await writeFile(join(destination, fsLocation), buffer)
+
+    try {
         const ombul = await prisma.ombul.create({
             data: {
-                coverImageId,
-                issue: rewdata
+                year,
+                issueNumber,
+                name,
+                coverImage: {
+                    connect: {
+                        id: coverImageId
+                    }
+                },
+                fsLocation: ""
             }
         })
         return {
