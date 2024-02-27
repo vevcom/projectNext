@@ -1,4 +1,5 @@
 'use server'
+
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'

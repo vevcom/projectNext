@@ -1,3 +1,5 @@
+'use server'
+
 import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'

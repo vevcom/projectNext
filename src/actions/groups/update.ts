@@ -1,7 +1,10 @@
-import z from 'zod'
-import { ActionReturn } from '../type'
-import { Group, Membership } from '@prisma/client'
+'use server'
+
 import errorHandler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
+import z from 'zod'
+import type { ActionReturn } from '@/actions/Types'
+import type { Group, Membership } from '@prisma/client'
 
 export async function updateGroup(groupId: number, rawData: FormData): Promise<ActionReturn<Group>> {
     const schema = z.object({
@@ -11,13 +14,15 @@ export async function updateGroup(groupId: number, rawData: FormData): Promise<A
 
     const parse = schema.safeParse(rawData)
 
-    if (!parse.success) return { 
-        success: false,
-        error: parse.error.issues
+    if (!parse.success) {
+        return {
+            success: false,
+            error: parse.error.issues
+        }
     }
 
     const { name, membershipRenewal } = parse.data
-    
+
     try {
         const group = await prisma.group.update({
             where: {
@@ -33,7 +38,7 @@ export async function updateGroup(groupId: number, rawData: FormData): Promise<A
             success: true,
             data: group,
         }
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 }
@@ -42,8 +47,8 @@ export async function addGroupMember(groupId: number, userId: number): Promise<A
     try {
         const membership = await prisma.membership.create({
             data: {
-                groupId: groupId,
-                userId: userId,
+                groupId,
+                userId,
                 admin: false,
                 active: true,
                 endOrder: 0,
@@ -55,7 +60,7 @@ export async function addGroupMember(groupId: number, userId: number): Promise<A
             success: true,
             data: membership,
         }
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 }
@@ -72,7 +77,7 @@ export async function removeGroupMember(groupId: number, userId: number) {
             success: true,
             data: membership,
         }
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 }

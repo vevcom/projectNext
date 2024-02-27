@@ -1,6 +1,9 @@
-import { ActionReturn } from "@/actions/type"
+'use server'
+
+import errorHandler from '@/prisma/errorHandler'
+import prisma from '@/prisma'
+import type { ActionReturn } from '@/actions/Types'
 import type { Committe } from './Types'
-import errorHandler from "@/prisma/errorHandler"
 
 export async function createCommittee(): Promise<ActionReturn<Committe>> {
     try {
@@ -26,7 +29,7 @@ export async function createCommittee(): Promise<ActionReturn<Committe>> {
                 ...group,
             },
         }
-    } catch(e) {
+    } catch (e) {
         return errorHandler(e)
     }
 }

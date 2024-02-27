@@ -1,13 +1,13 @@
-import { readGroups } from "@/actions/groups/read";
-import { GroupType } from "@prisma/client";
+import { readGroups } from '@/actions/groups/read'
+// import type { GroupType } from '@prisma/client'
 
-const groupTypes: Record<GroupType, string> = {
-    CLASS: 'Klasse',
-    COMMITEE: 'Komité',
-    INTEREST_GROUP: 'Interessegruppe',
-    OMEGA_MEMBERSHIP: 'Omega medlemskap',
-    STUDY_PROGRAMME: 'Studieprogram'
-}
+// const groupTypes: Record<GroupType, string> = {
+//     CLASS: 'Klasse',
+//     COMMITEE: 'Komité',
+//     INTEREST_GROUP: 'Interessegruppe',
+//     OMEGA_MEMBERSHIP: 'Omega medlemskap',
+//     STUDY_PROGRAMME: 'Studieprogram'
+// }
 
 export default async function Groups() {
     const res = await readGroups()

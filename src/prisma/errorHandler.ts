@@ -5,7 +5,7 @@ export default function errorHandler(err: unknown): ActionReturn<never> {
     // TODO - LOGGER
 
     if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {
-        return { success: false, error: [{ message: 'unknown error' }] }
+        return { success: false, error: [{ message: `unkown error: ${String(err)}` }] }
     }
 
     const errorMessages: { [key: string]: string } = {
