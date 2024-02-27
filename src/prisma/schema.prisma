@@ -106,7 +106,6 @@ model Image {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
-  coverImageForOmbul      Ombul[]          @relation(name: "coverImageForOmbul")
 }
 
 enum SpecialCollection {
@@ -149,6 +148,7 @@ model CmsImage {
   articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
+  Ombul                Ombul[]
 }
 
 model CmsParagraph {
@@ -274,10 +274,10 @@ model Ombul {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   fsLocation   String   @unique //location in /store/ombul/[fsLocation]
-  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImageForOmbul")
-  coverImageId Int?     @unique
   year         Int
   issueNumber  Int
+  CmsImage     CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId Int
 
   @@unique([year, issueNumber])
 }

@@ -1,4 +1,4 @@
-import type { Ombul } from "@prisma/client"
+import Image from '@/components/Image/Image'
 import styles from './OmbulCover.module.scss'
 import { ExpandedOmbul } from "@/actions/ombul/Types"
 
@@ -10,6 +10,7 @@ export default function OmbulCover({ ombul } : PropTypes) {
     return (
         <div className={styles.OmbulCover}>
             {ombul.name}
+            <Image image={ombul.coverImage || } />
         </div>
     )
 }
