@@ -2,10 +2,8 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { z } from 'zod'
-import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
-import { join } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
+
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 import createFile from '@/store/createFile'
