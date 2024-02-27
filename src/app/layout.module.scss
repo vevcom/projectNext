@@ -1,15 +1,20 @@
 @use "@/styles/ohma";
 
+$nav-height: 60px;
+
 .wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: calc(100vh - $nav-height);
+    margin-top: $nav-height;
 }
 
 .navBar {
-    z-index: 2;
-    position: sticky;
+    height: $nav-height;
+    z-index: 3;
+    position: fixed;
     top: 0;
+    width: 100%;
 } 
 
 .content {
@@ -24,6 +29,9 @@
 
 .footer {
     flex-shrink: 0;
+    z-index: 2;
+    position: relative;
+    box-sizing: content-box;
 }
 
 .mobileNavBar {
@@ -31,11 +39,20 @@
     position: sticky;
     bottom: 0;
     display: none;
+    z-index: 3;
+    height: $nav-height;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
     .mobileNavBar {
         display: block;
+    }
+    .wrapper {
+        margin-top: 0;
+        min-height: 100vh;
+    }
+    .navBar {
+        display: none;
     }
 }
 

@@ -3,7 +3,7 @@ import { userFieldsToExpose } from './Types'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { UserFiltered, UserDetails } from './Types'
-import type { ActionReturn, ReadPageInput } from '@/actions/type'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 export async function readUserPage<const PageSize extends number>({
     page,
@@ -20,7 +20,6 @@ export async function readUserPage<const PageSize extends number>({
             }), {} as { [key in typeof userFieldsToExpose[number]]: true }),
             where: {
                 AND: words.map((word, i) => {
-                    console.log(word)
                     const condition = {
                         [i === words.length - 1 ? 'contains' : 'equals']: word,
                         mode: 'insensitive'

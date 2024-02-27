@@ -8,7 +8,7 @@ import { getUser } from '@/auth'
 import Link from 'next/link'
 
 export default async function NavBar() {
-    const user = await getUser()
+    const { user } = await getUser()
     const isLoggedIn = user !== null
 
     //temporary

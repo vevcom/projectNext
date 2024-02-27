@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 
 export default function errorHandler(err: unknown): ActionReturn<never> {
     // TODO - LOGGER

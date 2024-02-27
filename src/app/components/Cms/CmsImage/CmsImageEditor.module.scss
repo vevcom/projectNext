@@ -20,6 +20,10 @@ $collectionSize: calc(14vmin + 70px);
     > .currentCmsImage {
         grid-column: 1 / 2;
         grid-row: 1 / 2;
+        > .info {
+            max-width: 150px;
+            overflow: hidden;
+        }
     }
     > .selectImage {
         grid-column: 2 / 3;

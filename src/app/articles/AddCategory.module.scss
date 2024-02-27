@@ -1,0 +1,8 @@
+@use '@/styles/ohma';
+
+.AddCategory {
+    min-width: 50vw;
+    .description {
+        min-height: 100px;
+    }
+}

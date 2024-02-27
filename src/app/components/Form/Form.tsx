@@ -6,7 +6,7 @@ import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
-import type { Action, ActionError } from '@/actions/type'
+import type { Action, ActionError } from '@/actions/Types'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 type Colors = ButtonPropTypes['color']
@@ -66,21 +66,27 @@ function SubmitButton({
         return children
     }
     const button = (
-        <Button aria-disabled={pending || success} color={success ? 'green' : color} type="submit">
+        <Button
+            className={styles.submitButton}
+            aria-disabled={pending || success}
+            color={success ? 'green' : color}
+            type="submit"
+        >
             {btnContent()}
         </Button>
     )
 
+
     const mainContent = () => (confirmedOpen ? (
         <div className={styles.confirm}>
-            <p>{confirmation.text || 'Are you sure?'}</p>
+            <p>{confirmation.text || 'Er du sikker?'}</p>
             <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
                 <FontAwesomeIcon icon={faX} />
             </button>
             {button}
         </div>
     ) : (
-        <Button color={color} onClick={() => setConfirmedOpen(true)}>
+        <Button className={styles.submitButton} color={color} onClick={() => setConfirmedOpen(true)}>
             {children}
         </Button>
     ))
@@ -145,6 +151,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     },
     action,
     successCallback,
+    className,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
@@ -190,7 +197,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     }
 
     return (
-        <form {...props} className={`${styles.Form} ${props.className}`} action={actionWithError}>
+        <form className={`${styles.Form} ${className}`} {...props} action={actionWithError}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (

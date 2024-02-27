@@ -7,7 +7,7 @@ import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
-import type { ActionReturn } from '@/actions/type'
+import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
@@ -73,7 +73,6 @@ async function createOne(file: File, meta: {
             if (!image) return { success: false }
             return { success: true, data: image }
         } catch (err) {
-            console.log(err)
             return errorHandler(err)
         }
     } catch (err) {

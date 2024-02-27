@@ -9,12 +9,16 @@
 
 html {
     scroll-behavior: smooth;
+    background-color: black;
+    z-index: 5;
 }
 
 body {
     font-size: ohma.$fonts-s;
     font-weight: ohma.$fonts-weight-s;
     overflow-x: hidden;
+    overscroll-behavior-y:contain;
+    background-color: ohma.$colors-gray-100;
 }
 
 h1 {

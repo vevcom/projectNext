@@ -23,7 +23,6 @@ type PropTypes = {
 export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
-
     const cmsImageContent = (
         <span className={styles.image}>
             {cmsImage && <>
