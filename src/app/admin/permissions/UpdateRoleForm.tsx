@@ -25,6 +25,13 @@ const permissionCategories: PermissionCategory[] = [
             { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
         ],
     },
+    {
+        title: 'ombul',
+        permissions: [
+            { permission: 'OMBUL_READ', name: 'Lese ombul' },
+            { permission: 'OMBUL_CREATE', name: 'Lage ombul' },
+        ],
+    }
 ]
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
