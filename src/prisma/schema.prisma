@@ -249,3 +249,16 @@ model OmegaOrder {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+///////////////////////////
+// Ombul //////////////////
+///////////////////////////
+
+model Ombul {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fsLocation  String   @unique //location in /store/ombul/[fsLocation]
+}
