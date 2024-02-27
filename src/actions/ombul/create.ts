@@ -7,6 +7,7 @@ import ombulSchema from './schema'
 import createFile from '@/store/createFile'
 import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
+import { readSpecialImageCollection } from '../images/collections/read'
 
 /**
  * Create a new Ombul. 
@@ -64,7 +65,14 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
     const fsLocation = ret.data.fsLocation
 
     // create coverimage
-    const coverImageRes = await createOneImage(data.ombulCoverImage, { name: fsLocation, alt: 'cover of ' + name, collectionId: 1 })
+    const ombulCoverCollectionRes = await readSpecialImageCollection('OMBULCOVERS')
+    if (!ombulCoverCollectionRes.success) return ombulCoverCollectionRes
+    const ombulCoverCollection = ombulCoverCollectionRes.data
+    const coverImageRes = await createOneImage(data.ombulCoverImage, { 
+        name: fsLocation, 
+        alt: 'cover of ' + name, 
+        collectionId: ombulCoverCollection.id
+    })
     if (!coverImageRes.success) return coverImageRes
     const coverImage = coverImageRes.data
 
