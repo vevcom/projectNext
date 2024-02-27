@@ -45,6 +45,45 @@ export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
     }
 }
 
+export async function readOmbul(idOrNameAndYear: number | {
+    name: string,
+    year: number,
+}) : Promise<ActionReturn<ExpandedOmbul>> {
+    try {
+        const ombul = await prisma.ombul.findUnique({
+            where: typeof idOrNameAndYear === 'number' ? { 
+                id: idOrNameAndYear 
+            } : {
+                year_name: {
+                    name: idOrNameAndYear.name,
+                    year: idOrNameAndYear.year
+                }
+            },
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+        if (!ombul) {
+            return {
+                success: false,
+                error: [{
+                    message: 'Fant ingen ombul'
+                }]
+            }
+        }
+        return {
+            success: true,
+            data: ombul
+        }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}
+
 export async function readOmbuls() : Promise<ActionReturn<ExpandedOmbul[]>> {
     //Auth route
     const { user, status } = await getUser({
