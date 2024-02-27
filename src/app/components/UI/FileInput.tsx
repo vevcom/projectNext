@@ -19,6 +19,7 @@ export default function FileInput({ label = 'default', color, ...props }: PropTy
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) setFileName(e.target.files[0].name)
+        props.onChange?.(e)
     }
 
     return (

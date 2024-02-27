@@ -6,6 +6,7 @@ import styles from './CreateOmbul.module.scss'
 import TextInput from '../components/UI/TextInput'
 import NumberInput from '../components/UI/NumberInput'
 import FileInput from '../components/UI/FileInput'
+import { useState } from 'react'
 
 /**
  * This component is for creating ombul issues. Since it needs to be able to choose a image
@@ -14,6 +15,16 @@ import FileInput from '../components/UI/FileInput'
  */
 export default function CreateOmbul() {
     const currentYear = new Date().getFullYear()
+    const [image, setImage] = useState<File | null>(null);
+
+    const handleImgPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        console.log(files);
+        if (files) {
+            console.log(files[0]);
+            setImage(files[0]);
+        }
+    }
 
     return (
         <div className={styles.CreateOmbul}>
@@ -26,10 +37,14 @@ export default function CreateOmbul() {
                 <NumberInput label="År" name="year" defaultValue={currentYear} />
                 <NumberInput label="nummer" name="issueNumber" />
                 <FileInput color="primary" label="Ombul fil" name="ombulFile" />
-                <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" />
+                <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handleImgPreview} />
             </Form>
-            <div className={styles.chooseImage}>
-
+            <div className={styles.imgPreview}>
+                {
+                    image && (
+                        <img src={URL.createObjectURL(image)} alt={image.name} />
+                    )
+                }
             </div>
         </div>
         
