@@ -10,6 +10,8 @@ import { useState } from 'react'
 import { Ombul } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import Textarea from '../components/UI/Textarea'
+import OmbulCover from './OmbulCover'
+import type { PropTypesPreview } from './OmbulCover'
 
 type PropTypes = {
     latestOmbul: Ombul | null
@@ -39,11 +41,17 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
     }
     const [image, setImage] = useState<File | null>(null);
 
+    const [preview, setPreview] = useState<PropTypesPreview>({
+        pImage: image,
+        pName: '',
+        pYear: nextYear.toString(),
+        pIssueNumber: nextIssue.toString(),
+        pDescription: ''
+    })
+
     const handleImgPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
-        console.log(files);
         if (files) {
-            console.log(files[0]);
             setImage(files[0]);
         }
     }
@@ -69,6 +77,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                         <img src={URL.createObjectURL(image)} alt={image.name} />
                     )
                 }
+                <OmbulCover client={true} preview={preview} ombul={null} />
             </div>
         </div>
         
