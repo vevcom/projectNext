@@ -58,7 +58,9 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
         }
     }
     const issueNumber = data.issueNumber || latestIssueNumber
+    
     const name = data.name
+    const description = data.description
 
     //upload the file to the store volume
     const ret = await createFile(data.ombulFile, 'ombul', ['pdf']);
@@ -84,6 +86,7 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
     try {
         const ombul = await prisma.ombul.create({
             data: {
+                description,
                 year,
                 issueNumber,
                 name,

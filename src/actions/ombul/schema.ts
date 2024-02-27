@@ -10,6 +10,7 @@ const ombulSchema = z.object({
     issueNumber: z.string().transform(val => parseInt(val))
         .refine(val => val <= 30, 'max 30').optional(),
     name: z.string().min(2, 'Minimum lengde er 2').max(25, 'Maximum lengde er 25').trim(),
+    description: z.string().min(2, 'Minimum lengde er 2').max(100, 'Maximum lengde er 100').trim()
 })
 
 export default ombulSchema
