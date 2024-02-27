@@ -3,6 +3,8 @@ import errorHandler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 
+// These function should maybe be in another place than server actions? @Paulijuz
+
 export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {
         await prisma.user.update({

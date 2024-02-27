@@ -1,8 +1,8 @@
 import { Adapter, AdapterUser, AdapterAccount } from "next-auth/adapters";
-import type { FeideAccount, PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { adapterUserCutomFields, AdapterUserCustom } from "./Types";
-import { getAdapterUserByFeideAccount } from "@/actions/feideaccount/read";
-import { createFeideAccount } from "@/actions/feideaccount/create";
+import { getAdapterUserByFeideAccount } from "./index";
+import { createFeideAccount } from "./index";
 
 function addALotOfFrustrationWithNextAuth(user: AdapterUserCustom): AdapterUser {
     return {

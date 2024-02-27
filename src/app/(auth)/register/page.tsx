@@ -4,7 +4,6 @@ import Form from "@/app/components/Form/Form";
 import Checkbox from "@/app/components/UI/Checkbox";
 import Select from "@/app/components/UI/Select";
 import TextInput from "@/app/components/UI/TextInput";
-import { requireUser } from "@/auth"
 import { useUser } from "@/auth/client";
 import { signIn } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
@@ -12,7 +11,6 @@ import { redirect, useSearchParams } from "next/navigation";
 export default async function Register() {
     
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl');
 
     const userAuth = useUser()
     if (userAuth.status !== 'authenticated') {
@@ -28,16 +26,22 @@ export default async function Register() {
     let lastUsername = userAuth.user?.username;
     let lastPassword : string = '';
 
-    function callback() {
-        
-        signIn('credentials', {
+    const callbackUrl = searchParams.get('callbackUrl') || 'users/me';
+
+    async function callback() {
+
+        console.log(lastPassword)
+
+        const response = await signIn('credentials', {
             username: lastUsername,
             password: lastPassword,
-            redirect: true,
-            callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+            redirect: false
         })
 
-        redirect(callbackUrl ?? "users/me")
+        console.log(response)
+        console.log(callbackUrl)
+
+        //redirect(callbackUrl)
     }
 
     return <Form
