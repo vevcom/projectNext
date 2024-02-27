@@ -1,7 +1,21 @@
 @use '@/styles/ohma';
 
 .CreateOmbul {
+    display: flex;
+    align-items: center;
+    height: 70vh;
     .form {
         min-width: 35vw;
+    }
+    .imgPreview {
+        width: 100%;
+        height: 100%;
+        img {
+            width: 35vw;
+            height: 100%;
+            object-fit: contain;
+            margin-bottom: ohma.$gap;
+        }
+        
     }
 }
