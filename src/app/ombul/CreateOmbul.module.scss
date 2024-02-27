@@ -4,6 +4,9 @@
     display: flex;
     align-items: center;
     height: 70vh;
+    textarea {
+        min-height: 100px;
+    }
     .form {
         min-width: 35vw;
     }

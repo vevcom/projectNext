@@ -1,5 +1,8 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    
+    margin-top: 2*ohma.$gap;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2*ohma.$gap;
 }

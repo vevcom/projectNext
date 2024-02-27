@@ -9,6 +9,7 @@ import FileInput from '../components/UI/FileInput'
 import { useState } from 'react'
 import { Ombul } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import Textarea from '../components/UI/Textarea'
 
 type PropTypes = {
     latestOmbul: Ombul | null
@@ -56,7 +57,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 successCallback={refresh}
             >
                 <TextInput label="navn" name="name" />
-                <TextInput label="beskrivelse" name="description" />
+                <Textarea label="beskrivelse" name="description" />
                 <NumberInput label="År" name="year" defaultValue={nextYear} />
                 <NumberInput label="nummer" name="issueNumber" defaultValue={nextIssue} />
                 <FileInput color="primary" label="Ombul fil" name="ombulFile" />
