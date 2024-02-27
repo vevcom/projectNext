@@ -12,8 +12,8 @@ export async function destroyImageCollection(collectionId: number): Promise<Acti
                 id: collectionId,
             },
         })
-        if (!collection) return { success: false, error: [{ message: 'Collection not found' }] }
-        if (collection.special) return { success: false, error: [{ message: 'Cannot delete special collections' }] }
+        if (!collection) return { success: false, error: [{ message: 'Collection ikke funnet' }] }
+        if (collection.special) return { success: false, error: [{ message: 'Kan ikke slette spesielle koleksjoner' }] }
 
         await prisma.imageCollection.delete({
             where: {
