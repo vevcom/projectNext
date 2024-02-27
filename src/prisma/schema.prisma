@@ -109,15 +109,23 @@ model Image {
   coverImageForOmbul      Ombul[]          @relation(name: "coverImageForOmbul")
 }
 
+enum SpecialCollection {
+  STANDARDIMAGES
+  OMBULCOVERS
+  PROFILEIMAGES
+  COMMITEELOGOS
+}
+
 model ImageCollection {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
+  id           Int                @id @default(autoincrement())
+  name         String             @unique
   description  String?
   images       Image[]
-  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
-  coverImageId Int?     @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  coverImage   Image?             @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
+  coverImageId Int?               @unique
+  special      SpecialCollection? @unique
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }
 
 enum ImageSize {
