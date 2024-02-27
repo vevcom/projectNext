@@ -2,15 +2,15 @@ import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
 import { v4 as uuid } from 'uuid'
 import type { ActionReturn } from '@/actions/Types'
+import type { StoreLocations } from './StoreLocations'
 
-type StoreLocations = 'images' | 'ombul'
 /**
  * Create a file in the store volume
  * @param file - file to upload to store
  * @param destination - destination folder in store like /images or /ombul
- * @param prosessor - a function to process the file before saving it to the store
  * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png'], 
  *                     if not provided all extensions are allowed
+ * @param prosessor - a function to process the file before saving it to the store
  * @returns - either an error or the file location and ext. Its an ActionReturn
  */
 export default async function createFile(
