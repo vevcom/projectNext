@@ -268,4 +268,8 @@ model Ombul {
   fsLocation   String   @unique //location in /store/ombul/[fsLocation]
   coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImageForOmbul")
   coverImageId Int?     @unique
+  year         Int
+  issueNumber  Int
+
+  @@unique([year, issueNumber])
 }
