@@ -11,6 +11,7 @@ import type { User } from '@prisma/client'
 import PrismaAdapter from './feide/PrismaAdapter'
 import { ExtendedFeideUser } from './feide/Types'
 import signUp from './feide/signUp'
+import { updateFeideTokens } from './feide'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -134,6 +135,11 @@ export const authOptions: AuthOptions = {
                     throw Error('No profile found when signing up')
                 }
                 signUp({user, profile} as {user: nextAuthUser, profile: ExtendedFeideUser});
+            }
+
+            // Check if user logged in with feide
+            if (trigger == 'signIn' && profile?.sub) {
+                updateFeideTokens(profile.sub, profile.tokens);
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.

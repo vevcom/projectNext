@@ -66,7 +66,7 @@ export default function FeideProvider({clientId, clientSecret} : PropType) : Pro
 
                 const groups : Array<FeideGroup> = await userinfoGroups.json();
 
-                return { ...profile, extended: profileExtended, groups };
+                return { ...profile, extended: profileExtended, groups, tokens };
             }
         },
         profile(profile : ExtendedFeideUser, token) : Awaitable<AdapterUserCustom> {
