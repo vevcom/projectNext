@@ -12,10 +12,10 @@ import { useContext } from 'react'
  * ImageSelectionProvider.
  */
 export default function CreateOmbul() {
-    const selection = 1
-    const handleCreate = createOmbul.bind(null, selection)
     const imageSelectionCtx = useContext(ImageSelectionContext)
     if (!imageSelectionCtx) throw new Error('CreateOmbul must be rendered inside ImageSelectionProvider')
+    
+    const handleCreate = createOmbul.bind(null, imageSelectionCtx.selectedImage.id)
 
     return (
         <div className={styles.CreateOmbul}>

@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PageWrapper from '../components/PageWrapper/PageWrapper';
 import styles from './page.module.scss';
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
-import ImageSelectionProvider from '@/context/ImageSelection';
 import CreateOmbul from './CreateOmbul';
 
 export default function page() {
@@ -11,9 +10,7 @@ export default function page() {
             title="Ombul"
             headerItem={
                 <AddHeaderItemPopUp PopUpKey="create ombul">
-                    <ImageSelectionProvider>
-                        <CreateOmbul />
-                    </ImageSelectionProvider>
+                    <CreateOmbul />
                 </AddHeaderItemPopUp>
             }
         >
