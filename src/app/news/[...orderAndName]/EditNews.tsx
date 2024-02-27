@@ -42,7 +42,7 @@ export default function EditNews({ news, children }: PropTypes) {
                 <Form
                     action={updateAction}
                     successCallback={(data) => {
-                        push(`/news/${data?.articleName}`)
+                        push(`/news/${data?.orderPublished}/${data?.articleName}`)
                     }}
                     submitText="oppdater"
                 >
