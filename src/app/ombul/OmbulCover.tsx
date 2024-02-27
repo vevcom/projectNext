@@ -10,7 +10,6 @@ export default function OmbulCover({ ombul } : PropTypes) {
     return (
         <div className={styles.OmbulCover}>
             {ombul.name}
-            <Image image={ombul.coverImage || } />
         </div>
     )
 }

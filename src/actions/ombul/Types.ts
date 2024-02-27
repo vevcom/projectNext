@@ -1,5 +1,5 @@
-import type { Image, Ombul } from '@prisma/client'
+import type { CmsImage, Ombul } from '@prisma/client'
 
 export type ExpandedOmbul = Ombul & {
-    coverImage: Image | null
+    coverImage: CmsImage | null
 }
