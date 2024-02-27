@@ -19,6 +19,7 @@ $width: clamp(250px, 30vw, 30px);
             width: 100% !important;
             height: 100%;
             object-fit: cover;
+            min-height: 50px;
         }
     }
     > * {

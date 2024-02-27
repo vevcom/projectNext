@@ -12,10 +12,13 @@ import { useRouter } from 'next/navigation'
 import Textarea from '../components/UI/Textarea'
 import OmbulCover from './OmbulCover'
 import type { PropTypesPreview } from './OmbulCover'
+import type { ChangeEvent } from 'react'
 
 type PropTypes = {
     latestOmbul: Ombul | null
 }
+
+type PreviewKey = keyof PropTypesPreview
 
 /**
  * This component is for creating ombul issues. Since it needs to be able to choose a image
@@ -39,21 +42,40 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
         nextYear = currentYear;
         nextIssue = 1;
     }
-    const [image, setImage] = useState<File | null>(null);
 
     const [preview, setPreview] = useState<PropTypesPreview>({
-        pImage: image,
+        pImage: new File([], 'cover'),
         pName: '',
         pYear: nextYear.toString(),
         pIssueNumber: nextIssue.toString(),
         pDescription: ''
     })
 
-    const handleImgPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if (files) {
-            setImage(files[0]);
+    const handlePreviewChange = (
+        type: PreviewKey,
+        event: ChangeEvent<HTMLInputElement>
+    ) => {
+        if (type === 'pImage') {
+            const files = event.target.files
+            if (files) {
+                setPreview({
+                    ...preview,
+                    pImage: files[0],
+                });
+            }
+        } else {
+            setPreview({
+                ...preview,
+                [type]: event.target.value,
+            });
         }
+    }
+
+    const handlePreviewChangeDescription = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setPreview({
+            ...preview,
+            pDescription: event.target.value,
+        });
     }
 
     return (
@@ -64,19 +86,14 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 className={styles.form}
                 successCallback={refresh}
             >
-                <TextInput label="navn" name="name" />
-                <Textarea label="beskrivelse" name="description" />
-                <NumberInput label="År" name="year" defaultValue={nextYear} />
-                <NumberInput label="nummer" name="issueNumber" defaultValue={nextIssue} />
+                <TextInput label="navn" name="name" onChange={handlePreviewChange.bind(null, 'pName')} />
+                <Textarea label="Beskrivelse" name="description" onChange={handlePreviewChangeDescription} />
+                <NumberInput label="År" name="year" defaultValue={nextYear} onChange={handlePreviewChange.bind(null, 'pYear')}/>
+                <NumberInput label="nummer" name="issueNumber" defaultValue={nextIssue} onChange={handlePreviewChange.bind(null, 'pIssueNumber')} />
                 <FileInput color="primary" label="Ombul fil" name="ombulFile" />
-                <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handleImgPreview} />
+                <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handlePreviewChange.bind(null, 'pImage')} />
             </Form>
             <div className={styles.imgPreview}>
-                {
-                    image && (
-                        <img src={URL.createObjectURL(image)} alt={image.name} />
-                    )
-                }
                 <OmbulCover client={true} preview={preview} ombul={null} />
             </div>
         </div>
