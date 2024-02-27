@@ -24,6 +24,8 @@ export const authOptions: AuthOptions = {
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials.password) return null
 
+                // Sign in with email insted of username
+
                 // This should be an action
                 const userCredentials = await prisma.credentials.findUnique({
                     where: {
