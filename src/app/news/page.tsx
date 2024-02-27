@@ -6,6 +6,7 @@ import PopUp from '@/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 
 export default async function NewsArtilces() {
     //TODO: add can create news permission
@@ -18,15 +19,9 @@ export default async function NewsArtilces() {
                     <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
                     {
                         canCreateNews && (
-                            <PopUp
-                                PopUpKey="CreateCategory"
-                                showButtonContent={
-                                    <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
-                                }
-                                showButtonClass={styles.addNews}
-                            >
+                            <AddHeaderItemPopUp PopUpKey="createNewsPop">
                                 <AddNews />
-                            </PopUp>
+                            </AddHeaderItemPopUp>
                         )
                     }
                 </div>

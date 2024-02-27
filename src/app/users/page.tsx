@@ -6,19 +6,14 @@ import CreateUserForm from '@/components/User/CreateUserForm'
 import UserPagingProvider from '@/context/paging/UserPaging'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 
 export default async function Users() {
     return (
         <PageWrapper title="Brukere" headerItem={
-            <PopUp
-                PopUpKey="userListAdd"
-                showButtonClass={styles.addUserButton}
-                showButtonContent = {
-                    <FontAwesomeIcon className={styles.addIcon} icon={faPlus} />
-                }
-            >
+            <AddHeaderItemPopUp PopUpKey="createUser">
                 <CreateUserForm className={styles.makeUser} />
-            </PopUp>
+            </AddHeaderItemPopUp>
         }>
             <div className={styles.wrapper}>
                 <UserPagingProvider
