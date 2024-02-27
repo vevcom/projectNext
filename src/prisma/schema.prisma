@@ -97,11 +97,12 @@ model Image {
   ext                  String
   alt                  String
   collection           ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  coverImageFor        ImageCollection? @relation(name: "coverImage")
+  coverImageForCollection        ImageCollection? @relation(name: "coverImageForCollection")
   collectionId         Int
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   cmsImages            CmsImage[]
+  coverImageForOmbul   Ombul[]        @relation(name: "coverImageForOmbul")
 }
 
 model ImageCollection {
@@ -109,7 +110,7 @@ model ImageCollection {
   name         String   @unique
   description  String?
   images       Image[]
-  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImage")
+  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
   coverImageId Int?     @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -187,17 +188,17 @@ model ArticleSection {
 }
 
 model Article {
-  id                Int              @id @default(autoincrement())
-  name              String
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  articleSections   ArticleSection[]
-  newsArticle       NewsArticle?
-  articleCategory   ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
-  articleCategoryId Int?
+  id                  Int              @id @default(autoincrement())
+  name                String
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  articleSections     ArticleSection[]
+  newsArticle         NewsArticle?
+  articleCategory     ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
+  articleCategoryId   Int?
   articleCategoryName String?
-  coverImage        CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
-  coverImageId      Int              @unique
+  coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId        Int              @unique
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
@@ -261,4 +262,6 @@ model Ombul {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   fsLocation  String   @unique //location in /store/ombul/[fsLocation]
+  coverImage Image?   @relation(fields: [coverImageId], references: [id], name: "coverImageForOmbul")
+  coverImageId Int?   @unique
 }
