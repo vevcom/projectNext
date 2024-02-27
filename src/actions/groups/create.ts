@@ -2,11 +2,14 @@
 
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { GroupType, Prisma } from '@prisma/client/'
+import type { ActionReturn } from '@/actions/Types'
+import type { Group, GroupType, Prisma } from '@prisma/client/'
 
-// Map between GroupType and properties of GroupCreateInput to get correct
-// typing for specific group data in createGroup.
-const groupEnumToGroupCreateInputKey = {
+// Map between GroupType and corresponding properties of GroupCreateInput.
+// (GroupCreateInput is the type that prisma.group.create accepts.)
+// This object is needed to be able to assign the data argument input of
+// createGroup to the correct field in prisma.group.create.
+const groupEnumToKey = {
     CLASS: 'class',
     COMMITEE: 'commitee',
     INTEREST_GROUP: 'interestGroup',
@@ -14,13 +17,21 @@ const groupEnumToGroupCreateInputKey = {
     STUDY_PROGRAMME: 'studyProgramme',
 } as const
 
-type GroupEnumToGroupCreateInputKey = typeof groupEnumToGroupCreateInputKey;
+type GroupEnumToKey = typeof groupEnumToKey
+
+// Generic type for a specific group type which includes the information from
+// both the generic group and specific group.
+// type ExpandedGroup<T extends GroupType> = Prisma.GroupGetPayload<{
+//     include: { [key in GroupEnumToKey[T]]: true }
+// }> & {
+//     [key in GroupEnumToKey[T]]: {}
+// }
 
 type CreateGroupArgs<T extends GroupType> = {
     groupType: T,
     name: string,
     membershipRenewal: boolean,
-    data: Required<Prisma.GroupCreateInput>[GroupEnumToGroupCreateInputKey[T]]['create'],
+    data: Required<Prisma.GroupCreateInput>[GroupEnumToKey[T]]['create'],
 }
 
 /**
@@ -32,19 +43,16 @@ export async function createGroup<T extends GroupType>({
     name,
     membershipRenewal,
     data
-}: CreateGroupArgs<T>) {
-    const groupCreateInputKey = groupEnumToGroupCreateInputKey[groupType]
+}: CreateGroupArgs<T>): Promise<ActionReturn<Group, false>> {
+    const groupKey = groupEnumToKey[groupType]
 
     try {
-        prisma.group.create({
+        await prisma.group.create({
             data: {
                 name,
                 groupType,
                 membershipRenewal,
-                [groupCreateInputKey]: data,
-            },
-            include: {
-                [groupCreateInputKey]: true,
+                [groupKey]: data,
             },
         })
 
