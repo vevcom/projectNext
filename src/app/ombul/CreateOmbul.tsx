@@ -7,14 +7,33 @@ import TextInput from '../components/UI/TextInput'
 import NumberInput from '../components/UI/NumberInput'
 import FileInput from '../components/UI/FileInput'
 import { useState } from 'react'
+import { Ombul } from '@prisma/client'
+
+type PropTypes = {
+    latestOmbul: Ombul | null
+}
 
 /**
  * This component is for creating ombul issues. Since it needs to be able to choose a image
  * it must be able to consume ImageSelectionContext, so it **must** be rendered inside
  * ImageSelectionProvider.
+ * @param latestOmbul - The latest ombul issue, used to set default values for year and issueNumber of next ombul
  */
-export default function CreateOmbul() {
+export default function CreateOmbul({ latestOmbul }: PropTypes) {
     const currentYear = new Date().getFullYear()
+
+    let nextYear : number;
+    let nextIssue : number;
+    if (!latestOmbul) {
+        nextYear = currentYear;
+        nextIssue = 1;
+    } else if (currentYear === latestOmbul?.year) {
+        nextYear = currentYear;
+        nextIssue = latestOmbul.issueNumber + 1;
+    } else {
+        nextYear = currentYear;
+        nextIssue = 1;
+    }
     const [image, setImage] = useState<File | null>(null);
 
     const handleImgPreview = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,8 +53,8 @@ export default function CreateOmbul() {
                 className={styles.form}
             >
                 <TextInput label="navn" name="name" />
-                <NumberInput label="År" name="year" defaultValue={currentYear} />
-                <NumberInput label="nummer" name="issueNumber" />
+                <NumberInput label="År" name="year" defaultValue={nextYear} />
+                <NumberInput label="nummer" name="issueNumber" defaultValue={nextIssue} />
                 <FileInput color="primary" label="Ombul fil" name="ombulFile" />
                 <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handleImgPreview} />
             </Form>

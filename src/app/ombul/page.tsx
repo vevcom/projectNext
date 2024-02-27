@@ -1,16 +1,20 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PageWrapper from '../components/PageWrapper/PageWrapper';
 import styles from './page.module.scss';
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
 import CreateOmbul from './CreateOmbul';
+import { readLatestOmbul } from '@/actions/ombul/read';
 
-export default function page() {
+export default async function page() {
+    const latestOmbulRes = await readLatestOmbul()
+    const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null
+    console.log(latestOmbul)
+
     return (
         <PageWrapper
             title="Ombul"
             headerItem={
                 <AddHeaderItemPopUp PopUpKey="create ombul">
-                    <CreateOmbul />
+                    <CreateOmbul latestOmbul={latestOmbul} />
                 </AddHeaderItemPopUp>
             }
         >

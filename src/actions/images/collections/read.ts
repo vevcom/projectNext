@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
+import logger from '@/logger'
 
 export async function readImageCollection(
     idOrName: number | string
@@ -91,6 +92,7 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
             }
         })
         if (!collection) {
+            logger.warn(`Special collection ${special} did not exist, creating it`)
             const newCollection = await prisma.imageCollection.create({
                 data: {
                     name: special,
