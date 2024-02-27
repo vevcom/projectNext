@@ -8,6 +8,7 @@ import createFile from '@/store/createFile'
 import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
 import { readSpecialImageCollection } from '../images/collections/read'
+import { createCmsImage } from '../cms/images/create'
 
 /**
  * Create a new Ombul. 
@@ -76,6 +77,10 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
     if (!coverImageRes.success) return coverImageRes
     const coverImage = coverImageRes.data
 
+    const cmsCoverImageRes = await createCmsImage(fsLocation, coverImage)
+    if (!cmsCoverImageRes.success) return cmsCoverImageRes
+    const cmsCoverImage = cmsCoverImageRes.data
+
     try {
         const ombul = await prisma.ombul.create({
             data: {
@@ -84,7 +89,7 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
                 name,
                 coverImage: {
                     connect: {
-                        id: coverImage.id
+                        id: cmsCoverImage.id
                     }
                 },
                 fsLocation,

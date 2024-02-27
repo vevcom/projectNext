@@ -4,7 +4,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { Image, CmsImage } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function createCmsImage(name: string): Promise<ActionReturn<CmsImage & {image: Image | null}>> {
+export async function createCmsImage(name: string, image?: Image): Promise<ActionReturn<CmsImage & {image: Image | null}>> {
     try {
         const created = {
             ...await prisma.cmsImage.create({
@@ -12,7 +12,7 @@ export async function createCmsImage(name: string): Promise<ActionReturn<CmsImag
                     name,
                 },
             }),
-            image: null,
+            image: image || null
         }
         return { success: true, data: created }
     } catch (error) {
