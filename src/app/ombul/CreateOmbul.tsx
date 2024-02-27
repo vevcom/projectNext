@@ -94,7 +94,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handlePreviewChange.bind(null, 'pImage')} />
             </Form>
             <div className={styles.imgPreview}>
-                <OmbulCover client={true} preview={preview} ombul={null} />
+                <OmbulCover preview={preview} ombul={null} />
             </div>
         </div>
         
