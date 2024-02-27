@@ -50,7 +50,7 @@ export default function OmbulCover(props : PropTypes) {
     </>
 
     return props.ombul ? (
-        <Link className={styles.OmbulCover} href={`/ombul/${props.ombul.name}`}>
+        <Link className={styles.OmbulCover} href={`/ombul/${props.ombul.year}/${props.ombul.name}`}>
             { content }
         </Link>
     ) : (

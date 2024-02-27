@@ -7,7 +7,7 @@ import OmbulCover from './OmbulCover';
 import { requireUser } from '@/auth';
 import type { ExpandedOmbul } from '@/actions/ombul/Types';
 
-export default async function page() {
+export default async function Ombuls() {
     const user = await requireUser({
         permissions: ['OMBUL_READ']
     })

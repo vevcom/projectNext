@@ -49,6 +49,18 @@ export async function readOmbul(idOrNameAndYear: number | {
     name: string,
     year: number,
 }) : Promise<ActionReturn<ExpandedOmbul>> {
+    //Auth route
+    const { user, status } = await getUser({
+        permissions: ['OMBUL_READ']
+    })
+    if (!user) {
+        return {
+            success: false,
+            error: [{
+                message: status
+            }]
+        }
+    }
     try {
         const ombul = await prisma.ombul.findUnique({
             where: typeof idOrNameAndYear === 'number' ? { 
