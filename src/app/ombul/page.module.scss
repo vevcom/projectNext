@@ -2,5 +2,13 @@
 
 .wrapper {
     margin-top: 2*ohma.$gap;
-    @include ohma.ImageCardListLayout;
+    display: flex;
+    flex-direction: column;
+    .ombulList {
+        width: 100%;
+        @include ohma.ImageCardListLayout;
+        > * {
+            width: 100%;
+        }
+    }
 }

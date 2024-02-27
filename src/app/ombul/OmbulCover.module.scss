@@ -1,12 +1,9 @@
 @use '@/styles/ohma';
 
-$width: clamp(250px, 30vw, 30px);
-
 .OmbulCover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: $width;
     .coverImg {
         width: 100%;
         > *, > * > * {
