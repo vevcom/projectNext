@@ -4,8 +4,15 @@ import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
 import CreateOmbul from './CreateOmbul';
 import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read';
 import OmbulCover from './OmbulCover';
+import { requireUser } from '@/auth';
 
 export default async function page() {
+    const user = await requireUser({
+        permissions: ['OMBUL_READ']
+    })
+
+    const showCreateButton = user.permissions.includes('OMBUL_CREATE')
+
     const latestOmbulRes = await readLatestOmbul()
     const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null
     const ombulRes = await readOmbuls()
@@ -16,9 +23,11 @@ export default async function page() {
         <PageWrapper
             title="Ombul"
             headerItem={
-                <AddHeaderItemPopUp PopUpKey="create ombul">
-                    <CreateOmbul latestOmbul={latestOmbul} />
-                </AddHeaderItemPopUp>
+                showCreateButton && (
+                    <AddHeaderItemPopUp PopUpKey="create ombul">
+                        <CreateOmbul latestOmbul={latestOmbul} />
+                    </AddHeaderItemPopUp>
+                )
             }
         >
             <div className={styles.wrapper}>
