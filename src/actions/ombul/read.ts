@@ -3,6 +3,7 @@ import { Ombul } from "@prisma/client";
 import { ActionReturn } from "@/actions/Types";
 import prisma from "@/prisma";
 import errorHandler from "@/prisma/errorHandler";
+import { ExpandedOmbul } from "./Types";
 
 export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
     try {
@@ -31,9 +32,17 @@ export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
     }
 }
 
-export async function readOmbuls() : Promise<ActionReturn<Ombul[]>> {
+export async function readOmbuls() : Promise<ActionReturn<ExpandedOmbul[]>> {
     try {
-        const ombuls = await prisma.ombul.findMany()
+        const ombuls = await prisma.ombul.findMany({
+            orderBy: [
+                { year: 'desc' },
+                { issueNumber: 'desc' },
+            ],
+            include: {
+                coverImage: true
+            }
+        })
         return { success: true, data: ombuls }
     } catch (error) {
         return errorHandler(error)

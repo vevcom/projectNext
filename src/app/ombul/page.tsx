@@ -3,6 +3,7 @@ import styles from './page.module.scss';
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
 import CreateOmbul from './CreateOmbul';
 import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read';
+import OmbulCover from './OmbulCover';
 
 export default async function page() {
     const latestOmbulRes = await readLatestOmbul()
@@ -23,9 +24,7 @@ export default async function page() {
             <div className={styles.wrapper}>
             {
                 ombuls.map(ombul => (
-                    <div key={ombul.id}>
-                        {ombul.name}
-                    </div>
+                    <OmbulCover key={ombul.id} ombul={ombul} />
                 ))
             }
             </div>
