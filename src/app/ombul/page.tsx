@@ -27,7 +27,7 @@ export default async function page() {
         }
         groups[year].push(ombul);
         return groups;
-      }, {} as { [year: number]: ExpandedOmbul[] }))
+      }, {} as { [year: number]: ExpandedOmbul[] })).toSorted(([a], [b]) => parseInt(b) - parseInt(a))
 
     return (
         <PageWrapper

@@ -34,4 +34,9 @@
         background-color: ohma.$colors-gray-500;
         margin-bottom: ohma.$gap;
     }
+    @media screen and (max-width: ohma.$mobileBreakpoint) {
+        > h2 {
+            font-size: ohma.$fonts-xl;
+        }
+    }
 }
