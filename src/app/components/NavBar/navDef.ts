@@ -66,13 +66,13 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Ny Student?',
-        href: '/infopages/nystudent',
+        href: '/articles',
         show: 'loggedOut',
         icon: faGraduationCap,
     },
     {
         name: 'Ombul',
-        href: '/infopages/about',
+        href: '/ombul',
         show: 'all',
         icon: faBook,
     },
