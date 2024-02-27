@@ -7,13 +7,17 @@ import ombulSchema from './schema'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
+import createFile from '@/store/createFile'
 
 /**
  * Create a new Ombul. 
  * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber 
- * CoverImageId is the id of the Image that will be used as the cover of the ombul
+ * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
  */
-export async function createOmbul(coverImageId: number, rewdata: FormData) : Promise<ActionReturn<Ombul>>  {
+export async function createOmbul(
+    coverImageId: number, 
+    rewdata: FormData) 
+: Promise<ActionReturn<Ombul>>  {
     const parse = ombulSchema.safeParse(Object.fromEntries(rewdata.entries()))
     if (!parse.success)  return {
         success: false,
@@ -46,25 +50,9 @@ export async function createOmbul(coverImageId: number, rewdata: FormData) : Pro
     const name = data.name
 
     //upload the file to the store volume
-    const arrBuffer = await data.ombulFile.arrayBuffer()
-    const buffer = Buffer.from(arrBuffer)
-    const ext = data.ombulFile.type.split('/')[1]
-    if (!['pdf'].includes(ext)) {
-        return {
-            success: false, 
-            error: [
-                {
-                    path: ['file'],
-                    message: 'Invalid file type'
-                }
-            ]
-        }
-    }
-
-    const fsLocation = `${uuid()}.${ext}`
-    const destination = join('store', 'ombul')
-    await mkdir(destination, { recursive: true })
-    await writeFile(join(destination, fsLocation), buffer)
+    const ret = await createFile(data.ombulFile, 'ombul', ['pdf']);
+    if (!ret.success) return ret
+    const fsLocation = ret.data
 
     try {
         const ombul = await prisma.ombul.create({
