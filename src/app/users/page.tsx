@@ -1,11 +1,8 @@
 import styles from './page.module.scss'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import UserList from '@/components/User/UserList/UserList'
-import PopUp from '@/components/PopUp/PopUp'
 import CreateUserForm from '@/components/User/CreateUserForm'
 import UserPagingProvider from '@/context/paging/UserPaging'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 
 export default async function Users() {

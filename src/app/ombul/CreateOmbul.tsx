@@ -8,6 +8,7 @@ import NumberInput from '../components/UI/NumberInput'
 import FileInput from '../components/UI/FileInput'
 import { useState } from 'react'
 import { Ombul } from '@prisma/client'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     latestOmbul: Ombul | null
@@ -20,6 +21,7 @@ type PropTypes = {
  * @param latestOmbul - The latest ombul issue, used to set default values for year and issueNumber of next ombul
  */
 export default function CreateOmbul({ latestOmbul }: PropTypes) {
+    const { refresh } = useRouter()
     const currentYear = new Date().getFullYear()
 
     let nextYear : number;
@@ -51,6 +53,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 action={createOmbul}
                 submitText="Lag ombul"
                 className={styles.form}
+                successCallback={refresh}
             >
                 <TextInput label="navn" name="name" />
                 <NumberInput label="År" name="year" defaultValue={nextYear} />

@@ -30,3 +30,12 @@ export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
         return errorHandler(error)
     }
 }
+
+export async function readOmbuls() : Promise<ActionReturn<Ombul[]>> {
+    try {
+        const ombuls = await prisma.ombul.findMany()
+        return { success: true, data: ombuls }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}

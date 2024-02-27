@@ -2,12 +2,14 @@ import PageWrapper from '../components/PageWrapper/PageWrapper';
 import styles from './page.module.scss';
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
 import CreateOmbul from './CreateOmbul';
-import { readLatestOmbul } from '@/actions/ombul/read';
+import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read';
 
 export default async function page() {
     const latestOmbulRes = await readLatestOmbul()
     const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null
-    console.log(latestOmbul)
+    const ombulRes = await readOmbuls()
+    if (!ombulRes.success) throw new Error('Failed to read ombuls')
+    const ombuls = ombulRes.data
 
     return (
         <PageWrapper
@@ -19,7 +21,13 @@ export default async function page() {
             }
         >
             <div className={styles.wrapper}>
-                hei
+            {
+                ombuls.map(ombul => (
+                    <div key={ombul.id}>
+                        {ombul.name}
+                    </div>
+                ))
+            }
             </div>
         </PageWrapper>
     )
