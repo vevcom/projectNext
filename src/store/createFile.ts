@@ -23,7 +23,7 @@ export default async function createFile(
     ext: string
 }>> {
     const arrBuffer = await file.arrayBuffer()
-    let buffer = await prosessor(Buffer.from(arrBuffer))
+    let buffer = Buffer.from(arrBuffer)
     const ext = file.type.split('/')[1]
     if (allowedExt && !allowedExt.includes(ext)) {
         return {
@@ -36,10 +36,11 @@ export default async function createFile(
             ]
         }
     }
+    const pBuffer = await prosessor(buffer)
     const fsLocation = `${uuid()}.${ext}`
     const destination_ = join('store', destination)
     await mkdir(destination_, { recursive: true })
-    await writeFile(join(destination_, fsLocation), buffer)
+    await writeFile(join(destination_, fsLocation), pBuffer)
     return {
         success: true,
         data: {
