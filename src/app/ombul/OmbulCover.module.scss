@@ -1,5 +1,39 @@
 @use '@/styles/ohma';
 
+$width: clamp(250px, 30vw, 30px);
+
 .OmbulCover {
-  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: $width;
+    .coverImg {
+        width: 100%;
+        > *, > * > * {
+            border-radius: ohma.$rounding;
+            overflow: hidden;
+            width: 100% !important;
+            height: 100%;
+        }
+        img {
+            width: 100% !important;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    > * {
+        text-align: center;
+        width: 100%;
+    }
+    > p {
+        font-weight: ohma.$fonts-weight-s;
+    }
+    > h2::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: ohma.$colors-gray-500;
+        margin-bottom: ohma.$gap;
+    }
 }

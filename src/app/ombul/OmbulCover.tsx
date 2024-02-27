@@ -9,9 +9,11 @@ type PropTypes = {
 export default function OmbulCover({ ombul } : PropTypes) {
     return (
         <div className={styles.OmbulCover}>
-            <CmsImage name={ombul.coverImage.name} width={200} />
-            <h5>{ombul.year} - {ombul.issueNumber}</h5>
+            <div className={styles.coverImg}>
+                <CmsImage name={ombul.coverImage.name} width={200} />
+            </div>
             <h2>{ombul.name}</h2>
+            <h5>{ombul.year} - {ombul.issueNumber}</h5>
             <p>{ombul.description}</p>
         </div>
     )
