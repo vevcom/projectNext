@@ -18,6 +18,7 @@ async function createOne(file: File, meta: {
     alt: string,
     collectionId: number,
 }): Promise<ActionReturn<Image>> {
+    const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
         return {

@@ -5,19 +5,22 @@ import type { ActionReturn } from '@/actions/Types'
 
 type StoreLocations = 'images' | 'ombul'
 /**
- * 
+ * Create a file in the store volume
  * @param file - file to upload to store
  * @param destination - destination folder in store like /images or /ombul
- * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png']
+ * @param prosessor - a function to process the file before saving it to the store
+ * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png'], 
+ *                     if not provided all extensions are allowed
  * @returns - either an error or the file location. Its an ActionReturn
  */
 export default async function createFile(
     file: File, 
     destination: StoreLocations, 
-    allowedExt?: string[]
+    allowedExt: string[] | undefined = undefined,
+    prosessor: (buffer: Buffer) => Promise<Buffer> = async (buffer) => buffer,
 ) : Promise<ActionReturn<string>> {
     const arrBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrBuffer)
+    let buffer = await prosessor(Buffer.from(arrBuffer))
     const ext = file.type.split('/')[1]
     if (allowedExt && !allowedExt.includes(ext)) {
         return {
