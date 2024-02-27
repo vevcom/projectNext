@@ -12,6 +12,15 @@ import createFile from '@/store/createFile'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
+async function createOneInStore(file: File, allowedExt: string[], size: number) {
+    const ret = await createFile(file, 'images', allowedExt, async (buffer) => {
+        return await sharp(buffer).resize(size, size, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toBuffer()
+    })
+    return ret
+}
 
 async function createOne(file: File, meta: {
     name: string,
@@ -20,29 +29,20 @@ async function createOne(file: File, meta: {
 }): Promise<ActionReturn<Image>> {
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 
-    const smallRes = await createFile(file, 'images', allowedExt, async (buffer) => {
-        return await sharp(buffer).resize(250, 250, {
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-        }).toBuffer()
-    })
-    if (!smallRes.success) return smallRes
-    const fsLocationSmallSize = smallRes.data.fsLocation
+    const uploadPromises = [
+        createOneInStore(file, allowedExt, 250),
+        createOneInStore(file, allowedExt, 600),
+        createFile(file, 'images', allowedExt),
+    ]
 
-    const mediumRes = await createFile(file, 'images', allowedExt, async (buffer) => {
-        return await sharp(buffer).resize(500, 500, {
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-        }).toBuffer()
-    })
-    if (!mediumRes.success) return mediumRes
-    const fsLocationMediumSize = mediumRes.data.fsLocation
-
-    const ret = await createFile(file, 'images', allowedExt)
-    if (!ret.success) return ret
-    const fsLocation = ret.data.fsLocation
-
-    const ext = ret.data.ext
+    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+    if (!smallSize.success) return smallSize
+    const fsLocationSmallSize = smallSize.data.fsLocation
+    if (!mediumSize.success) return mediumSize
+    const fsLocationMediumSize = mediumSize.data.fsLocation
+    if (!original.success) return original
+    const fsLocation = original.data.fsLocation
+    const ext = original.data.ext
 
     try {
         try {

@@ -11,7 +11,7 @@ type StoreLocations = 'images' | 'ombul'
  * @param prosessor - a function to process the file before saving it to the store
  * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png'], 
  *                     if not provided all extensions are allowed
- * @returns - either an error or the file location. Its an ActionReturn
+ * @returns - either an error or the file location and ext. Its an ActionReturn
  */
 export default async function createFile(
     file: File, 
