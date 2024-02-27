@@ -148,7 +148,8 @@ model CmsImage {
   articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
-  Ombul                Ombul[]
+  Ombul                Ombul?
+  
 }
 
 model CmsParagraph {
@@ -277,7 +278,7 @@ model Ombul {
   year         Int
   issueNumber  Int
   coverImage   CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
-  coverImageId Int
+  coverImageId Int      @unique
 
   @@unique([year, issueNumber])
 }
