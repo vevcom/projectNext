@@ -1,5 +1,13 @@
 @use '@/styles/ohma';
 
+a.OmbulCover {
+    &:hover {
+        .coverImg img {
+            scale: 1.1;
+        }
+    }
+}
+
 .OmbulCover {
     display: flex;
     flex-direction: column;
@@ -16,11 +24,13 @@
             height: 100%;
         }
         img {
+            transition: scale 0.3s;
             width: 100% !important;
             height: 100%;
             object-fit: cover;
             min-height: 50px;
         }
+        margin-bottom: ohma.$gap;
     }
     > * {
         text-align: center;
