@@ -4,6 +4,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    color: ohma.$colors-gray-900;
+    text-decoration: none;
     .coverImg {
         width: 100%;
         > *, > * > * {

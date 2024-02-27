@@ -66,7 +66,11 @@ export async function readOmbuls() : Promise<ActionReturn<ExpandedOmbul[]>> {
                 { issueNumber: 'desc' },
             ],
             include: {
-                coverImage: true
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
             }
         })
         return { success: true, data: ombuls }
