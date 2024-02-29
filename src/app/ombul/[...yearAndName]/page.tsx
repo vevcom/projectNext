@@ -18,11 +18,17 @@ export default async function Ombul({ params }: PropTypes) {
     })
     if (!ombulRes.success) notFound()
     const ombul = ombulRes.data
+
+    const path = `/store/ombul/${ombul.fsLocation}`
+
     return (
         <div className={styles.wrapper}>
             <h1>{ombul.name}</h1>
             <p>{ombul.description}</p>
-            <embed src={`/store/ombul/${ombul.fsLocation}`} type="application/pdf" width="100%" height="600px" />
+            <embed src={path} type="application/pdf" width="100%" height="600px" />
+            <div className={styles.download}>
+                <a href={path} download>Download</a>
+            </div>
         </div>
     )
 }
