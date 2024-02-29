@@ -22,7 +22,7 @@ export default async function Ombul({ params }: PropTypes) {
         <div className={styles.wrapper}>
             <h1>{ombul.name}</h1>
             <p>{ombul.description}</p>
-            <embed src={`/store/ombul/${ombul.fsLocation}`} width="800px" height="2100px" />
+            <embed src={`/store/ombul/${ombul.fsLocation}`} type="application/pdf" width="100%" height="600px" />
         </div>
     )
 }

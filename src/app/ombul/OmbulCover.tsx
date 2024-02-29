@@ -20,7 +20,6 @@ type PropTypes = {
 
 /**
  * 
- * @param client - If the component is being rendered on the client we must use cmsImageClient
  * @param ombul - The ombul issue to display
  * @param preview - If ombul is null, the preview object is used to display the ombul issue based on params in preview
  * @returns 
