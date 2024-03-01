@@ -27,6 +27,7 @@ export default async function Ombul({ params }: PropTypes) {
         <div className={styles.wrapper}>
             <div className={styles.header}>
                 <h1>{ombul.name}</h1>
+                <p>{ombul.year} - {ombul.issueNumber}</p>
                 <p>{ombul.description}</p>
             </div>
             <main>

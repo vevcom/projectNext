@@ -18,7 +18,14 @@ type PropTypes = {
  */
 export default function PdfDocument({ src }: PropTypes) {
     const [numPages, setNumPages] = useState<number | null>(null);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState<{
+            leftPage: number | null,
+            rightPage: number | null
+        }>({
+            leftPage: null,
+            rightPage: null
+        });
+    const [pagePair, setPagePair] = useState<number>(1);
 
     const onDocumentLoadSuccess = ({ numPages } : { numPages: number }) => {
         setNumPages(numPages);
@@ -32,25 +39,33 @@ export default function PdfDocument({ src }: PropTypes) {
             >
                 <div className={styles.pages}>
                     <div className={styles.leftPage}>
-                        <Page key={1} pageNumber={1} />
+                        {
+                            pageNumber.leftPage && (
+                                <Page key={pageNumber.leftPage} pageNumber={pageNumber.leftPage} />
+                            )
+                        }
                     </div>
                     <div className={styles.rightPage}>
-                        <Page key={2} pageNumber={2} />
+                        {
+                            pageNumber.rightPage && (
+                                <Page key={pageNumber.rightPage} pageNumber={pageNumber.rightPage} />
+                            )
+                        }
                     </div>
                 </div>
             </Document>
             <p>
-                Page {pageNumber} of {numPages}
+                Page {pageNumber.leftPage}, {pageNumber.rightPage} of {numPages}
             </p>
             <button
-                disabled={pageNumber <= 1}
-                onClick={() => setPageNumber((prevPageNumber) => prevPageNumber - 2)}
+                disabled={!pageNumber.leftPage || pageNumber.leftPage <= 1}
+                onClick={() => setPagePair(pagePair - 1)}
             >
                 Previous
             </button>
             <button
-                disabled={!numPages || pageNumber >= numPages}
-                onClick={() => setPageNumber((prevPageNumber) => prevPageNumber + 2)}
+                disabled={!pageNumber.leftPage || pageNumber.leftPage <= 1}
+                onClick={() => setPagePair(pagePair + 1)}
             >
                 Next
             </button>
