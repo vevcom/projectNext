@@ -1,5 +1,23 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    width: 100%;
+
+    .header {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+    }
+
+    .nav {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+    }
+
+    main {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+    }
 }

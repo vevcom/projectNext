@@ -1,7 +1,8 @@
 import { readOmbul } from '@/actions/ombul/read'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
-import PdfDocument from '../../components/PdfDocument/PdfDocument'
+import PdfDocument from '@/components/PdfDocument/PdfDocument'
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
@@ -24,11 +25,20 @@ export default async function Ombul({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <h1>{ombul.name}</h1>
-            <p>{ombul.description}</p>
-            <PdfDocument src={path} />
-            <div className={styles.download}>
-                <a href={path} download>Download</a>
+            <div className={styles.header}>
+                <h1>{ombul.name}</h1>
+                <p>{ombul.description}</p>
+            </div>
+            <main>
+                <PdfDocument src={path} />
+            </main>
+            <div className={styles.nav}>
+                <div className={styles.download}>
+                    <a href={path} download>Last ned</a>
+                </div>
+                <div className={styles.openInBrowser}>
+                    <Link href={path} target='blank'>Åpne i ny fane</Link>
+                </div>
             </div>
         </div>
     )
