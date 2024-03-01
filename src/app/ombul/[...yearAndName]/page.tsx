@@ -1,7 +1,7 @@
 import { readOmbul } from '@/actions/ombul/read'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
-import PdfDocument from './PdfDocument'
+import PdfDocument from '../../components/PdfDocument/PdfDocument'
 
 type PropTypes = {
     params: {
