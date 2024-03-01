@@ -1,10 +1,14 @@
 @use '@/styles/ohma';
 
 .PdfDocument {
-    .leftPage {
+    .pages {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        .leftPage {
 
-    }
-    .rightPage {
-
+        }
+        .rightPage {
+    
+        }
     }
 }
