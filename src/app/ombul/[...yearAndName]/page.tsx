@@ -1,6 +1,7 @@
 import { readOmbul } from '@/actions/ombul/read'
 import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
+import PdfDocument from './PdfDocument'
 
 type PropTypes = {
     params: {
@@ -25,7 +26,7 @@ export default async function Ombul({ params }: PropTypes) {
         <div className={styles.wrapper}>
             <h1>{ombul.name}</h1>
             <p>{ombul.description}</p>
-            <embed src={path} type="application/pdf" width="100%" height="600px" />
+            <PdfDocument src={path} />
             <div className={styles.download}>
                 <a href={path} download>Download</a>
             </div>
