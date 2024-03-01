@@ -2,18 +2,29 @@
 
 .wrapper {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
     width: 100%;
+    padding: 1em ohma.$minimalPagePadding;
 
     .header {
         grid-column: 1 / 2;
-        grid-row: 1 / 2;
+        grid-row: 1 / 2; 
+        p {
+            font-weight: ohma.$fonts-weight-s;
+        }
     }
 
     .nav {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 1em;
+        :is(.download, .openInBrowser) a {
+            display: block;
+            @include ohma.btn(ohma.$colors-primary);
+        }
     }
 
     main {
