@@ -2,13 +2,32 @@
 
 .PdfDocument {
     .pages {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        .leftPage {
-
-        }
-        .rightPage {
-    
+        display: flex;
+        .leftPage, .rightPage {
+            display: flex;
+            > button {
+                background-color: ohma.$colors-gray-500;
+                border: none;
+                padding: 1em;
+                transition: background-color 0.3s;
+                svg {
+                    color: ohma.$colors-white;
+                    width: 25px;
+                    height: 25px;
+                }
+                &:hover {
+                    background-color: ohma.$colors-gray-600;
+                    cursor: pointer;
+                }
+            }
+            &.rightPage > button {
+                border-top-right-radius: ohma.$rounding;
+                border-bottom-right-radius: ohma.$rounding;
+            }
+            &.leftPage > button {
+                border-top-left-radius: ohma.$rounding;
+                border-bottom-left-radius: ohma.$rounding;
+            }
         }
     }
 }

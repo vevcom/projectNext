@@ -5,6 +5,8 @@ import { pdfjs } from 'react-pdf';
 import styles from './PdfDocument.module.scss';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -58,6 +60,15 @@ export default function PdfDocument({ src }: PropTypes) {
                     <div className={styles.leftPage}>
                         {
                             currentPages.leftPage && (
+                                <button
+                                    onClick={() => setPagePair(pagePair - 1)}
+                                >
+                                    <FontAwesomeIcon icon={faChevronLeft} />
+                                </button>
+                            )
+                        }
+                        {
+                            currentPages.leftPage && (
                                 <Page key={currentPages.leftPage} pageNumber={currentPages.leftPage} />
                             )
                         }
@@ -68,24 +79,21 @@ export default function PdfDocument({ src }: PropTypes) {
                                 <Page key={currentPages.rightPage} pageNumber={currentPages.rightPage} />
                             )
                         }
+                        {
+                            currentPages.rightPage && (
+                                <button
+                                    onClick={() => setPagePair(pagePair + 1)}
+                                >
+                                    <FontAwesomeIcon icon={faChevronRight} />
+                                </button>
+                            )
+                        }
                     </div>
                 </div>
             </Document>
             <p>
                 Page {currentPages.leftPage}, {currentPages.rightPage} of {numPages}
             </p>
-            <button
-                disabled={!currentPages.leftPage}
-                onClick={() => setPagePair(pagePair - 1)}
-            >
-                Previous
-            </button>
-            <button
-                disabled={!currentPages.rightPage}
-                onClick={() => setPagePair(pagePair + 1)}
-            >
-                Next
-            </button>
         </div>
     )
 }
