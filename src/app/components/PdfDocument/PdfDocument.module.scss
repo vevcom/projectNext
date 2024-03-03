@@ -4,7 +4,11 @@
     .pages {
         display: flex;
         .leftPage, .rightPage {
+            width: 40%;
             display: flex;
+            .page {
+                width: 100%;
+            }
             > button {
                 background-color: ohma.$colors-gray-500;
                 border: none;

@@ -1,5 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { 
+    useEffect, 
+    useState,
+    useRef
+} from 'react';
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 import styles from './PdfDocument.module.scss';
@@ -7,6 +11,7 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import useViewPort from '@/hooks/useViewPort';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -27,7 +32,11 @@ export default function PdfDocument({ src }: PropTypes) {
             leftPage: null,
             rightPage: null
         });
-    const [pagePair, setPagePair] = useState<number>(0);
+    const [pagePair, setPagePair] = useState<number>(0)
+    const [pageWidthLeft, setPageWidthLeft] = useState<number | null>(null)
+    const [pageWidthRight, setPageWidthRight] = useState<number | null>(null)
+    const leftPageRef = useRef<HTMLDivElement>(null)
+    const rightPageRef = useRef<HTMLDivElement>(null)
 
     const onDocumentLoadSuccess = ({ numPages } : { numPages: number }) => {
         setNumPages(numPages);
@@ -50,6 +59,18 @@ export default function PdfDocument({ src }: PropTypes) {
         })
     }, [numPages, pagePair])
 
+    useViewPort(() => {
+        if (leftPageRef.current) setPageWidthLeft(leftPageRef.current.offsetWidth)
+        if (rightPageRef.current) setPageWidthRight(rightPageRef.current.offsetWidth)
+    })
+
+    const getPageNumberText = (rightPage: number | null, leftPage: number | null) => {
+        if (rightPage && leftPage) return `Side ${leftPage} og ${rightPage} av ${numPages}`
+        if (leftPage) return `Side ${leftPage} av ${numPages}`
+        if (rightPage) return `Side ${rightPage} av ${numPages}`
+        return ''
+    }
+
     return (
         <div className={styles.PdfDocument}>
             <Document
@@ -67,18 +88,30 @@ export default function PdfDocument({ src }: PropTypes) {
                                 </button>
                             )
                         }
+                        <div ref={leftPageRef} className={styles.page}>
                         {
                             currentPages.leftPage && (
-                                <Page key={currentPages.leftPage} pageNumber={currentPages.leftPage} />
+                                <Page 
+                                    width={pageWidthLeft || undefined}
+                                    key={currentPages.leftPage} 
+                                    pageNumber={currentPages.leftPage} 
+                                />
                             )
                         }
+                        </div>
                     </div>
                     <div className={styles.rightPage}>
+                        <div ref={rightPageRef} className={styles.page}>
                         {
                             currentPages.rightPage && (
-                                <Page key={currentPages.rightPage} pageNumber={currentPages.rightPage} />
+                                <Page 
+                                    width={pageWidthRight || undefined}
+                                    key={currentPages.rightPage} 
+                                    pageNumber={currentPages.rightPage} 
+                                />
                             )
                         }
+                        </div>
                         {
                             currentPages.rightPage && (
                                 <button
@@ -92,7 +125,7 @@ export default function PdfDocument({ src }: PropTypes) {
                 </div>
             </Document>
             <p>
-                Page {currentPages.leftPage}, {currentPages.rightPage} of {numPages}
+                {getPageNumberText(currentPages.rightPage, currentPages.leftPage)}
             </p>
         </div>
     )
