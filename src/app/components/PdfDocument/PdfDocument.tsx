@@ -35,8 +35,20 @@ export default function PdfDocument({ src }: PropTypes) {
     const [pagePair, setPagePair] = useState<number>(0)
     const [pageWidthLeft, setPageWidthLeft] = useState<number | null>(null)
     const [pageWidthRight, setPageWidthRight] = useState<number | null>(null)
+    const [pageHeight, setPageHeight] = useState<number>(20)
     const leftPageRef = useRef<HTMLDivElement>(null)
     const rightPageRef = useRef<HTMLDivElement>(null)
+    const [loadingPage, setLoadingPage] = useState<boolean>(true)
+
+
+    const handleLoadSuccess = () => {
+        setLoadingPage(false)
+    }  
+
+    const handleSetPagePairNumber = (pageNumber: number) => {
+        setLoadingPage(true)
+        setPagePair(pageNumber)
+    }
 
     const onDocumentLoadSuccess = ({ numPages } : { numPages: number }) => {
         setNumPages(numPages);
@@ -62,6 +74,9 @@ export default function PdfDocument({ src }: PropTypes) {
     useViewPort(() => {
         if (leftPageRef.current) setPageWidthLeft(leftPageRef.current.offsetWidth)
         if (rightPageRef.current) setPageWidthRight(rightPageRef.current.offsetWidth)
+        if (!loadingPage) {
+            setPageHeight(leftPageRef.current?.offsetHeight || rightPageRef.current?.offsetHeight || 0)
+        }
     })
 
     const getPageNumberText = (rightPage: number | null, leftPage: number | null) => {
@@ -82,7 +97,7 @@ export default function PdfDocument({ src }: PropTypes) {
                         {
                             currentPages.leftPage && (
                                 <button
-                                    onClick={() => setPagePair(pagePair - 1)}
+                                    onClick={() => handleSetPagePairNumber(pagePair - 1)}
                                 >
                                     <FontAwesomeIcon icon={faChevronLeft} />
                                 </button>
@@ -90,11 +105,17 @@ export default function PdfDocument({ src }: PropTypes) {
                         }
                         <div ref={leftPageRef} className={styles.page}>
                         {
+                            loadingPage && (
+                                <p style={{height: pageHeight}}>Laster...</p>
+                            )
+                        }
+                        {
                             currentPages.leftPage && (
                                 <Page 
                                     width={pageWidthLeft || undefined}
                                     key={currentPages.leftPage} 
                                     pageNumber={currentPages.leftPage} 
+                                    onLoadSuccess={handleLoadSuccess}
                                 />
                             )
                         }
@@ -103,11 +124,17 @@ export default function PdfDocument({ src }: PropTypes) {
                     <div className={styles.rightPage}>
                         <div ref={rightPageRef} className={styles.page}>
                         {
+                            loadingPage && (
+                                <p style={{height: pageHeight}}>Laster...</p>
+                            )
+                        }
+                        {
                             currentPages.rightPage && (
                                 <Page 
                                     width={pageWidthRight || undefined}
                                     key={currentPages.rightPage} 
                                     pageNumber={currentPages.rightPage} 
+                                    onLoadSuccess={handleLoadSuccess}
                                 />
                             )
                         }
@@ -115,7 +142,7 @@ export default function PdfDocument({ src }: PropTypes) {
                         {
                             currentPages.rightPage && (
                                 <button
-                                    onClick={() => setPagePair(pagePair + 1)}
+                                    onClick={() => handleSetPagePairNumber(pagePair + 1)}
                                 >
                                     <FontAwesomeIcon icon={faChevronRight} />
                                 </button>
