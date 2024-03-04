@@ -149,7 +149,7 @@ export default function PdfDocument({ src, className }: PropTypes) {
                             }
                         </div>
                         {
-                            currentPages.rightPage && (
+                            currentPages.rightPage && currentPages.rightPage !== numPages && (
                                 <button
                                     onClick={() => handleSetPagePairNumber(pagePair + 1)}
                                 >
