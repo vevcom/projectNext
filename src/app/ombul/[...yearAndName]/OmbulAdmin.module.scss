@@ -3,4 +3,10 @@
 .OmbulAdmin {
     background-color: ohma.$colors-secondary;
     @include ohma.card();
+    display: flex;
+    justify-content: space-between;
+    .coverImage {
+        border-radius: ohma.$rounding;
+        overflow: hidden;
+    }
 }
