@@ -1,9 +1,21 @@
+'use client'
+
+import Form from '@/app/components/Form/Form'
 import styles from './OmbulAdmin.module.scss'
 
-export default function OmbulAdmin() {
+type PropTypes = {
+    canUpdate: boolean
+    canDestroy: boolean
+}
+
+export default function OmbulAdmin({ canUpdate, canDestroy }: PropTypes) {
     return (
-        <div>
-            <h1>OmbulAdmin</h1>
+        <div className={styles.OmbulAdmin}>
+            {
+                canDestroy && (
+                    
+                )
+            }
         </div>
     )
 }
