@@ -8,6 +8,8 @@ import Link from 'next/link'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import OmbulAdmin from './OmbulAdmin'
 
 type PropTypes = {
     params: {
@@ -71,6 +73,10 @@ export default async function Ombul({ params }: PropTypes) {
                 <div className={styles.openInBrowser}>
                     <Link href={path} target="blank">Åpne i ny fane</Link>
                 </div>
+            </div>
+            <div className={styles.admin}>
+                <OmbulAdmin />
+                <CmsImage name={ombul.coverImage.name} width={200} />
             </div>
         </div>
     )
