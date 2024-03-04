@@ -123,8 +123,8 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
         })
 
         //delete the old file
-        await deleteFile('ombul', oldFsLocation)
-
+        const ret = await deleteFile('ombul', oldFsLocation)
+        if (!ret.success) return ret
 
         return {
             success: true,
