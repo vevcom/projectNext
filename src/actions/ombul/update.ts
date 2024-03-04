@@ -81,7 +81,7 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
     }
 
     const parse = ombulUpdateFileSchema.safeParse({
-        file: rawData.get('file'),
+        ombulFile: rawData.get('ombulFile'),
     })
     if (!parse.success) {
         return {

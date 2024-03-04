@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { ExpandedOmbul } from '@/actions/ombul/Types'
 import DateInput from '@/app/components/UI/DateInput'
 import NumberInput from '@/app/components/UI/NumberInput'
+import FileInput from '@/app/components/UI/FileInput'
 
 type PropTypes = {
     canUpdate: boolean
@@ -32,7 +33,7 @@ export default function OmbulAdmin({
     canDestroy, 
     ombul,
 }: PropTypes) {
-    const { push } = useRouter()
+    const { push, refresh } = useRouter()
     const editCtx = useContext(EditModeContext)
     if (!editCtx?.editMode) return null
 
@@ -42,13 +43,20 @@ export default function OmbulAdmin({
     const handleChange = async (ombul : ExpandedOmbul | undefined) => {
         if (!ombul) return
         push(`/ombul/${ombul?.year}/${ombul?.name}`)
+        refresh()
+    }
+
+    const handleDestroy = async () => {
+        push('/ombul')
+        refresh()
     }
     
     return (
         <div className={styles.OmbulAdmin}>
-            <div>
+            <div className={styles.left}>
             {
                 canUpdate && (
+                <>
                     <Form
                         action={updateOmbulAction}
                         successCallback={handleChange}
@@ -62,9 +70,17 @@ export default function OmbulAdmin({
                         <NumberInput 
                             name='issueNumber' 
                             label='Nummer'
-                             defaultValue={ombul.issueNumber} 
+                            defaultValue={ombul.issueNumber} 
                         />
                     </Form>
+                    <Form
+                        action={updateOmbulFileAction}
+                        successCallback={handleChange}
+                        submitText='Oppdater fil'
+                    >
+                        <FileInput name="ombulFile" label="ombul fil" color="primary" />
+                    </Form>
+                </>
                 )
             }  
             {
@@ -73,7 +89,7 @@ export default function OmbulAdmin({
                 )
             }
             </div>
-            <div>
+            <div className={styles.right}>
             {
                 canUpdate && (
                     <div className={styles.coverImage}>
