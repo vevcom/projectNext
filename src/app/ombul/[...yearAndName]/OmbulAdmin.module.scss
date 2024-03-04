@@ -1,5 +1,6 @@
 @use '@/styles/ohma';
 
 .OmbulAdmin {
-    
+    background-color: ohma.$colors-secondary;
+    @include ohma.card();
 }

@@ -79,8 +79,8 @@ export default async function Ombul({ params }: PropTypes) {
                     canDestroy={canDestroy} 
                     canUpdate={canUpdate}
                     coverImage={ombul.coverImage}
+                    ombulId={ombul.id}
                 />
-                <CmsImage name={ombul.coverImage.name} width={200} />
             </div>
         </div>
     )
