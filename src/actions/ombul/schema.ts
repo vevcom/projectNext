@@ -13,7 +13,14 @@ const ombulSchema = z.object({
     description: z.string().min(2, 'Minimum lengde er 2').max(100, 'Maximum lengde er 100').trim()
 })
 
-const ombulUpdateSchema = ombulSchema.partial()
+const ombulUpdateSchema = ombulSchema.partial().omit({
+    ombulFile: true,
+    ombulCoverImage: true
+})
+
+const ombulUpdateFileSchema = ombulSchema.pick({
+    ombulFile: true
+})
 
 export default ombulSchema
-export { ombulUpdateSchema }
+export { ombulUpdateSchema, ombulUpdateFileSchema }
