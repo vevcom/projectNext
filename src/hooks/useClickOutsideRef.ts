@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
  * A hook that returns a ref to a DOM element that can be used to detect clicks outside of the element
  * When a click is detected outside of the element, the callback function is called
  * @param callback - The function to call when a click is detected outside of the element
- * @returns 
+ * @returns A ref to the DOM element to detect clicks outside of
  */
 export default function useClickOutsideRef(
     callback: (event: MouseEvent | TouchEvent) => void

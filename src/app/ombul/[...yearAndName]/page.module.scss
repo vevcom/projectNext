@@ -39,5 +39,10 @@
                 height: 100%;
             }
         }
+        @media screen and (max-width: ohma.$mobileBreakpoint) {
+            > .embedPdf {
+                height: 50vh;
+            }
+        }
     }
 }

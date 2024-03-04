@@ -17,13 +17,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 type PropTypes = {
     src: string
+    className?: string
 }
 
 /**
  * A component that displays a PDF document in a book format
  * @param src - The path (relative to domain) to the PDF document
  */
-export default function PdfDocument({ src }: PropTypes) {
+export default function PdfDocument({ src, className }: PropTypes) {
     const [numPages, setNumPages] = useState<number | null>(null);
     const [currentPages, setCurrentPages] = useState<{
             leftPage: number | null,
@@ -87,7 +88,7 @@ export default function PdfDocument({ src }: PropTypes) {
     }
 
     return (
-        <div className={styles.PdfDocument}>
+        <div className={`${styles.PdfDocument} ${className}`}>
             <Document
                 file={src}
                 onLoadSuccess={onDocumentLoadSuccess}
