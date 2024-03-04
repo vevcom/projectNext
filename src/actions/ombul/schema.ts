@@ -1,6 +1,6 @@
-import { z } from 'zod'
 import { maxOmbulFileSize } from './ConfigVars'
 import { imageSchema } from '@/actions/images/schema'
+import { z } from 'zod'
 
 const ombulSchema = z.object({
     ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),

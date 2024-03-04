@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { maxFileSize } from './ConfigVars'
+import { z } from 'zod'
 
 export const imageSchema = z.object({
     file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
@@ -13,8 +13,8 @@ export const imageSchemaMany = z.object({
         'File size must be less than 10mb'
     ),
 })
-.refine(
-    data => data.files.length < 100, 'Max 100 files')
-.refine(
-    data => data.files.length > 0, 'You must add a file!'
-)
+    .refine(
+        data => data.files.length < 100, 'Max 100 files')
+    .refine(
+        data => data.files.length > 0, 'You must add a file!'
+    )

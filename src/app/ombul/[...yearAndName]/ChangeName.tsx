@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
-import EditableTextField from "@/components/EditableTextField/EditableTextField"
-import { updateOmbul } from "@/actions/ombul/update"
+import EditableTextField from '@/components/EditableTextField/EditableTextField'
+import { updateOmbul } from '@/actions/ombul/update'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     children: ReactNode
@@ -16,7 +16,7 @@ type PropTypes = {
  * @param ombulId - The id of the ombul to update
  * @returns The component jsx
  */
-export default function ChangeName({ children, editable, ombulId } : PropTypes) {
+export default function ChangeName({ children, editable, ombulId }: PropTypes) {
     const changeName = updateOmbul.bind(null, ombulId)
 
     return (

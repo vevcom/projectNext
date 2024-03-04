@@ -1,21 +1,21 @@
 'use server'
-import type { Ombul } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import ombulSchema from './schema'
+import { readSpecialImageCollection } from '../images/collections/read'
+import { createCmsImage } from '../cms/images/create'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import ombulSchema from './schema'
 import createFile from '@/store/createFile'
 import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
-import { readSpecialImageCollection } from '../images/collections/read'
-import { createCmsImage } from '../cms/images/create'
+import type { ActionReturn } from '@/actions/Types'
+import type { Ombul } from '@prisma/client'
 
 /**
- * Create a new Ombul. 
- * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber 
+ * Create a new Ombul.
+ * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber
  * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
  */
-export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombul>>  {
+export async function createOmbul(rawdata: FormData): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_CREATE']
@@ -30,13 +30,15 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
     }
 
     const parse = ombulSchema.safeParse(Object.fromEntries(rawdata.entries()))
-    if (!parse.success)  return {
-        success: false,
-        error: parse.error.issues
+    if (!parse.success) {
+        return {
+            success: false,
+            error: parse.error.issues
+        }
     }
     const data = parse.data
-    
-    const year = data.year || new Date().getFullYear();
+
+    const year = data.year || new Date().getFullYear()
 
     // Get the latest issue number if not provided
     let latestIssueNumber = 1
@@ -44,7 +46,7 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
         try {
             const ombul = await prisma.ombul.findFirst({
                 where: {
-                    year: year
+                    year
                 },
                 orderBy: {
                     issueNumber: 'desc'
@@ -58,12 +60,12 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
         }
     }
     const issueNumber = data.issueNumber || latestIssueNumber
-    
+
     const name = data.name
     const description = data.description
 
     //upload the file to the store volume
-    const ret = await createFile(data.ombulFile, 'ombul', ['pdf']);
+    const ret = await createFile(data.ombulFile, 'ombul', ['pdf'])
     if (!ret.success) return ret
     const fsLocation = ret.data.fsLocation
 
@@ -71,9 +73,9 @@ export async function createOmbul(rawdata: FormData) : Promise<ActionReturn<Ombu
     const ombulCoverCollectionRes = await readSpecialImageCollection('OMBULCOVERS')
     if (!ombulCoverCollectionRes.success) return ombulCoverCollectionRes
     const ombulCoverCollection = ombulCoverCollectionRes.data
-    const coverImageRes = await createOneImage(data.ombulCoverImage, { 
-        name: fsLocation, 
-        alt: 'cover of ' + name, 
+    const coverImageRes = await createOneImage(data.ombulCoverImage, {
+        name: fsLocation,
+        alt: `cover of ${name}`,
         collectionId: ombulCoverCollection.id
     })
     if (!coverImageRes.success) return coverImageRes

@@ -1,11 +1,11 @@
-import PageWrapper from '../components/PageWrapper/PageWrapper';
-import styles from './page.module.scss';
-import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp';
-import CreateOmbul from './CreateOmbul';
-import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read';
-import OmbulCover from './OmbulCover';
-import { requireUser } from '@/auth';
-import type { ExpandedOmbul } from '@/actions/ombul/Types';
+import styles from './page.module.scss'
+import CreateOmbul from './CreateOmbul'
+import OmbulCover from './OmbulCover'
+import PageWrapper from '../components/PageWrapper/PageWrapper'
+import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
+import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read'
+import { requireUser } from '@/auth'
+import type { ExpandedOmbul } from '@/actions/ombul/Types'
 
 export default async function Ombuls() {
     const user = await requireUser({
@@ -21,13 +21,13 @@ export default async function Ombuls() {
     const ombuls = ombulRes.data
 
     const yearsWithOmbul = Object.entries(ombuls.reduce((groups, ombul) => {
-        const year = ombul.year;
+        const year = ombul.year
         if (!groups[year]) {
-          groups[year] = [];
+            groups[year] = []
         }
-        groups[year].push(ombul);
-        return groups;
-      }, {} as { [year: number]: ExpandedOmbul[] })).toSorted(([a], [b]) => parseInt(b) - parseInt(a))
+        groups[year].push(ombul)
+        return groups
+    }, {} as { [year: number]: ExpandedOmbul[] })).toSorted(([a], [b]) => parseInt(b) - parseInt(a))
 
     return (
         <PageWrapper
@@ -41,20 +41,20 @@ export default async function Ombuls() {
             }
         >
             <div className={styles.wrapper}>
-            {
-                yearsWithOmbul.map(([year, ombuls]) => (
-                    <div key={year}>
-                        <h1>{year}</h1>
-                        <div className={styles.ombulList}>
-                            {
-                                ombuls.map(ombul => (
-                                    <OmbulCover key={ombul.id} ombul={ombul} />
-                                ))
-                            }
+                {
+                    yearsWithOmbul.map(([year, ombuls]) => (
+                        <div key={year}>
+                            <h1>{year}</h1>
+                            <div className={styles.ombulList}>
+                                {
+                                    ombuls.map(ombul => (
+                                        <OmbulCover key={ombul.id} ombul={ombul} />
+                                    ))
+                                }
+                            </div>
                         </div>
-                    </div>
-                ))
-            }
+                    ))
+                }
             </div>
         </PageWrapper>
     )

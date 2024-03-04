@@ -1,19 +1,18 @@
 'use client'
-import { 
-    useEffect, 
+import styles from './PdfDocument.module.scss'
+import useViewPort from '@/hooks/useViewPort'
+import {
+    useEffect,
     useState,
     useRef
-} from 'react';
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
-import styles from './PdfDocument.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import useViewPort from '@/hooks/useViewPort';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+} from 'react'
+import { Document, Page, pdfjs } from 'react-pdf'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
+import 'react-pdf/dist/esm/Page/TextLayer.css'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 type PropTypes = {
     src: string
@@ -26,14 +25,14 @@ type PropTypes = {
  * @param className - The class name of the component to add extra styling
  */
 export default function PdfDocument({ src, className }: PropTypes) {
-    const [numPages, setNumPages] = useState<number | null>(null);
+    const [numPages, setNumPages] = useState<number | null>(null)
     const [currentPages, setCurrentPages] = useState<{
             leftPage: number | null,
             rightPage: number | null
         }>({
             leftPage: null,
             rightPage: null
-        });
+        })
     const [pagePair, setPagePair] = useState<number>(0)
     const [pageWidthLeft, setPageWidthLeft] = useState<number | null>(null)
     const [pageWidthRight, setPageWidthRight] = useState<number | null>(null)
@@ -45,31 +44,35 @@ export default function PdfDocument({ src, className }: PropTypes) {
 
     const handleLoadSuccess = () => {
         setLoadingPage(false)
-    }  
+    }
 
     const handleSetPagePairNumber = (pageNumber: number) => {
         setLoadingPage(true)
         setPagePair(pageNumber)
     }
 
-    const onDocumentLoadSuccess = ({ numPages } : { numPages: number }) => {
-        setNumPages(numPages);
+    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+        setNumPages(numPages)
     }
 
     useEffect(() => {
-        if (!numPages) return 
+        if (!numPages) return
         if (pagePair < 0) setPagePair(1)
-        if (pagePair === 0) return setCurrentPages({
-            leftPage: null,
-            rightPage: numPages > 0 ? 1 : null
-        })
-        if (2*pagePair === numPages) return setCurrentPages({
-            leftPage: numPages,
-            rightPage: null
-        })
+        if (pagePair === 0) {
+            return setCurrentPages({
+                leftPage: null,
+                rightPage: numPages > 0 ? 1 : null
+            })
+        }
+        if (2 * pagePair === numPages) {
+            return setCurrentPages({
+                leftPage: numPages,
+                rightPage: null
+            })
+        }
         return setCurrentPages({
-            leftPage: 2*pagePair,
-            rightPage: 2*pagePair + 1
+            leftPage: 2 * pagePair,
+            rightPage: 2 * pagePair + 1
         })
     }, [numPages, pagePair])
 
@@ -106,44 +109,44 @@ export default function PdfDocument({ src, className }: PropTypes) {
                             )
                         }
                         <div ref={leftPageRef} className={styles.page}>
-                        {
-                            loadingPage && (
-                                <p style={{height: pageHeight}}>Laster...</p>
-                            )
-                        }
-                        {
-                            currentPages.leftPage && (
-                                <div style={{display: loadingPage ? 'none' : 'block'}}>
-                                    <Page 
-                                        width={pageWidthLeft || undefined}
-                                        key={currentPages.leftPage} 
-                                        pageNumber={currentPages.leftPage} 
-                                        onLoadSuccess={handleLoadSuccess}
-                                    />
-                                </div>
-                            )
-                        }
+                            {
+                                loadingPage && (
+                                    <p style={{ height: pageHeight }}>Laster...</p>
+                                )
+                            }
+                            {
+                                currentPages.leftPage && (
+                                    <div style={{ display: loadingPage ? 'none' : 'block' }}>
+                                        <Page
+                                            width={pageWidthLeft || undefined}
+                                            key={currentPages.leftPage}
+                                            pageNumber={currentPages.leftPage}
+                                            onLoadSuccess={handleLoadSuccess}
+                                        />
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
                     <div className={styles.rightPage}>
                         <div ref={rightPageRef} className={styles.page}>
-                        {
-                            loadingPage && (
-                                <p style={{height: pageHeight}}>Laster...</p>
-                            )
-                        }
-                        {
-                            currentPages.rightPage && (
-                                <div style={{display: loadingPage ? 'none' : 'block'}}>
-                                    <Page 
-                                        width={pageWidthRight || undefined}
-                                        key={currentPages.rightPage} 
-                                        pageNumber={currentPages.rightPage} 
-                                        onLoadSuccess={handleLoadSuccess}
-                                    />
-                                </div>
-                            )
-                        }
+                            {
+                                loadingPage && (
+                                    <p style={{ height: pageHeight }}>Laster...</p>
+                                )
+                            }
+                            {
+                                currentPages.rightPage && (
+                                    <div style={{ display: loadingPage ? 'none' : 'block' }}>
+                                        <Page
+                                            width={pageWidthRight || undefined}
+                                            key={currentPages.rightPage}
+                                            pageNumber={currentPages.rightPage}
+                                            onLoadSuccess={handleLoadSuccess}
+                                        />
+                                    </div>
+                                )
+                            }
                         </div>
                         {
                             currentPages.rightPage && (

@@ -1,11 +1,10 @@
-import { readOmbul } from '@/actions/ombul/read'
-import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
-import PdfDocument from '@/components/PdfDocument/PdfDocument'
-import Link from 'next/link'
-import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
-import { requireUser } from '@/auth'
 import ChangeName from './ChangeName'
+import { readOmbul } from '@/actions/ombul/read'
+import PdfDocument from '@/components/PdfDocument/PdfDocument'
+import { requireUser } from '@/auth'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
@@ -51,7 +50,7 @@ export default async function Ombul({ params }: PropTypes) {
                     <a href={path} download>Last ned</a>
                 </div>
                 <div className={styles.openInBrowser}>
-                    <Link href={path} target='blank'>Åpne i ny fane</Link>
+                    <Link href={path} target="blank">Åpne i ny fane</Link>
                 </div>
             </div>
         </div>

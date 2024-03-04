@@ -1,9 +1,9 @@
 'use server'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
-import logger from '@/logger'
 
 export async function readImageCollection(
     idOrName: number | string

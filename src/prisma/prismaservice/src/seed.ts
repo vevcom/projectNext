@@ -6,8 +6,8 @@ import seedDevNews from './development/seedDevNews'
 import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
-import { PrismaClient } from '@prisma/client'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
+import { PrismaClient } from '@prisma/client'
 
 async function seed() {
     const prisma = new PrismaClient()

@@ -1,16 +1,16 @@
 'use client'
 
-import { createOmbul } from '@/actions/ombul/create'
-import Form from '@/components/Form/Form'
 import styles from './CreateOmbul.module.scss'
+import OmbulCover from './OmbulCover'
 import TextInput from '../components/UI/TextInput'
 import NumberInput from '../components/UI/NumberInput'
 import FileInput from '../components/UI/FileInput'
-import { useState } from 'react'
-import { Ombul } from '@prisma/client'
-import { useRouter } from 'next/navigation'
 import Textarea from '../components/UI/Textarea'
-import OmbulCover from './OmbulCover'
+import { createOmbul } from '@/actions/ombul/create'
+import Form from '@/components/Form/Form'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import type { Ombul } from '@prisma/client'
 import type { PropTypesPreview } from './OmbulCover'
 import type { ChangeEvent } from 'react'
 
@@ -30,17 +30,17 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
     const { refresh } = useRouter()
     const currentYear = new Date().getFullYear()
 
-    let nextYear : number;
-    let nextIssue : number;
+    let nextYear: number
+    let nextIssue: number
     if (!latestOmbul) {
-        nextYear = currentYear;
-        nextIssue = 1;
+        nextYear = currentYear
+        nextIssue = 1
     } else if (currentYear === latestOmbul?.year) {
-        nextYear = currentYear;
-        nextIssue = latestOmbul.issueNumber + 1;
+        nextYear = currentYear
+        nextIssue = latestOmbul.issueNumber + 1
     } else {
-        nextYear = currentYear;
-        nextIssue = 1;
+        nextYear = currentYear
+        nextIssue = 1
     }
 
     const [preview, setPreview] = useState<PropTypesPreview>({
@@ -61,13 +61,13 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 setPreview({
                     ...preview,
                     pImage: files[0],
-                });
+                })
             }
         } else {
             setPreview({
                 ...preview,
                 [type]: event.target.value,
-            });
+            })
         }
     }
 
@@ -75,7 +75,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
         setPreview({
             ...preview,
             pDescription: event.target.value,
-        });
+        })
     }
 
     return (
@@ -97,6 +97,6 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 <OmbulCover preview={preview} ombul={null} />
             </div>
         </div>
-        
+
     )
 }

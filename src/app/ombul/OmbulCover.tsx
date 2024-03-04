@@ -1,7 +1,7 @@
 import styles from './OmbulCover.module.scss'
-import { ExpandedOmbul } from "@/actions/ombul/Types"
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
+import type { ExpandedOmbul } from '@/actions/ombul/Types'
 
 export type PropTypesPreview = {
     pImage: File,
@@ -19,12 +19,12 @@ type PropTypes = {
 }
 
 /**
- * 
+ *
  * @param ombul - The ombul issue to display
  * @param preview - If ombul is null, the preview object is used to display the ombul issue based on params in preview
- * @returns 
+ * @returns
  */
-export default function OmbulCover(props : PropTypes) {
+export default function OmbulCover(props: PropTypes) {
     const name = props.ombul ? props.ombul.name : props.preview.pName
     const year = props.ombul ? props.ombul.year : props.preview.pYear
     const issueNumber = props.ombul ? props.ombul.issueNumber : props.preview.pIssueNumber
@@ -34,7 +34,7 @@ export default function OmbulCover(props : PropTypes) {
     const content = <>
         <div className={styles.coverImg}>
             {
-                coverImage instanceof File  ? (
+                coverImage instanceof File ? (
                     <img src={URL.createObjectURL(coverImage)} alt="last opp cover" />
                 ) : (
                     coverImage.image && (

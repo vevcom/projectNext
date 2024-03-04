@@ -1,12 +1,12 @@
 'use server'
-import { Ombul } from "@prisma/client";
-import { ActionReturn } from "@/actions/Types";
-import prisma from "@/prisma";
-import errorHandler from "@/prisma/errorHandler";
-import { ExpandedOmbul } from "./Types";
-import { getUser } from "@/auth";
+import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
+import { getUser } from '@/auth'
+import type { ActionReturn } from '@/actions/Types'
+import type { ExpandedOmbul } from './Types'
+import type { Ombul } from '@prisma/client'
 
-export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
+export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_READ']
@@ -48,7 +48,7 @@ export async function readLatestOmbul() : Promise<ActionReturn<Ombul>> {
 export async function readOmbul(idOrNameAndYear: number | {
     name: string,
     year: number,
-}) : Promise<ActionReturn<ExpandedOmbul>> {
+}): Promise<ActionReturn<ExpandedOmbul>> {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_READ']
@@ -63,8 +63,8 @@ export async function readOmbul(idOrNameAndYear: number | {
     }
     try {
         const ombul = await prisma.ombul.findUnique({
-            where: typeof idOrNameAndYear === 'number' ? { 
-                id: idOrNameAndYear 
+            where: typeof idOrNameAndYear === 'number' ? {
+                id: idOrNameAndYear
             } : {
                 year_name: {
                     name: idOrNameAndYear.name,
@@ -96,7 +96,7 @@ export async function readOmbul(idOrNameAndYear: number | {
     }
 }
 
-export async function readOmbuls() : Promise<ActionReturn<ExpandedOmbul[]>> {
+export async function readOmbuls(): Promise<ActionReturn<ExpandedOmbul[]>> {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_READ']

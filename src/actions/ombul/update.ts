@@ -1,12 +1,12 @@
 'use server'
-import { ombulUpdateSchema, ombulUpdateFileSchema } from "./schema"
-import type { ActionReturn } from "@/actions/Types"
-import type { ExpandedOmbul } from "./Types"
-import { getUser } from "@/auth"
-import prisma from "@/prisma"
-import errorHandler from "@/prisma/errorHandler"
-import createFile from "@/store/createFile"
-import deleteFile from "@/store/deleteFile"
+import { ombulUpdateSchema, ombulUpdateFileSchema } from './schema'
+import { getUser } from '@/auth'
+import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
+import createFile from '@/store/createFile'
+import deleteFile from '@/store/deleteFile'
+import type { ExpandedOmbul } from './Types'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * Update an ombul
@@ -27,11 +27,13 @@ export async function updateOmbul(id: number, rawdata: FormData): Promise<Action
             }]
         }
     }
-    
+
     const parse = ombulUpdateSchema.safeParse(Object.fromEntries(rawdata.entries()))
-    if (!parse.success) return {
-        success: false,
-        error: parse.error.issues
+    if (!parse.success) {
+        return {
+            success: false,
+            error: parse.error.issues
+        }
     }
     const data = parse.data
 
@@ -81,13 +83,15 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
     const parse = ombulUpdateFileSchema.safeParse({
         file: rawData.get('file'),
     })
-    if (!parse.success) return {
-        success: false,
-        error: parse.error.issues
+    if (!parse.success) {
+        return {
+            success: false,
+            error: parse.error.issues
+        }
     }
     const data = parse.data
 
-    const ret = await createFile(data.ombulFile, 'ombul', ['pdf']);
+    const ret = await createFile(data.ombulFile, 'ombul', ['pdf'])
     if (!ret.success) return ret
     const fsLocation = ret.data.fsLocation
 
@@ -96,11 +100,13 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
             id
         }
     })
-    if (!ombul) return {
-        success: false,
-        error: [{
-            message: 'Ombul ikke funnet'
-        }]
+    if (!ombul) {
+        return {
+            success: false,
+            error: [{
+                message: 'Ombul ikke funnet'
+            }]
+        }
     }
 
     const oldFsLocation = ombul.fsLocation

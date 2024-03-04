@@ -1,6 +1,6 @@
+import { v4 as uuid } from 'uuid'
 import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
-import { v4 as uuid } from 'uuid'
 import type { ActionReturn } from '@/actions/Types'
 import type { StoreLocations } from './StoreLocations'
 
@@ -8,26 +8,26 @@ import type { StoreLocations } from './StoreLocations'
  * Create a file in the store volume
  * @param file - file to upload to store
  * @param destination - destination folder in store like /images or /ombul
- * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png'], 
+ * @param allowedExt - allowed file extensions like ['pdf', 'jpg', 'png'],
  *                     if not provided all extensions are allowed
  * @param prosessor - a function to process the file before saving it to the store
  * @returns - either an error or the file location and ext. Its an ActionReturn
  */
 export default async function createFile(
-    file: File, 
-    destination: StoreLocations, 
+    file: File,
+    destination: StoreLocations,
     allowedExt: string[] | undefined = undefined,
     prosessor: (buffer: Buffer) => Promise<Buffer> = async (buffer) => buffer,
-) : Promise<ActionReturn<{
+): Promise<ActionReturn<{
     fsLocation: string,
     ext: string
 }>> {
     const arrBuffer = await file.arrayBuffer()
-    let buffer = Buffer.from(arrBuffer)
+    const buffer = Buffer.from(arrBuffer)
     const ext = file.type.split('/')[1]
     if (allowedExt && !allowedExt.includes(ext)) {
         return {
-            success: false, 
+            success: false,
             error: [
                 {
                     path: ['file'],

@@ -200,7 +200,7 @@ export async function requireUser({
         if (typeof redirectUrl === 'string') {
             redirect(redirectUrl)
         }
-        
+
         notFound()
     }
 

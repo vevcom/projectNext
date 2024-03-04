@@ -14,7 +14,7 @@ export async function createCmsImage(name: string, image?: Image): Promise<Actio
             include: {
                 image: true
             }
-         })
+        })
         return { success: true, data: created }
     } catch (error) {
         return errorHandler(error)

@@ -1,9 +1,9 @@
 import styles from './page.module.scss'
+import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import UserList from '@/components/User/UserList/UserList'
 import CreateUserForm from '@/components/User/CreateUserForm'
 import UserPagingProvider from '@/context/paging/UserPaging'
-import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 
 export default async function Users() {
     return (
