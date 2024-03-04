@@ -13,6 +13,9 @@
         p {
             font-weight: ohma.$fonts-weight-s;
         }
+        .changeDescriptionButton {
+            transform: translateY(-30%);
+        }
     }
 
     .nav {
@@ -42,7 +45,7 @@
         }
         .book {
             display: block;
-            min-height: 70vh;
+            min-height: 90vh;
         }
         @media screen and (max-width: ohma.$mobileBreakpoint) {
             > .embedPdf {

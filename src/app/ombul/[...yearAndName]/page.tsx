@@ -6,6 +6,8 @@ import { requireUser } from '@/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
+import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
+import { updateOmbul } from '@/actions/ombul/update'
 
 type PropTypes = {
     params: {
@@ -33,6 +35,8 @@ export default async function Ombul({ params }: PropTypes) {
     const canUpdate = user.permissions.includes('OMBUL_UPDATE')
     const canDestroy = user.permissions.includes('OMBUL_DESTROY')
 
+    const changeDescription = updateOmbul.bind(null, ombul.id)
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
@@ -40,7 +44,19 @@ export default async function Ombul({ params }: PropTypes) {
                     <h1>{ombul.name}</h1>
                 </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
-                <p>{ombul.description}</p>
+                <EditableTextField 
+                    editable={canUpdate}
+                    formProps={{
+                        action: changeDescription
+                    }}
+                    submitButton={{
+                        name: 'description',
+                        text: 'Endre',
+                        className: styles.changeDescriptionButton,
+                    }}
+                >
+                    <p>{ombul.description}</p>
+                </EditableTextField>
             </div>
             <main>
                 <SlideInOnView>
