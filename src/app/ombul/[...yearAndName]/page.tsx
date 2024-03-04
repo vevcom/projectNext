@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import Link from 'next/link'
+import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
+import { requireUser } from '@/auth'
 
 type PropTypes = {
     params: {
@@ -23,10 +25,19 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
+    const user = await requireUser({
+        permissions: ['OMBUL_READ']
+    })
+
+    const canUpdate = user.permissions.includes('OMBUL_UPDATE')
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
-                <h1>{ombul.name}</h1>
+                <EditableTextField editable=>
+                    <h1>{ombul.name}</h1>
+                    
+                </EditableTextField>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
                 <p>{ombul.description}</p>
             </div>

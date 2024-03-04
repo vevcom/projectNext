@@ -19,6 +19,14 @@ type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     }
 }
 
+/**
+ * A component that wraps a text element in a form that can be submitted to update the text
+ * @param editable - Whether the text should be editable
+ * @param children - The text to display
+ * @param formProps - The props to pass to the form (the component use Form internally)
+ * @param submitButton - The props to pass to the submit button
+ * @param props - further props to pass to the text element
+ */
 export default function EditableTextField<ReturnType, DataGuaratee extends boolean>({
     editable,
     children,
