@@ -12,6 +12,7 @@ import { ExpandedOmbul } from '@/actions/ombul/Types'
 import DateInput from '@/app/components/UI/DateInput'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
+import CmsImage, { CmsImageNew } from '@/app/components/Cms/CmsImage/CmsImage'
 
 type PropTypes = {
     canUpdate: boolean
@@ -93,7 +94,7 @@ export default function OmbulAdmin({
             {
                 canUpdate && (
                     <div className={styles.coverImage}>
-                        <CmsImageClient name={ombul.coverImage.name} width={250} />
+                        <CmsImageNew cmsImage={ombul.coverImage} width={250} />
                     </div>
                 )
             }

@@ -6,6 +6,7 @@ import { readImage } from '@/actions/images/read'
 import React from 'react'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
+import { ExpandedCmsImage } from '@/actions/cms/images/Types'
 
 export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & {
     name: string,
@@ -37,6 +38,23 @@ export default async function CmsImage({ name, children, ...props }: PropTypes) 
         <div className={styles.CmsImage}>
             <CmsImageEditor cmsImage={{ ...res.data, image }}/>
             <Image imageSize={res.data.imageSize} image={image} {...props}/>
+            <div className={styles.children}>{children}</div>
+        </div>
+    )
+}
+
+//This will be how the component works after next refactor.
+type PropTypesNew = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & { 
+    cmsImage: ExpandedCmsImage, 
+    children?: React.ReactNode
+} 
+
+export function CmsImageNew({ cmsImage, children, ...props }: PropTypesNew) {
+    if (!cmsImage.image) throw new Error('CmsImageNew does not yet work with images that are not loaded. This will be fixed in the next refactor.')
+    return (
+        <div className={styles.CmsImage}>
+            <CmsImageEditor cmsImage={cmsImage}/> 
+            <Image imageSize={cmsImage.imageSize} image={cmsImage.image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
     )
