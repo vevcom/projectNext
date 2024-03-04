@@ -5,6 +5,7 @@ import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import Link from 'next/link'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { requireUser } from '@/auth'
+import ChangeName from './ChangeName'
 
 type PropTypes = {
     params: {
@@ -30,14 +31,14 @@ export default async function Ombul({ params }: PropTypes) {
     })
 
     const canUpdate = user.permissions.includes('OMBUL_UPDATE')
+    const canDestroy = user.permissions.includes('OMBUL_DESTROY')
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
-                <EditableTextField editable=>
+                <ChangeName editable={canUpdate}>
                     <h1>{ombul.name}</h1>
-                    
-                </EditableTextField>
+                </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
                 <p>{ombul.description}</p>
             </div>
