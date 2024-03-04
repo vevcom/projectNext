@@ -1,4 +1,10 @@
 import type { StoreLocations } from "./StoreLocations";
+import { unlink } from "fs/promises";
+import { join } from "path";
+
+function isErrorWithCode(error: any): error is { code: string } {
+    return error && typeof error.code === 'string';
+}
 
 /**
  * @param destination what part of the store to delete from
@@ -7,5 +13,18 @@ import type { StoreLocations } from "./StoreLocations";
  * if file does not exist
  */
 export default async function deleteFile(destination: StoreLocations, fsLocation: string) {
-    // TODO: implement this and delete images from the store
+    const filePath = join('store', destination, fsLocation)
+    try {
+        await unlink(filePath)
+    } catch (error) {
+        if (isErrorWithCode(error) && error.code === 'ENOENT') {
+            return {
+                success: false,
+                error: [{
+                    message: 'Fil ikke funnet'
+                }]
+            }
+        }
+        throw error
+    }
 }
