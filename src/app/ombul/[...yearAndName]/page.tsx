@@ -32,6 +32,7 @@ export default async function Ombul({ params }: PropTypes) {
             </div>
             <main>
                 <PdfDocument src={path} />
+                <embed className={styles.embedPdf} src={path} type="application/pdf" />
             </main>
             <div className={styles.nav}>
                 <div className={styles.download}>
