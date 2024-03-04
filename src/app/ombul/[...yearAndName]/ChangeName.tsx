@@ -3,6 +3,8 @@
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
 import type { ReactNode } from 'react'
+import styles from './ChangeName.module.scss'
+import { ExpandedOmbul } from '@/actions/ombul/Types'
 
 type PropTypes = {
     children: ReactNode
@@ -21,16 +23,27 @@ type PropTypes = {
 export default function ChangeName({ children, editable, ombulId }: PropTypes) {
     const changeName = updateOmbul.bind(null, ombulId)
 
+    const handleChange = async (data: ExpandedOmbul | undefined) => {
+        const name = data?.name
+        if (!name) return
+        const url = window.location.pathname
+        const urlParts = url.split('/')
+        urlParts[urlParts.length - 1] = name
+        const newUrl = urlParts.join('/')
+        window.history.pushState({ path: newUrl }, '', newUrl)
+    }
+
     return (
         <EditableTextField
             editable={editable}
             formProps={{
                 action: changeName,
-                successCallback: () => {}
+                successCallback: handleChange
             }}
             submitButton={{
                 name: 'name',
-                text: 'lagre'
+                text: 'Endre',
+                className: styles.changeNameButton
             }}
         >
             {children}
