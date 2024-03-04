@@ -23,6 +23,7 @@ type PropTypes = {
 /**
  * A component that displays a PDF document in a book format
  * @param src - The path (relative to domain) to the PDF document
+ * @param className - The class name of the component to add extra styling
  */
 export default function PdfDocument({ src, className }: PropTypes) {
     const [numPages, setNumPages] = useState<number | null>(null);
@@ -112,12 +113,14 @@ export default function PdfDocument({ src, className }: PropTypes) {
                         }
                         {
                             currentPages.leftPage && (
+                                <div style={{display: loadingPage ? 'none' : 'block'}}>
                                 <Page 
                                     width={pageWidthLeft || undefined}
                                     key={currentPages.leftPage} 
                                     pageNumber={currentPages.leftPage} 
                                     onLoadSuccess={handleLoadSuccess}
                                 />
+                                </div>
                             )
                         }
                         </div>
@@ -131,12 +134,14 @@ export default function PdfDocument({ src, className }: PropTypes) {
                         }
                         {
                             currentPages.rightPage && (
+                                <div style={{display: loadingPage ? 'none' : 'block'}}>
                                 <Page 
                                     width={pageWidthRight || undefined}
                                     key={currentPages.rightPage} 
                                     pageNumber={currentPages.rightPage} 
                                     onLoadSuccess={handleLoadSuccess}
                                 />
+                                </div>
                             )
                         }
                         </div>
