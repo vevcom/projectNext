@@ -62,6 +62,8 @@ enum Permission {
   // Ombul
   OMBUL_CREATE
   OMBUL_READ
+  OMBUL_UPDATE
+  OMBUL_DESTROY
 }
 
 model Role {
