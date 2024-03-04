@@ -13,4 +13,7 @@ const ombulSchema = z.object({
     description: z.string().min(2, 'Minimum lengde er 2').max(100, 'Maximum lengde er 100').trim()
 })
 
+const ombulUpdateSchema = ombulSchema.partial()
+
 export default ombulSchema
+export { ombulUpdateSchema }

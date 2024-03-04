@@ -1,2 +1,2 @@
 'use server'
-import ombulSchema from "./schema"
+import { ombulUpdateSchema } from "./schema"
