@@ -36,7 +36,7 @@ export default async function Ombul({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
-                <ChangeName editable={canUpdate}>
+                <ChangeName editable={canUpdate} ombulId={ombul.id}>
                     <h1>{ombul.name}</h1>
                 </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
