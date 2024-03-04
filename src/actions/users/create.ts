@@ -6,14 +6,6 @@ import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 
 export async function createUser(rawdata: FormData): Promise<ActionReturn<User>> {
-    //TEST FOR WAIT
-    await (new Promise((resolve) => {
-        setTimeout(() => {
-            resolve('resolved')
-        }, 5000)
-    }))
-    //TEST FOR WAIT
-
     const schema = z.object({
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
