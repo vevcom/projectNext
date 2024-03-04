@@ -7,11 +7,11 @@ import {
 import { Document, Page } from 'react-pdf';
 import { pdfjs } from 'react-pdf';
 import styles from './PdfDocument.module.scss';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import useViewPort from '@/hooks/useViewPort';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -114,12 +114,12 @@ export default function PdfDocument({ src, className }: PropTypes) {
                         {
                             currentPages.leftPage && (
                                 <div style={{display: loadingPage ? 'none' : 'block'}}>
-                                <Page 
-                                    width={pageWidthLeft || undefined}
-                                    key={currentPages.leftPage} 
-                                    pageNumber={currentPages.leftPage} 
-                                    onLoadSuccess={handleLoadSuccess}
-                                />
+                                    <Page 
+                                        width={pageWidthLeft || undefined}
+                                        key={currentPages.leftPage} 
+                                        pageNumber={currentPages.leftPage} 
+                                        onLoadSuccess={handleLoadSuccess}
+                                    />
                                 </div>
                             )
                         }
@@ -135,12 +135,12 @@ export default function PdfDocument({ src, className }: PropTypes) {
                         {
                             currentPages.rightPage && (
                                 <div style={{display: loadingPage ? 'none' : 'block'}}>
-                                <Page 
-                                    width={pageWidthRight || undefined}
-                                    key={currentPages.rightPage} 
-                                    pageNumber={currentPages.rightPage} 
-                                    onLoadSuccess={handleLoadSuccess}
-                                />
+                                    <Page 
+                                        width={pageWidthRight || undefined}
+                                        key={currentPages.rightPage} 
+                                        pageNumber={currentPages.rightPage} 
+                                        onLoadSuccess={handleLoadSuccess}
+                                    />
                                 </div>
                             )
                         }
