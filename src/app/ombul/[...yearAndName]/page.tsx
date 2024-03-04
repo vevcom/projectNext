@@ -75,7 +75,11 @@ export default async function Ombul({ params }: PropTypes) {
                 </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin />
+                <OmbulAdmin 
+                    canDestroy={canDestroy} 
+                    canUpdate={canUpdate}
+                    coverImage={ombul.coverImage}
+                />
                 <CmsImage name={ombul.coverImage.name} width={200} />
             </div>
         </div>
