@@ -1,3 +1,5 @@
+'use client'
+
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
 import type { ReactNode } from 'react'

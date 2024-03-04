@@ -1,3 +1,4 @@
+'use client'
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import { EditModeContext } from '@/context/EditMode'

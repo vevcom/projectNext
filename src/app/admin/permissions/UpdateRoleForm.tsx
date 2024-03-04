@@ -30,6 +30,8 @@ const permissionCategories: PermissionCategory[] = [
         permissions: [
             { permission: 'OMBUL_READ', name: 'Lese ombul' },
             { permission: 'OMBUL_CREATE', name: 'Lage ombul' },
+            { permission: 'OMBUL_UPDATE', name: 'Oppdatere ombul' },
+            { permission: 'OMBUL_DESTROY', name: 'Slette ombul' },
         ],
     }
 ]
