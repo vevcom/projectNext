@@ -5,6 +5,7 @@ import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import { requireUser } from '@/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 
 type PropTypes = {
     params: {
@@ -42,7 +43,9 @@ export default async function Ombul({ params }: PropTypes) {
                 <p>{ombul.description}</p>
             </div>
             <main>
-                <PdfDocument src={path} className={styles.book} />
+                <SlideInOnView>
+                    <PdfDocument src={path} className={styles.book} />
+                </SlideInOnView>
                 <embed className={styles.embedPdf} src={path} type="application/pdf" />
             </main>
             <div className={styles.nav}>

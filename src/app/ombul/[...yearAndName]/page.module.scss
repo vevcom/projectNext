@@ -40,7 +40,7 @@
             }
             display: none;
         }
-        > .book {
+        .book {
             display: block;
             min-height: 70vh;
         }
@@ -48,7 +48,7 @@
             > .embedPdf {
                 display: block;
             }
-            > .book {
+            .book {
                 display: none;
             }
         }
