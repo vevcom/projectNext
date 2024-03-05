@@ -1,13 +1,13 @@
 'use server'
-import { userSchema } from './schema'
+import { CreateUserSchemaType, createUserSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 
-export async function createUser(rawdata: FormData | z.infer<typeof userSchema>): Promise<ActionReturn<User>> {
-    const parse = userSchema.safeParse(rawdata)
+export async function createUser(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
+    const parse = createUserSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return { success: false, error: parse.error.issues }

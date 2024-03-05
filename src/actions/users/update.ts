@@ -1,27 +1,18 @@
 "use server"
+
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import errorHandler from '@/prisma/errorHandler';
 import { z } from 'zod'
+import { UpdateUserSchemaType, updateUserSchema } from './schema';
 
 
 
+export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType) : Promise<ActionReturn<User>> {
 
+    const parse = updateUserSchema.safeParse(rawdata);
 
-export async function updateUser(id: number, rawdata: FormData) : Promise<ActionReturn<User>> {
-    const schema = z.object({
-        username: z.string().max(50).min(2),
-        email: z.string().max(200).min(2).email(),
-        firstname: z.string().max(50).min(2),
-        lastname: z.string().max(50).min(2),
-    })
-    const parse = schema.safeParse({
-        username: rawdata.get("username"),
-        email: rawdata.get("email"),
-        firstname: rawdata.get("firstname"),
-        lastname: rawdata.get("lastname"),
-    })
     if (!parse.success) return { success: false, error: parse.error.issues}
     const data = parse.data
 
@@ -37,7 +28,7 @@ export async function updateUser(id: number, rawdata: FormData) : Promise<Action
     catch (error) {
         return errorHandler(error)
     }
-
+}
 
 export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {
