@@ -84,7 +84,7 @@ export function UpdateRoleForm({ selectedRole }: PropTypes) {
                         <label>
                             <input
                                 type="checkbox"
-                                name="permission"
+                                name="permissions"
                                 value={entry.permission}
                                 checked={checkedPermissions[entry.permission]}
                                 onChange={e =>

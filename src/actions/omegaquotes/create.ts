@@ -1,13 +1,13 @@
 'use server'
+import { omegaquotesSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
-import { z } from 'zod'
+import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 
-export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {
-    //Auth route
+export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
     const { user, status } = await getUser({
         permissions: ['OMEGAQUOTES_WRITE']
     })
@@ -19,16 +19,8 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
             }]
         }
     }
-
-    const shema = z.object({
-        quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
-        author: z.string().min(1, 'Noen må siteres'),
-    })
-
-    const parse = shema.safeParse({
-        quote: rawdata.get('quote'),
-        author: rawdata.get('author')
-    })
+    
+    const parse = omegaquotesSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return {

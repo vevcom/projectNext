@@ -1,5 +1,6 @@
 'use server'
-import { imageSchema, imageSchemaMany } from './schema'
+import { createImageSchema, createImagesSchema } from './schema'
+import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import createFile from '@/store/createFile'
@@ -69,21 +70,15 @@ export async function createOneImage(file: File, meta: {
     }
 }
 
-export async function createImage(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
-    const parse = imageSchema.safeParse({
-        file: rawdata.get('file'),
-        name: rawdata.get('name'),
-        alt: rawdata.get('alt'),
-    })
+export async function createImage(collectionId: number, rawdata: FormData | CreateImageSchemaType): Promise<ActionReturn<Image>> {
+    const parse = createImageSchema.safeParse(rawdata)
     if (!parse.success) return { success: false, error: parse.error.issues }
     const { file, ...data } = parse.data
     return await createOneImage(file, { ...data, collectionId })
 }
 
-export async function createImages(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
-    const parse = imageSchemaMany.safeParse({
-        files: rawdata.getAll('files'),
-    })
+export async function createImages(collectionId: number, rawdata: FormData | CreateImagesSchemaType): Promise<ActionReturn<Image[]>> {
+    const parse = createImagesSchema.safeParse(rawdata)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
