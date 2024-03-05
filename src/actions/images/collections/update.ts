@@ -1,9 +1,9 @@
 'use server'
+import { updateImageCollectionSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { updateImageCollectionSchema } from './schema'
 import type { UpdateImageCollectionSchemaType } from './schema'
 
 export async function updateImageCollection(
@@ -11,7 +11,6 @@ export async function updateImageCollection(
     coverImageId: number | undefined,
     rawdata: FormData | UpdateImageCollectionSchemaType
 ): Promise<ActionReturn<ImageCollection>> {
-    
     const parse = updateImageCollectionSchema.safeParse(rawdata)
 
     if (!parse.success) {

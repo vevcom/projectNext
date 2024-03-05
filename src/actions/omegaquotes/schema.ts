@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { zfd } from "zod-form-data"
+import { zfd } from 'zod-form-data'
 
 export const omegaquotesSchema = zfd.formData({
     quote: z.string().min(1, 'Sitatet kan ikke være tomt'),

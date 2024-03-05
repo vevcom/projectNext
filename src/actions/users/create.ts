@@ -1,7 +1,7 @@
 'use server'
+import { userSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { userSchema } from './schema'
 import type { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'

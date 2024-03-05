@@ -1,11 +1,11 @@
 'use server'
+import { omegaquotesSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
-import { z } from 'zod'
+import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
-import { omegaquotesSchema, OmegaquotesSchemaType } from './schema'
 
 export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
     const parse = omegaquotesSchema.safeParse(rawdata)

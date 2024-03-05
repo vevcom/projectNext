@@ -1,6 +1,6 @@
+import { maxFileSize } from './ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
-import { maxFileSize } from './ConfigVars'
 import { File } from 'buffer'
 
 export const createImageSchema = zfd.formData({

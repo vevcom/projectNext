@@ -1,9 +1,9 @@
 'use server'
+import { updateImageSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { updateImageSchema } from './schema'
 import type { UpdateImageSchemaType } from './schema'
 
 export async function updateImage(imageId: number, rawdata: FormData | UpdateImageSchemaType): Promise<ActionReturn<Image>> {

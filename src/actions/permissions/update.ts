@@ -1,10 +1,11 @@
 'use server'
 
+import { updateRoleSchema } from './schema'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/actions/users/update'
+import type { UpdateRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import { UpdateRoleSchemaType, updateRoleSchema } from './schema'
 
 export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
     const parse = updateRoleSchema.safeParse(rawdata)

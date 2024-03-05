@@ -1,13 +1,14 @@
 'use server'
+import { createImageCollectionSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { createImageCollectionSchema } from './schema'
 import type { CreateImageCollectionSchemaType } from './schema'
 
-export async function createImageCollection(rawdata: FormData | CreateImageCollectionSchemaType): Promise<ActionReturn<ImageCollection>> {
-    
+export async function createImageCollection(
+    rawdata: FormData | CreateImageCollectionSchemaType
+): Promise<ActionReturn<ImageCollection>> {
     const parse = createImageCollectionSchema.safeParse(rawdata)
 
     if (!parse.success) {

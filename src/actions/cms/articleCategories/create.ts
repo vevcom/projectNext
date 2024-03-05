@@ -16,7 +16,7 @@ export async function createArticleCategory(
     }
 
     const { name, description } = parse.data
-    
+
     try {
         // TODO: Check for permission to create article category
         const articleCategory = await prisma.articleCategory.create({

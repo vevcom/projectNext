@@ -1,12 +1,12 @@
 'use server'
 
+import { createRoleSchema, addUserToRoleSchema } from './schema'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/actions/users/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
 import type { CreateRoleSchemaType, AddUserToRoleSchemaType } from './schema'
-import { createRoleSchema, addUserToRoleSchema } from './schema'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 

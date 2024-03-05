@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { zfd } from "zod-form-data"
+import { zfd } from 'zod-form-data'
 import { Permission } from '@prisma/client'
 
 export const createRoleSchema = zfd.formData({ name: z.string() })

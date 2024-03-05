@@ -1,10 +1,11 @@
 'use server'
 
+import { articleLinkSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import type { ArticleLinkSchemaType } from './schema'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { ArticleLinkSchemaType, articleLinkSchema } from './schema'
 
 export async function updateCmsLink(id: number, rawData: FormData | ArticleLinkSchemaType): Promise<ActionReturn<CmsLink>> {
     const parse = articleLinkSchema.safeParse(rawData)

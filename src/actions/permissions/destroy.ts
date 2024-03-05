@@ -1,11 +1,12 @@
 'use server'
 
+import { removeUserFromRoleSchema } from './schema'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/actions/users/update'
+import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
-import { RemoveUserFromRoleSchemaType, removeUserFromRoleSchema } from './schema'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -41,7 +42,9 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
     }
 }
 
-export async function removeUserFromRole(rawdata: FormData | RemoveUserFromRoleSchemaType): Promise<ActionReturn<void, false>> {
+export async function removeUserFromRole(
+    rawdata: FormData | RemoveUserFromRoleSchemaType
+): Promise<ActionReturn<void, false>> {
     const parse = removeUserFromRoleSchema.safeParse(rawdata)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
