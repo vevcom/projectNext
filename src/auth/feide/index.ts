@@ -108,7 +108,7 @@ export async function getAdapterUserByFeideAccount(feideId: string): Promise<Act
     }
 }
 
-export function readJWTPayload(jwt: string) : {
+export function readJWTPayload(jwt: string): {
     iss: string,
     jti: string,
     aud: string,

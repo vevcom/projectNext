@@ -1,8 +1,8 @@
 import 'server-only'
+import { readJWTPayload } from '.'
 import type { Awaitable } from 'next-auth'
 import type { Provider } from 'next-auth/providers/index'
 import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from './Types'
-import { readJWTPayload } from '.'
 
 export type PropType = {
     clientId: string,
