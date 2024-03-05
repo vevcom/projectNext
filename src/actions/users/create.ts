@@ -2,11 +2,11 @@
 import { userSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { z as zType } from 'zod'
+import { getUser } from '@/auth'
 import { z } from 'zod'
+import type { z as zType } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { getUser } from '@/auth'
 
 export async function createUser(rawdata: FormData | zType.infer<typeof userSchema>): Promise<ActionReturn<User>> {
     const parse = userSchema.safeParse(rawdata)

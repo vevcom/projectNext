@@ -59,7 +59,7 @@ export default async function seedImages(prisma: PrismaClient) {
             withoutEnlargement: true
         }).toFile(mediumPath)
 
-        const image = await prisma.image.upsert({
+        await prisma.image.upsert({
             where: {
                 name
             },

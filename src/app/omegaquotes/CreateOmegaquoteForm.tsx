@@ -17,7 +17,13 @@ export default function CreateOmegaquoteForm() {
             showButtonContent="Ny Omegaquote"
             showButtonClass={styles.button}
         >
-            <Form title="Ny Omegaquote" submitText="Legg til" action={createQuote} successCallback={refresh} className={styles.popupForm}>
+            <Form
+                title="Ny Omegaquote"
+                submitText="Legg til"
+                action={createQuote}
+                successCallback={refresh}
+                className={styles.popupForm}
+            >
                 <Textarea
                     name="quote"
                     label="Omegaquote"
