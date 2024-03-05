@@ -5,17 +5,10 @@ import { getUser } from '@/auth'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
+import { omegaquotesSchema, OmegaquotesSchemaType } from './schema'
 
-export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {
-    const shema = z.object({
-        quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
-        author: z.string().min(1, 'Noen må siteres'),
-    })
-
-    const parse = shema.safeParse({
-        quote: rawdata.get('quote'),
-        author: rawdata.get('author')
-    })
+export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
+    const parse = omegaquotesSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return {
