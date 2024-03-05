@@ -1,5 +1,6 @@
 'use server'
-import { ombulUpdateSchema, ombulUpdateFileSchema } from './schema'
+import { updateOmbulSchema, updateObuleFileSchema } from './schema'
+import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema' 
 import { getUser } from '@/auth'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
@@ -14,7 +15,7 @@ import type { ActionReturn } from '@/actions/Types'
  * @param rawdata - The new data for the ombul including: name, year, issueNumber, description,
  * @returns The updated ombul
  */
-export async function updateOmbul(id: number, rawdata: FormData): Promise<ActionReturn<ExpandedOmbul>> {
+export async function updateOmbul(id: number, rawdata: FormData | UpdateOmbulSchemaType): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_UPDATE']
@@ -28,7 +29,7 @@ export async function updateOmbul(id: number, rawdata: FormData): Promise<Action
         }
     }
 
-    const parse = ombulUpdateSchema.safeParse(Object.fromEntries(rawdata.entries()))
+    const parse = updateOmbulSchema.safeParse(rawdata)
     if (!parse.success) {
         return {
             success: false,
@@ -66,7 +67,7 @@ export async function updateOmbul(id: number, rawdata: FormData): Promise<Action
  * @param rawData - The new data for the new ombul file with field name 'file'
  * @returns The updated ombul
  */
-export async function updateOmbulFile(id: number, rawData: FormData): Promise<ActionReturn<ExpandedOmbul>> {
+export async function updateOmbulFile(id: number, rawData: FormData | UpdateOmbulFileSchemaType): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_UPDATE']
@@ -80,9 +81,7 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
         }
     }
 
-    const parse = ombulUpdateFileSchema.safeParse({
-        ombulFile: rawData.get('ombulFile'),
-    })
+    const parse = updateObuleFileSchema.safeParse(rawData)
     if (!parse.success) {
         return {
             success: false,

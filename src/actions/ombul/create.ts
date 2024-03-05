@@ -1,5 +1,6 @@
 'use server'
-import ombulSchema from './schema'
+import { createOmbulSchema } from './schema'
+import type { CreateOmbulSchemaType } from './schema'
 import { readSpecialImageCollection } from '@/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'
@@ -9,13 +10,14 @@ import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
+import { raw } from '@prisma/client/runtime/library'
 
 /**
  * Create a new Ombul.
  * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber
  * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
  */
-export async function createOmbul(rawdata: FormData): Promise<ActionReturn<Ombul>> {
+export async function createOmbul(rawdata: FormData | CreateOmbulSchemaType): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_CREATE']
@@ -29,7 +31,7 @@ export async function createOmbul(rawdata: FormData): Promise<ActionReturn<Ombul
         }
     }
 
-    const parse = ombulSchema.safeParse(Object.fromEntries(rawdata.entries()))
+    const parse = createOmbulSchema.safeParse(rawdata)
     if (!parse.success) {
         return {
             success: false,

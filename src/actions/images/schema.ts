@@ -2,8 +2,10 @@ import { maxFileSize } from './ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
+export const imageFileSchema = z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb')
+
 export const createImageSchema = zfd.formData({
-    file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
+    file: imageFileSchema,
     name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
     alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
 })

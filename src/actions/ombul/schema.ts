@@ -1,10 +1,11 @@
 import { maxOmbulFileSize } from './ConfigVars'
-import { imageSchema } from '@/actions/images/schema'
+import { imageFileSchema } from '@/actions/images/schema'
 import { z } from 'zod'
+import { zfd } from 'zod-form-data'
 
-const ombulSchema = z.object({
+export const ombulSchema = z.object({
     ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),
-    ombulCoverImage: imageSchema.shape.file,
+    ombulCoverImage: imageFileSchema,
     year: z.string().transform(val => parseInt(val, 10))
         .refine(val => val >= 1900 && val <= new Date().getFullYear(), 'År må være mellom 1900 og nå').optional(),
     issueNumber: z.string().transform(val => parseInt(val, 10))
@@ -13,14 +14,21 @@ const ombulSchema = z.object({
     description: z.string().min(2, 'Minimum lengde er 2').max(100, 'Maximum lengde er 100').trim()
 })
 
-const ombulUpdateSchema = ombulSchema.partial().omit({
-    ombulFile: true,
-    ombulCoverImage: true
-})
+export const createOmbulSchema = zfd.formData(ombulSchema)
+export type CreateOmbulSchemaType = z.infer<typeof createOmbulSchema>
 
-const ombulUpdateFileSchema = ombulSchema.pick({
-    ombulFile: true
-})
+export const updateOmbulSchema = zfd.formData(
+    ombulSchema.partial().omit({
+        ombulFile: true,
+        ombulCoverImage: true
+    })
+)
+export type UpdateOmbulSchemaType = z.infer<typeof updateOmbulSchema>
 
-export default ombulSchema
-export { ombulUpdateSchema, ombulUpdateFileSchema }
+export const updateObuleFileSchema = zfd.formData(
+    ombulSchema.pick({
+        ombulFile: true
+    })
+)
+export type UpdateOmbulFileSchemaType = z.infer<typeof updateObuleFileSchema>
+
