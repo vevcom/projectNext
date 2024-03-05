@@ -15,7 +15,7 @@ import { v4 as uuid } from 'uuid'
 import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
-    const user = await getUser({
+    const { user } = await getUser({
         required: true,
         requiredPermissions: ['OMEGAQUOTES_READ'],
     })
