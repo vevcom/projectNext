@@ -1,20 +1,38 @@
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import { v4 as uuid } from 'uuid'
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { writeFile } from 'fs/promises';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
     const ombuls = await vevenPrisma.ombul.findMany()
-    for (const ombul of ombuls) {
-        const fsLocationOldVev = `${process.env.VEVEN_STORE_URL}/ombul/${ombul.fileName}/${ombul.originalName}`
+
+    //First write files concurrently for speed
+    const fsLocations = await Promise.all(ombuls.map(async (ombul) => {
+        const fsLocationOldVev = `${process.env.VEVEN_STORE_URL}/ombul/${ombul.fileName}.pdf/${ombul.originalName}`
 
         // Get pdf served at old location
         const res = await fetch(fsLocationOldVev, {
             method: 'GET',
         })
-        const pdf = await res.blob()
-        console.log(res)
+        const pdfBuffer = Buffer.from(await res.arrayBuffer())
 
-        const fsLocation = uuid()
+        const store = join(__dirname, '..', '..', 'store', 'ombul')
+
+        const fsLocation = uuid() + '.pdf'
+
+        await writeFile(join(store, fsLocation), pdfBuffer)
+
+        return fsLocation
+    }))
+
+    for (const ombulIdx in ombuls) {
+        const ombul = ombuls[ombulIdx]
+        const fsLocation = fsLocations[ombulIdx]
 
         const coverName = ombul.title.split(' ').join('_') + '_cover' + uuid()
         const coverImage = await pnPrisma.cmsImage.upsert({

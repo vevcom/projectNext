@@ -4,5 +4,5 @@ import migrateOmbul from './migrateOmbul'
 
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     const vevenPrisma = new PrismaClientVeven()
-    migrateOmbul(pnPrisma, vevenPrisma)
+    await migrateOmbul(pnPrisma, vevenPrisma)
 }
