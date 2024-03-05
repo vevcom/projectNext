@@ -49,8 +49,6 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
         }
     }
 
-    console.log(rawdata)
-
     try {
         const parse = userRegisterSchema.safeParse(rawdata)
 
