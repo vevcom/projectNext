@@ -3,19 +3,15 @@ import { maxSections } from './ConfigVars'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { addArticleSectionPart } from '@/cms/articleSections/update'
-import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { Part } from '@/cms/articleSections/update'
 import type { ExpandedArticle } from './Types'
+import { articleSchema } from './schema'
+import type { ArticleSchemaType } from './schema'
 
-export async function updateArticle(id: number, rawData: FormData): Promise<ActionReturn<ExpandedArticle>> {
-    const schema = z.object({
-        name: z.string().min(2).max(20)
-    })
-    const parse = schema.safeParse({
-        name: rawData.get('name'),
-    })
+export async function updateArticle(id: number, rawData: FormData | ArticleSchemaType): Promise<ActionReturn<ExpandedArticle>> {
+    const parse = articleSchema.safeParse(rawData)
 
     if (!parse.success) {
         return {
