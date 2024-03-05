@@ -10,7 +10,6 @@ import { createOneImage } from '@/actions/images/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
 
-
 /**
  * Create a new Ombul.
  * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber
@@ -107,25 +106,5 @@ export async function createOmbul(rawdata: FormData): Promise<ActionReturn<Ombul
         }
     } catch (error) {
         return errorHandler(error)
-    }
-}
-
-/**
- * Create a cover image cover from a pdf file
- * @param file the pdf file to create a cover image from
- * @returns the cover image
- */
-export async function createCoverImageFromPdf(file: File): Promise<ActionReturn<File>> {
-    //Auth route
-    const { user, status } = await getUser({
-        permissions: ['OMBUL_CREATE']
-    })
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
     }
 }
