@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
@@ -24,16 +24,11 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
     const { quote, author } = parse.data
 
     const { user, status } = await getUser({
-        permissions: ['OMEGAQUOTES_WRITE']
+        requiredPermissions: ['OMEGAQUOTES_WRITE']
     })
 
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+    if (status !== 'AUTHORIZED') {
+        return createActionError(status)
     }
 
     try {

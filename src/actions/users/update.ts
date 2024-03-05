@@ -1,5 +1,5 @@
 
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -15,13 +15,13 @@ export async function invalidateOneUserSessionData(userId: number): Promise<Acti
         return createPrismaActionError(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }
 
 export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
     const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
 
-    if (results.some(result => !result.success)) return { success: false }
+    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

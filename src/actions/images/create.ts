@@ -66,17 +66,14 @@ async function createOne(file: File, meta: {
                     }
                 }
             })
-            if (!image) return { success: false }
+
             return { success: true, data: image }
         } catch (err) {
             return createPrismaActionError(err)
         }
     } catch (err) {
         //LOGGER
-        return {
-            success: false,
-            error: [{ path: ['file'], message: 'Failed to create small size image' }]
-        }
+        return createActionError('UNKNOWN ERROR', [{ path: ['file'], message: 'Failed to create small size image' }])
     }
 }
 

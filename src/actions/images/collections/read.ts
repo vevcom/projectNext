@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 
@@ -18,7 +18,7 @@ export async function readImageCollection(
                 coverImage: true,
             }
         })
-        if (!collection) return { success: false, error: [{ message: 'Collection not found' }] }
+        if (!collection) return createActionError('NOT FOUND', 'Collection not found')
         return { success: true, data: collection }
     } catch (error) {
         return createPrismaActionError(error)

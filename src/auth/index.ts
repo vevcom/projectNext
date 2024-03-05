@@ -122,49 +122,52 @@ export const authOptions: AuthOptions = {
     }
 }
 
-export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
+export type AuthStatus = 'AUTHORIZED' | 'UNAUTHENTICATED' | 'UNAUTHORIZED'
 
 export type UserWithPermissions = User & {
     permissions: Permission[]
 }
 
 type GetUserArgsType = {
-    permissions?: Permission[] | undefined,
+    requiredPermissions?: Permission[] | undefined,
 }
 
 type GetUserReturnType = {
-    user: UserWithPermissions | null,
-    status: AuthStatus,
+    user: null,
+    status: 'UNAUTHENTICATED'
+} | {
+    user: UserWithPermissions,
+    status: Exclude<AuthStatus, 'UNAUTHENTICATED'>
 }
 
 /**
  * Returns the user object from the current session. If there is no session or the
  * user does not have adequate permissions `null` is returned.
  *
- * @param permissions - A list of permissions that the user must have.
+ * @param requiredPermissions - A list of permissions that the user must have.
  *
  * This function is for server side components and actions. For client side
  * components use `useUser`.
  */
-export async function getUser({ permissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
+export async function getUser({ requiredPermissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user
 
     if (!user) {
-        return { user: null, status: 'unauthenticated' }
+        return { user: null, status: 'UNAUTHENTICATED' }
     }
 
     // Check if user has all required permissions
-    if (permissions && !permissions.every(permission => user.permissions.includes(permission))) {
-        return { user: null, status: 'unauthorized' }
+    if (requiredPermissions && !requiredPermissions.every(permission => user.permissions.includes(permission))) {
+        return { user, status: 'UNAUTHORIZED' }
     }
 
-    return { user, status: 'authorized' }
+    return { user, status: 'AUTHORIZED' }
 }
 
 type RequireUserArgsType = {
     returnUrl?: string | undefined,
     redirectUrl?: string | undefined,
-    permissions?: Permission[] | undefined,
+    requiredPermissions?: Permission[] | undefined,
 }
 
 /**
@@ -180,7 +183,7 @@ type RequireUserArgsType = {
  * is no session and/or if the user doesn't have adequate permissions. If it's
  * not set user will be redirected to a 404.
  *
- * @param permissions - A list of permissions that the user must have.
+ * @param requiredPermissions - A list of permissions that the user must have.
  *
  * This function is for server side components. For client side components
  * use `useUser`. For actions use `getUser`.
@@ -188,12 +191,12 @@ type RequireUserArgsType = {
 export async function requireUser({
     returnUrl,
     redirectUrl,
-    permissions,
+    requiredPermissions,
 }: RequireUserArgsType = {}): Promise<UserWithPermissions> {
-    const { user, status } = await getUser({ permissions })
+    const { user, status } = await getUser({ requiredPermissions })
 
     if (!user) {
-        if (status === 'unauthenticated' && typeof returnUrl === 'string') {
+        if (status === 'UNAUTHENTICATED' && typeof returnUrl === 'string') {
             redirect(`/login?callbackUrl=${returnUrl}`)
         }
 

@@ -1,6 +1,6 @@
 'use server'
 
-import errorHandeler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/actions/users/update'
 import { Permission } from '@prisma/client'
@@ -20,7 +20,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
         permissions: data.getAll('permission'),
     })
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { id, name, permissions } = parse.data
 
@@ -46,7 +46,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
 
         userIds = role.users.map(user => user.userId)
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Delete removed permissions
@@ -62,7 +62,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
             }
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Create added permissions
@@ -75,7 +75,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
             skipDuplicates: true
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     const res = await invalidateManyUserSessionData(userIds)

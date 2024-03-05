@@ -1,7 +1,7 @@
 'use server'
 import newsArticleSchema from './schema'
 import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { SimpleNewsArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -61,5 +61,5 @@ export async function updateNews(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
-    return { success: false, error: [{ message: 'Not implemented' }] }
+    return createActionError('UNKNOWN ERROR', 'Not implemented')
 }
