@@ -54,7 +54,7 @@ services:
       dockerfile: ./prismaservice/Dockerfile
       target: dev
       args:
-        SHOULD_MIGRATE: ${MIGRATE_FROM_VEVEN}
+        SHOULD_MIGRATE: ${VEVEN_DB_URI}
     environment:
       NODE_ENV: development
       DB_URI: ${DB_URI}

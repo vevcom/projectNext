@@ -1,9 +1,10 @@
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import { v4 as uuid } from 'uuid'
 
 export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
     const ombuls = await vevenPrisma.ombul.findMany()
-    Promise.all(ombuls.map(async (ombul) => {
+    for (const ombul of ombuls) {
         const fsLocationOldVev = `${process.env.VEVEN_STORE_URL}/ombul/${ombul.fileName}/${ombul.originalName}`
 
         // Get pdf served at old location
@@ -13,12 +14,12 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
         const pdf = await res.blob()
         console.log(res)
 
-        const fsLocation = `hei`
+        const fsLocation = uuid()
 
-        const coverName = ombul.title.split(' ').join('_') + '_cover'
+        const coverName = ombul.title.split(' ').join('_') + '_cover' + uuid()
         const coverImage = await pnPrisma.cmsImage.upsert({
             where: {
-                name: coverName
+                name: coverName,
             },
             update: {
 
@@ -28,7 +29,16 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
             }
         })
 
-        return pnPrisma.ombul.upsert({
+        const ombulsWithSameYearAndName = await pnPrisma.ombul.findMany({
+            where: {
+                name: ombul.title,
+                year: ombul.year || 1919
+            }
+        })
+
+        const name = ombul.title + (ombulsWithSameYearAndName.length > 0 ? ` (${ombulsWithSameYearAndName.length + 1})` : '')
+
+        await pnPrisma.ombul.upsert({
             where: {
                 id: ombul.id
             },
@@ -41,7 +51,7 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
                         id: coverImage.id
                     }
                 },
-                name: ombul.title,
+                name,
                 description: ombul.lead,
                 createdAt: ombul.createdAt,
                 updatedAt: ombul.updatedAt,
@@ -50,5 +60,5 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
                 fsLocation,
             }
         })
-    }))
+    }
 }
