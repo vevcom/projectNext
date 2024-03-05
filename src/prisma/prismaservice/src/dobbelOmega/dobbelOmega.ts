@@ -1,0 +1,2 @@
+import { PrismaClient } from '@/dobbelOmega'
+
