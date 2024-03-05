@@ -60,6 +60,7 @@ services:
       NODE_ENV: development
       DB_URI: ${DB_URI}
       MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
+      VEVEN_STORE_URL: ${VEVEN_STORE_URL}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
       - devstore:/usr/src/app/prismaservice/store
