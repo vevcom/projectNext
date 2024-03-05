@@ -1,5 +1,5 @@
 'use server'
-import { parseToFormData } from '../utils'
+import { parseToFormData } from '@/actions/utils'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
@@ -114,7 +114,7 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
             }
         }
 
-        const results = await prisma.$transaction([
+        await prisma.$transaction([
             prisma.user.update({
                 where: {
                     id: user.id

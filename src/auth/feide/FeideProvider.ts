@@ -50,11 +50,14 @@ export default function FeideProvider({ clientId, clientSecret }: PropType): Pro
 
                 const clientIdData = JSON.parse(Buffer.from(tokens.id_token.split('.')[1], 'base64').toString())
 
-                if (clientIdData.aud != process.env.FEIDE_CLIENT_ID) {
+                if (clientIdData.aud !== process.env.FEIDE_CLIENT_ID) {
                     throw new Error('The audience for the response from Feide is incorrect')
                 }
 
-                const [userinfoBasic, userinfoExtended, userinfoGroups] = await Promise.all([userinfoBasicRequest, userinfoExtendedRequest, userinfoGroupsRequest])
+                const [userinfoBasic,
+                    userinfoExtended,
+                    userinfoGroups
+                ] = await Promise.all([userinfoBasicRequest, userinfoExtendedRequest, userinfoGroupsRequest])
 
                 if (!userinfoBasic.ok || !userinfoExtended.ok || !userinfoGroups.ok) {
                     throw new Error('Failed to fetch user information')
@@ -69,7 +72,7 @@ export default function FeideProvider({ clientId, clientSecret }: PropType): Pro
                 return { ...profile, extended: profileExtended, groups, tokens }
             }
         },
-        profile(profile: ExtendedFeideUser, token): Awaitable<AdapterUserCustom> {
+        profile(profile: ExtendedFeideUser): Awaitable<AdapterUserCustom> {
             return {
                 id: profile.sub,
                 email: profile.email,

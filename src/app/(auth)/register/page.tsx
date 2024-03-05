@@ -14,7 +14,7 @@ export default async function Register() {
 
     const router = useRouter()
 
-    if (callbackUrl.substring(0, 4) == 'http') {
+    if (callbackUrl.substring(0, 4) === 'http') {
         let indexOfSlash = callbackUrl.search('/') + 2
         callbackUrl = callbackUrl.substring(indexOfSlash)
         indexOfSlash = callbackUrl.search('/')
@@ -56,7 +56,7 @@ export default async function Register() {
     >
         <TextInput label="Brukernavn" name="username" disabled={true} value={userAuth.user?.username}/>
         <TextInput label="Epost" name="email" disabled={true} value={userAuth.user?.email}/>
-        <TextInput label="Passord" name="password" onChange={(e) => lastPassword = e.target.value}/>
+        <TextInput label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
         <TextInput label="Gjenta passord" name="confirmPassword" />
         <Select name="sex" label="Kjønn" options={sexOptions}/>
         <Checkbox label="Jeg godtar vilkårene" name="acceptTerms" />

@@ -23,6 +23,11 @@ export default function LogIn() {
         })
     }
 
+    const buttonClick = () => signIn('feide', {
+        redirect: true,
+        callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+    })
+
     return <>
         <form onSubmit={handleSignIn}>
             <TextInput label="Brukernavn" name="username" type="text"/>
@@ -30,6 +35,6 @@ export default function LogIn() {
             <BorderButton>Logg inn</BorderButton>
             <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
         </form>
-        <BorderButton onClick={() => signIn('feide', { redirect: true, callbackUrl: searchParams.get('callbackUrl') || '/users/me' })}>Logg inn med Feide</BorderButton>
+        <BorderButton onClick={buttonClick}>Logg inn med Feide</BorderButton>
     </>
 }

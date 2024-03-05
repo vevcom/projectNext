@@ -35,6 +35,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "sass": "^1.70.0",
+    "server-only": "^0.0.1",
     "sharp": "^0.33.2",
     "unified": "^11.0.4",
     "uuid": "^9.0.1",

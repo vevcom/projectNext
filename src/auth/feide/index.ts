@@ -7,7 +7,11 @@ import type { FeideAccount } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { AdapterUserCustom } from '@/auth/feide/Types'
 
-export async function updateFeideAccount(accountId: string, token: TokenSetParameters, email: string | undefined | null): Promise<ActionReturn<boolean>> {
+export async function updateFeideAccount(
+    accountId: string,
+    token: TokenSetParameters,
+    email: string | undefined | null
+): Promise<ActionReturn<boolean>> {
     try {
         const expiresAt = token.expires_at ? new Date(token.expires_at * 1000) : new Date()
         if (!token.expires_at || !token.access_token) {
@@ -51,7 +55,13 @@ export async function updateEmailForFeideAccount(accountId: string, email: strin
     }
 }
 
-export async function createFeideAccount({ id, accessToken, expiresAt, issuedAt, userId }: Omit<FeideAccount, 'email'>): Promise<ActionReturn<FeideAccount>> {
+export async function createFeideAccount({
+    id,
+    accessToken,
+    expiresAt,
+    issuedAt,
+    userId,
+}: Omit<FeideAccount, 'email'>): Promise<ActionReturn<FeideAccount>> {
     try {
         const ret = await prisma.feideAccount.create({
             data: {

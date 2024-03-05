@@ -2,7 +2,7 @@ import 'server-only'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { StudyProgram } from '@prisma/client'
-import type { ActionReturn } from '../Types'
+import type { ActionReturn } from '@/actions/Types'
 
 type PropType = {
     name: string,
@@ -46,7 +46,9 @@ const returnSelections = {
     }
 }
 
-export async function upsertManyStudyProgrammes(programs: Array<PropType>): Promise<ActionReturn<Array<ReturnStudyProgram>>> {
+export async function upsertManyStudyProgrammes(
+    programs: Array<PropType>
+): Promise<ActionReturn<Array<ReturnStudyProgram>>> {
     if (programs.length === 0) return { success: true, data: [] }
 
     try {

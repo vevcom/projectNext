@@ -30,7 +30,7 @@ async function generateUsername(prisma: PrismaClient, user: Omit<AdapterUser, 'i
         }
     })
 
-    const existingUsernames = new Set(results.map(user => user.username))
+    const existingUsernames = new Set(results.map(dbuser => dbuser.username))
     let username = user.username
 
     if (!existingUsernames.has(username)) {
