@@ -1,21 +1,11 @@
 'use server'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { getUser } from '@/auth'
 
 export async function createUser(rawdata: FormData): Promise<ActionReturn<User>> {
-    const { user, status } = await getUser({
-        requiredPermissions: ['OMEGAQUOTES_READ']
-    })
-
-    if (status !== "AUTHORIZED") {
-        return createActionError(status)
-    }
-
-    user.email
     //TEST FOR WAIT
     await (new Promise((resolve) => {
         setTimeout(() => {

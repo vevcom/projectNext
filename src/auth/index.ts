@@ -122,90 +122,76 @@ export const authOptions: AuthOptions = {
     }
 }
 
-export type AuthStatus = 'AUTHORIZED' | 'UNAUTHENTICATED' | 'UNAUTHORIZED'
 
 export type UserWithPermissions = User & {
     permissions: Permission[]
 }
 
-type GetUserArgsType = {
+type GetUserArgsType<R extends boolean = boolean> = {
     requiredPermissions?: Permission[] | undefined,
+    required?: R,
+    redirectUrl?: string,
+    returnUrl?: string,
 }
 
-type GetUserReturnType = {
+type GetUserReturnTypeSafe = {
+    user: UserWithPermissions,
+    status: 'AUTHORIZED',
+}
+
+type GetUserReturnTypeUnsafe = GetUserReturnTypeSafe | {
     user: null,
-    status: 'UNAUTHENTICATED'
+    status: 'UNAUTHENTICATED',
 } | {
     user: UserWithPermissions,
-    status: Exclude<AuthStatus, 'UNAUTHENTICATED'>
+    status: 'UNAUTHORIZED',
 }
+
+export type AuthStatus = GetUserReturnTypeUnsafe['status']
 
 /**
  * Returns the user object from the current session. If there is no session or the
- * user does not have adequate permissions `null` is returned.
- *
- * @param requiredPermissions - A list of permissions that the user must have.
+ * user does not have adequate permissions `null` is returned. Except if `required`
+ * is true, then the user gets redirected.
  *
  * This function is for server side components and actions. For client side
  * components use `useUser`.
- */
-export async function getUser({ requiredPermissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
-    const user = (await getServerSession(authOptions))?.user
-
-    if (!user) {
-        return { user: null, status: 'UNAUTHENTICATED' }
-    }
-
-    // Check if user has all required permissions
-    if (requiredPermissions && !requiredPermissions.every(permission => user.permissions.includes(permission))) {
-        return { user, status: 'UNAUTHORIZED' }
-    }
-
-    return { user, status: 'AUTHORIZED' }
-}
-
-type RequireUserArgsType = {
-    returnUrl?: string | undefined,
-    redirectUrl?: string | undefined,
-    requiredPermissions?: Permission[] | undefined,
-}
-
-/**
- * Gets user in the same way as `getUser`, but redirects when the user is not
- * logged in. This function will never return `null`.
- *
- * @param returnUrl - The url to the current page. If set the user will be
- * redirected to a login page for login, and then back after successfull
- * login. Must be set manually because next js doesn't provide a function to
- * retrive the current url of the page on the server side.
- *
- * @param redirectUrl - The url that the user should be redirected to if there
- * is no session and/or if the user doesn't have adequate permissions. If it's
- * not set user will be redirected to a 404.
  *
  * @param requiredPermissions - A list of permissions that the user must have.
+ * @param required - Wheter or not to redirect the user if user is not authorized.
+ * @param redirectUrl - The url to redirect the user to, by default to 404 page.
+ * @param returnUrl - If set, the user is redirected to the login page and then back to the given url.
  *
- * This function is for server side components. For client side components
- * use `useUser`. For actions use `getUser`.
+ * @returns The user object and auth status (either `AUTHORIZED`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
  */
-export async function requireUser({
-    returnUrl,
-    redirectUrl,
+// This function is overloaded to get correct typing for when required is set to true or false.
+export async function getUser(args: GetUserArgsType<false>): Promise<GetUserReturnTypeSafe>
+export async function getUser(args: GetUserArgsType<true>): Promise<GetUserReturnTypeSafe>
+export async function getUser({
     requiredPermissions,
-}: RequireUserArgsType = {}): Promise<UserWithPermissions> {
-    const { user, status } = await getUser({ requiredPermissions })
+    required,
+    redirectUrl,
+    returnUrl,
+}: GetUserArgsType = {}) {
+    const user = (await getServerSession(authOptions))?.user ?? null
 
-    if (!user) {
-        if (status === 'UNAUTHENTICATED' && typeof returnUrl === 'string') {
-            redirect(`/login?callbackUrl=${returnUrl}`)
-        }
+    const authorized = user && (!requiredPermissions || !requiredPermissions.every(permission => user.permissions.includes(permission)))
 
-        if (typeof redirectUrl === 'string') {
-            redirect(redirectUrl)
-        }
-
-        notFound()
+    if (authorized) {
+        return { user, status: 'AUTHORIZED' }
     }
 
-    return user
+    if (required !== true) {
+        return { status: 'UNAUTHENTICATED', user: null }
+    }
+
+    if (!user && returnUrl) {
+        redirect(`/login?callbackUrl=${encodeURI(returnUrl)}`)
+    }
+
+    if (redirectUrl) {
+        redirect(redirectUrl)
+    }
+
+    notFound() // Should probably redirect to a unauthorized page when we have one
 }

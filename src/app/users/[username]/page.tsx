@@ -1,5 +1,5 @@
 import prisma from '@/prisma'
-import { requireUser } from '@/auth'
+import { getUser } from '@/auth'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
@@ -11,8 +11,9 @@ type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const user = await requireUser({
-        returnUrl: `/users/${params.username}`
+    const { user } = await getUser({
+        required: true,
+        returnUrl: `/users/${params.username}`,
     })
 
     const me = params.username === 'me'
