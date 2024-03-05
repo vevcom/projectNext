@@ -8,6 +8,7 @@ import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import { PrismaClient } from '@prisma/client'
+import dobbelOmega from './dobbelOmega/dobbelOmega'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -18,6 +19,11 @@ async function seed() {
     await seedImages(prisma)
     await seedCms(prisma)
     console.log('seed standard done')
+
+    if (process.env.MIGRATE_FROM_VEVEN) {
+        console.log('dobbel omega!!!')
+        await dobbelOmega(prisma)
+    }
 
     if (process.env.NODE_ENV !== 'development') return
     console.log('seeding dev data....')
