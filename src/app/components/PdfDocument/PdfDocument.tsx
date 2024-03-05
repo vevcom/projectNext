@@ -160,7 +160,7 @@ export default function PdfDocument({ src, className }: PropTypes) {
                     </div>
                 </div>
             </Document>
-            <p style={{transform: pagePair === 0 ? `translateX(${pageWidthLeft}px)` : undefined}}>
+            <p style={{ transform: pagePair === 0 ? `translateX(${pageWidthLeft}px)` : undefined }}>
                 {getPageNumberText(currentPages.rightPage, currentPages.leftPage)}
             </p>
         </div>
