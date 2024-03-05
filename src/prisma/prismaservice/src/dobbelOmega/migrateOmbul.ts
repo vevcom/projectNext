@@ -9,7 +9,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
-    const ombuls = await vevenPrisma.ombul.findMany()
+    const ombuls = await vevenPrisma.ombul.findMany({
+        include: {
+            Images: true
+        }
+    })
 
     //First write files concurrently for speed
     const fsLocations = await Promise.all(ombuls.map(async (ombul) => {
