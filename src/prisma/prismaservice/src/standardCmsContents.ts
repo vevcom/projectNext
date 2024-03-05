@@ -25,11 +25,31 @@ export type SeedArticleSection = {
     imageSize?: number,
 }
 
+export const standardCategories = [
+    {
+        name: 'om omega',
+        description: 'lær om omega',
+    },
+    {
+        name: 'guider',
+        description: 'få hjelp til ting',
+    }
+] as const
+
+export type SeedCategories = typeof standardCategories[number]
+type Categories = typeof standardCategories[number]['name']
+
 export type SeedArticle = {
     name: string,
     coverImage: SeedCmsImage,
     articleSections: SeedArticleSection[]
-}
+} & ({
+    category: Categories
+} | {
+    category: 'news',
+    description: string,
+    orderPublished: number
+})
 
 export type CmsContent = {
     cmsImages: SeedCmsImage[], //this is a cmsImage without a connection to a cmsArticleSection
@@ -130,7 +150,33 @@ const standardCmsContents: CmsContent = {
     ],
     articles: [
         {
+            name: 'velkommen til nye veven',
+            category: 'news',
+            description: 'ny vev',
+            orderPublished: 105,
+            coverImage: {
+                name: 'velkommen_til_nye_veven_cover',
+                imageName: 'logo_simple',
+                imageSize: 'LARGE'
+            },
+            articleSections: [
+                {
+                    name: 'velkommen_til_nye_veven_1',
+                    cmsParagraph: {
+                        name: 'velkommen_til_nye_veven_1_paragraph',
+                        file: 'news/velkommen_til_nye_veven_1.md'
+                    },
+                    cmsImage: {
+                        name: 'velkommen_til_nye_veven_1_image',
+                        imageName: 'kappemann',
+                        imageSize: 'LARGE'
+                    }
+                }
+            ]
+        },
+        {
             name: 'om omega',
+            category: 'om omega',
             coverImage: {
                 name: 'about_cover',
                 imageName: 'ohma',
@@ -164,6 +210,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'statutter',
+            category: 'om omega',
             coverImage: {
                 name: 'statutter_cover',
                 imageName: 'ov',
@@ -190,6 +237,52 @@ const standardCmsContents: CmsContent = {
                     cmsImage: {
                         name: 'statutter_2_image',
                         imageName: 'traktat',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
+        },
+        {
+            name: 'prikkreglement',
+            category: 'guider',
+            coverImage: {
+                name: 'prikkreglement_cover',
+                imageName: 'ov',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'prikkreglement_1',
+                    cmsParagraph: {
+                        name: 'prikkreglement_1_paragraph',
+                        file: 'prikkreglement/prikkreglement_1.md'
+                    },
+                    cmsImage: {
+                        name: 'prikkreglement_1_image',
+                        imageName: 'traktat',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
+        },
+        {
+            name: 'søknadsguide',
+            category: 'guider',
+            coverImage: {
+                name: 'søknadsguide_cover',
+                imageName: 'ov',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'søknadsguide_1',
+                    cmsParagraph: {
+                        name: 'søknadsguide_1_paragraph',
+                        file: 'soknadsguide/soknadsguide_1.md'
+                    },
+                    cmsImage: {
+                        name: 'søknadsguide_1_image',
+                        imageName: 'kappemann',
                         imageSize: 'MEDIUM'
                     }
                 }

@@ -1,0 +1,16 @@
+@use "@/styles/ohma";
+
+.wrapper {
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.moreNews {
+    display: flex;
+    flex-direction: column;
+    margin: 0 ohma.$minimalPagePadding;
+    min-height: 80px;  
+    > div {
+        display: flex;
+    }
+}

@@ -1,0 +1,17 @@
+@use '@/styles/ohma';
+.wrapper {
+    @include ohma.ImageCardListLayout;
+}
+
+.addCategory {
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    .addIcon {
+        width: 100%;
+        height: 100%;
+        color: ohma.$colors-black;
+    }
+}
+

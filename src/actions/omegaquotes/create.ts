@@ -1,22 +1,14 @@
 'use server'
-import { readPermissionsOfUser } from '@/actions/permissions/read'
+import { omegaquotesSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
-import { z } from 'zod'
+import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 
-export async function createQuote(rawdata: FormData): Promise<ActionReturn<OmegaQuote>> {
-    const shema = z.object({
-        quote: z.string().min(1, 'Sitatet kan ikke være tomt'),
-        author: z.string().min(1, 'Noen må siteres'),
-    })
-
-    const parse = shema.safeParse({
-        quote: rawdata.get('quote'),
-        author: rawdata.get('author')
-    })
+export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
+    const parse = omegaquotesSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return {
@@ -27,33 +19,15 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
 
     const { quote, author } = parse.data
 
-    // REFACTOR when new permission system is working
-    const user = await getUser()
+    const { user, status } = await getUser({
+        permissions: ['OMEGAQUOTES_WRITE']
+    })
 
     if (!user) {
         return {
             success: false,
             error: [{
-                message: '403: Not authenticated'
-            }]
-        }
-    }
-
-    const permissions = await readPermissionsOfUser(user.id)
-    if (!permissions.success) {
-        return {
-            success: false,
-            error: [{
-                message: '500: Failed to read permissions of user'
-            }]
-        }
-    }
-
-    if (!permissions.data.has('OMEGAQUOTES_WRITE')) {
-        return {
-            success: false,
-            error: [{
-                message: '403: User not allowed to add quotes'
+                message: status
             }]
         }
     }

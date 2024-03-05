@@ -1,7 +1,7 @@
 @use "@/styles/ohma";
 
-$padding: 4rem;
 $cover-height: min(300px, 40vh);
+$padding: ohma.$minimalPagePadding;
 
 .Article {
     .coverImage {
@@ -37,7 +37,7 @@ $cover-height: min(300px, 40vh);
                     top: 0;
                     left: 0;
                     width: 100% !important;
-                    height: $cover-height !important; // Add this line
+                    height: $cover-height !important;
                     object-fit: cover;
                 }
             }
@@ -46,13 +46,6 @@ $cover-height: min(300px, 40vh);
             position: absolute;
             left: $padding;
             bottom: 1em;
-            .title {
-                font-size: ohma.$fonts-xxl;
-                font-family: ohma.$fonts-secondary;
-                text-transform: uppercase;
-                color: ohma.$colors-white;
-                z-index: 2;
-            }
         }   
         
     }
@@ -89,12 +82,9 @@ $cover-height: min(300px, 40vh);
     .addSection {
         margin: 0 $padding;
     }
-
-    .submitNameButton {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translate(0, -100%);
+    .empty {
+        display: flex;
+        height: 2em;
     }
 }   
 

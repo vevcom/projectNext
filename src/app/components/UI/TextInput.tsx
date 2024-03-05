@@ -3,10 +3,10 @@ import { v4 as uuid } from 'uuid'
 import type { InputHTMLAttributes } from 'react'
 
 
-type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+export type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label: string,
     type?: 'text' | 'password',
-    color?: 'primary' | 'secondary' | 'red' | 'black',
+    color?: 'primary' | 'secondary' | 'red' | 'black' | 'white',
 }
 
 export default function TextInput({ label = 'default', type = 'text', color = 'black', className, ...props }: PropTypes) {

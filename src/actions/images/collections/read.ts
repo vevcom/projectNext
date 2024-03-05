@@ -4,11 +4,15 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 
-export async function readImageCollection(id: number): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+export async function readImageCollection(
+    idOrName: number | string
+): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
     try {
         const collection = await prisma.imageCollection.findUnique({
-            where: {
-                id,
+            where: typeof idOrName === 'number' ? {
+                id: idOrName,
+            } : {
+                name: idOrName,
             },
             include: {
                 coverImage: true,

@@ -1,8 +1,10 @@
 'use server'
 
+import { removeUserFromRoleSchema } from './schema'
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
-import { z } from 'zod'
+import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/actions/users/update'
+import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
 
@@ -21,9 +23,18 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
                     select: {
                         permission: true
                     }
+                },
+                users: {
+                    select: {
+                        userId: true
+                    }
                 }
             }
         })
+
+        const res = await invalidateManyUserSessionData(role.users.map(user => user.userId))
+
+        if (!res.success) return res
 
         return { success: true, data: role }
     } catch (e) {
@@ -31,16 +42,10 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
     }
 }
 
-export async function removeUserFromRole(data: FormData): Promise<ActionReturn<void, false>> {
-    const schema = z.object({
-        roleId: z.coerce.number(),
-        username: z.string(),
-    })
-
-    const parse = schema.safeParse({
-        roleId: data.get('roleId'),
-        username: data.get('username'),
-    })
+export async function removeUserFromRole(
+    rawdata: FormData | RemoveUserFromRoleSchemaType
+): Promise<ActionReturn<void, false>> {
+    const parse = removeUserFromRoleSchema.safeParse(rawdata)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
@@ -66,6 +71,10 @@ export async function removeUserFromRole(data: FormData): Promise<ActionReturn<v
                 }
             },
         })
+
+        const res = await invalidateOneUserSessionData(user.id)
+
+        if (!res.success) return res
     } catch (e) {
         return errorHandeler(e)
     }

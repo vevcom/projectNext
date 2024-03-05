@@ -10,11 +10,11 @@ We use scss modules, marked by their .module.scss extension. One important thing
 }
 ```
 You can then import the module:
-```javascript
+```tsx
 import styles from './filename.module.scss'
 ```
 Note that you may call the styles object whatever but our convention is to call it styles. You may now access the class in the jsx by:
-```jsx
+```tsx
 <div className={styles.myClass}>
     scss is super
 </div>
