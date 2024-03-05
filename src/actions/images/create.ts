@@ -1,6 +1,7 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+
+import { createPrismaActionError, createActionError } from '@/actions/error'
 import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
@@ -9,6 +10,7 @@ import { writeFile, mkdir } from 'fs/promises'
 import { File } from 'buffer'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
+import { createZodActionError } from '../error'
 
 const maxFileSize = 10 * 1024 * 1024 // 10mb
 
@@ -20,14 +22,10 @@ async function createOne(file: File, meta: {
 }): Promise<ActionReturn<Image>> {
     const ext = file.type.split('/')[1]
     if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
-        return {
-            success: false, error: [
-                {
-                    path: ['file'],
-                    message: 'Invalid file type'
-                }
-            ]
-        }
+        return createActionError('BAD PARAMETERS', [{
+            path: ['file'],
+            message: 'Invalid file type'
+        }])
     }
 
     const arrBuffer = await file.arrayBuffer()
@@ -73,7 +71,7 @@ async function createOne(file: File, meta: {
             if (!image) return { success: false }
             return { success: true, data: image }
         } catch (err) {
-            return errorHandler(err)
+            return createPrismaActionError(err)
         }
     } catch (err) {
         //LOGGER
@@ -95,7 +93,7 @@ export async function createImage(collectionId: number, rawdata: FormData): Prom
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
     })
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
     const { file, ...data } = parse.data
     return await createOne(file, { ...data, collectionId })
 }
@@ -118,7 +116,7 @@ export async function createImages(collectionId: number, rawdata: FormData): Pro
         files: rawdata.getAll('files'),
     })
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const data = parse.data
 

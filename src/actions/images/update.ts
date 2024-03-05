@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import { z } from 'zod'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -20,7 +20,7 @@ export async function updateImage(imageId: number, rawdata: FormData): Promise<A
         name: rawdata.get('name'),
         alt: rawdata.get('alt'),
     })
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
     try {
         const image = await prisma.image.update({
@@ -31,6 +31,6 @@ export async function updateImage(imageId: number, rawdata: FormData): Promise<A
         })
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

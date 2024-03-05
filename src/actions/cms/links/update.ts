@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import { z } from 'zod'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -26,7 +26,7 @@ export async function updateCmsLink(id: number, rawData: FormData): Promise<Acti
     })
 
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
 
     const data = parse.data
@@ -42,6 +42,6 @@ export async function updateCmsLink(id: number, rawData: FormData): Promise<Acti
         })
         return { success: true, data: cmsLink }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

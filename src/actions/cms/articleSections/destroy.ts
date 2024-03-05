@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
 
@@ -11,6 +11,6 @@ export async function destroyArticleSection(name: string): Promise<ActionReturn<
         })
         return { success: true, data: articleSection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

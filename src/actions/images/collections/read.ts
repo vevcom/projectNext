@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 
@@ -21,7 +21,7 @@ export async function readImageCollection(
         if (!collection) return { success: false, error: [{ message: 'Collection not found' }] }
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -74,6 +74,6 @@ export async function readImageCollectionsPage<const PageSize extends number>(
 
         return { success: true, data: returnData }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

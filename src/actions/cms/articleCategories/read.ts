@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 import type {
@@ -33,7 +33,7 @@ export async function readArticleCategories(): Promise<ActionReturn<ArticleCateg
         return { success: true, data: categoriesWithCover }
     } catch (error) {
         console.error(error)
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -52,14 +52,14 @@ export async function readArticleCategory(name: string): Promise<ActionReturn<Ex
                 }
             },
         })
-        if (!category) return { success: false, error: [{ message: `Category ${name} not found` }] }
+        if (!category) return createActionError('NOT FOUND', `Category ${name} not found`)
         const categoryWithCover = {
             ...category,
             coverImage: await getCoverImage(category)
         }
         return { success: true, data: categoryWithCover }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 

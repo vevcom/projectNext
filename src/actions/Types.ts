@@ -1,18 +1,32 @@
+export type ActionErrorCode = 
+    | 'DUPLICATE'
+    | 'NOT FOUND'
+    | 'BAD PARAMETERS'
+    | 'UNAUTHENTICATED'
+    | 'UNAUTHORIZED'
+    | 'UNKNOWN ERROR'
+
 export type ActionError = {
     path?: (number | string)[],
     message: string,
 }
 
-export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = {
+export type ActionReturnError = {
     success: false,
+    errorCode: ActionErrorCode,
     error?: ActionError[],
-} | (DataGuarantee extends true ? {
+}
+
+export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = 
+ActionReturnError | { 
     success: true,
-    data: ReturnType,
-} : {
-    success: true,
-    data?: ReturnType,
-})
+} & (
+    DataGuarantee extends true ? {
+        data: ReturnType
+    } : {
+        data?: ReturnType
+    }
+)
 
 export type Page<PageSize extends number> = {
     readonly pageSize: PageSize,

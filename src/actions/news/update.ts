@@ -1,7 +1,7 @@
 'use server'
 import newsArticleSchema from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { SimpleNewsArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -22,7 +22,7 @@ export async function publishNews(
             data: news
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -33,7 +33,7 @@ export async function updateNews(
     try {
         const parse = newsArticleSchema.safeParse(Object.fromEntries(rawdata.entries()))
         if (!parse.success) {
-            return { success: false, error: parse.error.issues }
+            return createZodActionError(parse)
         }
         const data = parse.data
         const news = await prisma.newsArticle.update({
@@ -53,7 +53,7 @@ export async function updateNews(
             data: news
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 

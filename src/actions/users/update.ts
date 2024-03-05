@@ -1,4 +1,5 @@
-import errorHandler from '@/prisma/errorHandler'
+
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -11,7 +12,7 @@ export async function invalidateOneUserSessionData(userId: number): Promise<Acti
             data: {}
         })
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 
     return { success: true, data: undefined }

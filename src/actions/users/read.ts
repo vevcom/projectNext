@@ -1,7 +1,7 @@
 'use server'
 import { userFieldsToExpose } from './Types'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
@@ -45,6 +45,6 @@ export async function readUserPage<const PageSize extends number>({
         })
         return { success: true, data: users }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

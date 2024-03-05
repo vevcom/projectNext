@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
@@ -18,10 +18,7 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
     })
 
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
 
     const { quote, author } = parse.data
@@ -54,6 +51,6 @@ export async function createQuote(rawdata: FormData): Promise<ActionReturn<Omega
 
         return { success: true, data: results }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from './Types'
@@ -21,7 +21,7 @@ export async function readImagesPage<const PageSize extends number>(
         if (!images) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: images }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -36,7 +36,7 @@ export async function readImageById(id: number): Promise<ActionReturn<Image>> {
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -50,7 +50,7 @@ export async function readImageByName(name: string): Promise<ActionReturn<Image>
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 

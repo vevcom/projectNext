@@ -1,11 +1,11 @@
 'use server'
 
-import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/actions/users/update'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
+import { createActionError, createPrismaActionError, createZodActionError } from '../error'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
@@ -16,12 +16,9 @@ export async function createRole(data: FormData): Promise<ActionReturn<RoleWithP
         name: data.get('name')
     })
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
-
+    if (!parse.success) return createZodActionError(parse)
 
     const { name } = parse.data
-
-    if (!name) return { success: false }
 
     try {
         const role = await prisma.role.create({
@@ -39,7 +36,7 @@ export async function createRole(data: FormData): Promise<ActionReturn<RoleWithP
 
         return { success: true, data: role }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -55,7 +52,7 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
     })
 
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { roleId, username } = parse.data
 
@@ -69,7 +66,7 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
             },
         })
 
-        if (!user) return { success: false, error: [{ message: 'Invalid username' }] }
+        if (!user) return createActionError('BAD PARAMETERS', 'Invalid username')
 
         await prisma.rolesUsers.create({
             data: {
@@ -82,7 +79,7 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
 
         if (!res.success) return res
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     return { success: true }

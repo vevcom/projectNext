@@ -1,7 +1,7 @@
 'use server'
 import { destroyArticle } from '@/cms/articles/destroy'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { SimpleNewsArticle } from './Types'
 
@@ -25,6 +25,6 @@ export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleN
             data: news
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

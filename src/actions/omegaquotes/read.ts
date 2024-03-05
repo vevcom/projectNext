@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import { getUser } from '@/auth'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { OmegaquoteFiltered } from './Types'
@@ -41,6 +41,6 @@ export async function readQuotesPage<const PageSize extends number>(
 
         return { success: true, data: results }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

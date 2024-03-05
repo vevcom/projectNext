@@ -1,7 +1,7 @@
 'use server'
 import articleSchema from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from './Types'
 
@@ -24,7 +24,7 @@ export async function updateArticleCategory(
         description: rawData.get('description'),
     })
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
     const { name, description } = parse.data
     try {
@@ -42,6 +42,6 @@ export async function updateArticleCategory(
         })
         return { success: true, data: articleCategory }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
