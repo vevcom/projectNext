@@ -4,6 +4,7 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { User } from '@prisma/client'
 
 export async function readUserPage<const PageSize extends number>({
     page,
@@ -44,6 +45,44 @@ export async function readUserPage<const PageSize extends number>({
             ]
         })
         return { success: true, data: users }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}
+
+
+export async function readUserById(id: number): Promise<ActionReturn<User>> {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!user) {
+            return { success: false, error: [{ message: 'Bruker ikke funnet.' }] }
+        }
+
+        return { success: true, data: user }
+    } catch (error) {
+        return errorHandler(error)
+    }
+}
+
+
+export async function readUserByEmail(email: string): Promise<ActionReturn<User>> {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        })
+
+        if (!user) {
+            return { success: false, error: [{ message: 'User not found' }] }
+        }
+
+        return { success: true, data: user }
     } catch (error) {
         return errorHandler(error)
     }
