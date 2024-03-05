@@ -1,9 +1,9 @@
 'use server'
-import type { ExpandedOmbul } from "./Types"
-import type { ActionReturn } from "@/actions/Types"
-import prisma from "@/prisma"
-import errorHandler from "@/prisma/errorHandler"
-import deleteFile from "@/store/deleteFile"
+import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
+import deleteFile from '@/store/deleteFile'
+import type { ActionReturn } from '@/actions/Types'
+import type { ExpandedOmbul } from './Types'
 
 export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
     try {

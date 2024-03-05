@@ -1,10 +1,10 @@
 'use client'
 
+import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
 import type { ReactNode } from 'react'
-import styles from './ChangeName.module.scss'
-import { ExpandedOmbul } from '@/actions/ombul/Types'
+import type { ExpandedOmbul } from '@/actions/ombul/Types'
 
 type PropTypes = {
     children: ReactNode

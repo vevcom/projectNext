@@ -22,9 +22,11 @@ type PropTypes = {
 }
 
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
-    if (cmsImage.image === null) throw new Error(
-        'CmsImageEditor does not yet work with images that are not loaded. This will be fixed in the next refactor.'
-    )
+    if (cmsImage.image === null) {
+        throw new Error(
+            'CmsImageEditor does not yet work with images that are not loaded. This will be fixed in the next refactor.'
+        )
+    }
 
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)

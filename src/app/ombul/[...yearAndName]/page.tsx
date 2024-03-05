@@ -1,15 +1,15 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
+import OmbulAdmin from './OmbulAdmin'
 import { readOmbul } from '@/actions/ombul/read'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import { requireUser } from '@/auth'
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import OmbulAdmin from './OmbulAdmin'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {
@@ -46,7 +46,7 @@ export default async function Ombul({ params }: PropTypes) {
                     <h1>{ombul.name}</h1>
                 </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
-                <EditableTextField 
+                <EditableTextField
                     editable={canUpdate}
                     formProps={{
                         action: changeDescription
@@ -75,8 +75,8 @@ export default async function Ombul({ params }: PropTypes) {
                 </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin 
-                    canDestroy={canDestroy} 
+                <OmbulAdmin
+                    canDestroy={canDestroy}
                     canUpdate={canUpdate}
                     ombul={ombul}
                 />
