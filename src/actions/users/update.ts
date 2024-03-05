@@ -1,19 +1,17 @@
-"use server"
+'use server'
 
+import { updateUserSchema } from './schema'
 import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import errorHandler from '@/prisma/errorHandler';
-import { z } from 'zod'
-import { UpdateUserSchemaType, updateUserSchema } from './schema';
+import type { UpdateUserSchemaType } from './schema'
 
 
+export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
+    const parse = updateUserSchema.safeParse(rawdata)
 
-export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType) : Promise<ActionReturn<User>> {
-
-    const parse = updateUserSchema.safeParse(rawdata);
-
-    if (!parse.success) return { success: false, error: parse.error.issues}
+    if (!parse.success) return { success: false, error: parse.error.issues }
     const data = parse.data
 
     try {
@@ -23,9 +21,8 @@ export async function updateUser(id: number, rawdata: FormData | UpdateUserSchem
             },
             data
         })
-        return {success: true, data: user }
-    }
-    catch (error) {
+        return { success: true, data: user }
+    } catch (error) {
         return errorHandler(error)
     }
 }

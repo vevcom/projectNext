@@ -1,8 +1,8 @@
 'use server'
-import { CreateUserSchemaType, createUserSchema } from './schema'
+import { createUserSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import type { z } from 'zod'
+import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 

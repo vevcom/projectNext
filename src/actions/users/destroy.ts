@@ -1,27 +1,24 @@
-"use server"
+'use server'
 import prisma from '@/prisma'
-import { ActionReturn } from '../Types'
+import errorHandler from '@/prisma/errorHandler'
+import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import errorHandler from '@/prisma/errorHandler';
 
 
-export async function destroyUser(id: number) : Promise<ActionReturn<User>> {
+export async function destroyUser(id: number): Promise<ActionReturn<User>> {
     try {
-        const user = await prisma.user.delete( {
+        const user = await prisma.user.delete({
             where: {
-            id,
+                id,
             },
         })
 
         if (!user) {
-            return {success: false, error: [{message: "User not found"}]}
+            return { success: false, error: [{ message: 'User not found' }] }
         }
-        else {
-            return {success: true, data: user}
-        }
-    }
 
-    catch(error) {
+        return { success: true, data: user }
+    } catch (error) {
         return errorHandler(error)
     }
 }

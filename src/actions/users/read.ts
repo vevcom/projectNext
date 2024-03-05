@@ -51,7 +51,7 @@ export async function readUserPage<const PageSize extends number>({
 }
 
 
-export async function readUserById(id: number) : Promise<ActionReturn<User>> {
+export async function readUserById(id: number): Promise<ActionReturn<User>> {
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -60,19 +60,17 @@ export async function readUserById(id: number) : Promise<ActionReturn<User>> {
         })
 
         if (!user) {
-            return {success: false, error: [{message: "User not found"}]}
+            return { success: false, error: [{ message: 'User not found' }] }
         }
-        else {
-            return { success: true, data: user}
-        }
-    }
-    catch(error) {
+
+        return { success: true, data: user }
+    } catch (error) {
         return errorHandler(error)
     }
 }
 
 
-export async function readUserByEmail(email: string) : Promise<ActionReturn<User>> {
+export async function readUserByEmail(email: string): Promise<ActionReturn<User>> {
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -81,13 +79,11 @@ export async function readUserByEmail(email: string) : Promise<ActionReturn<User
         })
 
         if (!user) {
-            return {success: false, error: [{message: "User not found"}]}
+            return { success: false, error: [{ message: 'User not found' }] }
         }
-        else {
-            return { success: true, data: user}
-        }
-    }
-    catch(error) {
+
+        return { success: true, data: user }
+    } catch (error) {
         return errorHandler(error)
     }
 }
