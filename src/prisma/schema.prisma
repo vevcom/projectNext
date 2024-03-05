@@ -62,7 +62,7 @@ model Credentials {
 model FeideAccount {
   id          String   @id
   accessToken String   @db.Text
-  email       String?  @unique
+  email       String   @unique
   expiresAt   DateTime
   issuedAt    DateTime
   userId      Int      @unique

@@ -141,7 +141,7 @@ export const authOptions: AuthOptions = {
 
             // Check if user logged in with feide
             if (trigger === 'signIn' && profile?.sub) {
-                updateFeideAccount(profile.sub, profile.tokens, profile.email)
+                updateFeideAccount(profile.sub, profile.tokens)
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.

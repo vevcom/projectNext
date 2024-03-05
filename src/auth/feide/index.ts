@@ -10,13 +10,14 @@ import type { AdapterUserCustom } from '@/auth/feide/Types'
 export async function updateFeideAccount(
     accountId: string,
     token: TokenSetParameters,
-    email: string | undefined | null
 ): Promise<ActionReturn<boolean>> {
     try {
         const expiresAt = token.expires_at ? new Date(token.expires_at * 1000) : new Date()
-        if (!token.expires_at || !token.access_token) {
+        if (!token.expires_at || !token.access_token || !token.id_token) {
             throw new Error('Missing required fields in token')
         }
+
+        const tokenData = readJWTPayload(token.id_token)
 
         await prisma.feideAccount.update({
             where: {
@@ -25,8 +26,7 @@ export async function updateFeideAccount(
             data: {
                 accessToken: token.access_token,
                 expiresAt,
-                issuedAt: new Date(),
-                email: email || null,
+                issuedAt: new Date(tokenData.iat * 1000),
             }
         })
 
@@ -61,7 +61,8 @@ export async function createFeideAccount({
     expiresAt,
     issuedAt,
     userId,
-}: Omit<FeideAccount, 'email'>): Promise<ActionReturn<FeideAccount>> {
+    email,
+}: FeideAccount): Promise<ActionReturn<FeideAccount>> {
     try {
         const ret = await prisma.feideAccount.create({
             data: {
@@ -69,6 +70,7 @@ export async function createFeideAccount({
                 accessToken,
                 expiresAt,
                 issuedAt,
+                email,
                 user: {
                     connect: {
                         id: userId,
@@ -104,4 +106,19 @@ export async function getAdapterUserByFeideAccount(feideId: string): Promise<Act
     } catch (e) {
         return errorHandler(e)
     }
+}
+
+export function readJWTPayload(jwt: string) : {
+    iss: string,
+    jti: string,
+    aud: string,
+    sub: string,
+    iat: number,
+    exp: number,
+    email: string,
+    name: string
+} {
+    const parts = jwt.split('.')
+    const payload = Buffer.from(parts[1], 'base64').toString('utf-8')
+    return JSON.parse(payload)
 }

@@ -1,5 +1,5 @@
 import 'server-only'
-import { getAdapterUserByFeideAccount, createFeideAccount } from './index'
+import { getAdapterUserByFeideAccount, createFeideAccount, readJWTPayload } from './index'
 import { adapterUserCutomFields } from './Types'
 import type { AdapterUserCustom } from './Types'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
@@ -137,16 +137,19 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
             return HS_MAA_GAA(ret) as AdapterUser
         },
         async linkAccount(account: AdapterAccount): Promise<void> {
-            if (!account.access_token || !account.expires_at) {
+            if (!account.access_token || !account.expires_at || !account.id_token) {
                 throw Error('Missing required fields in account')
             }
+
+            const tokenData = readJWTPayload(account.id_token)
 
             await createFeideAccount({
                 id: account.providerAccountId,
                 accessToken: account.access_token,
                 expiresAt: new Date(account.expires_at * 1000),
-                issuedAt: new Date(),
+                issuedAt: new Date(tokenData.iat * 1000),
                 userId: Number(account.userId),
+                email: tokenData.email,
             })
         },
         async deleteUser() {

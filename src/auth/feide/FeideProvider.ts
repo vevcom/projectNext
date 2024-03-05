@@ -2,6 +2,7 @@ import 'server-only'
 import type { Awaitable } from 'next-auth'
 import type { Provider } from 'next-auth/providers/index'
 import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from './Types'
+import { readJWTPayload } from '.'
 
 export type PropType = {
     clientId: string,
@@ -48,7 +49,7 @@ export default function FeideProvider({ clientId, clientSecret }: PropType): Pro
                     throw new Error('No id_token provided')
                 }
 
-                const clientIdData = JSON.parse(Buffer.from(tokens.id_token.split('.')[1], 'base64').toString())
+                const clientIdData = readJWTPayload(tokens.id_token)
 
                 if (clientIdData.aud !== process.env.FEIDE_CLIENT_ID) {
                     throw new Error('The audience for the response from Feide is incorrect')
