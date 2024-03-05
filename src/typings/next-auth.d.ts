@@ -3,8 +3,8 @@ import type { UserWithPermissions } from '@/auth'
 import 'next-auth'
 import 'next-auth/adapters'
 
-import { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
-import { FeideAccount } from '@/prisma/client'
+import type { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
+import type { FeideAccount } from '@/prisma/client'
 
 declare module 'next-auth' {
 

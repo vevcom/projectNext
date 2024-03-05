@@ -9,7 +9,7 @@ import Textarea from '@/components/UI/Textarea'
 import { useRouter } from 'next/navigation'
 
 export default function CreateOmegaquoteForm() {
-    const { refresh } = useRouter();
+    const { refresh } = useRouter()
 
     return (
         <PopUp

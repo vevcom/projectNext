@@ -1,19 +1,18 @@
 'use client'
-import { registerUser } from "@/actions/users/create";
-import Form from "@/app/components/Form/Form";
-import Checkbox from "@/app/components/UI/Checkbox";
-import Select from "@/app/components/UI/Select";
-import TextInput from "@/app/components/UI/TextInput";
-import { useUser } from "@/auth/client";
-import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { registerUser } from '@/actions/users/create'
+import Form from '@/app/components/Form/Form'
+import Checkbox from '@/app/components/UI/Checkbox'
+import Select from '@/app/components/UI/Select'
+import TextInput from '@/app/components/UI/TextInput'
+import { useUser } from '@/auth/client'
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default async function Register() {
-    
-    const searchParams = useSearchParams();
-    let callbackUrl = searchParams.get('callbackUrl') || 'users/me';
+    const searchParams = useSearchParams()
+    let callbackUrl = searchParams.get('callbackUrl') || 'users/me'
 
-    const router = useRouter();
+    const router = useRouter()
 
     if (callbackUrl.substring(0, 4) == 'http') {
         let indexOfSlash = callbackUrl.search('/') + 2
@@ -30,22 +29,22 @@ export default async function Register() {
     if (userAuth.user?.acceptedTerms) {
         router.push('/users/me')
     }
-    
+
     const sexOptions = [
-        {value: "FEMALE", label: "Kvinne"},
-        {value: "MALE", label: "Mann"},
-        {value: "OTHER", label: "Annet"},
+        { value: 'FEMALE', label: 'Kvinne' },
+        { value: 'MALE', label: 'Mann' },
+        { value: 'OTHER', label: 'Annet' },
     ]
 
-    let lastUsername = userAuth.user?.username;
-    let lastPassword : string = '';
+    const lastUsername = userAuth.user?.username
+    let lastPassword: string = ''
 
     async function callback() {
         await signIn('credentials', {
             username: lastUsername,
             password: lastPassword,
             redirect: true,
-            callbackUrl: callbackUrl
+            callbackUrl
         })
     }
 

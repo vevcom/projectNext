@@ -1,17 +1,17 @@
+import FeideProvider from './feide/FeideProvider'
+import PrismaAdapter from './feide/PrismaAdapter'
+import signUp from './feide/signUp'
+import { updateFeideAccount } from './feide/index'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
-import { JWT, decode } from 'next-auth/jwt'
+import { decode } from 'next-auth/jwt'
+import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
-import type { Permission } from '@prisma/client'
-import FeideProvider from './feide/FeideProvider'
-import type { User } from '@prisma/client'
-import PrismaAdapter from './feide/PrismaAdapter'
-import { ExtendedFeideUser } from './feide/Types'
-import signUp from './feide/signUp'
-import { updateFeideTokens } from './feide'
+import type { Permission, User } from '@prisma/client'
+import type { ExtendedFeideUser } from './feide/Types'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -46,8 +46,8 @@ export const authOptions: AuthOptions = {
             }
         }),
         FeideProvider({
-            clientId: process.env.FEIDE_CLIENT_ID ?? "no_id",
-            clientSecret: process.env.FEIDE_CLIENT_SECRET ?? "no_secret",
+            clientId: process.env.FEIDE_CLIENT_ID ?? 'no_id',
+            clientSecret: process.env.FEIDE_CLIENT_SECRET ?? 'no_secret',
         })
     ],
     session: {
@@ -69,7 +69,7 @@ export const authOptions: AuthOptions = {
                 }
             })
 
-            if (credentials == null) {
+            if (credentials === null) {
                 const hasFeide = await prisma.feideAccount.findUnique({
                     where: {
                         userId: token.user.id
@@ -77,7 +77,7 @@ export const authOptions: AuthOptions = {
                     select: {
                         userId: true
                     }
-                }) 
+                })
 
                 if (hasFeide) {
                     return token
@@ -104,13 +104,12 @@ export const authOptions: AuthOptions = {
             user,
             trigger,
             profile
-        } : {
+        }: {
             token: JWT,
             user: nextAuthUser,
-            trigger?: "update" | "signIn" | "signUp",
+            trigger?: 'update' | 'signIn' | 'signUp',
             profile?: Profile,
         }) {
-
             if (!trigger) {
                 // TODO - refactor when read user action exists
                 const dbUser = await prisma.user.findUniqueOrThrow({
@@ -137,12 +136,12 @@ export const authOptions: AuthOptions = {
                 if (!profile || !profile.sub) {
                     throw Error('No profile found when signing up')
                 }
-                signUp({user, profile} as {user: nextAuthUser, profile: ExtendedFeideUser});
+                signUp({ user, profile } as {user: nextAuthUser, profile: ExtendedFeideUser})
             }
 
             // Check if user logged in with feide
-            if (trigger == 'signIn' && profile?.sub) {
-                updateFeideTokens(profile.sub, profile.tokens);
+            if (trigger === 'signIn' && profile?.sub) {
+                updateFeideAccount(profile.sub, profile.tokens, profile.email)
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.

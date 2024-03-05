@@ -1,5 +1,5 @@
-import type { User as PrismaUser } from '@prisma/client';
-import type { TokenSetParameters } from 'openid-client';
+import type { User as PrismaUser } from '@prisma/client'
+import type { TokenSetParameters } from 'openid-client'
 
 export type FeideGroup = {
     id: string,
@@ -26,7 +26,7 @@ export type ExtendedFeideUser = {
     tokens: TokenSetParameters
 }
 
-export const adapterUserCutomFieldsArr = ['id', 'username', 'email', 'firstname', 'lastname'] as const;
+export const adapterUserCutomFieldsArr = ['id', 'username', 'email', 'firstname', 'lastname'] as const
 export const adapterUserCutomFields = adapterUserCutomFieldsArr.reduce((prev, field) => ({
     ...prev,
     [field]: true

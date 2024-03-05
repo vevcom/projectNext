@@ -1,14 +1,14 @@
 'use server'
+import { parseToFormData } from '../utils'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import { getUser } from '@/auth'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { parseToFormData } from '../utils'
-import { getUser } from '@/auth'
 
-export default async function createUser(rawdata: FormData | User) : Promise<ActionReturn<User>> {
-    rawdata = parseToFormData(rawdata);
+export default async function createUser(rawdata: FormData | User): Promise<ActionReturn<User>> {
+    rawdata = parseToFormData(rawdata)
 
     //TEST FOR WAIT
     await (new Promise((resolve) => {
@@ -62,7 +62,7 @@ export default async function createUser(rawdata: FormData | User) : Promise<Act
     }
 }
 
-export async function registerUser(rawdata: FormData) : Promise<ActionReturn<null>> {
+export async function registerUser(rawdata: FormData): Promise<ActionReturn<null>> {
     const { user, status } = await getUser()
 
     if (!user) {
@@ -75,13 +75,12 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
     }
 
     try {
-
         const parse = z
             .object({
                 password: z.string().max(50).min(2),
                 confirmPassword: z.string().max(50).min(2),
                 acceptTerms: z.literal('on', {
-                    errorMap: () => ({ message: "Du må godta vilkårene for å bruk siden." }),
+                    errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
                 }),
                 sex: z.enum(['FEMALE', 'MALE', 'OTHER']),
             })
@@ -92,7 +91,7 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
                 acceptTerms: rawdata.get('acceptTerms'),
                 sex: rawdata.get('sex')
             })
-        
+
         if (!parse.success) {
             return { success: false, error: parse.error.issues }
         }
@@ -134,8 +133,7 @@ export async function registerUser(rawdata: FormData) : Promise<ActionReturn<nul
             })
         ])
 
-        return {success: true, data: null};
-
+        return { success: true, data: null }
     } catch (error) {
         return errorHandler(error)
     }

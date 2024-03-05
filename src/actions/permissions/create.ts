@@ -78,7 +78,7 @@ export async function addUserToRole(data: FormData): Promise<ActionReturn<void, 
 }
 
 export async function addUserByIdToRole(userId: number, roleId: number): Promise<ActionReturn<void, false>> {
-    return addUserByIdToRoles(userId, [roleId]);
+    return addUserByIdToRoles(userId, [roleId])
 }
 
 export async function addUserByIdToRoles(userId: number, roleIds: number[]): Promise<ActionReturn<void, false>> {
@@ -97,5 +97,5 @@ export async function addUserByIdToRoles(userId: number, roleIds: number[]): Pro
         return errorHandeler(e)
     }
 
-    return { success: true } 
+    return { success: true }
 }

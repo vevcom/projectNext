@@ -1,8 +1,8 @@
-'use server'
-import type { ActionReturn } from "../Types";
-import prisma from "@/prisma";
-import errorHandler from "@/prisma/errorHandler";
-import { StudyProgram } from "@prisma/client";
+import 'server-only'
+import prisma from '@/prisma'
+import errorHandler from '@/prisma/errorHandler'
+import type { StudyProgram } from '@prisma/client'
+import type { ActionReturn } from '../Types'
 
 type PropType = {
     name: string,
@@ -14,7 +14,7 @@ type ReturnStudyProgram = {
     name: string,
     code: string,
     startYear: number,
-    insititueCode: String | null,
+    insititueCode: string | null,
     yearsLength: number | null,
     newStudyProgram: boolean,
 }
@@ -22,7 +22,7 @@ type ReturnStudyProgram = {
 type PrismaResults = StudyProgram & { role: {name: string}}
 
 function unpackResults(newStudyProgram: boolean) {
-    return (p : PrismaResults) : ReturnStudyProgram => ({
+    return (p: PrismaResults): ReturnStudyProgram => ({
         id: p.id,
         name: p.role.name,
         code: p.code,
@@ -30,8 +30,8 @@ function unpackResults(newStudyProgram: boolean) {
         insititueCode: p.insititueCode,
         yearsLength: p.yearsLength,
         newStudyProgram,
-    });
-};
+    })
+}
 
 const returnSelections = {
     id: true,
@@ -46,7 +46,7 @@ const returnSelections = {
     }
 }
 
-export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Promise<ActionReturn<Array<ReturnStudyProgram>>> {
+export async function upsertManyStudyProgrammes(programs: Array<PropType>): Promise<ActionReturn<Array<ReturnStudyProgram>>> {
     if (programs.length === 0) return { success: true, data: [] }
 
     try {
@@ -57,11 +57,11 @@ export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Pr
                 }
             },
             select: returnSelections
-        });
+        })
 
         const existingStudyCodes = new Set(exists.map(program => program.code))
         const newStudyPrograms = programs.filter(program => !existingStudyCodes.has(program.code))
-        let createdStudyPrograms : Array<{studyProgram: PrismaResults}> = [];
+        let createdStudyPrograms: Array<{studyProgram: PrismaResults}> = []
 
         if (newStudyPrograms.length > 0) {
             createdStudyPrograms = (await prisma.$transaction(
@@ -80,8 +80,7 @@ export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Pr
                         }
                     }
                 }))
-            ) || []).filter(p => p !== null) as Array<{studyProgram: PrismaResults}>;
-            
+            ) || []).filter(p => p !== null) as Array<{studyProgram: PrismaResults}>
         }
 
         const allStudyPrograms = exists
@@ -89,9 +88,9 @@ export async function upsertManyStudyProgrammes(programs : Array<PropType>) : Pr
             .concat(createdStudyPrograms
                 .map(result => result.studyProgram)
                 .map(unpackResults(true))
-            );
+            )
 
-        return { success: true, data: allStudyPrograms}
+        return { success: true, data: allStudyPrograms }
     } catch (error) {
         return errorHandler(error)
     }
