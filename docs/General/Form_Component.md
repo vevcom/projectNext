@@ -59,10 +59,7 @@ const schema = zfd.formData({
     description: z.string().max(500).min(2).trim()
 })
 
-const parse = schema.safeParse({
-    name: rawdata.get('name'),
-    description: rawdata.get('description'),
-})
+const parse = schema.safeParse(rawdata)
 
 if (!parse.success) {
     return { success: false, error: parse.error.issues }
