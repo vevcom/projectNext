@@ -2,10 +2,10 @@
 import { createUserSchema, userRegisterSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
+import { getUser } from '@/auth'
 import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { getUser } from '@/auth'
 
 export async function createUser(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
     const parse = createUserSchema.safeParse(rawdata)
