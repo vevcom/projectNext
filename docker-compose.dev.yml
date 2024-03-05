@@ -27,7 +27,6 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
       VEVEN_DB_URI: ${VEVEN_DB_URI}
-      MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
     depends_on:
       - db
       - prisma
@@ -55,9 +54,12 @@ services:
       context: ./src/prisma
       dockerfile: ./prismaservice/Dockerfile
       target: dev
+      args:
+        SHOULD_MIGRATE: ${MIGRATE_FROM_VEVEN}
     environment:
       NODE_ENV: development
       DB_URI: ${DB_URI}
+      MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
       - devstore:/usr/src/app/prismaservice/store

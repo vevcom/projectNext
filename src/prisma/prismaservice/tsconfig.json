@@ -7,15 +7,15 @@
       "outDir": "./dist",
       "rootDir": "./src",
       "strict": true,
-      "baseUrl": ".",
+      "baseUrl": "./",
       "paths": {
-        "@/prisma/*": ["./generated/*"]
+        "@/generated/*": ["./generated/*"]
       }
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "./generated/**/*"],
     "exclude": ["node_modules"],
     "tsc-alias": {
-      "verbose": false,
+      "verbose": true,
       "resolveFullPaths": true
     }
 }

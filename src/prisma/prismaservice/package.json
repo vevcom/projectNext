@@ -4,8 +4,8 @@
   "description": "migrations and seeding for db",
   "type": "module",
   "scripts": {
-    "build": "tsc && tsc-alias",
-    "seed": "npx node dist/seed.js",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist && tsc-alias",
+    "seed": "node dist/seed.js",
     "dobbelOmega-pull": "npx prisma db pull --schema ../schema.veven.prisma",
     "dobbelOmega-generate": "npx prisma generate --schema ../schema.veven.prisma"
   },
@@ -29,6 +29,7 @@
     "@types/uuid": "^9.0.8",
     "prisma": "^5.10.2",
     "tsc-alias": "^1.8.8",
+    "tscpaths": "^0.0.9",
     "typescript": "^5.3.3"
   }
 }

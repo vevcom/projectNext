@@ -3,7 +3,7 @@ import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import type { PrismaClient } from '../generated/pn'
+import type { PrismaClient } from '@/generated/pn'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
