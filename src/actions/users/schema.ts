@@ -9,3 +9,13 @@ export const userSchema = zfd.formData({
     lastname: z.string().max(50).min(2),
     confirmPassword: z.string().max(50).min(2),
 }).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
+
+export const userRegisterSchema = zfd.formData({
+    email: z.string().max(200).min(2).email(),
+    password: z.string().max(50).min(2),
+    confirmPassword: z.string().max(50).min(2),
+    acceptedTerms: z.literal('on', {
+        errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+    }),
+    sex: z.enum(['FEMALE', 'MALE', 'OTHER']),
+}).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')

@@ -59,6 +59,6 @@ export default async function Register() {
         <TextInput label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
         <TextInput label="Gjenta passord" name="confirmPassword" />
         <Select name="sex" label="Kjønn" options={sexOptions}/>
-        <Checkbox label="Jeg godtar vilkårene" name="acceptTerms" />
+        <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
 }

@@ -1,9 +1,8 @@
 'use server'
-import { userSchema } from './schema'
+import { userRegisterSchema, userSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import { getUser } from '@/auth'
-import { z } from 'zod'
 import type { z as zType } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
@@ -50,25 +49,10 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
         }
     }
 
+    console.log(rawdata)
+
     try {
-        const parse = z
-            .object({
-                email: z.string().email(),
-                password: z.string().max(50).min(2),
-                confirmPassword: z.string().max(50).min(2),
-                acceptTerms: z.literal('on', {
-                    errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
-                }),
-                sex: z.enum(['FEMALE', 'MALE', 'OTHER']),
-            })
-            .refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
-            .safeParse({
-                email: rawdata.get('email'),
-                password: rawdata.get('password'),
-                confirmPassword: rawdata.get('confirmPassword'),
-                acceptTerms: rawdata.get('acceptTerms'),
-                sex: rawdata.get('sex')
-            })
+        const parse = userRegisterSchema.safeParse(rawdata)
 
         if (!parse.success) {
             return { success: false, error: parse.error.issues }
