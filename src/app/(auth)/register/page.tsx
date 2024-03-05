@@ -48,8 +48,7 @@ export default async function Register() {
             password: lastPassword,
             redirect: true,
             callbackUrl
-            })
-        }
+        })}
     >
         <TextInput label="Brukernavn" name="username" disabled={true} value={userAuth.user?.username}/>
         <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
