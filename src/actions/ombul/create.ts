@@ -1,6 +1,5 @@
 'use server'
 import { createOmbulSchema } from './schema'
-import type { CreateOmbulSchemaType } from './schema'
 import { readSpecialImageCollection } from '@/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'
@@ -10,7 +9,7 @@ import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
-import { raw } from '@prisma/client/runtime/library'
+import type { CreateOmbulSchemaType } from './schema'
 
 /**
  * Create a new Ombul.

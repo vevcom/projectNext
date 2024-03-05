@@ -19,7 +19,7 @@ export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Pr
             }]
         }
     }
-    
+
     const parse = omegaquotesSchema.safeParse(rawdata)
 
     if (!parse.success) {

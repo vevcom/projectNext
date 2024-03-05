@@ -1,11 +1,11 @@
 'use server'
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
-import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema' 
 import { getUser } from '@/auth'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import createFile from '@/store/createFile'
 import deleteFile from '@/store/deleteFile'
+import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -15,7 +15,10 @@ import type { ActionReturn } from '@/actions/Types'
  * @param rawdata - The new data for the ombul including: name, year, issueNumber, description,
  * @returns The updated ombul
  */
-export async function updateOmbul(id: number, rawdata: FormData | UpdateOmbulSchemaType): Promise<ActionReturn<ExpandedOmbul>> {
+export async function updateOmbul(
+    id: number,
+    rawdata: FormData | UpdateOmbulSchemaType
+): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_UPDATE']
@@ -67,7 +70,10 @@ export async function updateOmbul(id: number, rawdata: FormData | UpdateOmbulSch
  * @param rawData - The new data for the new ombul file with field name 'file'
  * @returns The updated ombul
  */
-export async function updateOmbulFile(id: number, rawData: FormData | UpdateOmbulFileSchemaType): Promise<ActionReturn<ExpandedOmbul>> {
+export async function updateOmbulFile(
+    id: number,
+    rawData: FormData | UpdateOmbulFileSchemaType
+): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { user, status } = await getUser({
         permissions: ['OMBUL_UPDATE']
