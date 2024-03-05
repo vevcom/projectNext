@@ -1,7 +1,17 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import type { UseSessionOptions } from 'next-auth/react'
+import type { SessionContextValue, UseSessionOptions } from 'next-auth/react'
+import { UserWithPermissions } from '.'
+
+type UseUserReturnType<R extends boolean> = R extends true ? {
+    user: UserWithPermissions,
+    status: SessionContextValue<R>['status']
+} : {
+    user: UserWithPermissions | null,
+    status: SessionContextValue<R>['status']
+}
+
 /**
  * Wrapper for next-auth's `useSession`. Returns just the user object of the
  * current session, null otherwise.
@@ -9,10 +19,11 @@ import type { UseSessionOptions } from 'next-auth/react'
 * This function is for client side components. For server side components
 * use `getUser``.
 */
-export function useUser<R extends boolean>(options?: UseSessionOptions<R>) {
+// Overloading is required here to get correct typehinting base on if required is true or false in options.
+export function useUser(options?: UseSessionOptions<false>): UseUserReturnType<false>
+export function useUser(options?: UseSessionOptions<true>): UseUserReturnType<true>
+export function useUser(options?: UseSessionOptions<boolean>): UseUserReturnType<boolean> {
     const { data: session, status } = useSession(options)
 
     return { user: session?.user ?? null, status }
 }
-
-export { SessionProvider as AuthProvider } from 'next-auth/react'

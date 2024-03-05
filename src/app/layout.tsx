@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import { AuthProvider } from '@/auth/client'
+import { SessionProvider } from 'next-auth/react'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={inter.className}>
-                <AuthProvider session={session}>
+                <SessionProvider session={session}>
                     <EditModeProvider>
                         <PopUpProvider>
                             <div className={styles.wrapper}>
@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: PropTypes) {
                             </div>
                         </PopUpProvider>
                     </EditModeProvider>
-                </AuthProvider>
+                </SessionProvider>
             </body>
         </html>
     )
