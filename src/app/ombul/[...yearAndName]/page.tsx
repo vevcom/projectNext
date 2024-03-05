@@ -7,7 +7,6 @@ import { requireUser } from '@/auth'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 

@@ -112,7 +112,7 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
     const oldFsLocation = ombul.fsLocation
 
     try {
-        const ombul = await prisma.ombul.update({
+        const ombulUpdated = await prisma.ombul.update({
             where: {
                 id
             },
@@ -129,12 +129,12 @@ export async function updateOmbulFile(id: number, rawData: FormData): Promise<Ac
         })
 
         //delete the old file
-        const ret = await deleteFile('ombul', oldFsLocation)
-        if (!ret.success) return ret
+        const delRet = await deleteFile('ombul', oldFsLocation)
+        if (!delRet.success) return delRet
 
         return {
             success: true,
-            data: ombul
+            data: ombulUpdated
         }
     } catch (error) {
         return errorHandler(error)

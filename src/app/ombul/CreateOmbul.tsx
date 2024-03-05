@@ -1,10 +1,10 @@
 'use client'
 import styles from './CreateOmbul.module.scss'
 import OmbulCover from './OmbulCover'
-import TextInput from '../components/UI/TextInput'
-import NumberInput from '../components/UI/NumberInput'
-import FileInput from '../components/UI/FileInput'
-import Textarea from '../components/UI/Textarea'
+import TextInput from '@/components/UI/TextInput'
+import NumberInput from '@/components/UI/NumberInput'
+import FileInput from '@/components/UI/FileInput'
+import Textarea from '@/components/UI/Textarea'
 import { createOmbul } from '@/actions/ombul/create'
 import Form from '@/components/Form/Form'
 import { useState } from 'react'
@@ -91,12 +91,39 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
                 className={styles.form}
                 successCallback={handleCreate}
             >
-                <TextInput label="navn" name="name" onChange={handlePreviewChange.bind(null, 'pName')} />
-                <Textarea label="Beskrivelse" name="description" onChange={handlePreviewChangeDescription} />
-                <NumberInput label="År" name="year" defaultValue={nextYear} onChange={handlePreviewChange.bind(null, 'pYear')}/>
-                <NumberInput label="nummer" name="issueNumber" defaultValue={nextIssue} onChange={handlePreviewChange.bind(null, 'pIssueNumber')} />
-                <FileInput color="primary" label="Ombul fil" name="ombulFile" />
-                <FileInput color="primary" label="Ombul cover" name="ombulCoverImage" onChange={handlePreviewChange.bind(null, 'pImage')} />
+                <TextInput
+                    label="navn"
+                    name="name"
+                    onChange={handlePreviewChange.bind(null, 'pName')}
+                />
+                <Textarea
+                    label="Beskrivelse"
+                    name="description"
+                    onChange={handlePreviewChangeDescription}
+                />
+                <NumberInput
+                    label="År"
+                    name="year"
+                    defaultValue={nextYear}
+                    onChange={handlePreviewChange.bind(null, 'pYear')}
+                />
+                <NumberInput
+                    label="nummer"
+                    name="issueNumber"
+                    defaultValue={nextIssue}
+                    onChange={handlePreviewChange.bind(null, 'pIssueNumber')}
+                />
+                <FileInput
+                    color="primary"
+                    label="Ombul fil"
+                    name="ombulFile"
+                />
+                <FileInput
+                    color="primary"
+                    label="Ombul cover"
+                    name="ombulCoverImage"
+                    onChange={handlePreviewChange.bind(null, 'pImage')}
+                />
             </Form>
             <div className={styles.imgPreview}>
                 <OmbulCover preview={preview} ombul={null} />

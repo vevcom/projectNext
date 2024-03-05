@@ -1,12 +1,9 @@
 import styles from './page.module.scss'
 import AddCategory from './AddCategory'
-import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
+import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import PopUp from '@/components/PopUp/PopUp'
 import { readArticleCategories } from '@/cms/articleCategories/read'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default async function ArticleCategoryList() {
     const res = await readArticleCategories()

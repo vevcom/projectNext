@@ -39,9 +39,9 @@ export default function OmbulAdmin({
     const updateOmbulAction = updateOmbul.bind(null, ombul.id)
     const updateOmbulFileAction = updateOmbulFile.bind(null, ombul.id)
 
-    const handleChange = async (ombul: ExpandedOmbul | undefined) => {
-        if (!ombul) return
-        push(`/ombul/${ombul?.year}/${ombul?.name}`)
+    const handleChange = async (newOmbul: ExpandedOmbul | undefined) => {
+        if (!newOmbul) return
+        push(`/ombul/${newOmbul.year}/${newOmbul.name}`)
         refresh()
     }
 

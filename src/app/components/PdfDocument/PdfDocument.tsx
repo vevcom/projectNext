@@ -51,29 +51,32 @@ export default function PdfDocument({ src, className }: PropTypes) {
         setPagePair(pageNumber)
     }
 
-    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-        setNumPages(numPages)
+    const onDocumentLoadSuccess = ({ numPages: n }: { numPages: number }) => {
+        setNumPages(n)
     }
 
     useEffect(() => {
         if (!numPages) return
         if (pagePair < 0) setPagePair(1)
         if (pagePair === 0) {
-            return setCurrentPages({
+            setCurrentPages({
                 leftPage: null,
                 rightPage: numPages > 0 ? 1 : null
             })
+            return
         }
         if (2 * pagePair === numPages) {
-            return setCurrentPages({
+            setCurrentPages({
                 leftPage: numPages,
                 rightPage: null
             })
+            return
         }
-        return setCurrentPages({
+        setCurrentPages({
             leftPage: 2 * pagePair,
             rightPage: 2 * pagePair + 1
         })
+        return
     }, [numPages, pagePair])
 
     useViewPort(() => {

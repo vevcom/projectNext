@@ -2,7 +2,7 @@
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { ExpandedCmsImage } from './Types'
-import type { Image, CmsImage } from '@prisma/client'
+import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createCmsImage(name: string, image?: Image): Promise<ActionReturn<ExpandedCmsImage>> {

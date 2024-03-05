@@ -50,7 +50,11 @@ type PropTypesNew = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize'
 }
 
 export function CmsImageNew({ cmsImage, children, ...props }: PropTypesNew) {
-    if (!cmsImage.image) throw new Error('CmsImageNew does not yet work with images that are not loaded. This will be fixed in the next refactor.')
+    if (!cmsImage.image) {
+        throw new Error(
+            'CmsImageNew does not yet work with images that are not loaded. This will be fixed in the next refactor.'
+        )
+    }
     return (
         <div className={styles.CmsImage}>
             <CmsImageEditor cmsImage={cmsImage}/>
