@@ -1,39 +1,15 @@
 'use server'
-import { parseToFormData } from '@/actions/utils'
+import { userSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { getUser } from '@/auth'
+import type { z as zType } from 'zod'
 import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
+import { getUser } from '@/auth'
 
-export default async function createUser(rawdata: FormData | User): Promise<ActionReturn<User>> {
-    rawdata = parseToFormData(rawdata)
-
-    //TEST FOR WAIT
-    await (new Promise((resolve) => {
-        setTimeout(() => {
-            resolve('resolved')
-        }, 5000)
-    }))
-    //TEST FOR WAIT
-
-    const schema = z.object({
-        username: z.string().max(50).min(2),
-        password: z.string().max(50).min(2),
-        email: z.string().max(200).min(2).email(),
-        firstname: z.string().max(50).min(2),
-        lastname: z.string().max(50).min(2),
-        confirmPassword: z.string().max(50).min(2),
-    }).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
-    const parse = schema.safeParse({
-        username: rawdata.get('username'),
-        password: rawdata.get('password'),
-        email: rawdata.get('email'),
-        firstname: rawdata.get('firstname'),
-        lastname: rawdata.get('lastname'),
-        confirmPassword: rawdata.get('confirmPassword'),
-    })
+export async function createUser(rawdata: FormData | zType.infer<typeof userSchema>): Promise<ActionReturn<User>> {
+    const parse = userSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return { success: false, error: parse.error.issues }

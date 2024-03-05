@@ -1,17 +1,15 @@
 'use server'
+import { createImageSchema, createImagesSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { z } from 'zod'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import { File } from 'buffer'
+import type { File } from 'buffer'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
-
-const maxFileSize = 10 * 1024 * 1024 // 10mb
-
+import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
 
 async function createOne(file: File, meta: {
     name: string,
@@ -73,7 +71,6 @@ async function createOne(file: File, meta: {
             if (!image) return { success: false }
             return { success: true, data: image }
         } catch (err) {
-            console.log(err)
             return errorHandler(err)
         }
     } catch (err) {
@@ -85,39 +82,20 @@ async function createOne(file: File, meta: {
     }
 }
 
-export async function createImage(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
-    const schema = z.object({
-        file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
-        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
-        alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
-    })
-    const parse = schema.safeParse({
-        file: rawdata.get('file'),
-        name: rawdata.get('name'),
-        alt: rawdata.get('alt'),
-    })
+export async function createImage(
+    collectionId: number, rawdata: FormData | CreateImageSchemaType
+): Promise<ActionReturn<Image>> {
+    const parse = createImageSchema.safeParse(rawdata)
+
     if (!parse.success) return { success: false, error: parse.error.issues }
     const { file, ...data } = parse.data
     return await createOne(file, { ...data, collectionId })
 }
 
-export async function createImages(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
-    const schema = z.object({
-        files: z.array(z.instanceof(File)).refine(
-            files => files.every(file => file.size < maxFileSize),
-            'File size must be less than 10mb'
-        ),
-    }).refine(
-        data => data.files.length < 100,
-        'Max 100 files')
-        .refine(
-            data => data.files.length > 0,
-            'You must add a file!'
-        )
-
-    const parse = schema.safeParse({
-        files: rawdata.getAll('files'),
-    })
+export async function createImages(
+    collectionId: number, rawdata: FormData | CreateImagesSchemaType
+): Promise<ActionReturn<Image[]>> {
+    const parse = createImagesSchema.safeParse(rawdata)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 

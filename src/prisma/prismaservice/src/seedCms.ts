@@ -1,4 +1,4 @@
-import standardCmsContents from './standardCmsContents'
+import standardCmsContents, { standardCategories } from './standardCmsContents'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
@@ -13,6 +13,7 @@ import type {
     SeedCmsLink,
     SeedArticleSection,
     SeedArticle,
+    SeedCategories
 } from './standardCmsContents'
 
 export default async function seedCms(prisma: PrismaClient) {
@@ -32,8 +33,12 @@ export default async function seedCms(prisma: PrismaClient) {
         await seedArticleSection(articleSection, prisma)
     }))
 
-    await Promise.all(standardCmsContents.articles.map(async (article) => {
-        await seedArticle(article, prisma)
+    await Promise.all(standardCategories.map(async (category) => {
+        await seedArticleCategories(category, prisma)
+    }))
+
+    await Promise.all(standardCmsContents.articles.map(async (article, i) => {
+        await seedArticle({ ...article, id: i }, prisma)
     }))
 }
 
@@ -128,20 +133,26 @@ async function seedArticleSection(articleSection: SeedArticleSection & {order?: 
             imagePosition: articleSection.imagePosition,
             imageSize: articleSection.imageSize,
             order: articleSection.order,
-            cmsImage: {
-                connect: cmsImage
-            },
-            cmsLink: {
-                connect: cmsLink
-            },
-            cmsParagraph: {
-                connect: cmsParagraph
-            }
+            cmsImage: cmsImage ? {
+                connect: {
+                    id: cmsImage.id
+                }
+            } : {},
+            cmsLink: cmsLink ? {
+                connect: {
+                    id: cmsLink.id
+                }
+            } : {},
+            cmsParagraph: cmsParagraph ? {
+                connect: {
+                    id: cmsParagraph.id
+                }
+            } : {},
         }
     })
 }
 
-async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
+async function seedArticle(article: SeedArticle & {id: number}, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>
@@ -150,7 +161,7 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
 
     return prisma.article.upsert({
         where: {
-            name: article.name
+            id: article.id
         },
         update: {
             name: article.name,
@@ -158,11 +169,45 @@ async function seedArticle(article: SeedArticle, prisma: PrismaClient) {
         create: {
             name: article.name,
             coverImage: {
-                connect: coverImage
+                connect: {
+                    id: coverImage.id
+                }
             },
             articleSections: {
                 connect: articleSections.map(section => ({ id: section.id }))
-            }
+            },
+            newsArticle:
+                article.category === 'news' ? {
+                    create: {
+                        description: article.description,
+                        endDateTime: (() => {
+                            const date = new Date()
+                            date.setDate(date.getDate() + 7)
+                            return date
+                        })(),
+                        orderPublished: article.orderPublished,
+                    }
+                } : undefined,
+            articleCategory:
+                article.category === 'news' ? undefined : {
+                    connect: {
+                        name: article.category,
+                    }
+                },
+        }
+    })
+}
+
+async function seedArticleCategories(category: SeedCategories, prisma: PrismaClient) {
+    return await prisma.articleCategory.upsert({
+        where: {
+            name: category.name
+        },
+        update: {
+            name: category.name,
+        },
+        create: {
+            ...category
         }
     })
 }

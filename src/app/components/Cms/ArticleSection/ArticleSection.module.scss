@@ -8,10 +8,10 @@
         flex-flow: row wrap;
         gap: 2*ohma.$gap;
         > *:first-child {
-            z-index: 2; //Neccessary for the remover confirmation to be on top of the thing on right
+            z-index: 2; //Necessary for the remover confirmation to be on top of the thing on right
         }
         > *:nth-child(2) {
-            z-index: 1; //Neccessary for the remover confirmation to be on top of the thing on right    
+            z-index: 1; //Necessary for the remover confirmation to be on top of the thing on right    
         }
         > .paragraphAndLink {
             min-height: 100%;
@@ -78,6 +78,7 @@
         .content {
             flex-flow: column;
             > .paragraphAndLink {
+                min-height: auto;
                 order: 1;
                 > .paragraph {
                     margin-right: ohma.$gap;

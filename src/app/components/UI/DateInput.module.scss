@@ -1,0 +1,30 @@
+@use "@/styles/ohma";
+
+.DateInput {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    input[type="date"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    &.primary {
+        color: ohma.$colors-primary
+    }
+    &.secondary {
+        color: ohma.$colors-secondary
+    }
+    &.red {
+        color: ohma.$colors-red
+    }
+    &.black {
+        color: ohma.$colors-black
+    }
+}
+
+
+
+
+

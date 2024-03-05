@@ -1,29 +1,14 @@
 'use server'
 
+import { articleLinkSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
-import { z } from 'zod'
+import type { ArticleLinkSchemaType } from './schema'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function updateCmsLink(id: number, rawData: FormData): Promise<ActionReturn<CmsLink>> {
-    const schema = z.object({
-        text: z.string().min(2, 'Linken må ha navn på mer enn 1 bokstav').max(30, 'Max lengde er 30'),
-        url: z.string().refine(value => {
-            try {
-                const url = new URL(value)
-                return url
-            } catch (_) {
-                return value.startsWith('/') || value.includes('.')
-            }
-        }, {
-            message: 'Invalid URL',
-        })
-    })
-    const parse = schema.safeParse({
-        text: rawData.get('text'),
-        url: rawData.get('url'),
-    })
+export async function updateCmsLink(id: number, rawData: FormData | ArticleLinkSchemaType): Promise<ActionReturn<CmsLink>> {
+    const parse = articleLinkSchema.safeParse(rawData)
 
     if (!parse.success) {
         return { success: false, error: parse.error.issues }
