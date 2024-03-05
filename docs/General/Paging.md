@@ -6,7 +6,7 @@ Paging in this project means reading a lot of data in batches, the displaying of
 
 ## A Paging action
 A paging action is a [server action](/Server_actions.md), just like any other: It returns a (promise) of generic type ActionReturn<ReturnType>. The difference is that a "paging" server action will always take in *one* parameter of type ReadPageInput<PageSize extends number, InputDetailType>. Here is an example from image paging:
-```javascript
+```ts
 export async function readPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, {collectionId: number}>
 ) : Promise<ActionReturn<Image[]>> {
@@ -19,7 +19,7 @@ Here we se that the ReturnType is Image[] (The return type should naturally alwa
 
 ### It's a Generic function
 Note also that the function is generic, readPage has a different overload for different numbers corresponding to different sizes of pages, but note that this number will be inferred by ts by the page you pass it. For example if calling:
-```javascript
+```ts
 readPage({
     page: {
         pageSize: 10,
@@ -34,7 +34,7 @@ Typescript infers PageSize to be 10. Of course when using the readPage action on
 
 ### How to implement one
 Usually a paging action will just be implemented with a prisma find many and 
-```javascript
+```ts
 {
     skip: page.pageSize*page
     take: pageSize
@@ -46,13 +46,13 @@ On the frontend: in order to use a paging action, the paging context provides a 
 
 ### The Context
 First you need to generate the paging context. This generate function takes no arguments, but require that you specify two types. The ReturnType of your action (referred to as the Data type in the pagingContext) and the pageSize (note that PageSize here is the type not the js variable). In the following example the Data type is Image and PageSize type is 30:
-```javascript
+```ts
 export type PageSizeImage = 30
 export const ImagePagingContext = generatePagingContext<Image, PageSizeImage>()
 ```
 Now you have a context that holds data of your specific type. The pagingContext includes the following: 
 1. **state:** The current state of the context: state.data holds an array of type Data (array of type Image in the above example) state.loading if it is currently fetching a page, state.allLoaded if there is any more pages to load and state.page which is of type Page<PageSize> (the same type used in the paging action). The state.page holds info about what page to fetch next: state.page.page and the page size being used: state.page.pageSize, note that the pageSize must be of type PageSize (in the above example 30) so it is stuck holding a constant value: You are not allowed to reassaign it as typescript expects state.page to be of 
-```javascript
+```ts
 type Page<PageSize extends number> = {
     readonly pageSize: PageSize,
     page: number,
@@ -66,7 +66,7 @@ The context may be consumed as usual with useContext(ImagePagingContext) in this
 ### The Provider
 Now that we have a way to generate our specific context. In our example: a context holding Data of Image type, we need a provider to actually wrap our app, manage the logic and the state. This is done using generatePagingProvider This HOF takes the "fetcher" you would like to use and the Context in an object. All type parameters can be inferred by ts. The fetcher function will usually just be your paging action. In our example:
 
-```javascript
+```ts
 const fetcher = async (x: ReadPageInput<PageSizeImage, {collectionId: number}>) => {
     const ret = await readPage(x)
     return ret
@@ -86,7 +86,7 @@ The pagingProvider that you generate (in ou example ImagePagingProvider) take in
 4. startPage. A page that the action should start from. If you server render 1 page (the 0 index page). You should start on startPage.page = 1. startPage.pageSize must have type PageSize meaning you have to provided the right number else ts will complain at you. This is again to make sure you cannot change pageSize.
 
 Here is use o ImagePagingProvider
-```javascript
+```tsx
 <ImagePagingProvider
     startPage={{
         pageSize: 30,
@@ -102,7 +102,7 @@ Here is use o ImagePagingProvider
 ## Paging wrappers: endless scroll and pagination
 To go along with paging we have the EndlessScroll component that takes in a PagingContext and a renderer. Then it simply renders what is inside state.data of the context using your renderer. Here is an example: When the viewport reaches the bottom of endlessScroll it automatically calls .loadMore() on your context.
 
-```javascript
+```tsx
 <div className={styles.ListImagesInCollection}>
     {serverRendered} {/* should be rendered in the same way*/}
     <EndlessScroll
@@ -116,7 +116,7 @@ Pagination has not yet been implemented
 
 ## Server rendering and paging
 When server rendering for example the first page you should call your paging action and render all on the server and pass the rendered JSX to for example a client component. Here is how the serverRendered data in the above example is passed:
-```javascript
+```tsx
 const readImages = await readPage({ 
     page: { pageSize, page: 0 }, 
     details: { collectionId: collection.id } 
