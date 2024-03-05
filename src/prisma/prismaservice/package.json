@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "seed": "npx node dist/seed.js",
-    "dobbelOmega-pull": "npx prisma db pull --schema ./src/dobbelOmega/schema.veven.prisma"
+    "dobbelOmega-pull": "npx prisma db pull --schema ./src/dobbelOmega/schema.veven.prisma",
+    "dobbelOmega-generate": "npx prisma generate --schema ./src/dobbelOmega/schema.veven.prisma"
   },
   "author": "vevcom",
   "license": "ISC",

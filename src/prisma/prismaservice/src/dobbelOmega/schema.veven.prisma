@@ -3,6 +3,11 @@ datasource db {
   url      = env("VEVEN_DB_URI")
 }
 
+generator dobbelOmega {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
 model AliasAssociations {
   MailAliasId Int
   UserId      Int
