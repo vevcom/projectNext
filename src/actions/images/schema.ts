@@ -12,10 +12,10 @@ export const createImageSchema = zfd.formData({
 export type CreateImageSchemaType = z.infer<typeof createImageSchema>
 
 export const createImagesSchema = zfd.formData({
-    files: z.array(z.instanceof(File)).refine(
+    files: zfd.repeatable(z.array(z.instanceof(File)).refine(
         files => files.every(file => file.size < maxFileSize),
         'File size must be less than 10mb'
-    ),
+    )),
 }).refine(
     data => data.files.length < 100,
     'Max 100 files'
