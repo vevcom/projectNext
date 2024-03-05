@@ -31,6 +31,12 @@ a.OmbulCover {
             min-height: 50px;
         }
         margin-bottom: ohma.$gap;
+        .noCoverImage {
+            border: 3px solid ohma.$colors-gray-500;
+            aspect-ratio: 5 / 7;
+            display: grid;
+            place-items: center;
+        }
     }
     > * {
         text-align: center;

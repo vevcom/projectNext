@@ -31,11 +31,19 @@ export default function OmbulCover(props: PropTypes) {
     const description = props.ombul ? props.ombul.description : props.preview.pDescription
     const coverImage = props.ombul ? props.ombul.coverImage : props.preview.pImage
 
+    const placeholderCover = (
+        coverImage instanceof File && coverImage.size ? (
+            <img src={URL.createObjectURL(coverImage)} />
+        ) : (
+            <div className={styles.noCoverImage}>Cover ikke valgt</div>
+        )
+    )
+
     const content = <>
         <div className={styles.coverImg}>
             {
                 coverImage instanceof File ? (
-                    <img src={URL.createObjectURL(coverImage)} alt="last opp cover" />
+                    placeholderCover
                 ) : (
                     coverImage.image && (
                         <Image width={250} image={coverImage.image} className={styles.coverImg} />
