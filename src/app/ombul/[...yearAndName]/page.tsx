@@ -17,7 +17,6 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
-    
     const user = await requireUser({
         permissions: ['OMBUL_READ']
     })
