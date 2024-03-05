@@ -98,10 +98,10 @@
 @mixin ImageCardListLayout {
     margin: 1em 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, calc((100% - 2em) / 3));
     grid-gap: 1em;
     @media screen and (max-width: variables.$mobileBreakpoint) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
     }
     @media screen and (max-width: 500px) {
         grid-template-columns: 1fr;

@@ -5,7 +5,6 @@ import styles from './error.module.scss'
 import CmsImageClient from './components/Cms/CmsImage/CmsImageClient'
 
 export default function ErrorBoundary({ error, reset }: {error: Error, reset: () => void}) {
-    console.error(error) //Should be exchanged for logger when implemented
     return (
         <div className={styles.wrapper}>
             <div className={styles.info}>
