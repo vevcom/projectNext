@@ -26,6 +26,7 @@
         }
         .confirm {
             width: 100%;
+            max-width: 200px;
             display: flex;
             flex-direction: column;
             > .close {
