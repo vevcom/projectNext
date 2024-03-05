@@ -39,20 +39,17 @@ export default async function Register() {
     const lastUsername = userAuth.user?.username
     let lastPassword: string = ''
 
-    async function callback() {
-        await signIn('credentials', {
-            username: lastUsername,
-            password: lastPassword,
-            redirect: true,
-            callbackUrl
-        })
-    }
-
     return <Form
         title="Registrer bruker"
         submitText="Registrer bruker"
         action={registerUser}
-        successCallback={callback}
+        successCallback={() => signIn('credentials', {
+            username: lastUsername,
+            password: lastPassword,
+            redirect: true,
+            callbackUrl
+            })
+        }
     >
         <TextInput label="Brukernavn" name="username" disabled={true} value={userAuth.user?.username}/>
         <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>

@@ -100,7 +100,6 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
                 select: adapterUserCutomFields
             })
             const ret = HS_MAA_GAA(user)
-            console.log(ret)
             return ret
         },
 
@@ -122,8 +121,7 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
                 return null
             }
 
-            const ret = HS_MAA_GAA(user.data)
-            return ret
+            return HS_MAA_GAA(user.data)
         },
 
         async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Promise<AdapterUser> {
