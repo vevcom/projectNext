@@ -3,22 +3,11 @@
 import errorHandeler from '@/prisma/errorHandler'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/actions/users/update'
-import { Permission } from '@prisma/client'
-import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
+import { UpdateRoleSchemaType, updateRoleSchema } from './schema'
 
-export async function updateRole(data: FormData): Promise<ActionReturn<void, false>> {
-    const schema = z.object({
-        id: z.coerce.number(),
-        name: z.string(),
-        permissions: z.nativeEnum(Permission).array(),
-    })
-
-    const parse = schema.safeParse({
-        id: data.get('id'),
-        name: data.get('name'),
-        permissions: data.getAll('permission'),
-    })
+export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
+    const parse = updateRoleSchema.safeParse(rawdata)
 
     if (!parse.success) return { success: false, error: parse.error.issues }
 
