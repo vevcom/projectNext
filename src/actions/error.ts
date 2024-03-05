@@ -1,12 +1,12 @@
 import { Prisma } from '@prisma/client'
+import type { SafeParseError } from 'zod'
 import type { ActionErrorCode, ActionError, ActionReturnError } from './Types'
-import { SafeParseError } from 'zod'
 
 export function createActionError(errorCode: ActionErrorCode, error?: string | ActionError[]): ActionReturnError {
     return {
         success: false,
         errorCode,
-        error: typeof error === 'string' ? error = [{ message: error }] : error,
+        error: typeof error === 'string' ? [{ message: error }] : error,
     }
 }
 

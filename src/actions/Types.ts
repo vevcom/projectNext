@@ -1,4 +1,4 @@
-export type ActionErrorCode = 
+export type ActionErrorCode =
     | 'DUPLICATE'
     | 'NOT FOUND'
     | 'BAD PARAMETERS'
@@ -17,8 +17,8 @@ export type ActionReturnError = {
     error?: ActionError[],
 }
 
-export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = 
-ActionReturnError | { 
+export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> =
+ActionReturnError | {
     success: true,
 } & (
     DataGuarantee extends true ? {

@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import { z } from 'zod'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
