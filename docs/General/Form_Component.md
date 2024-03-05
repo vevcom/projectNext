@@ -6,7 +6,7 @@ The Form component is a custom component that wraps a regular ```<form>```. It i
 
 ## How to use it
 At the end of the day you can use it as a regular form with a action:
-```javascript
+```tsx
 <Form 
     successCallback={collectionCreatedCallback}
     title="Lag et album" 
@@ -33,7 +33,7 @@ These are the props Form take in:
 
 ## Using a Form as submit button
 Note that since the Form always adds the submit button, it is completly valid to create a Form that has no input children. This essentially just a button:
-```javascript
+```tsx
 <Form
     action={update.bind(null, cmsParagraph.id).bind(null, content)}
     submitText="Oppdater"
@@ -53,15 +53,16 @@ The main technical part of the Form component is how it handles errors. When the
 Thus it is important that the path property used when returning errors in an action maps to the apropriate input field, but note that this is how zod does it by default. As long as the names in the FormData (and thus the form) matches the names in the zod schema, zod will baseically do this for you. 
 
 Here is an example action
-```javascript
-const schema = z.object({
+```ts
+const schema = zfd.formData({
     name: z.string().max(40).min(2).trim()
     description: z.string().max(500).min(2).trim()
 })
+
 const parse = schema.safeParse({
-        name: rawdata.get('name'),
-        description: rawdata.get('description'),
-    })
+    name: rawdata.get('name'),
+    description: rawdata.get('description'),
+})
 
 if (!parse.success) {
     return { success: false, error: parse.error.issues }
