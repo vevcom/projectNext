@@ -53,6 +53,7 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
     try {
         const parse = z
             .object({
+                email: z.string().email(),
                 password: z.string().max(50).min(2),
                 confirmPassword: z.string().max(50).min(2),
                 acceptTerms: z.literal('on', {
@@ -62,6 +63,7 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
             })
             .refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
             .safeParse({
+                email: rawdata.get('email'),
                 password: rawdata.get('password'),
                 confirmPassword: rawdata.get('confirmPassword'),
                 acceptTerms: rawdata.get('acceptTerms'),
@@ -96,6 +98,7 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
                     id: user.id
                 },
                 data: {
+                    email: parse.data.email,
                     acceptedTerms: new Date(),
                     sex: parse.data.sex
                 }
