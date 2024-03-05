@@ -8,6 +8,18 @@ import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 
 export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
+    const { user, status } = await getUser({
+        permissions: ['OMEGAQUOTES_WRITE']
+    })
+    if (!user) {
+        return {
+            success: false,
+            error: [{
+                message: status
+            }]
+        }
+    }
+
     const parse = omegaquotesSchema.safeParse(rawdata)
 
     if (!parse.success) {
@@ -18,19 +30,6 @@ export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Pr
     }
 
     const { quote, author } = parse.data
-
-    const { user, status } = await getUser({
-        permissions: ['OMEGAQUOTES_WRITE']
-    })
-
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
-    }
 
     try {
         const results = await prisma.omegaQuote.create({

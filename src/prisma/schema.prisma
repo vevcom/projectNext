@@ -77,6 +77,12 @@ enum Permission {
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
+
+  // Ombul
+  OMBUL_CREATE
+  OMBUL_READ
+  OMBUL_UPDATE
+  OMBUL_DESTROY
 }
 
 model Role {
@@ -110,30 +116,38 @@ model RolesUsers {
 ////////////
 
 model Image {
-  id                   Int              @id @default(autoincrement())
-  fsLocation           String           @unique
-  fsLocationSmallSize  String?          @unique
-  fsLocationMediumSize String?          @unique
-  name                 String           @unique
-  ext                  String
-  alt                  String
-  collection           ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  coverImageFor        ImageCollection? @relation(name: "coverImage")
-  collectionId         Int
-  createdAt            DateTime         @default(now())
-  updatedAt            DateTime         @updatedAt
-  cmsImages            CmsImage[]
+  id                      Int              @id @default(autoincrement())
+  fsLocation              String           @unique
+  fsLocationSmallSize     String?          @unique
+  fsLocationMediumSize    String?          @unique
+  name                    String           @unique
+  ext                     String
+  alt                     String
+  collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
+  collectionId            Int
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  cmsImages               CmsImage[]
+}
+
+enum SpecialCollection {
+  STANDARDIMAGES
+  OMBULCOVERS
+  PROFILEIMAGES
+  COMMITEELOGOS
 }
 
 model ImageCollection {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
+  id           Int                @id @default(autoincrement())
+  name         String             @unique
   description  String?
   images       Image[]
-  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImage")
-  coverImageId Int?     @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  coverImage   Image?             @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
+  coverImageId Int?               @unique
+  special      SpecialCollection? @unique
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }
 
 enum ImageSize {
@@ -157,6 +171,8 @@ model CmsImage {
   articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
+  Ombul                Ombul?
+  
 }
 
 model CmsParagraph {
@@ -283,4 +299,24 @@ model OmegaOrder {
   order     Int      @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+///////////////////////////
+// Ombul //////////////////
+///////////////////////////
+
+model Ombul {
+  id           Int      @id @default(autoincrement())
+  name         String   
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  fsLocation   String   @unique //location in /store/ombul/[fsLocation]
+  year         Int
+  issueNumber  Int
+  coverImage   CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId Int      @unique
+
+  @@unique([year, name])
+  @@unique([year, issueNumber])
 }

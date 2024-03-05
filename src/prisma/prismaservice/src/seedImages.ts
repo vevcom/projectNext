@@ -9,19 +9,14 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default async function seedImages(prisma: PrismaClient) {
-    const standardCollection = await prisma.imageCollection.upsert({
+    const standardCollection = await prisma.imageCollection.findUnique({
         where: {
-            name: 'standard images'
-        },
-        update: {
-
-        },
-        create: {
-            name: 'standard images',
-            description: 'standard images for the website',
+            special: 'STANDARDIMAGES',
         }
     })
-
+    if (!standardCollection) {
+        throw new Error('Standard collection not found')
+    }
     const standardLocation = join(__dirname, '..', 'standard_store', 'images')
     const storeLocation = join(__dirname, '..', 'store', 'images')
 

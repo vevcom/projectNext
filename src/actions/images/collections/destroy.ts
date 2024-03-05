@@ -6,7 +6,16 @@ import type { ActionReturn } from '@/actions/Types'
 
 export async function destroyImageCollection(collectionId: number): Promise<ActionReturn<ImageCollection>> {
     try {
-        const collection = await prisma.imageCollection.delete({
+        //only delete if the collection is not special
+        const collection = await prisma.imageCollection.findUnique({
+            where: {
+                id: collectionId,
+            },
+        })
+        if (!collection) return { success: false, error: [{ message: 'Collection ikke funnet' }] }
+        if (collection.special) return { success: false, error: [{ message: 'Kan ikke slette spesielle koleksjoner' }] }
+
+        await prisma.imageCollection.delete({
             where: {
                 id: collectionId,
             },
