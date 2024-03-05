@@ -33,7 +33,7 @@ a.OmbulCover {
         margin-bottom: ohma.$gap;
         .noCoverImage {
             border: 3px solid ohma.$colors-gray-500;
-            aspect-ratio: 5 / 7;
+            aspect-ratio: 5 / 7; //aspect-ratio of sheet of paper assuemed
             display: grid;
             place-items: center;
         }

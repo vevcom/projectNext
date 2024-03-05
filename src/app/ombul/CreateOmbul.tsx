@@ -84,6 +84,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
 
     return (
         <div className={styles.CreateOmbul}>
+            <h1>Lag ny ombul</h1>
             <Form
                 action={createOmbul}
                 submitText="Lag ombul"
