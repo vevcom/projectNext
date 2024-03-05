@@ -4,8 +4,14 @@ import errorHandler from '@/prisma/errorHandler'
 import deleteFile from '@/store/deleteFile'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from './Types'
+import { requireUser } from '@/auth'
 
 export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
+
+    await requireUser({
+        permissions: ['OMBUL_DESTROY']
+    });
+
     try {
         const ombul = await prisma.ombul.findUnique({
             where: {
