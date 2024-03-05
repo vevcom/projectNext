@@ -5,6 +5,8 @@
     @include ohma.card();
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 2em;
     .coverImage {
         border-radius: ohma.$rounding;
         overflow: hidden;

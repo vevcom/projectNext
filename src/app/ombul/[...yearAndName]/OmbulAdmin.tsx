@@ -13,6 +13,7 @@ import DateInput from '@/app/components/UI/DateInput'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
 import CmsImage, { CmsImageNew } from '@/app/components/Cms/CmsImage/CmsImage'
+import { destroyOmbul } from '@/actions/ombul/destroy'
 
 type PropTypes = {
     canUpdate: boolean
@@ -86,7 +87,16 @@ export default function OmbulAdmin({
             }  
             {
                 canDestroy && (
-                    <></>
+                    <Form
+                        action={destroyOmbul.bind(null, ombul.id)}
+                        successCallback={handleDestroy}
+                        submitText='Slett'
+                        submitColor='red'
+                        confirmation={{
+                            confirm: true,
+                            text: 'Sikker på at du vil slette ombul? Dette kan ikke angres.',
+                        }}
+                    ></Form>
                 )
             }
             </div>
