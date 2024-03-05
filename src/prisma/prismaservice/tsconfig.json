@@ -7,8 +7,9 @@
       "outDir": "./dist",
       "rootDir": "./src",
       "strict": true,
+      "baseUrl": ".",
       "paths": {
-        "@/dobbelOmega": ["./src/dobbelOmega/client/default"],
+        "@/prisma/*": ["./generated/*"]
       }
     },
     "include": ["src/**/*"],
@@ -17,4 +18,4 @@
       "verbose": false,
       "resolveFullPaths": true
     }
-  }
+}

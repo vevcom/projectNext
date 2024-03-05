@@ -1,5 +1,5 @@
-import { Permission } from '@prisma/client'
-import type { PrismaClient } from '@prisma/client'
+import { Permission } from '../../generated/pn'
+import type { PrismaClient } from '../../generated/pn'
 
 export default async function seedDevPermissions(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({

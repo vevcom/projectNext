@@ -7,7 +7,7 @@ import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../generated/pn'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 
 async function seed() {
@@ -20,9 +20,11 @@ async function seed() {
     await seedCms(prisma)
     console.log('seed standard done')
 
+    console.log(process.env.MIGRATE_FROM_VEVEN)
     if (process.env.MIGRATE_FROM_VEVEN) {
         console.log('dobbel omega!!!')
         await dobbelOmega(prisma)
+        console.log('dobbel omega done, dagen derpå')
     }
 
     if (process.env.NODE_ENV !== 'development') return

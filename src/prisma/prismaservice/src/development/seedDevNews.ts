@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '../../generated/pn'
 
 export default async function seedDevNews(prisma: PrismaClient) {
     // seed old news

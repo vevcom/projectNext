@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '../../generated/pn'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
     const fn = ['anne', 'johan', 'pål', 'lars', 'lasse', 'leo', 'noa',
