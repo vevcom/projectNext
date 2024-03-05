@@ -1,5 +1,4 @@
 'use client'
-
 import styles from './CreateOmbul.module.scss'
 import OmbulCover from './OmbulCover'
 import TextInput from '../components/UI/TextInput'
@@ -27,7 +26,7 @@ type PreviewKey = keyof PropTypesPreview
  * @param latestOmbul - The latest ombul issue, used to set default values for year and issueNumber of next ombul
  */
 export default function CreateOmbul({ latestOmbul }: PropTypes) {
-    const { refresh } = useRouter()
+    const { refresh, push } = useRouter()
     const currentYear = new Date().getFullYear()
 
     let nextYear: number
@@ -78,13 +77,18 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
         })
     }
 
+    const handleCreate = async (ombul: Ombul | undefined) => {
+        if (ombul) push(`/ombul/${ombul.year}/${ombul.name}`)
+        refresh()
+    }
+
     return (
         <div className={styles.CreateOmbul}>
             <Form
                 action={createOmbul}
                 submitText="Lag ombul"
                 className={styles.form}
-                successCallback={refresh}
+                successCallback={handleCreate}
             >
                 <TextInput label="navn" name="name" onChange={handlePreviewChange.bind(null, 'pName')} />
                 <Textarea label="Beskrivelse" name="description" onChange={handlePreviewChangeDescription} />
