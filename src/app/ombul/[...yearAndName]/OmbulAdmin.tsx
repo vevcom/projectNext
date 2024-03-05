@@ -2,18 +2,15 @@
 
 import styles from './OmbulAdmin.module.scss'
 import Form from '@/app/components/Form/Form'
-import CmsImageClient from '@/app/components/Cms/CmsImage/CmsImageClient'
 import { updateOmbul, updateOmbulFile } from '@/actions/ombul/update'
 import { EditModeContext } from '@/context/EditMode'
-import DateInput from '@/app/components/UI/DateInput'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
-import CmsImage, { CmsImageNew } from '@/app/components/Cms/CmsImage/CmsImage'
+import { CmsImageNew } from '@/app/components/Cms/CmsImage/CmsImage'
 import { destroyOmbul } from '@/actions/ombul/destroy'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import type { ExpandedOmbul } from '@/actions/ombul/Types'
-import type { ExpandedCmsImage } from '@/actions/cms/images/Types'
 
 type PropTypes = {
     canUpdate: boolean
@@ -55,6 +52,7 @@ export default function OmbulAdmin({
 
     return (
         <div className={styles.OmbulAdmin}>
+            <h2>Admin</h2>
             <div className={styles.left}>
                 {
                     canUpdate && (

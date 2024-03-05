@@ -4,15 +4,20 @@
     background-color: ohma.$colors-secondary;
     @include ohma.card();
     display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
     gap: 2em;
+    h2 {
+        flex: 1 1 100%;
+        color: ohma.$colors-white;
+    }
     .coverImage {
         border-radius: ohma.$rounding;
         overflow: hidden;
     }
     > .left {
-        > :first-child {
+        > *:not(:last-child) {
             border-bottom: 3px solid ohma.$colors-gray-700;
             margin-bottom: 2em;
         }
