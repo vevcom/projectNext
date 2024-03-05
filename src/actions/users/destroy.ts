@@ -14,7 +14,7 @@ export async function destroyUser(id: number): Promise<ActionReturn<User>> {
         })
 
         if (!user) {
-            return { success: false, error: [{ message: 'User not found' }] }
+            return { success: false, error: [{ message: 'Bruker ikke funnet.' }] }
         }
 
         return { success: true, data: user }
