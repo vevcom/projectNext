@@ -1,9 +1,10 @@
 'use server'
-import newsArticleSchema from './schema'
+import { newsArticleSchema } from './schema'
 import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import type { SimpleNewsArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import type { NewsArticleSchemaType } from './schema'
 
 export async function publishNews(
     id: number,
@@ -28,10 +29,10 @@ export async function publishNews(
 
 export async function updateNews(
     id: number,
-    rawdata: FormData
+    rawdata: FormData | NewsArticleSchemaType
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
-        const parse = newsArticleSchema.safeParse(Object.fromEntries(rawdata.entries()))
+        const parse = newsArticleSchema.safeParse(rawdata)
         if (!parse.success) {
             return { success: false, error: parse.error.issues }
         }
