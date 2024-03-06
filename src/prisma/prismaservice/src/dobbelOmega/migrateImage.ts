@@ -54,8 +54,8 @@ export default async function migrateImage(
         return {
             ...image,
             collectionId,
-        }
-    })
+        } //TODO: Remove this. For now I only want to migrate ombul images
+    }).filter(image => image.collectionId === ombulCollection.id)
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
         const ext = image.name.split('.')[1]
