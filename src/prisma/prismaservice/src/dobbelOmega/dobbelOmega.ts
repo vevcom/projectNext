@@ -5,8 +5,12 @@ import migrateImageCollection from './migrateImageCollection'
 import migrateImage from './migrateImage'
 
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
+    console.log('dobbel omega!!!')
+
     const vevenPrisma = new PrismaClientVeven()
     const imageCollectionIdMap = await migrateImageCollection(pnPrisma, vevenPrisma)
     await migrateImage(pnPrisma, vevenPrisma)
     await migrateOmbul(pnPrisma, vevenPrisma)
+
+    console.log('dobbel omega done, dagen derpå')
 }

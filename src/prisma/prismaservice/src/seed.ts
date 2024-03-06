@@ -22,11 +22,7 @@ async function seed() {
 
     const shouldMigrate = process.env.MIGRATE_FROM_VEVEN === 'true'
     console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
-    if (shouldMigrate) {
-        console.log('dobbel omega!!!')
-        await dobbelOmega(prisma)
-        console.log('dobbel omega done, dagen derpå')
-    }
+    if (shouldMigrate) await dobbelOmega(prisma)
 
     if (process.env.NODE_ENV !== 'development') return
     console.log('seeding dev data....')
