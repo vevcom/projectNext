@@ -3,7 +3,7 @@ import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import { v4 as uuid } from 'uuid'
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -12,7 +12,8 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
     const ombuls = await vevenPrisma.ombul.findMany({
         include: {
             Images: true
-        }
+        },
+        take: 3 //TODO: remove this
     })
 
     //First write files concurrently for speed
@@ -28,6 +29,8 @@ export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma
         const store = join(__dirname, '..', '..', 'store', 'ombul')
 
         const fsLocation = uuid() + '.pdf'
+
+        await mkdir(store, { recursive: true })
 
         await writeFile(join(store, fsLocation), pdfBuffer)
 
