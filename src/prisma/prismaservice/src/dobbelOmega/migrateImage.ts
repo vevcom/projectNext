@@ -5,6 +5,7 @@ import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuid } from 'uuid'
+import { Limits } from './migrationLimits'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
@@ -19,7 +20,8 @@ import { v4 as uuid } from 'uuid'
 export default async function migrateImage(
     pnPrisma: PrismaClientPn, 
     vevenPrisma: PrismaClientVeven,
-    migrateImageCollectionIdMap: IdMapper
+    migrateImageCollectionIdMap: IdMapper,
+    limits: Limits
 ) {
     const gabageCollection = await pnPrisma.imageCollection.upsert({
         where: {
@@ -56,9 +58,13 @@ export default async function migrateImage(
             ...image,
             collectionId,
         }
-    }).filter(image => 
-        image.collectionId === ombulCollection.id || (image.ImageGroupId && image.ImageGroupId < 3)
-    )  //TODO: Change this. For now only seed ombul covers and some images
+    }).filter(image => {
+        //Apply limits
+        if (!limits.numberOffFullImageCollections) return true
+        if (image.collectionId === ombulCollection.id) return true
+        if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
+        return false
+    })
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
         const ext = image.originalName.split('.').pop()

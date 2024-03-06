@@ -10,3 +10,5 @@ export function getLimits() {
         numberOffFullImageCollections: limitsOn ? 3 : null,
     }
 }
+
+export type Limits = ReturnType<typeof getLimits>

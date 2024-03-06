@@ -3,13 +3,16 @@ import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import migrateOmbul from './migrateOmbul'
 import migrateImageCollection from './migrateImageCollection'
 import migrateImage from './migrateImage'
+import { getLimits } from './migrationLimits'
 
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     console.log('dobbel omega!!!')
     const vevenPrisma = new PrismaClientVeven()
 
+    const limits = getLimits()
+
     const imageCollectionIdMap = await migrateImageCollection(pnPrisma, vevenPrisma)
-    const imageIdMap = await migrateImage(pnPrisma, vevenPrisma, imageCollectionIdMap)
+    const imageIdMap = await migrateImage(pnPrisma, vevenPrisma, imageCollectionIdMap, limits)
     await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap)
 
     console.log('dobbel omega done, dagen derpå')
