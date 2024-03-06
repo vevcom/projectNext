@@ -5,7 +5,7 @@ import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuid } from 'uuid'
-import { Limits } from './migrationLimits'
+import type { Limits } from './migrationLimits'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection

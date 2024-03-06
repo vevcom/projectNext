@@ -6,7 +6,7 @@ import { dirname, join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 import type { IdMapper } from './IdMapper'
 import { vevenIdToPnId } from './IdMapper'
-import { Limits } from './migrationLimits';
+import type { Limits } from './migrationLimits';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
