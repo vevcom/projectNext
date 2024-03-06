@@ -105,6 +105,7 @@ export default async function migrateImage(
     })
 
     //Finally upsurt to db
+    const migrateImageIdMap : IdMapper = []
     await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
         const { id: pnId } = await pnPrisma.image.upsert({
             where: {
@@ -125,7 +126,9 @@ export default async function migrateImage(
                 }
             }
         })
+        migrateImageIdMap.push({vevenId: image.id, pnId})
     }))
+    return migrateImageIdMap
 }
 
 /**
