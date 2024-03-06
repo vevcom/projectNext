@@ -27,6 +27,8 @@ export async function updateUser(id: number, rawdata: FormData | UpdateUserSchem
     }
 }
 
+// These function should maybe be in another place than server actions? @Paulijuz
+
 export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {
         await prisma.user.update({
