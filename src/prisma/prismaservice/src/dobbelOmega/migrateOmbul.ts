@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 import type { IdMapper } from './IdMapper'
+import { vevenIdToPnId } from './IdMapper'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,10 +23,7 @@ export default async function migrateOmbul(
     imageIdMap: IdMapper
 ) {
     const ombuls = await vevenPrisma.ombul.findMany({
-        include: {
-            Images: true
-        },
-        take: 3 //TODO: remove this
+        take: 5 //TODO: remove this
     })
 
     //First write files concurrently for speed
@@ -54,6 +52,9 @@ export default async function migrateOmbul(
         const fsLocation = fsLocations[ombulIdx]
 
         const coverName = ombul.title.split(' ').join('_') + '_cover' + uuid()
+
+        const coverImageId = vevenIdToPnId(imageIdMap, ombul.ImageId)
+
         const coverImage = await pnPrisma.cmsImage.upsert({
             where: {
                 name: coverName,
@@ -62,7 +63,12 @@ export default async function migrateOmbul(
 
             },
             create: {
-                name: coverName,
+                name: coverName,   
+                image: coverImageId ?{
+                    connect: {
+                        id: coverImageId
+                    }
+                } : undefined
             }
         })
 
