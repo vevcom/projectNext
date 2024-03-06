@@ -1,7 +1,7 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
-type IdMapper = {
+export type IdMapper = {
     vevenId: number
     pnId: number
 }[]
