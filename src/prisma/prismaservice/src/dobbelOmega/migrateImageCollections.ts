@@ -8,7 +8,7 @@ import type { IdMapper } from './IdMapper'
  * @param vevenPrisma - PrismaClientVeven
  * @returns - IdMapper - A map of the old and new id's of the image collections
  */
-export default async function migrateImageCollection(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
+export default async function migrateImageCollections(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
     const imageCollections = await vevenPrisma.imageGroups.findMany()
 
     const IdMap: IdMapper = []

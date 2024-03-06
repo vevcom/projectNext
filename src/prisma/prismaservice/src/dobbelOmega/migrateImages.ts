@@ -17,7 +17,7 @@ import { Limits } from './migrationLimits'
  * the same as the return value of migrateImageCollection
  * @returns - A map of the old and new id's of the images to be used to create correct relations
  */
-export default async function migrateImage(
+export default async function migrateImages(
     pnPrisma: PrismaClientPn, 
     vevenPrisma: PrismaClientVeven,
     migrateImageCollectionIdMap: IdMapper,
