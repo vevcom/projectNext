@@ -1,8 +1,10 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './migrateImageCollection'
-import migrateImageCollection from './migrateImageCollection'
-import { imageSizes } from 'src/seedImages'
+import { imageSizes, imageStoreLocation } from 'src/seedImages'
+import { writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
+import { v4 as uuid } from 'uuid'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
@@ -73,7 +75,17 @@ export default async function migrateImage(
  * fetches an image from the Veven store and uploads it to the PN store (does NOT store the image 
  * in the database, only the file on the server)
  * @param fsLocationVev - The location of the image on the Veven store to be fetched
+ * @returns - The location of the image on the PN store
  */
-function fetchImageAndUploadToStore(fsLocationVev: string) : string {
+async function fetchImageAndUploadToStore(fsLocationVev: string) : Promise<string> {
+    const ext = fsLocationVev.split('.').pop()
+    const fsLocationPn = `${uuid()}.${ext}`
 
+    const res = await fetch(fsLocationVev, {
+        method: 'GET',
+    })
+    const imageBuffer = Buffer.from(await res.arrayBuffer())
+    await mkdir(imageStoreLocation, { recursive: true })
+    await writeFile(join(imageStoreLocation, fsLocationPn), imageBuffer)
+    return fsLocationPn
 }

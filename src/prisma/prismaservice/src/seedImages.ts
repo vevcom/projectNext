@@ -13,6 +13,9 @@ export const imageSizes = {
     medium: 600,
 }
 
+const standardLocation = join(__dirname, '..', 'standard_store', 'images')
+export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
+
 export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.findUnique({
         where: {
@@ -22,8 +25,6 @@ export default async function seedImages(prisma: PrismaClient) {
     if (!standardCollection) {
         throw new Error('Standard collection not found')
     }
-    const standardLocation = join(__dirname, '..', 'standard_store', 'images')
-    const storeLocation = join(__dirname, '..', 'store', 'images')
 
     const files = await readdir(standardLocation)
     await Promise.all(files.map(async (file) => {
@@ -38,14 +39,14 @@ export default async function seedImages(prisma: PrismaClient) {
         const fsLocation = `${uuid()}.${ext}`
         await copyFile(
             join(standardLocation, file),
-            join(storeLocation, fsLocation)
+            join(imageStoreLocation, fsLocation)
         )
 
         const bigPath = path.join(standardLocation, file)
 
         //create small size version of the image
         const fsLocationSmallSize = `${uuid()}.${ext}`
-        const smallPath = path.join(storeLocation, fsLocationSmallSize)
+        const smallPath = path.join(imageStoreLocation, fsLocationSmallSize)
         await sharp(bigPath).resize(imageSizes.small, imageSizes.small, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
@@ -53,7 +54,7 @@ export default async function seedImages(prisma: PrismaClient) {
 
         //create medium size version of the image
         const fsLocationMediumSize = `${uuid()}.${ext}`
-        const mediumPath = path.join(storeLocation, fsLocationMediumSize)
+        const mediumPath = path.join(imageStoreLocation, fsLocationMediumSize)
         await sharp(bigPath).resize(imageSizes.medium, imageSizes.medium, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
