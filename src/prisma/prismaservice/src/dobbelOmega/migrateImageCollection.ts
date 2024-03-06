@@ -1,11 +1,24 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
+type IdMapper = {
+    vevenId: number
+    pnId: number
+}[]
+
+/**
+ * This function migrates image collections from Veven to PN
+ * @param pnPrisma - PrismaClientPn
+ * @param vevenPrisma - PrismaClientVeven
+ * @returns - IdMapper - A map of the old and new id's of the image collections
+ */
 export default async function migrateImageCollection(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
     const imageCollections = await vevenPrisma.imageGroups.findMany()
 
+    const IdMap : IdMapper = []
+
     await Promise.all(imageCollections.map(async (imageCollection) => {
-        pnPrisma.imageCollection.upsert({
+        const collection = await pnPrisma.imageCollection.upsert({
             where: {
                 name: imageCollection.name
             },
@@ -13,7 +26,6 @@ export default async function migrateImageCollection(pnPrisma: PrismaClientPn, v
 
             },
             create: {
-                id: imageCollection.id,
                 name: imageCollection.name,
                 description: 'Denne samlingen ble migrert fra Veven',
                 createdAt: imageCollection.updatedAt,
@@ -21,5 +33,8 @@ export default async function migrateImageCollection(pnPrisma: PrismaClientPn, v
                 //TODO: Link to right committee
             }
         })
-    }))
+        IdMap.push({vevenId: imageCollection.id, pnId: collection.id})
+        }
+    ))
+    return IdMap
 }
