@@ -1,15 +1,15 @@
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import { v4 as uuid } from 'uuid'
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { writeFile, mkdir } from 'fs/promises';
-import type { IdMapper } from './IdMapper'
 import { vevenIdToPnId } from './IdMapper'
-import type { Limits } from './migrationLimits';
+import { v4 as uuid } from 'uuid'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
+import { writeFile, mkdir } from 'fs/promises'
+import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { IdMapper } from './IdMapper'
+import type { Limits } from './migrationLimits'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 /**
  * This function migrates ombul from Veven to PN, by creating a new ombul in PN for each ombul in Veven,
@@ -19,7 +19,7 @@ const __dirname = dirname(__filename);
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to be used to create correct relations
  */
 export default async function migrateOmbul(
-    pnPrisma: PrismaClientPn, 
+    pnPrisma: PrismaClientPn,
     vevenPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
     limits: Limits,
@@ -40,7 +40,7 @@ export default async function migrateOmbul(
 
         const store = join(__dirname, '..', '..', 'store', 'ombul')
 
-        const fsLocation = uuid() + '.pdf'
+        const fsLocation = `${uuid()}.pdf`
 
         await mkdir(store, { recursive: true })
 
@@ -53,7 +53,7 @@ export default async function migrateOmbul(
         const ombul = ombuls[ombulIdx]
         const fsLocation = fsLocations[ombulIdx]
 
-        const coverName = ombul.title.split(' ').join('_') + '_cover' + uuid()
+        const coverName = `${ombul.title.split(' ').join('_')}_cover${uuid()}`
 
         const coverImageId = vevenIdToPnId(imageIdMap, ombul.ImageId)
 
@@ -65,8 +65,8 @@ export default async function migrateOmbul(
 
             },
             create: {
-                name: coverName,   
-                image: coverImageId ?{
+                name: coverName,
+                image: coverImageId ? {
                     connect: {
                         id: coverImageId
                     }
@@ -88,7 +88,7 @@ export default async function migrateOmbul(
                 id: ombul.id
             },
             update: {
-               
+
             },
             create: {
                 coverImage: {

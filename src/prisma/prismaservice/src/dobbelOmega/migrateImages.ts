@@ -1,11 +1,11 @@
-import { PrismaClient as PrismaClientPn } from '@/generated/pn'
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import { vevenIdToPnId, type IdMapper } from './IdMapper'
-import { imageSizes, imageStoreLocation } from '@/src/seedImages'
+import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
-import { v4 as uuid } from 'uuid'
 import type { Limits } from './migrationLimits'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
@@ -18,7 +18,7 @@ import type { Limits } from './migrationLimits'
  * @returns - A map of the old and new id's of the images to be used to create correct relations
  */
 export default async function migrateImages(
-    pnPrisma: PrismaClientPn, 
+    pnPrisma: PrismaClientPn,
     vevenPrisma: PrismaClientVeven,
     migrateImageCollectionIdMap: IdMapper,
     limits: Limits
@@ -48,12 +48,12 @@ export default async function migrateImages(
     })
 
     const imagesWithCollection = images.map(image => {
-        let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId);
+        let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (!collectionId) {
             collectionId = gabageCollection.id
-        } 
+        }
         return {
             ...image,
             collectionId,
@@ -93,7 +93,7 @@ export default async function migrateImages(
     }))
 
     //correct names if there are duplicates
-    const namesTaken : { name: string, times: number }[] = []
+    const namesTaken: { name: string, times: number }[] = []
     const imagesWithCollectionAndFsAndCorrectedName = imagesWithCollectionAndFs.map(image => {
         if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const ext = image.originalName.split('.').pop() || ''
@@ -106,9 +106,9 @@ export default async function migrateImages(
                 name: `${name}(${nameTaken.times})`,
                 ext
             }
-        } else {
-            namesTaken.push({name, times: 0})
         }
+        namesTaken.push({ name, times: 0 })
+
         return {
             ...image,
             name,
@@ -117,7 +117,7 @@ export default async function migrateImages(
     })
 
     //Finally upsurt to db
-    const migrateImageIdMap : IdMapper = []
+    const migrateImageIdMap: IdMapper = []
     await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
         if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const { id: pnId } = await pnPrisma.image.upsert({
@@ -139,23 +139,23 @@ export default async function migrateImages(
                 }
             }
         })
-        migrateImageIdMap.push({vevenId: image.id, pnId})
+        migrateImageIdMap.push({ vevenId: image.id, pnId })
     }))
     return migrateImageIdMap
 }
 
 /**
- * fetches an image from the Veven store and uploads it to the PN store (does NOT store the image 
+ * fetches an image from the Veven store and uploads it to the PN store (does NOT store the image
  * in the database, only the file on the server). Note that veven will often fail when we make a
  * lot of requests to it. TODO: Add a retry mechanism
  * @param fsLocationVev - The location of the image on the Veven store to be fetched
  * @returns - The location of the image on the PN store
  */
-async function fetchImageAndUploadToStore(fsLocationVev: string) : Promise<string | null> {
-    const ext = fsLocationVev.split('.').pop() 
+async function fetchImageAndUploadToStore(fsLocationVev: string): Promise<string | null> {
+    const ext = fsLocationVev.split('.').pop()
     const fsLocationPn = `${uuid()}.${ext}`
 
-    if (!ext || !['webp', 'png', 'jpg', 'jpeg'].includes(ext)){
+    if (!ext || !['webp', 'png', 'jpg', 'jpeg'].includes(ext)) {
         console.error(`Image ${fsLocationVev} is not a webp image`)
         return null
     }

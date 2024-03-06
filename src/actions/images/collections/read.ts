@@ -39,7 +39,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
 /**
  * Returns a page of image collections, orders by createdAt (and then name)
  * @param page - the page to read of the Page type
- * @returns 
+ * @returns
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>

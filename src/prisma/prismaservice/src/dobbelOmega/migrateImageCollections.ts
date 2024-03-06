@@ -1,6 +1,6 @@
-import { PrismaClient as PrismaClientPn } from '@/generated/pn'
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './IdMapper'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
 /**
  * This function migrates image collections from Veven to PN
@@ -36,7 +36,7 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
                 //TODO: Link to right committee
             }
         })
-        IdMap.push({vevenId: imageCollection.id, pnId: collection.id})
+        IdMap.push({ vevenId: imageCollection.id, pnId: collection.id })
     }
     return IdMap
 }

@@ -1,10 +1,10 @@
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import migrateOmbul from './migrateOmbul'
 import migrateImageCollections from './migrateImageCollections'
 import migrateImages from './migrateImages'
 import { getLimits } from './migrationLimits'
 import migrateOmegaquotes from './migrateOmegaquotes'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     console.log('dobbel omega!!!')
