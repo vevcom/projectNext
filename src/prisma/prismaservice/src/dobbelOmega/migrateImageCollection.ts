@@ -15,9 +15,16 @@ type IdMapper = {
 export default async function migrateImageCollection(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
     const imageCollections = await vevenPrisma.imageGroups.findMany()
 
-    const IdMap : IdMapper = []
+    const IdMap: IdMapper = []
+    for (const imageCollection of imageCollections) {
+        const collectionsWithSameName = await pnPrisma.imageCollection.findMany({
+            where: {
+                name: imageCollection.name
+            }
+        })
 
-    await Promise.all(imageCollections.map(async (imageCollection) => {
+        const name = imageCollection.name + (collectionsWithSameName.length ? `(${collectionsWithSameName.length})` : '')
+
         const collection = await pnPrisma.imageCollection.upsert({
             where: {
                 name: imageCollection.name
@@ -26,7 +33,7 @@ export default async function migrateImageCollection(pnPrisma: PrismaClientPn, v
 
             },
             create: {
-                name: imageCollection.name,
+                name,
                 description: 'Denne samlingen ble migrert fra Veven',
                 createdAt: imageCollection.updatedAt,
                 updatedAt: imageCollection.updatedAt,
@@ -34,7 +41,6 @@ export default async function migrateImageCollection(pnPrisma: PrismaClientPn, v
             }
         })
         IdMap.push({vevenId: imageCollection.id, pnId: collection.id})
-        }
-    ))
+    }
     return IdMap
 }
