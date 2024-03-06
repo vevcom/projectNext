@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 import type { IdMapper } from './IdMapper'
 import { vevenIdToPnId } from './IdMapper'
+import { Limits } from './migrationLimits';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,10 +21,11 @@ const __dirname = dirname(__filename);
 export default async function migrateOmbul(
     pnPrisma: PrismaClientPn, 
     vevenPrisma: PrismaClientVeven,
-    imageIdMap: IdMapper
+    imageIdMap: IdMapper,
+    limits: Limits,
 ) {
     const ombuls = await vevenPrisma.ombul.findMany({
-        take: 5 //TODO: remove this
+        take: limits.ombul ? limits.ombul : undefined,
     })
 
     //First write files concurrently for speed

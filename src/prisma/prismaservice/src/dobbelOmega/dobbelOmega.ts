@@ -13,7 +13,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
 
     const imageCollectionIdMap = await migrateImageCollection(pnPrisma, vevenPrisma)
     const imageIdMap = await migrateImage(pnPrisma, vevenPrisma, imageCollectionIdMap, limits)
-    await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap)
+    await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap, limits)
 
     console.log('dobbel omega done, dagen derpå')
 }
