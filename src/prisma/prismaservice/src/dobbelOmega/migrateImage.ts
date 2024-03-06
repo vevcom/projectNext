@@ -56,23 +56,26 @@ export default async function migrateImage(
             ...image,
             collectionId,
         } //TODO: Remove this. For now I only want to migrate ombul images or images in foirst 5 collections on veven
-    }).filter(image => image.collectionId === ombulCollection.id || image.collectionId < 5)
+    }).filter(image => image.collectionId === ombulCollection.id || image.collectionId < 3)
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
-        const ext = image.name.split('.')[1]
-        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}/
-            ?url=${process.env.VEVEN_STORE_URL}/images/${image.name}.${ext}`
-        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/
-            resize/${imageSizes.medium}/${imageSizes.medium}/${image.name}
-            ?url=${process.env.VEVEN_STORE_URL}/images/${image.name}.${ext}`
-        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/
-            resize/${imageSizes.small}/${imageSizes.small}/${image.name}
-            ?url=${process.env.VEVEN_STORE_URL}/images/${image.name}.${ext}`
+        const ext = image.originalName.split('.').pop()
+        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
+            + `?url=/store/images/${image.name}.${ext}`
+        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
+            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
+            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
         const [fsLocationSmallSize, fsLocationMediumSize, fsLocation] = await Promise.all([
             fetchImageAndUploadToStore(fsLocationSmallOldVev),
             fetchImageAndUploadToStore(fsLocationMediumOldVev),
             fetchImageAndUploadToStore(fsLocationDefaultOldVev)
         ])
+        if (!fsLocation || !fsLocationMediumSize || !fsLocationSmallSize) {
+            console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
+            return null
+        }
+
         return {
             ...image,
             fsLocationSmallSize,
@@ -84,6 +87,7 @@ export default async function migrateImage(
     //correct names if there are duplicates
     const namesTaken : { name: string, times: number }[] = []
     const imagesWithCollectionAndFsAndCorrectedName = imagesWithCollectionAndFs.map(image => {
+        if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const ext = image.originalName.split('.').pop() || ''
         const name = image.originalName.split('.').slice(0, -1).join('.')
         const nameTaken = namesTaken.find(n => n.name === name)
@@ -107,6 +111,7 @@ export default async function migrateImage(
     //Finally upsurt to db
     const migrateImageIdMap : IdMapper = []
     await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
+        if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const { id: pnId } = await pnPrisma.image.upsert({
             where: {
                 name: image.name
@@ -133,17 +138,28 @@ export default async function migrateImage(
 
 /**
  * fetches an image from the Veven store and uploads it to the PN store (does NOT store the image 
- * in the database, only the file on the server)
+ * in the database, only the file on the server). Note that veven will often fail when we make a
+ * lot of requests to it. TODO: Add a retry mechanism
  * @param fsLocationVev - The location of the image on the Veven store to be fetched
  * @returns - The location of the image on the PN store
  */
-async function fetchImageAndUploadToStore(fsLocationVev: string) : Promise<string> {
-    const ext = fsLocationVev.split('.').pop()
+async function fetchImageAndUploadToStore(fsLocationVev: string) : Promise<string | null> {
+    const ext = fsLocationVev.split('.').pop() 
     const fsLocationPn = `${uuid()}.${ext}`
 
+    if (!ext || !['webp', 'png', 'jpg', 'jpeg'].includes(ext)){
+        console.error(`Image ${fsLocationVev} is not a webp image`)
+        return null
+    }
     const res = await fetch(fsLocationVev, {
         method: 'GET',
-    })
+        //This is to make the fetch request look like it comes from a browser. Not sure if it helps
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+        },
+    }).catch(() => console.error(`Failed to fetch image from ${fsLocationVev}`))
+
+    if (!res) return null
     const imageBuffer = Buffer.from(await res.arrayBuffer())
     await mkdir(imageStoreLocation, { recursive: true })
     await writeFile(join(imageStoreLocation, fsLocationPn), imageBuffer)
