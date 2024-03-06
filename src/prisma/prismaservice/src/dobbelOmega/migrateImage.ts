@@ -79,6 +79,52 @@ export default async function migrateImage(
             fsLocation
         }
     }))
+
+    //correct names if there are duplicates
+    const namesTaken : { name: string, times: number }[] = []
+    const imagesWithCollectionAndFsAndCorrectedName = imagesWithCollectionAndFs.map(image => {
+        const ext = image.originalName.split('.').pop() || ''
+        const name = image.originalName.split('.').slice(0, -1).join('.')
+        const nameTaken = namesTaken.find(n => n.name === name)
+        if (nameTaken) {
+            nameTaken.times++
+            return {
+                ...image,
+                name: `${name}(${nameTaken.times})`,
+                ext
+            }
+        } else {
+            namesTaken.push({name, times: 0})
+        }
+        return {
+            ...image,
+            name,
+            ext
+        }
+    })
+
+    //Finally upsurt to db
+    await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
+        await pnPrisma.image.upsert({
+            where: {
+                name: image.name
+            },
+            update: {},
+            create: {
+                name: image.name,
+                alt: image.name.split('_').join(' '),
+                fsLocation: image.fsLocation,
+                fsLocationSmallSize: image.fsLocationSmallSize,
+                fsLocationMediumSize: image.fsLocationMediumSize,
+                ext: image.ext,
+                collection: {
+                    connect: {
+                        id: image.collectionId
+                    }
+                }
+            }
+        })
+    }))
 }
 
 /**
