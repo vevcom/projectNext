@@ -31,12 +31,12 @@ export default async function migrateImage(
         },
     })
 
-    const ombulcollection = await pnPrisma.imageCollection.findUnique({
+    const ombulCollection = await pnPrisma.imageCollection.findUnique({
         where: {
             special: 'OMBULCOVERS',
         },
     })
-    if (!ombulcollection) throw new Error('No ombul collection found for seeding images')
+    if (!ombulCollection) throw new Error('No ombul collection found for seeding images')
 
     const images = await vevenPrisma.images.findMany({
         include: {
@@ -47,7 +47,7 @@ export default async function migrateImage(
     const imagesWithCollection = images.map(image => {
         let collectionId = migrateImageCollectionIdMap.find(collection => collection.vevenId === image.ImageGroupId)?.pnId
         if (image.Ombul.length) {
-            collectionId = ombulcollection.id
+            collectionId = ombulCollection.id
         } else if (!collectionId) {
             collectionId = gabageCollection.id
         } 
@@ -57,8 +57,7 @@ export default async function migrateImage(
         }
     })
 
-    console.log(imagesWithCollection.splice(0, 10))
-    await Promise.all(imagesWithCollection.map(async (image) => {
+    const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
         const ext = image.name.split('.')[1]
         const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}/
             ?url=${process.env.VEVEN_STORE_URL}/images/${image.name}.${ext}`
@@ -68,6 +67,17 @@ export default async function migrateImage(
         const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/
             resize/${imageSizes.small}/${imageSizes.small}/${image.name}
             ?url=${process.env.VEVEN_STORE_URL}/images/${image.name}.${ext}`
+        const [fsLocationSmallSize, fsLocationMediumSize, fsLocation] = await Promise.all([
+            fetchImageAndUploadToStore(fsLocationSmallOldVev),
+            fetchImageAndUploadToStore(fsLocationMediumOldVev),
+            fetchImageAndUploadToStore(fsLocationDefaultOldVev)
+        ])
+        return {
+            ...image,
+            fsLocationSmallSize,
+            fsLocationMediumSize,
+            fsLocation
+        }
     }))
 }
 
