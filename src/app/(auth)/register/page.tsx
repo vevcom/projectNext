@@ -12,15 +12,15 @@ export default async function Register() {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
 
-    const router = useRouter()
+    const { push } = useRouter()
 
     const userAuth = useUser()
     if (userAuth.status !== 'authenticated') {
-        router.push('/login')
+        push('/login')
     }
 
     if (userAuth.user?.acceptedTerms) {
-        router.push('/users/me')
+        push('/users/me')
     }
 
     const sexOptions = [

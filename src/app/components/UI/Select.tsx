@@ -4,10 +4,10 @@ import { v4 } from 'uuid'
 export type Proptypes = {
     name: string,
     label?: string,
-    options: Array<{
+    options: {
         value: string,
         label?: string,
-    }>,
+    }[],
 }
 
 export default function Select({ name, label, options }: Proptypes) {

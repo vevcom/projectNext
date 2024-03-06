@@ -19,10 +19,10 @@ export type ExtendedFeideUser = {
     email: string,
     email_verified: boolean,
     extended: {
-        givenName: Array<string>,
-        sn: Array<string>,
+        givenName: string[],
+        sn: string[],
     },
-    groups: Array<FeideGroup>,
+    groups: FeideGroup[],
     tokens: TokenSetParameters
 }
 

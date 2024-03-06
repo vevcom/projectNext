@@ -4,11 +4,6 @@ import errorHandler from '@/prisma/errorHandler'
 import type { StudyProgram } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-type PropType = {
-    name: string,
-    code: string,
-}
-
 type ReturnStudyProgram = {
     id: number,
     name: string,
@@ -47,8 +42,11 @@ const returnSelections = {
 }
 
 export async function upsertManyStudyProgrammes(
-    programs: Array<PropType>
-): Promise<ActionReturn<Array<ReturnStudyProgram>>> {
+    programs: {
+        name: string,
+        code: string,
+    }[]
+): Promise<ActionReturn<ReturnStudyProgram[]>> {
     if (programs.length === 0) return { success: true, data: [] }
 
     try {
@@ -63,9 +61,9 @@ export async function upsertManyStudyProgrammes(
 
         const existingStudyCodes = new Set(exists.map(program => program.code))
         const newStudyPrograms = programs.filter(program => !existingStudyCodes.has(program.code))
-        let createdStudyPrograms: Array<{studyProgram: PrismaResults}> = []
+        let createdStudyPrograms: {studyProgram: PrismaResults}[] = []
 
-        if (newStudyPrograms.length > 0) {
+        if (newStudyPrograms.length) {
             createdStudyPrograms = (await prisma.$transaction(
                 newStudyPrograms.map(program => prisma.role.create({
                     data: {
@@ -82,7 +80,7 @@ export async function upsertManyStudyProgrammes(
                         }
                     }
                 }))
-            ) || []).filter(p => p !== null) as Array<{studyProgram: PrismaResults}>
+            ) || []).filter(p => p !== null) as {studyProgram: PrismaResults}[]
         }
 
         const allStudyPrograms = exists

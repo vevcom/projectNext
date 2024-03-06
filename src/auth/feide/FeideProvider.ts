@@ -4,12 +4,13 @@ import type { Awaitable } from 'next-auth'
 import type { Provider } from 'next-auth/providers/index'
 import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from './Types'
 
-export type PropType = {
+export default function FeideProvider({
+    clientId,
+    clientSecret
+}: {
     clientId: string,
     clientSecret: string,
-}
-
-export default function FeideProvider({ clientId, clientSecret }: PropType): Provider {
+}): Provider {
     return {
         id: 'feide',
         name: 'Feide',
@@ -68,7 +69,7 @@ export default function FeideProvider({ clientId, clientSecret }: PropType): Pro
 
                 const profileExtended = await userinfoExtended.json()
 
-                const groups: Array<FeideGroup> = await userinfoGroups.json()
+                const groups: FeideGroup[] = await userinfoGroups.json()
 
                 return { ...profile, extended: profileExtended, groups, tokens }
             }
