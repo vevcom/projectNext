@@ -14,13 +14,6 @@ export default async function Register() {
 
     const router = useRouter()
 
-    if (callbackUrl.substring(0, 4) === 'http') {
-        let indexOfSlash = callbackUrl.search('/') + 2
-        callbackUrl = callbackUrl.substring(indexOfSlash)
-        indexOfSlash = callbackUrl.search('/')
-        callbackUrl = callbackUrl.substring(indexOfSlash)
-    }
-
     const userAuth = useUser()
     if (userAuth.status !== 'authenticated') {
         router.push('/login')

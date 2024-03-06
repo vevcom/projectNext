@@ -1,10 +1,11 @@
+import { SEX } from '@prisma/client'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
 const userSchema = z.object({
     username: z.string().max(50).min(2),
     password: z.string().max(50).min(2),
-    sex: z.enum(['MALE', 'FEMALE', 'OTHER']),
+    sex: z.nativeEnum(SEX),
     email: z.string().max(200).min(2).email(),
     firstname: z.string().max(50).min(2),
     lastname: z.string().max(50).min(2),
