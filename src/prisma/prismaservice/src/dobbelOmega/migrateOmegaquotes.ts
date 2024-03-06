@@ -2,6 +2,12 @@ import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
 
+/**
+ * This function migrates omegaquotes from Veven to PN
+ * @param pnPrisma - PrismaClientPn
+ * @param vevenPrisma - PrismaClientVeven
+ * @param limits - Limits - used to limit the number of quotes to migrate
+ */
 export default async function migrateOmegaquotes(
     pnPrisma: PrismaClientPn,
     vevenPrisma: PrismaClientVeven,
@@ -22,4 +28,5 @@ export default async function migrateOmegaquotes(
     })
 
     //TODO: link to a user??? user migration not done yet
+    //TODO: also seed bulshit into omegaquote
 }
