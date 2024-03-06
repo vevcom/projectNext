@@ -4,11 +4,23 @@ import { v4 as uuid } from 'uuid'
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
+import type { IdMapper } from './IdMapper'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default async function migrateOmbul(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
+/**
+ * This function migrates ombul from Veven to PN, by creating a new ombul in PN for each ombul in Veven,
+ * adding the correct relations to the coverimage and fetching the pdf from the old location and storing it in the new location
+ * @param pnPrisma - PrismaClientPn
+ * @param vevenPrisma - PrismaClientVeven
+ * @param imageIdMap - IdMapper - A map of the old and new id's of the images to be used to create correct relations
+ */
+export default async function migrateOmbul(
+    pnPrisma: PrismaClientPn, 
+    vevenPrisma: PrismaClientVeven,
+    imageIdMap: IdMapper
+) {
     const ombuls = await vevenPrisma.ombul.findMany({
         include: {
             Images: true
