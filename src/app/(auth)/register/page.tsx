@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 export default async function Register() {
     const searchParams = useSearchParams()
-    let callbackUrl = searchParams.get('callbackUrl') || 'users/me'
+    const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
 
     const router = useRouter()
 
