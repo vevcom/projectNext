@@ -8,6 +8,11 @@ import type { PrismaClient } from '@/generated/pn'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+export const imageSizes = {
+    small: 250,
+    medium: 600,
+}
+
 export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.findUnique({
         where: {
@@ -41,7 +46,7 @@ export default async function seedImages(prisma: PrismaClient) {
         //create small size version of the image
         const fsLocationSmallSize = `${uuid()}.${ext}`
         const smallPath = path.join(storeLocation, fsLocationSmallSize)
-        await sharp(bigPath).resize(250, 250, {
+        await sharp(bigPath).resize(imageSizes.small, imageSizes.small, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toFile(smallPath)
@@ -49,7 +54,7 @@ export default async function seedImages(prisma: PrismaClient) {
         //create medium size version of the image
         const fsLocationMediumSize = `${uuid()}.${ext}`
         const mediumPath = path.join(storeLocation, fsLocationMediumSize)
-        await sharp(bigPath).resize(600, 600, {
+        await sharp(bigPath).resize(imageSizes.medium, imageSizes.medium, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
         }).toFile(mediumPath)
