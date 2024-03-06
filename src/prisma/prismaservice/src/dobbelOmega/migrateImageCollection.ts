@@ -1,10 +1,6 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-
-export type IdMapper = {
-    vevenId: number
-    pnId: number
-}[]
+import type { IdMapper } from './IdMapper'
 
 /**
  * This function migrates image collections from Veven to PN

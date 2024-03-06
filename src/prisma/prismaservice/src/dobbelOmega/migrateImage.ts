@@ -1,6 +1,6 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import type { IdMapper } from './migrateImageCollection'
+import { vevenIdToPnId, type IdMapper } from './IdMapper'
 import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
@@ -14,6 +14,7 @@ import { v4 as uuid } from 'uuid'
  * @param vevenPrisma - PrismaClientVeven
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
  * the same as the return value of migrateImageCollection
+ * @returns - A map of the old and new id's of the images to be used to create correct relations
  */
 export default async function migrateImage(
     pnPrisma: PrismaClientPn, 
@@ -45,7 +46,7 @@ export default async function migrateImage(
     })
 
     const imagesWithCollection = images.map(image => {
-        let collectionId = migrateImageCollectionIdMap.find(collection => collection.vevenId === image.ImageGroupId)?.pnId
+        let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId);
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (!collectionId) {
@@ -54,8 +55,8 @@ export default async function migrateImage(
         return {
             ...image,
             collectionId,
-        } //TODO: Remove this. For now I only want to migrate ombul images
-    }).filter(image => image.collectionId === ombulCollection.id)
+        } //TODO: Remove this. For now I only want to migrate ombul images or images in foirst 5 collections on veven
+    }).filter(image => image.collectionId === ombulCollection.id || image.collectionId < 5)
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
         const ext = image.name.split('.')[1]
@@ -105,7 +106,7 @@ export default async function migrateImage(
 
     //Finally upsurt to db
     await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
-        await pnPrisma.image.upsert({
+        const { id: pnId } = await pnPrisma.image.upsert({
             where: {
                 name: image.name
             },
