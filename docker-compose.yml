@@ -56,6 +56,7 @@ services:
       MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
       VEVEN_STORE_URL: ${VEVEN_STORE_URL}
       VEVEN_DB_URI: ${VEVEN_DB_URI}
+      MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
     volumes:
       - store:/usr/src/app/prismaservice/store
     depends_on:
