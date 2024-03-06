@@ -8,6 +8,7 @@ export function getLimits() {
     return {
         ombul: limitsOn ? 5 : null,
         numberOffFullImageCollections: limitsOn ? 3 : null,
+        omegaquotes: limitsOn ? 500 : null,
     }
 }
 
