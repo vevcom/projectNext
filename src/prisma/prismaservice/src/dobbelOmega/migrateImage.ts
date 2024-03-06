@@ -55,8 +55,10 @@ export default async function migrateImage(
         return {
             ...image,
             collectionId,
-        } //TODO: Remove this. For now I only want to migrate ombul images or images in foirst 5 collections on veven
-    }).filter(image => image.collectionId === ombulCollection.id || image.collectionId < 3)
+        }
+    }).filter(image => 
+        image.collectionId === ombulCollection.id || (image.ImageGroupId && image.ImageGroupId < 3)
+    )  //TODO: Change this. For now only seed ombul covers and some images
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
         const ext = image.originalName.split('.').pop()
