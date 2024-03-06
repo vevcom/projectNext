@@ -1,7 +1,7 @@
 import { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './migrateImageCollection'
-import { imageSizes, imageStoreLocation } from 'src/seedImages'
+import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuid } from 'uuid'

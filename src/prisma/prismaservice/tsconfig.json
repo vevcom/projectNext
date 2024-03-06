@@ -9,7 +9,8 @@
       "strict": true,
       "baseUrl": "./",
       "paths": {
-        "@/generated/*": ["./generated/*"]
+        "@/generated/*": ["./generated/*"],
+        "@/src/*": ["./src/*"],
       }
     },
     "include": ["src/**/*", "./generated/**/*"],
