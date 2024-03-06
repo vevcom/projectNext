@@ -17,14 +17,12 @@ export default async function migrateOmegaquotes(
         take: limits.omegaquotes ? limits.omegaquotes : undefined,
     })
     await pnPrisma.omegaQuote.createMany({
-        data: omegaquotes.map(quote => {
-            return {
-                quote: quote.quote,
-                author: quote.author,
-                timestamp: quote.timestamp || new Date(),
-                userPosterId: 0,
-            }
-        })
+        data: omegaquotes.map(quote => ({
+            quote: quote.quote,
+            author: quote.author,
+            timestamp: quote.timestamp || new Date(),
+            userPosterId: 0,
+        }))
     })
 
     //TODO: link to a user??? user migration not done yet

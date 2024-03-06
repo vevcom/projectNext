@@ -9,8 +9,9 @@ import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
- * If they do not belong to a image collection (group on veven) they will be added to a garbage collection
- * The function also places special images like the once related to a ombul or profile picture in the correct special collection.
+ * If they do not belong to a image collection (group on veven)
+ * they will be added to a garbage collection. The function also places special images
+ * like the once related to a ombul or profile picture in the correct special collection.
  * @param pnPrisma - PrismaClientPn
  * @param vevenPrisma - PrismaClientVeven
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
@@ -95,7 +96,7 @@ export default async function migrateImages(
     //correct names if there are duplicates
     const namesTaken: { name: string, times: number }[] = []
     const imagesWithCollectionAndFsAndCorrectedName = imagesWithCollectionAndFs.map(image => {
-        if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
+        if (!image) return null //Only happens if fetchImageAndUploadToStore fails for the image
         const ext = image.originalName.split('.').pop() || ''
         const name = image.originalName.split('.').slice(0, -1).join('.')
         const nameTaken = namesTaken.find(n => n.name === name)
@@ -163,7 +164,8 @@ async function fetchImageAndUploadToStore(fsLocationVev: string): Promise<string
         method: 'GET',
         //This is to make the fetch request look like it comes from a browser. Not sure if it helps
         headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
         },
     }).catch(() => console.error(`Failed to fetch image from ${fsLocationVev}`))
 

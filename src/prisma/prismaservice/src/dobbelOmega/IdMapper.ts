@@ -12,7 +12,7 @@ export type IdMapper = {
  */
 export function vevenIdToPnId(mapper: IdMapper, vevenId: number | null): number | null {
     if (!vevenId) return null
-    const id = mapper.find(id => id.vevenId === vevenId)?.pnId
+    const id = mapper.find(_id => _id.vevenId === vevenId)?.pnId
     if (!id) {
         console.error(`No id found for vevenId: ${vevenId}. Are you sure you have migrated the image collections?`)
         return null

@@ -12,11 +12,13 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 /**
- * This function migrates ombul from Veven to PN, by creating a new ombul in PN for each ombul in Veven,
- * adding the correct relations to the coverimage and fetching the pdf from the old location and storing it in the new location
+ * This function migrates ombul from Veven to PN, by creating a new ombul in PN for
+ * each ombul in Veven, adding the correct relations to the coverimage and fetching the
+ * pdf from the old location and storing it in the new location
  * @param pnPrisma - PrismaClientPn
  * @param vevenPrisma - PrismaClientVeven
- * @param imageIdMap - IdMapper - A map of the old and new id's of the images to be used to create correct relations
+ * @param imageIdMap - IdMapper - A map of the old and new id's of the images to
+ * be used to create correct relations
  */
 export default async function migrateOmbul(
     pnPrisma: PrismaClientPn,
@@ -49,7 +51,7 @@ export default async function migrateOmbul(
         return fsLocation
     }))
 
-    for (const ombulIdx in ombuls) {
+    for (let ombulIdx = 0; ombulIdx < ombuls.length; ombulIdx++) {
         const ombul = ombuls[ombulIdx]
         const fsLocation = fsLocations[ombulIdx]
 
