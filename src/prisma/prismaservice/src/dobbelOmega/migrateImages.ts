@@ -45,7 +45,8 @@ export default async function migrateImages(
 
     const images = await vevenPrisma.images.findMany({
         include: {
-            Ombul: true
+            Ombul: true,
+            Articles: true,
         }
     })
 
@@ -63,6 +64,8 @@ export default async function migrateImages(
     }).filter(image => {
         //Apply limits
         if (!limits.numberOffFullImageCollections) return true
+        if (image.Ombul.length) return true
+        if (image.Articles.length) return true
         if (image.collectionId === ombulCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false
