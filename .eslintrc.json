@@ -2,7 +2,7 @@
     "settings": {
         "import/resolver": {
             "typescript": {
-              "project": ["tsconfig.json", "src/prisma/prismaservice/tsconfig.json"]
+                "project": ["tsconfig.json", "src/prisma/prismaservice/tsconfig.json"]
             }
         }
     },
