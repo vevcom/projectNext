@@ -41,22 +41,65 @@ export default async function migrateArticles(
             }
         })
 
-        const cmsParagraph = await pnPrisma.cmsParagraph.create({
+        const articleSectionLead = await pnPrisma.articleSection.create({
             data: {
-                content: article.content,
-                createdAt: article.createdAt,
-                updatedAt: article.updatedAt,
+                name: `${article.title} lead ${i}`,
+                cmsParagraph: {
+                    create: {
+                        contentHtml: article.lead || '',
+                        createdAt: article.createdAt,
+                        updatedAt: article.updatedAt,
+                    }
+                }
+            }
+        })
+        const articleSectionBody = await pnPrisma.articleSection.create({
+            data: {
+                name: `${article.title} body ${i}`,
+                cmsParagraph: {
+                    create: {
+                        contentHtml: article.text || '',
+                        createdAt: article.createdAt,
+                        updatedAt: article.updatedAt,
+                    }
+                }
             }
         })
 
         //TODO: link Article to a group (comitteee on veven)
-        const articlePn = await pnPrisma.article.createMany({
-            data: articles.map(article => ({
+        const articlePn = await pnPrisma.article.create({
+            data: {
                 name: article.title,
                 createdAt: article.createdAt,
                 updatedAt: article.updatedAt,
                 coverImageId: coverImage.id,
-            })),
+                articleSections: {
+                    connect: [
+                        { id: articleSectionLead.id },
+                        { id: articleSectionBody.id },
+                    ]
+                },
+            }
+        })
+
+        // The order is assumed to change 1. september, calculate by createdAt 
+        // 1. september 1914 = order 1, 1. september 1915 = order 2, ...
+        let orderPublished = new Date(article.createdAt).getFullYear() - 1914
+        if (new Date(article.createdAt).getMonth() < 8) {
+            orderPublished--
+        }
+
+        const news = await pnPrisma.newsArticle.create({
+            data: {
+                description: article.lead || '',
+                endDateTime: article.dateEnd || new Date(),
+                orderPublished,
+                article: {
+                    connect: {
+                        id: articlePn.id,
+                    },
+                },
+            }
         })
     }))
     //TODO: Do it for infopages as well, many should probably be seeded and revritten though
