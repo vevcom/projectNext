@@ -1,2 +1,2 @@
-# Migrations from the old veven
+# Migrations from veven - DobbelOmega
 NOT IMPLEMENTED

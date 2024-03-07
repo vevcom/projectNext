@@ -160,8 +160,8 @@ async function fetchImageAndUploadToStore(fsLocationVev: string): Promise<string
     const ext = fsLocationVev.split('.').pop()
     const fsLocationPn = `${uuid()}.${ext}`
 
-    if (!ext || !['webp', 'png', 'jpg', 'jpeg'].includes(ext)) {
-        console.error(`Image ${fsLocationVev} is not a webp image`)
+    if (!ext || !['webp', 'png', 'jpg', 'jpeg', 'svg'].includes(ext)) {
+        console.error(`Image ${fsLocationVev} is not a suported image`)
         return null
     }
     const res = await fetch(fsLocationVev, {
