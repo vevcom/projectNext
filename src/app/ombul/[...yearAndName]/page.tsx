@@ -17,6 +17,10 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
+    const user = await requireUser({
+        permissions: ['OMBUL_READ']
+    })
+
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)
     const name = decodeURIComponent(params.yearAndName[1])
     if (!year || !name || params.yearAndName.length > 2) notFound()
@@ -28,10 +32,6 @@ export default async function Ombul({ params }: PropTypes) {
     const ombul = ombulRes.data
 
     const path = `/store/ombul/${ombul.fsLocation}`
-
-    const user = await requireUser({
-        permissions: ['OMBUL_READ']
-    })
 
     const canUpdate = user.permissions.includes('OMBUL_UPDATE')
     const canDestroy = user.permissions.includes('OMBUL_DESTROY')

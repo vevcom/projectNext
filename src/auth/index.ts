@@ -1,11 +1,17 @@
+import FeideProvider from './feide/FeideProvider'
+import PrismaAdapter from './feide/PrismaAdapter'
+import signUp from './feide/signUp'
+import { updateFeideAccount } from './feide/index'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import { decode } from 'next-auth/jwt'
-import type { AuthOptions } from 'next-auth'
+import type { JWT } from 'next-auth/jwt'
+import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
 import type { Permission, User } from '@prisma/client'
+import type { ExtendedFeideUser } from './feide/Types'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -17,6 +23,8 @@ export const authOptions: AuthOptions = {
             },
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials.password) return null
+
+                // Sign in with email insted of username
 
                 // This should be an action
                 const userCredentials = await prisma.credentials.findUnique({
@@ -36,6 +44,10 @@ export const authOptions: AuthOptions = {
 
                 return { id: userCredentials.userId }
             }
+        }),
+        FeideProvider({
+            clientId: process.env.FEIDE_CLIENT_ID ?? 'no_id',
+            clientSecret: process.env.FEIDE_CLIENT_SECRET ?? 'no_secret',
         })
     ],
     session: {
@@ -57,11 +69,27 @@ export const authOptions: AuthOptions = {
                 }
             })
 
+            if (credentials === null) {
+                const hasFeide = await prisma.feideAccount.findUnique({
+                    where: {
+                        userId: token.user.id
+                    },
+                    select: {
+                        userId: true
+                    }
+                })
+
+                if (hasFeide) {
+                    return token
+                }
+            }
+
             // Check if the users credentials were updated after the token was
             // created. I.e. if the user updates their password you don't want
             // their old token to be valid. 'iat' is given in seconds so we
             // have to convert it to milliseconds.
-            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime()) return null
+            // Add 10 seconds to get time to login after a credentials update
+            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime() - 10000) return null
 
             return token
         },
@@ -71,8 +99,18 @@ export const authOptions: AuthOptions = {
             session.user = token.user
             return session
         },
-        async jwt({ token, user, trigger }) {
-            if (trigger !== 'signIn' && trigger !== 'update') {
+        async jwt({
+            token,
+            user,
+            trigger,
+            profile
+        }: {
+            token: JWT,
+            user: nextAuthUser,
+            trigger?: 'update' | 'signIn' | 'signUp',
+            profile?: Profile,
+        }) {
+            if (!trigger) {
                 // TODO - refactor when read user action exists
                 const dbUser = await prisma.user.findUniqueOrThrow({
                     where: {
@@ -92,10 +130,24 @@ export const authOptions: AuthOptions = {
                 }
             }
 
+            if (trigger === 'signUp') {
+                token.email = undefined
+                user.id = Number(user.id)
+                if (!profile || !profile.sub) {
+                    throw Error('No profile found when signing up')
+                }
+                signUp({ user, profile } as {user: nextAuthUser, profile: ExtendedFeideUser})
+            }
+
+            // Check if user logged in with feide
+            if (trigger === 'signIn' && profile?.sub) {
+                updateFeideAccount(profile.sub, profile.tokens)
+            }
+
             // The 'user' object will only be set when the trigger is 'signIn'.
             // We also have to type guard 'user.id' because the default next
             // auth type for it is different from our model.
-            const userId = user && typeof user.id === 'number' ? user.id : token?.user.id
+            const userId = user ? Number(user.id) : token?.user.id
 
             // TODO - refactor when read user action exists
             const userInfo = await prisma.user.findUnique({
@@ -114,17 +166,20 @@ export const authOptions: AuthOptions = {
             }
 
             return token
-        },
+        }
     },
     pages: {
         signIn: '/login',
-        signOut: '/logout'
-    }
+        signOut: '/logout',
+        newUser: '/register'
+    },
+    adapter: PrismaAdapter(prisma),
 }
 
 export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
 
-export type UserWithPermissions = User & {
+export type UserWithPermissions = Omit<User, 'id'> & {
+    id: number,
     permissions: Permission[]
 }
 
