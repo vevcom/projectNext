@@ -18,7 +18,7 @@ export function getLimits() {
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'
     console.log(limitsOn ? 'Limits on' : '!!!!Limits off!!!!')
-
+    if (limitsOn) console.log('Limits:', limits)
     return limitsOn ? limits : nullObj
 }
 
