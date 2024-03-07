@@ -1,13 +1,13 @@
+import { vevenIdToPnId } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './IdMapper'
-import { vevenIdToPnId } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
 /**
  * WARNING: This function is not complete, it does not migrate the InfoPages, only the articles (news)
  * WARNING: The text formatting is still bad, and needs to be fixed
- * This function migrates articles from Veven to PN, 
+ * This function migrates articles from Veven to PN,
  * Both Articles -> NewsAricle (with Article relation)
  * And InfoPages -> Articles (belonging to a Article collection)
  * @param pnPrisma - PrismaClientPn
@@ -84,7 +84,7 @@ export default async function migrateArticles(
             }
         })
 
-        // The order is assumed to change 1. september, calculate by createdAt 
+        // The order is assumed to change 1. september, calculate by createdAt
         // 1. september 1914 = order 1, 1. september 1915 = order 2, ...
         let orderPublished = new Date(article.createdAt).getFullYear() - 1914
         if (new Date(article.createdAt).getMonth() < 8) {
@@ -100,10 +100,10 @@ export default async function migrateArticles(
 
     for (let i = 0; i < articles.length; i++) {
         const articlePn = articlesPn[i]
-        let newArticleName = articlePn.name;
-        let unique = false;
+        let newArticleName = articlePn.name
+        let unique = false
 
-        let k = 0;
+        let k = 0
         while (!unique) {
             const articlesSameWithNameAndOrder = await pnPrisma.newsArticle.findMany({
                 where: {
@@ -111,15 +111,15 @@ export default async function migrateArticles(
                     orderPublished: articlePn.orderPublished,
                 }
             })
-    
+
             if (articlesSameWithNameAndOrder.length) {
                 console.log(`Must change a name of a article ${newArticleName} for unique constraint`)
                 newArticleName = `${articlePn.name} (${++k})`
             } else {
-                unique = true;
+                unique = true
             }
         }
-    
+
         await pnPrisma.article.update({
             where: {
                 id: articlePn.id,
@@ -128,7 +128,7 @@ export default async function migrateArticles(
                 name: newArticleName,
             }
         })
-    
+
         await pnPrisma.newsArticle.create({
             data: {
                 article: {

@@ -3,9 +3,9 @@ import migrateImageCollections from './migrateImageCollections'
 import migrateImages from './migrateImages'
 import { getLimits } from './migrationLimits'
 import migrateOmegaquotes from './migrateOmegaquotes'
+import migrateArticles from './migateArticles'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import migrateArticles from './migateArticles'
 
 /**
  * !DobbelOmega!
@@ -13,7 +13,6 @@ import migrateArticles from './migateArticles'
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
-
     console.log('============================================')
     console.log('==========!!!Dobbel Omega!!!================')
     const vevenPrisma = new PrismaClientVeven()

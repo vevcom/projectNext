@@ -9,7 +9,7 @@ export function getLimits() {
         omegaquotes: null,
         articles: 10_000,
     }
-    const nullObj : { [key in keyof typeof limits]: null } = {
+    const nullObj: { [key in keyof typeof limits]: null } = {
         ombul: null,
         numberOffFullImageCollections: null,
         omegaquotes: null,
@@ -18,7 +18,7 @@ export function getLimits() {
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'
     console.log(limitsOn ? 'Limits on' : '!!!!Limits off!!!!')
-    
+
     return limitsOn ? limits : nullObj
 }
 
