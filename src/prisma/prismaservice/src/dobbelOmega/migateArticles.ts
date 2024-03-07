@@ -26,13 +26,15 @@ export default async function migrateArticles(
     await Promise.all(articles.map(async (article, i) => {
         const coverId = vevenIdToPnId(imageIdMap, article.ImageId) || undefined
 
+
+        const coverName = `${article.title.split(' ').join('_')}_cover${i}`
         const coverImage = await pnPrisma.cmsImage.upsert({
             where: {
-                name: `${article.title.split(' ').join('_')}_cover${i}`,
+                name: coverName,
             },
             update: {},
             create: {
-                name: article.title,
+                name: coverName,
                 image: coverId ? {
                     connect: {
                         id: coverId,
