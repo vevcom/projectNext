@@ -16,15 +16,25 @@ export default async function migrateOmegaquotes(
     const omegaquotes = await vevenPrisma.quotes.findMany({
         take: limits.omegaquotes ? limits.omegaquotes : undefined,
     })
+
+    //TODO: link to a user??? user migration not done yet
+    const user = await pnPrisma.user.create({
+        data: {
+            email: '',
+            firstname: 'Omegaquotes migrator',
+            lastname: 'Migratorson',
+            username: 'omegaquotesMigrator',
+        },
+    })
+
     await pnPrisma.omegaQuote.createMany({
         data: omegaquotes.map(quote => ({
             quote: quote.quote,
             author: quote.author,
             timestamp: quote.timestamp || new Date(),
-            userPosterId: 0,
-        }))
+            userPosterId: user.id,
+        })),
     })
 
-    //TODO: link to a user??? user migration not done yet
     //TODO: also seed bulshit into omegaquote
 }
