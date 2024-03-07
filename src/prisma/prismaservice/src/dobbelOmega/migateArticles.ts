@@ -5,6 +5,7 @@ import { vevenIdToPnId } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
 /**
+ * WARNING: This function is not complete, it does not migrate the InfoPages, only the articles (news)
  * This function migrates articles from Veven to PN, 
  * Both Articles -> NewsAricle (with Article relation)
  * And InfoPages -> Articles (belonging to a Article collection)
