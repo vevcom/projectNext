@@ -7,6 +7,11 @@ import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import migrateArticles from './migateArticles'
 
+/**
+ * !DobbelOmega!
+ * This function migrates data from Veven to ProjectNext
+ * @param pnPrisma - PrismaClientPn
+ */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     console.log('dobbel omega!!!')
     const vevenPrisma = new PrismaClientVeven()
