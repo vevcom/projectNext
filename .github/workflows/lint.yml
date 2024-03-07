@@ -21,16 +21,12 @@ jobs:
     - name: Install dependencies 
       run: npm ci
 
-    - name: Go to prismaservice directory
-      run: cd src/prisma/prismaservice
-    - name: Install dependencies  (prismaservice)
-      run: npm ci
-    - name: Generate Prisma Client
-      run: npx prisma generate
-    - name: Generate dobbelOmega
-      run: npm run dobbelOmega-generate
-    - name: Go to root directory
-      run: cd ../../..
+  - name: Install dependencies  (prismaservice)
+    run: cd src/prisma/prismaservice && npm ci
+  - name: Generate Prisma Client
+    run: cd src/prisma/prismaservice && npx prisma generate
+  - name: Generate dobbelOmega
+    run: cd src/prisma/prismaservice && npm run dobbelOmega-generate
 
     - name: lint
       run: npm run lint
