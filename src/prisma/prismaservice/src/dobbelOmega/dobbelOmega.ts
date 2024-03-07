@@ -13,7 +13,9 @@ import migrateArticles from './migateArticles'
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
-    console.log('dobbel omega!!!')
+
+    console.log('============================================')
+    console.log('==========!!!Dobbel Omega!!!================')
     const vevenPrisma = new PrismaClientVeven()
 
     const limits = getLimits()
@@ -25,5 +27,5 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
 
     vevenPrisma.$disconnect()
-    console.log('dobbel omega done, dagen derpå')
+    console.log('=======Dobbel Omega ferdig, dagen derpå=======')
 }
