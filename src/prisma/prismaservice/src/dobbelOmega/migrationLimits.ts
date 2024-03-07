@@ -3,13 +3,21 @@
  * null means no limit and happens if the env variable MIGRATION_WITH_LIMITS is set to "false"
  */
 export function getLimits() {
+    const limits = {
+        ombul: 5,
+        numberOffFullImageCollections: 3,
+        omegaquotes: null,
+    }
+    const nullObj : { [key in keyof typeof limits]: null } = {
+        ombul: null,
+        numberOffFullImageCollections: null,
+        omegaquotes: null,
+    }
+
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'
     console.log(limitsOn ? 'Limits on' : '!!!!Limits off!!!!')
-    return {
-        ombul: limitsOn ? 5 : null,
-        numberOffFullImageCollections: limitsOn ? 3 : null,
-        omegaquotes: limitsOn ? 500 : null,
-    }
+    
+    return limitsOn ? limits : nullObj
 }
 
 export type Limits = ReturnType<typeof getLimits>

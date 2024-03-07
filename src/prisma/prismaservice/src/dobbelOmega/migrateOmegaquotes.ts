@@ -17,7 +17,7 @@ export default async function migrateOmegaquotes(
         take: limits.omegaquotes ? limits.omegaquotes : undefined,
     })
 
-    //TODO: link to a user??? user migration not done yet
+    //TODO: link to a user??? user migration not done yet and must be done early in the migration process
     const user = await pnPrisma.user.create({
         data: {
             email: '',

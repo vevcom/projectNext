@@ -15,6 +15,7 @@ import { imageSizes, imageStoreLocation } from '@/src/seedImages'
  * @param pnPrisma - PrismaClientPn
  * @param vevenPrisma - PrismaClientVeven
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
+ * @param limits - Limits - used to limit the number of images to migrate
  * the same as the return value of migrateImageCollection
  * @returns - A map of the old and new id's of the images to be used to create correct relations
  */
@@ -24,7 +25,7 @@ export default async function migrateImages(
     migrateImageCollectionIdMap: IdMapper,
     limits: Limits
 ) {
-    const gabageCollection = await pnPrisma.imageCollection.upsert({
+    const garbageCollection = await pnPrisma.imageCollection.upsert({
         where: {
             name: 'Garbage'
         },
@@ -53,7 +54,7 @@ export default async function migrateImages(
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (!collectionId) {
-            collectionId = gabageCollection.id
+            collectionId = garbageCollection.id
         }
         return {
             ...image,
@@ -68,7 +69,7 @@ export default async function migrateImages(
     })
 
     const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
-        const ext = image.originalName.split('.').pop()
+        const ext = image.originalName.split('.').pop() || ''
         const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
             + `?url=/store/images/${image.name}.${ext}`
         const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
