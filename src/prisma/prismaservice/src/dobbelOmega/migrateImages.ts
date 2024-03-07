@@ -1,11 +1,11 @@
 import { vevenIdToPnId, type IdMapper } from './IdMapper'
+import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import type { Limits } from './migrationLimits'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
