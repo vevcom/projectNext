@@ -8,6 +8,7 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
 import type { NewsArticleSchemaType } from './schema'
+import { ombulSchema } from '../ombul/schema'
 
 export async function createNews(rawdata: FormData | NewsArticleSchemaType): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
@@ -22,7 +23,7 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
 
     const res = await readCurrenOmegaOrder()
     if (!res.success) return res
-    const orderPublished = res.data.order
+    const currentOrder = res.data
 
     try {
         const article = await createArticle(data.name)
@@ -38,7 +39,9 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
                     }
                 },
                 endDateTime: data.endDateTime || endDateTime,
-                orderPublished,
+                omegaOrder: {
+                    connect: currentOrder
+                }
             },
             include: {
                 article: {
