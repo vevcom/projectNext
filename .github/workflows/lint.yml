@@ -28,7 +28,7 @@ jobs:
     - name: Generate Prisma Client
       run: npx prisma generate
     - name: Generate dobbelOmega
-      run: npm run dobbleOmega-generate
+      run: npm run dobbelOmega-generate
     - name: Go to root directory
       run: cd ../../..
 
