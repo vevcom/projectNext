@@ -23,7 +23,7 @@ export default async function migrateArticles(
 ) {
     const articles = await vevenPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
 
-    await Promise.all(articles.map(async (article, i) => {
+    const articlesPn = await Promise.all(articles.map(async (article, i) => {
         const coverId = vevenIdToPnId(imageIdMap, article.ImageId) || undefined
 
 
@@ -91,18 +91,56 @@ export default async function migrateArticles(
             orderPublished--
         }
 
-        const news = await pnPrisma.newsArticle.create({
+        return {
+            ...articlePn,
+            orderPublished,
+            endDateTime: article.dateEnd || new Date(),
+        }
+    }))
+
+    for (let i = 0; i < articles.length; i++) {
+        const articlePn = articlesPn[i]
+        let newArticleName = articlePn.name;
+        let unique = false;
+
+        let k = 0;
+        while (!unique) {
+            const articlesSameWithNameAndOrder = await pnPrisma.newsArticle.findMany({
+                where: {
+                    articleName: newArticleName,
+                    orderPublished: articlePn.orderPublished,
+                }
+            })
+    
+            if (articlesSameWithNameAndOrder.length) {
+                console.log(`Must change a name of a article ${newArticleName} for unique constraint`)
+                newArticleName = `${articlePn.name} (${++k})`
+            } else {
+                unique = true;
+            }
+        }
+    
+        await pnPrisma.article.update({
+            where: {
+                id: articlePn.id,
+            },
             data: {
-                description: article.lead || '',
-                endDateTime: article.dateEnd || new Date(),
-                orderPublished,
+                name: newArticleName,
+            }
+        })
+    
+        await pnPrisma.newsArticle.create({
+            data: {
                 article: {
                     connect: {
                         id: articlePn.id,
-                    },
+                    }
                 },
+                orderPublished: articlePn.orderPublished,
+                endDateTime: articlePn.endDateTime,
             }
         })
-    }))
+    }
+
     //TODO: Do it for infopages as well, many should probably be seeded and revritten though
 }
