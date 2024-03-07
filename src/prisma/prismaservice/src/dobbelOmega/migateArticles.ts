@@ -21,11 +21,9 @@ export default async function migrateArticles(
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
-    const articles = await vevenPrisma.articles.findMany()
+    const articles = await vevenPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
 
-    const articlesWithLimit = limits.articles ? articles.splice(0, limits.articles) : articles
-
-    await Promise.all(articlesWithLimit.map(async (article, i) => {
+    await Promise.all(articles.map(async (article, i) => {
         const coverId = vevenIdToPnId(imageIdMap, article.ImageId) || undefined
 
         const coverImage = await pnPrisma.cmsImage.upsert({

@@ -7,7 +7,7 @@ export function getLimits() {
         ombul: 5,
         numberOffFullImageCollections: 3,
         omegaquotes: null,
-        articles: 100,
+        articles: 10_000,
     }
     const nullObj : { [key in keyof typeof limits]: null } = {
         ombul: null,
