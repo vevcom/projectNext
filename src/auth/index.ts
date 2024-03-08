@@ -22,7 +22,7 @@ export const authOptions: AuthOptions = {
                 const userCredentials = await prisma.credentials.findUnique({
                     where: {
                         username: credentials.username,
-                    },
+                    },  
                     select: {
                         userId: true,
                         passwordHash: true,
@@ -134,13 +134,13 @@ type GetUserArgsType<R extends boolean = boolean> = {
     returnUrl?: string,
 }
 
-type GetUserReturnTypeSafe = {
+type RequiredGetUserReturnType = {
     user: UserWithPermissions,
     authorized: true,
     status: 'AUTHORIZED',
 }
 
-type GetUserReturnTypeUnsafe = GetUserReturnTypeSafe | {
+type GetUserReturnType = RequiredGetUserReturnType | {
     user: null,
     authorized: false,
     status: 'UNAUTHENTICATED',
@@ -150,7 +150,7 @@ type GetUserReturnTypeUnsafe = GetUserReturnTypeSafe | {
     status: 'UNAUTHORIZED',
 }
 
-export type AuthStatus = GetUserReturnTypeUnsafe['status']
+export type AuthStatus = GetUserReturnType['status']
 
 /**
  * Returns the user object from the current session. If there is no session or the
@@ -168,21 +168,21 @@ export type AuthStatus = GetUserReturnTypeUnsafe['status']
  * @returns The user object and auth status (either `AUTHORIZED`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
  */
 // This function is overloaded to get correct typing for when required is set to true or false.
-export async function getUser(args?: GetUserArgsType<true>): Promise<GetUserReturnTypeSafe>
-export async function getUser(args?: GetUserArgsType<false>): Promise<GetUserReturnTypeUnsafe>
+export async function getUser(args?: GetUserArgsType<false>): Promise<GetUserReturnType>
+export async function getUser(args?: GetUserArgsType<true>): Promise<RequiredGetUserReturnType>
 export async function getUser({
     requiredPermissions,
     required,
     redirectUrl,
     returnUrl,
-}: GetUserArgsType = {}): Promise<GetUserReturnTypeSafe | GetUserReturnTypeUnsafe> {
+}: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
     if (
         user && // Check if user is authenticated...
         (
             !requiredPermissions || // ...and if the user has all the required permissions (if any are given).
-            !requiredPermissions.every(permission => user.permissions.includes(permission))
+            requiredPermissions.every(permission => user.permissions.includes(permission))
         )
     ) {
         return { user, authorized: true, status: 'AUTHORIZED' }
