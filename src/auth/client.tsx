@@ -45,3 +45,13 @@ export function useUser({ required, requiredPermissions }: UseUserArgsType<boole
 
     return { user, status }
 }
+
+type PropTypes = {
+    children: React.ReactNode
+}
+
+export function RequireUserClient({ children }: PropTypes) {
+    const { status } = useUser({ required: true })
+
+    return status === "authenticated" && children
+}
