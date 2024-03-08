@@ -38,10 +38,76 @@ const seedSpecialImageConfig : ImageSeedSpecialConfig = {
         fsLocation: 'default_image.jpeg',
         collection: collectionForSpecialImages,
     },
+    KAPPEMANN: {
+        name: 'kappemann',
+        alt: 'En kappemann',
+        fsLocation: 'kappemann.jpeg',
+        collection: collectionForSpecialImages,
+    },
+    KONGSBERG: {
+        name: 'kongsberg',
+        alt: 'Kongsberg',
+        fsLocation: 'kongsberg.png',
+        collection: collectionForSpecialImages,
+    },
+    NORDIC: {
+        name: 'nordic',
+        alt: 'Nordic',
+        fsLocation: 'nordic.png',
+        collection: collectionForSpecialImages,
+    },
     LENS_CAMERA: {
         name: 'lens_camera',
         alt: 'Et kamera med en linse',
         fsLocation: 'lens_camera.jpeg',
         collection: collectionForSpecialImages,
     },
+    LOGO_SIMPLE: {
+        name: 'logo_simple',
+        alt: 'Logo',
+        fsLocation: 'logo_simple.png',
+        collection: collectionForSpecialImages,
+    },
+    LOGO_WHITE: {
+        name: 'logo_white',
+        alt: 'Logo',
+        fsLocation: 'logo_white.png',
+        collection: collectionForSpecialImages,
+    },
+    LOGO_WHITE_TEXT: {
+        name: 'logo_white_text',
+        alt: 'Logo',
+        fsLocation: 'omega_logo_white.png',
+        collection: collectionForSpecialImages,
+    },
+    MAKISK_HATT: {
+        name: 'makisk_hatt',
+        alt: 'Makisk hatt',
+        fsLocation: 'makisk_hatt.png',
+        collection: collectionForSpecialImages,
+    },
+    OHMA: {
+        name: 'ohma',
+        alt: 'Ohma',
+        fsLocation: 'ohma.jpeg',
+        collection: collectionForSpecialImages,
+    },
+    OMEGA_MAI: {
+        name: 'omega_mai',
+        alt: 'Omega mai',
+        fsLocation: 'Omegamai.jpeg',
+        collection: collectionForSpecialImages,
+    },
+    OV: {
+        name: 'ov',
+        alt: 'OV',
+        fsLocation: 'ov.png',
+        collection: collectionForSpecialImages,
+    },
+    PWA: {
+        name: 'pwa',
+        alt: 'PWA',
+        fsLocation: 'pwa.png',
+        collection: collectionForSpecialImages,
+    }
 }
