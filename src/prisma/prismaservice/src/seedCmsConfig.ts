@@ -99,7 +99,7 @@ const standardCmsContents: CmsContent = {
         },
         {
             name: 'footer_logo',
-            imageName: 'omega_logo_white',
+            imageName: 'logo_white_text',
         },
         {
             name: 'footer_1',

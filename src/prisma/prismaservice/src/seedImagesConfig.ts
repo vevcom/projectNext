@@ -21,7 +21,7 @@ type ImageSeedSpecialConfig = {
  */
 export const seedImageConfig : ImageSeedConfig = [
     {
-        name: 'trekant',
+        name: 'traktat',
         alt: 'En gammel traktat',
         fsLocation: 'traktat.jpg',
         collection: collectionForSpecialImages,
