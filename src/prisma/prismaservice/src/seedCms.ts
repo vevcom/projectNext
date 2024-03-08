@@ -1,4 +1,4 @@
-import standardCmsContents, { standardCategories } from './standardCmsContents'
+import standardCmsContents, { standardCategories } from './seedCmsConfig'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
@@ -14,7 +14,7 @@ import type {
     SeedArticleSection,
     SeedArticle,
     SeedCategories
-} from './standardCmsContents'
+} from './seedCmsConfig'
 
 export default async function seedCms(prisma: PrismaClient) {
     await Promise.all(standardCmsContents.cmsImages.map(async (cmsimage) => {
