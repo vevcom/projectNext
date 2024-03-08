@@ -9,7 +9,9 @@ export async function invalidateOneUserSessionData(userId: number): Promise<Acti
             where: {
                 id: userId,
             },
-            data: {}
+            data: {
+                updatedAt: new Date(),
+            }
         })
     } catch (e) {
         return createPrismaActionError(e)
