@@ -1,6 +1,6 @@
 import type { SpecialImage, SpecialCollection } from '@/generated/pn'
 
-type ImageSeedConfig = {
+type ImageSeedConfigBase = {
     name: string,
     alt: string,
     fsLocation: string, //location in standard_store/images
@@ -9,18 +9,19 @@ type ImageSeedConfig = {
 
 const collectionForSpecialImages = 'STANDARDIMAGES' as const;
 
+type ImageSeedConfig = ImageSeedConfigBase[]
 
 type ImageSeedSpecialConfig = {
-    [K in SpecialImage]: ImageSeedConfig & { collection: SpecialCollection };
+    [T in SpecialImage]: ImageSeedConfigBase & { collection: SpecialCollection };
 }
 
 /**
  * This is the configuration for the images that are to be seeded
  * that are not special
  */
-const seedImageConfig : ImageSeedConfig[] = [
+export const seedImageConfig : ImageSeedConfig = [
     {
-        name: 'traktat',
+        name: 'trekant',
         alt: 'En gammel traktat',
         fsLocation: 'traktat.jpg',
         collection: collectionForSpecialImages,
@@ -31,7 +32,7 @@ const seedImageConfig : ImageSeedConfig[] = [
  * This is the configuration for the images that are to be seeded
  * that are special
  */
-const seedSpecialImageConfig : ImageSeedSpecialConfig = {
+export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
     DEFAULT_IMAGE: {
         name: 'default_image',
         alt: 'standard bilde (ikke funnet)',
@@ -109,5 +110,5 @@ const seedSpecialImageConfig : ImageSeedSpecialConfig = {
         alt: 'PWA',
         fsLocation: 'pwa.png',
         collection: collectionForSpecialImages,
-    }
+    },
 }
