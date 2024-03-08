@@ -9,10 +9,11 @@ type ImageSeedConfig = {
 
 const collectionForSpecialImages = 'STANDARDIMAGES' as const;
 
-type ImageSeedSpecialConfig = ImageSeedConfig & {
-    collection: SpecialCollection,
-    special: SpecialImage 
+
+type ImageSeedSpecialConfig = {
+    [K in SpecialImage]: ImageSeedConfig & { collection: SpecialCollection };
 }
+
 /**
  * This is the configuration for the images that are to be seeded
  * that are not special
@@ -30,12 +31,17 @@ const seedImageConfig : ImageSeedConfig[] = [
  * This is the configuration for the images that are to be seeded
  * that are special
  */
-const seedSpecialImageConfig : ImageSeedSpecialConfig[] = [
-    {
+const seedSpecialImageConfig : ImageSeedSpecialConfig = {
+    DEFAULT_IMAGE: {
+        name: 'default_image',
+        alt: 'standard bilde (ikke funnet)',
+        fsLocation: 'default_image.jpeg',
+        collection: collectionForSpecialImages,
+    },
+    LENS_CAMERA: {
         name: 'lens_camera',
         alt: 'Et kamera med en linse',
         fsLocation: 'lens_camera.jpeg',
-        collection: 'STANDARDIMAGES',
-        special: 'LENS_CAMERA'
-    }
-]
+        collection: collectionForSpecialImages,
+    },
+}

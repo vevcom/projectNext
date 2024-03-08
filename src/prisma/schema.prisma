@@ -145,6 +145,7 @@ model Image {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
+  special                 SpecialImage?    @unique
 }
 
 enum SpecialCollection {
