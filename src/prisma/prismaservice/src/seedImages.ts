@@ -4,7 +4,7 @@ import { readdir, copyFile } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@/generated/pn'
-import { seedImageConfig, seedSpecialImageConfig } from './seedImageConfig'
+import { seedImageConfig, seedSpecialImageConfig } from './seedImagesConfig'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -51,7 +51,6 @@ export default async function seedImages(prisma: PrismaClient) {
             console.log(`skipping image ${file}`)
             return
         }
-        const name = file.split('.')[0]
 
         //full size version of the image
         const fsLocation = `${uuid()}.${ext}`
@@ -80,12 +79,12 @@ export default async function seedImages(prisma: PrismaClient) {
 
         await prisma.image.upsert({
             where: {
-                name
+                name: image.name
             },
             update: {},
             create: {
-                name,
-                alt: name.split('_').join(' '),
+                name: image.name,
+                alt: image.alt,
                 fsLocation,
                 fsLocationSmallSize,
                 fsLocationMediumSize,
