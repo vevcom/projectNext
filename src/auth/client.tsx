@@ -3,12 +3,23 @@
 import { useSession } from 'next-auth/react'
 import type { SessionContextValue, UseSessionOptions } from 'next-auth/react'
 import { UserWithPermissions } from '.'
+import { Permission } from '@prisma/client'
+import { useEffect } from 'react'
 
-type UseUserReturnType<R extends boolean> = R extends true ? {
+// SessionProvider needs to be exported from a 'use client' file so that it can
+// be used in a server side file.
+export { SessionProvider } from 'next-auth/react'
+
+type UseUserArgsType<R extends boolean> = {
+    required?: R,
+    requiredPermissions?: Permission[]
+}
+
+type UseUserReturnType<R extends boolean> = (R extends true ? {
     user: UserWithPermissions,
-    status: SessionContextValue<R>['status']
 } : {
     user: UserWithPermissions | null,
+}) & {
     status: SessionContextValue<R>['status']
 }
 
@@ -20,10 +31,17 @@ type UseUserReturnType<R extends boolean> = R extends true ? {
 * use `getUser``.
 */
 // Overloading is required here to get correct typehinting base on if required is true or false in options.
-export function useUser(options?: UseSessionOptions<false>): UseUserReturnType<false>
-export function useUser(options?: UseSessionOptions<true>): UseUserReturnType<true>
-export function useUser(options?: UseSessionOptions<boolean>): UseUserReturnType<boolean> {
-    const { data: session, status } = useSession(options)
+export function useUser(options?: UseUserArgsType<false>): UseUserReturnType<false>
+export function useUser(options?: UseUserArgsType<true>): UseUserReturnType<true>
+export function useUser({ required, requiredPermissions }: UseUserArgsType<boolean> = {}): UseUserReturnType<boolean> {
+    const { data: session, status } = useSession({ required: required || false })
 
-    return { user: session?.user ?? null, status }
+    const user = session?.user ?? null
+    
+    useEffect(() => {
+        if (!requiredPermissions || !user) return
+        if (!requiredPermissions.every(permission => user.permissions.includes(permission))) window.location.href = `/login?callbackUrl=${window.location.href}`
+    }, [user])
+
+    return { user, status }
 }
