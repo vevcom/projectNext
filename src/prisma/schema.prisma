@@ -115,6 +115,22 @@ model RolesUsers {
 // Images //
 ////////////
 
+enum SpecialImage {
+  DEFAULT_IMAGE
+  KAPPEMANN
+  KONGSBERG
+  NORDIC
+  LENS_CAMERA
+  LOGO_SIMPLE
+  LOGO_WHITE
+  LOGO_WHITE_TEXT
+  MAKISK_HATT
+  OHMA
+  OMEGA_MAI
+  OV
+  PWA
+}
+
 model Image {
   id                      Int              @id @default(autoincrement())
   fsLocation              String           @unique
