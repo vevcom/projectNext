@@ -5,6 +5,8 @@ import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from './Types'
+import logger from '@/logger'
+import { readSpecialImageCollection } from './collections/read'
 
 export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, ImageDetails>
@@ -67,7 +69,8 @@ export async function readImage(nameOrId: string | number): Promise<ActionReturn
 }
 
 /**
- * Reads a "special" image - read on this in the docs. If it does not exist it will create it.
+ * Reads a "special" image - read on this in the docs. If it does not exist it will create it, but
+ * its conntent will not be the intended content. This is NOT under any circomstainses supposed to happen
  * @param special - the special image to read
  * @returns the special image
  */
@@ -87,8 +90,28 @@ export async function readSpecialImage(special: SpecialImage): Promise<ActionRet
         //TODO: auth image by collection
 
         if (!image) {
-            
+            const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
+            if (!standardCollection.success) return standardCollection
+            logger.error(`Special image ${special} did not exist, creating it with bad conent`)
+            const newImage = await prisma.image.create({
+                data: {
+                    name: special,
+                    special,
+                    fsLocation: 'not_found',
+                    fsLocationMediumSize: 'not_found',
+                    fsLocationSmallSize: 'not_found',
+                    ext: 'jpg',
+                    alt: 'not found',
+                    collection: {
+                        connect: {
+                            id: standardCollection.data.id
+                        }
+                    }
+                },
+            })
+            return { success: true, data: newImage }
         }
+
         if (!image) return { success: false, error: [{ message: 'Image not found' }] }
         return { success: true, data: image }
     } catch (error) {
