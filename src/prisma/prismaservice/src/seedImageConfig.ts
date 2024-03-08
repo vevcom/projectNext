@@ -81,10 +81,10 @@ export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
         fsLocation: 'omega_logo_white.png',
         collection: collectionForSpecialImages,
     },
-    MAKISK_HATT: {
-        name: 'makisk_hatt',
-        alt: 'Makisk hatt',
-        fsLocation: 'makisk_hatt.png',
+    MAGISK_HATT: {
+        name: 'magisk_hatt',
+        alt: 'Magisk hatt',
+        fsLocation: 'magisk_hatt.png',
         collection: collectionForSpecialImages,
     },
     OHMA: {
