@@ -22,7 +22,7 @@ export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
  * All are seeded to the special collection 'STANDARDIMAGES'
  * @param pisama - the prisma client
  */
-export default async function seedImages(prisma: PrismaClient) {
+export default async function seedImages(prisma: PrismaClient, special) {
     const standardCollection = await prisma.imageCollection.findUnique({
         where: {
             special: 'STANDARDIMAGES',
