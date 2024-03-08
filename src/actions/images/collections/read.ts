@@ -3,7 +3,8 @@ import prisma from '@/prisma'
 import errorHandler from '@/prisma/errorHandler'
 import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
+import type { ImageCollection, Image } from '@prisma/client'
+import { SpecialCollection } from '@prisma/client'
 
 /**
  * Reads an image collection by id or name
@@ -99,6 +100,12 @@ export async function readImageCollectionsPage<const PageSize extends number>(
  * @returns the special collection
  */
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+    //Check that the collection actually is a special collection, as the paramter is only a compile time type check
+    if (!Object.values(SpecialCollection).includes(special)) return {
+        success: false,
+        error: [{ message: `${special} is not special` }]
+    }
+
     //TODO: Check permission associated with the special collection
     try {
         const collection = await prisma.imageCollection.findUnique({
