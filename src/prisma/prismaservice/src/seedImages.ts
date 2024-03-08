@@ -16,6 +16,12 @@ export const imageSizes = {
 const standardLocation = join(__dirname, '..', 'standard_store', 'images')
 export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
 
+/**
+ * This functions seeds all images in standard_store/images,
+ * both the ones that are special and the ones that are not.
+ * All are seeded to the special collection 'STANDARDIMAGES'
+ * @param pisama - the prisma client
+ */
 export default async function seedImages(prisma: PrismaClient) {
     const standardCollection = await prisma.imageCollection.findUnique({
         where: {
