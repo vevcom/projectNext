@@ -8,7 +8,6 @@ import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
 import type { NewsArticleSchemaType } from './schema'
-import { ombulSchema } from '../ombul/schema'
 
 export async function createNews(rawdata: FormData | NewsArticleSchemaType): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
