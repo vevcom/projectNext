@@ -102,7 +102,7 @@ export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
     OV: {
         name: 'ov',
         alt: 'OV',
-        fsLocation: 'ov.png',
+        fsLocation: 'ov.jpeg',
         collection: collectionForSpecialImages,
     },
     PWA: {
