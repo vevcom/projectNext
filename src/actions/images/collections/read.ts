@@ -96,7 +96,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
 
 /**
  * Reads a "special" collection read on this in the docs. If it does not exist it will create it.
- * @param special the special collection to read
+ * @param special - the special collection to read
  * @returns the special collection
  */
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
