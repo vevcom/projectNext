@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import { SessionProvider } from 'next-auth/react'
+import { SessionProvider } from '@/auth/client'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
