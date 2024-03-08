@@ -4,6 +4,7 @@ import { readdir, copyFile } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@/generated/pn'
+import { seedImageConfig, seedSpecialImageConfig } from './seedImageConfig'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -22,18 +23,29 @@ export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
  * All are seeded to the special collection 'STANDARDIMAGES'
  * @param pisama - the prisma client
  */
-export default async function seedImages(prisma: PrismaClient, special) {
-    const standardCollection = await prisma.imageCollection.findUnique({
-        where: {
-            special: 'STANDARDIMAGES',
-        }
-    })
-    if (!standardCollection) {
-        throw new Error('Standard collection not found')
-    }
-
+export default async function seedImages(prisma: PrismaClient) {
     const files = await readdir(standardLocation)
-    await Promise.all(files.map(async (file) => {
+
+    //Get the to bjects to a common format
+    const seedSpecialImagesTransformed = transformObject(seedSpecialImageConfig, (value, key) => {
+        return {
+            ...value,
+            special: key
+        };
+    });
+    const seedImagesTransformed = seedImageConfig.map((value) => {
+        return {
+            ...value,
+            special: null
+        };
+    })
+    const allImages = [...seedSpecialImagesTransformed, ...seedImagesTransformed]
+
+    //Seed all images
+    await Promise.all(allImages.map(async (image) => {
+        const file = files.find(file => file === image.fsLocation)
+        if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
+
         const ext = file.split('.')[1]
         if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
             console.log(`skipping image ${file}`)
@@ -78,12 +90,17 @@ export default async function seedImages(prisma: PrismaClient, special) {
                 fsLocationSmallSize,
                 fsLocationMediumSize,
                 ext,
+                special: image.special,
                 collection: {
                     connect: {
-                        id: standardCollection.id
+                        name: image.collection
                     }
                 }
             }
         })
     }))
+}
+
+function transformObject<K extends string | number | symbol, T, U>(obj: Record<K, T>, fn: (value: T, key: K) => U): U[] {
+    return Object.entries(obj).map(([key, value]) => fn(value as T, key as K));
 }
