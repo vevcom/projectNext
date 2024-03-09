@@ -19,6 +19,7 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
 
     useEffect(() => {
+        if (image) return
         readSpecialImage('DEFAULT_IMAGE').then(res => {
             if (!res.success) throw new Error('No default image found. To fix add a image called: default_image')
             setCmsImage(res.data)

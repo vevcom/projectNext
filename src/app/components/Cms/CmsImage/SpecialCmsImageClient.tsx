@@ -17,7 +17,7 @@ export default function SpecialCmsImageClient({ special, ...props }: PropTypes) 
             if (!res.success) throw new Error(`No special cms image found for ${special}`)
             setCmsImage(res.data)
         })
-    })
+    }, [])
 
     return (
         cmsImage && (

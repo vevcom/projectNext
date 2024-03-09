@@ -4,6 +4,7 @@ import ImageCard from '@/components/ImageCard/ImageCard'
 import { readImage } from '@/actions/images/read'
 
 export default async function JobAds() {
+    throw new Error('Not implemented')
     const testImageRes = await readImage('ohma')
     if (!testImageRes.success) throw new Error('Failed to read image')
     const testImage = testImageRes.data
