@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import { adapterUserCutomFields } from '@/auth/feide/Types'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { TokenSetParameters } from 'openid-client'
 import type { FeideAccount } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -34,7 +34,7 @@ export async function updateFeideAccount(
 
         return { success: true, data: true }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -51,7 +51,7 @@ export async function updateEmailForFeideAccount(accountId: string, email: strin
 
         return { success: true, data: true }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -81,7 +81,7 @@ export async function createFeideAccount({
 
         return { success: true, data: ret }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -99,12 +99,12 @@ export async function getAdapterUserByFeideAccount(feideId: string): Promise<Act
         })
 
         if (account === null) {
-            return { success: false, error: [{ message: 'Account not found' }] }
+            return createActionError('NOT FOUND', 'Account not found')
         }
 
         return { success: true, data: account.user }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
 

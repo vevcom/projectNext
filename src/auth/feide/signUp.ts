@@ -6,8 +6,6 @@ import type { User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './Types'
 
 export default async function signUp({ user, profile }: {user: nextAuthUser, profile: ExtendedFeideUser}) {
-    console.log('signUp', user, profile)
-
     const groups = profile.groups
         .filter(group => group.type === 'fc:fs:prg' && group.id.split(':')[4] === 'ntnu.no')
         .map(group => ({

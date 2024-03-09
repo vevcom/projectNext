@@ -1,10 +1,10 @@
 'use server'
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
-import { getUser } from '@/auth'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import createFile from '@/store/createFile'
 import deleteFile from '@/store/deleteFile'
+import { getUser } from '@/auth/user'
 import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from './Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -20,24 +20,16 @@ export async function updateOmbul(
     rawdata: FormData | UpdateOmbulSchemaType
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
-    const { user, status } = await getUser({
-        permissions: ['OMBUL_UPDATE']
+    const { status, authorized } = await getUser({
+        requiredPermissions: ['OMBUL_UPDATE']
     })
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+    if (!authorized) {
+        return createActionError(status)
     }
 
     const parse = updateOmbulSchema.safeParse(rawdata)
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -60,7 +52,7 @@ export async function updateOmbul(
             data: ombul
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -75,24 +67,16 @@ export async function updateOmbulFile(
     rawData: FormData | UpdateOmbulFileSchemaType
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
-    const { user, status } = await getUser({
-        permissions: ['OMBUL_UPDATE']
+    const { status, authorized } = await getUser({
+        requiredPermissions: ['OMBUL_UPDATE']
     })
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+    if (!authorized) {
+        return createActionError(status)
     }
 
     const parse = updateObuleFileSchema.safeParse(rawData)
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -106,12 +90,7 @@ export async function updateOmbulFile(
         }
     })
     if (!ombul) {
-        return {
-            success: false,
-            error: [{
-                message: 'Ombul ikke funnet'
-            }]
-        }
+        return createActionError('NOT FOUND', 'Ombul ikke funnet')
     }
 
     const oldFsLocation = ombul.fsLocation
@@ -142,6 +121,6 @@ export async function updateOmbulFile(
             data: ombulUpdated
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

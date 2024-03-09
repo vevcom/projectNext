@@ -1,6 +1,6 @@
 'use server'
 import { createCmsParagraph } from './create'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsParagraph } from '@prisma/client'
@@ -20,6 +20,6 @@ export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsPa
         }
         return createCmsParagraph(name)
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

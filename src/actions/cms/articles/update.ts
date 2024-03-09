@@ -2,7 +2,7 @@
 import { maxSections } from './ConfigVars'
 import { articleSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import { addArticleSectionPart } from '@/cms/articleSections/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
@@ -16,10 +16,7 @@ export async function updateArticle(
     const parse = articleSchema.safeParse(rawData)
 
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -44,7 +41,7 @@ export async function updateArticle(
         })
         return { success: true, data: article }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -60,12 +57,7 @@ export async function addSectionToArticle(
         })
 
         if (!article) {
-            return {
-                success: false,
-                error: [{
-                    message: 'Artikkel ikke funnet',
-                }],
-            }
+            return createActionError('NOT FOUND', 'Artikkel ikke funnet.')
         }
 
         const highestOrderSection = await prisma.articleSection.findMany({
@@ -88,12 +80,7 @@ export async function addSectionToArticle(
             },
         })
         if (numberOfSections >= maxSections) {
-            return {
-                success: false,
-                error: [{
-                    message: `The maximum number of sections is ${maxSections}`,
-                }],
-            }
+            return createActionError('BAD PARAMETERS', `The maximum number of sections is ${maxSections}`)
         }
 
         const newSectionName = `${article.name} section ${nextOreder}`
@@ -130,7 +117,7 @@ export async function addSectionToArticle(
 
         return { success: true, data: updatedArticle }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -148,12 +135,7 @@ export async function moveSectionOrder(
             },
         })
         if (!section) {
-            return {
-                success: false,
-                error: [{
-                    message: 'Seksjon ikke funnet',
-                }],
-            }
+            return createActionError('NOT FOUND', 'Seksjon ikke funnet.')
         }
 
         //find the section with the order one higher/lower than the current section
@@ -172,12 +154,7 @@ export async function moveSectionOrder(
             take: 1,
         }).then(sections => sections[0])
         if (!otherSection) {
-            return {
-                success: false,
-                error: [{
-                    message: 'Seksjon kan ikke  flyttes opp/ned',
-                }],
-            }
+            return createActionError('BAD PARAMETERS', 'Seksjon kan ikke flyttes opp/ned.')
         }
 
 
@@ -210,16 +187,11 @@ export async function moveSectionOrder(
 
 
         if (!updatedSection || !updatedOtherSection) {
-            return {
-                success: false,
-                error: [{
-                    message: 'Noe uventet skjedde under flytting av seksjonen',
-                }],
-            }
+            return createActionError('UNKNOWN ERROR', 'Noe uventet skjedde under flytting av seksjonen.')
         }
 
         return { success: true, data: updatedSection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

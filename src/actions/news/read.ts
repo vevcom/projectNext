@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedNewsArticle, SimpleNewsArticle } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
@@ -41,7 +41,7 @@ export async function readOldNewsPage<const PageSize extends number>(
             })),
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -78,7 +78,7 @@ export async function readNewsCurrent(): Promise<ActionReturn<SimpleNewsArticle[
             }))
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -111,9 +111,9 @@ export async function readNewsByIdOrName(idOrName: number | {
                 }
             }
         })
-        if (!news) return { success: false, error: [{ message: `article ${idOrName} not found` }] }
+        if (!news) return createActionError('NOT FOUND', `article ${idOrName} not found`)
         return { success: true, data: news }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

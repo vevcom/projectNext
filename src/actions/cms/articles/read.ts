@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -29,15 +29,15 @@ export async function readArticle(idOrName: number | {
                 coverImage: true,
             }
         })
-        if (!article) return { success: false, error: [{ message: `Article ${name} not found` }] }
-        if (!article.coverImage) return { success: false, error: [{ message: `Article ${name} has no cover image` }] }
+        if (!article) return createActionError('NOT FOUND', `Article ${name} not found`)
+        if (!article.coverImage) return createActionError('BAD PARAMETERS', `Article ${name} has no cover image`)
         const ret: ExpandedArticle = {
             ...article,
             coverImage: article.coverImage
         }
         return { success: true, data: ret }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -60,6 +60,6 @@ export async function readArticles(articleCategoryId: number): Promise<ActionRet
         })
         return { success: true, data: articles }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -1,3 +1,4 @@
+import { createActionError } from '@/actions/error'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
 import type { ActionReturn } from '@/actions/Types'
@@ -25,12 +26,7 @@ export default async function deleteFile(
         }
     } catch (error) {
         if (isErrorWithCode(error) && error.code === 'ENOENT') {
-            return {
-                success: false,
-                error: [{
-                    message: 'Fil ikke funnet'
-                }]
-            }
+            return createActionError('NOT FOUND', 'Fil ikke funnet')
         }
         throw error
     }
