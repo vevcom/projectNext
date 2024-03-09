@@ -12,9 +12,11 @@ export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeS
 }
 
 /**
+ * WARNING: This component only works on the server
  * A function to display a cms image with image relation. If the cms image does not have a image it will use the default image
  * By calling on special image DEFAULT_IMAGE
  * @param cmsImage - the cms image to display with image relation
+ * @param children - the children to display besides image
  * @returns 
  */
 export default async function CmsImage({ cmsImage, children, ...props }: PropTypes) {
