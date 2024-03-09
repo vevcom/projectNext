@@ -90,6 +90,17 @@ export default async function migrateArticles(
         if (new Date(article.createdAt).getMonth() < 8) {
             orderPublished--
         }
+        await pnPrisma.omegaOrder.upsert({
+            where: {
+                order: orderPublished,
+            },
+            update: {
+                order: orderPublished,
+            },
+            create: {
+                order: orderPublished,
+            }
+        })
 
         return {
             ...articlePn,
@@ -136,7 +147,11 @@ export default async function migrateArticles(
                         id: articlePn.id,
                     }
                 },
-                orderPublished: articlePn.orderPublished,
+                omegaOrder: {
+                    connect: {
+                        order: articlePn.orderPublished,
+                    }
+                },
                 endDateTime: articlePn.endDateTime,
             }
         })
