@@ -22,7 +22,6 @@ export default function SectionMover({ articleId, sectionId, className, showUp, 
         const res = (await moveSectionOrder(articleId, sectionId, direction))
         if (!res.success) {
             const m = res.error ? res?.error[0].message : 'dd'
-            console.error(m)
         }
         refresh()
     }, [sectionId, articleId, refresh])

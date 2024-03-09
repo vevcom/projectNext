@@ -22,7 +22,6 @@ export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {
             ],
             take: 1,
         })
-        console.log(ombul[0])
         if (!ombul) {
             return createActionError('NOT FOUND', 'Fant ingen ombul.')
         }

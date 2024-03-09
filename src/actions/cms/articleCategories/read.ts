@@ -32,7 +32,6 @@ export async function readArticleCategories(): Promise<ActionReturn<ArticleCateg
         )))
         return { success: true, data: categoriesWithCover }
     } catch (error) {
-        console.error(error)
         return createPrismaActionError(error)
     }
 }

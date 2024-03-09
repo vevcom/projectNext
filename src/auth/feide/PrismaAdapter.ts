@@ -111,7 +111,6 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
             provider: string
         }): Promise<AdapterUser | null> {
             if (provider !== 'feide') {
-                console.log(provider)
                 throw new Error('Unsupported provider')
             }
 
