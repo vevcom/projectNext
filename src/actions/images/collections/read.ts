@@ -1,8 +1,9 @@
 'use server'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
+import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageCollection, Image } from '@prisma/client'
+import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
 
 export async function readImageCollection(
     idOrName: number | string
@@ -73,6 +74,34 @@ export async function readImageCollectionsPage<const PageSize extends number>(
         }))
 
         return { success: true, data: returnData }
+    } catch (error) {
+        return createPrismaActionError(error)
+    }
+}
+
+/**
+ * Reads a "special" collection read on this in the docs. If it does not exist it will create it.
+ * @param special the special collection to read
+ * @returns the special collection
+ */
+export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+    try {
+        const collection = await prisma.imageCollection.findUnique({
+            where: {
+                special
+            }
+        })
+        if (!collection) {
+            logger.warn(`Special collection ${special} did not exist, creating it`)
+            const newCollection = await prisma.imageCollection.create({
+                data: {
+                    name: special,
+                    special
+                }
+            })
+            return { success: true, data: newCollection }
+        }
+        return { success: true, data: collection }
     } catch (error) {
         return createPrismaActionError(error)
     }

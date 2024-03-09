@@ -1,5 +1,5 @@
 'use server'
-import schema from './schema'
+import { newsArticleSchema } from './schema'
 import { defaultNewsArticleOldCutoff } from './ConfigVars'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
@@ -7,13 +7,14 @@ import { createArticle } from '@/cms/articles/create'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
+import type { NewsArticleSchemaType } from './schema'
 
-export async function createNews(rawdata: FormData): Promise<ActionReturn<ExpandedNewsArticle>> {
+export async function createNews(rawdata: FormData | NewsArticleSchemaType): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
     const endDateTime = new Date()
     endDateTime.setDate(endDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-    const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
+    const parse = newsArticleSchema.safeParse(rawdata)
     if (!parse.success) {
         return createZodActionError(parse)
     }

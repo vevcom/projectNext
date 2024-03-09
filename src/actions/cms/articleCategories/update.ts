@@ -1,7 +1,8 @@
 'use server'
-import articleSchema from './schema'
+import { articleCategorySchema } from './schema'
 import prisma from '@/prisma'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import type { ArticleCategorySchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from './Types'
 
@@ -17,16 +18,16 @@ export async function updateArticleCategoryVisibility(
 
 export async function updateArticleCategory(
     id: number,
-    rawData: FormData
+    rawData: FormData | ArticleCategorySchemaType
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
-    const parse = articleSchema.safeParse({
-        name: rawData.get('name'),
-        description: rawData.get('description'),
-    })
+    const parse = articleCategorySchema.safeParse(rawData)
+
     if (!parse.success) {
         return createZodActionError(parse)
     }
+
     const { name, description } = parse.data
+
     try {
         const articleCategory = await prisma.articleCategory.update({
             where: {

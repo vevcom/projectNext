@@ -1,0 +1,29 @@
+@use '@/styles/ohma';
+
+.NumberInput {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 200px;
+}
+
+.NumberInput .field {
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: ohma.$fonts-m;
+    color: ohma.$colors-secondary;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+.NumberInput .field:focus {
+    outline: none;
+    box-shadow: 0px 0px 10px ohma.$colors-secondary;
+}
+
+.NumberInput .labe {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #666;
+}

@@ -19,6 +19,7 @@ export default async function User({ params }: PropTypes) {
     const me = params.username === 'me'
     const username = me ? user.username : params.username
 
+    // TODO REFACTOR
     const userProfile = await prisma.user.findUnique({
         where: {
             username

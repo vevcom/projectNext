@@ -1,35 +1,14 @@
 'use server'
+import { createUserSchema, userRegisterSchema } from './schema'
 import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import { z } from 'zod'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
+import { getUser } from '@/auth'
+import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 
-export async function createUser(rawdata: FormData): Promise<ActionReturn<User>> {
-    //TEST FOR WAIT
-    await (new Promise((resolve) => {
-        setTimeout(() => {
-            resolve('resolved')
-        }, 5000)
-    }))
-    //TEST FOR WAIT
-
-    const schema = z.object({
-        username: z.string().max(50).min(2),
-        password: z.string().max(50).min(2),
-        email: z.string().max(200).min(2).email(),
-        firstname: z.string().max(50).min(2),
-        lastname: z.string().max(50).min(2),
-        confirmPassword: z.string().max(50).min(2),
-    }).refine((data) => data.password === data.confirmPassword, 'Password must match confirm password')
-    const parse = schema.safeParse({
-        username: rawdata.get('username'),
-        password: rawdata.get('password'),
-        email: rawdata.get('email'),
-        firstname: rawdata.get('firstname'),
-        lastname: rawdata.get('lastname'),
-        confirmPassword: rawdata.get('confirmPassword'),
-    })
+export async function createUser(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
+    const parse = createUserSchema.safeParse(rawdata)
 
     if (!parse.success) {
         return createZodActionError(parse)
@@ -53,6 +32,59 @@ export async function createUser(rawdata: FormData): Promise<ActionReturn<User>>
         })
 
         return { success: true, data: user }
+    } catch (error) {
+        return createPrismaActionError(error)
+    }
+}
+
+export async function registerUser(rawdata: FormData): Promise<ActionReturn<null>> {
+    const { user, status } = await getUser()
+
+    if (!user) {
+        return createActionError(status)
+    }
+
+    try {
+        const parse = userRegisterSchema.safeParse(rawdata)
+
+        if (!parse.success) {
+            return createZodActionError(parse)
+        }
+
+        const alredyRegistered = await prisma.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                acceptedTerms: true
+            }
+        })
+
+        if (alredyRegistered?.acceptedTerms !== null) {
+            return createActionError('DUPLICATE', 'User already registered')
+        }
+
+        await prisma.$transaction([
+            prisma.user.update({
+                where: {
+                    id: user.id
+                },
+                data: {
+                    email: parse.data.email,
+                    acceptedTerms: new Date(),
+                    sex: parse.data.sex
+                }
+            }),
+            prisma.credentials.create({
+                data: {
+                    passwordHash: parse.data.password,
+                    userId: user.id,
+                    username: user.username,
+                }
+            })
+        ])
+
+        return { success: true, data: null }
     } catch (error) {
         return createPrismaActionError(error)
     }
