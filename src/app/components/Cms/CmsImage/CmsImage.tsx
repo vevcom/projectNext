@@ -29,7 +29,7 @@ export default async function CmsImage({ cmsImage, children, ...props }: PropTyp
 
     return (
         <div className={styles.CmsImage}>
-            <CmsImageEditor cmsImage={cmsImage}/>
+            <CmsImageEditor cmsImage={{...cmsImage, image}}/>
             <Image imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>

@@ -27,7 +27,7 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
 
     return (
         <div className={styles.CmsImage}>
-            {cmsImage && <CmsImageEditor cmsImage={cmsImage}/>}
+            {image && <CmsImageEditor cmsImage={{...cmsImage, image}}/>}
             <div className={styles.children}>{children}</div>
             {image &&
                 <Image
