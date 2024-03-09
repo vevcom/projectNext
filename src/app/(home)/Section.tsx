@@ -1,11 +1,12 @@
 import styles from './Section.module.scss'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import React from 'react'
 import Link from 'next/link'
+import { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 
 type PropTypes = {
     children: React.ReactNode,
-    imagename: string,
+    specialImage: SpecialCmsImageT,
     name: string,
     lesMer: string,
     right?: boolean,
@@ -13,10 +14,10 @@ type PropTypes = {
     id?: string,
 }
 
-function Section({ children, imagename, name, lesMer, right, imgWidth, id }: PropTypes) {
+function Section({ children, specialImage, name, lesMer, right, imgWidth, id }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
-            <CmsImage name={imagename} width={imgWidth} />
+            <SpecialCmsImage special={specialImage} width={imgWidth} />
         </div>
     )
     return (

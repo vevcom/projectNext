@@ -43,10 +43,18 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
             include: {
                 article: {
                     include: {
-                        coverImage: true,
+                        coverImage: {
+                            include: {
+                                image: true
+                            }
+                        },
                         articleSections: {
                             include: {
-                                cmsImage: true,
+                                cmsImage: {
+                                    include: {
+                                        image: true
+                                    }
+                                },
                                 cmsParagraph: true,
                                 cmsLink: true
                             }

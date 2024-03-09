@@ -29,10 +29,18 @@ export async function updateArticle(
                 ...data,
             },
             include: {
-                coverImage: true,
+                coverImage: {
+                    include: {
+                        image: true,
+                    }
+                },
                 articleSections: {
                     include: {
-                        cmsImage: true,
+                        cmsImage: {
+                            include: {
+                                image: true,
+                            },
+                        },
                         cmsParagraph: true,
                         cmsLink: true,
                     }
@@ -98,10 +106,18 @@ export async function addSectionToArticle(
                 },
             },
             include: {
-                coverImage: true,
+                coverImage: {
+                    include: {
+                        image: true,
+                    }
+                },
                 articleSections: {
                     include: {
-                        cmsImage: true,
+                        cmsImage: {
+                            include: {
+                                image: true,
+                            }
+                        },
                         cmsParagraph: true,
                         cmsLink: true,
                     }

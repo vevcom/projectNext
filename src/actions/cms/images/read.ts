@@ -39,7 +39,7 @@ export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<Act
     try {
         const cmsImage = await prisma.cmsImage.findUnique({
             where: {
-                name: special,
+                special,
             },
             include: {
                 image: true,

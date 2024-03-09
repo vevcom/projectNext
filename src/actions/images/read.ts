@@ -79,7 +79,7 @@ export async function readSpecialImage(special: SpecialImage): Promise<ActionRet
     if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', `${special} is not special`)
     
     try {
-        const image = await prisma.image.findFirst({
+        const image = await prisma.image.findUnique({
             where: {
                 special,
             },

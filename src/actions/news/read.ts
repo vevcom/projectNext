@@ -99,10 +99,18 @@ export async function readNewsByIdOrName(idOrName: number | {
             include: {
                 article: {
                     include: {
-                        coverImage: true,
+                        coverImage: {
+                            include: {
+                                image: true
+                            }
+                        },
                         articleSections: {
                             include: {
-                                cmsImage: true,
+                                cmsImage: {
+                                    include: {
+                                        image: true
+                                    }
+                                },
                                 cmsParagraph: true,
                                 cmsLink: true
                             }

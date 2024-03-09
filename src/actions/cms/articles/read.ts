@@ -21,12 +21,20 @@ export async function readArticle(idOrName: number | {
             include: {
                 articleSections: {
                     include: {
-                        cmsImage: true,
+                        cmsImage: {
+                            include: {
+                                image: true
+                            },
+                        },
                         cmsParagraph: true,
                         cmsLink: true
                     }
                 },
-                coverImage: true,
+                coverImage: {
+                    include: {
+                        image: true
+                    },
+                },
             }
         })
         if (!article) return createActionError('NOT FOUND', `Article ${name} not found`)
@@ -50,12 +58,20 @@ export async function readArticles(articleCategoryId: number): Promise<ActionRet
             include: {
                 articleSections: {
                     include: {
-                        cmsImage: true,
+                        cmsImage: {
+                            include: {
+                                image: true
+                            },
+                        },
                         cmsParagraph: true,
                         cmsLink: true
                     }
                 },
-                coverImage: true,
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                },
             }
         })
         return { success: true, data: articles }

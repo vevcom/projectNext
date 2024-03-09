@@ -33,12 +33,21 @@ export async function createArticle(name: string | null, config?: {
             include: {
                 articleSections: {
                     include: {
-                        cmsImage: true,
+                        cmsImage: {
+                            include: {
+                                image: true
+                            },
+                        },
                         cmsParagraph: true,
                         cmsLink: true
                     }
                 },
-                coverImage: true,
+                coverImage: {
+                    include: {
+                        image: true
+                    },
+                
+                },
             }
         })
         return { success: true, data: article }

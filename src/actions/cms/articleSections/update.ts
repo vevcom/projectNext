@@ -42,7 +42,11 @@ export async function updateArticleSection(name: string, changes: {
                     },
                 },
             },
-            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+            include: { 
+                cmsParagraph: true, 
+                cmsImage: { include: { image: true } },
+                cmsLink: true 
+            }
         })
         return { success: true, data: articleSection }
     } catch (error) {
@@ -75,7 +79,11 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsImage: { connect: { id: cmsImage.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: { 
+                            cmsParagraph: true, 
+                            cmsImage: { include: { image: true } },
+                            cmsLink: true 
+                        }
                     })
                 }
             }
@@ -88,7 +96,11 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsParagraph: { connect: { id: cmsParagraph.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: { 
+                            cmsParagraph: true, 
+                            cmsImage: { include: { image: true } },
+                            cmsLink: true 
+                        }
                     })
                 }
             }
@@ -101,7 +113,11 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsLink: { connect: { id: cmsLink.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: { 
+                            cmsParagraph: true, 
+                            cmsImage: { include: { image: true } }, 
+                            cmsLink: true 
+                        }
                     })
                 }
             }

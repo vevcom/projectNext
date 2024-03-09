@@ -1,10 +1,10 @@
+import SpecialCmsImage from '../components/Cms/CmsImage/SpecialCmsImage'
 import styles from './page.module.scss'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 
 export default function Events() {
     return (
         <div className={styles.wrapper}>
-            <CmsImage name="events_test__" width={300}/>
+            <SpecialCmsImage special="FRONTPAGE_1" width={300}/>
             iejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf
             projectnextiejiejiwjfijwfoekfoewkfowkefokewf

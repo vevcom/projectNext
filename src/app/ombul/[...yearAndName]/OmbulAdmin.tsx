@@ -6,7 +6,7 @@ import { updateOmbul, updateOmbulFile } from '@/actions/ombul/update'
 import { EditModeContext } from '@/context/EditMode'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
-import { CmsImageNew } from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import { destroyOmbul } from '@/actions/ombul/destroy'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
@@ -102,7 +102,7 @@ export default function OmbulAdmin({
                 {
                     canUpdate && (
                         <div className={styles.coverImage}>
-                            <CmsImageNew cmsImage={ombul.coverImage} width={250} />
+                            <CmsImage cmsImage={ombul.coverImage} width={250} />
                         </div>
                     )
                 }

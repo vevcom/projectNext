@@ -11,11 +11,12 @@ import type {
     CmsImage as CmsImageT,
     CmsLink as CmsLinkT
 } from '@prisma/client'
+import { ExpandedCmsImage } from '@/actions/cms/images/Types'
 
 type PropTypes = {
     articleSection: ArticleSectionT & {
         cmsParagraph: CmsParagraphT | null,
-        cmsImage: CmsImageT | null,
+        cmsImage: ExpandedCmsImage | null,
         cmsLink: CmsLinkT | null
     }
 }
@@ -27,7 +28,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
         <span className={styles.image}>
             {cmsImage && <>
                 <span className={styles.cmsImageWithControls}>
-                    <CmsImage width={articleSection.imageSize} name={cmsImage.name} />
+                    <CmsImage width={articleSection.imageSize} cmsImage={cmsImage} />
                     <ImageControls className={styles.moveControls} articleSection={articleSection} />
                 </span>
                 <div className={styles.remover}>

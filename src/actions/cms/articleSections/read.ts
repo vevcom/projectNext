@@ -13,7 +13,12 @@ export async function readArticleSection(name: string): Promise<ActionReturn<Exp
                 name
             },
             include: {
-                cmsImage: true,
+                cmsImage: {
+                    include: {
+                        image: true
+                    }
+                
+                },
                 cmsParagraph: true,
                 cmsLink: true
             }

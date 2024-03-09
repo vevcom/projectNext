@@ -12,7 +12,11 @@ export async function createArticleSection(name: string): Promise<ActionReturn<E
                 name,
             },
             include: {
-                cmsImage: true,
+                cmsImage: {
+                    include: {
+                        image: true
+                    },
+                },
                 cmsParagraph: true,
                 cmsLink: true
             }
