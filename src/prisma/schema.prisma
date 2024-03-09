@@ -172,7 +172,6 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
-  
 }
 
 model CmsParagraph {
@@ -241,12 +240,13 @@ model Article {
 }
 
 model NewsArticle {
-  id             Int      @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   description    String?
   endDateTime    DateTime //when the article is no longer considered current
-  article        Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
-  articleId      Int      @unique
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
+  articleId      Int        @unique
   articleName    String
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
   orderPublished Int
 
   @@unique([articleId, articleName])
@@ -296,9 +296,10 @@ model StudyProgram {
 ///////////////////////////
 
 model OmegaOrder {
-  order     Int      @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  order       Int           @id
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  NewsArticle NewsArticle[]
 }
 
 ///////////////////////////
@@ -307,7 +308,7 @@ model OmegaOrder {
 
 model Ombul {
   id           Int      @id @default(autoincrement())
-  name         String   
+  name         String
   description  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
