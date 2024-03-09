@@ -1,12 +1,12 @@
 'use server'
 import { createOmbulSchema } from './schema'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import { readSpecialImageCollection } from '@/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import createFile from '@/store/createFile'
-import { getUser } from '@/auth'
 import { createOneImage } from '@/actions/images/create'
+import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
 import type { CreateOmbulSchemaType } from './schema'
@@ -18,24 +18,16 @@ import type { CreateOmbulSchemaType } from './schema'
  */
 export async function createOmbul(rawdata: FormData | CreateOmbulSchemaType): Promise<ActionReturn<Ombul>> {
     //Auth route
-    const { user, status } = await getUser({
-        permissions: ['OMBUL_CREATE']
+    const { status, authorized } = await getUser({
+        requiredPermissions: ['OMBUL_CREATE']
     })
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+    if (!authorized) {
+        return createActionError(status)
     }
 
     const parse = createOmbulSchema.safeParse(rawdata)
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -57,7 +49,7 @@ export async function createOmbul(rawdata: FormData | CreateOmbulSchemaType): Pr
                 latestIssueNumber = ombul.issueNumber + 1
             }
         } catch (error) {
-            return errorHandler(error)
+            return createPrismaActionError(error)
         }
     }
     const issueNumber = data.issueNumber || latestIssueNumber
@@ -106,6 +98,6 @@ export async function createOmbul(rawdata: FormData | CreateOmbulSchemaType): Pr
             data: ombul
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

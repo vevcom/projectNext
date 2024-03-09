@@ -1,8 +1,8 @@
 'use server'
 import { createUserSchema, userRegisterSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import { getUser } from '@/auth'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
+import { getUser } from '@/auth/user'
 import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
@@ -11,7 +11,7 @@ export async function createUser(rawdata: FormData | CreateUserSchemaType): Prom
     const parse = createUserSchema.safeParse(rawdata)
 
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
 
     const { username, password, email, firstname, lastname } = parse.data
@@ -33,7 +33,7 @@ export async function createUser(rawdata: FormData | CreateUserSchemaType): Prom
 
         return { success: true, data: user }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -41,19 +41,14 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
     const { user, status } = await getUser()
 
     if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+        return createActionError(status)
     }
 
     try {
         const parse = userRegisterSchema.safeParse(rawdata)
 
         if (!parse.success) {
-            return { success: false, error: parse.error.issues }
+            return createZodActionError(parse)
         }
 
         const alredyRegistered = await prisma.user.findUnique({
@@ -66,12 +61,7 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
         })
 
         if (alredyRegistered?.acceptedTerms !== null) {
-            return {
-                success: false,
-                error: [{
-                    message: 'User already registered'
-                }]
-            }
+            return createActionError('DUPLICATE', 'User already registered')
         }
 
         await prisma.$transaction([
@@ -96,6 +86,6 @@ export async function registerUser(rawdata: FormData): Promise<ActionReturn<null
 
         return { success: true, data: null }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

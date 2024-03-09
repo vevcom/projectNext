@@ -1,6 +1,6 @@
 import 'server-only'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { StudyProgram } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -92,6 +92,6 @@ export async function upsertManyStudyProgrammes(
 
         return { success: true, data: allStudyPrograms }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -1,5 +1,5 @@
 'use server'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsLink } from '@prisma/client'
@@ -13,6 +13,6 @@ export async function createCmsLink(name: string): Promise<ActionReturn<CmsLink>
         })
         return { success: true, data: cmsLink }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

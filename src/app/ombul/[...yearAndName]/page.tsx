@@ -3,10 +3,10 @@ import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
 import { readOmbul } from '@/actions/ombul/read'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
-import { requireUser } from '@/auth'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbul } from '@/actions/ombul/update'
+import { getUser } from '@/auth/user'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -17,8 +17,9 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
-    const user = await requireUser({
-        permissions: ['OMBUL_READ']
+    const { user } = await getUser({
+        requiredPermissions: ['OMBUL_READ'],
+        required: true,
     })
 
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)

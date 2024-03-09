@@ -1,7 +1,7 @@
 'use server'
 
 import { createRoleSchema, addUserToRoleSchema } from './schema'
-import errorHandeler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/actions/users/update'
 import type { ActionReturn } from '@/actions/Types'
@@ -13,12 +13,9 @@ type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { sele
 export async function createRole(rawdata: FormData | CreateRoleSchemaType): Promise<ActionReturn<RoleWithPermissions>> {
     const parse = createRoleSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
-
+    if (!parse.success) return createZodActionError(parse)
 
     const { name } = parse.data
-
-    if (!name) return { success: false }
 
     try {
         const role = await prisma.role.create({
@@ -36,14 +33,14 @@ export async function createRole(rawdata: FormData | CreateRoleSchemaType): Prom
 
         return { success: true, data: role }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
 export async function addUserToRole(rawdata: FormData | AddUserToRoleSchemaType): Promise<ActionReturn<void, false>> {
     const parse = addUserToRoleSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { roleId, username } = parse.data
 
@@ -57,11 +54,11 @@ export async function addUserToRole(rawdata: FormData | AddUserToRoleSchemaType)
             },
         })
 
-        if (!user) return { success: false, error: [{ message: 'Invalid username' }] }
+        if (!user) return createActionError('BAD PARAMETERS', 'Invalid username')
 
         return await addUserByIdToRole(user.id, roleId)
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -82,7 +79,7 @@ export async function addUserByIdToRoles(userId: number, roleIds: number[]): Pro
 
         if (!res.success) return res
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     return { success: true }

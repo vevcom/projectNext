@@ -1,3 +1,4 @@
+import { createActionError } from '@/actions/error'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
@@ -26,15 +27,12 @@ export default async function createFile(
     const buffer = Buffer.from(arrBuffer)
     const ext = file.type.split('/')[1]
     if (allowedExt && !allowedExt.includes(ext)) {
-        return {
-            success: false,
-            error: [
-                {
-                    path: ['file'],
-                    message: 'Invalid file type'
-                }
-            ]
-        }
+        return createActionError('BAD PARAMETERS', [
+            {
+                path: ['file'],
+                message: 'Invalid file type'
+            }
+        ])
     }
     const pBuffer = await prosessor(buffer)
     const fsLocation = `${uuid()}.${ext}`

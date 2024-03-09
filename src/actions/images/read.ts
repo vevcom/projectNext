@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '../error'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
@@ -23,10 +23,10 @@ export async function readImagesPage<const PageSize extends number>(
         })
         //TODO: auth image by collection
 
-        if (!images) return { success: false, error: [{ message: 'Image not found' }] }
+        if (!images) return createActionError('NOT FOUND', 'No images found')
         return { success: true, data: images }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -40,10 +40,10 @@ export async function readImageById(id: number): Promise<ActionReturn<Image>> {
         })
         //TODO: auth image by collection
 
-        if (!image) return { success: false, error: [{ message: 'Image not found' }] }
+        if (!image) return createActionError('NOT FOUND', 'Image not found')
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -56,10 +56,10 @@ export async function readImageByName(name: string): Promise<ActionReturn<Image>
         })
         //TODO: auth image by collection
 
-        if (!image) return { success: false, error: [{ message: 'Image not found' }] }
+        if (!image) return createActionError('NOT FOUND', 'Image not found')
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -76,10 +76,7 @@ export async function readImage(nameOrId: string | number): Promise<ActionReturn
  */
 export async function readSpecialImage(special: SpecialImage): Promise<ActionReturn<Image>> {
 
-    if (!Object.values(SpecialImage).includes(special)) return {
-        success: false,
-        error: [{ message: `${special} is not special` }]
-    }
+    if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', 'Special image not found')
     
     try {
         const image = await prisma.image.findFirst({
@@ -112,9 +109,9 @@ export async function readSpecialImage(special: SpecialImage): Promise<ActionRet
             return { success: true, data: newImage }
         }
 
-        if (!image) return { success: false, error: [{ message: 'Image not found' }] }
+        if (!image) return createActionError('NOT FOUND', 'Image not found')
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

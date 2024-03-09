@@ -1,8 +1,8 @@
 'use server'
 
 import { updateUserSchema } from './schema'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserSchemaType } from './schema'
@@ -11,7 +11,7 @@ import type { UpdateUserSchemaType } from './schema'
 export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
     const parse = updateUserSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
     try {
@@ -23,7 +23,7 @@ export async function updateUser(id: number, rawdata: FormData | UpdateUserSchem
         })
         return { success: true, data: user }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -35,19 +35,21 @@ export async function invalidateOneUserSessionData(userId: number): Promise<Acti
             where: {
                 id: userId,
             },
-            data: {}
+            data: {
+                updatedAt: new Date(),
+            }
         })
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 
-    return { success: true, data: undefined }
+    return { success: true }
 }
 
 export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
     const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
 
-    if (results.some(result => !result.success)) return { success: false }
+    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
 
-    return { success: true, data: undefined }
+    return { success: true }
 }

@@ -1,7 +1,7 @@
 'use server'
 
 import { removeUserFromRoleSchema } from './schema'
-import errorHandeler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/actions/users/update'
 import type { RemoveUserFromRoleSchemaType } from './schema'
@@ -38,7 +38,7 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
 
         return { success: true, data: role }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -47,7 +47,7 @@ export async function removeUserFromRole(
 ): Promise<ActionReturn<void, false>> {
     const parse = removeUserFromRoleSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { roleId, username } = parse.data
 
@@ -61,7 +61,7 @@ export async function removeUserFromRole(
             },
         })
 
-        if (!user) return { success: false, error: [{ message: 'Invalid username' }] }
+        if (!user) return createActionError('BAD PARAMETERS', 'Invalid username')
 
         await prisma.rolesUsers.delete({
             where: {
@@ -76,7 +76,7 @@ export async function removeUserFromRole(
 
         if (!res.success) return res
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     return { success: true }

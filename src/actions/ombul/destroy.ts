@@ -1,15 +1,19 @@
 'use server'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import deleteFile from '@/store/deleteFile'
-import { requireUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from './Types'
 
 export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
-    await requireUser({
-        permissions: ['OMBUL_DESTROY']
+    const { status, authorized } = await getUser({
+        requiredPermissions: ['OMBUL_DESTROY']
     })
+
+    if (!authorized) {
+        return createActionError(status)
+    }
 
     try {
         const ombul = await prisma.ombul.findUnique({
@@ -25,12 +29,7 @@ export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmb
             }
         })
         if (!ombul) {
-            return {
-                success: false,
-                error: [{
-                    message: 'Ombul ikke funnet'
-                }]
-            }
+            return createActionError('NOT FOUND', 'Ombul ikke funnet.')
         }
 
         const res = await deleteFile('ombul', ombul.fsLocation)
@@ -47,6 +46,6 @@ export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmb
             data: ombul
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

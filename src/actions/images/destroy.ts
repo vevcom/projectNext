@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -22,6 +22,6 @@ export async function destroyImage(imageId: number): Promise<ActionReturn<Image>
 
         return { success: true, data: image }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

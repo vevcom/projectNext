@@ -1,7 +1,7 @@
 'use server'
 import { createCmsImage } from './create'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedCmsImage } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 import { SpecialCmsImage } from '@prisma/client'
@@ -62,6 +62,6 @@ export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<Act
         }
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
