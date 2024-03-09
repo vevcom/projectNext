@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedNewsArticle, SimpleNewsArticle } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import { newsArticleRealtionsIncluder } from './ConfigVars'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
@@ -96,28 +97,7 @@ export async function readNewsByIdOrName(idOrName: number | {
                     orderPublished: idOrName.order
                 }
             },
-            include: {
-                article: {
-                    include: {
-                        coverImage: {
-                            include: {
-                                image: true
-                            }
-                        },
-                        articleSections: {
-                            include: {
-                                cmsImage: {
-                                    include: {
-                                        image: true
-                                    }
-                                },
-                                cmsParagraph: true,
-                                cmsLink: true
-                            }
-                        }
-                    }
-                }
-            }
+            include: newsArticleRealtionsIncluder
         })
         if (!news) return createActionError('NOT FOUND', `article ${idOrName} not found`)
         return { success: true, data: news }
