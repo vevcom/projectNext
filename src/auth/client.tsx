@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-import type { UserWithPermissions } from '.'
+import type { UserWithPermissions } from './user'
 import type { Permission } from '@prisma/client'
 import type { SessionContextValue } from 'next-auth/react'
 
