@@ -3,7 +3,7 @@ import CmsImage from "./CmsImage"
 import type { SpecialCmsImage as SpecialCmsImageT } from "@prisma/client"
 import type { PropTypes as CmsImageProps } from './CmsImage'
 
-type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
+export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
     special: SpecialCmsImageT
 }
 /**
