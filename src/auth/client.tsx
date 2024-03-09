@@ -36,7 +36,7 @@ export function useUser({ required }: UseUserArgsType<boolean> = {}): UseUserRet
     const { data: session, status } = useSession({ required: required || false })
 
     const user = session?.user ?? null
-    const authorized = user != null
+    const authorized = Boolean(user)
 
     return { user, status, authorized }
 }

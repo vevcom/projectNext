@@ -1,8 +1,8 @@
 import prisma from '@/prisma'
+import { getUser } from '@/auth/user'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import { getUser } from '@/auth/user'
 
 type PropTypes = {
     params: {

@@ -2,7 +2,7 @@
 
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { OmegaquoteFiltered } from './Types'
 

@@ -2,7 +2,7 @@
 import { createUserSchema, userRegisterSchema } from './schema'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'

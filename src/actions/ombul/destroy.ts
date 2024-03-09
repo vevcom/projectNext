@@ -2,7 +2,7 @@
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import deleteFile from '@/store/deleteFile'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from './Types'
 
