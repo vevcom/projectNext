@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/generated/pn'
 
 export default async function seedDevImages(prisma: PrismaClient) {
     for (let i = 0; i < 10; i++) {

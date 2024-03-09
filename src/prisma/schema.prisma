@@ -8,7 +8,7 @@ generator projectnext {
 
 generator prismaservice {
   provider = "prisma-client-js"
-  output   = "./prismaservice/node_modules/.prisma/client"
+  output   = "./prismaservice/generated/pn"
 }
 
 datasource db {

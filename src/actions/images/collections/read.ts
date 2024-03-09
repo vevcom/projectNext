@@ -5,6 +5,11 @@ import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
 
+/**
+ * Reads an image collection by id or name
+ * @param idOrName - the id or name of the image collection
+ * @returns the image collection in actionrturn
+ */
 export async function readImageCollection(
     idOrName: number | string
 ): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
@@ -31,6 +36,11 @@ export type ImageCollectionPageReturn = ImageCollection & {
     numberOfImages: number,
 }
 
+/**
+ * Returns a page of image collections, orders by createdAt (and then name)
+ * @param page - the page to read of the Page type
+ * @returns
+ */
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
@@ -48,6 +58,10 @@ export async function readImageCollectionsPage<const PageSize extends number>(
                     }
                 }
             },
+            orderBy: [
+                { createdAt: 'desc' },
+                { name: 'asc' }
+            ],
             skip: pageNumber * pageSize,
             take: pageSize,
         })
@@ -85,6 +99,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
  * @returns the special collection
  */
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+    //TODO: Check permission associated with the special collection
     try {
         const collection = await prisma.imageCollection.findUnique({
             where: {

@@ -1,4 +1,4 @@
-import type { Position, ImageSize } from '@prisma/client'
+import type { Position, ImageSize } from '@/generated/pn'
 
 export type SeedCmsImage = {
     name: string,
