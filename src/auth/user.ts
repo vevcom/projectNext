@@ -1,7 +1,7 @@
+import { authOptions } from './authoptions'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Permission, User } from '@prisma/client'
-import { authOptions } from './authoptions'
 
 export type UserWithPermissions = Omit<User, 'id'> & {
     id: number,

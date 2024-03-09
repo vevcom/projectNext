@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
+import { createPrismaActionError } from '@/actions/error'
 import type { StudyProgram } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { createPrismaActionError } from '@/actions/error'
 
 type ReturnStudyProgram = {
     id: number,

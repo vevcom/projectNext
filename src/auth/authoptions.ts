@@ -5,12 +5,9 @@ import { updateFeideAccount } from './feide/index'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { getServerSession } from 'next-auth'
-import { notFound, redirect } from 'next/navigation'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
-import type { Permission, User } from '@prisma/client'
 import type { ExtendedFeideUser } from './feide/Types'
 
 export const authOptions: AuthOptions = {
