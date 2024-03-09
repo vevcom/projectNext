@@ -1,0 +1,10 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    background-color: ohma.$colors-gray-200;
+
+}
