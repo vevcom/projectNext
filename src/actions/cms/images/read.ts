@@ -1,7 +1,7 @@
 'use server'
 import { createCmsImage } from './create'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedCmsImage } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 import { SpecialCmsImage } from '@prisma/client'
@@ -22,10 +22,10 @@ export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedC
                 image: true,
             }
         })
-        if (!cmsImage) return { success: false, error: [{ message: `CmsImage ${name} not found` }] }
+        if (!cmsImage) return createActionError('NOT FOUND', `${name} Cms Image not found`)
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -35,10 +35,7 @@ export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedC
  * @returns ActionReturn<ExpandedCmsImage>
  */
 export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<ActionReturn<ExpandedCmsImage>> {
-    if (!Object.values(SpecialCmsImage).includes(special)) return {
-        success: false,
-        error: [{ message: `${special} is not special` }]
-    }
+    if (!Object.values(SpecialCmsImage).includes(special)) return createActionError('BAD PARAMETERS', `${special} is not special`)
     try {
         const cmsImage = await prisma.cmsImage.findUnique({
             where: {

@@ -76,7 +76,7 @@ export async function readImage(nameOrId: string | number): Promise<ActionReturn
  */
 export async function readSpecialImage(special: SpecialImage): Promise<ActionReturn<Image>> {
 
-    if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', 'Special image not found')
+    if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', `${special} is not special`)
     
     try {
         const image = await prisma.image.findFirst({
