@@ -5,11 +5,11 @@ import Image from '@/components/Image/Image'
 import { readCmsImage } from '@/cms/images/read'
 import { readImage } from '@/actions/images/read'
 import { useState, useEffect } from 'react'
-import type { Image as ImageT, CmsImage } from '@prisma/client'
 import type { PropTypes } from './CmsImage'
+import type { Image as ImageT } from '@prisma/client'
 
-export default function CmsImageClient({ name, width, alt, children, ...props }: PropTypes) {
-    const [cmsImage, setCmsImage] = useState<CmsImage & {image: ImageT} | null>(null)
+export default function CmsImageClient({ cmsImage: givenCmsImage, children, ...props }: PropTypes) {
+    const [cmsImage, setCmsImage] = useState<ImageT>(givenCmsImage)
 
     useEffect(() => {
         readCmsImage(name).then(res => {
@@ -36,9 +36,7 @@ export default function CmsImageClient({ name, width, alt, children, ...props }:
             {cmsImage?.image &&
                 <Image
                     imageSize={cmsImage.imageSize}
-                    alt={alt}
                     image={cmsImage.image}
-                    width={width}
                     {...props}
                 />
             }
