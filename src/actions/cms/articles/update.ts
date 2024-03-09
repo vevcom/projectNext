@@ -1,5 +1,5 @@
 'use server'
-import { maxSections } from './ConfigVars'
+import { articleRealtionsIncluder, maxSections } from './ConfigVars'
 import { articleSchema } from './schema'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
@@ -28,24 +28,7 @@ export async function updateArticle(
             data: {
                 ...data,
             },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true,
-                    }
-                },
-                articleSections: {
-                    include: {
-                        cmsImage: {
-                            include: {
-                                image: true,
-                            },
-                        },
-                        cmsParagraph: true,
-                        cmsLink: true,
-                    }
-                }
-            }
+            include: articleRealtionsIncluder,
         })
         return { success: true, data: article }
     } catch (error) {
@@ -105,24 +88,7 @@ export async function addSectionToArticle(
                     },
                 },
             },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true,
-                    }
-                },
-                articleSections: {
-                    include: {
-                        cmsImage: {
-                            include: {
-                                image: true,
-                            }
-                        },
-                        cmsParagraph: true,
-                        cmsLink: true,
-                    }
-                }
-            }
+            include: articleRealtionsIncluder,
         })
 
         for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] as const) {

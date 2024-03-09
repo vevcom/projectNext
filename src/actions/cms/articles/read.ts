@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import { articleRealtionsIncluder } from './ConfigVars'
 
 export async function readArticle(idOrName: number | {
     name: string,
@@ -18,24 +19,7 @@ export async function readArticle(idOrName: number | {
                     name: idOrName.name,
                 }
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: {
-                            include: {
-                                image: true
-                            },
-                        },
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: {
-                    include: {
-                        image: true
-                    },
-                },
-            }
+            include: articleRealtionsIncluder,
         })
         if (!article) return createActionError('NOT FOUND', `Article ${name} not found`)
         if (!article.coverImage) return createActionError('BAD PARAMETERS', `Article ${name} has no cover image`)
@@ -55,24 +39,7 @@ export async function readArticles(articleCategoryId: number): Promise<ActionRet
             where: {
                 articleCategoryId
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: {
-                            include: {
-                                image: true
-                            },
-                        },
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                },
-            }
+            include: articleRealtionsIncluder
         })
         return { success: true, data: articles }
     } catch (error) {

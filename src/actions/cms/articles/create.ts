@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import { articleRealtionsIncluder } from './ConfigVars'
 
 export async function createArticle(name: string | null, config?: {
     categoryId: number,
@@ -30,25 +31,7 @@ export async function createArticle(name: string | null, config?: {
                     }
                 } : undefined
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: {
-                            include: {
-                                image: true
-                            },
-                        },
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: {
-                    include: {
-                        image: true
-                    },
-                
-                },
-            }
+            include: articleRealtionsIncluder,
         })
         return { success: true, data: article }
     } catch (error) {
