@@ -90,7 +90,7 @@ export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
     DEFAULT_PROFILE_IMAGE: {
         name: 'default_profile_image',
         alt: 'standard profilbilde',
-        fsLocation: 'default_profile_image.jpeg',
+        fsLocation: 'default_profile_image.png',
         collection: 'PROFILEIMAGES',
     },
     LOGO_SIMPLE: {
