@@ -240,13 +240,13 @@ model Article {
 }
 
 model NewsArticle {
-  id             Int         @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   description    String?
   endDateTime    DateTime //when the article is no longer considered current
-  article        Article     @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
-  articleId      Int         @unique
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
+  articleId      Int        @unique
   articleName    String
-  omegaOrder     OmegaOrder? @relation(fields: [orderPublished], references: [order])
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
   orderPublished Int
 
   @@unique([articleId, articleName])
