@@ -234,6 +234,7 @@ model Article {
   articleCategoryName String?
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
+  JobAd               JobAd?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
@@ -300,6 +301,7 @@ model OmegaOrder {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   NewsArticle NewsArticle[]
+  JobAd       JobAd[]
 }
 
 ///////////////////////////
@@ -320,4 +322,18 @@ model Ombul {
 
   @@unique([year, name])
   @@unique([year, issueNumber])
+}
+
+model JobAd {
+  id             Int        @id @default(autoincrement())
+  company        String
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
+  articleId      Int
+  articleName    String
+  description    String?
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
+  orderPublished Int
+
+  @@unique([articleId, articleName])
+  @@unique([articleName, orderPublished])
 }
