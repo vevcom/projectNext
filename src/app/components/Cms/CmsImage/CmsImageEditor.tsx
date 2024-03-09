@@ -24,7 +24,7 @@ type PropTypes = {
 /**
  * A component to edit a cms image
  * @param cmsImage - the cms image to edit
- * @returns 
+ * @returns
  */
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
     const editingContext = useContext(EditModeContext)

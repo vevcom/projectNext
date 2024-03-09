@@ -48,10 +48,10 @@ export default async function NavBar() {
                         isAdmin && <EditModeSwitch />
                     }
                     <div className={styles.magicHat}>
-                        <SpecialCmsImage 
+                        <SpecialCmsImage
                             special="NAV_LOGIN_BUTTON"
-                            width={25} 
-                            height={25} 
+                            width={25}
+                            height={25}
                             alt="log in button"
                         >
                             <Link href={isLoggedIn ? '/users/me' : '/login'} />

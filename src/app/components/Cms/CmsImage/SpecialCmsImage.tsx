@@ -1,6 +1,6 @@
-import { readSpecialCmsImage } from "@/actions/cms/images/read"
-import CmsImage from "./CmsImage"
-import type { SpecialCmsImage as SpecialCmsImageT } from "@prisma/client"
+import CmsImage from './CmsImage'
+import { readSpecialCmsImage } from '@/actions/cms/images/read'
+import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 import type { PropTypes as CmsImageProps } from './CmsImage'
 
 export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
@@ -10,7 +10,7 @@ export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
  * WARNING: This component is only meant for the server - use SpecialCmsImageClient for the client
  * A component that fetches a special cms image and displays it
  * @param special - the special cms image to display
- * @returns 
+ * @returns
  */
 export default async function SpecialCmsImage({ special, ...props }: PropTypes) {
     const imageRes = await readSpecialCmsImage(special)

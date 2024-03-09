@@ -7,7 +7,7 @@ export const articleSectionsRealtionsIncluder = {
         include: {
             image: true
         }
-    
+
     },
     cmsParagraph: true,
     cmsLink: true

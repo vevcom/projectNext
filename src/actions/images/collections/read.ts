@@ -1,11 +1,11 @@
 'use server'
+import { readSpecialImage } from '../read'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import logger from '@/logger'
+import { SpecialCollection } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
-import { SpecialCollection } from '@prisma/client'
-import { readSpecialImage } from '../read'
 
 /**
  * Reads an image collection by id or name

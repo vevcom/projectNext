@@ -13,7 +13,7 @@ import type { Image as ImageT } from '@prisma/client'
  * By calling on special image DEFAULT_IMAGE
  * @param cmsImage - the cms image to display with image relation
  * @param children - the children to display besides image
- * @returns 
+ * @returns
  */
 export default function CmsImageClient({ cmsImage, children, ...props }: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
@@ -21,14 +21,14 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
     useEffect(() => {
         if (image) return
         readSpecialImage('DEFAULT_IMAGE').then(res => {
-            if (!res.success) throw new Error('No default image found. To fix add a image called: default_image')
+            if (!res.success) throw new Error('No default image found.')
             setCmsImage(res.data)
         })
     }, [])
 
     return (
         <div className={styles.CmsImage}>
-            {image && <CmsImageEditor cmsImage={{...cmsImage, image}}/>}
+            {image && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
             <div className={styles.children}>{children}</div>
             {image &&
                 <Image

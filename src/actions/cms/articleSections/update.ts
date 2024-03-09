@@ -1,5 +1,5 @@
 'use server'
-import { maxImageSize, minImageSize } from './ConfigVars'
+import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from './ConfigVars'
 import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
@@ -9,7 +9,6 @@ import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
 import type { ExpandedArticleSection } from './Types'
 import type { ActionReturn } from '@/actions/Types'
-import { articleSectionsRealtionsIncluder } from './ConfigVars'
 
 
 export async function updateArticleSection(name: string, changes: {

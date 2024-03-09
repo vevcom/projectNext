@@ -1,8 +1,9 @@
-import { 
-    seedCmsConfig, 
+import {
+    seedCmsConfig,
     seedSpecialCmsImageConfig,
     standardArticleCategories
 } from './seedCmsConfig'
+import { transformObject } from './seedImages'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
@@ -19,22 +20,17 @@ import type {
     SeedArticle,
     SeedCategories
 } from './seedCmsConfig'
-import { transformObject } from './seedImages'
 
 export default async function seedCms(prisma: PrismaClient) {
     //Bring the special and non special images to a common format
-    const seedCmsImagesTranformed = seedCmsConfig.cmsImages.map((value) => {
-        return {
-            ...value,
-            special: null
-        };
-    })
-    const seedSpecialCmsImagesTransformed = transformObject(seedSpecialCmsImageConfig, (value, key) => {
-        return {
-            ...value,
-            special: key
-        };
-    })
+    const seedCmsImagesTranformed = seedCmsConfig.cmsImages.map((value) => ({
+        ...value,
+        special: null
+    }))
+    const seedSpecialCmsImagesTransformed = transformObject(seedSpecialCmsImageConfig, (value, key) => ({
+        ...value,
+        special: key
+    }))
     const allCmsImages = [...seedSpecialCmsImagesTransformed, ...seedCmsImagesTranformed]
     await Promise.all(allCmsImages.map(async (cmsimage) => {
         await seedCmsImage(cmsimage, prisma)
@@ -62,7 +58,7 @@ export default async function seedCms(prisma: PrismaClient) {
 }
 
 async function seedCmsImage(
-    cmsimage: SeedCmsImage & { special?: SpecialCmsImage | null }, 
+    cmsimage: SeedCmsImage & { special?: SpecialCmsImage | null },
     prisma: PrismaClient
 ) {
     const image = await prisma.image.findUnique({

@@ -7,7 +7,7 @@ type ImageSeedConfigBase = {
     collection: string,
 }
 
-const defaultCollection = 'STANDARDIMAGES' as const;
+const defaultCollection = 'STANDARDIMAGES' as const
 
 type ImageSeedConfig = ImageSeedConfigBase[]
 
@@ -19,7 +19,7 @@ type ImageSeedSpecialConfig = {
  * This is the configuration for the images that are to be seeded
  * that are not special
  */
-export const seedImageConfig : ImageSeedConfig = [
+export const seedImageConfig: ImageSeedConfig = [
     {
         name: 'traktat',
         alt: 'En gammel traktat',
@@ -74,7 +74,7 @@ export const seedImageConfig : ImageSeedConfig = [
  * This is the configuration for the images that are to be seeded
  * that are special
  */
-export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
+export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
     DEFAULT_IMAGE: {
         name: 'default_image',
         alt: 'standard bilde (ikke funnet)',

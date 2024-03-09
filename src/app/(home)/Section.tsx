@@ -2,7 +2,7 @@ import styles from './Section.module.scss'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import React from 'react'
 import Link from 'next/link'
-import { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
+import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 
 type PropTypes = {
     children: React.ReactNode,

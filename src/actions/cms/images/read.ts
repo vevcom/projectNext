@@ -2,14 +2,14 @@
 import { createCmsImage } from './create'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
+import { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from './Types'
 import type { ActionReturn } from '@/actions/Types'
-import { SpecialCmsImage } from '@prisma/client'
 
 /**
  * Read a cms image including the image
  * @param name - name of the cms image the image
- * @returns 
+ * @returns
  */
 export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedCmsImage>> {
     //Note this action reates a image link if it does not exist and returns it
@@ -49,7 +49,7 @@ export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<Act
             const created = await prisma.cmsImage.create({
                 data: {
                     name: special,
-                    special: special,
+                    special,
                 },
                 include: {
                     image: true

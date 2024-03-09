@@ -1,10 +1,10 @@
+import { seedImageConfig, seedSpecialImageConfig } from './seedImagesConfig'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@/generated/pn'
-import { seedImageConfig, seedSpecialImageConfig } from './seedImagesConfig'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -27,18 +27,14 @@ export default async function seedImages(prisma: PrismaClient) {
     const files = await readdir(standardLocation)
 
     //Get the to bjects to a common format
-    const seedSpecialImagesTransformed = transformObject(seedSpecialImageConfig, (value, key) => {
-        return {
-            ...value,
-            special: key
-        };
-    });
-    const seedImagesTransformed = seedImageConfig.map((value) => {
-        return {
-            ...value,
-            special: null
-        };
-    })
+    const seedSpecialImagesTransformed = transformObject(seedSpecialImageConfig, (value, key) => ({
+        ...value,
+        special: key
+    }))
+    const seedImagesTransformed = seedImageConfig.map((value) => ({
+        ...value,
+        special: null
+    }))
     const allImages = [...seedSpecialImagesTransformed, ...seedImagesTransformed]
 
     //Seed all images
@@ -104,8 +100,8 @@ export default async function seedImages(prisma: PrismaClient) {
  * A function to transform an object to an array
  * @param obj - the object to transform
  * @param fn - the function to transform the object with
- * @returns 
+ * @returns
  */
 export function transformObject<K extends string | number | symbol, T, U>(obj: Record<K, T>, fn: (value: T, key: K) => U): U[] {
-    return Object.entries(obj).map(([key, value]) => fn(value as T, key as K));
+    return Object.entries(obj).map(([key, value]) => fn(value as T, key as K))
 }

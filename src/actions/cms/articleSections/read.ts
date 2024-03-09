@@ -1,10 +1,10 @@
 'use server'
 import { createArticleSection } from './create'
+import { articleSectionsRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleSection } from './Types'
-import { articleSectionsRealtionsIncluder } from './ConfigVars'
 
 // Note that this function creates a new articleSection if it doesn't exist
 export async function readArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {

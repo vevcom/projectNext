@@ -1,12 +1,12 @@
 'use server'
-import prisma from '@/prisma'
+import { readSpecialImageCollection } from './collections/read'
 import { createActionError, createPrismaActionError } from '../error'
+import prisma from '@/prisma'
+import logger from '@/logger'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from './Types'
-import logger from '@/logger'
-import { readSpecialImageCollection } from './collections/read'
 
 export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, ImageDetails>
@@ -75,9 +75,8 @@ export async function readImage(nameOrId: string | number): Promise<ActionReturn
  * @returns the special image
  */
 export async function readSpecialImage(special: SpecialImage): Promise<ActionReturn<Image>> {
-
     if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', `${special} is not special`)
-    
+
     try {
         const image = await prisma.image.findUnique({
             where: {

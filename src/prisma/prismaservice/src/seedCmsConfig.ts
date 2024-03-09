@@ -1,5 +1,5 @@
-import type { Position, ImageSize } from '@/generated/pn'
-import type { SpecialCmsImage } from '@/generated/pn' 
+import type { Position, ImageSize, SpecialCmsImage } from '@/generated/pn'
+
 
 export type SeedCmsImage = {
     name: string,
@@ -63,7 +63,7 @@ export const seedSpecialCmsImageConfig: CmsImageSeedSpecialConfig = {
         imageName: 'logo_white',
         imageSize: 'LARGE'
     },
-    FRONTPAGE_1:{
+    FRONTPAGE_1: {
         name: 'frontpage_1',
         imageName: 'kappemann',
     },

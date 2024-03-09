@@ -1,9 +1,9 @@
 'use server'
+import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
-import { articleRealtionsIncluder } from './ConfigVars'
 
 export async function readArticle(idOrName: number | {
     name: string,
