@@ -2,7 +2,6 @@
 
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-import type React from 'react'
 import type { UserWithPermissions } from '.'
 import type { Permission } from '@prisma/client'
 import type { SessionContextValue } from 'next-auth/react'
@@ -47,14 +46,4 @@ export function useUser({ required, requiredPermissions }: UseUserArgsType<boole
     }, [user])
 
     return { user, status }
-}
-
-type PropTypes = {
-    children: React.ReactNode
-}
-
-export function RequireUserClient({ children }: PropTypes) {
-    const { status } = useUser({ required: true })
-
-    return status === 'authenticated' && children
 }
