@@ -7,7 +7,7 @@ type ImageSeedConfigBase = {
     collection: string,
 }
 
-const collectionForSpecialImages = 'STANDARDIMAGES' as const;
+const defaultCollection = 'STANDARDIMAGES' as const;
 
 type ImageSeedConfig = ImageSeedConfigBase[]
 
@@ -24,8 +24,50 @@ export const seedImageConfig : ImageSeedConfig = [
         name: 'traktat',
         alt: 'En gammel traktat',
         fsLocation: 'traktat.jpg',
-        collection: collectionForSpecialImages,
-    }
+        collection: defaultCollection,
+    },
+    {
+        name: 'kappemann',
+        alt: 'En kappemann',
+        fsLocation: 'kappemann.jpeg',
+        collection: defaultCollection,
+    },
+    {
+        name: 'kongsberg',
+        alt: 'Kongsberg',
+        fsLocation: 'kongsberg.png',
+        collection: defaultCollection,
+    },
+    {
+        name: 'nordic',
+        alt: 'Nordic',
+        fsLocation: 'nordic.png',
+        collection: defaultCollection,
+    },
+    {
+        name: 'ohma',
+        alt: 'Ohma',
+        fsLocation: 'ohma.jpeg',
+        collection: defaultCollection,
+    },
+    {
+        name: 'omega_mai',
+        alt: 'Omega mai',
+        fsLocation: 'Omegamai.jpeg',
+        collection: defaultCollection,
+    },
+    {
+        name: 'ov',
+        alt: 'OV',
+        fsLocation: 'ov.jpeg',
+        collection: defaultCollection,
+    },
+    {
+        name: 'pwa',
+        alt: 'PWA',
+        fsLocation: 'pwa.png',
+        collection: defaultCollection,
+    },
 ]
 
 /**
@@ -37,78 +79,42 @@ export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
         name: 'default_image',
         alt: 'standard bilde (ikke funnet)',
         fsLocation: 'default_image.jpeg',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
     },
-    KAPPEMANN: {
-        name: 'kappemann',
-        alt: 'En kappemann',
-        fsLocation: 'kappemann.jpeg',
-        collection: collectionForSpecialImages,
-    },
-    KONGSBERG: {
-        name: 'kongsberg',
-        alt: 'Kongsberg',
-        fsLocation: 'kongsberg.png',
-        collection: collectionForSpecialImages,
-    },
-    NORDIC: {
-        name: 'nordic',
-        alt: 'Nordic',
-        fsLocation: 'nordic.png',
-        collection: collectionForSpecialImages,
-    },
-    LENS_CAMERA: {
+    DEFAULT_IMAGE_COLLECTION_COVER: {
         name: 'lens_camera',
         alt: 'Et kamera med en linse',
         fsLocation: 'lens_camera.jpeg',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
+    },
+    DEFAULT_PROFILE_IMAGE: {
+        name: 'default_profile_image',
+        alt: 'standard profilbilde',
+        fsLocation: 'default_profile_image.jpeg',
+        collection: 'PROFILEIMAGES',
     },
     LOGO_SIMPLE: {
         name: 'logo_simple',
         alt: 'Logo',
         fsLocation: 'logo_simple.png',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
     },
     LOGO_WHITE: {
         name: 'logo_white',
         alt: 'Logo',
         fsLocation: 'logo_white.png',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
     },
     LOGO_WHITE_TEXT: {
         name: 'logo_white_text',
         alt: 'Logo',
         fsLocation: 'omega_logo_white.png',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
     },
     MAGISK_HATT: {
         name: 'magisk_hatt',
         alt: 'Magisk hatt',
         fsLocation: 'magisk_hatt.png',
-        collection: collectionForSpecialImages,
-    },
-    OHMA: {
-        name: 'ohma',
-        alt: 'Ohma',
-        fsLocation: 'ohma.jpeg',
-        collection: collectionForSpecialImages,
-    },
-    OMEGA_MAI: {
-        name: 'omega_mai',
-        alt: 'Omega mai',
-        fsLocation: 'Omegamai.jpeg',
-        collection: collectionForSpecialImages,
-    },
-    OV: {
-        name: 'ov',
-        alt: 'OV',
-        fsLocation: 'ov.jpeg',
-        collection: collectionForSpecialImages,
-    },
-    PWA: {
-        name: 'pwa',
-        alt: 'PWA',
-        fsLocation: 'pwa.png',
-        collection: collectionForSpecialImages,
+        collection: defaultCollection,
     },
 }
