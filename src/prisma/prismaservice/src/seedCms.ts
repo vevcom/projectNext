@@ -6,7 +6,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { join } from 'path'
 import { readFile } from 'fs/promises'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/generated/pn'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,
