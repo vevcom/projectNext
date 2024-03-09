@@ -7,7 +7,7 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 

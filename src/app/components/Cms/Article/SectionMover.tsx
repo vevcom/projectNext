@@ -19,11 +19,7 @@ export default function SectionMover({ articleId, sectionId, className, showUp, 
     const editMode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
-        const res = (await moveSectionOrder(articleId, sectionId, direction))
-        if (!res.success) {
-            const m = res.error ? res?.error[0].message : 'dd'
-            console.error(m)
-        }
+        await moveSectionOrder(articleId, sectionId, direction)
         refresh()
     }, [sectionId, articleId, refresh])
     if (!editMode?.editMode) return null

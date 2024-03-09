@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -43,6 +43,6 @@ export async function createArticle(name: string | null, config?: {
         })
         return { success: true, data: article }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

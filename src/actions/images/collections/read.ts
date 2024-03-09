@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
@@ -24,10 +24,10 @@ export async function readImageCollection(
                 coverImage: true,
             }
         })
-        if (!collection) return { success: false, error: [{ message: 'Collection not found' }] }
+        if (!collection) return createActionError('NOT FOUND', 'Collection not found')
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -89,7 +89,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
 
         return { success: true, data: returnData }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -118,6 +118,6 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         }
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

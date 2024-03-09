@@ -1,7 +1,7 @@
 'use server'
 
 import { updateRoleSchema } from './schema'
-import errorHandeler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/actions/users/update'
 import type { UpdateRoleSchemaType } from './schema'
@@ -10,7 +10,7 @@ import type { ActionReturn } from '@/actions/Types'
 export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
     const parse = updateRoleSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { id, name, permissions } = parse.data
 
@@ -36,7 +36,7 @@ export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Prom
 
         userIds = role.users.map(user => user.userId)
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Delete removed permissions
@@ -52,7 +52,7 @@ export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Prom
             }
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Create added permissions
@@ -65,7 +65,7 @@ export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Prom
             skipDuplicates: true
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     const res = await invalidateManyUserSessionData(userIds)

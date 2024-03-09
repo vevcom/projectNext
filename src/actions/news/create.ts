@@ -4,7 +4,7 @@ import { defaultNewsArticleOldCutoff } from './ConfigVars'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 import { createArticle } from '@/cms/articles/create'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
 import type { NewsArticleSchemaType } from './schema'
@@ -16,7 +16,7 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
 
     const parse = newsArticleSchema.safeParse(rawdata)
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -57,6 +57,6 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
         })
         return { success: true, data: news }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

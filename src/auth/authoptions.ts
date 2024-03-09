@@ -5,12 +5,9 @@ import { updateFeideAccount } from './feide/index'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/actions/permissions/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { getServerSession } from 'next-auth'
-import { notFound, redirect } from 'next/navigation'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
-import type { Permission, User } from '@prisma/client'
 import type { ExtendedFeideUser } from './feide/Types'
 
 export const authOptions: AuthOptions = {
@@ -174,90 +171,4 @@ export const authOptions: AuthOptions = {
         newUser: '/register'
     },
     adapter: PrismaAdapter(prisma),
-}
-
-export type AuthStatus = 'unauthenticated' | 'unauthorized' | 'authorized'
-
-export type UserWithPermissions = Omit<User, 'id'> & {
-    id: number,
-    permissions: Permission[]
-}
-
-type GetUserArgsType = {
-    permissions?: Permission[] | undefined,
-}
-
-type GetUserReturnType = {
-    user: UserWithPermissions | null,
-    status: AuthStatus,
-}
-
-/**
- * Returns the user object from the current session. If there is no session or the
- * user does not have adequate permissions `null` is returned.
- *
- * @param permissions - A list of permissions that the user must have.
- *
- * This function is for server side components and actions. For client side
- * components use `useUser`.
- */
-export async function getUser({ permissions }: GetUserArgsType = {}): Promise<GetUserReturnType> {
-    const user = (await getServerSession(authOptions))?.user
-
-    if (!user) {
-        return { user: null, status: 'unauthenticated' }
-    }
-
-    // Check if user has all required permissions
-    if (permissions && !permissions.every(permission => user.permissions.includes(permission))) {
-        return { user: null, status: 'unauthorized' }
-    }
-
-    return { user, status: 'authorized' }
-}
-
-type RequireUserArgsType = {
-    returnUrl?: string | undefined,
-    redirectUrl?: string | undefined,
-    permissions?: Permission[] | undefined,
-}
-
-/**
- * Gets user in the same way as `getUser`, but redirects when the user is not
- * logged in. This function will never return `null`.
- *
- * @param returnUrl - The url to the current page. If set the user will be
- * redirected to a login page for login, and then back after successfull
- * login. Must be set manually because next js doesn't provide a function to
- * retrive the current url of the page on the server side.
- *
- * @param redirectUrl - The url that the user should be redirected to if there
- * is no session and/or if the user doesn't have adequate permissions. If it's
- * not set user will be redirected to a 404.
- *
- * @param permissions - A list of permissions that the user must have.
- *
- * This function is for server side components. For client side components
- * use `useUser`. For actions use `getUser`.
- */
-export async function requireUser({
-    returnUrl,
-    redirectUrl,
-    permissions,
-}: RequireUserArgsType = {}): Promise<UserWithPermissions> {
-    const { user, status } = await getUser({ permissions })
-
-    if (!user) {
-        if (status === 'unauthenticated' && typeof returnUrl === 'string') {
-            redirect(`/login?callbackUrl=${returnUrl}`)
-        }
-
-        if (typeof redirectUrl === 'string') {
-            redirect(redirectUrl)
-        }
-
-        notFound()
-    }
-
-    return user
 }

@@ -1,8 +1,8 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import type { ExpandedCmsImage } from './Types'
+import { createPrismaActionError } from '@/actions/error'
 import type { Image } from '@prisma/client'
+import type { ExpandedCmsImage } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createCmsImage(name: string, image?: Image): Promise<ActionReturn<ExpandedCmsImage>> {
@@ -18,6 +18,6 @@ export async function createCmsImage(name: string, image?: Image): Promise<Actio
         })
         return { success: true, data: created }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

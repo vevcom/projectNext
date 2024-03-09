@@ -1,7 +1,7 @@
 'use server'
 import { createImageCollectionSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { CreateImageCollectionSchemaType } from './schema'
@@ -12,7 +12,7 @@ export async function createImageCollection(
     const parse = createImageCollectionSchema.safeParse(rawdata)
 
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -25,6 +25,6 @@ export async function createImageCollection(
         })
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -1,7 +1,7 @@
 'use server'
 import { createImageSchema, createImagesSchema } from './schema'
+import { createZodActionError, createPrismaActionError, createActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
 import createFile from '@/store/createFile'
 import sharp from 'sharp'
 import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
@@ -55,17 +55,14 @@ export async function createOneImage(file: File, meta: {
                     }
                 }
             })
-            if (!image) return { success: false }
+
             return { success: true, data: image }
         } catch (err) {
-            return errorHandler(err)
+            return createPrismaActionError(err)
         }
     } catch (err) {
         //LOGGER
-        return {
-            success: false,
-            error: [{ path: ['file'], message: 'Failed to create small size image' }]
-        }
+        return createActionError('UNKNOWN ERROR', [{ path: ['file'], message: 'Failed to create small size image' }])
     }
 }
 
@@ -74,7 +71,7 @@ export async function createImage(
     rawdata: FormData | CreateImageSchemaType
 ): Promise<ActionReturn<Image>> {
     const parse = createImageSchema.safeParse(rawdata)
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
     const { file, ...data } = parse.data
     return await createOneImage(file, { ...data, collectionId })
 }
@@ -85,7 +82,7 @@ export async function createImages(
 ): Promise<ActionReturn<Image[]>> {
     const parse = createImagesSchema.safeParse(rawdata)
 
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const data = parse.data
 

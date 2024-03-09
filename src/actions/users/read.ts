@@ -1,7 +1,7 @@
 'use server'
 import { userFieldsToExpose } from './Types'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { User } from '@prisma/client'
@@ -46,7 +46,7 @@ export async function readUserPage<const PageSize extends number>({
         })
         return { success: true, data: users }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -60,12 +60,12 @@ export async function readUserById(id: number): Promise<ActionReturn<User>> {
         })
 
         if (!user) {
-            return { success: false, error: [{ message: 'Bruker ikke funnet.' }] }
+            return createActionError('NOT FOUND', 'Bruker ikke funnet.')
         }
 
         return { success: true, data: user }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -79,11 +79,11 @@ export async function readUserByEmail(email: string): Promise<ActionReturn<User>
         })
 
         if (!user) {
-            return { success: false, error: [{ message: 'User not found' }] }
+            return createActionError('NOT FOUND', 'User not found')
         }
 
         return { success: true, data: user }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -4,7 +4,7 @@ import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import Link from 'next/link'
 
 export default async function NavBar() {

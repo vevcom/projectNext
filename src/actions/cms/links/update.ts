@@ -2,7 +2,7 @@
 
 import { articleLinkSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ArticleLinkSchemaType } from './schema'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -11,7 +11,7 @@ export async function updateCmsLink(id: number, rawData: FormData | ArticleLinkS
     const parse = articleLinkSchema.safeParse(rawData)
 
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
 
     const data = parse.data
@@ -27,6 +27,6 @@ export async function updateCmsLink(id: number, rawData: FormData | ArticleLinkS
         })
         return { success: true, data: cmsLink }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
