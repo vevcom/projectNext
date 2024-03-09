@@ -100,6 +100,12 @@ export default async function seedImages(prisma: PrismaClient) {
     }))
 }
 
-function transformObject<K extends string | number | symbol, T, U>(obj: Record<K, T>, fn: (value: T, key: K) => U): U[] {
+/**
+ * A function to transform an object to an array
+ * @param obj - the object to transform
+ * @param fn - the function to transform the object with
+ * @returns 
+ */
+export function transformObject<K extends string | number | symbol, T, U>(obj: Record<K, T>, fn: (value: T, key: K) => U): U[] {
     return Object.entries(obj).map(([key, value]) => fn(value as T, key as K));
 }

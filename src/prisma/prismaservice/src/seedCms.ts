@@ -1,4 +1,8 @@
-import standardCmsContents, { standardCategories } from './seedCmsConfig'
+import { 
+    seedCmsConfig, 
+    seedSpecialCmsImageConfig,
+    standardArticleCategories
+} from './seedCmsConfig'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
@@ -6,7 +10,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { join } from 'path'
 import { readFile } from 'fs/promises'
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient, SpecialCmsImage } from '@/generated/pn'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,
@@ -15,34 +19,52 @@ import type {
     SeedArticle,
     SeedCategories
 } from './seedCmsConfig'
+import { transformObject } from './seedImages'
 
 export default async function seedCms(prisma: PrismaClient) {
-    await Promise.all(standardCmsContents.cmsImages.map(async (cmsimage) => {
+    //Bring the special and non special images to a common format
+    const seedCmsImagesTranformed = seedCmsConfig.cmsImages.map((value) => {
+        return {
+            ...value,
+            special: null
+        };
+    })
+    const seedSpecialCmsImagesTransformed = transformObject(seedSpecialCmsImageConfig, (value, key) => {
+        return {
+            ...value,
+            special: key
+        };
+    })
+    const allCmsImages = [...seedSpecialCmsImagesTransformed, ...seedCmsImagesTranformed]
+    await Promise.all(allCmsImages.map(async (cmsimage) => {
         await seedCmsImage(cmsimage, prisma)
     }))
 
-    await Promise.all(standardCmsContents.cmsParagraphs.map(async (cmsparagraph) => {
+    await Promise.all(seedCmsConfig.cmsParagraphs.map(async (cmsparagraph) => {
         await seedCmsParagraph(cmsparagraph, prisma)
     }))
 
-    await Promise.all(standardCmsContents.cmsLink.map(async (cmslink) => {
+    await Promise.all(seedCmsConfig.cmsLink.map(async (cmslink) => {
         await seedCmsLink(cmslink, prisma)
     }))
 
-    await Promise.all(standardCmsContents.articleSections.map(async (articleSection) => {
+    await Promise.all(seedCmsConfig.articleSections.map(async (articleSection) => {
         await seedArticleSection(articleSection, prisma)
     }))
 
-    await Promise.all(standardCategories.map(async (category) => {
+    await Promise.all(standardArticleCategories.map(async (category) => {
         await seedArticleCategories(category, prisma)
     }))
 
-    await Promise.all(standardCmsContents.articles.map(async (article, i) => {
+    await Promise.all(seedCmsConfig.articles.map(async (article, i) => {
         await seedArticle({ ...article, id: i }, prisma)
     }))
 }
 
-async function seedCmsImage(cmsimage: SeedCmsImage, prisma: PrismaClient) {
+async function seedCmsImage(
+    cmsimage: SeedCmsImage & { special?: SpecialCmsImage | null }, 
+    prisma: PrismaClient
+) {
     const image = await prisma.image.findUnique({
         where: {
             name: cmsimage.imageName
@@ -67,7 +89,8 @@ async function seedCmsImage(cmsimage: SeedCmsImage, prisma: PrismaClient) {
                 connect: {
                     id: image.id
                 }
-            }
+            },
+            special: cmsimage.special || null
         }
     })
 }
@@ -111,7 +134,10 @@ async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
     })
 }
 
-async function seedArticleSection(articleSection: SeedArticleSection & {order?: number}, prisma: PrismaClient) {
+async function seedArticleSection(
+    articleSection: SeedArticleSection & { order?: number },
+    prisma: PrismaClient
+) {
     const cmsImage = articleSection.cmsImage ?
         await seedCmsImage(articleSection.cmsImage, prisma) : undefined
 
