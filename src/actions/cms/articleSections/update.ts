@@ -9,6 +9,7 @@ import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
 import type { ExpandedArticleSection } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import { articleSectionsRealtionsIncluder } from './ConfigVars'
 
 
 export async function updateArticleSection(name: string, changes: {
@@ -42,11 +43,7 @@ export async function updateArticleSection(name: string, changes: {
                     },
                 },
             },
-            include: { 
-                cmsParagraph: true, 
-                cmsImage: { include: { image: true } },
-                cmsLink: true 
-            }
+            include: articleSectionsRealtionsIncluder
         })
         return { success: true, data: articleSection }
     } catch (error) {
@@ -79,11 +76,7 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsImage: { connect: { id: cmsImage.data.id } } },
-                        include: { 
-                            cmsParagraph: true, 
-                            cmsImage: { include: { image: true } },
-                            cmsLink: true 
-                        }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }
@@ -96,11 +89,7 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsParagraph: { connect: { id: cmsParagraph.data.id } } },
-                        include: { 
-                            cmsParagraph: true, 
-                            cmsImage: { include: { image: true } },
-                            cmsLink: true 
-                        }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }
@@ -113,11 +102,7 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsLink: { connect: { id: cmsLink.data.id } } },
-                        include: { 
-                            cmsParagraph: true, 
-                            cmsImage: { include: { image: true } }, 
-                            cmsLink: true 
-                        }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }

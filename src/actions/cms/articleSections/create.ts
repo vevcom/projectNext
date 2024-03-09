@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleSection } from './Types'
+import { articleSectionsRealtionsIncluder } from './ConfigVars'
 
 
 export async function createArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
@@ -11,15 +12,7 @@ export async function createArticleSection(name: string): Promise<ActionReturn<E
             data: {
                 name,
             },
-            include: {
-                cmsImage: {
-                    include: {
-                        image: true
-                    },
-                },
-                cmsParagraph: true,
-                cmsLink: true
-            }
+            include: articleSectionsRealtionsIncluder
         })
         return { success: true, data: articleSection }
     } catch (error) {
