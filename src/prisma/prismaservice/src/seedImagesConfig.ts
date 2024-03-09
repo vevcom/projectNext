@@ -117,4 +117,4 @@ export const seedSpecialImageConfig : ImageSeedSpecialConfig = {
         fsLocation: 'magisk_hatt.png',
         collection: defaultCollection,
     },
-}
+} as const
