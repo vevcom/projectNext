@@ -5,6 +5,7 @@ import logger from '@/logger'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 import { SpecialCollection } from '@prisma/client'
+import { readSpecialImage } from '../read'
 
 /**
  * Reads an image collection by id or name
@@ -67,11 +68,9 @@ export async function readImageCollectionsPage<const PageSize extends number>(
             take: pageSize,
         })
 
-        const lensCamera = await prisma.image.findUnique({
-            where: {
-                name: 'lens_camera'
-            },
-        })
+        const lensCameraRes = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
+        if (!lensCameraRes.success) return lensCameraRes
+        const lensCamera = lensCameraRes.data
 
         const chooseCoverImage = (collection: {
             coverImage: Image | null,
