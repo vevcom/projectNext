@@ -55,9 +55,15 @@ services:
       context: ./src/prisma
       dockerfile: ./prismaservice/Dockerfile
       target: dev
+      args:
+        SHOULD_MIGRATE: ${VEVEN_DB_URI}
     environment:
       NODE_ENV: development
       DB_URI: ${DB_URI}
+      MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
+      VEVEN_STORE_URL: ${VEVEN_STORE_URL}
+      VEVEN_DB_URI: ${VEVEN_DB_URI}
+      MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
     volumes:
       - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
       - devstore:/usr/src/app/prismaservice/store
