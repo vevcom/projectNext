@@ -3,7 +3,7 @@ import ParagraphEditor from './CmsParagraphEditor'
 import React from 'react'
 import type { CmsParagraph as CmsParagraphT } from '@prisma/client'
 
-type PropTypes = {
+export type PropTypes = {
     cmsParagraph: CmsParagraphT
     className?: string
 }
