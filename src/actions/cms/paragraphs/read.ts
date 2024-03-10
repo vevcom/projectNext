@@ -3,7 +3,8 @@ import { createCmsParagraph } from './create'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
-import type { CmsParagraph, SpecialCmsParagraph } from '@prisma/client'
+import { SpecialCmsParagraph } from '@prisma/client'
+import type { CmsParagraph } from '@prisma/client'
 
 export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {
@@ -28,6 +29,8 @@ export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsPa
  * @returns - the paragraph
  */
 export async function readSpecialCmsParagraph(special: SpecialCmsParagraph): Promise<ActionReturn<CmsParagraph>> {
+    if (!Object.values(SpecialCmsParagraph).includes(special)) return createActionError('BAD PARAMETERS', `${special} is not special`)
+    
     try {
         const paragraph = await prisma.cmsParagraph.findUnique({
             where: {
