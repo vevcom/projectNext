@@ -2,19 +2,22 @@ import styles from './Section.module.scss'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import React from 'react'
 import Link from 'next/link'
-import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
+import type { 
+    SpecialCmsImage as SpecialCmsImageT,
+    SpecialCmsParagraph as SpecialCmsParagraphT
+} from '@prisma/client'
+import SpecialCmsParagraph from '../components/Cms/CmsParagraph/SpecialCmsParagraph'
 
 type PropTypes = {
-    children: React.ReactNode,
     specialCmsImage: SpecialCmsImageT,
-    name: string,
+    specialCmsParagraph: SpecialCmsParagraphT,
     lesMer: string,
     right?: boolean,
     imgWidth: number,
     id?: string,
 }
 
-function Section({ children, specialCmsImage, name, lesMer, right, imgWidth, id }: PropTypes) {
+function Section({ specialCmsImage, specialCmsParagraph, lesMer, right, imgWidth, id }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
             <SpecialCmsImage special={specialCmsImage} width={imgWidth} />
@@ -24,10 +27,7 @@ function Section({ children, specialCmsImage, name, lesMer, right, imgWidth, id 
         <div id={id} className={`${styles.section} ${right && styles.blue}`}>
             {!right && imgContainer}
             <div>
-                <h3>{name}</h3>
-                <p>
-                    {children}
-                </p>
+                <SpecialCmsParagraph special={specialCmsParagraph} />
                 <Link href={lesMer}>Les mer</Link>
             </div>
             {right && imgContainer}
