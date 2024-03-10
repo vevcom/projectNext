@@ -1,4 +1,9 @@
-import type { Position, ImageSize, SpecialCmsImage } from '@/generated/pn'
+import type { 
+    Position, 
+    ImageSize, 
+    SpecialCmsImage,
+    SpecialCmsParagraph,
+} from '@/generated/pn'
 
 
 export type SeedCmsImage = {
@@ -132,6 +137,29 @@ export const seedSpecialCmsImageConfig: CmsImageSeedSpecialConfig = {
         imageName: 'magisk_hatt',
         imageSize: 'SMALL'
     }
+}
+
+type CmsParagraphSeedSpecialConfig = {
+    [T in SpecialCmsParagraph]: SeedCmsParagraph;
+}
+
+export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
+    FRONTPAGE_1: {
+        name: 'frontpage_1_paragraph',
+        file: 'frontpage/frontpage_1.md'
+    },
+    FRONTPAGE_2: {
+        name: 'frontpage_2_paragraph',
+        file: 'frontpage/frontpage_2.md'
+    },
+    FRONTPAGE_3: {
+        name: 'frontpage_3_paragraph',
+        file: 'frontpage/frontpage_3.md'
+    },
+    FRONTPAGE_4: {
+        name: 'frontpage_4_paragraph',
+        file: 'frontpage/frontpage_4.md'
+    },
 }
 
 
