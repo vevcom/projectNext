@@ -47,7 +47,7 @@ export default async function Home() {
                     specialCmsImage="FRONTPAGE_2" 
                     specialCmsParagraph="FRONTPAGE_2"
                     lesMer="/articles" 
-                    imgWidth={550}
+                    imgWidth={700}
                 />
                     
             </div>
