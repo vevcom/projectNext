@@ -12,7 +12,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { join } from 'path'
 import { readFile } from 'fs/promises'
-import type { PrismaClient, SpecialCmsImage } from '@/generated/pn'
+import type { PrismaClient, SpecialCmsImage, SpecialCmsParagraph } from '@/generated/pn'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,
@@ -103,7 +103,10 @@ async function seedCmsImage(
     })
 }
 
-async function seedCmsParagraph(cmssparagraph: SeedCmsParagraph, prisma: PrismaClient) {
+async function seedCmsParagraph(
+    cmssparagraph: SeedCmsParagraph & {special?: SpecialCmsParagraph | null}, 
+    prisma: PrismaClient
+) {
     const contentMd = await readFile(join('./cms_paragraphs', cmssparagraph.file), 'utf-8')
     const contentHtml = (await unified()
         .use(remarkParse)
@@ -121,6 +124,7 @@ async function seedCmsParagraph(cmssparagraph: SeedCmsParagraph, prisma: PrismaC
         },
         create: {
             name: cmssparagraph.name,
+            special: cmssparagraph.special || null,
             contentMd,
             contentHtml,
         }

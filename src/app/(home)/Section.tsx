@@ -27,7 +27,7 @@ function Section({ specialCmsImage, specialCmsParagraph, lesMer, right, imgWidth
         <div id={id} className={`${styles.section} ${right && styles.blue}`}>
             {!right && imgContainer}
             <div>
-                <SpecialCmsParagraph special={specialCmsParagraph} />
+                <SpecialCmsParagraph className={styles.paragraph} special={specialCmsParagraph} />
                 <Link href={lesMer}>Les mer</Link>
             </div>
             {right && imgContainer}
