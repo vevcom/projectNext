@@ -33,7 +33,7 @@ export default async function Home() {
                         </Link>
                     </div>
                 </div>
-                <Section specialImage="FRONTPAGE_1" name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
+                <Section specialCmsImage="FRONTPAGE_1" name="Om Omega" lesMer="infopages/about" imgWidth={450} id="firstSection">
                     Sct. Omega Broderskab ble offisielt stiftet 21. november 1919 av et kull elektrostudenter
                     som må ha hatt et svært godt kameratskap og sosialt miljø. Til å begynne med var det en
                     eksklusiv klubb forbeholdt 3. og 4. årskurs, og for å bli tatt opp måtte man sende inn
@@ -41,7 +41,7 @@ export default async function Home() {
                     opp automatisk fra 1. klasse.
                 </Section>
                 <InfoBubbles />
-                <Section right specialImage="FRONTPAGE_2" name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
+                <Section right specialCmsImage="FRONTPAGE_2" name="Omega Verksted" lesMer="infopages/omegaverksted" imgWidth={550}>
                     Omega Verksted er en forening for elektronikk- og hobbyinteresserte studenter ved Norges
                     Teknisk-Naturvitenskapelige Universitet (NTNU) stiftet i 1971. Omega Verksted holder til i kjelleren i
                     det gamle elektrobygget på Gløshaugen (G 016 A). Verkstedet inneholder det meste av verktøy for små og
@@ -51,12 +51,12 @@ export default async function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <Section specialImage="FRONTPAGE_3" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
+                <Section specialCmsImage="FRONTPAGE_3" name="For bedrifter" lesMer="infopages/contactor" imgWidth={550}>
                     Altså omega er helt fantastisk for bedrifter.... tro meg 100%. Bare å ta kontakt med contactor
                     ellerno... Lorem ipsium bla lofrgin fofkewivj irjvioer firegjoireg g jfirejgergo
                     rjgijgoieg jgirejgioe geroigjkoiegoekg kogkpeogkg rgierg
                 </Section>
-                <Section right specialImage="FRONTPAGE_4" name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
+                <Section right specialCmsImage="FRONTPAGE_4" name="Ohma Electra" lesMer="infopages/loccom" imgWidth={750}>
                     Ohma Electra er Omega sin stolthet, og hennes historie strekker seg helt tilbake til 1908.
                     Ohma er verdens første(!) fungerende vekselstrøm-lokomotiv, og har en lang historie fra både
                     gruvedrift, sabotasje under 2. verdenskrig, og som glamourmodell på utsiden av elektrobygget.

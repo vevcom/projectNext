@@ -6,7 +6,7 @@ import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 
 type PropTypes = {
     children: React.ReactNode,
-    specialImage: SpecialCmsImageT,
+    specialCmsImage: SpecialCmsImageT,
     name: string,
     lesMer: string,
     right?: boolean,
@@ -14,10 +14,10 @@ type PropTypes = {
     id?: string,
 }
 
-function Section({ children, specialImage, name, lesMer, right, imgWidth, id }: PropTypes) {
+function Section({ children, specialCmsImage, name, lesMer, right, imgWidth, id }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
-            <SpecialCmsImage special={specialImage} width={imgWidth} />
+            <SpecialCmsImage special={specialCmsImage} width={imgWidth} />
         </div>
     )
     return (
