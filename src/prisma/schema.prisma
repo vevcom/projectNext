@@ -206,6 +206,13 @@ model CmsImage {
   special              SpecialCmsImage? @unique
 }
 
+enum SpecialCmsParagraph {
+  FRONTPAGE_1
+  FRONTPAGE_2
+  FRONTPAGE_3
+  FRONTPAGE_4
+}
+
 model CmsParagraph {
   id               Int             @id @default(autoincrement())
   name             String          @unique @default(cuid())
@@ -215,6 +222,7 @@ model CmsParagraph {
   updatedAt        DateTime        @updatedAt
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
+  special          SpecialCmsParagraph? @unique
 }
 
 model CmsLink {
