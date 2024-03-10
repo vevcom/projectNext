@@ -1,6 +1,7 @@
 import {
     seedCmsConfig,
     seedSpecialCmsImageConfig,
+    seedSpecialCmsParagraphConfig,
     standardArticleCategories
 } from './seedCmsConfig'
 import { transformObject } from './seedImages'
@@ -21,6 +22,7 @@ import type {
     SeedCategories
 } from './seedCmsConfig'
 
+
 export default async function seedCms(prisma: PrismaClient) {
     //Bring the special and non special images to a common format
     const seedCmsImagesTranformed = seedCmsConfig.cmsImages.map((value) => ({
@@ -36,7 +38,17 @@ export default async function seedCms(prisma: PrismaClient) {
         await seedCmsImage(cmsimage, prisma)
     }))
 
-    await Promise.all(seedCmsConfig.cmsParagraphs.map(async (cmsparagraph) => {
+    //Bring the cmsParagraphs, cmsLinks and articleSections to a common format
+    const seedCmsParagraphsTransformed = seedCmsConfig.cmsParagraphs.map((value) => ({
+        ...value,
+        special: null,
+    }))
+    const seedSpecialCmsParagraphsTransformed = transformObject(seedSpecialCmsParagraphConfig, (value, key) => ({
+        ...value,
+        special: key
+    }))
+    const allCmsParagraphs = [...seedSpecialCmsParagraphsTransformed, ...seedCmsParagraphsTransformed]
+    await Promise.all(allCmsParagraphs.map(async (cmsparagraph) => {
         await seedCmsParagraph(cmsparagraph, prisma)
     }))
 
