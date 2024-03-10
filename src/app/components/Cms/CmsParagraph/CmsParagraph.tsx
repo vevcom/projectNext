@@ -8,7 +8,7 @@ type PropTypes = {
     className?: string
 }
 
-export default async function CmsParagraph({ cmsParagraph, className }: PropTypes) {
+export default function CmsParagraph({ cmsParagraph, className }: PropTypes) {
     return (
         <>
             <div className={`${styles.CmsParagraph} ${className}`}>
