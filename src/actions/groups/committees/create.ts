@@ -5,9 +5,10 @@ import { createPrismaActionError, createZodActionError } from "@/actions/error"
 import prisma from "@/prisma"
 import { z } from "zod"
 import { createCommitteeSchema, createCommitteeSchemaType } from "./schema"
+import { createCmsImage } from "@/actions/cms/images/create"
 
 export default async function createCommittee(
-    committeeLogoId: number, 
+    committeeLogoImageId: number, 
     rawdata: FormData | createCommitteeSchemaType
 ) : Promise<ActionReturn<Committee>> {
     const parse = createCommitteeSchema.safeParse(rawdata)
@@ -17,12 +18,23 @@ export default async function createCommittee(
     const { name } = parse.data
 
     try {
+        const committeLogo = await prisma.cmsImage.create({
+            data: {
+                name: `${name}_logo`,
+                image: {
+                    connect: {
+                        id: committeeLogoImageId
+                    }
+                }
+            }
+        })
+
         const committee = await prisma.committee.create({
             data: {
                 name,
                 logoImage: {
                     connect: {
-                        id: committeeLogoId
+                        id: committeLogo.id
                     }
                 }
             },
