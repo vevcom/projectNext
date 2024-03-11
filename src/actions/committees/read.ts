@@ -1,7 +1,7 @@
 'use server'
-import { ActionReturn } from "@/actions/type"
+import { ActionReturn } from "@/actions/Types"
 import type { Committee } from "@prisma/client"
-import errorHandler from "@/prisma/errorHandler"
+import { createActionError, createPrismaActionError } from "@/actions/error"
 import prisma from "@/prisma"
 
 export default async function read(name: string) : Promise<ActionReturn<Committee>> {
@@ -11,9 +11,9 @@ export default async function read(name: string) : Promise<ActionReturn<Committe
                 name
             }
         })
-        if (!committee) return { success: false, error: [{message:`kommitee ${name} ikke funnet `}] }
+        if (!committee) return createActionError('BAD PARAMETERS', "Committee not found")
         return { success: true, data: committee }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
