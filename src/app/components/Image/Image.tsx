@@ -13,6 +13,16 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     | { imageSize?: ImageSize, smallSize?: never, largeSize?: never }
 );
 
+/**
+ * A component to display a Image from the database
+ * @param alt - (optional) the alt text of the image (will be set to image.alt if not provided)
+ * @param image - the image to display
+ * @param width - the width of the image
+ * @param smallSize - (optional) if true, the image will be the small size
+ * @param largeSize - (optional) if true, the image will be the large size
+ * @param imageSize - (optional) the size of the image
+ * @param props - the rest of the props to pass to the img tag
+ */
 export default function Image({ alt, image, width, smallSize, largeSize, imageSize, ...props }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
     if (imageSize) {
@@ -48,6 +58,13 @@ type SrcImageProps = Omit<PropTypes, 'image' | 'imageSize' | 'smallSize' | 'larg
     src: string
 }
 
+/**
+ * A component  meant to look like Image but with a src instead of an image. Only used in 
+ * worst case scenario, probably to render things in /public
+ * @param src - the source of the image
+ * @param width - the width of the image
+ * @returns 
+ */
 export function SrcImage({ src, width, ...props } : SrcImageProps) {
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>
