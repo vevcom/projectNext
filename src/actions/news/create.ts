@@ -22,7 +22,7 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
 
     const res = await readCurrenOmegaOrder()
     if (!res.success) return res
-    const orderPublished = res.data.order
+    const currentOrder = res.data
 
     try {
         const article = await createArticle(data.name)
@@ -38,7 +38,9 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
                     }
                 },
                 endDateTime: data.endDateTime || endDateTime,
-                orderPublished,
+                omegaOrder: {
+                    connect: currentOrder
+                }
             },
             include: newsArticleRealtionsIncluder,
         })

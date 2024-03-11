@@ -15,6 +15,7 @@ import type { ImageCollection, Image } from '@prisma/client'
 export async function readImageCollection(
     idOrName: number | string
 ): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+    //TODO: Auth image collections on visibility or permission (if special collection)
     try {
         const collection = await prisma.imageCollection.findUnique({
             where: typeof idOrName === 'number' ? {
@@ -46,6 +47,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
+    //TODO: Auth image collections on visibility or permission (if special collection)
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({
@@ -104,6 +106,7 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         return createActionError('BAD PARAMETERS', `${special} is not special`)
     }
 
+    //TODO: Auth special image collections on permission (not visibility)
     //TODO: Check permission associated with the special collection
     try {
         const collection = await prisma.imageCollection.findUnique({

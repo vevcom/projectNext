@@ -1,5 +1,5 @@
 /**
- * Returns Limits for the migration process to test without going crazy
+ * @returns Limits for the migration process to test without going crazy
  * null means no limit and happens if the env variable MIGRATION_WITH_LIMITS is set to "false"
  */
 export function getLimits() {
