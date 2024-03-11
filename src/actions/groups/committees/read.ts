@@ -18,7 +18,7 @@ export default async function readCommitee(name: string) : Promise<ActionReturn<
                 }
             }
         })
-        if (!committee) return createActionError('BAD PARAMETERS', "Committee not found")
+        if (!committee) return createActionError('BAD PARAMETERS', 'Committee not found')
         return { success: true, data: committee }
     } catch (error) {
         return createPrismaActionError(error)

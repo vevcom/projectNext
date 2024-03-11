@@ -4,7 +4,7 @@ import create from "@/actions/groups/committees/create";
 
 export default function adminCommittee() {
     return (
-        <Form action={create.bind()}>
+        <Form action={create.bind(null, 1)}>
             <TextInput name="name" label="Navn"/>
         </Form>
     )
