@@ -43,3 +43,15 @@ export default function Image({ alt, image, width, smallSize, largeSize, imageSi
         </div>
     )
 }
+
+type SrcImageProps = Omit<PropTypes, 'image' | 'imageSize' | 'smallSize' | 'largeSize'> & {
+    src: string
+}
+
+export function SrcImage({ src, width, ...props } : SrcImageProps) {
+    return (
+        <div style={{ width: `${width}px` }} className={styles.Image}>
+            <img {...props} width={width} src={src} />
+        </div>
+    )
+}
