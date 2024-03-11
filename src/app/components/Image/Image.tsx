@@ -59,13 +59,13 @@ type SrcImageProps = Omit<PropTypes, 'image' | 'imageSize' | 'smallSize' | 'larg
 }
 
 /**
- * A component  meant to look like Image but with a src instead of an image. Only used in 
+ * A component  meant to look like Image but with a src instead of an image. Only used in
  * worst case scenario, probably to render things in /public
  * @param src - the source of the image
  * @param width - the width of the image
- * @returns 
+ * @returns
  */
-export function SrcImage({ src, width, ...props } : SrcImageProps) {
+export function SrcImage({ src, width, ...props }: SrcImageProps) {
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>
             <img {...props} width={width} src={src} />

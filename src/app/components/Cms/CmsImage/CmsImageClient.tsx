@@ -1,10 +1,10 @@
 'use client'
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
+import { fallbackImage } from './CmsImage'
 import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImage } from '@/actions/images/read'
 import { useState, useEffect } from 'react'
-import { fallbackImage } from './CmsImage'
 import type { PropTypes } from './CmsImage'
 import type { Image as ImageT } from '@prisma/client'
 

@@ -1,6 +1,6 @@
-import type { 
-    Position, 
-    ImageSize, 
+import type {
+    Position,
+    ImageSize,
     SpecialCmsImage,
     SpecialCmsParagraph,
 } from '@/generated/pn'

@@ -1,12 +1,12 @@
 import styles from './Section.module.scss'
+import SpecialCmsParagraph from '../components/Cms/CmsParagraph/SpecialCmsParagraph'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import React from 'react'
 import Link from 'next/link'
-import type { 
+import type {
     SpecialCmsImage as SpecialCmsImageT,
     SpecialCmsParagraph as SpecialCmsParagraphT
 } from '@prisma/client'
-import SpecialCmsParagraph from '../components/Cms/CmsParagraph/SpecialCmsParagraph'
 
 type PropTypes = {
     specialCmsImage: SpecialCmsImageT,

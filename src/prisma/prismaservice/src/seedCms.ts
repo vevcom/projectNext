@@ -104,7 +104,7 @@ async function seedCmsImage(
 }
 
 async function seedCmsParagraph(
-    cmssparagraph: SeedCmsParagraph & {special?: SpecialCmsParagraph | null}, 
+    cmssparagraph: SeedCmsParagraph & {special?: SpecialCmsParagraph | null},
     prisma: PrismaClient
 ) {
     const contentMd = await readFile(join('./cms_paragraphs', cmssparagraph.file), 'utf-8')

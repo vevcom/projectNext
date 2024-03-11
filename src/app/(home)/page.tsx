@@ -33,41 +33,41 @@ export default async function Home() {
                         </Link>
                     </div>
                 </div>
-                <Section 
-                    specialCmsImage="FRONTPAGE_1" 
-                    specialCmsParagraph='FRONTPAGE_1'
-                    lesMer="/articles" 
-                    imgWidth={450} 
-                    id="firstSection" 
+                <Section
+                    specialCmsImage="FRONTPAGE_1"
+                    specialCmsParagraph="FRONTPAGE_1"
+                    lesMer="/articles"
+                    imgWidth={450}
+                    id="firstSection"
                 />
-                    
+
                 <InfoBubbles />
-                <Section 
+                <Section
                     right
-                    specialCmsImage="FRONTPAGE_2" 
+                    specialCmsImage="FRONTPAGE_2"
                     specialCmsParagraph="FRONTPAGE_2"
-                    lesMer="/articles" 
+                    lesMer="/articles"
                     imgWidth={700}
                 />
-                    
+
             </div>
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <Section 
-                    specialCmsImage="FRONTPAGE_3" 
+                <Section
+                    specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
-                    lesMer="/jobads" 
-                    imgWidth={550} 
+                    lesMer="/jobads"
+                    imgWidth={550}
                 />
-                <Section 
-                    right 
-                    specialCmsImage="FRONTPAGE_4" 
+                <Section
+                    right
+                    specialCmsImage="FRONTPAGE_4"
                     specialCmsParagraph="FRONTPAGE_4"
-                    lesMer="infopages/loccom" 
+                    lesMer="infopages/loccom"
                     imgWidth={750}
                 />
-                    
+
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
