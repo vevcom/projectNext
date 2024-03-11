@@ -4,14 +4,13 @@ import type { Committee } from "@prisma/client"
 import { createPrismaActionError, createZodActionError } from "@/actions/error"
 import prisma from "@/prisma"
 import { z } from "zod"
+import { createCommitteeSchema, createCommitteeSchemaType } from "./schema"
 
-export default async function createCommitee(committeeLogoId : number, rawdata : FormData) : Promise<ActionReturn<Committee>> {
-    const schema = z.object({
-        name : z.string().min(2, "Kommiteenavn må minst ha 2 karakterer").max(15, "Kommiteenavn kan maks ha 15 karakterer")
-    })
-    const parse = schema.safeParse({
-        name : rawdata.get("name")
-    })
+export default async function createCommitee(
+    committeeLogoId: number, 
+    rawdata: FormData | createCommitteeSchemaType
+) : Promise<ActionReturn<Committee>> {
+    const parse = createCommitteeSchema.safeParse(rawdata)
         
     if (!parse.success) return createZodActionError(parse)
 
