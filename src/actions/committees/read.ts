@@ -4,7 +4,7 @@ import type { Committee } from "@prisma/client"
 import { createActionError, createPrismaActionError } from "@/actions/error"
 import prisma from "@/prisma"
 
-export default async function read(name: string) : Promise<ActionReturn<Committee>> {
+export default async function readCommitee(name: string) : Promise<ActionReturn<Committee>> {
     try {
         const committee = await prisma.committee.findUnique({
             where: {

@@ -5,7 +5,7 @@ import { createPrismaActionError, createZodActionError } from "@/actions/error"
 import prisma from "@/prisma"
 import { z } from "zod"
 
-export default async function create(committeeLogoId : number, rawdata : FormData) : Promise<ActionReturn<Committee>> {
+export default async function createCommitee(committeeLogoId : number, rawdata : FormData) : Promise<ActionReturn<Committee>> {
     const schema = z.object({
         name : z.string().min(2, "Kommiteenavn må minst ha 2 karakterer").max(15, "Kommiteenavn kan maks ha 15 karakterer")
     })
