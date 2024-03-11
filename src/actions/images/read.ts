@@ -1,6 +1,6 @@
 'use server'
 import { readSpecialImageCollection } from './collections/read'
-import { createActionError, createPrismaActionError } from '../error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import { SpecialImage } from '@prisma/client'
@@ -75,7 +75,9 @@ export async function readImage(nameOrId: string | number): Promise<ActionReturn
  * @returns the special image
  */
 export async function readSpecialImage(special: SpecialImage): Promise<ActionReturn<Image>> {
-    if (!Object.values(SpecialImage).includes(special)) createActionError('BAD PARAMETERS', `${special} is not special`)
+    if (!Object.values(SpecialImage).includes(special)) {
+        return createActionError('BAD PARAMETERS', `${special} is not special`)
+    }
 
     try {
         const image = await prisma.image.findUnique({

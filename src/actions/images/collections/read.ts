@@ -1,5 +1,5 @@
 'use server'
-import { readSpecialImage } from '../read'
+import { readSpecialImage } from '@/actions/images/read'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import logger from '@/logger'
@@ -100,7 +100,9 @@ export async function readImageCollectionsPage<const PageSize extends number>(
  */
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
     //Check that the collection actually is a special collection, as the paramter is only a compile time type check
-    if (!Object.values(SpecialCollection).includes(special)) return createActionError('BAD PARAMETERS', `${special} is not special`)
+    if (!Object.values(SpecialCollection).includes(special)) {
+        return createActionError('BAD PARAMETERS', `${special} is not special`)
+    }
 
     //TODO: Check permission associated with the special collection
     try {

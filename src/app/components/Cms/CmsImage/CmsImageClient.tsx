@@ -10,7 +10,8 @@ import type { Image as ImageT } from '@prisma/client'
 
 /**
  * WARNING: This component is only meant for the client
- * A function to display a cms image with image relation. If the cms image does not have a image it will use the default image
+ * A function to display a cms image with image relation.
+ * If the cms image does not have a image it will use the default image
  * By calling on special image DEFAULT_IMAGE
  * @param cmsImage - the cms image to display with image relation
  * @param children - the children to display besides image

@@ -29,7 +29,9 @@ export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsPa
  * @returns - the paragraph
  */
 export async function readSpecialCmsParagraph(special: SpecialCmsParagraph): Promise<ActionReturn<CmsParagraph>> {
-    if (!Object.values(SpecialCmsParagraph).includes(special)) return createActionError('BAD PARAMETERS', `${special} is not special`)
+    if (!Object.values(SpecialCmsParagraph).includes(special)) {
+        return createActionError('BAD PARAMETERS', `${special} is not special`)
+    }
 
     try {
         const paragraph = await prisma.cmsParagraph.findUnique({

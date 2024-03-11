@@ -39,7 +39,7 @@ export default async function seedImages(prisma: PrismaClient) {
 
     //Seed all images
     await Promise.all(allImages.map(async (image) => {
-        const file = files.find(file => file === image.fsLocation)
+        const file = files.find(file_ => file_ === image.fsLocation)
         if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
 
         const ext = file.split('.')[1]
@@ -102,6 +102,8 @@ export default async function seedImages(prisma: PrismaClient) {
  * @param fn - the function to transform the object with
  * @returns
  */
-export function transformObject<K extends string | number | symbol, T, U>(obj: Record<K, T>, fn: (value: T, key: K) => U): U[] {
+export function transformObject<K extends string | number | symbol, T, U>(
+    obj: Record<K, T>, fn: (value: T, key: K) => U
+): U[] {
     return Object.entries(obj).map(([key, value]) => fn(value as T, key as K))
 }

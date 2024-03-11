@@ -1,5 +1,5 @@
 import styles from './Section.module.scss'
-import SpecialCmsParagraph from '../components/Cms/CmsParagraph/SpecialCmsParagraph'
+import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import React from 'react'
 import Link from 'next/link'

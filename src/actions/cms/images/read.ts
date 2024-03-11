@@ -1,5 +1,4 @@
 'use server'
-import { createCmsImage } from './create'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import { SpecialCmsImage } from '@prisma/client'
@@ -35,7 +34,10 @@ export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedC
  * @returns ActionReturn<ExpandedCmsImage>
  */
 export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<ActionReturn<ExpandedCmsImage>> {
-    if (!Object.values(SpecialCmsImage).includes(special)) return createActionError('BAD PARAMETERS', `${special} is not special`)
+    if (!Object.values(SpecialCmsImage).includes(special)) {
+        return createActionError('BAD PARAMETERS', `${special} is not special`)
+    }
+
     try {
         const cmsImage = await prisma.cmsImage.findUnique({
             where: {

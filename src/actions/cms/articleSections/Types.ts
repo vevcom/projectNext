@@ -1,5 +1,5 @@
-import type { ExpandedCmsImage } from '../images/Types'
-import type { ArticleSection, CmsImage, CmsParagraph, CmsLink } from '@prisma/client'
+import type { ExpandedCmsImage } from '@/cms/images/Types'
+import type { ArticleSection, CmsParagraph, CmsLink } from '@prisma/client'
 
 export type ExpandedArticleSection = ArticleSection & {
     cmsImage: ExpandedCmsImage | null,
