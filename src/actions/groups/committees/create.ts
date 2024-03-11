@@ -6,7 +6,7 @@ import prisma from "@/prisma"
 import { z } from "zod"
 import { createCommitteeSchema, createCommitteeSchemaType } from "./schema"
 
-export default async function createCommitee(
+export default async function createCommittee(
     committeeLogoId: number, 
     rawdata: FormData | createCommitteeSchemaType
 ) : Promise<ActionReturn<Committee>> {

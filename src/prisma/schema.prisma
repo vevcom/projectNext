@@ -129,7 +129,6 @@ model Image {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
-  Committee               Committee?
 }
 
 enum SpecialCollection {
@@ -173,6 +172,7 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
+  Committee            Committee?
 }
 
 model CmsParagraph {
@@ -324,10 +324,10 @@ model Ombul {
 }
 
 model Committee {
-  id          Int    @id @default(autoincrement())
-  name        String @unique
-  logoImage   Image  @relation(fields: [logoImageId], references: [id])
-  logoImageId Int    @unique
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  logoImage   CmsImage @relation(fields: [logoImageId], references: [id])
+  logoImageId Int      @unique
 
   @@map("committees")
 }
