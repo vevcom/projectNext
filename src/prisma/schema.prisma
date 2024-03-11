@@ -203,7 +203,6 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
-<<<<<<< HEAD
   special              SpecialCmsImage? @unique
 }
 
@@ -212,8 +211,6 @@ enum SpecialCmsParagraph {
   FRONTPAGE_2
   FRONTPAGE_3
   FRONTPAGE_4
-=======
->>>>>>> main
 }
 
 model CmsParagraph {
