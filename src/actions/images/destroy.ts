@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -11,8 +11,8 @@ export async function destroyImage(imageId: number): Promise<ActionReturn<Image>
                 id: imageId,
             },
         })
-        if (!image) return { success: false, error: [{ message: 'Bilde ikke funnet' }] }
-        if (image.special) return { success: false, error: [{ message: 'Kan ikke slette spesielle bilder' }] }
+        if (!image) return createActionError('NOT FOUND', `Bilde ${imageId} ikke funnet`)
+        if (image.special) return createActionError('BAD PARAMETERS', `Bilde ${imageId} er spesielt og kan ikke slettes`)
 
         await prisma.image.delete({
             where: {

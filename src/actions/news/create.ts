@@ -39,7 +39,7 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
                 },
                 endDateTime: data.endDateTime || endDateTime,
                 omegaOrder: {
-                    connect: currentOrder
+                    connect: currentOrder,
                 }
             },
             include: newsArticleRealtionsIncluder,
