@@ -1,6 +1,6 @@
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
-import Image from '@/components/Image/Image'
+import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImage } from '@/actions/images/read'
 import React from 'react'
 import type { ExpandedCmsImage } from '@/actions/cms/images/Types'
@@ -10,6 +10,8 @@ export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeS
     cmsImage: ExpandedCmsImage,
     children?: React.ReactNode
 }
+
+export const fallbackImage = '/images/fallback.jpg'
 
 /**
  * WARNING: This component only works on the server
@@ -23,7 +25,7 @@ export default async function CmsImage({ cmsImage, children, ...props }: PropTyp
     let image = cmsImage.image
     if (!image) {
         const defaultRes = await readSpecialImage('DEFAULT_IMAGE')
-        if (!defaultRes.success) throw new Error('No default image found.')
+        if (!defaultRes.success) return <SrcImage src={fallbackImage} {...props}/>
         image = defaultRes.data
     }
 

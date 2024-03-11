@@ -1,9 +1,10 @@
 'use client'
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
-import Image from '@/components/Image/Image'
+import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImage } from '@/actions/images/read'
 import { useState, useEffect } from 'react'
+import { fallbackImage } from './CmsImage'
 import type { PropTypes } from './CmsImage'
 import type { Image as ImageT } from '@prisma/client'
 
@@ -17,12 +18,13 @@ import type { Image as ImageT } from '@prisma/client'
  */
 export default function CmsImageClient({ cmsImage, children, ...props }: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
+    const [fallback, setFallback] = useState(false)
 
     useEffect(() => {
         if (image) return
         readSpecialImage('DEFAULT_IMAGE').then(res => {
-            if (!res.success) throw new Error('No default image found.')
-            setCmsImage(res.data)
+            if (!res.success) return setFallback(true)
+            return setCmsImage(res.data)
         })
     }, [])
 
@@ -37,6 +39,7 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
                     {...props}
                 />
             }
+            {fallback && <SrcImage src={fallbackImage} {...props}/>}
         </div>
     )
 }
