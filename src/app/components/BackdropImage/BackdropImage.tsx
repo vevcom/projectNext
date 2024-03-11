@@ -8,7 +8,7 @@ type PropTypes = {
     image:ImageT
  }
 
-export default function BackdropImage({children, image}:PropTypes) {
+export default function BackdropImage({ children, image }:PropTypes) {
     return (
         <div className={styles.BackdropImage}>
             <div className={styles.content}>

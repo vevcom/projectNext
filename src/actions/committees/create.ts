@@ -1,7 +1,7 @@
 'use server'
-import { ActionReturn } from "@/actions/type"
+import { ActionReturn } from "@/actions/Types"
 import type { Committee } from "@prisma/client"
-import errorHandler from "@/prisma/errorHandler"
+import { createPrismaActionError, createZodActionError } from "@/actions/error"
 import prisma from "@/prisma"
 import { z } from "zod"
 
@@ -13,9 +13,7 @@ export default async function create(committeeLogoId : number, rawdata : FormDat
         name : rawdata.get("name")
     })
         
-    if (!parse.success) {
-        return { success: false, error: parse.error.issues }
-    }
+    if (!parse.success) return createZodActionError(parse)
 
     const { name } = parse.data
 
@@ -31,9 +29,8 @@ export default async function create(committeeLogoId : number, rawdata : FormDat
             },
         })
         
-        if (!committee) return { success: false, error: [{message:`kommitee ${name} ikke funnet `}] }
         return { success: true, data: committee }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
