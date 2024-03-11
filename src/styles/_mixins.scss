@@ -9,7 +9,7 @@
 }
 
 @mixin card {
-    border-radius: 3*variables.$rounding;
+    border-radius: variables.$cardRounding;
     padding: 5*variables.$rounding;
 }
 
@@ -82,6 +82,33 @@
         background-image:linear-gradient(-45deg, colors.$white 0px, colors.$white 20%, colors.$gray-500 60%, colors.$white 80%, colors.$white 100%);
         animation: rotate 10s linear infinite;
         scale: 10;
+    }
+}
+
+@mixin pagePadding($max-width: 900px) {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
+    position: relative;
+    overflow-y: hidden;
+}
+
+@mixin ImageCardListLayout {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(3, calc((100% - 2em) / 3));
+    grid-gap: 1em;
+    @media screen and (max-width: variables.$mobileBreakpoint) {
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    }
+    @media screen and (max-width: 500px) {
+        grid-template-columns: 1fr;
+        place-items: center;
+        > * {
+            width: 100%;
+        }
     }
 }
 

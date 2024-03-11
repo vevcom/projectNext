@@ -18,7 +18,7 @@
     }
     .submit {
         margin-top: ohma.$gap;
-        > button:not(.cross) {
+        > .submitButton, .confirm > .submitButton {
             width: 150px;
             margin: 0;
             color: ohma.$colors-black;
@@ -26,6 +26,7 @@
         }
         .confirm {
             width: 100%;
+            max-width: 200px;
             display: flex;
             flex-direction: column;
             > .close {

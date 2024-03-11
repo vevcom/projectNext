@@ -1,7 +1,7 @@
 import styles from './ArticleSection.module.scss'
 import RemovePart from './RemovePart'
-import AddParts from './AddParts'
 import ImageControls from './ImageControls'
+import AddPartToArticleSection from './AddPartToArticleSection'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
@@ -23,7 +23,6 @@ type PropTypes = {
 export default function ArticleSection({ articleSection }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
-
     const cmsImageContent = (
         <span className={styles.image}>
             {cmsImage && <>
@@ -41,7 +40,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
 
     return (
         <section className={styles.ArticleSection}>
-            <AddParts
+            <AddPartToArticleSection
                 articleSectionName={articleSection.name}
                 showParagraphAdd={!cmsParagraph}
                 showImageAdd={!cmsImage}
@@ -77,7 +76,7 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                         cmsImageContent
                     }
                 </span>
-            </AddParts>
+            </AddPartToArticleSection>
         </section>
     )
 }

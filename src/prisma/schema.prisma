@@ -1,10 +1,14 @@
+///////////
+// Setup //
+///////////
+
 generator projectnext {
   provider = "prisma-client-js"
 }
 
 generator prismaservice {
   provider = "prisma-client-js"
-  output   = "./prismaservice/node_modules/.prisma/client"
+  output   = "./prismaservice/generated/pn"
 }
 
 datasource db {
@@ -12,39 +16,73 @@ datasource db {
   url      = env("DB_URI")
 }
 
-model User {
-  id        Int          @id @default(autoincrement())
-  username  String       @unique
-  email     String       @unique
-  password  String // Dette er kun for testing
-  firstname String       @default("[Fjernet]")
-  lastname  String       @default("[Fjernet]")
-  roles     RolesUsers[]
+///////////
+// Users //
+///////////
 
-  @@map("users")
+enum SEX {
+  FEMALE
+  MALE
+  OTHER
 }
 
+model User {
+  id            Int           @id @default(autoincrement())
+  username      String        @unique
+  email         String        @unique
+  firstname     String        @default("[Fjernet]")
+  lastname      String        @default("[Fjernet]")
+  acceptedTerms DateTime?
+  sex           SEX?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt // is also updated manually
+  roles         RolesUsers[]
+  omegaQuote    OmegaQuote[]
+  credentials   Credentials?
+  feideAccount  FeideAccount?
+
+  // We need to explicitly mark the combination of 'id' and 'username' as
+  // unique to make the relation to 'Credentials' work.
+  @@unique([id, username])
+}
+
+model Credentials {
+  user                 User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  userId               Int      @unique
+  username             String   @unique
+  passwordHash         String
+  credentialsUpdatedAt DateTime @updatedAt
+
+  // We need to explicitly mark the combination of 'userId' and 'username' as
+  // unique to make the relation to 'User' work.
+  @@unique([userId, username])
+  @@map("Authentication")
+}
+
+model FeideAccount {
+  id          String   @id
+  accessToken String   @db.Text
+  email       String   @unique
+  expiresAt   DateTime
+  issuedAt    DateTime
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+/////////////////
+// Permissions //
+/////////////////
+
 enum Permission {
-  // Her kommer masse eksempler på tillganger, for nå er de bare for testing
+  // Omega Quotes
+  OMEGAQUOTES_WRITE
+  OMEGAQUOTES_READ
 
-  // Fridge
-  USE_MONEY
-  USE_FRIDGE
-  INFINITE_MONEY
-
-  // Quotes
-  USE_OMEGA_QUOTES
-
-  // Bulshit
-  POST_BULSHIT
-  VIEW_BULSHIT
-
-  // Events
-  PARTICIPATE_IN_EVENTS
-  CREATE_EVENTS
-
-  // Minecraft
-  CREATIVE_MODE
+  // Ombul
+  OMBUL_CREATE
+  OMBUL_READ
+  OMBUL_UPDATE
+  OMBUL_DESTROY
 }
 
 model Role {
@@ -53,27 +91,27 @@ model Role {
   users       RolesUsers[]
   permissions RolePermission[]
 
-  @@map("role")
+  studyProgram StudyProgram?
 }
 
 model RolePermission {
   role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId     Int        @map("role_id")
+  roleId     Int
   permission Permission
 
   @@unique([roleId, permission])
-  @@map("role_permission")
 }
 
 model RolesUsers {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int  @map("user_id")
-  role   Role @relation(fields: [roleId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId Int
 
   @@id([userId, roleId])
 }
 
+<<<<<<< HEAD
 model Image {
   id                   Int              @id @default(autoincrement())
   fsLocation           String           @unique
@@ -89,21 +127,45 @@ model Image {
   updatedAt            DateTime         @updatedAt @map("updated_at")
   cmsImages            CmsImage[]
   Committee            Committee?
+=======
+////////////
+// Images //
+////////////
+>>>>>>> main
 
-  @@map("images")
+model Image {
+  id                      Int              @id @default(autoincrement())
+  fsLocation              String           @unique
+  fsLocationSmallSize     String?          @unique
+  fsLocationMediumSize    String?          @unique
+  name                    String           @unique
+  ext                     String
+  alt                     String
+  collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
+  collectionId            Int
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  cmsImages               CmsImage[]
+}
+
+enum SpecialCollection {
+  STANDARDIMAGES
+  OMBULCOVERS
+  PROFILEIMAGES
+  COMMITEELOGOS
 }
 
 model ImageCollection {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
+  id           Int                @id @default(autoincrement())
+  name         String             @unique
   description  String?
   images       Image[]
-  coverImage   Image?   @relation(fields: [coverImageId], references: [id], name: "coverImage")
-  coverImageId Int?     @unique
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  @@map("image_collections")
+  coverImage   Image?             @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
+  coverImageId Int?               @unique
+  special      SpecialCollection? @unique
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }
 
 enum ImageSize {
@@ -112,42 +174,44 @@ enum ImageSize {
   LARGE
 }
 
-model CmsImage {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique
-  image          Image?          @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId        Int?
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  imageSize      ImageSize       @default(MEDIUM) @map("small_image")
-  articleSection ArticleSection?
-  Article        Article? //Can be cover image for an article
+/////////
+// CMS //
+/////////
 
-  @@map("cms_images")
+model CmsImage {
+  id                   Int             @id @default(autoincrement())
+  name                 String          @unique @default(cuid())
+  image                Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  imageId              Int?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  imageSize            ImageSize       @default(MEDIUM)
+  articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId     Int?            @unique
+  coverImageforArticle Article?
+  Ombul                Ombul?
 }
 
 model CmsParagraph {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique
-  contentMd      String          @default("")
-  contentHtml    String          @default("")
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  articleSection ArticleSection?
-
-  @@map("cms_paragraphs")
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @default(cuid())
+  contentMd        String          @default("")
+  contentHtml      String          @default("")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?            @unique
 }
 
 model CmsLink {
-  id             Int             @id @default(autoincrement())
-  name           String          @unique
-  url            String          @default("/")
-  createdAt      DateTime        @default(now()) @map("created_at")
-  updatedAt      DateTime        @updatedAt @map("updated_at")
-  text           String          @default("Link")
-  articleSection ArticleSection?
-
-  @@map("cms_links")
+  id               Int             @id @default(autoincrement())
+  name             String          @unique @default(cuid())
+  url              String          @default("/")
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  text             String          @default("Link")
+  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?            @unique
 }
 
 enum Position {
@@ -156,6 +220,7 @@ enum Position {
 }
 
 model ArticleSection {
+<<<<<<< HEAD
   id             Int           @id @default(autoincrement())
   name           String        @unique
   createdAt      DateTime      @default(now()) @map("created_at")
@@ -171,21 +236,126 @@ model ArticleSection {
   article        Article?      @relation(fields: [articleId], references: [id])
   articleId      Int?
   order          Int           @default(autoincrement()) //The order "position" of the article section in the article
+=======
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  imagePosition Position @default(RIGHT)
+  imageSize     Int      @default(200)
+  article       Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId     Int?
+  order         Int      @default(autoincrement()) //The order "position" of the article section in the article
+
+  //If true, the article section will be deleted if it is empty, ie has no relation to paragraph, link or image
+  destroyOnEmpty Boolean       @default(true)
+  cmsImage       CmsImage?
+  cmsParagraph   CmsParagraph?
+  cmsLink        CmsLink?
+>>>>>>> main
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
-  @@map("article_sections")
 }
 
 model Article {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  articleSections ArticleSection[]
-  coverImage      CmsImage         @relation(fields: [coverImageId], references: [id])
-  coverImageId    Int              @unique
+  id                  Int              @id @default(autoincrement())
+  name                String
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  articleSections     ArticleSection[]
+  newsArticle         NewsArticle?
+  articleCategory     ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
+  articleCategoryId   Int?
+  articleCategoryName String?
+  coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId        Int              @unique
 
-  @@map("articles")
+  @@unique([name, id])
+  @@unique([articleCategoryName, name])
+}
+
+model NewsArticle {
+  id             Int        @id @default(autoincrement())
+  description    String?
+  endDateTime    DateTime //when the article is no longer considered current
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
+  articleId      Int        @unique
+  articleName    String
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
+  orderPublished Int
+
+  @@unique([articleId, articleName])
+  @@unique([articleName, orderPublished])
+}
+
+model ArticleCategory {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  articles    Article[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@unique([id, name])
+}
+
+/////////////////
+// OmegaQuotes //
+/////////////////
+
+model OmegaQuote {
+  id           Int      @id @default(autoincrement())
+  author       String
+  quote        String
+  timestamp    DateTime @default(now())
+  userPoster   User     @relation(fields: [userPosterId], references: [id])
+  userPosterId Int
+}
+
+///////////////////
+// StudyPrograms //
+///////////////////
+
+model StudyProgram {
+  // Use the name field from the role instead
+  id            Int     @id
+  code          String  @unique
+  insititueCode String?
+  yearsLength   Int?
+  startYear     Int     @default(1)
+  role          Role    @relation(fields: [id], references: [id], onDelete: Cascade)
+}
+
+///////////////////////////
+// Current year of omega //
+///////////////////////////
+
+model OmegaOrder {
+  order       Int           @id
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  NewsArticle NewsArticle[]
+}
+
+///////////////////////////
+// Ombul //////////////////
+///////////////////////////
+
+model Ombul {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  fsLocation   String   @unique //location in /store/ombul/[fsLocation]
+  year         Int
+  issueNumber  Int
+  coverImage   CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId Int      @unique
+
+  @@unique([year, name])
+  @@unique([year, issueNumber])
 }
 
 model Committee {

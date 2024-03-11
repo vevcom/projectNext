@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
 
-type PropTypes = {
+export type PropTypes = {
     children: React.ReactNode,
     showButtonContent: React.ReactNode,
     showButtonClass?: string,
@@ -20,7 +20,7 @@ export default function PopUp({
     children,
     showButtonContent,
     showButtonClass,
-} : PropTypes) {
+}: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
 
 

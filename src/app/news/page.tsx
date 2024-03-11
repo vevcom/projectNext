@@ -1,14 +1,32 @@
 import styles from './page.module.scss'
-import Article from '@/cms/Article/Article'
-import read from '@/cms/articles/read'
+import AddNews from './AddNews'
+import CurrentNews from './CurrentNews'
+import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import Link from 'next/link'
 
-export default async function Articles() {
-    const article = await read('om omega')
-    if (!article.success) return (<div>{article.error ? article.error[9].message : 'error'}</div>)
+export default async function NewsArtilces() {
+    //TODO: add can create news permission
+    const canCreateNews = true //temp
 
     return (
-        <main className={styles.wrapper}>
-            <Article article={article.data} />
-        </main>
+        <PageWrapper title="Nyheter"
+            headerItem={
+                <div className={styles.head}>
+                    <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
+                    {
+                        canCreateNews && (
+                            <AddHeaderItemPopUp PopUpKey="createNewsPop">
+                                <AddNews />
+                            </AddHeaderItemPopUp>
+                        )
+                    }
+                </div>
+            }
+        >
+            <main className={styles.wrapper}>
+                <CurrentNews />
+            </main>
+        </PageWrapper>
     )
 }

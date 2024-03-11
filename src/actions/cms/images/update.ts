@@ -1,10 +1,10 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
+import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage, ImageSize } from '@prisma/client'
 
-export default async function update(linkId: number, imageId: number) : Promise<ActionReturn<CmsImage>> {
+export async function updateCmsImage(linkId: number, imageId: number): Promise<ActionReturn<CmsImage>> {
     try {
         const cmsImage = await prisma.cmsImage.update({
             where: {
@@ -20,11 +20,11 @@ export default async function update(linkId: number, imageId: number) : Promise<
         })
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
-export async function updateConfig(linkId: number, config: {imageSize: ImageSize}): Promise<ActionReturn<CmsImage>> {
+export async function updateCmsImageConfig(linkId: number, config: {imageSize: ImageSize}): Promise<ActionReturn<CmsImage>> {
     try {
         const cmsImage = await prisma.cmsImage.update({
             where: {
@@ -36,6 +36,6 @@ export async function updateConfig(linkId: number, config: {imageSize: ImageSize
         })
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

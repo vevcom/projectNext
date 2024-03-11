@@ -3,6 +3,10 @@ FROM node:20-alpine AS base
 
 WORKDIR /usr/src/app
 COPY ./schema.prisma ./schema.prisma
+COPY ./schema.veven.prisma ./schema.veven.prisma
+
+# Remove the projectnext generator lines
+RUN sed -i '/generator projectnext {/,/}/d' ./schema.prisma
 
 WORKDIR /usr/src/app/prismaservice
 COPY /prismaservice/package*.json ./
@@ -15,6 +19,10 @@ RUN mkdir -p ./store/images
 
 COPY prismaservice/standard_store ./standard_store
 COPY prismaservice/cms_paragraphs ./cms_paragraphs
+
+ARG SHOULD_MIGRATE
+RUN if [ "$SHOULD_MIGRATE" = "true" ] ; then npm run dobbelOmega-pull ; fi
+RUN npm run dobbelOmega-generate
 
 COPY /prismaservice/src ./src
 RUN npm run build

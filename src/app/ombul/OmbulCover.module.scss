@@ -1,0 +1,61 @@
+@use '@/styles/ohma';
+
+a.OmbulCover {
+    &:hover {
+        .coverImg img {
+            scale: 1.1;
+        }
+    }
+}
+
+.OmbulCover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    color: ohma.$colors-gray-900;
+    text-decoration: none;
+    .coverImg {
+        width: 100%;
+        > *, > * > * {
+            border-radius: ohma.$rounding;
+            overflow: hidden;
+            width: 100% !important;
+            height: 100%;
+        }
+        img {
+            transition: scale 0.3s;
+            width: 100% !important;
+            height: 100%;
+            object-fit: cover;
+            min-height: 50px;
+        }
+        margin-bottom: ohma.$gap;
+        .noCoverImage {
+            border: 3px solid ohma.$colors-gray-500;
+            aspect-ratio: 5 / 7; //aspect-ratio of sheet of paper assuemed
+            display: grid;
+            place-items: center;
+        }
+    }
+    > * {
+        text-align: center;
+        width: 100%;
+    }
+    > p {
+        font-weight: ohma.$fonts-weight-s;
+    }
+    > h2::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: ohma.$colors-gray-500;
+        margin-bottom: ohma.$gap;
+    }
+    @media screen and (max-width: ohma.$mobileBreakpoint) {
+        > h2 {
+            font-size: ohma.$fonts-xl;
+        }
+    }
+}

@@ -1,15 +1,15 @@
 import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import { getUser } from '@/auth'
+import { getUser } from '@/auth/user'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 
 export default async function MobileNavBar() {
-    const user = await getUser()
+    const { user } = await getUser()
     const isLoggedIn = user !== null
     const applicationPeriod = false //temp
     const isAdmin = user?.username === 'Harambe104' // temp

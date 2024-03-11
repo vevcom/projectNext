@@ -1,59 +1,44 @@
 'use server'
-import { ActionReturn } from '@/actions/type'
+import { createImageSchema, createImagesSchema } from './schema'
+import { createZodActionError, createPrismaActionError, createActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import { z } from 'zod'
-import { v4 as uuid } from 'uuid'
+import createFile from '@/store/createFile'
 import sharp from 'sharp'
-import { join } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
-import { File } from 'buffer'
+import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
+import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 
-const maxFileSize = 10 * 1024 * 1024 // 10mb
+async function createOneInStore(file: File, allowedExt: string[], size: number) {
+    const ret = await createFile(file, 'images', allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
+        fit: sharp.fit.inside,
+        withoutEnlargement: true
+    }).toBuffer())
+    return ret
+}
 
-
-async function createOne(file: File, meta: {
+export async function createOneImage(file: File, meta: {
     name: string,
     alt: string,
     collectionId: number,
-}) : Promise<ActionReturn<Image>> {
-    const ext = file.type.split('/')[1]
-    if (!['png', 'jpg', 'jpeg', 'heic'].includes(ext)) {
-        return {
-            success: false, error: [
-                {
-                    path: ['file'],
-                    message: 'Invalid file type'
-                }
-            ]
-        }
-    }
+}): Promise<ActionReturn<Image>> {
+    const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 
-    const arrBuffer = await file.arrayBuffer()
+    const uploadPromises = [
+        createOneInStore(file, allowedExt, 250),
+        createOneInStore(file, allowedExt, 600),
+        createFile(file, 'images', allowedExt),
+    ]
 
-    const buffer = Buffer.from(arrBuffer)
+    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+    if (!smallSize.success) return smallSize
+    const fsLocationSmallSize = smallSize.data.fsLocation
+    if (!mediumSize.success) return mediumSize
+    const fsLocationMediumSize = mediumSize.data.fsLocation
+    if (!original.success) return original
+    const fsLocation = original.data.fsLocation
+    const ext = original.data.ext
 
     try {
-        const fsLocation = `${uuid()}.${ext}`
-        const destination = join('store', 'images')
-        await mkdir(destination, { recursive: true })
-        await writeFile(join(destination, fsLocation), buffer)
-
-        const smallsize = await sharp(buffer).resize(250, 250, {
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-        }).toBuffer() // Adjust the size as needed
-        const fsLocationSmallSize = `${uuid()}.${ext}`
-        await writeFile(join(destination, fsLocationSmallSize), smallsize)
-
-        const mediumSize = await sharp(buffer).resize(600, 600, {
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-        }).toBuffer() // Adjust the size as needed
-        const fsLocationMediumSize = `${uuid()}.${ext}`
-        await writeFile(join(destination, fsLocationMediumSize), mediumSize)
-
         try {
             const image = await prisma.image.create({
                 data: {
@@ -70,62 +55,40 @@ async function createOne(file: File, meta: {
                     }
                 }
             })
-            if (!image) return { success: false }
+
             return { success: true, data: image }
         } catch (err) {
-            console.log(err)
-            return errorHandler(err)
+            return createPrismaActionError(err)
         }
     } catch (err) {
         //LOGGER
-        return {
-            success: false,
-            error: [{ path: ['file'], message: 'Failed to create small size image' }]
-        }
+        return createActionError('UNKNOWN ERROR', [{ path: ['file'], message: 'Failed to create small size image' }])
     }
 }
 
-export default async function create(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image>> {
-    const schema = z.object({
-        file: z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb'),
-        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
-        alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
-    })
-    const parse = schema.safeParse({
-        file: rawdata.get('file'),
-        name: rawdata.get('name'),
-        alt: rawdata.get('alt'),
-    })
-    if (!parse.success) return { success: false, error: parse.error.issues }
+export async function createImage(
+    collectionId: number,
+    rawdata: FormData | CreateImageSchemaType
+): Promise<ActionReturn<Image>> {
+    const parse = createImageSchema.safeParse(rawdata)
+    if (!parse.success) return createZodActionError(parse)
     const { file, ...data } = parse.data
-    return await createOne(file, { ...data, collectionId })
+    return await createOneImage(file, { ...data, collectionId })
 }
 
-export async function createMany(collectionId: number, rawdata: FormData): Promise<ActionReturn<Image[]>> {
-    const schema = z.object({
-        files: z.array(z.instanceof(File)).refine(
-            files => files.every(file => file.size < maxFileSize),
-            'File size must be less than 10mb'
-        ),
-    }).refine(
-        data => data.files.length < 100,
-        'Max 100 files')
-        .refine(
-            data => data.files.length > 0,
-            'You must add a file!'
-        )
+export async function createImages(
+    collectionId: number,
+    rawdata: FormData | CreateImagesSchemaType
+): Promise<ActionReturn<Image[]>> {
+    const parse = createImagesSchema.safeParse(rawdata)
 
-    const parse = schema.safeParse({
-        files: rawdata.getAll('files'),
-    })
-
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const data = parse.data
 
-    let finalReturn : ActionReturn<Image[]> = { success: true, data: [] }
+    let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
-        const ret = await createOne(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        const ret = await createOneImage(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
         if (!ret.success) return ret
         finalReturn = {
             ...finalReturn,

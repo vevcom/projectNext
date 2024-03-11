@@ -3,7 +3,7 @@ import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
 import EditOverlay from '@/cms/EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
-import EndlessScroll from '@/components/PagingWrappes/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
 import { EditModeContext } from '@/context/EditMode'
@@ -12,17 +12,22 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import { useContext, useState } from 'react'
-import { CmsImage, Image as ImageT } from '@prisma/client'
 import Link from 'next/link'
+import type { CmsImage, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     cmsImage: CmsImage & {
-        image: ImageT
+        image: ImageT | null
     }
 }
 
-
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
+    if (cmsImage.image === null) {
+        throw new Error(
+            'CmsImageEditor does not yet work with images that are not loaded. This will be fixed in the next refactor.'
+        )
+    }
+
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
@@ -50,10 +55,12 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                     <PopUpProvider>
                         <div className={styles.CmsImageEditor}>
                             <div className={styles.currentCmsImage}>
-                                <h2>Edit image link</h2>
-                                <div className={styles.meta}>
-                                    <p>name: {cmsImage.name}</p>
-                                    <i>id: {cmsImage.id}</i>
+                                <div className={styles.info}>
+                                    <h2>Edit image link</h2>
+                                    <div className={styles.meta}>
+                                        <p>name: {cmsImage.name}</p>
+                                        <i>id: {cmsImage.id}</i>
+                                    </div>
                                 </div>
                                 <ChangeImage
                                     currentImageSize={cmsImage.imageSize}
@@ -70,7 +77,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                         pageSize: 12,
                                         page: 0,
                                     }}
-                                    details={null}
+                                    details={undefined}
                                     serverRenderedData={[]}
                                 >
                                     <EndlessScroll

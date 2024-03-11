@@ -1,16 +1,16 @@
 'use server'
 
-import { ActionReturn } from '@/actions/type'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { CmsParagraph } from '@prisma/client'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import type { CmsParagraph } from '@prisma/client'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function update(id: number, contentMd: string) : Promise<ActionReturn<CmsParagraph>> {
+export async function updateCmsParagraph(id: number, contentMd: string): Promise<ActionReturn<CmsParagraph>> {
     //This function expects to get valid md
     try {
         const contentHtml = (await unified()
@@ -35,14 +35,9 @@ export default async function update(id: number, contentMd: string) : Promise<Ac
                 data: paragraph
             }
         } catch (error) {
-            return errorHandler(error)
+            return createPrismaActionError(error)
         }
     } catch (e) {
-        return {
-            success: false,
-            error: [{
-                message: 'Invalid markdown'
-            }]
-        }
+        return createActionError('BAD PARAMETERS', 'Invalid markdown')
     }
 }

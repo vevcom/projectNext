@@ -10,9 +10,7 @@ import {
     faQuestionCircle,
     faCamera,
     faList,
-    faUsers,
     faCircleInfo,
-    IconDefinition,
     faNewspaper,
     faCalendar,
     faSuitcase,
@@ -21,7 +19,11 @@ import {
     faBriefcase,
     faGraduationCap,
     faTools,
+    faChartLine,
+    faSignature,
 } from '@fortawesome/free-solid-svg-icons'
+import type {
+    IconDefinition } from '@fortawesome/free-solid-svg-icons'
 
 type showTypes = 'all' | 'loggedOut' | 'loggedIn' | 'applicationPeriodAndLoggedIn' | 'admin'
 export type NavItem = {
@@ -31,7 +33,7 @@ export type NavItem = {
     icon: IconDefinition,
 }
 
-export const itemsForMenu : NavItem[] = [
+export const itemsForMenu: NavItem[] = [
     {
         name: 'Hvad der hender',
         href: '/events',
@@ -64,21 +66,15 @@ export const itemsForMenu : NavItem[] = [
     },
     {
         name: 'Ny Student?',
-        href: '/infopages/nystudent',
+        href: '/articles',
         show: 'loggedOut',
         icon: faGraduationCap,
     },
     {
         name: 'Ombul',
-        href: '/infopages/about',
+        href: '/ombul',
         show: 'all',
         icon: faBook,
-    },
-    {
-        name: 'Intressegrupper',
-        href: '/infopages/interessegrupper',
-        show: 'all',
-        icon: faGamepad,
     },
     {
         name: 'Nyheter',
@@ -105,8 +101,14 @@ export const itemsForMenu : NavItem[] = [
         icon: faComment,
     },
     {
+        name: 'Artikkler',
+        href: '/articles',
+        show: 'all',
+        icon: faSignature,
+    },
+    {
         name: 'Guider',
-        href: 'infopages/guides',
+        href: '/articles/guider',
         show: 'all',
         icon: faQuestionCircle,
     },
@@ -123,20 +125,20 @@ export const itemsForMenu : NavItem[] = [
         icon: faList,
     },
     {
-        name: 'Komitémedlemmer',
-        href: '/committees',
-        show: 'loggedIn',
-        icon: faUsers,
-    },
-    {
         name: 'Om Omega',
-        href: 'ingopages/about',
+        href: '/articles/om%20omega',
         show: 'all',
         icon: faCircleInfo,
     },
     {
+        name: 'Omegafond',
+        href: '/omegafund',
+        show: 'all',
+        icon: faChartLine,
+    },
+    {
         name: 'Intressegrupper',
-        href: 'ingopages/interessegrupper',
+        href: '/infopages/interessegrupper',
         show: 'all',
         icon: faGamepad,
     },
@@ -148,7 +150,7 @@ export const itemsForMenu : NavItem[] = [
     }
 ]
 
-export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean) : NavItem[] {
+export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean): NavItem[] {
     return itemsForMenu.filter(item => {
         switch (item.show) {
             case 'all':

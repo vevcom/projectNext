@@ -1,23 +1,23 @@
 'use server'
 import { maxImageSize, minImageSize } from './ConfigVars'
+import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import { default as createCmsImage } from '@/actions/cms/images/create'
-import { default as createCmsParagraph } from '@/actions/cms/paragraphs/create'
-import { default as createCmsLink } from '@/actions/cms/links/create'
-import { ImageSize } from '@prisma/client'
-import type { ReturnType } from './ReturnType'
-import type { ActionReturn } from '@/actions/type'
-import type { ArticleSection, Position } from '@prisma/client'
+import { createActionError, createPrismaActionError } from '@/actions/error'
+import { createCmsImage } from '@/actions/cms/images/create'
+import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
+import { createCmsLink } from '@/actions/cms/links/create'
+import type { ImageSize, ArticleSection, Position } from '@prisma/client'
+import type { ExpandedArticleSection } from './Types'
+import type { ActionReturn } from '@/actions/Types'
 
 
-export default async function update(name: string, changes: {
+export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
-}) : Promise<ActionReturn<ReturnType>> {
+}): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         //Sets the image resolution based on the image size
-        let newCmsImageResolution : ImageSize | undefined = undefined
+        let newCmsImageResolution: ImageSize | undefined = undefined
 
         if (changes.imageSize) {
             if (changes.imageSize > maxImageSize) {
@@ -46,23 +46,23 @@ export default async function update(name: string, changes: {
         })
         return { success: true, data: articleSection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
 export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
 
-export async function addPart(name: string, part: Part) : Promise<ActionReturn<ReturnType>> {
+export async function addArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
             include: { [part]: true }
         })
         if (!articleSection) {
-            return { success: false, error: [{ message: 'ArticleSection not found' }] }
+            return createActionError('NOT FOUND', 'ArticleSection not found')
         }
         if (articleSection.cmsLink) {
-            return { success: false, error: [{ message: `ArticleSection already has ${part}` }] }
+            return createActionError('BAD PARAMETERS', `ArticleSection already has ${part}`)
         }
 
         switch (part) {
@@ -108,60 +108,67 @@ export async function addPart(name: string, part: Part) : Promise<ActionReturn<R
             default:
                 break
         }
-        return { success: false, error: [{ message: 'Invalid part' }] }
+        return createActionError('BAD PARAMETERS', 'Invalid part')
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
-export async function removePart(name: string, part: Part) : Promise<ActionReturn<ArticleSection>> {
+export async function removeArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
             include: { cmsLink: true, cmsParagraph: true, cmsImage: true }
         })
         if (!articleSection) {
-            return { success: false, error: [{ message: 'ArticleSection not found' }] }
+            return createActionError('NOT FOUND', 'ArticleSection not found')
         }
         if (!articleSection[part]) {
-            return { success: false, error: [{ message: `ArticleSection does not have ${part}` }] }
+            return createActionError('BAD PARAMETERS', `ArticleSection does not have ${part}`)
         }
 
         switch (part) {
             case 'cmsLink':
                 await prisma.cmsLink.delete({ where: { id: articleSection.cmsLink?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsParagraph':
                 await prisma.cmsParagraph.delete({ where: { id: articleSection.cmsParagraph?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
-
+                break
             case 'cmsImage':
                 await prisma.cmsImage.delete({ where: { id: articleSection.cmsImage?.id } })
-                return {
-                    success: true,
-                    data: await prisma.articleSection.findUnique({
-                        where: { name },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
-                    }) || articleSection
-                }
+                break
             default:
                 break
         }
-        return { success: false, error: [{ message: 'Invalid part' }] }
+
+
+        // check if all Parts are removed and if so, remove the articleSection,
+        // but only if destroyOnEmpty is true
+        const afterDelete = await prisma.articleSection.findUnique({
+            where: { name },
+            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+        })
+        if (!afterDelete) {
+            return createActionError('UNKNOWN ERROR', 'Noe uventet skjedde etter sletting av del av artclesection')
+        }
+        if (
+            articleSection.destroyOnEmpty &&
+            !afterDelete.cmsImage &&
+            !afterDelete.cmsParagraph &&
+            !afterDelete.cmsImage
+        ) {
+            const destroyRes = await destroyArticleSection(name)
+            if (!destroyRes.success) {
+                return createActionError('UNKNOWN ERROR', 'Greide ikke slette artikkelseksjonen')
+            }
+            return { success: true, data: destroyRes.data }
+        }
+
+        return {
+            success: true,
+            data: afterDelete
+        }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

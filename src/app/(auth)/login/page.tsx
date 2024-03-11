@@ -1,9 +1,9 @@
 'use client'
 import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
-import { FormEvent } from 'react'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import type { FormEvent } from 'react'
 
 export default function LogIn() {
     const searchParams = useSearchParams()
@@ -30,5 +30,9 @@ export default function LogIn() {
             <BorderButton>Logg inn</BorderButton>
             <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
         </form>
+        <BorderButton onClick={() => signIn('feide', {
+            redirect: true,
+            callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+        })}>Logg inn med Feide</BorderButton>
     </>
 }

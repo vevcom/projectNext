@@ -1,5 +1,17 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    max-width: 100vw;
+    @include ohma.ImageCardListLayout;
+}
+
+.head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1em;
+}
+
+.archiveBtn {
+    @include ohma.borderBtn(ohma.$colors-primary);
+    display: block;
+    margin: 0 ohma.$gap;
 }

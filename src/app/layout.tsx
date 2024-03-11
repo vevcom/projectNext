@@ -1,9 +1,9 @@
 import styles from './layout.module.scss'
-import { AuthProvider } from '@/auth/client'
+import { SessionProvider } from '@/auth/client'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
-import { authOptions } from '@/auth'
+import { authOptions } from '@/auth/authoptions'
 import EditModeProvider from '@/context/EditMode'
 import PopUpProvider from '@/context/PopUp'
 import { Inter } from 'next/font/google'
@@ -27,13 +27,13 @@ type PropTypes = {
     children: React.ReactNode
 }
 
-export default async function RootLayout({ children } : PropTypes) {
+export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
 
     return (
         <html lang="en">
             <body className={inter.className}>
-                <AuthProvider session={session}>
+                <SessionProvider session={session}>
                     <EditModeProvider>
                         <PopUpProvider>
                             <div className={styles.wrapper}>
@@ -52,7 +52,7 @@ export default async function RootLayout({ children } : PropTypes) {
                             </div>
                         </PopUpProvider>
                     </EditModeProvider>
-                </AuthProvider>
+                </SessionProvider>
             </body>
         </html>
     )

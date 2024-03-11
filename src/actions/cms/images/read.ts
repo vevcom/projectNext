@@ -1,11 +1,11 @@
 'use server'
-import create from './create'
+import { createCmsImage } from './create'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import type { Image, CmsImage } from '@prisma/client'
-import type { ActionReturn } from '@/actions/type'
+import { createPrismaActionError } from '@/actions/error'
+import type { ExpandedCmsImage } from './Types'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function read(name: string) : Promise<ActionReturn<CmsImage & {image: Image | null}>> {
+export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedCmsImage>> {
     //Note this action reates a image link if it does not exist and returns it
     try {
         const cmsImage = await prisma.cmsImage.findUnique({
@@ -17,10 +17,10 @@ export default async function read(name: string) : Promise<ActionReturn<CmsImage
             }
         })
         if (!cmsImage) {
-            return await create(name)
+            return await createCmsImage(name)
         }
         return { success: true, data: cmsImage }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

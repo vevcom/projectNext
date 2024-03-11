@@ -5,7 +5,8 @@ $image-size: 150px;
 .ImageListImage {
     width: $image-size;
     height: $image-size;
-    margin: 0.5*ohma.$gap;
+    margin: ohma.$gap;
+    margin-left: 0;
     overflow: hidden;
     @include ohma.round;
     position: relative;
@@ -27,7 +28,6 @@ $image-size: 150px;
             object-fit: cover;
             width: 100%;
             height: 100%;
-            z-index: -1;
         }  
     }
     &:hover {
@@ -46,7 +46,7 @@ $image-size: 150px;
         opacity: 0;
     }
 
-    //selectionbutton
+    //selection button
     > div:last-child {
         z-index: 1;
         position: absolute;

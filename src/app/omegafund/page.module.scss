@@ -1,0 +1,23 @@
+@use "@/styles/ohma";
+
+.omegafundIframe{
+    border-style: solid;
+    border-width: 4px;
+    border-color: ohma.$colors-primary;
+    border-radius: ohma.$rounding;
+    height:50vh;
+    margin:0 10% 10% 10%;
+    box-shadow: 10px 10px 15px ohma.$colors-gray-700;
+}
+.wrapper{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex: 0 0 100%;
+    h1{
+        text-align: center;
+        font-size: 6em;
+        font-family: ohma.$fonts-secondary;
+        margin: 0.2em 0 0.2em 0;
+    }
+}

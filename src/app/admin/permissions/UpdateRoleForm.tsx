@@ -1,6 +1,6 @@
 'use client'
 
-import { updateRole } from '@/actions/permissions'
+import { updateRole } from '@/actions/permissions/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
@@ -19,33 +19,21 @@ type PermissionCategory = {
 // defines the layout of the role edit section
 const permissionCategories: PermissionCategory[] = [
     {
-        title: 'Hendelser',
+        title: '«Bulshit» og «omegaquotes»',
         permissions: [
-            { permission: 'CREATE_EVENTS', name: 'Lage hendelser' },
-            { permission: 'PARTICIPATE_IN_EVENTS', name: 'Delta på hendelser' },
+            { permission: 'OMEGAQUOTES_READ', name: 'Lese omegaquotes' },
+            { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
         ],
     },
     {
-        title: 'Konto og pengebruk',
+        title: 'ombul',
         permissions: [
-            { permission: 'USE_MONEY', name: 'Bruk penger' },
-            { permission: 'INFINITE_MONEY', name: 'Ubegrenset penger' },
+            { permission: 'OMBUL_READ', name: 'Lese ombul' },
+            { permission: 'OMBUL_CREATE', name: 'Lage ombul' },
+            { permission: 'OMBUL_UPDATE', name: 'Oppdatere ombul' },
+            { permission: 'OMBUL_DESTROY', name: 'Slette ombul' },
         ],
-    },
-    {
-        title: '«Bulshit» og «Omega Quotes»',
-        permissions: [
-            { permission: 'POST_BULSHIT', name: 'Legge ut «Bulshit»-er' },
-            { permission: 'VIEW_BULSHIT', name: 'Lese «Bulshit»-er' },
-            { permission: 'USE_OMEGA_QUOTES', name: 'Lese og legge ut sitater på «Omega Quotes»' },
-        ],
-    },
-    {
-        title: 'Annet',
-        permissions: [
-            { permission: 'CREATIVE_MODE', name: 'Kreativ-modus' },
-        ],
-    },
+    }
 ]
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
@@ -96,7 +84,7 @@ export function UpdateRoleForm({ selectedRole }: PropTypes) {
                         <label>
                             <input
                                 type="checkbox"
-                                name="permission"
+                                name="permissions"
                                 value={entry.permission}
                                 checked={checkedPermissions[entry.permission]}
                                 onChange={e =>

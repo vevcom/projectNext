@@ -1,0 +1,21 @@
+@use "@/styles/ohma";
+
+.wrapper {
+    @include ohma.pagePadding();
+    align-self: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0 2em;
+    h1 {
+        font-family: ohma.$fonts-secondary;
+        font-size: ohma.$fonts-xxl;
+        text-transform: capitalize;
+    }
+
+    .inlineHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

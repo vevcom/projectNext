@@ -1,13 +1,13 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import create, { createMany } from '@/actions/images/create'
-import update from '@/actions/images/collections/update'
+import { createImage, createImages } from '@/actions/images/create'
+import { updateImageCollection } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
 import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
-import destroy from '@/actions/images/collections/destroy'
+import { destroyImageCollection } from '@/actions/images/collections/destroy'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
@@ -35,8 +35,11 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     if (!shouldRender) return null
 
     const refreshImages = () => {
-        pagingContext?.refetch()
-        router.refresh()
+        if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
+            pagingContext?.refetch()
+        } else {
+            router.refresh()
+        }
     }
 
     return (
@@ -46,7 +49,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                     successCallback={refreshImages}
                     title="last opp bilde"
                     submitText="last opp"
-                    action={create.bind(null, collectionId)}
+                    action={createImage.bind(null, collectionId)}
                 >
                     <TextInput color="black" label="navn" name="name" />
                     <TextInput color="black" label="alternativ tekst" name="alt" />
@@ -63,7 +66,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                         successCallback={refreshImages}
                         title="last opp bilder"
                         submitText="last opp"
-                        action={createMany.bind(null, collectionId)}
+                        action={createImages.bind(null, collectionId)}
                     >
                         <Dropzone label="last opp" name="files"/>
                     </Form>
@@ -76,7 +79,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 }}
                 title="Rediger samling"
                 submitText="oppdater"
-                action={update.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
+                action={updateImageCollection.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />
@@ -130,7 +133,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
             <Form
                 submitText="slett samling"
                 successCallback={() => router.push('/images')}
-                action={destroy.bind(null, collectionId)}
+                action={destroyImageCollection.bind(null, collectionId)}
                 submitColor="red"
                 confirmation={{
                     confirm: true,
