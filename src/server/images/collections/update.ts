@@ -1,6 +1,6 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createPrismaActionError } from '@/actions/error'
 import type { ImageCollection, Prisma } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
