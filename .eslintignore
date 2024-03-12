@@ -2,3 +2,4 @@ node_modules/
 .next/
 dist/
 src/prisma/prismaservice/generated/
+src/prisma/prismaservice/dist/

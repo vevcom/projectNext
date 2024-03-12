@@ -1,7 +1,7 @@
 import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import { getUser } from '@/auth/user'
 import Link from 'next/link'
@@ -30,14 +30,14 @@ export default async function MobileNavBar() {
                 ))
             }
             <div>
-                <CmsImage name="mobile_nav_primary_button" width={30}>
+                <SpecialCmsImage special="MOBILE_NAV_PRIMARY_BUTTON" width={30}>
                     <Link className={styles.imagelink} href="/"/>
-                </CmsImage>
+                </SpecialCmsImage>
             </div>
             <div className={styles.magicHat}>
-                <CmsImage name="mobile_nav_login_button" width={25} height={25} alt="log in button">
+                <SpecialCmsImage special="MOBILE_NAV_LOGIN_BUTTON" width={25} height={25} alt="log in button">
                     <Link className={styles.imagelink} href={isLoggedIn ? '/users/me' : '/login'} />
-                </CmsImage>
+                </SpecialCmsImage>
             </div>
             <Menu items={itemsForMenu} openBtnContent={
                 <div className={styles.menuBtn}>

@@ -1,6 +1,6 @@
 'use server'
 import { newsArticleSchema } from './schema'
-import { defaultNewsArticleOldCutoff } from './ConfigVars'
+import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 import { createArticle } from '@/cms/articles/create'
@@ -39,23 +39,10 @@ export async function createNews(rawdata: FormData | NewsArticleSchemaType): Pro
                 },
                 endDateTime: data.endDateTime || endDateTime,
                 omegaOrder: {
-                    connect: currentOrder
+                    connect: currentOrder,
                 }
             },
-            include: {
-                article: {
-                    include: {
-                        coverImage: true,
-                        articleSections: {
-                            include: {
-                                cmsImage: true,
-                                cmsParagraph: true,
-                                cmsLink: true
-                            }
-                        }
-                    }
-                }
-            }
+            include: newsArticleRealtionsIncluder,
         })
         return { success: true, data: news }
     } catch (error) {

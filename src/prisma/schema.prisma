@@ -115,6 +115,16 @@ model RolesUsers {
 // Images //
 ////////////
 
+enum SpecialImage {
+  DEFAULT_IMAGE
+  DEFAULT_IMAGE_COLLECTION_COVER
+  DEFAULT_PROFILE_IMAGE
+  LOGO_SIMPLE
+  LOGO_WHITE
+  LOGO_WHITE_TEXT
+  MAGISK_HATT
+}
+
 model Image {
   id                      Int              @id @default(autoincrement())
   fsLocation              String           @unique
@@ -129,6 +139,7 @@ model Image {
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
+  special                 SpecialImage?    @unique
 }
 
 enum SpecialCollection {
@@ -160,6 +171,26 @@ enum ImageSize {
 // CMS //
 /////////
 
+enum SpecialCmsImage {
+  FRONTPAGE_LOGO
+  FRONTPAGE_1
+  FRONTPAGE_2
+  FRONTPAGE_3
+  FRONTPAGE_4
+  SERVER_ERROR
+  NOT_FOUND
+  AUTH_ICON
+  FOOTER_LOGO
+  FOOTER_1
+  FOOTER_2
+  FOOTER_3
+  LOADER_IMAGE
+  MOBILE_NAV_LOGIN_BUTTON
+  MOBILE_NAV_PRIMARY_BUTTON
+  NAV_LOGIN_BUTTON
+  NAV_PRIMARY_BUTTON
+}
+
 model CmsImage {
   id                   Int             @id @default(autoincrement())
   name                 String          @unique @default(cuid())
@@ -172,7 +203,18 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
+<<<<<<< HEAD
   Committee            Committee?
+=======
+  special              SpecialCmsImage? @unique
+}
+
+enum SpecialCmsParagraph {
+  FRONTPAGE_1
+  FRONTPAGE_2
+  FRONTPAGE_3
+  FRONTPAGE_4
+>>>>>>> main
 }
 
 model CmsParagraph {
@@ -184,6 +226,7 @@ model CmsParagraph {
   updatedAt        DateTime        @updatedAt
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
+  special          SpecialCmsParagraph? @unique
 }
 
 model CmsLink {

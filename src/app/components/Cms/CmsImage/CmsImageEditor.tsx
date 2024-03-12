@@ -17,17 +17,16 @@ import type { CmsImage, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     cmsImage: CmsImage & {
-        image: ImageT | null
+        image: ImageT
     }
 }
 
+/**
+ * A component to edit a cms image
+ * @param cmsImage - the cms image to edit
+ * @returns
+ */
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
-    if (cmsImage.image === null) {
-        throw new Error(
-            'CmsImageEditor does not yet work with images that are not loaded. This will be fixed in the next refactor.'
-        )
-    }
-
     const editingContext = useContext(EditModeContext)
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 

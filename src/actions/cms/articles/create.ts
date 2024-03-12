@@ -1,4 +1,5 @@
 'use server'
+import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
@@ -30,16 +31,7 @@ export async function createArticle(name: string | null, config?: {
                     }
                 } : undefined
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: true,
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: true,
-            }
+            include: articleRealtionsIncluder,
         })
         return { success: true, data: article }
     } catch (error) {
