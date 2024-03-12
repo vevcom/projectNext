@@ -10,6 +10,8 @@ export async function createImageAction(
     collectionId: number,
     rawdata: FormData | CreateImageSchemaType
 ): Promise<ActionReturn<Image>> {
+    //TODO: add auth
+
     const parse = createImageSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const { file, ...data } = parse.data
@@ -21,6 +23,8 @@ export async function createImagesAction(
     collectionId: number,
     rawdata: FormData | CreateImagesSchemaType
 ): Promise<ActionReturn<Image[]>> {
+    //TODO: add auth
+
     const parse = createImagesSchema.safeParse(rawdata)
 
     if (!parse.success) return createZodActionError(parse)
