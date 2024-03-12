@@ -5,7 +5,7 @@ import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
-import { updateImage } from '@/actions/images/update'
+import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
@@ -110,7 +110,7 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                             title="Rediger metadata"
                             successCallback={reload}
                             submitText="oppdater"
-                            action={updateImage.bind(null, currentImage.current.id)}
+                            action={updateImageAction.bind(null, currentImage.current.id)}
                         >
                             <TextInput name="name" label="navn" />
                             <TextInput name="alt" label="alt" />
