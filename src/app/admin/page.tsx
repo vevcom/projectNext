@@ -6,6 +6,11 @@ import { sendDevMail } from '@/actions/dev'
 import Button from '@/components/UI/Button'
 
 export default function Admin() {
+
+    const handleClick = async () => {
+        await sendDevMail()
+    }
+
     return (
         <div className={styles.wrapper}>
             <h2>Administrasjon</h2>
@@ -14,7 +19,7 @@ export default function Admin() {
             <Link href="admin/users">Users</Link>
             <Link href="admin/permissions">Permissions</Link>
 
-            <Button onClick={sendDevMail}>Click me</Button>
+            <Button onClick={handleClick}>Click me</Button>
         </div>
     )
 }
