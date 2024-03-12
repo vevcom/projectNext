@@ -13,9 +13,9 @@ export default async function adminCommittee() {
     if (!committeeLogoCollectionRes.success) throw new Error('Kunne ikke finne komitelogoer')
     const { id: collectionId } = committeeLogoCollectionRes.data
 
-    const defaultCommitteeLogeRes = await readSpecialImage('DAFAULT_COMMITTEE_LOGO')
-    if (!defaultCommitteeLogeRes.success) throw new Error('Kunne ikke finne standard komitelogo')
-    const defaultCommitteeLogo = defaultCommitteeLogeRes.data
+    const defaultCommitteeLogoRes = await readSpecialImage('DAFAULT_COMMITTEE_LOGO')
+    if (!defaultCommitteeLogoRes.success) throw new Error('Kunne ikke finne standard komitelogo')
+    const defaultCommitteeLogo = defaultCommitteeLogoRes.data
 
     const pageSize: PageSizeImage = 30
 
@@ -40,7 +40,7 @@ export default async function adminCommittee() {
                             <ImageList withUpload />
                         </div>
                         <div className={styles.form}>
-                            <CreateCommitteeForm />
+                            <CreateCommitteeForm defaultImage={defaultCommitteeLogo} />
                         </div>
                     </div>
                 </ImageSelectionProvider>
