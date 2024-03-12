@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Image as ImageT } from '@prisma/client'
+import ImageUploader from '@/app/components/Image/ImageUploader'
 
 type PropTypes = {
     collectionId: number,
@@ -45,16 +46,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
-                <Form
-                    successCallback={refreshImages}
-                    title="last opp bilde"
-                    submitText="last opp"
-                    action={createImage.bind(null, collectionId)}
-                >
-                    <TextInput color="black" label="navn" name="name" />
-                    <TextInput color="black" label="alternativ tekst" name="alt" />
-                    <FileInput label="fil" name="file" color="primary" />
-                </Form>
+                <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
                 <PopUp PopUpKey={uuid()} showButtonContent={
                     <>
                         Last opp mange

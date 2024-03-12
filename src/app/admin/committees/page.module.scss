@@ -4,9 +4,8 @@
     display: flex;
     flex-flow: row wrap;
     gap: 1em;
-    justify-content: center;
     > .imgSelection {
-        min-width: clamp(50vw, 700px, 100vw);
+        min-width: clamp(50vw, 700px, 90vw);
         min-height: 50vh;
         background-color: ohma.$colors-gray-500;
         border-radius: ohma.$rounding;
@@ -14,5 +13,6 @@
     }
     > .form {
         min-width: 250px;
+        
     }
 }

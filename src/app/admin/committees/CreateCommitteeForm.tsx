@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './CreateCommitteeForm.module.scss'
 import Form from "@/app/components/Form/Form";
 import TextInput from "@/app/components/UI/TextInput";
