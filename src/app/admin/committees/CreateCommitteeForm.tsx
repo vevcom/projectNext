@@ -11,7 +11,7 @@ import create from "@/actions/groups/committees/create";
  */
 export default function CreateCommitteeForm() {
     return (
-        <div className={styles.CommitteeLogoForm}>
+        <div className={styles.CreateCommitteeForm}>
             <Form action={create.bind(null, 1)}>
                 <TextInput name="name" label="Navn"/>
             </Form>
