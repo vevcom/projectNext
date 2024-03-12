@@ -60,7 +60,6 @@ export async function readUser({ id, username, email }: readUserArg): Promise<Ac
     if (!id && !username && !email) {
         return createActionError('BAD PARAMETERS')
     }
-
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -72,25 +71,6 @@ export async function readUser({ id, username, email }: readUserArg): Promise<Ac
 
         if (!user) {
             return createActionError('NOT FOUND', 'Bruker ikke funnet.')
-        }
-
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
-}
-
-
-export async function readUserByEmail(email: string): Promise<ActionReturn<User>> {
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        })
-
-        if (!user) {
-            return createActionError('NOT FOUND', 'User not found')
         }
 
         return { success: true, data: user }

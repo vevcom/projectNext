@@ -19,7 +19,7 @@ export default function LogIn() {
             username: formData.get('username'),
             password: formData.get('password'),
             redirect: true,
-            callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+            callbackUrl: searchParams.get('callbackUrl') || `/users/${formData.get('username')}`
         })
     }
 
@@ -32,7 +32,7 @@ export default function LogIn() {
         </form>
         <BorderButton onClick={() => signIn('feide', {
             redirect: true,
-            callbackUrl: searchParams.get('callbackUrl') || '/users/me'
+            callbackUrl: searchParams.get('callbackUrl') || '/' //TODO fix redirect to proper user 
         })}>Logg inn med Feide</BorderButton>
     </>
 }

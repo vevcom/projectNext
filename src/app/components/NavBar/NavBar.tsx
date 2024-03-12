@@ -49,7 +49,7 @@ export default async function NavBar() {
                     }
                     <div className={styles.magicHat}>
                         <CmsImage name="nav_login_button" width={25} height={25} alt="log in button">
-                            <Link href={isLoggedIn ? '/users/me' : '/login'} />
+                            <Link href={isLoggedIn ? `/users/${user.username}` : '/login'} />
                         </CmsImage>
                     </div>
                 </li>
