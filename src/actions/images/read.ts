@@ -7,27 +7,13 @@ import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from './Types'
+import { readImagesPage } from '@/server/images/read'
 
-export async function readImagesPage<const PageSize extends number>(
-    { page, details }: ReadPageInput<PageSize, ImageDetails>
+export async function readImagesPageAction<const PageSize extends number>(
+    pageReadInput: ReadPageInput<PageSize, ImageDetails>
 ): Promise<ActionReturn<Image[]>> {
-    const { collectionId } = details
-    const { page: pageNumber, pageSize } = page
-    try {
-        const images = await prisma.image.findMany({
-            where: {
-                collectionId,
-            },
-            skip: pageNumber * pageSize,
-            take: pageSize,
-        })
-        //TODO: auth image by collection
-
-        if (!images) return createActionError('NOT FOUND', 'No images found')
-        return { success: true, data: images }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    //TODO: auth route based on collection
+    return await readImagesPage(pageReadInput)
 }
 
 
