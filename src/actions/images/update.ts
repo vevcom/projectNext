@@ -6,7 +6,10 @@ import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageSchemaType } from './schema'
 import { updateImage } from '@/server/images/update'
 
-export async function updateImageAction(imageId: number, rawdata: FormData | UpdateImageSchemaType): Promise<ActionReturn<Image>> {
+export async function updateImageAction(
+    imageId: number, 
+    rawdata: FormData | UpdateImageSchemaType
+): Promise<ActionReturn<Image>> {
     const parse = updateImageSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
