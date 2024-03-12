@@ -68,7 +68,7 @@ export default async function migrateArticles(
             }
         })
 
-        //TODO: link Article to a group (comitteee on veven)
+        //TODO: link Article to a group (committeee on veven)
         const articlePn = await pnPrisma.article.create({
             data: {
                 name: article.title,

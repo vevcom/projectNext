@@ -4,7 +4,7 @@
 // createGroup to the correct field in prisma.group.create.
 export const groupEnumToKey = {
     CLASS: 'class',
-    COMMITEE: 'commitee',
+    COMMITTEE: 'committee',
     INTEREST_GROUP: 'interestGroup',
     OMEGA_MEMBERSHIP: 'omegaMembership',
     STUDY_PROGRAMME: 'studyProgramme',

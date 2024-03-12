@@ -16,7 +16,7 @@ export async function createCommittee(rawData: FormData | CreateCommitteeSchemaT
     const { name } = parse.data
 
     const createGroupRes = await createGroup({
-        groupType: "COMMITEE",
+        groupType: "COMMITTEE",
         membershipRenewal: true,
         name,
         data: {}

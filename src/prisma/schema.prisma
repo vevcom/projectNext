@@ -99,7 +99,7 @@ model Membership {
 // group it is.
 enum GroupType {
   CLASS
-  COMMITEE
+  COMMITTEE
   INTEREST_GROUP
   OMEGA_MEMBERSHIP
   STUDY_PROGRAMME
@@ -116,7 +116,7 @@ model Group {
   roles             RolesGroups[]
   groupType         GroupType
   class             Class?
-  commitee          Commitee?
+  committee          Committee?
   interestGroup     InterestGroup?
   omegaMembership   OmegaMembership?
   studyProgramme    StudyProgramme?
@@ -131,7 +131,7 @@ model Class {
   year    Int
 }
 
-model Commitee {
+model Committee {
   group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int   @unique
 }
@@ -243,7 +243,7 @@ enum SpecialCollection {
   STANDARDIMAGES
   OMBULCOVERS
   PROFILEIMAGES
-  COMMITEELOGOS
+  COMMITTEELOGOS
 }
 
 model ImageCollection {

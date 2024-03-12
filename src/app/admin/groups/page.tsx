@@ -3,7 +3,7 @@ import { readGroups } from '@/actions/groups/read'
 
 // const groupTypes: Record<GroupType, string> = {
 //     CLASS: 'Klasse',
-//     COMMITEE: 'Komité',
+//     COMMITTEE: 'Komité',
 //     INTEREST_GROUP: 'Interessegruppe',
 //     OMEGA_MEMBERSHIP: 'Omega medlemskap',
 //     STUDY_PROGRAMME: 'Studieprogram'
