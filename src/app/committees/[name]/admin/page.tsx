@@ -8,6 +8,10 @@ export default async function ComitteeAdmin({ params }: PropTypes) {
     return (
         <div>
             <h1>Admin for {committee.name}</h1>
+            {
+                //TODO: make sure this cms image can only chose images with cirtain permission (
+                // can view committees, should be same permission as COMMITTEELOGOS)
+            }
             <CmsImage cmsImage={committee.logoImage} width={300} />
         </div>
     )
