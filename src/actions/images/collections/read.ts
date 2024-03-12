@@ -1,97 +1,36 @@
 'use server'
-import { readSpecialImageAction } from '@/actions/images/read'
-import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import { SpecialCollection } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
-import { readSpecialImageCollection } from '@/server/images/collections/read'
+import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
 import type { 
     ExpandedImageCollection, 
     ImageCollectionPageReturn 
 } from '@/actions/images/collections/Types'
 
 /**
- * Reads an image collection by id or name
+ * Action that reads an image collection by id or name
  * @param idOrName - the id or name of the image collection
  * @returns the image collection in actionrturn
  */
-export async function readImageCollection(
+export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: typeof idOrName === 'number' ? {
-                id: idOrName,
-            } : {
-                name: idOrName,
-            },
-            include: {
-                coverImage: true,
-            }
-        })
-        if (!collection) return createActionError('NOT FOUND', 'Collection not found')
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readImageCollection(idOrName)
 }
 
 /**
- * Returns a page of image collections, orders by createdAt (and then name)
+ * Action that returns a page of image collections, orders by createdAt (and then name)
  * @param page - the page to read of the Page type
- * @returns
+ * @returns - A page of image collections
  */
-export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+export async function readImageCollectionsPageAction<const PageSize extends number>(
+    readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    try {
-        const { page: pageNumber, pageSize } = page
-        const collections = await prisma.imageCollection.findMany({
-            include: {
-                coverImage: true,
-                images: {
-                    take: 1
-                },
-                _count: {
-                    select: {
-                        images: true
-                    }
-                }
-            },
-            orderBy: [
-                { createdAt: 'desc' },
-                { name: 'asc' }
-            ],
-            skip: pageNumber * pageSize,
-            take: pageSize,
-        })
-
-        const lensCameraRes = await readSpecialImageAction('DEFAULT_IMAGE_COLLECTION_COVER')
-        if (!lensCameraRes.success) return lensCameraRes
-        const lensCamera = lensCameraRes.data
-
-        const chooseCoverImage = (collection: {
-            coverImage: Image | null,
-            images: Image[]
-        }) => {
-            if (collection.coverImage) return collection.coverImage
-            if (collection.images[0]) return collection.images[0]
-            if (lensCamera) return lensCamera
-            return null
-        }
-        const returnData = collections.map(collection => ({
-            ...collection,
-            coverImage: chooseCoverImage(collection),
-            numberOfImages: collection._count.images,
-        }))
-
-        return { success: true, data: returnData }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readImageCollectionsPage(readPageInput)
 }
 
 /**
