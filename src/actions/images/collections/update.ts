@@ -5,8 +5,16 @@ import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageCollectionSchemaType } from './schema'
+import { updateImageCollection } from '@/server/images/collections/update'
 
-export async function updateImageCollection(
+/**
+ * A action that updates an image collection
+ * @param collectionId - the id of the collection to update
+ * @param coverImageId - the id of the image to set as the cover image (optional)
+ * @param rawdata - the data to update the collection with
+ * @returns - the updated collection in ActionReturn
+ */
+export async function updateImageCollectionAction(
     collectionId: number,
     coverImageId: number | undefined,
     rawdata: FormData | UpdateImageCollectionSchemaType
@@ -24,16 +32,5 @@ export async function updateImageCollection(
             }
         } : undefined
     }
-
-    try {
-        const collection = await prisma.imageCollection.update({
-            where: {
-                id: collectionId,
-            },
-            data
-        })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await updateImageCollection(collectionId, data)
 }
