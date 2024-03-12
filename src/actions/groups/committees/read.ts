@@ -8,6 +8,8 @@ import type { ActionReturn } from '@/actions/Types'
  * Reads all committees
  */
 export async function readCommitees(): Promise<ActionReturn<ExpandedCommittee[]>> {
+    // TODO: This should be protected by a permission
+
     try {
         const committees = await prisma.committee.findMany({
             include: {
