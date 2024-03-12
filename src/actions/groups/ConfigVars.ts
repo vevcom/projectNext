@@ -6,6 +6,6 @@ export const groupEnumToKey = {
     CLASS: 'class',
     COMMITTEE: 'committee',
     INTEREST_GROUP: 'interestGroup',
-    OMEGA_MEMBERSHIP: 'omegaMembership',
-    STUDY_PROGRAMME: 'studyProgramme',
+    OMEGA_MEMBERSHIP_GROUP: 'omegaMembershipGroup',
+    STUDY_PROGRAMME_GROUP: 'studyProgrammeGroup',
 } as const

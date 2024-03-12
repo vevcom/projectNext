@@ -5,8 +5,8 @@ import { readGroups } from '@/actions/groups/read'
 //     CLASS: 'Klasse',
 //     COMMITTEE: 'Komité',
 //     INTEREST_GROUP: 'Interessegruppe',
-//     OMEGA_MEMBERSHIP: 'Omega medlemskap',
-//     STUDY_PROGRAMME: 'Studieprogram'
+//     OMEGA_MEMBERSHIP_GROUP: 'Omega medlemskap',
+//     STUDY_PROGRAMME_GROUP: 'Studieprogram'
 // }
 
 export default async function Groups() {
