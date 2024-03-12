@@ -4,7 +4,28 @@ import { createActionError, createPrismaActionError } from "@/actions/error"
 import prisma from "@/prisma"
 import { ExpandedCommittee } from "./Types"
 
-export default async function readCommitee(name: string) : Promise<ActionReturn<ExpandedCommittee>> {
+/**
+ * Reads all committees
+ */
+export async function readCommitees() : Promise<ActionReturn<ExpandedCommittee[]>> {
+    try {
+        const committees = await prisma.committee.findMany({
+            include: {
+                logoImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+        return { success: true, data: committees }
+    } catch (error) {
+        return createPrismaActionError(error)
+    }
+
+}
+
+export async function readCommitee(name: string) : Promise<ActionReturn<ExpandedCommittee>> {
     try {
         const committee = await prisma.committee.findUnique({
             where: {
