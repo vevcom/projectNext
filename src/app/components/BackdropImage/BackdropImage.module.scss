@@ -15,6 +15,10 @@
         * {
             width: 100% !important;
         }
+        .gray {
+            background-color: ohma.$colors-gray-500;
+            filter: grayscale(100%);
+        }
     }
 
     .content {
