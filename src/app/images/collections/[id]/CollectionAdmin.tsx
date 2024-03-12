@@ -1,6 +1,6 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import { createImage, createImages } from '@/actions/images/create'
+import { createImageAction, createImagesAction } from '@/actions/images/create'
 import { updateImageCollection } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
 import FileInput from '@/app/components/UI/FileInput'
@@ -49,7 +49,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                     successCallback={refreshImages}
                     title="last opp bilde"
                     submitText="last opp"
-                    action={createImage.bind(null, collectionId)}
+                    action={createImageAction.bind(null, collectionId)}
                 >
                     <TextInput color="black" label="navn" name="name" />
                     <TextInput color="black" label="alternativ tekst" name="alt" />
@@ -66,7 +66,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                         successCallback={refreshImages}
                         title="last opp bilder"
                         submitText="last opp"
-                        action={createImages.bind(null, collectionId)}
+                        action={createImagesAction.bind(null, collectionId)}
                     >
                         <Dropzone label="last opp" name="files"/>
                     </Form>
