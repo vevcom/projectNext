@@ -43,15 +43,13 @@ export default function ImageList({
     }, [context, refresh])
 
     return (
-        <div className={styles.ListImagesInCollection}>
-            {serverRendered} {/* Rendered on server homefully in the right way*/}
-            <EndlessScroll
-                pagingContext={ImagePagingContext}
-                renderer={image => <ImageListImage key={image.id} image={image} disableEditing={disableEditing}/>}
-            />
+        <div className={withUpload ? 
+            `${styles.ListImagesInCollection} ${styles.paddingTop}` : 
+            styles.ListImagesInCollection
+        }>
             {
                 withUpload && (
-                    <PopUp PopUpKey={uuid()} showButtonClass={styles.upload} showButtonContent={
+                    <PopUp PopUpKey={uuid()} showButtonClass={styles.uploadImage} showButtonContent={
                         <>Legg til bilde</>
                     }>
                         <ImageUploader 
@@ -61,6 +59,11 @@ export default function ImageList({
                     </PopUp>
                 )
             }
+            {serverRendered} {/* Rendered on server homefully in the right way*/}
+            <EndlessScroll
+                pagingContext={ImagePagingContext}
+                renderer={image => <ImageListImage key={image.id} image={image} disableEditing={disableEditing}/>}
+            />
         </div>
     )
 }
