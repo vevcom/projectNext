@@ -1,27 +1,17 @@
 'use server'
 import { updateUserSchema } from './schema'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserSchemaType } from './schema'
+import { updateUser } from '@/server/users/update'
 
 
-export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
+export async function updateUserAction(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
     const parse = updateUserSchema.safeParse(rawdata)
 
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id,
-            },
-            data
-        })
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await updateUser(id, data)
 }
