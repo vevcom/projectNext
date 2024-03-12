@@ -6,6 +6,7 @@ import PopUpProvider from "@/context/PopUp";
 import { readSpecialImage } from "@/actions/images/read";
 import styles from './page.module.scss'
 import CreateCommitteeForm from "./CreateCommitteeForm";
+import ImageUploader from "@/app/components/Image/ImageUploader";
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
@@ -42,7 +43,6 @@ export default async function adminCommittee() {
                             <CreateCommitteeForm />
                         </div>
                     </div>
-                    
                 </ImageSelectionProvider>
             </PopUpProvider>
         </ImagePagingProvider>
