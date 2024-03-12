@@ -1,11 +1,12 @@
 'use server'
-import { readSpecialImage } from '@/actions/images/read'
+import { readSpecialImageAction } from '@/actions/images/read'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import logger from '@/logger'
 import { SpecialCollection } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
+import { readSpecialImageCollection } from '@/server/images/collections/read'
 
 /**
  * Reads an image collection by id or name
@@ -70,7 +71,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
             take: pageSize,
         })
 
-        const lensCameraRes = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
+        const lensCameraRes = await readSpecialImageAction('DEFAULT_IMAGE_COLLECTION_COVER')
         if (!lensCameraRes.success) return lensCameraRes
         const lensCamera = lensCameraRes.data
 
@@ -100,7 +101,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
  * @param special - the special collection to read
  * @returns the special collection
  */
-export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+export async function readSpecialImageCollectionAction(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
     //Check that the collection actually is a special collection, as the paramter is only a compile time type check
     if (!Object.values(SpecialCollection).includes(special)) {
         return createActionError('BAD PARAMETERS', `${special} is not special`)
@@ -108,24 +109,5 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
 
     //TODO: Auth special image collections on permission (not visibility)
     //TODO: Check permission associated with the special collection
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: {
-                special
-            }
-        })
-        if (!collection) {
-            logger.warn(`Special collection ${special} did not exist, creating it`)
-            const newCollection = await prisma.imageCollection.create({
-                data: {
-                    name: special,
-                    special
-                }
-            })
-            return { success: true, data: newCollection }
-        }
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readSpecialImageCollection(special)
 }

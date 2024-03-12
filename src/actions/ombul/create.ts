@@ -1,11 +1,11 @@
 'use server'
 import { createOmbulSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import { readSpecialImageCollection } from '@/images/collections/read'
+import { readSpecialImageCollection } from '@/server/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'
 import createFile from '@/server/store/createFile'
-import { createOneImage } from '@/actions/images/create'
+import { createImage } from '@/server/images/create'
 import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
@@ -66,7 +66,7 @@ export async function createOmbul(rawdata: FormData | CreateOmbulSchemaType): Pr
     const ombulCoverCollectionRes = await readSpecialImageCollection('OMBULCOVERS')
     if (!ombulCoverCollectionRes.success) return ombulCoverCollectionRes
     const ombulCoverCollection = ombulCoverCollectionRes.data
-    const coverImageRes = await createOneImage(data.ombulCoverImage, {
+    const coverImageRes = await createImage(data.ombulCoverImage, {
         name: fsLocation,
         alt: `cover of ${name}`,
         collectionId: ombulCoverCollection.id

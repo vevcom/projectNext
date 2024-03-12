@@ -2,8 +2,11 @@ import 'server-only'
 import type { ActionReturn } from '@/actions/Types'
 import createFile from '@/server/store/createFile'
 import sharp from 'sharp'
-import type { Image } from '@prisma/client'
+import type { Image, SpecialImage } from '@prisma/client'
 import { createPrismaActionError, createActionError } from '@/actions/error'
+import prisma from '@/prisma'
+import logger from '@/logger'
+import { readSpecialImageCollection } from './collections/read'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -24,16 +27,15 @@ export async function createImage(file: File, meta: {
         createFile(file, 'images', allowedExt),
     ]
 
-    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
-    if (!smallSize.success) return smallSize
-    const fsLocationSmallSize = smallSize.data.fsLocation
-    if (!mediumSize.success) return mediumSize
-    const fsLocationMediumSize = mediumSize.data.fsLocation
-    if (!original.success) return original
-    const fsLocation = original.data.fsLocation
-    const ext = original.data.ext
-
     try {
+        const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+        if (!smallSize.success) return smallSize
+        const fsLocationSmallSize = smallSize.data.fsLocation
+        if (!mediumSize.success) return mediumSize
+        const fsLocationMediumSize = mediumSize.data.fsLocation
+        if (!original.success) return original
+        const fsLocation = original.data.fsLocation
+        const ext = original.data.ext
         try {
             const image = await prisma.image.create({
                 data: {
@@ -73,4 +75,41 @@ export async function createOneInStore(file: File, allowedExt: string[], size: n
         withoutEnlargement: true
     }).toBuffer())
     return ret
+}
+
+/**
+ * WARNING: This function should only be used in extreme cases
+ * Creats  bad image this should really only happen in worst case scenario
+ * Ads it to the standard collection
+ * @param name - the name of the image
+ * @param config - the config for the image (special)
+ */
+export async function createBadImage(name : string, config: {
+    special: SpecialImage
+}) : Promise<ActionReturn<Image>> {
+    const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
+    if (!standardCollection.success) return standardCollection
+
+    try {
+        logger.error(`Special image ${config.special} did not exist, creating it with bad conent`)
+        const newImage = await prisma.image.create({
+            data: {
+                name: name,
+                special: config.special,
+                fsLocation: 'not_found',
+                fsLocationMediumSize: 'not_found',
+                fsLocationSmallSize: 'not_found',
+                ext: 'jpg',
+                alt: 'not found',
+                collection: {
+                    connect: {
+                        id: standardCollection.data.id
+                    }
+                }
+            },
+        })
+        return { success: true, data: newImage }
+    } catch (error) {
+        return createPrismaActionError(error)
+    } 
 }

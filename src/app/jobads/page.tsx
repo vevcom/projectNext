@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readImage } from '@/actions/images/read'
+import { readImageAction } from '@/actions/images/read'
 
 export default async function JobAds() {
-    const testImageRes = await readImage('ohma')
+    const testImageRes = await readImageAction('ohma')
     if (!testImageRes.success) throw new Error('Failed to read image')
     const testImage = testImageRes.data
 
