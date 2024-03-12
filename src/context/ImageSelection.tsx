@@ -3,6 +3,13 @@
 import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
 
+/**
+ * The context for selecting an image from a list of images
+ * @prop selectionMode - Whether the selection mode is active
+ * @prop setSelectionMode - A function to set the selection mode
+ * @prop selectedImage - The currently selected image
+ * @prop setSelectedImage - A function to set the selected image
+ */
 export const ImageSelectionContext = createContext<{
     selectionMode: boolean,
     setSelectionMode: (selectionMode: boolean) => void,
