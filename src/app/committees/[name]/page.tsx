@@ -2,6 +2,7 @@ import { readCommitee } from "@/actions/groups/committees/read"
 import { readSpecialImage } from "@/actions/images/read"
 import BackdropImage from "@/app/components/BackdropImage/BackdropImage"
 import { notFound } from "next/navigation"
+import styles from './page.module.scss'
 
 
 type PropTypes = {
@@ -25,7 +26,9 @@ export default async function Committee({ params } : PropTypes) {
 
     return (
         <BackdropImage image={committeeLogo}>
-            <h1>{committee.name}</h1>
+            <div className={styles.wrapper}>
+                <h1>{committee.name}</h1>
+            </div>
         </BackdropImage>
     )
 }
