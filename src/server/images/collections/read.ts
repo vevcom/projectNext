@@ -1,3 +1,4 @@
+import 'server-only'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import { SpecialCollection } from '@prisma/client'

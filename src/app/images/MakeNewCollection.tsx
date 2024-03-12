@@ -3,7 +3,7 @@ import styles from './MakeNewCollection.module.scss'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import TextInput from '@/components/UI/TextInput'
-import { createImageCollection } from '@/actions/images/collections/create'
+import { createImageCollectionAction } from '@/actions/images/collections/create'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -20,7 +20,7 @@ export default function MakeNewCollection() {
         <PopUp PopUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
                 <Form successCallback={collectionCreatedCallback}
-                    title="Lag et album" submitText="Lag album" action={createImageCollection}>
+                    title="Lag et album" submitText="Lag album" action={createImageCollectionAction}>
                     <TextInput label="navn" name="name" />
                     <TextInput label="beskrivelse" name="description" />
                 </Form>
