@@ -3,7 +3,7 @@ import styles from './NavBar.module.scss'
 import Menu from './Menu'
 import getNavItems from './navDef'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { getUser } from '@/auth/user'
 import Link from 'next/link'
 
@@ -24,13 +24,13 @@ export default async function NavBar() {
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
-                    <CmsImage
-                        name="nav_primary_button"
+                    <SpecialCmsImage
+                        special="NAV_PRIMARY_BUTTON"
                         width={30}
                         alt="omega logo"
                     >
                         <Link href="/" />
-                    </CmsImage>
+                    </SpecialCmsImage>
                 </li>
                 {
                     itemsForNav.map((item) => (
@@ -48,9 +48,14 @@ export default async function NavBar() {
                         isAdmin && <EditModeSwitch />
                     }
                     <div className={styles.magicHat}>
-                        <CmsImage name="nav_login_button" width={25} height={25} alt="log in button">
+                        <SpecialCmsImage
+                            special="NAV_LOGIN_BUTTON"
+                            width={25}
+                            height={25}
+                            alt="log in button"
+                        >
                             <Link href={isLoggedIn ? '/users/me' : '/login'} />
-                        </CmsImage>
+                        </SpecialCmsImage>
                     </div>
                 </li>
             </ul>

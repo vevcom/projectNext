@@ -1,22 +1,22 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import Link from 'next/link'
 
 function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <CmsImage name="footer_logo" width={350} />
+                <SpecialCmsImage special="FOOTER_LOGO" width={350} />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og
                 Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
                 </p>
                 <div>
-                    <CmsImage name="footer_1" width={200} >
+                    <SpecialCmsImage special="FOOTER_1" width={200} >
                         <Link className={styles.pwa} href="/infopages/pwa" />
-                    </CmsImage>
+                    </SpecialCmsImage>
                     <div className={styles.icons}>
                         <SocialIcons />
                     </div>
@@ -38,12 +38,12 @@ function Footer() {
                 <p>7491 Trondheim</p>
             </div>
             <div className={styles.sponsors}>
-                <CmsImage name="footer_2" width={170}>
+                <SpecialCmsImage special="FOOTER_2" width={170}>
                     <Link href="http://www.nordicsemi.com" target="_blank" />
-                </CmsImage>
-                <CmsImage name="footer_3" width={100}>
+                </SpecialCmsImage>
+                <SpecialCmsImage special="FOOTER_3" width={100}>
                     <Link href="http://www.kongsberg.com" target="_blank" />
-                </CmsImage>
+                </SpecialCmsImage>
             </div>
         </footer>
     )

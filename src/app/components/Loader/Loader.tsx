@@ -1,10 +1,10 @@
 import styles from './Loader.module.scss'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 
 function Loader() {
     return (
         <div className={styles.Loader}>
-            <CmsImage name="loader_image" width={100} />
+            <SpecialCmsImage special="LOADER_IMAGE" width={100} />
         </div>
     )
 }
