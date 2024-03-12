@@ -1,7 +1,7 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
 import { createImageAction, createImagesAction } from '@/actions/images/create'
-import { updateImageCollection } from '@/actions/images/collections/update'
+import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
 import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
@@ -79,7 +79,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 }}
                 title="Rediger samling"
                 submitText="oppdater"
-                action={updateImageCollection.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
+                action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
                 <TextInput color="black" label="navn" name="name" />
                 <TextInput color="black" label="beskrivelse" name="description" />

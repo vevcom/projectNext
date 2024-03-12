@@ -1,7 +1,6 @@
 'use server'
 import { updateImageCollectionSchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createZodActionError } from '@/actions/error'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageCollectionSchemaType } from './schema'

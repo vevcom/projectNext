@@ -1,3 +1,4 @@
+import 'server-only'
 import prisma from '@/prisma'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ImageCollection, Prisma } from '@prisma/client'
