@@ -2,11 +2,14 @@
 import { readSpecialImageAction } from '@/actions/images/read'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
-import logger from '@/logger'
 import { SpecialCollection } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageCollection, Image } from '@prisma/client'
 import { readSpecialImageCollection } from '@/server/images/collections/read'
+import type { 
+    ExpandedImageCollection, 
+    ImageCollectionPageReturn 
+} from '@/actions/images/collections/Types'
 
 /**
  * Reads an image collection by id or name
@@ -15,7 +18,7 @@ import { readSpecialImageCollection } from '@/server/images/collections/read'
  */
 export async function readImageCollection(
     idOrName: number | string
-): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
     try {
         const collection = await prisma.imageCollection.findUnique({
@@ -33,11 +36,6 @@ export async function readImageCollection(
     } catch (error) {
         return createPrismaActionError(error)
     }
-}
-
-export type ImageCollectionPageReturn = ImageCollection & {
-    coverImage: Image | null,
-    numberOfImages: number,
 }
 
 /**
