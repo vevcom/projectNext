@@ -7,7 +7,7 @@ import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
-import { destroyImageCollection } from '@/actions/images/collections/destroy'
+import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
@@ -133,7 +133,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
             <Form
                 submitText="slett samling"
                 successCallback={() => router.push('/images')}
-                action={destroyImageCollection.bind(null, collectionId)}
+                action={destroyImageCollectionAction.bind(null, collectionId)}
                 submitColor="red"
                 confirmation={{
                     confirm: true,
