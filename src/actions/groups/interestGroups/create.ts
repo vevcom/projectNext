@@ -1,14 +1,17 @@
 'use server'
 
+import { createInterestGroupSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { createGroup } from '@/actions/groups/create'
+import type { CreateInterestGroupSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedInterestGroup } from './Types'
-import { createGroup } from '@/actions/groups/create'
-import { CreateInterestGroupSchemaType, createInterestGroupSchema } from './schema'
 
-export async function createInterestGroup(rawData: FormData | CreateInterestGroupSchemaType): Promise<ActionReturn<ExpandedInterestGroup>> {
+export async function createInterestGroup(
+    rawData: FormData | CreateInterestGroupSchemaType
+): Promise<ActionReturn<ExpandedInterestGroup>> {
     const parse = createInterestGroupSchema.safeParse(rawData)
-    
+
     if (!parse.success) {
         return createZodActionError(parse)
     }
@@ -16,7 +19,7 @@ export async function createInterestGroup(rawData: FormData | CreateInterestGrou
     const { name } = parse.data
 
     const createGroupRes = await createGroup({
-        groupType: "INTEREST_GROUP",
+        groupType: 'INTEREST_GROUP',
         membershipRenewal: true,
         name,
         data: {}

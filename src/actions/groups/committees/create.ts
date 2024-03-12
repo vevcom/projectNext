@@ -1,14 +1,17 @@
 'use server'
 
+import { createCommitteeSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { createGroup } from '@/actions/groups/create'
+import type { CreateCommitteeSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedCommitte } from './Types'
-import { createGroup } from '@/actions/groups/create'
-import { CreateCommitteeSchemaType, createCommitteeSchema } from './schema'
 
-export async function createCommittee(rawData: FormData | CreateCommitteeSchemaType): Promise<ActionReturn<ExpandedCommitte>> {
+export async function createCommittee(
+    rawData: FormData | CreateCommitteeSchemaType
+): Promise<ActionReturn<ExpandedCommitte>> {
     const parse = createCommitteeSchema.safeParse(rawData)
-    
+
     if (!parse.success) {
         return createZodActionError(parse)
     }
@@ -16,7 +19,7 @@ export async function createCommittee(rawData: FormData | CreateCommitteeSchemaT
     const { name } = parse.data
 
     const createGroupRes = await createGroup({
-        groupType: "COMMITTEE",
+        groupType: 'COMMITTEE',
         membershipRenewal: true,
         name,
         data: {}

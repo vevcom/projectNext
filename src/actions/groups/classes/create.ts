@@ -1,14 +1,15 @@
 'use server'
 
+import { createClassSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { createGroup } from '@/actions/groups/create'
+import type { CreateClassSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedClass } from './Types'
-import { createGroup } from '@/actions/groups/create'
-import { CreateClassSchemaType, createClassSchema } from './schema'
 
 export async function createClass(rawData: FormData | CreateClassSchemaType): Promise<ActionReturn<ExpandedClass>> {
     const parse = createClassSchema.safeParse(rawData)
-    
+
     if (!parse.success) {
         return createZodActionError(parse)
     }
@@ -16,7 +17,7 @@ export async function createClass(rawData: FormData | CreateClassSchemaType): Pr
     const { name } = parse.data
 
     const createGroupRes = await createGroup({
-        groupType: "CLASS",
+        groupType: 'CLASS',
         membershipRenewal: true,
         name,
         data: {}

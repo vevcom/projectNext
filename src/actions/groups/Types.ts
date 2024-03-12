@@ -1,5 +1,5 @@
-import type { Group, GroupType, Prisma } from "@prisma/client"
-import { groupEnumToKey } from "./ConfigVars"
+import type { groupEnumToKey } from './ConfigVars'
+import type { Group, GroupType, Prisma } from '@prisma/client'
 
 export type GroupEnumToKey = typeof groupEnumToKey
 
@@ -8,5 +8,5 @@ export type GroupEnumToKey = typeof groupEnumToKey
 export type ExpandedGroup<T extends GroupType> = Group & (Prisma.GroupGetPayload<{
     select: { [K in GroupEnumToKey[T]]: true }
 }> & {
-    [K in GroupEnumToKey[T]]: {}
+    [K in GroupEnumToKey[T]]: Record<string, never>
 })[GroupEnumToKey[T]]

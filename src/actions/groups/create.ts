@@ -1,11 +1,11 @@
 'use server'
 
+import { groupEnumToKey } from './ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { GroupType, Prisma } from '@prisma/client/'
 import type { ExpandedGroup, GroupEnumToKey } from './Types'
-import { groupEnumToKey } from './ConfigVars'
 
 type CreateGroupArgs<T extends GroupType> = {
     groupType: T,
@@ -31,7 +31,7 @@ export async function createGroup<T extends GroupType>({
     data
 }: CreateGroupArgs<T>): Promise<ActionReturn<ExpandedGroup<GroupType>>> {
     const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
-    
+
     const include: Partial<Record<GroupEnumToKey[keyof GroupEnumToKey], boolean>> = {
         [groupKey]: true
     }
@@ -48,7 +48,7 @@ export async function createGroup<T extends GroupType>({
         })
 
         if (!specificGroup) {
-            return createActionError('UNKNOWN ERROR', 'Noe har gått forferdelig galt. Dette burde aldri skje. Databasen har sikkert tatt fyr. :(')
+            return createActionError('UNKNOWN ERROR', 'Noe gikk galt.')
         }
 
         return { success: true, data: { ...genericGroup, ...specificGroup } }
