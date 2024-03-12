@@ -1,3 +1,4 @@
+import 'server-only'
 import { createActionError } from '@/actions/error'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'
@@ -34,6 +35,7 @@ export default async function createFile(
             }
         ])
     }
+
     const pBuffer = await prosessor(buffer)
     const fsLocation = `${uuid()}.${ext}`
     const destination_ = join('store', destination)

@@ -1,7 +1,7 @@
 'use server'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import deleteFile from '@/store/deleteFile'
+import destroyFile from '@/server/store/destroyFile'
 import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from './Types'
@@ -32,7 +32,7 @@ export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmb
             return createActionError('NOT FOUND', 'Ombul ikke funnet.')
         }
 
-        const res = await deleteFile('ombul', ombul.fsLocation)
+        const res = await destroyFile('ombul', ombul.fsLocation)
         if (!res.success) return res
 
         await prisma.ombul.delete({

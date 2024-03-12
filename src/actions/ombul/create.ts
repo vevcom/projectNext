@@ -4,7 +4,7 @@ import { createActionError, createPrismaActionError, createZodActionError } from
 import { readSpecialImageCollection } from '@/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'
-import createFile from '@/store/createFile'
+import createFile from '@/server/store/createFile'
 import { createOneImage } from '@/actions/images/create'
 import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'

@@ -2,8 +2,8 @@
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import createFile from '@/store/createFile'
-import deleteFile from '@/store/deleteFile'
+import createFile from '@/server/store/createFile'
+import destroyFile from '@/server/store/destroyFile'
 import { getUser } from '@/auth/user'
 import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from './Types'
@@ -113,7 +113,7 @@ export async function updateOmbulFile(
         })
 
         //delete the old file
-        const delRet = await deleteFile('ombul', oldFsLocation)
+        const delRet = await destroyFile('ombul', oldFsLocation)
         if (!delRet.success) return delRet
 
         return {

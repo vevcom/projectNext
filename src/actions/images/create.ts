@@ -2,7 +2,7 @@
 import { createImageSchema, createImagesSchema } from './schema'
 import { createZodActionError, createPrismaActionError, createActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import createFile from '@/store/createFile'
+import createFile from '@/server/store/createFile'
 import sharp from 'sharp'
 import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
