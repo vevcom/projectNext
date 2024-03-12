@@ -43,11 +43,11 @@ export async function createGroup<T extends GroupType>({
     name,
     membershipRenewal,
     data
-}: CreateGroupArgs<T>): Promise<ActionReturn<Group, false>> {
+}: CreateGroupArgs<T>): Promise<ActionReturn<Group>> {
     const groupKey = groupEnumToKey[groupType]
 
     try {
-        await prisma.group.create({
+        const group = await prisma.group.create({
             data: {
                 name,
                 groupType,
@@ -56,7 +56,7 @@ export async function createGroup<T extends GroupType>({
             },
         })
 
-        return { success: true }
+        return { success: true, data: group }
     } catch (e) {
         return errorHandler(e)
     }
