@@ -2,7 +2,7 @@
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readImageCollectionsPageAction } from '@/actions/images/collections/read'
 import type { ReadPageInput } from '@/actions/Types'
-import type { ImageCollectionPageReturn } from '@/actions/images/collections/Types'
+import type { ImageCollectionPageReturn } from '@/server/images/collections/Types'
 
 export type PageSizeImageCollection = 12
 const fetcher = async (x: ReadPageInput<PageSizeImageCollection>) => {

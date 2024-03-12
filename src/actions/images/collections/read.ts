@@ -7,7 +7,7 @@ import { readImageCollection, readImageCollectionsPage, readSpecialImageCollecti
 import type { 
     ExpandedImageCollection, 
     ImageCollectionPageReturn 
-} from '@/actions/images/collections/Types'
+} from '@/server/images/collections/Types'
 
 /**
  * Action that reads an image collection by id or name

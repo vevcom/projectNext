@@ -78,7 +78,7 @@ export async function getUser({
             redirect(redirectUrl)
         }
 
-        notFound() // Should probably redirect to an unauthorized page when we have one.
+        notFound() //TODO: Should probably redirect to an unauthorized page when we have one.
     }
 
     // Cannot have ternary expression for just status because then ts gets confused.

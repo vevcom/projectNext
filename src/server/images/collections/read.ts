@@ -6,7 +6,7 @@ import logger from '@/logger'
 import type { 
     ExpandedImageCollection, 
     ImageCollectionPageReturn 
-} from '@/actions/images/collections/Types'
+} from '@/server/images/collections/Types'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import { readSpecialImage } from '../read'

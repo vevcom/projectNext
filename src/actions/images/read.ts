@@ -3,7 +3,7 @@ import { createActionError } from '@/actions/error'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageDetails } from './Types'
+import type { ImageDetails } from '../../server/images/Types'
 import { readImage, readImagesPage, readSpecialImage } from '@/server/images/read'
 import { createBadImage } from '@/server/images/create'
 

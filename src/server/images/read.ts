@@ -1,6 +1,6 @@
 import 'server-only'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageDetails } from '@/actions/images/Types'
+import type { ImageDetails } from '@/server/images/Types'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { Image, SpecialImage } from '@prisma/client'
 
