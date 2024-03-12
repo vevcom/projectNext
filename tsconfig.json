@@ -30,6 +30,7 @@
       "@/context/*": ["src/context/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*"],
+      "@/server/*": ["src/server/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
