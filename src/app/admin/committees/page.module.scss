@@ -6,9 +6,13 @@
     gap: 1em;
     justify-content: center;
     > .imgSelection {
-        min-width: 50vw;
+        min-width: clamp(50vw, 700px, 100vw);
+        min-height: 50vh;
         background-color: ohma.$colors-gray-500;
         border-radius: ohma.$rounding;
         padding: ohma.$rounding;
+    }
+    > .form {
+        min-width: 250px;
     }
 }
