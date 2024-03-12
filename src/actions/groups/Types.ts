@@ -8,5 +8,5 @@ export type GroupEnumToKey = typeof groupEnumToKey
 export type ExpandedGroup<T extends GroupType> = Group & (Prisma.GroupGetPayload<{
     select: { [K in GroupEnumToKey[T]]: true }
 }> & {
-    [K in GroupEnumToKey[T]]: Record<string, never>
+    [K in GroupEnumToKey[T]]: object
 })[GroupEnumToKey[T]]
