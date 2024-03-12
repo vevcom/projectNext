@@ -3,10 +3,10 @@ import styles from './ImageList.module.scss'
 import ImageListImage from './ImageListImage'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import React, { useCallback, useContext } from 'react'
 import ImageUploader from '@/components/Image/ImageUploader'
-import { useRouter } from 'next/navigation'
 import PopUp from '@/components/PopUp/PopUp'
+import React, { useCallback, useContext } from 'react'
+import { useRouter } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
@@ -24,12 +24,12 @@ type PropTypes = {
  * @param disableEditing - if true, the ImageListImage components will not be able to edit the image
  * @param withUpload - if true, the ImageUploader component will be rendered to make it possible to upload images to
  * the current collection (false by default)
- * @returns 
+ * @returns
  */
-export default function ImageList({ 
-    serverRendered, 
-    disableEditing, 
-    withUpload = false 
+export default function ImageList({
+    serverRendered,
+    disableEditing,
+    withUpload = false
 }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const { refresh } = useRouter()
@@ -43,8 +43,8 @@ export default function ImageList({
     }, [context, refresh])
 
     return (
-        <div className={withUpload ? 
-            `${styles.ListImagesInCollection} ${styles.paddingTop}` : 
+        <div className={withUpload ?
+            `${styles.ListImagesInCollection} ${styles.paddingTop}` :
             styles.ListImagesInCollection
         }>
             {
@@ -52,8 +52,8 @@ export default function ImageList({
                     <PopUp PopUpKey={uuid()} showButtonClass={styles.uploadImage} showButtonContent={
                         <>Legg til bilde</>
                     }>
-                        <ImageUploader 
-                            collectionId={context.deatils.collectionId} 
+                        <ImageUploader
+                            collectionId={context.deatils.collectionId}
                             successCallback={handleUpload}
                         />
                     </PopUp>

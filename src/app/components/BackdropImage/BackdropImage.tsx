@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import type { Image as ImageT } from "@prisma/client";
-import Image from "../Image/Image";
-import styles from "./BackdropImage.module.scss"
+import styles from './BackdropImage.module.scss'
+import Image from '../Image/Image'
+import type { ReactNode } from 'react'
+import type { Image as ImageT } from '@prisma/client'
 
-type PropTypes = { 
+type PropTypes = {
     children: ReactNode
     image: ImageT
     grayScale?: boolean
@@ -14,17 +14,17 @@ type PropTypes = {
  * @param image - The image to render as a backdrop
  * @param grayScale - Whether the image should be rendered in grayscale (true by default)
  * */
-export default function BackdropImage({ children, image, grayScale = true }:PropTypes) {
+export default function BackdropImage({ children, image, grayScale = true }: PropTypes) {
     return (
         <div className={styles.BackdropImage}>
             <div className={styles.content}>
                 {children}
             </div>
             <div className={styles.image}>
-                <Image 
-                    className={grayScale ? styles.gray : ''} 
-                    image={image} 
-                    width={350} 
+                <Image
+                    className={grayScale ? styles.gray : ''}
+                    image={image}
+                    width={350}
                 />
             </div>
         </div>

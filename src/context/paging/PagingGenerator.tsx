@@ -133,14 +133,14 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         }, [givenDetails])
 
         return (
-            <Context.Provider value={{ 
-                state, 
-                loadMore, 
-                refetch, 
-                serverRenderedData, 
-                startPage, 
-                setDetails, 
-                loading,  
+            <Context.Provider value={{
+                state,
+                loadMore,
+                refetch,
+                serverRenderedData,
+                startPage,
+                setDetails,
+                loading,
                 deatils: { ...details.current },
             }}>
                 {children}

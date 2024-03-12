@@ -1,6 +1,6 @@
-import type { PropTypes } from "@/app/committees/[name]/page";
-import { getCommitee } from "@/app/committees/[name]/page";
-import CmsImage from "@/app/components/Cms/CmsImage/CmsImage";
+import { getCommitee } from '@/app/committees/[name]/page'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import type { PropTypes } from '@/app/committees/[name]/page'
 
 
 export default async function ComitteeAdmin({ params }: PropTypes) {

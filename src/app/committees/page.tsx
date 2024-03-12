@@ -1,5 +1,5 @@
-import { readCommitees } from "@/actions/groups/committees/read";
-import Link from "next/link";
+import { readCommitees } from '@/actions/groups/committees/read'
+import Link from 'next/link'
 
 export default async function committees() {
     const res = await readCommitees()
@@ -16,5 +16,5 @@ export default async function committees() {
                 ))
             }
         </div>
-    );
+    )
 }

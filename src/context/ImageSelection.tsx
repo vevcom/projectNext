@@ -29,7 +29,7 @@ type PropTypes = {
  * @param children - The children to wrap the provider around (has access to the context)
  * @param defaultSelectionMode - The starting selection mode
  * @param defaultImage - The starting image that is selected
- * @returns 
+ * @returns
  */
 export default function ImageSelectionProvider({ children, defaultSelectionMode = false, defaultImage }: PropTypes) {
     const [image, setImage] = useState<Image | null>(defaultImage || null)

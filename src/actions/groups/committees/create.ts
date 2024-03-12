@@ -1,18 +1,19 @@
 'use server'
-import { ActionReturn } from "@/actions/Types"
-import type { Committee } from "@prisma/client"
-import { createPrismaActionError, createZodActionError } from "@/actions/error"
-import prisma from "@/prisma"
-import { z } from "zod"
-import { createCommitteeSchema, createCommitteeSchemaType } from "./schema"
-import { createCmsImage } from "@/actions/cms/images/create"
+import { createCommitteeSchema } from './schema'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import prisma from '@/prisma'
+import { createCmsImage } from '@/actions/cms/images/create'
+import { z } from 'zod'
+import type { ActionReturn } from '@/actions/Types'
+import type { createCommitteeSchemaType } from './schema'
+import type { Committee } from '@prisma/client'
 
 export default async function createCommittee(
-    committeeLogoImageId: number, 
+    committeeLogoImageId: number,
     rawdata: FormData | createCommitteeSchemaType
-) : Promise<ActionReturn<Committee>> {
+): Promise<ActionReturn<Committee>> {
     const parse = createCommitteeSchema.safeParse(rawdata)
-        
+
     if (!parse.success) return createZodActionError(parse)
 
     const { name } = parse.data
@@ -39,7 +40,7 @@ export default async function createCommittee(
                 }
             },
         })
-        
+
         return { success: true, data: committee }
     } catch (error) {
         return createPrismaActionError(error)

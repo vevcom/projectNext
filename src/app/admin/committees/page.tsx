@@ -1,12 +1,13 @@
-import ImageSelectionProvider from "@/context/ImageSelection";
-import ImageList from "@/app/components/Image/ImageList/ImageList";
-import ImagePagingProvider, { PageSizeImage } from "@/context/paging/ImagePaging";
-import { readSpecialImageCollection } from "@/actions/images/collections/read";
-import PopUpProvider from "@/context/PopUp";
-import { readSpecialImage } from "@/actions/images/read";
 import styles from './page.module.scss'
-import CreateCommitteeForm from "./CreateCommitteeForm";
-import ImageUploader from "@/app/components/Image/ImageUploader";
+import CreateCommitteeForm from './CreateCommitteeForm'
+import ImageSelectionProvider from '@/context/ImageSelection'
+import ImageList from '@/app/components/Image/ImageList/ImageList'
+import ImagePagingProvider from '@/context/paging/ImagePaging'
+import { readSpecialImageCollection } from '@/actions/images/collections/read'
+import PopUpProvider from '@/context/PopUp'
+import { readSpecialImage } from '@/actions/images/read'
+import ImageUploader from '@/app/components/Image/ImageUploader'
+import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
@@ -20,8 +21,8 @@ export default async function adminCommittee() {
     const pageSize: PageSizeImage = 30
 
     return (
-        <ImagePagingProvider 
-            serverRenderedData={[]} 
+        <ImagePagingProvider
+            serverRenderedData={[]}
             details={{
                 collectionId,
             }}
@@ -31,7 +32,7 @@ export default async function adminCommittee() {
             }}
         >
             <PopUpProvider>
-                <ImageSelectionProvider 
+                <ImageSelectionProvider
                     defaultImage={defaultCommitteeLogo}
                     defaultSelectionMode={true}
                 >
