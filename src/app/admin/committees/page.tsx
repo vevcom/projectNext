@@ -5,6 +5,7 @@ import ImageSelectionProvider from "@/context/ImageSelection";
 import ImageList from "@/app/components/Image/ImageList/ImageList";
 import ImagePagingProvider, { PageSizeImage } from "@/context/paging/ImagePaging";
 import { readSpecialImageCollection } from "@/actions/images/collections/read";
+import PopUpProvider from "@/context/PopUp";
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
@@ -24,12 +25,14 @@ export default async function adminCommittee() {
                 pageSize,
             }}
         >
-            <ImageSelectionProvider>
-                <ImageList />
-                <Form action={create.bind(null, 1)}>
-                    <TextInput name="name" label="Navn"/>
-                </Form>
-            </ImageSelectionProvider>
+            <PopUpProvider>
+                <ImageSelectionProvider>
+                    <ImageList />
+                    <Form action={create.bind(null, 1)}>
+                        <TextInput name="name" label="Navn"/>
+                    </Form>
+                </ImageSelectionProvider>
+            </PopUpProvider>
         </ImagePagingProvider>
     )
 }
