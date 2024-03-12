@@ -7,6 +7,7 @@ import ImagePagingProvider, { PageSizeImage } from "@/context/paging/ImagePaging
 import { readSpecialImageCollection } from "@/actions/images/collections/read";
 import PopUpProvider from "@/context/PopUp";
 import { readSpecialImage } from "@/actions/images/read";
+import styles from './page.module.scss'
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
@@ -35,10 +36,17 @@ export default async function adminCommittee() {
                     defaultImage={defaultCommitteeLogo}
                     defaultSelectionMode={true}
                 >
-                    <ImageList />
-                    <Form action={create.bind(null, 1)}>
-                        <TextInput name="name" label="Navn"/>
-                    </Form>
+                    <div className={styles.wrapper}>
+                        <div className={styles.imgSelection}>
+                            <ImageList />
+                        </div>
+                        <div className={styles.form}>
+                            <Form action={create.bind(null, 1)}>
+                                <TextInput name="name" label="Navn"/>
+                            </Form>
+                        </div>
+                    </div>
+                    
                 </ImageSelectionProvider>
             </PopUpProvider>
         </ImagePagingProvider>
