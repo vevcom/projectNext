@@ -1,5 +1,5 @@
 'use server'
-import type { UserFiltered, UserDetails } from '../../server/users/Types'
+import type { UserFiltered, UserDetails } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import { readUserPage } from '@/server/users/read'
 
