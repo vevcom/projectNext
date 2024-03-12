@@ -1,4 +1,4 @@
-import { getCommitee } from '@/app/committees/[name]/page'
+import getCommitee from '@/app/committees/[name]/getCommittee'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import type { PropTypes } from '@/app/committees/[name]/page'
 

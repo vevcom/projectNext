@@ -1,10 +1,8 @@
 import styles from './page.module.scss'
-import { readCommitee } from '@/actions/groups/committees/read'
 import { readSpecialImage } from '@/actions/images/read'
 import BackdropImage from '@/app/components/BackdropImage/BackdropImage'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
-
+import getCommitee from './getCommittee'
 
 export type PropTypes = {
     params: {
@@ -30,11 +28,4 @@ export default async function Committee({ params }: PropTypes) {
             </div>
         </BackdropImage>
     )
-}
-
-export async function getCommitee(params: PropTypes['params']) {
-    const name = decodeURIComponent(params.name)
-    const res = await readCommitee(name)
-    if (!res.success) notFound()
-    return res.data
 }
