@@ -50,12 +50,23 @@ export async function readUserPage<const PageSize extends number>({
     }
 }
 
+type readUserArg = {
+    id?: number,
+    username?: string,
+    email?: string,
+}
 
-export async function readUserById(id: number): Promise<ActionReturn<User>> {
+export async function readUser({ id, username, email }: readUserArg): Promise<ActionReturn<User>> {
+    if (!id && !username && !email) {
+        return createActionError('BAD PARAMETERS')
+    }
+
     try {
         const user = await prisma.user.findUnique({
             where: {
                 id,
+                username,
+                email,
             },
         })
 
