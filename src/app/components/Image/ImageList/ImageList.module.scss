@@ -3,4 +3,17 @@
 .ListImagesInCollection {
     display: flex;
     flex-flow: row wrap;
+    position: relative;
+    &.paddingTop {
+        padding-top: 4em;
+    }
+    .uploadImage {
+        @include ohma.btn(ohma.$colors-secondary);
+        height: 3em;
+        margin: 0;
+        max-width: 150px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }

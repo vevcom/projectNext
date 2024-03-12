@@ -119,6 +119,7 @@ enum SpecialImage {
   DEFAULT_IMAGE
   DEFAULT_IMAGE_COLLECTION_COVER
   DEFAULT_PROFILE_IMAGE
+  DAFAULT_COMMITTEE_LOGO
   LOGO_SIMPLE
   LOGO_WHITE
   LOGO_WHITE_TEXT
@@ -203,6 +204,7 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
+  Committee            Committee?
   special              SpecialCmsImage? @unique
 }
 
@@ -360,4 +362,11 @@ model Ombul {
 
   @@unique([year, name])
   @@unique([year, issueNumber])
+}
+
+model Committee {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  logoImage   CmsImage @relation(fields: [logoImageId], references: [id])
+  logoImageId Int      @unique
 }
