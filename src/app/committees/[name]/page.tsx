@@ -1,8 +1,8 @@
 import styles from './page.module.scss'
+import getCommitee from './getCommittee'
 import { readSpecialImage } from '@/actions/images/read'
 import BackdropImage from '@/app/components/BackdropImage/BackdropImage'
 import Link from 'next/link'
-import getCommitee from './getCommittee'
 
 export type PropTypes = {
     params: {
