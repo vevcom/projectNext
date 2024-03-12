@@ -1,3 +1,3 @@
-import type { Commitee as PrismaCommittee, Group } from '@prisma/client'
+import { ExpandedGroup } from '@/actions/groups/Types'
 
-export type Committe = PrismaCommittee & Pick<Group, 'name'>
+export type ExpandedCommitte = ExpandedGroup<"COMMITEE">
