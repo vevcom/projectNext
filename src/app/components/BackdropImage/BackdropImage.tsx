@@ -1,5 +1,5 @@
 import styles from './BackdropImage.module.scss'
-import Image from '../Image/Image'
+import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 

@@ -6,7 +6,6 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import { readSpecialImageCollection } from '@/actions/images/collections/read'
 import PopUpProvider from '@/context/PopUp'
 import { readSpecialImage } from '@/actions/images/read'
-import ImageUploader from '@/app/components/Image/ImageUploader'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 export default async function adminCommittee() {

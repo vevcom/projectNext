@@ -2,8 +2,6 @@
 import { createCommitteeSchema } from './schema'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { createCmsImage } from '@/actions/cms/images/create'
-import { z } from 'zod'
 import type { ActionReturn } from '@/actions/Types'
 import type { createCommitteeSchemaType } from './schema'
 import type { Committee } from '@prisma/client'
