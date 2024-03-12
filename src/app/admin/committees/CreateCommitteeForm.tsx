@@ -1,6 +1,7 @@
 import styles from './CreateCommitteeForm.module.scss'
-
-import React from 'react'
+import Form from "@/app/components/Form/Form";
+import TextInput from "@/app/components/UI/TextInput";
+import create from "@/actions/groups/committees/create";
 
 /**
  * WARNING: The component expects to be rendered inside a ImageSelectionProvider, so the form can
@@ -10,6 +11,10 @@ import React from 'react'
  */
 export default function CreateCommitteeForm() {
     return (
-        <div>CreateCommitteeForm</div>
+        <div className={styles.CommitteeLogoForm}>
+            <Form action={create.bind(null, 1)}>
+                <TextInput name="name" label="Navn"/>
+            </Form>
+        </div>
     )
 }

@@ -1,6 +1,3 @@
-import Form from "@/app/components/Form/Form";
-import TextInput from "@/app/components/UI/TextInput";
-import create from "@/actions/groups/committees/create";
 import ImageSelectionProvider from "@/context/ImageSelection";
 import ImageList from "@/app/components/Image/ImageList/ImageList";
 import ImagePagingProvider, { PageSizeImage } from "@/context/paging/ImagePaging";
@@ -8,6 +5,7 @@ import { readSpecialImageCollection } from "@/actions/images/collections/read";
 import PopUpProvider from "@/context/PopUp";
 import { readSpecialImage } from "@/actions/images/read";
 import styles from './page.module.scss'
+import CreateCommitteeForm from "./CreateCommitteeForm";
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
@@ -41,9 +39,7 @@ export default async function adminCommittee() {
                             <ImageList />
                         </div>
                         <div className={styles.form}>
-                            <Form action={create.bind(null, 1)}>
-                                <TextInput name="name" label="Navn"/>
-                            </Form>
+                            <CreateCommitteeForm />
                         </div>
                     </div>
                     
