@@ -19,10 +19,12 @@ services:
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
+      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
     depends_on:
-      - db
-      - prisma
+      db:
+        condition: service_healthy
+      prisma:
+        condition: service_completed_successfully
     links:
       - db
 
@@ -39,18 +41,24 @@ services:
       - proddb:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
+      interval: 0.5s
+      timeout: 0.5s
+      retries: 60
 
   prisma:
-    build: 
+    build:
       context: ./src/prisma
       dockerfile: ./prismaservice/Dockerfile
       target: prod
+      args:
+        SHOULD_MIGRATE: ${VEVEN_DB_URI}
     environment:
       NODE_ENV: production
       DB_URI: ${DB_URI}
+      MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
+      VEVEN_STORE_URL: ${VEVEN_STORE_URL}
+      VEVEN_DB_URI: ${VEVEN_DB_URI}
+      MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
     volumes:
       - store:/usr/src/app/prismaservice/store
     depends_on:

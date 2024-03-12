@@ -26,3 +26,14 @@ All images belong to a ImageCollection (there is a model in the database called 
 
 (NOT IMPLEMENTED:)
 A collection also specifies who has access to read and modify images contained there. All images in a collection have the same auth requirements. One collection can for example be set to only display its images to all members, and only to be modified (delete images, update metadata, add images) for a certain committee.
+
+## Special collections and images
+### Images
+Special images are images such as the default placeholder image, they can be read using readSpecialImage(special). This action will create the image if it does not exist (this should never happen as Images are protected from destruction). If the readSpecialImage has to create the special image it will include bad data.
+
+### Collections
+Some collections have the special atribute. There can only exist one (and should always exist) one such collection for each special collection type. Use the readSpecialImageCollection to get a special image collection.
+
+Special collections are authed on a permission and not visibility (NOT IMPLEMENTED)
+
+Special collections are protected and cannot be deleted from actions like destroyImageCollecion.

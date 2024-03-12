@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticleCategory } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -18,6 +18,6 @@ export async function destroyArticleCategory(id: number): Promise<ActionReturn<E
         })
         return { success: true, data: articleCategory }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

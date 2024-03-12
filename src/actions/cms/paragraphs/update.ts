@@ -1,6 +1,6 @@
 'use server'
 
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
@@ -35,14 +35,9 @@ export async function updateCmsParagraph(id: number, contentMd: string): Promise
                 data: paragraph
             }
         } catch (error) {
-            return errorHandler(error)
+            return createPrismaActionError(error)
         }
     } catch (e) {
-        return {
-            success: false,
-            error: [{
-                message: 'Invalid markdown'
-            }]
-        }
+        return createActionError('BAD PARAMETERS', 'Invalid markdown')
     }
 }

@@ -1,8 +1,8 @@
 'use server'
-import { maxImageSize, minImageSize } from './ConfigVars'
+import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from './ConfigVars'
 import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import { createCmsImage } from '@/actions/cms/images/create'
 import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
@@ -42,11 +42,11 @@ export async function updateArticleSection(name: string, changes: {
                     },
                 },
             },
-            include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+            include: articleSectionsRealtionsIncluder
         })
         return { success: true, data: articleSection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -59,10 +59,10 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
             include: { [part]: true }
         })
         if (!articleSection) {
-            return { success: false, error: [{ message: 'ArticleSection not found' }] }
+            return createActionError('NOT FOUND', 'ArticleSection not found')
         }
         if (articleSection.cmsLink) {
-            return { success: false, error: [{ message: `ArticleSection already has ${part}` }] }
+            return createActionError('BAD PARAMETERS', `ArticleSection already has ${part}`)
         }
 
         switch (part) {
@@ -75,7 +75,7 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsImage: { connect: { id: cmsImage.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }
@@ -88,7 +88,7 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsParagraph: { connect: { id: cmsParagraph.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }
@@ -101,16 +101,16 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
                     data: await prisma.articleSection.update({
                         where: { name },
                         data: { cmsLink: { connect: { id: cmsLink.data.id } } },
-                        include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
+                        include: articleSectionsRealtionsIncluder
                     })
                 }
             }
             default:
                 break
         }
-        return { success: false, error: [{ message: 'Invalid part' }] }
+        return createActionError('BAD PARAMETERS', 'Invalid part')
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -121,10 +121,10 @@ export async function removeArticleSectionPart(name: string, part: Part): Promis
             include: { cmsLink: true, cmsParagraph: true, cmsImage: true }
         })
         if (!articleSection) {
-            return { success: false, error: [{ message: 'ArticleSection not found' }] }
+            return createActionError('NOT FOUND', 'ArticleSection not found')
         }
         if (!articleSection[part]) {
-            return { success: false, error: [{ message: `ArticleSection does not have ${part}` }] }
+            return createActionError('BAD PARAMETERS', `ArticleSection does not have ${part}`)
         }
 
         switch (part) {
@@ -149,10 +149,7 @@ export async function removeArticleSectionPart(name: string, part: Part): Promis
             include: { cmsParagraph: true, cmsImage: true, cmsLink: true }
         })
         if (!afterDelete) {
-            return {
-                success: false,
-                error: [{ message: 'Noe uventet skjedde etter sletting av del av artclesection' }]
-            }
+            return createActionError('UNKNOWN ERROR', 'Noe uventet skjedde etter sletting av del av artclesection')
         }
         if (
             articleSection.destroyOnEmpty &&
@@ -162,10 +159,7 @@ export async function removeArticleSectionPart(name: string, part: Part): Promis
         ) {
             const destroyRes = await destroyArticleSection(name)
             if (!destroyRes.success) {
-                return {
-                    success: false,
-                    error: [{ message: 'Greide ikke slette artikkelseksjonen' }]
-                }
+                return createActionError('UNKNOWN ERROR', 'Greide ikke slette artikkelseksjonen')
             }
             return { success: true, data: destroyRes.data }
         }
@@ -175,6 +169,6 @@ export async function removeArticleSectionPart(name: string, part: Part): Promis
             data: afterDelete
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

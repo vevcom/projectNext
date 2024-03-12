@@ -1,9 +1,10 @@
 'use server'
-import newsArticleSchema from './schema'
+import { newsArticleSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { SimpleNewsArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import type { NewsArticleSchemaType } from './schema'
 
 export async function publishNews(
     id: number,
@@ -22,18 +23,18 @@ export async function publishNews(
             data: news
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
 export async function updateNews(
     id: number,
-    rawdata: FormData
+    rawdata: FormData | NewsArticleSchemaType
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {
-        const parse = newsArticleSchema.safeParse(Object.fromEntries(rawdata.entries()))
+        const parse = newsArticleSchema.safeParse(rawdata)
         if (!parse.success) {
-            return { success: false, error: parse.error.issues }
+            return createZodActionError(parse)
         }
         const data = parse.data
         const news = await prisma.newsArticle.update({
@@ -53,7 +54,7 @@ export async function updateNews(
             data: news
         }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }
 
@@ -61,5 +62,5 @@ export async function updateNews(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function updateVisibility(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
     //TODO: add visible field to news
-    return { success: false, error: [{ message: 'Not implemented' }] }
+    return createActionError('UNKNOWN ERROR', 'Not implemented')
 }

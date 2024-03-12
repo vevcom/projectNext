@@ -1,6 +1,6 @@
 'use server'
 
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 import type { Group } from '@prisma/client'
@@ -18,6 +18,6 @@ export async function destroyGroup(groupId: number): Promise<ActionReturn<Group>
             data: group,
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }

@@ -1,6 +1,6 @@
 'use server'
 
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import z from 'zod'
 import type { ActionReturn } from '@/actions/Types'
@@ -15,10 +15,7 @@ export async function updateGroup(groupId: number, rawData: FormData): Promise<A
     const parse = schema.safeParse(rawData)
 
     if (!parse.success) {
-        return {
-            success: false,
-            error: parse.error.issues
-        }
+        return createZodActionError(parse)
     }
 
     const { name, membershipRenewal } = parse.data
@@ -39,7 +36,7 @@ export async function updateGroup(groupId: number, rawData: FormData): Promise<A
             data: group,
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -61,7 +58,7 @@ export async function addGroupMember(groupId: number, userId: number): Promise<A
             data: membership,
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -78,6 +75,6 @@ export async function removeGroupMember(groupId: number, userId: number) {
             data: membership,
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }

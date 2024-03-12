@@ -1,6 +1,7 @@
 'use server'
+import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -30,19 +31,10 @@ export async function createArticle(name: string | null, config?: {
                     }
                 } : undefined
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: true,
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: true,
-            }
+            include: articleRealtionsIncluder,
         })
         return { success: true, data: article }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { Group, GroupType, Prisma } from '@prisma/client/'
 
@@ -58,6 +58,6 @@ export async function createGroup<T extends GroupType>({
 
         return { success: true, data: group }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }

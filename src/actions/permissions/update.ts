@@ -1,26 +1,16 @@
 'use server'
 
-import errorHandeler from '@/prisma/errorHandler'
+import { updateRoleSchema } from './schema'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/actions/users/update'
-import { Permission } from '@prisma/client'
-import { z } from 'zod'
+import type { UpdateRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function updateRole(data: FormData): Promise<ActionReturn<void, false>> {
-    const schema = z.object({
-        id: z.coerce.number(),
-        name: z.string(),
-        permissions: z.nativeEnum(Permission).array(),
-    })
+export async function updateRole(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
+    const parse = updateRoleSchema.safeParse(rawdata)
 
-    const parse = schema.safeParse({
-        id: data.get('id'),
-        name: data.get('name'),
-        permissions: data.getAll('permission'),
-    })
-
-    if (!parse.success) return { success: false, error: parse.error.issues }
+    if (!parse.success) return createZodActionError(parse)
 
     const { id, name, permissions } = parse.data
 
@@ -46,7 +36,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
 
         userIds = role.users.map(user => user.userId)
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Delete removed permissions
@@ -62,7 +52,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
             }
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     // Create added permissions
@@ -75,7 +65,7 @@ export async function updateRole(data: FormData): Promise<ActionReturn<void, fal
             skipDuplicates: true
         })
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 
     const res = await invalidateManyUserSessionData(userIds)

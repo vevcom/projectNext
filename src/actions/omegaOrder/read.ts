@@ -1,6 +1,6 @@
 'use server'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { OmegaOrder } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -11,9 +11,9 @@ export async function readCurrenOmegaOrder(): Promise<ActionReturn<OmegaOrder>> 
                 order: 'desc'
             }
         })
-        if (!omegaOrder) return { success: false, error: [{ message: 'Current OmegaOrder not found' }] }
+        if (!omegaOrder) return createActionError('NOT FOUND', 'Current OmegaOrder not found')
         return { success: true, data: omegaOrder }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

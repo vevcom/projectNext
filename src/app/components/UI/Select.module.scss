@@ -1,0 +1,12 @@
+@use "@/styles/ohma";
+
+.Select {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    > select {
+        padding: 0.3rem;
+    }
+}

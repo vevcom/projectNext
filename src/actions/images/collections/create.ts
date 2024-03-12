@@ -1,21 +1,18 @@
 'use server'
+import { createImageCollectionSchema } from './schema'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import { z } from 'zod'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
+import type { CreateImageCollectionSchemaType } from './schema'
 
-export async function createImageCollection(rawdata: FormData): Promise<ActionReturn<ImageCollection>> {
-    const schema = z.object({
-        name: z.string().max(40).min(2).trim(),
-        description: z.string().max(500).min(2).trim(),
-    })
-    const parse = schema.safeParse({
-        name: rawdata.get('name'),
-        description: rawdata.get('description'),
-    })
+export async function createImageCollection(
+    rawdata: FormData | CreateImageCollectionSchemaType
+): Promise<ActionReturn<ImageCollection>> {
+    const parse = createImageCollectionSchema.safeParse(rawdata)
+
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
@@ -28,6 +25,6 @@ export async function createImageCollection(rawdata: FormData): Promise<ActionRe
         })
         return { success: true, data: collection }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

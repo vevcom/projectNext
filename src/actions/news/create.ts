@@ -1,27 +1,28 @@
 'use server'
-import schema from './schema'
-import { defaultNewsArticleOldCutoff } from './ConfigVars'
+import { newsArticleSchema } from './schema'
+import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 import { createArticle } from '@/cms/articles/create'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
+import type { NewsArticleSchemaType } from './schema'
 
-export async function createNews(rawdata: FormData): Promise<ActionReturn<ExpandedNewsArticle>> {
+export async function createNews(rawdata: FormData | NewsArticleSchemaType): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
     const endDateTime = new Date()
     endDateTime.setDate(endDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-    const parse = schema.safeParse(Object.fromEntries(rawdata.entries()))
+    const parse = newsArticleSchema.safeParse(rawdata)
     if (!parse.success) {
-        return { success: false, error: parse.error.issues }
+        return createZodActionError(parse)
     }
     const data = parse.data
 
     const res = await readCurrenOmegaOrder()
     if (!res.success) return res
-    const orderPublished = res.data.order
+    const currentOrder = res.data
 
     try {
         const article = await createArticle(data.name)
@@ -37,25 +38,14 @@ export async function createNews(rawdata: FormData): Promise<ActionReturn<Expand
                     }
                 },
                 endDateTime: data.endDateTime || endDateTime,
-                orderPublished,
-            },
-            include: {
-                article: {
-                    include: {
-                        coverImage: true,
-                        articleSections: {
-                            include: {
-                                cmsImage: true,
-                                cmsParagraph: true,
-                                cmsLink: true
-                            }
-                        }
-                    }
+                omegaOrder: {
+                    connect: currentOrder,
                 }
-            }
+            },
+            include: newsArticleRealtionsIncluder,
         })
         return { success: true, data: news }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

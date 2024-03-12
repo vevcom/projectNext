@@ -1,16 +1,29 @@
-import type { UserWithPermissions } from '@/auth'
+import type { UserWithPermissions } from '@/auth/user'
 
 import 'next-auth'
 import 'next-auth/adapters'
 
+import type { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
+import type { FeideAccount } from '@/prisma/client'
+
 declare module 'next-auth' {
+
     interface User {
-        id: number,
+        id: number | string,
     }
 
     interface Session {
         user: UserWithPermissions,
     }
+
+    interface Profile extends ExtendedFeideUser {
+        sub: string,
+    }
+}
+
+declare module 'next-auth/adapters' {
+    interface AdapterUser extends AdapterUserCustom {}
+    interface AdapterAccount extends FeideAccount {}
 }
 
 declare module 'next-auth/jwt' {

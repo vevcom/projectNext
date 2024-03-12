@@ -1,8 +1,8 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
-import { getUser } from '@/auth'
+import { createActionError, createPrismaActionError } from '@/actions/error'
+import { getUser } from '@/auth/user'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { OmegaquoteFiltered } from './Types'
 
@@ -10,17 +10,12 @@ export async function readQuotesPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<OmegaquoteFiltered[]>> {
     // REFACTOR when new permission system is working
-    const { user, status } = await getUser({
-        permissions: ['OMEGAQUOTES_READ']
+    const { status } = await getUser({
+        requiredPermissions: ['OMEGAQUOTES_READ']
     })
 
-    if (!user) {
-        return {
-            success: false,
-            error: [{
-                message: status
-            }]
-        }
+    if (status !== 'AUTHORIZED') {
+        return createActionError(status)
     }
 
     try {
@@ -41,6 +36,6 @@ export async function readQuotesPage<const PageSize extends number>(
 
         return { success: true, data: results }
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

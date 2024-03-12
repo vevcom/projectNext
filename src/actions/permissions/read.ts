@@ -1,6 +1,6 @@
 'use server'
 
-import errorHandeler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { Permission, Prisma, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -23,7 +23,7 @@ export async function readRoles(): Promise<ActionReturn<RoleWithPermissions[]>> 
             success: true,
         }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -42,7 +42,7 @@ export async function readUsersOfRole(roleId: number): Promise<ActionReturn<User
 
         return { success: true, data: users }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -71,7 +71,7 @@ export async function readRolesOfUser(userId: number): Promise<ActionReturn<Role
 
         return { success: true, data: roles }
     } catch (e) {
-        return errorHandeler(e)
+        return createPrismaActionError(e)
     }
 }
 

@@ -33,7 +33,7 @@ Seeding of the cms is naturally done through the seedCms.ts file as per our conv
 It includes all basic elements: cmsImages, cmsParagraphs and cmsLinks. Note that for example adding a object to cmsImages creates a "lonely" cmsImage with no relation to any articleSection or article. Providing a cmsImage in an articleSection is done inside a articleSection. Likevise all articleSections spesified in the articleSections atribute of standardCmsContents will not have a relation to a article. You specify all the articleSections belonging to a article inside the article.
 
 ### Example
-```javascript
+```ts
 const standardCmsContents : CmsContent = {
     cmsImages: [
         {

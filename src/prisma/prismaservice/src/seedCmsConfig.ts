@@ -1,4 +1,10 @@
-import type { Position, ImageSize } from '@prisma/client'
+import type {
+    Position,
+    ImageSize,
+    SpecialCmsImage,
+    SpecialCmsParagraph,
+} from '@/generated/pn'
+
 
 export type SeedCmsImage = {
     name: string,
@@ -25,7 +31,7 @@ export type SeedArticleSection = {
     imageSize?: number,
 }
 
-export const standardCategories = [
+export const standardArticleCategories = [
     {
         name: 'om omega',
         description: 'lær om omega',
@@ -36,8 +42,8 @@ export const standardCategories = [
     }
 ] as const
 
-export type SeedCategories = typeof standardCategories[number]
-type Categories = typeof standardCategories[number]['name']
+export type SeedCategories = typeof standardArticleCategories[number]
+type Categories = typeof standardArticleCategories[number]['name']
 
 export type SeedArticle = {
     name: string,
@@ -51,7 +57,113 @@ export type SeedArticle = {
     orderPublished: number
 })
 
-export type CmsContent = {
+
+type CmsImageSeedSpecialConfig = {
+    [T in SpecialCmsImage]: SeedCmsImage;
+}
+
+export const seedSpecialCmsImageConfig: CmsImageSeedSpecialConfig = {
+    FRONTPAGE_LOGO: {
+        name: 'frontpage_logo',
+        imageName: 'logo_white',
+        imageSize: 'LARGE'
+    },
+    FRONTPAGE_1: {
+        name: 'frontpage_1',
+        imageName: 'kappemann',
+    },
+    FRONTPAGE_2: {
+        name: 'frontpage_2',
+        imageName: 'ohma',
+    },
+    FRONTPAGE_3: {
+        name: 'frontpage_3',
+        imageName: 'ov',
+    },
+    FRONTPAGE_4: {
+        name: 'frontpage_4',
+        imageName: 'ohma',
+    },
+    SERVER_ERROR: {
+        name: 'server-error',
+        imageName: 'logo_simple',
+    },
+    NOT_FOUND: {
+        name: 'not-found',
+        imageName: 'logo_simple',
+    },
+    AUTH_ICON: {
+        name: 'auth_icon',
+        imageName: 'magisk_hatt',
+    },
+    FOOTER_LOGO: {
+        name: 'footer_logo',
+        imageName: 'logo_white_text',
+    },
+    FOOTER_1: {
+        name: 'footer_1',
+        imageName: 'pwa',
+    },
+    FOOTER_2: {
+        name: 'footer_2',
+        imageName: 'nordic',
+        imageSize: 'SMALL'
+    },
+    FOOTER_3: {
+        name: 'footer_3',
+        imageName: 'kongsberg',
+    },
+    LOADER_IMAGE: {
+        name: 'loader_image',
+        imageName: 'logo_simple'
+    },
+    MOBILE_NAV_PRIMARY_BUTTON: {
+        name: 'mobile_nav_primary_button',
+        imageName: 'logo_simple',
+        imageSize: 'SMALL'
+    },
+    MOBILE_NAV_LOGIN_BUTTON: {
+        name: 'mobile_nav_login_button',
+        imageName: 'magisk_hatt',
+        imageSize: 'SMALL'
+    },
+    NAV_PRIMARY_BUTTON: {
+        name: 'nav_primary_button',
+        imageName: 'logo_simple',
+        imageSize: 'SMALL'
+    },
+    NAV_LOGIN_BUTTON: {
+        name: 'nav_login_button',
+        imageName: 'magisk_hatt',
+        imageSize: 'SMALL'
+    }
+}
+
+type CmsParagraphSeedSpecialConfig = {
+    [T in SpecialCmsParagraph]: SeedCmsParagraph;
+}
+
+export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
+    FRONTPAGE_1: {
+        name: 'frontpage_1_paragraph',
+        file: 'frontpage/frontpage_1.md'
+    },
+    FRONTPAGE_2: {
+        name: 'frontpage_2_paragraph',
+        file: 'frontpage/frontpage_2.md'
+    },
+    FRONTPAGE_3: {
+        name: 'frontpage_3_paragraph',
+        file: 'frontpage/frontpage_3.md'
+    },
+    FRONTPAGE_4: {
+        name: 'frontpage_4_paragraph',
+        file: 'frontpage/frontpage_4.md'
+    },
+}
+
+
+export type CmsConfig = {
     cmsImages: SeedCmsImage[], //this is a cmsImage without a connection to a cmsArticleSection
     cmsParagraphs: SeedCmsParagraph[], //this is a cmsParagraph without a connection to a cmsArticleSection
     cmsLink: SeedCmsLink[], //this is a cmsLink without a connection to a cmsArticleSection
@@ -60,94 +172,14 @@ export type CmsContent = {
 
     articles: SeedArticle[],
 }
-
-//this object describes the starting state of all cmsimages
-const standardCmsContents: CmsContent = {
-    cmsImages: [
-        {
-            name: 'frontpage_logo',
-            imageName: 'logo_white',
-            imageSize: 'LARGE'
-        },
-        {
-            name: 'frontpage_1',
-            imageName: 'kappemann',
-        },
-        {
-            name: 'frontpage_2',
-            imageName: 'ov',
-        },
-        {
-            name: 'frontpage_3',
-            imageName: 'ov',
-        },
-        {
-            name: 'frontpage_4',
-            imageName: 'ohma',
-        },
-        {
-            name: 'server-error',
-            imageName: 'logo_simple',
-        },
-        {
-            name: 'not-found',
-            imageName: 'logo_simple',
-        },
-        {
-            name: 'auth_icon',
-            imageName: 'magisk_hatt',
-        },
-        {
-            name: 'footer_logo',
-            imageName: 'omega_logo_white',
-        },
-        {
-            name: 'footer_1',
-            imageName: 'pwa',
-        },
-        {
-            name: 'footer_2',
-            imageName: 'nordic',
-            imageSize: 'SMALL'
-        },
-        {
-            name: 'footer_3',
-            imageName: 'kongsberg',
-        },
-        {
-            name: 'loader_image',
-            imageName: 'logo_simple'
-        },
-        {
-            name: 'mobile_nav_primary_button',
-            imageName: 'logo_simple',
-            imageSize: 'SMALL'
-        },
-        {
-            name: 'mobile_nav_login_button',
-            imageName: 'magisk_hatt',
-            imageSize: 'SMALL'
-        },
-        {
-            name: 'nav_primary_button',
-            imageName: 'logo_simple',
-            imageSize: 'SMALL'
-        },
-        {
-            name: 'nav_login_button',
-            imageName: 'magisk_hatt',
-            imageSize: 'SMALL'
-        }
-    ],
-    cmsParagraphs: [
-
-    ],
-    cmsLink: [
-
-    ],
-    articleSections: [
-
-    ],
+/**
+ * This is the configuration for the cms content that are to be seeded
+ */
+export const seedCmsConfig: CmsConfig = {
+    cmsImages: [],
+    cmsParagraphs: [],
+    cmsLink: [],
+    articleSections: [],
     articles: [
         {
             name: 'velkommen til nye veven',
@@ -290,5 +322,3 @@ const standardCmsContents: CmsContent = {
         }
     ]
 }
-
-export default standardCmsContents

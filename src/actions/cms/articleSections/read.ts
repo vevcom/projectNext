@@ -1,7 +1,8 @@
 'use server'
 import { createArticleSection } from './create'
+import { articleSectionsRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleSection } from './Types'
 
@@ -12,16 +13,12 @@ export async function readArticleSection(name: string): Promise<ActionReturn<Exp
             where: {
                 name
             },
-            include: {
-                cmsImage: true,
-                cmsParagraph: true,
-                cmsLink: true
-            }
+            include: articleSectionsRealtionsIncluder
         })
         if (articleSection) return { success: true, data: articleSection }
         const createRes = await createArticleSection(name)
         return createRes
     } catch (error) {
-        return errorHandler(error)
+        return createPrismaActionError(error)
     }
 }

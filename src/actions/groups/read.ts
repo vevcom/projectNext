@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from '@/prisma'
-import errorHandler from '@/prisma/errorHandler'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { Group, Membership } from '@prisma/client'
 
@@ -14,7 +14,7 @@ export async function readGroups(): Promise<ActionReturn<Group[]>> {
             data: groups
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
 
@@ -32,6 +32,6 @@ export async function readGroupMemberships(groupId: number): Promise<ActionRetur
             data: memberships
         }
     } catch (e) {
-        return errorHandler(e)
+        return createPrismaActionError(e)
     }
 }
