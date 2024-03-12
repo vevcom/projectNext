@@ -1,7 +1,4 @@
 import { readCommitees } from "@/actions/groups/committees/read";
-import BackdropImage from "@/components/BackdropImage/BackdropImage";
-import { notDeepEqual } from "assert";
-import styles from "./page.module.scss"
 import Link from "next/link";
 
 export default async function committees() {

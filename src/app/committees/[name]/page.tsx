@@ -1,3 +1,5 @@
+import { readCommitee } from "@/actions/groups/committees/read"
+import { notFound } from "next/navigation"
 
 
 type PropTypes = {
@@ -7,6 +9,9 @@ type PropTypes = {
 }
 
 export default async function Committee({ params } : PropTypes) {
-    console.log(params.name)
+    const name = decodeURIComponent(params.name)
+    const res = await readCommitee(name)
+    if (!res.success) notFound()
+    
     return(params.name)
 }
