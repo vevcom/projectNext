@@ -3,11 +3,16 @@ import styles from './ImageList.module.scss'
 import ImageListImage from './ImageListImage'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
+import ImageUploader from '@/components/Image/ImageUploader'
+import { useRouter } from 'next/navigation'
+import PopUp from '@/components/PopUp/PopUp'
+import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     serverRendered?: React.ReactNode,
     disableEditing?: boolean,
+    withUpload?: boolean,
 }
 
 /**
@@ -17,13 +22,25 @@ type PropTypes = {
  * @param serverRendered - server rendered data, should be rendered before the endless scroll i.e a list
  * of ImageListImage components
  * @param disableEditing - if true, the ImageListImage components will not be able to edit the image
+ * @param withUpload - if true, the ImageUploader component will be rendered to make it possible to upload images to
+ * the current collection (false by default)
  * @returns 
  */
-export default function ImageList({ serverRendered, disableEditing }: PropTypes) {
+export default function ImageList({ 
+    serverRendered, 
+    disableEditing, 
+    withUpload = false 
+}: PropTypes) {
     const context = useContext(ImagePagingContext)
+    const { refresh } = useRouter()
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
+
+    const handleUpload = useCallback(() => {
+        refresh()
+        context.refetch()
+    }, [context, refresh])
 
     return (
         <div className={styles.ListImagesInCollection}>
@@ -32,6 +49,18 @@ export default function ImageList({ serverRendered, disableEditing }: PropTypes)
                 pagingContext={ImagePagingContext}
                 renderer={image => <ImageListImage key={image.id} image={image} disableEditing={disableEditing}/>}
             />
+            {
+                withUpload && (
+                    <PopUp PopUpKey={uuid()} showButtonClass={styles.upload} showButtonContent={
+                        <>Legg til bilde</>
+                    }>
+                        <ImageUploader 
+                            collectionId={context.deatils.collectionId} 
+                            successCallback={handleUpload}
+                        />
+                    </PopUp>
+                )
+            }
         </div>
     )
 }
