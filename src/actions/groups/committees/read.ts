@@ -7,7 +7,7 @@ import type { ActionReturn } from '@/actions/Types'
 /**
  * Reads all committees
  */
-export async function readCommitees(): Promise<ActionReturn<ExpandedCommittee[]>> {
+export async function readCommittees(): Promise<ActionReturn<ExpandedCommittee[]>> {
     // TODO: This should be protected by a permission
 
     try {
@@ -26,7 +26,7 @@ export async function readCommitees(): Promise<ActionReturn<ExpandedCommittee[]>
     }
 }
 
-export async function readCommitee(name: string): Promise<ActionReturn<ExpandedCommittee>> {
+export async function readCommittee(name: string): Promise<ActionReturn<ExpandedCommittee>> {
     try {
         const committee = await prisma.committee.findUnique({
             where: {

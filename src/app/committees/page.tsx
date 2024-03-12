@@ -1,8 +1,8 @@
-import { readCommitees } from '@/actions/groups/committees/read'
+import { readCommittees } from '@/actions/groups/committees/read'
 import Link from 'next/link'
 
 export default async function Committees() {
-    const res = await readCommitees()
+    const res = await readCommittees()
     if (!res.success) throw new Error('Kunne ikke hente komiteer')
     const committees = res.data
     return (
