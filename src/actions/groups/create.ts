@@ -1,9 +1,9 @@
 'use server'
 
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import type { Group, GroupType, Prisma } from '@prisma/client/'
+import { Group, GroupType, Prisma } from '@prisma/client/'
 
 // Map between GroupType and corresponding properties of GroupCreateInput.
 // (GroupCreateInput is the type that prisma.group.create accepts.)
@@ -21,11 +21,11 @@ type GroupEnumToKey = typeof groupEnumToKey
 
 // Generic type for a specific group type which includes the information from
 // both the generic group and specific group.
-// type ExpandedGroup<T extends GroupType> = Prisma.GroupGetPayload<{
-//     include: { [key in GroupEnumToKey[T]]: true }
-// }> & {
-//     [key in GroupEnumToKey[T]]: {}
-// }
+type ExpandedGroup<T extends GroupType> = Group & (Prisma.GroupGetPayload<{
+    select: { [K in GroupEnumToKey[T]]: true }
+}> & {
+    [K in GroupEnumToKey[T]]: {}
+})[GroupEnumToKey[T]]
 
 type CreateGroupArgs<T extends GroupType> = {
     groupType: T,
@@ -35,7 +35,7 @@ type CreateGroupArgs<T extends GroupType> = {
 }
 
 /**
- * Creats a group of a given type. The data required for each group depends on
+ * Creates a group of a given type. The data required for each group depends on
  * which type of group it is.
  */
 export async function createGroup<T extends GroupType>({
@@ -43,20 +43,35 @@ export async function createGroup<T extends GroupType>({
     name,
     membershipRenewal,
     data
-}: CreateGroupArgs<T>): Promise<ActionReturn<Group>> {
-    const groupKey = groupEnumToKey[groupType]
+}: CreateGroupArgs<T>): Promise<ActionReturn<ExpandedGroup<Extract<GroupType, T>>>>
+export async function createGroup<T extends GroupType>({
+    groupType,
+    name,
+    membershipRenewal,
+    data
+}: CreateGroupArgs<T>): Promise<ActionReturn<ExpandedGroup<GroupType>>> {
+    const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
+    
+    const include: Partial<Record<GroupEnumToKey[keyof GroupEnumToKey], boolean>> = {
+        [groupKey]: true
+    }
 
     try {
-        const group = await prisma.group.create({
+        const { [groupKey]: specificGroup, ...genericGroup } = await prisma.group.create({
             data: {
                 name,
                 groupType,
                 membershipRenewal,
                 [groupKey]: data,
             },
+            include
         })
 
-        return { success: true, data: group }
+        if (!specificGroup) {
+            return createActionError('UNKNOWN ERROR', 'Noe har gått forferdelig galt. Dette burde aldri skje. Databasen har sikkert tatt fyr. :(')
+        }
+
+        return { success: true, data: { ...genericGroup, ...specificGroup } }
     } catch (e) {
         return createPrismaActionError(e)
     }
