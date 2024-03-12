@@ -37,7 +37,7 @@ export default async function adminCommittee() {
                 >
                     <div className={styles.wrapper}>
                         <div className={styles.imgSelection}>
-                            <ImageList />
+                            <ImageList withUpload />
                         </div>
                         <div className={styles.form}>
                             <CreateCommitteeForm />
