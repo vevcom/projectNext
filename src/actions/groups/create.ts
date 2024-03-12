@@ -3,29 +3,9 @@
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import { Group, GroupType, Prisma } from '@prisma/client/'
-
-// Map between GroupType and corresponding properties of GroupCreateInput.
-// (GroupCreateInput is the type that prisma.group.create accepts.)
-// This object is needed to be able to assign the data argument input of
-// createGroup to the correct field in prisma.group.create.
-const groupEnumToKey = {
-    CLASS: 'class',
-    COMMITEE: 'commitee',
-    INTEREST_GROUP: 'interestGroup',
-    OMEGA_MEMBERSHIP: 'omegaMembership',
-    STUDY_PROGRAMME: 'studyProgramme',
-} as const
-
-type GroupEnumToKey = typeof groupEnumToKey
-
-// Generic type for a specific group type which includes the information from
-// both the generic group and specific group.
-type ExpandedGroup<T extends GroupType> = Group & (Prisma.GroupGetPayload<{
-    select: { [K in GroupEnumToKey[T]]: true }
-}> & {
-    [K in GroupEnumToKey[T]]: {}
-})[GroupEnumToKey[T]]
+import type { GroupType, Prisma } from '@prisma/client/'
+import type { ExpandedGroup, GroupEnumToKey } from './Types'
+import { groupEnumToKey } from './ConfigVars'
 
 type CreateGroupArgs<T extends GroupType> = {
     groupType: T,
