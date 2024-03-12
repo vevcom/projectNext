@@ -369,6 +369,4 @@ model Committee {
   name        String   @unique
   logoImage   CmsImage @relation(fields: [logoImageId], references: [id])
   logoImageId Int      @unique
-
-  @@map("committees")
 }
