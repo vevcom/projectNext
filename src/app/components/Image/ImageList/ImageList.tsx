@@ -10,7 +10,15 @@ type PropTypes = {
     disableEditing?: boolean,
 }
 
-//Note that this component may take iniitial images as props fetched on server
+/**
+ * WARNING: This component must be rendered inside a ImagePagingContextProvider
+ * This is a component that renders a list of images. It uses the ImagePagingContext to fetch more images
+ * The component is designed to use ImageSelectionProvider to select images as well
+ * @param serverRendered - server rendered data, should be rendered before the endless scroll i.e a list
+ * of ImageListImage components
+ * @param disableEditing - if true, the ImageListImage components will not be able to edit the image
+ * @returns 
+ */
 export default function ImageList({ serverRendered, disableEditing }: PropTypes) {
     const context = useContext(ImagePagingContext)
 
