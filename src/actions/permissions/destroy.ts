@@ -3,7 +3,7 @@
 import { removeUserFromRoleSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/server/users/update'
+import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
