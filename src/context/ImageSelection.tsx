@@ -16,6 +16,14 @@ type PropTypes = {
     defaultImage?: Image,
 }
 
+/**
+ * A context to select an image from a list of images, ImageList and other components from comonents/image
+ * implement this context to allow for selection of images
+ * @param children - The children to wrap the provider around (has access to the context)
+ * @param defaultSelectionMode - The starting selection mode
+ * @param defaultImage - The starting image that is selected
+ * @returns 
+ */
 export default function ImageSelectionProvider({ children, defaultSelectionMode = false, defaultImage }: PropTypes) {
     const [image, setImage] = useState<Image | null>(defaultImage || null)
     const [selectionModeActive, setSelectionModeActive] = useState(defaultSelectionMode)
