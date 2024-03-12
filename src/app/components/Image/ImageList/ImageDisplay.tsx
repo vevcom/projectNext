@@ -6,7 +6,7 @@ import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import { updateImage } from '@/actions/images/update'
-import { destroyImage } from '@/actions/images/destroy'
+import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { EditModeContext } from '@/context/EditMode'
@@ -117,7 +117,7 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                         </Form>
                         <Form
                             successCallback={reload}
-                            action={destroyImage.bind(null, currentImage.current.id)}
+                            action={destroyImageAction.bind(null, currentImage.current.id)}
                             submitText="slett"
                             submitColor="red"
                             confirmation={{
