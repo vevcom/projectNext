@@ -3,7 +3,7 @@
 import { createRoleSchema, addUserToRoleSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { invalidateOneUserSessionData } from '@/actions/users/update'
+import { invalidateOneUserSessionData } from '@/server/users/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
 import type { CreateRoleSchemaType, AddUserToRoleSchemaType } from './schema'

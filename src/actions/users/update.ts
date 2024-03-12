@@ -1,5 +1,4 @@
 'use server'
-
 import { updateUserSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
@@ -25,31 +24,4 @@ export async function updateUser(id: number, rawdata: FormData | UpdateUserSchem
     } catch (error) {
         return createPrismaActionError(error)
     }
-}
-
-// These function should maybe be in another place than server actions? @Paulijuz
-
-export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
-    try {
-        await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                updatedAt: new Date(),
-            }
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
-
-    return { success: true }
-}
-
-export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
-    const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
-
-    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
-
-    return { success: true }
 }
