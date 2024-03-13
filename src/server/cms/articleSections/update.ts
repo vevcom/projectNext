@@ -9,6 +9,7 @@ import type { ImageSize, ArticleSection, Position } from '@prisma/client'
 import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSectionPart } from './Types'
+import { destroyArticleSection } from './destroy'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
@@ -106,7 +107,7 @@ export async function addArticleSectionPart(
             }
             case 'cmsParagraph':
             {
-                const cmsParagraph = await createCmsParagraph(`${name}_paragraph`)
+                const cmsParagraph = await createCmsParagraph(`${nameOrId}_paragraph`)
                 if (!cmsParagraph.success) return cmsParagraph
                 return {
                     success: true,
@@ -119,7 +120,7 @@ export async function addArticleSectionPart(
             }
             case 'cmsLink':
             {
-                const cmsLink = await createCmsLink(`${name}_link`)
+                const cmsLink = await createCmsLink(`${nameOrId}_link`)
                 if (!cmsLink.success) return cmsLink
                 return {
                     success: true,
@@ -197,7 +198,7 @@ export async function removeArticleSectionPart(
             !afterDelete.cmsParagraph &&
             !afterDelete.cmsImage
         ) {
-            const destroyRes = await destroyArticleSection(name)
+            const destroyRes = await destroyArticleSection(nameOrId)
             if (!destroyRes.success) {
                 return createActionError('UNKNOWN ERROR', 'Greide ikke slette artikkelseksjonen')
             }

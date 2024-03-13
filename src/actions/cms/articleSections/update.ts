@@ -1,6 +1,5 @@
 'use server'
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
-import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import { createCmsImage } from '@/server/cms/images/create'
