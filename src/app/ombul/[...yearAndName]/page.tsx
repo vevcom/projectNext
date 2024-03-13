@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
-import { readOmbul } from '@/actions/ombul/read'
+import { readOmbulAction } from '@/actions/ombul/read'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
@@ -25,7 +25,7 @@ export default async function Ombul({ params }: PropTypes) {
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)
     const name = decodeURIComponent(params.yearAndName[1])
     if (!year || !name || params.yearAndName.length > 2) notFound()
-    const ombulRes = await readOmbul({
+    const ombulRes = await readOmbulAction({
         name,
         year
     })
