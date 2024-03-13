@@ -1,4 +1,4 @@
-import { userFieldsToExpose } from './ConfigVars'
+import { userFieldsToExpose, userFilterSelection } from './ConfigVars'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { UserFiltered, UserDetails } from './Types'
@@ -19,10 +19,7 @@ export async function readUserPage<const PageSize extends number>({
         const users = await prisma.user.findMany({
             skip: page.page * page.pageSize,
             take: page.pageSize,
-            select: userFieldsToExpose.reduce((prev, field) => ({
-                ...prev,
-                [field]: true
-            }), {} as { [key in typeof userFieldsToExpose[number]]: true }),
+            select: userFilterSelection,
             where: {
                 AND: words.map((word, i) => {
                     const condition = {
