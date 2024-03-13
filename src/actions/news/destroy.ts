@@ -1,5 +1,5 @@
 'use server'
-import { destroyArticle } from '@/cms/articles/destroy'
+import { destroyArticle } from '@/server/cms/articles/destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'

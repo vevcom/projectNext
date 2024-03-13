@@ -4,7 +4,7 @@ import EditCategory from './EditCategory'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
-import { destroyArticle } from '@/actions/cms/articles/destroy'
+import { destroyArticleAction } from '@/actions/cms/articles/destroy'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -78,7 +78,7 @@ function MainListContent({ category }: { category: ExpandedArticleCategory }) {
     const { push, refresh } = useRouter()
 
     const handleDestroy = async (id: number) => {
-        const res = await destroyArticle(id)
+        const res = await destroyArticleAction(id)
         if (!res.success) throw new Error('could not destroy article')
         push(`/articles/${category.name}`)
         refresh()
