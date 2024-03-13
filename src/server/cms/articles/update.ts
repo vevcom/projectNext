@@ -30,6 +30,12 @@ export async function updateArticle(
     }
 }
 
+/**
+ * A function to add a new article section to an article
+ * @param id - The id of the article to add a section to
+ * @param include - The parts to include in the new section
+ * @returns 
+ */
 export async function addSectionToArticle(
     id: number,
     include: Partial<Record<ArticleSectionPart, boolean>>
@@ -97,6 +103,13 @@ export async function addSectionToArticle(
     }
 }
 
+/**
+ * A function to move a section in an article up or down
+ * @param id - The id of the article to move a section in
+ * @param sectionId - The id of the section to move
+ * @param direction - The direction to move the section in
+ * @returns 
+ */
 export async function moveSectionOrder(
     id: number,
     sectionId: number,
