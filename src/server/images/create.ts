@@ -1,6 +1,6 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
-import createFile from '@/server/store/createFile'
+import { createFile } from '@/server/store/createFile'
 import { createPrismaActionError, createActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import logger from '@/logger'

@@ -15,7 +15,7 @@ function isErrorWithCode(error: unknown): error is { code: string } {
  * @param fsLocation the location of the file in the store to delete
  * @returns either an error or success in ActionReturn
  */
-export default async function destroyFile(
+export async function destroyFile(
     destination: StoreLocations,
     fsLocation: string
 ): Promise<ActionReturn<void, false>> {

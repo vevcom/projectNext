@@ -1,7 +1,7 @@
 import 'server-only'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import destroyFile from '@/server/store/destroyFile'
+import { destroyFile } from '@/server/store/destroyFile'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 
