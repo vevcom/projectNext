@@ -7,5 +7,5 @@ export const groupEnumToKey = {
     COMMITTEE: 'committee',
     INTEREST_GROUP: 'interestGroup',
     OMEGA_MEMBERSHIP_GROUP: 'omegaMembershipGroup',
-    STUDY_PROGRAMME_GROUP: 'studyProgrammeGroup',
+    STUDY_PROGRAMME: 'studyProgramme',
 } as const

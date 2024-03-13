@@ -101,8 +101,8 @@ enum GroupType {
   CLASS
   COMMITTEE
   INTEREST_GROUP
+  STUDY_PROGRAMME
   OMEGA_MEMBERSHIP_GROUP
-  STUDY_PROGRAMME_GROUP
 }
 
 // The model 'Group' should be treated as an abstract table. I.e. a generic
@@ -120,7 +120,7 @@ model Group {
   committee            Committee?
   interestGroup        InterestGroup?
   omegaMembershipGroup OmegaMembershipGroup?
-  studyProgrammeGroup  StudyProgrammeGroup?
+  studyProgramme       StudyProgramme?
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -129,17 +129,24 @@ model Group {
 model Class {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
-  year  Int
+
+  omegaOrder OmegaOrder @relation(fields: [order], references: [order])
+  order      Int        @unique
+  year       Int        @unique
 }
 
 model Committee {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
+
+  // TODO - add committee data
 }
 
 model InterestGroup {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
+
+  // TODOD - add intereset group data
 }
 
 enum OmegaMembershipLevel {
@@ -151,12 +158,18 @@ enum OmegaMembershipLevel {
 model OmegaMembershipGroup {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
+
+  omegaMembershipLevel OmegaMembershipLevel @unique
 }
 
-model StudyProgrammeGroup {
+model StudyProgramme {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
-  // TODO - Add study program model when finnished
+
+  code          String  @unique
+  insititueCode String?
+  yearsLength   Int?
+  startYear     Int?
 }
 
 /////////////////
@@ -181,8 +194,6 @@ model Role {
   users       RolesUsers[] // Will be removed when groups are finnished
   groups      RolesGroups[]
   permissions RolePermission[]
-
-  studyProgram StudyProgram?
 }
 
 model RolePermission {
@@ -418,34 +429,22 @@ model OmegaQuote {
   userPosterId Int
 }
 
-///////////////////
-// StudyPrograms //
-///////////////////
-
-model StudyProgram {
-  // Use the name field from the role instead
-  id            Int     @id
-  code          String  @unique
-  insititueCode String?
-  yearsLength   Int?
-  startYear     Int     @default(1)
-  role          Role    @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-///////////////////////////
-// Current year of omega //
-///////////////////////////
+////////////////////////////
+// Current order of omega //
+////////////////////////////
 
 model OmegaOrder {
-  order       Int           @id
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  NewsArticle NewsArticle[]
+  order     Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  newsArticles NewsArticle[]
+  classes      Class[]
 }
 
-///////////////////////////
-// Ombul //////////////////
-///////////////////////////
+///////////
+// Ombul //
+///////////
 
 model Ombul {
   id           Int      @id @default(autoincrement())

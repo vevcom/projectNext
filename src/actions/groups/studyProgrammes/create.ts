@@ -1,16 +1,19 @@
 'use server'
 
-import { createCommitteeSchema } from './schema'
+import 'server-only'
+import prisma from '@/prisma'
+import { createPrismaActionError } from '@/actions/error'
+import { createstudyProgrammeSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import { createGroup } from '@/actions/groups/create'
-import type { CreateCommitteeSchemaType } from './schema'
+import type { CreatestudyProgrammeSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedCommitte } from './Types'
+import type { ExpandedstudyProgramme } from './Types'
 
-export async function createCommittee(
-    rawData: FormData | CreateCommitteeSchemaType
-): Promise<ActionReturn<ExpandedCommitte>> {
-    const parse = createCommitteeSchema.safeParse(rawData)
+export async function createstudyProgramme(
+    rawData: FormData | CreatestudyProgrammeSchemaType
+): Promise<ActionReturn<ExpandedstudyProgramme>> {
+    const parse = createstudyProgrammeSchema.safeParse(rawData)
 
     if (!parse.success) {
         return createZodActionError(parse)
@@ -19,7 +22,7 @@ export async function createCommittee(
     const { name } = parse.data
 
     const createGroupRes = await createGroup({
-        groupType: 'COMMITTEE',
+        groupType: 'STUDY_PROGRAMME',
         membershipRenewal: true,
         name,
         details: {}

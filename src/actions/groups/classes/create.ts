@@ -20,7 +20,9 @@ export async function createClass(rawData: FormData | CreateClassSchemaType): Pr
         groupType: 'CLASS',
         membershipRenewal: true,
         name,
-        data: {}
+        details: {
+            year: 1
+        }
     })
 
     if (!createGroupRes.success) {

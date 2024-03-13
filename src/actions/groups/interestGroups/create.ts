@@ -22,7 +22,7 @@ export async function createInterestGroup(
         groupType: 'INTEREST_GROUP',
         membershipRenewal: true,
         name,
-        data: {}
+        details: {}
     })
 
     if (!createGroupRes.success) {
