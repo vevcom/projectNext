@@ -1,6 +1,6 @@
 'use client'
 
-import { destroyRole } from '@/actions/rolePermissions/destroy'
+import { destroyRoleAction } from '@/actions/rolePermissions/destroy'
 import Form from '@/app/components/Form/Form'
 import { useRouter } from 'next/navigation'
 
@@ -15,7 +15,7 @@ export default function DeleteRoleForm({ selectedRoleId }: PropType) {
         submitText="Slett"
         submitColor="red"
         confirmation={{ confirm: true, text: 'Er du sikker på at du vil slette denne rollen?' }}
-        action={() => destroyRole(selectedRoleId)}
+        action={() => destroyRoleAction(selectedRoleId)}
         successCallback={refresh}
     />
 }

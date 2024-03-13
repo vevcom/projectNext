@@ -1,45 +1,18 @@
 'use server'
-
 import { removeUserFromRoleSchema } from './schema'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
+import { invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { Prisma } from '@prisma/client'
+import { destroyRole } from '@/server/rolePermissions/destroy'
 
 type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
-export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
-    try {
-        const role = await prisma.role.delete({
-            where: {
-                id: roleId
-            },
-            select: {
-                id: true,
-                name: true,
-                permissions: {
-                    select: {
-                        permission: true
-                    }
-                },
-                users: {
-                    select: {
-                        userId: true
-                    }
-                }
-            }
-        })
-
-        const res = await invalidateManyUserSessionData(role.users.map(user => user.userId))
-
-        if (!res.success) return res
-
-        return { success: true, data: role }
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+export async function destroyRoleAction(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
+    //TODO: Auth
+    return await destroyRole(roleId)
 }
 
 export async function removeUserFromRole(
