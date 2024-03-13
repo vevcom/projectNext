@@ -3,9 +3,9 @@
 import { createRoleSchema, addUserToRoleSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import type { RoleWithPermissions } from '@/server/permissions/Types'
+import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
 import type { CreateRoleSchemaType, AddUserToRoleSchemaType } from './schema'
-import { addUserToRole, createRole } from '@/server/permissions/create'
+import { addUserToRole, createRole } from '@/server/rolePermissions/create'
 
 
 export async function createRoleAction(rawdata: FormData | CreateRoleSchemaType): Promise<ActionReturn<RoleWithPermissions>> {

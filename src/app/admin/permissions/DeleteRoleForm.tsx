@@ -1,6 +1,6 @@
 'use client'
 
-import { destroyRole } from '@/actions/permissions/destroy'
+import { destroyRole } from '@/actions/rolePermissions/destroy'
 import Form from '@/app/components/Form/Form'
 import { useRouter } from 'next/navigation'
 

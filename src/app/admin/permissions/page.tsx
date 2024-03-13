@@ -1,5 +1,5 @@
 import RoleView from './RoleView'
-import { readRoles } from '@/actions/permissions/read'
+import { readRoles } from '@/actions/rolePermissions/read'
 
 export default async function Permissions() {
     const res = await readRoles()

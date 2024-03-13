@@ -1,7 +1,7 @@
 'use client'
 
-import { addUserToRoleAction } from '@/actions/permissions/create'
-import { removeUserFromRole } from '@/actions/permissions/destroy'
+import { addUserToRoleAction } from '@/actions/rolePermissions/create'
+import { removeUserFromRole } from '@/actions/rolePermissions/destroy'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import { useRouter } from 'next/navigation'

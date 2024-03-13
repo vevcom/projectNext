@@ -1,6 +1,6 @@
 'use client'
 
-import { updateRole } from '@/actions/permissions/update'
+import { updateRole } from '@/actions/rolePermissions/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
