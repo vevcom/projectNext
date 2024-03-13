@@ -185,7 +185,6 @@ export async function removeArticleSectionPart(
                 break
         }
 
-
         // check if all Parts are removed and if so, remove the articleSection,
         // but only if destroyOnEmpty is true
         const afterDelete = await prisma.articleSection.findUnique({

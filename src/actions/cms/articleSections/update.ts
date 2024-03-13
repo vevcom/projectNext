@@ -2,7 +2,7 @@
 import type { ArticleSection, Position } from '@prisma/client'
 import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { addArticleSectionPart, removeArticleSectionPart } from '@/server/cms/articleSections/update'
+import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection } from '@/server/cms/articleSections/update'
 
 
 export async function updateArticleSectionAction(name: string, changes: {
@@ -10,7 +10,7 @@ export async function updateArticleSectionAction(name: string, changes: {
     imagePosition?: Position,
 }): Promise<ActionReturn<ExpandedArticleSection>> {
     //Todo: Auth by visibilty
-    return await updateArticleSectionAction(name, changes)
+    return await updateArticleSection(name, changes)
 }
 
 export async function addArticleSectionPartAction(
