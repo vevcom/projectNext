@@ -8,7 +8,7 @@ import type { ActionReturn } from '@/actions/Types'
  * A function to create a cms paragraph
  * @param name - name of the cms paragraph
  * @param config - Config for the paragraph, should it be special??
- * @returns 
+ * @returns
  */
 export async function createCmsParagraph(name: string, config?: {
     special?: SpecialCmsParagraph

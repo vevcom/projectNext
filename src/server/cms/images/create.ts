@@ -13,7 +13,7 @@ import type { ActionReturn } from '@/actions/Types'
  * @returns - The created cmsImage
  */
 export async function createCmsImage(
-    name: string, 
+    name: string,
     data?: {
         special?: SpecialCmsImage
     },

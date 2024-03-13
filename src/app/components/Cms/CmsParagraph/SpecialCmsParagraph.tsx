@@ -9,7 +9,9 @@ type PropTypes = Omit<PropTypesCmsParapraph, 'cmsParagraph'> & {
 }
 
 /**
- * WARNING: This component should only be rendered server side, on client fetch the paragraph using readSpecialCmsParagraphAction
+ * WARNING: This component should only be rendered server side, on client fetch the
+ * paragraph using readSpecialCmsParagraphAction
+ *
  * then render it using CmsParagraph.
  * A component that reads a special type of paragraph using readSpecialCmsParagraphAction
  * then renders it using standard CmsParagraph

@@ -1,12 +1,15 @@
 'use server'
 import { articleLinkSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { updateCmsLink } from '@/server/cms/links/update'
 import type { ArticleLinkSchemaType } from './schema'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { updateCmsLink } from '@/server/cms/links/update'
 
-export async function updateCmsLinkAction(id: number, rawData: FormData | ArticleLinkSchemaType): Promise<ActionReturn<CmsLink>> {
+export async function updateCmsLinkAction(
+    id: number,
+    rawData: FormData | ArticleLinkSchemaType
+): Promise<ActionReturn<CmsLink>> {
     //TODO: auth on visibility
     const parse = articleLinkSchema.safeParse(rawData)
     if (!parse.success) {

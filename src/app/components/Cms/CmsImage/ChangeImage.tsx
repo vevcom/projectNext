@@ -72,7 +72,11 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
                         <Form
-                            action={updateCmsImageConfigAction.bind(null, cmsImageId).bind(null, { imageSize: changeToSize })}
+                            action={
+                                updateCmsImageConfigAction
+                                    .bind(null, cmsImageId)
+                                    .bind(null, { imageSize: changeToSize })
+                            }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             successCallback={refresh}
                             submitColor="secondary"

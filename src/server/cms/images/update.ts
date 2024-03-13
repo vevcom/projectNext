@@ -8,7 +8,7 @@ import type { CmsImage, ImageSize } from '@prisma/client'
  * A function that changes the image of a cms image
  * @param cmImageId - The id of the cms image to change image
  * @param imageId - The id of the image to connect
- * @returns 
+ * @returns
  */
 export async function updateCmsImage(cmImageId: number, imageId: number): Promise<ActionReturn<CmsImage>> {
     try {
@@ -34,12 +34,12 @@ export async function updateCmsImage(cmImageId: number, imageId: number): Promis
  * A function to update metadata of a cms image
  * @param cmsImageId - The id of the cms image to update
  * @param config - The new config
- * @returns 
+ * @returns
  */
 export async function updateCmsImageConfig(
-    cmsImageId: number, 
+    cmsImageId: number,
     config: {imageSize: ImageSize}
-) : Promise<ActionReturn<CmsImage>> {
+): Promise<ActionReturn<CmsImage>> {
     try {
         const cmsImage = await prisma.cmsImage.update({
             where: {

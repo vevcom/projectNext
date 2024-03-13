@@ -13,7 +13,7 @@ import type { ActionReturn } from '@/actions/Types'
  * A function to update the content of a paragraph. Takes markdown and sets both md and html content.
  * @param id - id of the paragraph to update
  * @param contentMd - new content in markdown
- * @returns 
+ * @returns
  */
 export async function updateCmsParagraphContents(id: number, contentMd: string): Promise<ActionReturn<CmsParagraph>> {
     try {

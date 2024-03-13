@@ -1,8 +1,8 @@
 
 /**
- * A function to create the select atr. in prisma from fields. Use a constant array like 
+ * A function to create the select atr. in prisma from fields. Use a constant array like
  * ```ts
- * const fieldsToExpose = ['id', 'name', 'email'] as const 
+ * const fieldsToExpose = ['id', 'name', 'email'] as const
  * ```
  * and pass it to the function to
  * get the type of the selection. Note that you must spread the array to avoid the readonly

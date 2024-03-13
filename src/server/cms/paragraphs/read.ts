@@ -1,9 +1,8 @@
 import 'server-only'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import { SpecialCmsParagraph } from '@prisma/client'
+import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { CmsParagraph } from '@prisma/client'
 
 export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
     try {

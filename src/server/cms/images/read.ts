@@ -1,10 +1,9 @@
 import 'server-only'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
-import { SpecialCmsImage } from '@prisma/client'
+import type { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { createCmsImage } from '@/server/cms/images/create'
 
 /**
  * Read a cms image including the image associated with it
