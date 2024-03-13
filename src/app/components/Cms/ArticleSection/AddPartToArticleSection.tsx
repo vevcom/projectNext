@@ -1,6 +1,6 @@
 'use client'
 import styles from './AddPartToArticleSection.module.scss'
-import { addArticleSectionPart } from '@/cms/articleSections/update'
+import { addArticleSectionPartAction } from '@/cms/articleSections/update'
 import AddParts from '@/cms/AddParts'
 import { EditModeContext } from '@/context/EditMode'
 import { useCallback, useContext } from 'react'
@@ -18,7 +18,7 @@ export default function AddPartToArticleSection({ articleSectionName, children, 
     const { refresh } = useRouter()
     const editMode = useContext(EditModeContext)
     const handleAdd = useCallback(async (part: ArticleSectionPart) => {
-        await addArticleSectionPart(articleSectionName, part)
+        await addArticleSectionPartAction(articleSectionName, part)
         refresh()
     }, [articleSectionName])
     if (!editMode?.editMode) return children

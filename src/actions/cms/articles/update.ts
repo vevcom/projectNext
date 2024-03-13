@@ -3,12 +3,12 @@ import { articleRealtionsIncluder, maxSections } from './ConfigVars'
 import { articleSchema } from './schema'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import { addArticleSectionPart } from '@/cms/articleSections/update'
+import { addArticleSectionPart } from '@/server/cms/articleSections/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
-import type { ArticleSectionPart } from '@/cms/articleSections/Types'
 import type { ExpandedArticle } from './Types'
 import type { ArticleSchemaType } from './schema'
+import { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 export async function updateArticle(
     id: number, rawData: FormData | ArticleSchemaType
