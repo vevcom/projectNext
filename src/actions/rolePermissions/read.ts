@@ -1,7 +1,5 @@
 'use server'
-import { createPrismaActionError } from '@/actions/error'
-import prisma from '@/prisma'
-import type { Permission, Prisma, User } from '@prisma/client'
+import type { User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
 import { readRoles, readUsersOfRole } from '@/server/rolePermissions/read'
