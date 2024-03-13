@@ -59,7 +59,7 @@ export async function createOmbul(
     if (!coverImageRes.success) return coverImageRes
     const coverImage = coverImageRes.data
 
-    const cmsCoverImageRes = await createCmsImage(fsLocation, coverImage)
+    const cmsCoverImageRes = await createCmsImage(fsLocation, {}, coverImage)
     if (!cmsCoverImageRes.success) return cmsCoverImageRes
     const cmsCoverImage = cmsCoverImageRes.data
 
