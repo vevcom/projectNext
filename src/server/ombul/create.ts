@@ -1,7 +1,7 @@
 import 'server-only'
 import { createPrismaActionError } from '@/actions/error'
 import { readSpecialImageCollection } from '@/server/images/collections/read'
-import { createCmsImage } from '@/cms/images/create'
+import { createCmsImage } from '@/server/cms/images/create'
 import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { createImage } from '@/server/images/create'

@@ -1,1 +1,33 @@
 import 'server-only'
+import prisma from '@/prisma'
+import { createPrismaActionError } from '@/actions/error'
+import type { Image } from '@prisma/client'
+import type { ExpandedCmsImage } from './Types'
+import type { ActionReturn } from '@/actions/Types'
+
+/**
+ * A function to create a cmsImage
+ * @param name - The name of the cmsImage to create
+ * @param image - The image to associate with the cmsImage
+ * @returns - The created cmsImage
+ */
+export async function createCmsImage(name: string, image?: Image): Promise<ActionReturn<ExpandedCmsImage>> {
+    try {
+        const created = await prisma.cmsImage.create({
+            data: {
+                name,
+                image: {
+                    connect: {
+                        id: image?.id
+                    }
+                }
+            },
+            include: {
+                image: true
+            }
+        })
+        return { success: true, data: created }
+    } catch (error) {
+        return createPrismaActionError(error)
+    }
+}

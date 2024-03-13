@@ -3,7 +3,7 @@ import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from './
 import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
-import { createCmsImage } from '@/actions/cms/images/create'
+import { createCmsImage } from '@/server/cms/images/create'
 import { createCmsParagraph } from '@/actions/cms/paragraphs/create'
 import { createCmsLink } from '@/actions/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
@@ -15,6 +15,8 @@ export async function updateArticleSection(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }): Promise<ActionReturn<ExpandedArticleSection>> {
+    //Todo: Auth by visibilty
+
     try {
         //Sets the image resolution based on the image size
         let newCmsImageResolution: ImageSize | undefined = undefined
