@@ -1,4 +1,5 @@
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import 'server-only'
+import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { ActionReturn } from '@/actions/Types'
