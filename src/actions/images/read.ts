@@ -30,7 +30,7 @@ export async function readImageAction(nameOrId: string | number): Promise<Action
 }
 
 /**
- * Reads a "special" image - read on this in the docs. If it does not exist it will create it, but
+ * Action that reads a "special" image - read on this in the docs. If it does not exist it will create it, but
  * its conntent will not be the intended content. This is NOT under any circomstainses supposed to happen
  * @param special - the special image to read
  * @returns the special image
