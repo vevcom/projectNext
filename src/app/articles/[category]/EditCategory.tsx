@@ -4,7 +4,7 @@ import PopUp from '@/app/components/PopUp/PopUp'
 import Textarea from '@/app/components/UI/Textarea'
 import TextInput from '@/app/components/UI/TextInput'
 import { updateArticleCategory } from '@/actions/cms/articleCategories/update'
-import { createArticle } from '@/actions/cms/articles/create'
+import { createArticleAction } from '@/actions/cms/articles/create'
 import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,7 +40,7 @@ export default function EditCategory({ category }: PropTypes) {
         <>
             <li className={styles.newArticle}>
                 <Form
-                    action={createArticle.bind(null, null).bind(null, {
+                    action={createArticleAction.bind(null, null).bind(null, {
                         categoryId: category.id,
                     })}
                     successCallback={refresh}
