@@ -2,7 +2,7 @@
 import { newsArticleSchema } from './schema'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { createArticle } from '@/cms/articles/create'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
