@@ -1,8 +1,8 @@
 import 'server-only'
 import { destroyArticleSection } from './destroy'
-import { destroyCmsImage } from '../images/destoy'
-import { destroyCmsLink } from '../links/destroy'
-import { destroyCmsParagraph } from '../paragraphs/destroy'
+import { destroyCmsImage } from '@/server/cms/images/destoy'
+import { destroyCmsLink } from '@/server/cms/links/destroy'
+import { destroyCmsParagraph } from '@/server/cms/paragraphs/destroy'
 import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
@@ -172,13 +172,13 @@ export async function removeArticleSectionPart(
 
         switch (part) {
             case 'cmsLink':
-                articleSection.cmsLink && await destroyCmsLink(articleSection.cmsLink.id)
+                if (articleSection.cmsLink) await destroyCmsLink(articleSection.cmsLink.id)
                 break
             case 'cmsParagraph':
-                articleSection.cmsParagraph && await destroyCmsParagraph(articleSection.cmsParagraph.id)
+                if (articleSection.cmsParagraph) await destroyCmsParagraph(articleSection.cmsParagraph.id)
                 break
             case 'cmsImage':
-                articleSection.cmsImage && await destroyCmsImage(articleSection.cmsImage.id)
+                if (articleSection.cmsImage) await destroyCmsImage(articleSection.cmsImage.id)
                 break
             default:
                 break

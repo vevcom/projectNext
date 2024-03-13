@@ -1,5 +1,5 @@
 import 'server-only'
-import { destroyCmsImage } from '../images/destoy'
+import { destroyCmsImage } from '@/cms/images/destoy'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
@@ -17,7 +17,7 @@ export async function destroyArticle(id: number): Promise<ActionReturn<Article>>
             where: { id }
         })
 
-        // delete coverimage
+        // delete coverimage to avoid orphaned cmsimages
         await destroyCmsImage(article.coverImageId)
 
         return {

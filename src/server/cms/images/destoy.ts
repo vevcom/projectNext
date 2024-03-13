@@ -1,5 +1,6 @@
 import 'server-only'
 import { createPrismaActionError } from '@/actions/error'
+import prisma from '@/prisma'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage } from '@prisma/client'
 
