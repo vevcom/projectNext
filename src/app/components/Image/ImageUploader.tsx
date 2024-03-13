@@ -4,7 +4,7 @@ import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
-type ResponseType = Awaited<ReturnType<typeof createImage>>;
+type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
 type T = Pick<ResponseType & { success: true }, 'data'>['data']
 
 type PropTypes = Omit<FormPropTypes<T, true>, 'action' | 'submitText' | 'title'> & {
