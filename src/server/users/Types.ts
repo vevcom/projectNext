@@ -1,5 +1,5 @@
+import type { userFieldsToExpose } from './ConfigVars'
 import type { User } from '@prisma/client'
-import { userFieldsToExpose } from './ConfigVars'
 
 export type UserFiltered = Pick<User, typeof userFieldsToExpose[number]>
 

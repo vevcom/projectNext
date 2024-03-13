@@ -1,6 +1,6 @@
-import prisma from "@/prisma"
-import { createPrismaActionError, createActionError } from "@/actions/error"
-import type { ActionReturn } from "@/actions/Types"
+import prisma from '@/prisma'
+import { createPrismaActionError, createActionError } from '@/actions/error'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
     try {

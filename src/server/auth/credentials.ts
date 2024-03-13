@@ -10,9 +10,7 @@ export async function registerUser(id: number, config: {
     username: string
     sex: SEX
 }): Promise<ActionReturn<null>> {
-
     try {
-
         const alredyRegistered = await prisma.user.findUnique({
             where: {
                 id

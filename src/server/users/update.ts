@@ -1,9 +1,8 @@
 import 'server-only'
 import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
+import type { Prisma, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { Prisma } from '@prisma/client'
-import type { User } from '@prisma/client'
 
 export async function updateUser(id: number, data: Prisma.UserUpdateInput): Promise<ActionReturn<User>> {
     try {

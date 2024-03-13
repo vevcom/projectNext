@@ -1,13 +1,12 @@
 'use server'
 import { updateUserSchema, userRegisterSchema } from './schema'
-import { createZodActionError } from '@/actions/error'
+import { createZodActionError, createActionError } from '@/actions/error'
+import { updateUser } from '@/server/users/update'
+import { registerUser } from '@/server/auth/credentials'
+import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserSchemaType } from './schema'
-import { updateUser } from '@/server/users/update'
-import { registerUser } from '@/server/auth/credentials'
-import { createActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
 
 export async function updateUserAction(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
     const parse = updateUserSchema.safeParse(rawdata)
@@ -31,5 +30,5 @@ export async function updateUserCredentailsAction(rawdata: FormData): Promise<Ac
         return createZodActionError(parse)
     }
 
-    return await registerUser(user.id, {...parse.data, username: user.username})
+    return await registerUser(user.id, { ...parse.data, username: user.username })
 }

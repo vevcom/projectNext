@@ -1,11 +1,11 @@
 import 'server-only'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import type { ExpandedOmbul } from './Types'
-import type { ActionReturn } from '@/actions/Types'
-import { Prisma } from '@prisma/client'
 import createFile from '@/server/store/createFile'
 import destroyFile from '@/server/store/destroyFile'
+import type { Prisma } from '@prisma/client'
+import type { ExpandedOmbul } from './Types'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * A function Update an ombul
@@ -50,7 +50,6 @@ export async function updateOmbulFile(
     id: number,
     file: File,
 ): Promise<ActionReturn<ExpandedOmbul>> {
-
     const ret = await createFile(file, 'ombul', ['pdf'])
     if (!ret.success) return ret
     const fsLocation = ret.data.fsLocation

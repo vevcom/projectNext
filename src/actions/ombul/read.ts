@@ -1,11 +1,10 @@
 'use server'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
+import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { Ombul } from '@prisma/client'
-import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
 
 export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     //Auth route

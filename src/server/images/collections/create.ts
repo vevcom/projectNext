@@ -1,9 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import type { ImageCollection } from '@prisma/client'
+import { createPrismaActionError } from '@/actions/error'
+import type { ImageCollection, Prisma } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { Prisma } from '@prisma/client';
 
 export async function createImageCollection(
     data: Prisma.ImageCollectionCreateInput
@@ -15,5 +14,4 @@ export async function createImageCollection(
         return createPrismaActionError(error)
     }
 }
-
 

@@ -8,9 +8,9 @@ import type { RoleWithPermissions } from './Types'
 /**
  * A function that delets a role, it will also invalidate the session of all users that have the role
  * @param roleId - The id of the role to destroy
- * @returns 
+ * @returns
  */
-export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {    
+export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
     try {
         const role = await prisma.role.delete({
             where: {
@@ -46,7 +46,7 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
  * A function that removes a user from a role. It will also invalidate the session of the user
  * @param username - The username of the user to remove from the role
  * @param roleId - The id of the role to remove the user from
- * @returns 
+ * @returns
  */
 export async function removeUserFromRole(
     username: string,

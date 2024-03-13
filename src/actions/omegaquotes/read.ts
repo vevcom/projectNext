@@ -1,12 +1,12 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
+import { readQuotesPage } from '@/server/omegaquotes/read'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { OmegaquoteFiltered } from '@/server/omegaquotes/Types'
-import { readQuotesPage } from '@/server/omegaquotes/read'
 
 export async function readQuotesPageAction<const PageSize extends number>(
-    ReadPageInput: ReadPageInput<PageSize>
+    readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<OmegaquoteFiltered[]>> {
     //TODO:  REFACTOR when new permission system is working
     const { status } = await getUser({
@@ -17,5 +17,5 @@ export async function readQuotesPageAction<const PageSize extends number>(
         return createActionError(status)
     }
 
-    return await readQuotesPage(ReadPageInput)
+    return await readQuotesPage(readPageInput)
 }

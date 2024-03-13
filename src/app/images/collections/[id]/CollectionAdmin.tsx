@@ -1,6 +1,6 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import { createImageAction, createImagesAction } from '@/actions/images/create'
+import { createImagesAction } from '@/actions/images/create'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'

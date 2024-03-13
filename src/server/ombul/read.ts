@@ -29,7 +29,7 @@ export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {
 /**
  * A function to read one ombul
  * @param idOrNameAndYear - The id of the ombul to read, or an object with the name and year of the ombul to read
- * @returns 
+ * @returns
  */
 export async function readOmbul(idOrNameAndYear: number | {
     name: string,

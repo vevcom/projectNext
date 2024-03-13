@@ -1,11 +1,11 @@
 import 'server-only'
 import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import type { Permission, Prisma, User } from '@prisma/client'
+import type { Permission, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
 
-export async function readRoles(): Promise<ActionReturn<RoleWithPermissions[]>> {    
+export async function readRoles(): Promise<ActionReturn<RoleWithPermissions[]>> {
     try {
         const roles = await prisma.role.findMany({
             include: {

@@ -8,7 +8,7 @@ import type { ExpandedOmbul } from '@/server/ombul/Types'
 /**
  * A function to destroy an ombul, also deletes the file from the store, and the cmsImage on cascade
  * @param id - The id of the ombul to destroy
- * @returns 
+ * @returns
  */
 export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
     try {

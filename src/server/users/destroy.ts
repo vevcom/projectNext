@@ -7,7 +7,7 @@ import type { User } from '@prisma/client'
 /**
  * Action to destroy a user by the given id
  * @param id - The id of the user to destroy
- * @returns 
+ * @returns
  */
 export async function destroyUser(id: number): Promise<ActionReturn<User>> {
     try {

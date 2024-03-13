@@ -3,7 +3,7 @@ import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { ActionReturn } from '@/actions/Types'
-import type {  RoleWithPermissions } from './Types'
+import type { RoleWithPermissions } from './Types'
 
 export async function createRole(data: { name: string }): Promise<ActionReturn<RoleWithPermissions>> {
     try {
@@ -27,7 +27,7 @@ export async function createRole(data: { name: string }): Promise<ActionReturn<R
 }
 
 export async function addUserToRole(
-    username: string, 
+    username: string,
     roleId: number
 ): Promise<ActionReturn<void, false>> {
     //TODO: Auth

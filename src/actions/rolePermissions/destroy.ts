@@ -1,10 +1,10 @@
 'use server'
 import { removeUserFromRoleSchema } from './schema'
+import { destroyRole, removeUserFromRole } from '@/server/rolePermissions/destroy'
+import { createZodActionError } from '@/actions/error'
 import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import { destroyRole, removeUserFromRole } from '@/server/rolePermissions/destroy'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import { createZodActionError } from '@/actions/error'
 
 export async function destroyRoleAction(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
     //TODO: Auth

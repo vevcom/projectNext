@@ -1,6 +1,6 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
+import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote, Prisma } from '@prisma/client'
 
@@ -8,10 +8,10 @@ import type { OmegaQuote, Prisma } from '@prisma/client'
  * A function to create a quote
  * @param userId - The user id of the user creating the quote
  * @param data - The data of the quote to be created
- * @returns 
+ * @returns
  */
 export async function createQuote(
-    userId: number, 
+    userId: number,
     data: Omit<Prisma.OmegaQuoteCreateInput, 'userPoster'>
 ): Promise<ActionReturn<OmegaQuote>> {
     try {

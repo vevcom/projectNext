@@ -1,9 +1,9 @@
 'use server'
 import { updateRoleSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { updateRole } from '@/server/rolePermissions/update'
 import type { UpdateRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import { updateRole } from '@/server/rolePermissions/update'
 
 export async function updateRoleAction(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
     //TODO: auth

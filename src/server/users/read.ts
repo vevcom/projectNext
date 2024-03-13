@@ -1,4 +1,4 @@
-import { userFieldsToExpose, userFilterSelection } from './ConfigVars'
+import { userFilterSelection } from './ConfigVars'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { UserFiltered, UserDetails } from './Types'
@@ -8,7 +8,7 @@ import type { ActionReturn, ReadPageInput } from '@/actions/Types'
  * A function to read a page of users with the given details (filtering)
  * @param readPageInput - This is a) the page to read and b) the details to filter by like
  * name and groups
- * @returns 
+ * @returns
  */
 export async function readUserPage<const PageSize extends number>({
     page,

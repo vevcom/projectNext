@@ -1,5 +1,5 @@
 import 'server-only'
-import { createActionError, createPrismaActionError } from '@/actions/error'
+import { createPrismaActionError } from '@/actions/error'
 import { readSpecialImageCollection } from '@/server/images/collections/read'
 import { createCmsImage } from '@/cms/images/create'
 import prisma from '@/prisma'

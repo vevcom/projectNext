@@ -2,9 +2,8 @@ import 'server-only'
 import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
+import type { Prisma, Permission } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { Prisma } from '@prisma/client'
-import type { Permission } from '@prisma/client'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -12,10 +11,10 @@ import type { Permission } from '@prisma/client'
  * @param id - The id of the role to update
  * @param data - The new data for the role
  * @param permissions - The new permissions for the role
- * @returns 
+ * @returns
  */
 export async function updateRole(
-    id: number, 
+    id: number,
     data: Prisma.RoleUpdateInput,
     permissions: Permission[]
 ): Promise<ActionReturn<void, false>> {

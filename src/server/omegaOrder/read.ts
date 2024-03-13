@@ -5,8 +5,8 @@ import type { OmegaOrder } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 /**
- * A function to read the current OmegaOrder. That is the last OmegaOrder created, with 
- * heighst order. 
+ * A function to read the current OmegaOrder. That is the last OmegaOrder created, with
+ * heighst order.
  * @returns - the current OmegaOrder
  */
 export async function readCurrenOmegaOrder(): Promise<ActionReturn<OmegaOrder>> {
