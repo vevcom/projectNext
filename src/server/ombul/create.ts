@@ -53,7 +53,7 @@ export async function createOmbul(
     const ombulCoverCollection = ombulCoverCollectionRes.data
     const coverImageRes = await createImage(cover, {
         name: fsLocation,
-        alt: `cover of ${name}`,
+        alt: `cover of ${config.name}`,
         collectionId: ombulCoverCollection.id
     })
     if (!coverImageRes.success) return coverImageRes
