@@ -2,7 +2,7 @@
 
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { createRole } from '@/actions/permissions/create'
+import { createRoleAction } from '@/actions/permissions/create'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -17,7 +17,7 @@ export default function CreateRoleForm() {
     }
 
     return (
-        <Form submitText="Legg til" action={createRole} successCallback={callback} >
+        <Form submitText="Legg til" action={createRoleAction} successCallback={callback} >
             <TextInput label="Rollenavn" name="name" value={roleName} onChange={e => setRoleName(e.target.value)} />
         </Form>
     )

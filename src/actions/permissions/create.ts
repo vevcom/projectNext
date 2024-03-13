@@ -5,36 +5,19 @@ import { createActionError, createPrismaActionError, createZodActionError } from
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { ActionReturn } from '@/actions/Types'
-import type { Prisma } from '@prisma/client'
+import type { RoleWithPermissions } from '@/server/permissions/Types'
 import type { CreateRoleSchemaType, AddUserToRoleSchemaType } from './schema'
+import { createRole } from '@/server/permissions/create'
 
-type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } }>
 
-export async function createRole(rawdata: FormData | CreateRoleSchemaType): Promise<ActionReturn<RoleWithPermissions>> {
+export async function createRoleAction(rawdata: FormData | CreateRoleSchemaType): Promise<ActionReturn<RoleWithPermissions>> {
+    //TODO: Auth
+    
     const parse = createRoleSchema.safeParse(rawdata)
-
     if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-    const { name } = parse.data
-
-    try {
-        const role = await prisma.role.create({
-            data: { name },
-            select: {
-                id: true,
-                name: true,
-                permissions: {
-                    select: {
-                        permission: true
-                    }
-                }
-            }
-        })
-
-        return { success: true, data: role }
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    return await createRole(data)
 }
 
 export async function addUserToRole(rawdata: FormData | AddUserToRoleSchemaType): Promise<ActionReturn<void, false>> {
@@ -67,6 +50,7 @@ export async function addUserByIdToRole(userId: number, roleId: number): Promise
 }
 
 export async function addUserByIdToRoles(userId: number, roleIds: number[]): Promise<ActionReturn<void, false>> {
+    
     try {
         await prisma.rolesUsers.createMany({
             data: roleIds.map(roleId => ({
