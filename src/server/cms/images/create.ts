@@ -24,11 +24,11 @@ export async function createCmsImage(
             data: {
                 name,
                 special: data?.special,
-                image: {
+                image: image ? {
                     connect: {
                         id: image?.id
                     }
-                }
+                } : undefined
             },
             include: {
                 image: true
