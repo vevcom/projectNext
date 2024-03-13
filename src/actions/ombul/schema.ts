@@ -1,4 +1,4 @@
-import { maxOmbulFileSize } from './ConfigVars'
+import { maxOmbulFileSize } from '@/server/ombul/ConfigVars'
 import { imageFileSchema } from '@/actions/images/schema'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
