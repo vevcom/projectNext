@@ -41,3 +41,44 @@ export async function destroyRole(roleId: number): Promise<ActionReturn<RoleWith
         return createPrismaActionError(e)
     }
 }
+
+/**
+ * A function that removes a user from a role. It will also invalidate the session of the user
+ * @param username - The username of the user to remove from the role
+ * @param roleId - The id of the role to remove the user from
+ * @returns 
+ */
+export async function removeUserFromRole(
+    username: string,
+    roleId: number
+): Promise<ActionReturn<void, false>> {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                username
+            },
+            select: {
+                id: true
+            },
+        })
+
+        if (!user) return createActionError('BAD PARAMETERS', 'Invalid username')
+
+        await prisma.rolesUsers.delete({
+            where: {
+                userId_roleId: {
+                    roleId,
+                    userId: user.id
+                }
+            },
+        })
+
+        const res = await invalidateOneUserSessionData(user.id)
+
+        if (!res.success) return res
+    } catch (e) {
+        return createPrismaActionError(e)
+    }
+
+    return { success: true }
+}

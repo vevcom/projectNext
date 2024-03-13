@@ -1,7 +1,7 @@
 'use client'
 
 import { addUserToRoleAction } from '@/actions/rolePermissions/create'
-import { removeUserFromRole } from '@/actions/rolePermissions/destroy'
+import { removeUserFromRoleAction } from '@/actions/rolePermissions/destroy'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
@@ -23,7 +23,7 @@ export default function UserManagmentForm({ selectedRoleId }: PropTypes) {
     }
 
     async function removeUser(data: FormData) {
-        const result = await removeUserFromRole(data)
+        const result = await removeUserFromRoleAction(data)
         refresh()
         return result
     }
