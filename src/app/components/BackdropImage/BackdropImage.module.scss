@@ -1,0 +1,30 @@
+@use '@/styles/ohma';
+
+.BackdropImage {
+    position: relative;
+    isolation: isolate;
+
+    .image {
+        position: absolute;
+        translate: 40% 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 400px;
+        height: 400px;
+        opacity: 0.5;
+        display: flex;
+        align-items: flex-end;
+        * {
+            width: 100% !important;
+        }
+        .gray {
+            filter: grayscale(100%) brightness(0.5) contrast(1.5);
+        }
+    }
+
+
+    .content {
+        z-index: 2;
+    }
+}
