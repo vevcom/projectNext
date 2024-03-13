@@ -9,7 +9,7 @@ import type { ArticleSection } from '@prisma/client'
  * @param nameOrId - The name or id of the article section to destroy
  * @returns 
  */
-export async function destroyArticleSection(nameOrId: string): Promise<ActionReturn<ArticleSection>> {
+export async function destroyArticleSection(nameOrId: string | number): Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.delete({
             where: { 

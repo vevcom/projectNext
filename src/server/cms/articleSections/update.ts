@@ -20,7 +20,7 @@ import { destroyArticleSection } from './destroy'
  * the image in pixels, imagePosition is the position of the image in the article section
  * @returns 
  */
-export async function updateArticleSection(nameOrId: string, changes: {
+export async function updateArticleSection(nameOrId: string | number, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }): Promise<ActionReturn<ExpandedArticleSection>> {
@@ -71,7 +71,7 @@ export async function updateArticleSection(nameOrId: string, changes: {
  * @returns - The updated article section
  */
 export async function addArticleSectionPart(
-    nameOrId: string, 
+    nameOrId: string | number, 
     part: ArticleSectionPart
 ): Promise<ActionReturn<ExpandedArticleSection>> {
     const where = {
@@ -149,7 +149,7 @@ export async function addArticleSectionPart(
  * @returns - The updated article section
  */
 export async function removeArticleSectionPart(
-    nameOrId: string, 
+    nameOrId: string | number, 
     part: ArticleSectionPart
 ): Promise<ActionReturn<ArticleSection>> {
     const where = {
