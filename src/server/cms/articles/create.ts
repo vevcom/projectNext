@@ -10,7 +10,7 @@ import type { ActionReturn } from '@/actions/Types'
  * to null. A category can be given to the article, but it is not required.
  * @param name - The name of the article to create. If null, a unique name will be generated.
  * @param config - { categoryId } The category to connect the article to
- * @returns 
+ * @returns
  */
 export async function createArticle(name: string | null, config?: {
     categoryId: number,

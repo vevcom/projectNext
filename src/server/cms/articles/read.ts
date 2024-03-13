@@ -8,7 +8,7 @@ import type { ActionReturn } from '@/actions/Types'
 /**
  * A function that reads an article with all the neccessary data included like paragraphs, images, etc...
  * @param idOrName - The id or name + category of the article to read
- * @returns 
+ * @returns
  */
 export async function readArticle(idOrName: number | {
     name: string,

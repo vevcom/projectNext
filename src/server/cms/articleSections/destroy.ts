@@ -7,13 +7,13 @@ import type { ArticleSection } from '@prisma/client'
 /**
  * Destroys an article section
  * @param nameOrId - The name or id of the article section to destroy
- * @returns 
+ * @returns
  */
 export async function destroyArticleSection(nameOrId: string | number): Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.delete({
-            where: { 
-                name: typeof nameOrId === 'string' ? nameOrId : undefined, 
+            where: {
+                name: typeof nameOrId === 'string' ? nameOrId : undefined,
                 id: typeof nameOrId === 'number' ? nameOrId : undefined
             },
         })

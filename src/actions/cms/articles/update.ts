@@ -1,15 +1,15 @@
 'use server'
 import { articleSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { addSectionToArticle, moveSectionOrder, updateArticle } from '@/server/cms/articles/update'
+import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ArticleSchemaType } from './schema'
-import { ArticleSectionPart } from '@/server/cms/articleSections/Types'
-import { addSectionToArticle, moveSectionOrder, updateArticle } from '@/server/cms/articles/update'
 
 export async function updateArticleAction(
-    id: number, 
+    id: number,
     rawData: FormData | ArticleSchemaType
 ): Promise<ActionReturn<ExpandedArticle>> {
     //TODO: auth on visability

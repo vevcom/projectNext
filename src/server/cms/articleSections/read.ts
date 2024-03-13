@@ -8,7 +8,7 @@ import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 /**
  * Reads an article section
  * @param nameOrId - The name or id of the article section to read
- * @returns 
+ * @returns
  */
 export async function readArticleSection(nameOrId: string | number): Promise<ActionReturn<ExpandedArticleSection>> {
     try {

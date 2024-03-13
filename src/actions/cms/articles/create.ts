@@ -1,7 +1,7 @@
 'use server'
+import { createArticle } from '@/server/cms/articles/create'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { createArticle } from '@/server/cms/articles/create'
 
 export async function createArticleAction(name: string | null, config?: {
     categoryId: number,

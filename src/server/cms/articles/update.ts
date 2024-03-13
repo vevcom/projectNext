@@ -3,19 +3,19 @@ import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import { addArticleSectionPart } from '@/server/cms/articleSections/update'
+import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection, Prisma } from '@prisma/client'
 import type { ExpandedArticle } from '@/cms/articles/Types'
-import { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 /**
  * A function to update metadata of an article. This includes for ex. name.
  * @param id - The id of the article to update
  * @param data - The new data to update the article with
- * @returns 
+ * @returns
  */
 export async function updateArticle(
-    id: number, 
+    id: number,
     data: { name: string }
 ): Promise<ActionReturn<ExpandedArticle>> {
     try {
@@ -34,7 +34,7 @@ export async function updateArticle(
  * A function to add a new article section to an article
  * @param id - The id of the article to add a section to
  * @param include - The parts to include in the new section
- * @returns 
+ * @returns
  */
 export async function addSectionToArticle(
     id: number,
@@ -108,7 +108,7 @@ export async function addSectionToArticle(
  * @param id - The id of the article to move a section in
  * @param sectionId - The id of the section to move
  * @param direction - The direction to move the section in
- * @returns 
+ * @returns
  */
 export async function moveSectionOrder(
     id: number,

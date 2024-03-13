@@ -8,7 +8,7 @@ import type { ExpandedArticleSection } from './Types'
 /**
  * A function to create a new articleSection
  * @param name - The name of the article section to create
- * @returns 
+ * @returns
  */
 export async function createArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
     try {

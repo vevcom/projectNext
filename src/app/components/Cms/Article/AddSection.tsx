@@ -7,7 +7,7 @@ import { maxSections } from '@/cms/articles/ConfigVars'
 import { EditModeContext } from '@/context/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import { ArticleSectionPart } from '@/server/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 type PropTypes = {
     articleId: number,

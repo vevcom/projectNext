@@ -1,4 +1,8 @@
 import 'server-only'
+import { destroyArticleSection } from './destroy'
+import { destroyCmsImage } from '../images/destoy'
+import { destroyCmsLink } from '../links/destroy'
+import { destroyCmsParagraph } from '../paragraphs/destroy'
 import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
@@ -6,22 +10,17 @@ import { createCmsImage } from '@/server/cms/images/create'
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createCmsLink } from '@/server/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
+import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ArticleSectionPart } from './Types'
-import { destroyArticleSection } from './destroy'
-import { destroyCmsImage } from '../images/destoy'
-import { destroyCmsLink } from '../links/destroy'
-import { destroyCmsParagraph } from '../paragraphs/destroy'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
  * in the article section. It will also change the image size (resolution) based on the image size in
  * the article section
  * @param nameOrId - The name or id of the article section to update
- * @param changes - The changes to make to the article section. imageSize is the size of 
+ * @param changes - The changes to make to the article section. imageSize is the size of
  * the image in pixels, imagePosition is the position of the image in the article section
- * @returns 
+ * @returns
  */
 export async function updateArticleSection(nameOrId: string | number, changes: {
     imageSize?: number,
@@ -45,8 +44,8 @@ export async function updateArticleSection(nameOrId: string | number, changes: {
         }
 
         const articleSection = await prisma.articleSection.update({
-            where: { 
-                name: typeof nameOrId === 'string' ? nameOrId : undefined, 
+            where: {
+                name: typeof nameOrId === 'string' ? nameOrId : undefined,
                 id: typeof nameOrId === 'number' ? nameOrId : undefined
             },
             data: {
@@ -74,11 +73,11 @@ export async function updateArticleSection(nameOrId: string | number, changes: {
  * @returns - The updated article section
  */
 export async function addArticleSectionPart(
-    nameOrId: string | number, 
+    nameOrId: string | number,
     part: ArticleSectionPart
 ): Promise<ActionReturn<ExpandedArticleSection>> {
     const where = {
-        name: typeof nameOrId === 'string' ? nameOrId : undefined, 
+        name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined
     } as const
 
@@ -152,11 +151,11 @@ export async function addArticleSectionPart(
  * @returns - The updated article section
  */
 export async function removeArticleSectionPart(
-    nameOrId: string | number, 
+    nameOrId: string | number,
     part: ArticleSectionPart
 ): Promise<ActionReturn<ArticleSection>> {
     const where = {
-        name: typeof nameOrId === 'string' ? nameOrId : undefined, 
+        name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined
     } as const
     try {
