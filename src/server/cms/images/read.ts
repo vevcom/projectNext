@@ -30,7 +30,7 @@ export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedC
 
 /**
  * WARNING: You should assure that the special atr. is Special before calling this function
- * Reads a special cmsImage, if it does not exist it creates it
+ * Reads a special cmsImage.
  * @param special SpecialCmsImage
  * @returns ActionReturn<ExpandedCmsImage>
  */
