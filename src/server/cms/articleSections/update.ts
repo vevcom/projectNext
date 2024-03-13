@@ -10,6 +10,9 @@ import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSectionPart } from './Types'
 import { destroyArticleSection } from './destroy'
+import { destroyCmsImage } from '../images/destoy'
+import { destroyCmsLink } from '../links/destroy'
+import { destroyCmsParagraph } from '../paragraphs/destroy'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
@@ -170,13 +173,13 @@ export async function removeArticleSectionPart(
 
         switch (part) {
             case 'cmsLink':
-                await prisma.cmsLink.delete({ where: { id: articleSection.cmsLink?.id } })
+                articleSection.cmsLink && await destroyCmsLink(articleSection.cmsLink.id)
                 break
             case 'cmsParagraph':
-                await prisma.cmsParagraph.delete({ where: { id: articleSection.cmsParagraph?.id } })
+                articleSection.cmsParagraph && await destroyCmsParagraph(articleSection.cmsParagraph.id)
                 break
             case 'cmsImage':
-                await prisma.cmsImage.delete({ where: { id: articleSection.cmsImage?.id } })
+                articleSection.cmsImage && await destroyCmsImage(articleSection.cmsImage.id)
                 break
             default:
                 break
