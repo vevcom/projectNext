@@ -7,7 +7,7 @@ import { maxSections } from '@/cms/articles/ConfigVars'
 import { EditModeContext } from '@/context/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { Part } from '@/cms/articleSections/update'
+import { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 type PropTypes = {
     articleId: number,
@@ -19,7 +19,7 @@ export default function AddSection({ articleId, currentNumberSections }: PropTyp
     const editMode = useContext(EditModeContext)
     if (!editMode?.editMode) return null
 
-    const handleAdd = async (part: Part) => {
+    const handleAdd = async (part: ArticleSectionPart) => {
         addSectionToArticle(articleId, {
             [part]: true,
         })

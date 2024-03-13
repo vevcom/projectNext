@@ -6,7 +6,7 @@ import { EditModeContext } from '@/context/EditMode'
 import { useCallback, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
-import type { Part } from '@/cms/articleSections/update'
+import type { ArticleSectionPart } from '@/cms/articleSections/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
@@ -17,7 +17,7 @@ type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
 export default function AddPartToArticleSection({ articleSectionName, children, ...props }: PropTypes) {
     const { refresh } = useRouter()
     const editMode = useContext(EditModeContext)
-    const handleAdd = useCallback(async (part: Part) => {
+    const handleAdd = useCallback(async (part: ArticleSectionPart) => {
         await addArticleSectionPart(articleSectionName, part)
         refresh()
     }, [articleSectionName])

@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { Part } from '@/cms/articleSections/update'
+import type { ArticleSectionPart } from '@/cms/articleSections/Types'
 
 type PropTypes = {
-    part: Part,
+    part: ArticleSectionPart,
     articleSectionName: string
 }
 

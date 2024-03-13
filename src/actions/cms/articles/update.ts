@@ -6,7 +6,7 @@ import { createActionError, createPrismaActionError, createZodActionError } from
 import { addArticleSectionPart } from '@/cms/articleSections/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { ArticleSection } from '@prisma/client'
-import type { Part } from '@/cms/articleSections/update'
+import type { ArticleSectionPart } from '@/cms/articleSections/Types'
 import type { ExpandedArticle } from './Types'
 import type { ArticleSchemaType } from './schema'
 
@@ -38,7 +38,7 @@ export async function updateArticle(
 
 export async function addSectionToArticle(
     id: number,
-    include: Partial<Record<Part, boolean>>
+    include: Partial<Record<ArticleSectionPart, boolean>>
 ): Promise<ActionReturn<ExpandedArticle>> {
     try {
         const article = await prisma.article.findUnique({

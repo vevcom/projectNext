@@ -2,7 +2,7 @@ import styles from './AddParts.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import type { Part } from '@/cms/articleSections/update'
+import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 /**
  * Component for adding parts to an article and article section.
@@ -13,7 +13,7 @@ export type PropTypes = {
     showParagraphAdd: boolean,
     showImageAdd: boolean,
     showLinkAdd: boolean
-    onClick: (part: Part) => Promise<void>
+    onClick: (part: ArticleSectionPart) => Promise<void>
 }
 
 export default function AddParts({
@@ -24,7 +24,7 @@ export default function AddParts({
 }: PropTypes) {
     const parts: {
         shouldShow: boolean,
-        part: Part
+        part: ArticleSectionPart,
         text: string
     }[] = [
         {

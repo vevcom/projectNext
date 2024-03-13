@@ -1,60 +1,28 @@
 'use server'
-import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
+import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import { createCmsImage } from '@/server/cms/images/create'
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createCmsLink } from '@/server/cms/links/create'
-import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
+import type { ArticleSection, Position } from '@prisma/client'
+import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 
-export async function updateArticleSection(name: string, changes: {
+export async function updateArticleSectionAction(name: string, changes: {
     imageSize?: number,
     imagePosition?: Position,
 }): Promise<ActionReturn<ExpandedArticleSection>> {
     //Todo: Auth by visibilty
-
-    try {
-        //Sets the image resolution based on the image size
-        let newCmsImageResolution: ImageSize | undefined = undefined
-
-        if (changes.imageSize) {
-            if (changes.imageSize > maxImageSize) {
-                changes.imageSize = maxImageSize
-            }
-            if (changes.imageSize < minImageSize) {
-                changes.imageSize = minImageSize
-            }
-            newCmsImageResolution = 'SMALL'
-            if (changes.imageSize > 250) {
-                newCmsImageResolution = 'MEDIUM'
-            }
-        }
-
-        const articleSection = await prisma.articleSection.update({
-            where: { name },
-            data: {
-                ...changes,
-                cmsImage: {
-                    update: {
-                        imageSize: newCmsImageResolution,
-                    },
-                },
-            },
-            include: articleSectionsRealtionsIncluder
-        })
-        return { success: true, data: articleSection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await updateArticleSectionAction(name, changes)
 }
 
-export type Part = 'cmsLink' | 'cmsParagraph' | 'cmsImage'
-
-export async function addArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ExpandedArticleSection>> {
+export async function addArticleSectionPart(
+    name: string, 
+    part: ArticleSectionPart
+): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
@@ -116,7 +84,10 @@ export async function addArticleSectionPart(name: string, part: Part): Promise<A
     }
 }
 
-export async function removeArticleSectionPart(name: string, part: Part): Promise<ActionReturn<ArticleSection>> {
+export async function removeArticleSectionPart(
+    name: string, 
+    part: ArticleSectionPart
+): Promise<ActionReturn<ArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
             where: { name },
