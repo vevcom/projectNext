@@ -1,6 +1,6 @@
 'use client'
 
-import { addUserToRole } from '@/actions/permissions/create'
+import { addUserToRoleAction } from '@/actions/permissions/create'
 import { removeUserFromRole } from '@/actions/permissions/destroy'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
@@ -17,7 +17,7 @@ export default function UserManagmentForm({ selectedRoleId }: PropTypes) {
     const [username, setUsername] = useState<string>('')
 
     async function addUser(data: FormData) {
-        const result = await addUserToRole(data)
+        const result = await addUserToRoleAction(data)
         refresh()
         return result
     }
