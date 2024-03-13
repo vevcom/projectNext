@@ -14,7 +14,7 @@ type ReturnStudyProgram = {
     newStudyProgram: boolean,
 }
 
-type PrismaResults = StudyProgram & { role: {name: string}}
+type PrismaResults = StudyProgram & { role: {name: string} }
 
 function unpackResults(newStudyProgram: boolean) {
     return (p: PrismaResults): ReturnStudyProgram => ({
