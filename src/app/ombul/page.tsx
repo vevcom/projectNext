@@ -5,7 +5,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
 import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read'
 import { getUser } from '@/auth/user'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import { ExpandedOmbul } from '@/server/ombul/Types'
 
 export default async function Ombuls() {
     const { user } = await getUser({
@@ -20,7 +20,7 @@ export default async function Ombuls() {
     const ombulRes = await readOmbuls()
     if (!ombulRes.success) throw new Error('Failed to read ombuls')
     const ombuls = ombulRes.data
-
+    
     const yearsWithOmbul = Object.entries(ombuls.reduce((groups, ombul) => {
         const year = ombul.year
         if (!groups[year]) {
@@ -29,6 +29,7 @@ export default async function Ombuls() {
         groups[year].push(ombul)
         return groups
     }, {} as { [year: number]: ExpandedOmbul[] })).toSorted(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
+
 
     return (
         <PageWrapper
@@ -42,20 +43,20 @@ export default async function Ombuls() {
             }
         >
             <div className={styles.wrapper}>
-                {
-                    yearsWithOmbul.map(([year, ombulsInYear]) => (
-                        <div key={year}>
-                            <h1>{year}</h1>
-                            <div className={styles.ombulList}>
-                                {
-                                    ombulsInYear.map(ombul => (
-                                        <OmbulCover key={ombul.id} ombul={ombul} />
-                                    ))
-                                }
-                            </div>
+            {
+                yearsWithOmbul.map(([year, ombulsInYear]) => (
+                    <div key={year}>
+                        <h1>{year}</h1>
+                        <div className={styles.ombulList}>
+                            {
+                                ombulsInYear.map(ombul => (
+                                    <OmbulCover key={ombul.id} ombul={ombul} />
+                                ))
+                            }
                         </div>
-                    ))
-                }
+                    </div>
+                ))
+            }
             </div>
         </PageWrapper>
     )

@@ -3,7 +3,7 @@ import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedOmbul } from './Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { Ombul } from '@prisma/client'
 
 export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {

@@ -4,7 +4,7 @@ import prisma from '@/prisma'
 import destroyFile from '@/server/store/destroyFile'
 import { getUser } from '@/auth/user'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedOmbul } from './Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
     const { status, authorized } = await getUser({

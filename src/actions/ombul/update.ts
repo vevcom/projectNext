@@ -6,7 +6,7 @@ import createFile from '@/server/store/createFile'
 import destroyFile from '@/server/store/destroyFile'
 import { getUser } from '@/auth/user'
 import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
-import type { ExpandedOmbul } from './Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 /**
