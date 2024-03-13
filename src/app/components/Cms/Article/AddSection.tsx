@@ -2,7 +2,7 @@
 
 import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
-import { addSectionToArticle } from '@/cms/articles/update'
+import { addSectionToArticleAction } from '@/cms/articles/update'
 import { maxSections } from '@/cms/articles/ConfigVars'
 import { EditModeContext } from '@/context/EditMode'
 import { useRouter } from 'next/navigation'
@@ -20,7 +20,7 @@ export default function AddSection({ articleId, currentNumberSections }: PropTyp
     if (!editMode?.editMode) return null
 
     const handleAdd = async (part: ArticleSectionPart) => {
-        addSectionToArticle(articleId, {
+        addSectionToArticleAction(articleId, {
             [part]: true,
         })
         refresh()
