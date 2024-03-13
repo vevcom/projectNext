@@ -1,21 +1,9 @@
 'use server'
-import { articleSectionsRealtionsIncluder } from './ConfigVars'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleSection } from './Types'
+import { createArticleSection } from '@/server/cms/articleSections/create'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 
-
-export async function createArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
-    try {
-        const articleSection = await prisma.articleSection.create({
-            data: {
-                name,
-            },
-            include: articleSectionsRealtionsIncluder
-        })
-        return { success: true, data: articleSection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+export async function createArticleSectionAction(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
+    //TODO: Auth on general cms permission
+    return await createArticleSection(name)
 }

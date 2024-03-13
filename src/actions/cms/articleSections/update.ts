@@ -1,5 +1,5 @@
 'use server'
-import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from './ConfigVars'
+import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import { destroyArticleSection } from './destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
@@ -7,7 +7,7 @@ import { createCmsImage } from '@/server/cms/images/create'
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createCmsLink } from '@/server/cms/links/create'
 import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ExpandedArticleSection } from './Types'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 

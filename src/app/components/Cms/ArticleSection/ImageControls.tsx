@@ -2,7 +2,7 @@
 import styles from './ImageControls.module.scss'
 import { updateArticleSection } from '@/cms/articleSections/update'
 import { EditModeContext } from '@/context/EditMode'
-import { imageSizeIncrement, maxImageSize, minImageSize } from '@/actions/cms/articleSections/ConfigVars'
+import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/ConfigVars'
 import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {

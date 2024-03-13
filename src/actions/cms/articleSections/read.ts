@@ -1,12 +1,10 @@
 'use server'
-import { createArticleSection } from './create'
-import { articleSectionsRealtionsIncluder } from './ConfigVars'
+import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleSection } from './Types'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 
-// Note that this function creates a new articleSection if it doesn't exist
 export async function readArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
     try {
         const articleSection = await prisma.articleSection.findUnique({
@@ -15,9 +13,8 @@ export async function readArticleSection(name: string): Promise<ActionReturn<Exp
             },
             include: articleSectionsRealtionsIncluder
         })
-        if (articleSection) return { success: true, data: articleSection }
-        const createRes = await createArticleSection(name)
-        return createRes
+        if (!articleSection) return createActionError('NOT FOUND', 'Article section not found')
+        return { success: true, data: articleSection }
     } catch (error) {
         return createPrismaActionError(error)
     }
