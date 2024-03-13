@@ -7,10 +7,10 @@ import { EditModeContext } from '@/context/EditMode'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { destroyOmbul } from '@/actions/ombul/destroy'
+import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ExpandedOmbul } from '@/actions/ombul/Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 type PropTypes = {
     canUpdate: boolean
@@ -86,7 +86,7 @@ export default function OmbulAdmin({
                 {
                     canDestroy && (
                         <Form
-                            action={destroyOmbul.bind(null, ombul.id)}
+                            action={destroyOmbulAction.bind(null, ombul.id)}
                             successCallback={handleDestroy}
                             submitText="Slett"
                             submitColor="red"
