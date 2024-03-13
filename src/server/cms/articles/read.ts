@@ -37,22 +37,3 @@ export async function readArticle(idOrName: number | {
         return createPrismaActionError(error)
     }
 }
-
-/**
- * Reads all srticles in a category
- * @param articleCategoryId - The id of the category to read articles from
- * @returns 
- */
-export async function readArticles(articleCategoryId: number): Promise<ActionReturn<ExpandedArticle[]>> {
-    try {
-        const articles = await prisma.article.findMany({
-            where: {
-                articleCategoryId
-            },
-            include: articleRealtionsIncluder
-        })
-        return { success: true, data: articles }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
-}
