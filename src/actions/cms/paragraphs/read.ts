@@ -1,5 +1,5 @@
 'use server'
-import { createCmsParagraph } from './create'
+import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { SpecialCmsParagraph } from '@prisma/client'

@@ -1,21 +1,11 @@
 'use server'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
 import type { CmsParagraph, SpecialCmsParagraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
+import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 
-export async function createCmsParagraph(name: string, config?: {
+export async function createCmsParagraphAction(name: string, config?: {
     special?: SpecialCmsParagraph
 }): Promise<ActionReturn<CmsParagraph>> {
-    try {
-        const created = await prisma.cmsParagraph.create({
-            data: {
-                name,
-                special: config?.special,
-            },
-        })
-        return { success: true, data: created }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    //TDOD: Auth on cms permission (few should be able to create a paragraph standalone)
+    return await createCmsParagraph(name, config)
 }

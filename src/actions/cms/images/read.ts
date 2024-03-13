@@ -1,5 +1,5 @@
 'use server'
-import { createActionError, createPrismaActionError } from '@/actions/error'
+import { createActionError } from '@/actions/error'
 import { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { ActionReturn } from '@/actions/Types'
