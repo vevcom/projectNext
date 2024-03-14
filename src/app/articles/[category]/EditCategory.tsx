@@ -9,7 +9,7 @@ import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedArticleCategory } from '@/actions/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 type PropTypes = {
     category: ExpandedArticleCategory

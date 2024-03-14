@@ -4,7 +4,7 @@ import prisma from '@/prisma'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import type { ArticleCategorySchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleCategory } from './Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 export async function updateArticleCategoryVisibility(
     // disable eslint rule temporarily until function is implemented

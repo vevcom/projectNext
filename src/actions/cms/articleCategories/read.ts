@@ -7,7 +7,7 @@ import type {
     ExpandedArticleCategory,
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
-} from './Types'
+} from '@/cms/articleCategories/Types'
 
 export async function readArticleCategories(): Promise<ActionReturn<ArticleCategoryWithCover[]>> {
     try {
