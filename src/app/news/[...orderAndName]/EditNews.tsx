@@ -3,7 +3,7 @@ import styles from './EditNews.module.scss'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import { publishNewsAction, updateNewsAction, updateVisibilityAction } from '@/actions/news/update'
-import { destroyNews } from '@/actions/news/destroy'
+import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/app/components/UI/DateInput'
@@ -61,7 +61,7 @@ export default function EditNews({ news, children }: PropTypes) {
                     <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
                 <Form
-                    action={destroyNews.bind(null, news.id)}
+                    action={destroyNewsAction.bind(null, news.id)}
                     successCallback={() => {
                         push('/news')
                     }}
