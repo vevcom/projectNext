@@ -1,6 +1,4 @@
 'use server'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 import type { ActionReturn } from '@/actions/Types'
 import { destroyArticleCategory } from '@/server/cms/articleCategories/destroy'

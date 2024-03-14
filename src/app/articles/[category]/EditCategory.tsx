@@ -3,7 +3,7 @@ import Form from '@/app/components/Form/Form'
 import PopUp from '@/app/components/PopUp/PopUp'
 import Textarea from '@/app/components/UI/Textarea'
 import TextInput from '@/app/components/UI/TextInput'
-import { updateArticleCategory } from '@/actions/cms/articleCategories/update'
+import { updateArticleCategoryAction } from '@/actions/cms/articleCategories/update'
 import { createArticleAction } from '@/actions/cms/articles/create'
 import { destroyArticleCategoryAction } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
@@ -34,7 +34,7 @@ export default function EditCategory({ category }: PropTypes) {
 
     if (!canEditCategory) return null
 
-    const updateCategory = updateArticleCategory.bind(null, category.id)
+    const updateCategory = updateArticleCategoryAction.bind(null, category.id)
 
     return (
         <>
