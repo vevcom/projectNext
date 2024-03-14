@@ -2,4 +2,7 @@
 
 .test {
     min-height: 600px;
+    background-color: violet;
+    display: flex;
+    @include ohma.ImageCardListLayout;
 }
