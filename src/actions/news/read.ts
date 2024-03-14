@@ -1,8 +1,8 @@
 'use server'
-import { newsArticleRealtionsIncluder } from './ConfigVars'
+import { newsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { ExpandedNewsArticle, SimpleNewsArticle } from './Types'
+import type { ExpandedNewsArticle, SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 export async function readOldNewsPage<const PageSize extends number>(
