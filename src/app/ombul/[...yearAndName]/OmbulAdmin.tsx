@@ -2,15 +2,15 @@
 
 import styles from './OmbulAdmin.module.scss'
 import Form from '@/app/components/Form/Form'
-import { updateOmbul, updateOmbulFile } from '@/actions/ombul/update'
+import { updateOmbulAction, updateOmbulFileAction } from '@/actions/ombul/update'
 import { EditModeContext } from '@/context/EditMode'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { destroyOmbul } from '@/actions/ombul/destroy'
+import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ExpandedOmbul } from '@/actions/ombul/Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 type PropTypes = {
     canUpdate: boolean
@@ -36,8 +36,8 @@ export default function OmbulAdmin({
     const editCtx = useContext(EditModeContext)
     if (!editCtx?.editMode) return null
 
-    const updateOmbulAction = updateOmbul.bind(null, ombul.id)
-    const updateOmbulFileAction = updateOmbulFile.bind(null, ombul.id)
+    const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
+    const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)
 
     const handleChange = async (newOmbul: ExpandedOmbul | undefined) => {
         if (!newOmbul) return
@@ -58,7 +58,7 @@ export default function OmbulAdmin({
                     canUpdate && (
                         <>
                             <Form
-                                action={updateOmbulAction}
+                                action={updateOmbulActionBind}
                                 successCallback={handleChange}
                                 submitText="Oppdater"
                             >
@@ -74,7 +74,7 @@ export default function OmbulAdmin({
                                 />
                             </Form>
                             <Form
-                                action={updateOmbulFileAction}
+                                action={updateOmbulFileActionBind}
                                 successCallback={handleChange}
                                 submitText="Oppdater fil"
                             >
@@ -86,7 +86,7 @@ export default function OmbulAdmin({
                 {
                     canDestroy && (
                         <Form
-                            action={destroyOmbul.bind(null, ombul.id)}
+                            action={destroyOmbulAction.bind(null, ombul.id)}
                             successCallback={handleDestroy}
                             submitText="Slett"
                             submitColor="red"

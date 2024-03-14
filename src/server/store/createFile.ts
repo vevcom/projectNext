@@ -15,7 +15,7 @@ import type { StoreLocations } from './StoreLocations'
  * @param prosessor - a function to process the file before saving it to the store
  * @returns - either an error or the file location and ext. Its an ActionReturn
  */
-export default async function createFile(
+export async function createFile(
     file: File,
     destination: StoreLocations,
     allowedExt: string[] | undefined = undefined,

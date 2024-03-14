@@ -5,7 +5,7 @@ import TextInput from '@/components/UI/TextInput'
 import NumberInput from '@/components/UI/NumberInput'
 import FileInput from '@/components/UI/FileInput'
 import Textarea from '@/components/UI/Textarea'
-import { createOmbul } from '@/actions/ombul/create'
+import { createOmbulAction } from '@/actions/ombul/create'
 import Form from '@/components/Form/Form'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -86,7 +86,7 @@ export default function CreateOmbul({ latestOmbul }: PropTypes) {
         <div className={styles.CreateOmbul}>
             <h1>Lag ny ombul</h1>
             <Form
-                action={createOmbul}
+                action={createOmbulAction}
                 submitText="Lag ombul"
                 className={styles.form}
                 successCallback={handleCreate}

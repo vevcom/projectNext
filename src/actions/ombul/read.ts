@@ -1,12 +1,12 @@
 'use server'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
+import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedOmbul } from './Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { Ombul } from '@prisma/client'
 
-export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {
+export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
@@ -14,27 +14,10 @@ export async function readLatestOmbul(): Promise<ActionReturn<Ombul>> {
     if (!authorized) {
         return createActionError(status)
     }
-    try {
-        const ombul = await prisma.ombul.findMany({
-            orderBy: [
-                { year: 'desc' },
-                { issueNumber: 'desc' },
-            ],
-            take: 1,
-        })
-        if (!ombul) {
-            return createActionError('NOT FOUND', 'Fant ingen ombul.')
-        }
-        return {
-            success: true,
-            data: ombul[0]
-        }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readLatestOmbul()
 }
 
-export async function readOmbul(idOrNameAndYear: number | {
+export async function readOmbulAction(idOrNameAndYear: number | {
     name: string,
     year: number,
 }): Promise<ActionReturn<ExpandedOmbul>> {
@@ -45,37 +28,10 @@ export async function readOmbul(idOrNameAndYear: number | {
     if (!authorized) {
         return createActionError(status)
     }
-    try {
-        const ombul = await prisma.ombul.findUnique({
-            where: typeof idOrNameAndYear === 'number' ? {
-                id: idOrNameAndYear
-            } : {
-                year_name: {
-                    name: idOrNameAndYear.name,
-                    year: idOrNameAndYear.year
-                }
-            },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
-            }
-        })
-        if (!ombul) {
-            return createActionError('NOT FOUND', 'Fant ingen ombul')
-        }
-        return {
-            success: true,
-            data: ombul
-        }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readOmbul(idOrNameAndYear)
 }
 
-export async function readOmbuls(): Promise<ActionReturn<ExpandedOmbul[]>> {
+export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
     //Auth route
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
@@ -83,23 +39,5 @@ export async function readOmbuls(): Promise<ActionReturn<ExpandedOmbul[]>> {
     if (!authorized) {
         return createActionError(status)
     }
-
-    try {
-        const ombuls = await prisma.ombul.findMany({
-            orderBy: [
-                { year: 'desc' },
-                { issueNumber: 'desc' },
-            ],
-            include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
-            }
-        })
-        return { success: true, data: ombuls }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await readOmbuls()
 }

@@ -1,10 +1,10 @@
 'use server'
 import { updateImageCollectionSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { updateImageCollection } from '@/server/images/collections/update'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageCollectionSchemaType } from './schema'
-import { updateImageCollection } from '@/server/images/collections/update'
 
 /**
  * A action that updates an image collection

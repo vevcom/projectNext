@@ -1,13 +1,15 @@
 'use server'
 import { omegaquotesSchema } from './schema'
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
+import { createQuote } from '@/server/omegaquotes/create'
 import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 
-export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Promise<ActionReturn<OmegaQuote>> {
+export async function createQuoteAction(
+    rawdata: FormData | OmegaquotesSchemaType
+): Promise<ActionReturn<OmegaQuote>> {
     const { user, status } = await getUser({
         requiredPermissions: ['OMEGAQUOTES_WRITE']
     })
@@ -16,28 +18,8 @@ export async function createQuote(rawdata: FormData | OmegaquotesSchemaType): Pr
     }
 
     const parse = omegaquotesSchema.safeParse(rawdata)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { quote, author } = parse.data
-
-    try {
-        const results = await prisma.omegaQuote.create({
-            data: {
-                author,
-                quote,
-                userPoster: {
-                    connect: {
-                        id: user.id
-                    }
-                }
-            }
-        })
-
-        return { success: true, data: results }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await createQuote(user.id, data)
 }

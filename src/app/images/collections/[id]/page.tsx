@@ -26,9 +26,9 @@ export default async function Collection({ params }: PropTypes) {
     if (!readCollection.success) notFound()
     const collection = readCollection.data
 
-    const readImages = await readImagesPageAction({ 
-        page: { pageSize, page: 0 }, 
-        details: { collectionId: collection.id } 
+    const readImages = await readImagesPageAction({
+        page: { pageSize, page: 0 },
+        details: { collectionId: collection.id }
     })
     if (!readImages.success) notFound()
     const images = readImages.data

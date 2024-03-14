@@ -1,13 +1,13 @@
 'use server'
 import { updateImageSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { updateImage } from '@/server/images/update'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageSchemaType } from './schema'
-import { updateImage } from '@/server/images/update'
 
 export async function updateImageAction(
-    imageId: number, 
+    imageId: number,
     rawdata: FormData | UpdateImageSchemaType
 ): Promise<ActionReturn<Image>> {
     const parse = updateImageSchema.safeParse(rawdata)

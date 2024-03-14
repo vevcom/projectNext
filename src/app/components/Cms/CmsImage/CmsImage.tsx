@@ -3,7 +3,7 @@ import styles from './CmsImage.module.scss'
 import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImageAction } from '@/actions/images/read'
 import React from 'react'
-import type { ExpandedCmsImage } from '@/actions/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 
 export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & {

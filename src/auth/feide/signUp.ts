@@ -1,7 +1,7 @@
 import 'server-only'
 import { updateEmailForFeideAccount } from '.'
-import { upsertManyStudyProgrammes } from '@/actions/groups/studyProgrammes/create'
-import { addUserByIdToRoles } from '@/actions/permissions/create'
+import { upsertManyStudyProgrammes } from '@/server/studyprogrammes/create'
+import { addUserByIdToRoles } from '@/server/rolePermissions/create'
 import type { User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './Types'
 

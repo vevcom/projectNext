@@ -1,5 +1,5 @@
 'use client'
-import { registerUser } from '@/actions/users/create'
+import { updateUserCredentailsAction } from '@/actions/users/update'
 import Form from '@/app/components/Form/Form'
 import Checkbox from '@/app/components/UI/Checkbox'
 import Select from '@/app/components/UI/Select'
@@ -35,7 +35,7 @@ export default async function Register() {
     return <Form
         title="Registrer bruker"
         submitText="Registrer bruker"
-        action={registerUser}
+        action={updateUserCredentailsAction}
         successCallback={() => signIn('credentials', {
             username: lastUsername,
             password: lastPassword,

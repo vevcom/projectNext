@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import getCommitee from './getCommittee'
-import { readSpecialImage } from '@/actions/images/read'
+import { readSpecialImageAction } from '@/actions/images/read'
 import BackdropImage from '@/app/components/BackdropImage/BackdropImage'
 import Link from 'next/link'
 
@@ -15,7 +15,7 @@ export default async function Committee({ params }: PropTypes) {
 
     let committeeLogo = committee.logoImage.image
     if (!committeeLogo) {
-        const res = await readSpecialImage('DAFAULT_COMMITTEE_LOGO')
+        const res = await readSpecialImageAction('DAFAULT_COMMITTEE_LOGO')
         if (!res.success) throw new Error('Kunne ikke finne standard komitelogo')
         committeeLogo = res.data
     }

@@ -30,7 +30,7 @@
       "@/prisma/*": ["src/prisma/*"],
       "@/context/*": ["src/context/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*"],
+      "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*", "src/server/cms/*"],
       "@/server/*": ["src/server/*"],
     }
   },

@@ -1,12 +1,13 @@
 import 'server-only'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageDetails } from '@/actions/images/Types'
 import { createActionError, createPrismaActionError } from '@/actions/error'
+import prisma from '@/prisma'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ImageDetails } from '@/server/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
 
 export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, ImageDetails>
-): Promise<ActionReturn<Image[]>>  {
+): Promise<ActionReturn<Image[]>> {
     const { collectionId } = details
     const { page: pageNumber, pageSize } = page
     try {
