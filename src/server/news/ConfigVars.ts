@@ -7,3 +7,15 @@ export const newsArticleRealtionsIncluder = {
         include: articleRealtionsIncluder
     }
 } as const
+
+export const simpleNewsArticleRealtionsIncluder = {
+    article: {
+        include: {
+            coverImage: {
+                include: {
+                    image: true
+                }
+            }
+        }
+    }
+} as const

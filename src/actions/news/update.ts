@@ -2,7 +2,7 @@
 import { newsArticleSchema } from './schema'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import type { SimpleNewsArticle } from './Types'
+import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { NewsArticleSchemaType } from './schema'
 
