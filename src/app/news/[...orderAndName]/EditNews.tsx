@@ -2,7 +2,7 @@
 import styles from './EditNews.module.scss'
 import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
-import { publishNews, updateNews, updateVisibility } from '@/actions/news/update'
+import { publishNewsAction, updateNewsAction, updateVisibilityAction } from '@/actions/news/update'
 import { destroyNews } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
@@ -31,10 +31,10 @@ export default function EditNews({ news, children }: PropTypes) {
     //TODO: add publish functionality with visibility
     const isPublished = false //temp
 
-    const publishAction = publishNews.bind(null, news.id).bind(null, true)
-    const unpublishAction = publishNews.bind(null, news.id).bind(null, false)
-    const updateAction = updateNews.bind(null, news.id)
-    const updateVisibilityAction = updateVisibility.bind(null, news.id).bind(null, true)
+    const publishAction = publishNewsAction.bind(null, news.id).bind(null, true)
+    const unpublishAction = publishNewsAction.bind(null, news.id).bind(null, false)
+    const updateAction = updateNewsAction.bind(null, news.id)
+    const updateVisibilityActionBind = updateVisibilityAction.bind(null, news.id).bind(null, true)
 
     return (
         <div className={styles.EditNews}>
@@ -77,7 +77,7 @@ export default function EditNews({ news, children }: PropTypes) {
             <div className={styles.visibility}>
                 Her kommer visibility settings
                 <Form
-                    action={updateVisibilityAction}
+                    action={updateVisibilityActionBind}
                     submitText="oppdater synlighet"
 
                 >
