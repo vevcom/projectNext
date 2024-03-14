@@ -1,7 +1,6 @@
 'use server'
 import { newsArticleSchema } from './schema'
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createActionError, createZodActionError } from '@/actions/error'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { NewsArticleSchemaType } from './schema'
@@ -20,24 +19,14 @@ export async function updateNewsAction(
 }
 
 export async function publishNewsAction(
+    // disable eslint rule temporarily until todo is resolved
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id: number,
     // disable eslint rule temporarily until todo is resolved
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    try {
-        const news = await prisma.newsArticle.update({
-            where: { id },
-            data: {},
-            //data: { published: shouldPublish } //TODO: add published field to news
-        })
-        return {
-            success: true,
-            data: news
-        }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return createActionError('UNKNOWN ERROR', 'Not implemented')
 }
 
 
