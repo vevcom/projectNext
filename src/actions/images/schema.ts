@@ -1,4 +1,4 @@
-import { maxFileSize } from './ConfigVars'
+import { maxFileSize } from '@/server/images/ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 

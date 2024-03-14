@@ -6,35 +6,20 @@ import { getUser } from '@/auth/user'
 import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
+import { createUser } from '@/server/users/create'
 
-export async function createUser(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
+/**
+ * A action that creates a user by the given data. It will also hash the password
+ * @param rawdata - The user to create
+ * @returns - The created user
+ */
+export async function createUserAction(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
     const parse = createUserSchema.safeParse(rawdata)
-
     if (!parse.success) {
         return createZodActionError(parse)
     }
-
-    const { username, password, email, firstname, lastname } = parse.data
-
-    try {
-        const user = await prisma.user.create({
-            data: {
-                username,
-                email,
-                firstname,
-                lastname,
-                credentials: {
-                    create: {
-                        passwordHash: password, // TEMPORARY!
-                    },
-                },
-            },
-        })
-
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    const data = parse.data
+    return await createUser(data)
 }
 
 export async function registerUser(rawdata: FormData): Promise<ActionReturn<null>> {

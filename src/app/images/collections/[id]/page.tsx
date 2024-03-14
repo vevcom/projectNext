@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
-import { readImagesPage } from '@/actions/images/read'
-import { readImageCollection } from '@/actions/images/collections/read'
+import { readImagesPageAction } from '@/actions/images/read'
+import { readImageCollectionAction } from '@/actions/images/collections/read'
 import ImageList from '@/app/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
@@ -22,11 +22,14 @@ export default async function Collection({ params }: PropTypes) {
 
     const pageSize: PageSizeImage = 30
 
-    const readCollection = await readImageCollection(Number(params.id))
+    const readCollection = await readImageCollectionAction(Number(params.id))
     if (!readCollection.success) notFound()
     const collection = readCollection.data
 
-    const readImages = await readImagesPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
+    const readImages = await readImagesPageAction({ 
+        page: { pageSize, page: 0 }, 
+        details: { collectionId: collection.id } 
+    })
     if (!readImages.success) notFound()
     const images = readImages.data
     const isAdmin = user?.username === 'Harambe104' //temp

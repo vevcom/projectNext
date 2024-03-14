@@ -1,3 +1,4 @@
+import 'server-only'
 import { createActionError } from '@/actions/error'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
@@ -14,7 +15,7 @@ function isErrorWithCode(error: unknown): error is { code: string } {
  * @param fsLocation the location of the file in the store to delete
  * @returns either an error or success in ActionReturn
  */
-export default async function deleteFile(
+export default async function destroyFile(
     destination: StoreLocations,
     fsLocation: string
 ): Promise<ActionReturn<void, false>> {
