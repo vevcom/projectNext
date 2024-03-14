@@ -22,8 +22,8 @@ export type SpecificGroup<T extends GroupType> = (
 // Generic type for a specific group type which includes the information from
 // both the generic group and specific group.
 export type ExpandedGroup<T extends (GroupType | undefined) = undefined> = (
-    Group & (undefined extends T 
-        ? {} 
+    Group & (undefined extends T
+        ? {}
         : SpecificGroup<NonNullable<T>>
     )
 )

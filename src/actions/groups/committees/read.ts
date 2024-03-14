@@ -1,9 +1,7 @@
 'use server'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { readGroup, readGroups } from '@/actions/groups/read'
 import type { ExpandedCommittee } from './Types'
 import type { ActionReturn } from '@/actions/Types'
-import { readGroup, readGroups } from '../read'
 
 /**
  * Reads all committees

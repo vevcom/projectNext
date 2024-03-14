@@ -1,16 +1,15 @@
 'use server'
 
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
-import z from 'zod'
-import type { ActionReturn } from '@/actions/Types'
-import { Group, GroupType, Membership, Prisma } from '@prisma/client'
-import { GroupUpdateInput } from './Types'
 import { groupEnumToKey } from './ConfigVars'
+import { createActionError, createPrismaActionError } from '@/actions/error'
+import prisma from '@/prisma'
+import type { Group, GroupType, Membership, Prisma } from '@prisma/client'
+import type { ActionReturn } from '@/actions/Types'
+import type { GroupUpdateInput } from './Types'
 
 export async function updateGroup<T extends GroupType>(
     id: number,
-    groupType: T, 
+    groupType: T,
     { details, ...data }: GroupUpdateInput<T>,
 ): Promise<ActionReturn<Group>> {
     const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
@@ -34,7 +33,7 @@ export async function updateGroup<T extends GroupType>(
             include,
         })
 
-        if(!group[groupKey]) {
+        if (!group[groupKey]) {
             return createActionError('UNKNOWN ERROR', 'Noe gikk galt.')
         }
 

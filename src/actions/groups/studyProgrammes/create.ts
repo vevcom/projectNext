@@ -1,8 +1,6 @@
 'use server'
 
 import 'server-only'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
 import { createstudyProgrammeSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import { createGroup } from '@/actions/groups/create'

@@ -5,18 +5,18 @@ import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { GroupType, Prisma } from '@prisma/client/'
-import type { ExpandedGroup, GroupCreateInput} from './Types'
+import type { ExpandedGroup, GroupCreateInput } from './Types'
 
 /**
  * Creates a group of a given type. The data required for each group depends on
  * which type of group it is.
  */
 export async function createGroup<T extends GroupType>(
-    groupType: T, 
+    groupType: T,
     { details, ...data }: GroupCreateInput<T>,
 ): Promise<ActionReturn<ExpandedGroup<T>>>
 export async function createGroup<T extends GroupType>(
-    groupType: T, 
+    groupType: T,
     { details, ...data }: GroupCreateInput<T>,
 ): Promise<ActionReturn<ExpandedGroup<GroupType>>> {
     const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
