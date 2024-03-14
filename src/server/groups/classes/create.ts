@@ -1,22 +1,16 @@
 'use server'
 
-import { createClassSchema } from './schema'
-import { createZodActionError } from '@/actions/error'
-import { createGroup } from '@/actions/groups/create'
-import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
-import type { CreateClassSchemaType } from './schema'
+import 'server-only'
+import { createGroup } from '@/server/groups/create'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedClass } from './Types'
+import { GroupCreateInput } from '@/server/groups/Types'
 
-export async function createClass(rawData: FormData | CreateClassSchemaType): Promise<ActionReturn<ExpandedClass>> {
-    const parse = createClassSchema.safeParse(rawData)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { name } = parse.data
-
+export async function createClass({ 
+    details,
+    ...data
+}: GroupCreateInput<'CLASS'>): Promise<ActionReturn<ExpandedClass>> {
     const currentOrderRes = await readCurrenOmegaOrder()
 
     if (!currentOrderRes.success) {
@@ -26,8 +20,7 @@ export async function createClass(rawData: FormData | CreateClassSchemaType): Pr
     const { order } = currentOrderRes.data
 
     const createGroupRes = await createGroup('CLASS', {
-        membershipRenewal: true,
-        name,
+        ...data,
         details: {
             year: 1,
             order,

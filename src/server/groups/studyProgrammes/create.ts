@@ -1,30 +1,19 @@
 'use server'
 
 import 'server-only'
-import { createstudyProgrammeSchema } from './schema'
-import { createZodActionError } from '@/actions/error'
-import { createGroup } from '@/actions/groups/create'
-import type { CreatestudyProgrammeSchemaType } from './schema'
+import { createGroup } from '@/server/groups/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedstudyProgramme } from './Types'
+import { SpecificGroupCreateInput } from '@/server/groups/Types'
 
-export async function createstudyProgramme(
-    rawData: FormData | CreatestudyProgrammeSchemaType
-): Promise<ActionReturn<ExpandedstudyProgramme>> {
-    const parse = createstudyProgrammeSchema.safeParse(rawData)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { name } = parse.data
-
+export async function createStudyProgramme({
+    name,
+    details,
+}: SpecificGroupCreateInput<'STUDY_PROGRAMME'>): Promise<ActionReturn<ExpandedstudyProgramme>> {
     const createGroupRes = await createGroup('STUDY_PROGRAMME', {
-        membershipRenewal: true,
+        membershipRenewal: false,
         name,
-        details: {
-            // TODO - Add details for study prog
-        }
+        details,
     })
 
     if (!createGroupRes.success) {

@@ -1,5 +1,5 @@
 'use server'
-import { readGroup, readGroups } from '@/actions/groups/read'
+import { readGroup, readGroups } from '@/server/groups/read'
 import type { ExpandedCommittee } from './Types'
 import type { ActionReturn } from '@/actions/Types'
 

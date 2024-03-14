@@ -1,4 +1,4 @@
-import { readCommittees } from '@/actions/groups/committees/read'
+import { readCommittees } from '@/server/groups/committees/read'
 import Link from 'next/link'
 
 export default async function Committees() {

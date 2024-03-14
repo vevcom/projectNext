@@ -1,33 +1,19 @@
 'use server'
 
-import { createCommitteeSchema } from './schema'
-import { createZodActionError } from '@/actions/error'
-import { createGroup } from '@/actions/groups/create'
-import type { CreateCommitteeSchemaType } from './schema'
+import 'server-only'
+import { createGroup } from '@/server/groups/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedCommittee } from './Types'
+import { SpecificGroupCreateInput } from '../Types'
 
-export async function createCommittee(
-    rawData: FormData | CreateCommitteeSchemaType
-): Promise<ActionReturn<ExpandedCommittee>> {
-    const parse = createCommitteeSchema.safeParse(rawData)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { name } = parse.data
-
+export async function createCommittee({
+    name,
+    details,
+}: SpecificGroupCreateInput<'COMMITTEE'>): Promise<ActionReturn<ExpandedCommittee>> {
     const createGroupRes = await createGroup('COMMITTEE', {
         membershipRenewal: true,
         name,
-        details: {
-            logoImage: {
-                create: {
-                    name: 'Komitélogo',
-                },
-            },
-        },
+        details,
     })
 
     if (!createGroupRes.success) {

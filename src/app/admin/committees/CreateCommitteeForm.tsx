@@ -2,7 +2,7 @@
 import styles from './CreateCommitteeForm.module.scss'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
-import create from '@/actions/groups/committees/create'
+import create from '@/server/groups/committees/create'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { useContext } from 'react'
 import type { Image } from '@prisma/client'

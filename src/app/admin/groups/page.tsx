@@ -1,4 +1,4 @@
-import { readGroups } from '@/actions/groups/read'
+import { readGroups } from '@/server/groups/read'
 // import type { GroupType } from '@prisma/client'
 
 // const groupTypes: Record<GroupType, string> = {
