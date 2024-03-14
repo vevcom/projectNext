@@ -24,6 +24,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
+    buttonClassName?: string,
 }
 type InputType = {
     input: ReactNode & { label?: string },
@@ -38,12 +39,14 @@ function SubmitButton({
     success,
     color,
     confirmation,
+    className,
 }: {
     children: ReactNode, generalErrors?:
     ActionError[],
     success: boolean,
     color: Colors,
     confirmation: Confirmation,
+    className?: string,
 }) {
     const { pending } = useFormStatus()
     const [confirmedOpen, setConfirmedOpen] = useState(false)
@@ -67,7 +70,7 @@ function SubmitButton({
     }
     const button = (
         <Button
-            className={styles.submitButton}
+            className={`${styles.submitButton} ${className ?? ''}`}
             aria-disabled={pending || success}
             color={success ? 'green' : color}
             type="submit"
@@ -86,7 +89,7 @@ function SubmitButton({
             {button}
         </div>
     ) : (
-        <Button className={styles.submitButton} color={color} onClick={() => setConfirmedOpen(true)}>
+        <Button className={`${styles.submitButton} ${className ?? ''}`} color={color} onClick={() => setConfirmedOpen(true)}>
             {children}
         </Button>
     ))
@@ -152,6 +155,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     action,
     successCallback,
     className,
+    buttonClassName,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
@@ -209,6 +213,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
                 success={success}
                 generalErrors={generalErrors}
                 confirmation={confirmation}
+                className={buttonClassName}
             >
                 {submitText}
             </SubmitButton>
