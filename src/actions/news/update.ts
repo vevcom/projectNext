@@ -1,21 +1,21 @@
 'use server'
 import { newsArticleSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
+import { updateNews } from '@/server/news/update'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { NewsArticleSchemaType } from './schema'
-import { updateNews } from '@/server/news/update'
 
 
 export async function updateNewsAction(
     id: number,
     rawdata: FormData | NewsArticleSchemaType
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    //TODO: auth 
+    //TODO: auth
     const parse = newsArticleSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    return await updateNews(id, data) 
+    return await updateNews(id, data)
 }
 
 export async function publishNewsAction(

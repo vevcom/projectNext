@@ -58,7 +58,7 @@ export default function EditCategory({ category }: PropTypes) {
                     className={styles.EditCategory}
                     action={updateCategory}
                     successCallback={handleSuccessUpdate}
-                    submitText='oppdater'
+                    submitText="oppdater"
                 >
                     <TextInput label="navn" name="name" defaultValue={'hei'} />
                     <Textarea

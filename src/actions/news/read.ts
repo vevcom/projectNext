@@ -1,7 +1,7 @@
 'use server'
+import { readNews, readNewsCurrent, readOldNewsPage } from '@/server/news/read'
 import type { ExpandedNewsArticle, SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import { readNews, readNewsCurrent, readOldNewsPage } from '@/server/news/read'
 
 export async function readOldNewsPageAction<const PageSize extends number>(
     readPageImput: ReadPageInput<PageSize>

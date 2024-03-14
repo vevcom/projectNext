@@ -1,4 +1,4 @@
-import 'server-only' 
+import 'server-only'
 import { destroyArticle } from '@/server/cms/articles/destroy'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
@@ -9,7 +9,7 @@ import type { SimpleNewsArticle } from '@/server/news/Types'
  * Yhis function destroys a newsArticle. It is also responsible for sleaning up the article,
  * to avoid orphaned articles. It calls destroyArticle to destroy the article and its coverImage (cmsImage)
  * @param id - id of news article to destroy
- * @returns 
+ * @returns
  */
 export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     try {

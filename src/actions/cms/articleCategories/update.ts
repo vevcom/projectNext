@@ -1,10 +1,10 @@
 'use server'
 import { articleCategorySchema } from './schema'
 import { createZodActionError } from '@/actions/error'
+import { updateArticleCategory } from '@/server/cms/articleCategories/update'
 import type { ArticleCategorySchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
-import { updateArticleCategory } from '@/server/cms/articleCategories/update'
 
 export async function updateArticleCategoryVisibilityAction(
     // disable eslint rule temporarily until function is implemented
