@@ -5,7 +5,7 @@ import Textarea from '@/app/components/UI/Textarea'
 import TextInput from '@/app/components/UI/TextInput'
 import { updateArticleCategory } from '@/actions/cms/articleCategories/update'
 import { createArticleAction } from '@/actions/cms/articles/create'
-import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
+import { destroyArticleCategoryAction } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
@@ -70,7 +70,7 @@ export default function EditCategory({ category }: PropTypes) {
             </PopUp>
             <li>
                 <Form
-                    action={destroyArticleCategory.bind(null, category.id)}
+                    action={destroyArticleCategoryAction.bind(null, category.id)}
                     successCallback={handleSuccessDestroy}
                     submitText="Slett kategori"
                     submitColor="red"
