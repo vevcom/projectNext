@@ -1,16 +1,20 @@
-'use server'
-
 import 'server-only'
 import { createGroup } from '@/server/groups/create'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedClass } from './Types'
-import { GroupCreateInput } from '@/server/groups/Types'
 
-export async function createClass({ 
+type CreateClassArgs = {
+    name: string,
+    details: {
+        year: number,
+    }
+}
+
+export async function createClass({
+    name,
     details,
-    ...data
-}: GroupCreateInput<'CLASS'>): Promise<ActionReturn<ExpandedClass>> {
+}: CreateClassArgs): Promise<ActionReturn<ExpandedClass>> {
     const currentOrderRes = await readCurrenOmegaOrder()
 
     if (!currentOrderRes.success) {
@@ -20,11 +24,12 @@ export async function createClass({
     const { order } = currentOrderRes.data
 
     const createGroupRes = await createGroup('CLASS', {
-        ...data,
+        membershipRenewal: false,
+        name,
         details: {
-            year: 1,
             order,
-        }
+            ...details,
+        },
     })
 
     if (!createGroupRes.success) {

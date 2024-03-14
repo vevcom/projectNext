@@ -1,3 +1,3 @@
 import type { ExpandedGroup } from '@/server/groups/Types'
 
-export type ExpandedstudyProgramme = ExpandedGroup<'STUDY_PROGRAMME'>
+export type ExpandedStudyProgramme = ExpandedGroup<'STUDY_PROGRAMME'>

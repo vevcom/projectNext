@@ -1,5 +1,4 @@
-'use server'
-
+import 'server-only'
 import { groupEnumToKey } from './ConfigVars'
 import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'

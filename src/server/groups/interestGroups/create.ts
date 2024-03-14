@@ -1,15 +1,15 @@
-'use server'
-
 import 'server-only'
 import { createGroup } from '@/server/groups/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedInterestGroup } from './Types'
-import { SpecificGroupCreateInput } from '../Types'
+import type { SpecificGroupCreateInput } from '@/server/groups/Types'
+
+type CreateInterestGroupArgs = SpecificGroupCreateInput<'INTEREST_GROUP'>
 
 export async function createInterestGroup({
     name,
     details,
-}: SpecificGroupCreateInput<'INTEREST_GROUP'>): Promise<ActionReturn<ExpandedInterestGroup>> {
+}: CreateInterestGroupArgs): Promise<ActionReturn<ExpandedInterestGroup>> {
     const createGroupRes = await createGroup('INTEREST_GROUP', {
         membershipRenewal: true,
         name,

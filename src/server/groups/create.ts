@@ -1,5 +1,3 @@
-'use server'
-
 import 'server-only'
 import { groupEnumToKey } from './ConfigVars'
 import prisma from '@/prisma'

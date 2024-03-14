@@ -1,15 +1,15 @@
-'use server'
-
 import 'server-only'
 import { createGroup } from '@/server/groups/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedCommittee } from './Types'
-import { SpecificGroupCreateInput } from '../Types'
+import type { SpecificGroupCreateInput } from '@/server/groups/Types'
+
+type CreateCommitteArgs = SpecificGroupCreateInput<'COMMITTEE'>
 
 export async function createCommittee({
     name,
     details,
-}: SpecificGroupCreateInput<'COMMITTEE'>): Promise<ActionReturn<ExpandedCommittee>> {
+}: CreateCommitteArgs): Promise<ActionReturn<ExpandedCommittee>> {
     const createGroupRes = await createGroup('COMMITTEE', {
         membershipRenewal: true,
         name,

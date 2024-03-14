@@ -1,5 +1,7 @@
-import { readGroups } from '@/server/groups/read'
+// import { readGroups } from '@/server/groups/read'
 // import type { GroupType } from '@prisma/client'
+
+import type { Group } from '@prisma/client'
 
 // const groupTypes: Record<GroupType, string> = {
 //     CLASS: 'Klasse',
@@ -10,11 +12,11 @@ import { readGroups } from '@/server/groups/read'
 // }
 
 export default async function Groups() {
-    const res = await readGroups()
+    // const res = await readGroups()
 
-    if (!res.success) throw Error(res.error ? res.error[0].message : 'error')
+    // if (!res.success) throw Error(res.error ? res.error[0].message : 'error')
 
-    const groups = res.data
+    const groups: Group[] = []//res.data
 
     return <>
         <h1>Grupper</h1>

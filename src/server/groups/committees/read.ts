@@ -1,4 +1,4 @@
-'use server'
+import 'server-only'
 import { readGroup, readGroups } from '@/server/groups/read'
 import type { ExpandedCommittee } from './Types'
 import type { ActionReturn } from '@/actions/Types'

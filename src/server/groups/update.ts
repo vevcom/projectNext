@@ -1,17 +1,21 @@
-'use server'
-
+import 'server-only'
 import { groupEnumToKey } from './ConfigVars'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import type { Group, GroupType, Membership, Prisma } from '@prisma/client'
+import type { GroupType, Membership, Prisma } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { GroupUpdateInput } from './Types'
+import type { ExpandedGroup, GroupUpdateInput } from './Types'
 
 export async function updateGroup<T extends GroupType>(
     id: number,
     groupType: T,
     { details, ...data }: GroupUpdateInput<T>,
-): Promise<ActionReturn<Group>> {
+): Promise<ActionReturn<ExpandedGroup<T>>>
+export async function updateGroup<T extends GroupType>(
+    id: number,
+    groupType: T,
+    { details, ...data }: GroupUpdateInput<T>,
+): Promise<ActionReturn<ExpandedGroup<GroupType>>> {
     const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
 
     const include: Prisma.GroupInclude = {

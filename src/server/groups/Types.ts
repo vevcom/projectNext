@@ -1,13 +1,9 @@
 import type { groupEnumToKey } from './ConfigVars'
-import type { Group, GroupType, Prisma } from '@prisma/client'
+import { Group, GroupType, Prisma } from '@prisma/client'
 
 export type GroupEnumToKey = typeof groupEnumToKey
 
-export type SpecificGroupCreateInput<T extends GroupType> = (
-    Pick<Group, 'name'>
-) & {
-    details: Required<Prisma.GroupCreateInput>[GroupEnumToKey[T]]['create'],
-}
+// Input types for CRUD operations
 
 export type GroupCreateInput<T extends GroupType> = (
     Omit<Group, 'groupType' | 'id'>
@@ -15,7 +11,13 @@ export type GroupCreateInput<T extends GroupType> = (
     details: Required<Prisma.GroupCreateInput>[GroupEnumToKey[T]]['create'],
 }
 
+export type SpecificGroupCreateInput<T extends GroupType> = Pick<GroupCreateInput<T>, 'name' | 'details'>
+
 export type GroupUpdateInput<T extends GroupType> = Partial<Omit<GroupCreateInput<T>, 'id'>>
+
+export type SpecificGroupUpdateInput<T extends GroupType> = Pick<GroupUpdateInput<T>, 'name' | 'details'>
+
+// Return types
 
 export type SpecificGroup<T extends GroupType> = (
     Prisma.GroupGetPayload<{
