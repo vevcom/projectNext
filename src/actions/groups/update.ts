@@ -1,35 +1,42 @@
 'use server'
 
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import z from 'zod'
 import type { ActionReturn } from '@/actions/Types'
-import type { Group, Membership } from '@prisma/client'
+import { Group, GroupType, Membership, Prisma } from '@prisma/client'
+import { GroupUpdateInput } from './Types'
+import { groupEnumToKey } from './ConfigVars'
 
-export async function updateGroup(groupId: number, rawData: FormData): Promise<ActionReturn<Group>> {
-    const schema = z.object({
-        name: z.string(),
-        membershipRenewal: z.boolean(),
-    })
+export async function updateGroup<T extends GroupType>(
+    id: number,
+    groupType: T, 
+    { details, ...data }: GroupUpdateInput<T>,
+): Promise<ActionReturn<Group>> {
+    const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
 
-    const parse = schema.safeParse(rawData)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
+    const include: Prisma.GroupInclude = {
+        [groupKey]: true
     }
-
-    const { name, membershipRenewal } = parse.data
 
     try {
         const group = await prisma.group.update({
             where: {
-                id: groupId
+                id,
+                groupType,
             },
             data: {
-                name,
-                membershipRenewal,
+                ...data,
+                [groupKey]: {
+                    update: details,
+                }
             },
+            include,
         })
+
+        if(!group[groupKey]) {
+            return createActionError('UNKNOWN ERROR', 'Noe gikk galt.')
+        }
 
         return {
             success: true,

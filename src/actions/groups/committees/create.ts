@@ -5,11 +5,11 @@ import { createZodActionError } from '@/actions/error'
 import { createGroup } from '@/actions/groups/create'
 import type { CreateCommitteeSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedCommitte } from './Types'
+import type { ExpandedCommittee } from './Types'
 
 export async function createCommittee(
     rawData: FormData | CreateCommitteeSchemaType
-): Promise<ActionReturn<ExpandedCommitte>> {
+): Promise<ActionReturn<ExpandedCommittee>> {
     const parse = createCommitteeSchema.safeParse(rawData)
 
     if (!parse.success) {
@@ -18,11 +18,16 @@ export async function createCommittee(
 
     const { name } = parse.data
 
-    const createGroupRes = await createGroup({
-        groupType: 'COMMITTEE',
+    const createGroupRes = await createGroup('COMMITTEE', {
         membershipRenewal: true,
         name,
-        details: {}
+        details: {
+            logoImage: {
+                create: {
+                    name: 'Komitélogo',
+                },
+            },
+        },
     })
 
     if (!createGroupRes.success) {

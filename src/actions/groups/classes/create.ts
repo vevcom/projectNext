@@ -6,6 +6,7 @@ import { createGroup } from '@/actions/groups/create'
 import type { CreateClassSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedClass } from './Types'
+import { readCurrenOmegaOrder } from '@/actions/omegaOrder/read'
 
 export async function createClass(rawData: FormData | CreateClassSchemaType): Promise<ActionReturn<ExpandedClass>> {
     const parse = createClassSchema.safeParse(rawData)
@@ -16,12 +17,20 @@ export async function createClass(rawData: FormData | CreateClassSchemaType): Pr
 
     const { name } = parse.data
 
-    const createGroupRes = await createGroup({
-        groupType: 'CLASS',
+    const currentOrderRes = await readCurrenOmegaOrder()
+
+    if (!currentOrderRes.success) {
+        return currentOrderRes
+    }
+
+    const { order } = currentOrderRes.data
+
+    const createGroupRes = await createGroup('CLASS', {
         membershipRenewal: true,
         name,
         details: {
-            year: 1
+            year: 1,
+            order,
         }
     })
 

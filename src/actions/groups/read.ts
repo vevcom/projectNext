@@ -1,19 +1,67 @@
 'use server'
 
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
-import type { Group, Membership } from '@prisma/client'
+import { Group, GroupType, Membership, Prisma } from '@prisma/client'
+import { ExpandedGroup } from './Types'
+import { groupEnumToKey } from './ConfigVars'
 
-export async function readGroups(): Promise<ActionReturn<Group[]>> {
+export async function readGroups<T extends (GroupType | undefined) = undefined>(
+    groupType: T,
+): Promise<ActionReturn<ExpandedGroup<T>[]>>
+export async function readGroups<T extends (GroupType | undefined) = undefined>(
+    groupType: T,
+): Promise<ActionReturn<ExpandedGroup<GroupType>[]>> {
+    const groupKey: keyof Prisma.GroupInclude | undefined = groupType && groupEnumToKey[groupType]
+    
+    const include: Prisma.GroupInclude = groupKey ? {
+        [groupKey]: true
+    } : {}
+
     try {
-        const groups = await prisma.group.findMany({})
+        const groups = await prisma.group.findMany({
+            where: {
+                groupType,
+            },
+            include,
+        })
 
         return {
             success: true,
-            data: groups
+            data: groups,
         }
     } catch (e) {
+        return createPrismaActionError(e)
+    }
+}
+
+export async function readGroup<T extends GroupType>(id: number, groupType: T): Promise<ActionReturn<ExpandedGroup<T>>>
+export async function readGroup<T extends GroupType>(id: number, groupType: T): Promise<ActionReturn<ExpandedGroup<GroupType>>> {
+    const groupKey: keyof Prisma.GroupInclude = groupEnumToKey[groupType]
+
+    const include: Prisma.GroupInclude = {
+        [groupKey]: true
+    }
+    
+    try {
+        const group = await prisma.group.findUnique({
+            where: {
+                id,
+            },
+            include
+        })
+
+        if(!group) {
+            return createActionError('NOT FOUND', 'Fant ikke gruppe.')
+        }
+
+        if(!group[groupKey]) {
+            return createActionError('UNKNOWN ERROR', 'Noe gikk galt.')
+        }
+
+        return { success: true, data: group }
+    } catch(e) {
         return createPrismaActionError(e)
     }
 }

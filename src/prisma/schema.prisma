@@ -139,7 +139,8 @@ model Committee {
   group Group @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   id    Int   @id
 
-  // TODO - add committee data
+  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId Int      @unique
 }
 
 model InterestGroup {
@@ -231,6 +232,7 @@ enum SpecialImage {
   DEFAULT_IMAGE
   DEFAULT_IMAGE_COLLECTION_COVER
   DEFAULT_PROFILE_IMAGE
+  DAFAULT_COMMITTEE_LOGO
   LOGO_SIMPLE
   LOGO_WHITE
   LOGO_WHITE_TEXT
@@ -315,6 +317,7 @@ model CmsImage {
   articleSectionId     Int?             @unique
   coverImageforArticle Article?
   Ombul                Ombul?
+  committee            Committee?
   special              SpecialCmsImage? @unique
 }
 

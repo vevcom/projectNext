@@ -18,8 +18,7 @@ export async function createInterestGroup(
 
     const { name } = parse.data
 
-    const createGroupRes = await createGroup({
-        groupType: 'INTEREST_GROUP',
+    const createGroupRes = await createGroup('INTEREST_GROUP', {
         membershipRenewal: true,
         name,
         details: {}

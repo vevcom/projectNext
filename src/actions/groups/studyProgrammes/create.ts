@@ -21,11 +21,12 @@ export async function createstudyProgramme(
 
     const { name } = parse.data
 
-    const createGroupRes = await createGroup({
-        groupType: 'STUDY_PROGRAMME',
+    const createGroupRes = await createGroup('STUDY_PROGRAMME', {
         membershipRenewal: true,
         name,
-        details: {}
+        details: {
+            // TODO - Add details for study prog
+        }
     })
 
     if (!createGroupRes.success) {
