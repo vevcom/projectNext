@@ -6,6 +6,10 @@ type PropTypes = {
     defaultValue?: boolean,
 }
 
+/**
+ * EditModeContext is a context used to set if the app is in editmode. If the app is
+ * in editmode, the pencil icon will be shown in the top right corner of the app.
+ */
 export const EditModeContext = createContext<{
     editMode: boolean,
     setEditMode: (editMode: boolean) => void,
