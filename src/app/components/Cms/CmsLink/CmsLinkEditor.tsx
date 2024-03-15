@@ -9,15 +9,16 @@ import PopUp from '@/components/PopUp/PopUp'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CmsLink } from '@prisma/client'
+import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     cmsLink: CmsLink
 }
 
 export default function CmsLinkEditor({ cmsLink }: PropTypes) {
-    const editContext = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: check visibility of cmsLink for user and pass it to useEditing
     const { refresh } = useRouter()
-    if (!editContext?.editMode) return null
+    if (!canEdit) return null
 
     return (
         <PopUp

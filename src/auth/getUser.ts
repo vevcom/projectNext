@@ -67,6 +67,7 @@ export async function getUser({
     if (user && (!requiredPermissions || checkPermissionMatrix(user, requiredPermissions))){
         return { user, authorized: true, status: 'AUTHORIZED' }
     }
+    //TODO: visibility checks
 
     if (required) {
         if (!user && returnUrl) {

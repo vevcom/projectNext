@@ -11,6 +11,7 @@ import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
+import useEditing from '@/hooks/useEditing'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
@@ -27,11 +28,11 @@ type PropTypes = {
 }
 
 export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: PropTypes) {
-    const editmode = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: pass visibility / permissions to useEditing
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
 
-    if (!editmode?.editMode) return null
+    if (!canEdit) return null
 
     const handleContentChange = (value: string) => {
         setContent(value)

@@ -48,7 +48,7 @@ export function useUser({
     const user = session?.user ?? null
 
     const authorized = requiredPermissions && user ? checkPermissionMatrix(user, requiredPermissions) : Boolean(user)
-
+    //TODO: visibility checks
     return { 
         user, 
         status: authorized ? status : 'unauthenticated', 
