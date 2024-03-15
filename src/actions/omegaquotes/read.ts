@@ -10,7 +10,7 @@ export async function readQuotesPageAction<const PageSize extends number>(
 ): Promise<ActionReturn<OmegaquoteFiltered[]>> {
     //TODO:  REFACTOR when new permission system is working
     const { status } = await getUser({
-        requiredPermissions: ['OMEGAQUOTES_READ']
+        requiredPermissions: [['OMEGAQUOTES_READ']]
     })
 
     if (status !== 'AUTHORIZED') {

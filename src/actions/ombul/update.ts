@@ -19,7 +19,7 @@ export async function updateOmbulAction(
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
     if (!authorized) {
         return createActionError(status)
@@ -47,7 +47,7 @@ export async function updateOmbulFileAction(
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
     if (!authorized) {
         return createActionError(status)

@@ -9,7 +9,7 @@ import type { Ombul } from '@prisma/client'
 export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_READ']
+        requiredPermissions: [['OMBUL_READ']]
     })
     if (!authorized) {
         return createActionError(status)
@@ -23,7 +23,7 @@ export async function readOmbulAction(idOrNameAndYear: number | {
 }): Promise<ActionReturn<ExpandedOmbul>> {
     //Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_READ']
+        requiredPermissions: [['OMBUL_READ']]
     })
     if (!authorized) {
         return createActionError(status)
@@ -34,7 +34,7 @@ export async function readOmbulAction(idOrNameAndYear: number | {
 export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
     //Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_READ']
+        requiredPermissions: [['OMBUL_READ']]
     })
     if (!authorized) {
         return createActionError(status)

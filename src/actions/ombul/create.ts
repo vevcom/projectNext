@@ -15,7 +15,7 @@ import type { CreateOmbulSchemaType } from './schema'
 export async function createOmbulAction(rawdata: FormData | CreateOmbulSchemaType): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_CREATE']
+        requiredPermissions: [['OMBUL_CREATE']]
     })
     if (!authorized) {
         return createActionError(status)

@@ -7,7 +7,7 @@ import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 export async function destroyOmbulAction(id: number): Promise<ActionReturn<ExpandedOmbul>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_DESTROY']
+        requiredPermissions: [['OMBUL_DESTROY']]
     })
 
     if (!authorized) {
