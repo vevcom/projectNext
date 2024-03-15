@@ -1,5 +1,5 @@
 import { Permission } from "@prisma/client"
-import type { UserWithPermissions } from "./user"
+import type { UserWithPermissions } from "./getUser"
 
 export type PermissionMatrix = Permission[][]
 
