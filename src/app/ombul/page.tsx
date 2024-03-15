@@ -4,12 +4,12 @@ import OmbulCover from './OmbulCover'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
 import { readLatestOmbulAction, readOmbulsAction } from '@/actions/ombul/read'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 export default async function Ombuls() {
     const { user } = await getUser({
-        requiredPermissions: ['OMBUL_READ'],
+        requiredPermissions: [['OMBUL_READ']],
         required: true,
     })
 

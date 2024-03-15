@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import type { UserWithPermissions } from './user'
+import type { UserWithPermissions } from './getUser'
 import type { SessionContextValue } from 'next-auth/react'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can

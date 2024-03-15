@@ -1,6 +1,6 @@
 'use server'
 import { createActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { destroyOmbul } from '@/server/ombul/destroy'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'

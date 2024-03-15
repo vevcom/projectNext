@@ -1,7 +1,7 @@
 'use server'
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
 import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from '@/server/ombul/Types'

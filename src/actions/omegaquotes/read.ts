@@ -1,6 +1,6 @@
 'use server'
 import { createActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { readQuotesPage } from '@/server/omegaquotes/read'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { OmegaquoteFiltered } from '@/server/omegaquotes/Types'

@@ -1,7 +1,7 @@
 'use server'
 import { createOmbulSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { createOmbul } from '@/server/ombul/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'

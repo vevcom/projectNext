@@ -1,7 +1,7 @@
 'use server'
 import { omegaquotesSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { createQuote } from '@/server/omegaquotes/create'
 import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'

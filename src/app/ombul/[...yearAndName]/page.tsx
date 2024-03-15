@@ -6,7 +6,7 @@ import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/actions/ombul/update'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,7 +18,7 @@ type PropTypes = {
 
 export default async function Ombul({ params }: PropTypes) {
     const { user } = await getUser({
-        requiredPermissions: ['OMBUL_READ'],
+        requiredPermissions: [['OMBUL_READ']],
         required: true,
     })
 
