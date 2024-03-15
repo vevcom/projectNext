@@ -6,14 +6,14 @@ import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
-import { EditModeContext } from '@/context/EditMode'
 import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/context/paging/ImageCollectionPaging'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
+import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     cmsImage: CmsImage & {
@@ -27,14 +27,14 @@ type PropTypes = {
  * @returns
  */
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
-    const editingContext = useContext(EditModeContext)
+    const canEdit = useEditing()
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isCollectionActive = (collection: { id: number }) => (
         collection.id === currentCollectionId ? styles.selected : ''
     )
 
-    return editingContext?.editMode && (
+    return canEdit && (
         <PopUp
             PopUpKey={cmsImage.id}
             showButtonContent={<EditOverlay />}

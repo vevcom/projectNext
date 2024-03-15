@@ -1,9 +1,7 @@
 'use client'
 import styles from './ImageControls.module.scss'
 import { updateArticleSectionAction } from '@/cms/articleSections/update'
-import { EditModeContext } from '@/context/EditMode'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/ConfigVars'
-import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -13,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import type { ArticleSection } from '@prisma/client'
+import useEditing from '@/hooks/useEditing'
 
 /**
  * This component is used to control the image in the article section
@@ -25,9 +24,9 @@ type PropTypes = {
 }
 
 export default function ImageControls({ articleSection, className }: PropTypes) {
-    const editModeContext = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
     const { refresh } = useRouter()
-    if (!editModeContext?.editMode) return null
+    if (!canEdit) return null
 
     const moveLeft = async () => {
         await updateArticleSectionAction(articleSection.name, { imagePosition: 'LEFT' })

@@ -76,8 +76,6 @@ export default async function Ombul({ params }: PropTypes) {
             </div>
             <div className={styles.admin}>
                 <OmbulAdmin
-                    canDestroy={canDestroy}
-                    canUpdate={canUpdate}
                     ombul={ombul}
                 />
             </div>

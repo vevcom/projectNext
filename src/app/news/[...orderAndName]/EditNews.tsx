@@ -1,6 +1,5 @@
 'use client'
 import styles from './EditNews.module.scss'
-import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import { publishNewsAction, updateNewsAction, updateVisibilityAction } from '@/actions/news/update'
 import { destroyNewsAction } from '@/actions/news/destroy'
@@ -8,9 +7,9 @@ import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/app/components/UI/DateInput'
 import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
 import type { ExpandedNewsArticle } from '@/server/news/Types'
 import type { ReactNode } from 'react'
+import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     news: ExpandedNewsArticle
@@ -22,11 +21,10 @@ type PropTypes = {
  * pass it not: id of article to make sure not to display that article
  */
 export default function EditNews({ news, children }: PropTypes) {
-    const editModeCtx = useContext(EditModeContext)
     const { refresh, push } = useRouter()
     //TODO: chack visibility
-    const canEdit = true //temp
-    if (!editModeCtx?.editMode || !canEdit) return children
+    const canEdit = useEditing() 
+    if (!canEdit) return children
 
     //TODO: add publish functionality with visibility
     const isPublished = false //temp
