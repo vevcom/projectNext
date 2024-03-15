@@ -1,5 +1,5 @@
-import { Permission } from "@prisma/client"
-import type { UserWithPermissions } from "./getUser"
+import type { Permission } from '@prisma/client'
+import type { UserWithPermissions } from './getUser'
 
 export type PermissionMatrix = Permission[][]
 
@@ -11,5 +11,5 @@ export type PermissionMatrix = Permission[][]
  * @returns - true if the user has the permission(s), false otherwise.
  */
 export function checkPermissionMatrix(user: UserWithPermissions, permissionMatrix: PermissionMatrix): boolean {
-    return permissionMatrix.every((row) => row.some((p) => user.permissions.includes(p)));
+    return permissionMatrix.every((row) => row.some((p) => user.permissions.includes(p)))
 }

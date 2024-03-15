@@ -6,10 +6,10 @@ import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/app/components/UI/DateInput'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/server/news/Types'
 import type { ReactNode } from 'react'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     news: ExpandedNewsArticle
@@ -23,7 +23,7 @@ type PropTypes = {
 export default function EditNews({ news, children }: PropTypes) {
     const { refresh, push } = useRouter()
     //TODO: chack visibility
-    const canEdit = useEditing() 
+    const canEdit = useEditing()
     if (!canEdit) return children
 
     //TODO: add publish functionality with visibility

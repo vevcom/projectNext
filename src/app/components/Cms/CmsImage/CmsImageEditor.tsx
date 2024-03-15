@@ -10,10 +10,10 @@ import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/c
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import PopUpProvider from '@/context/PopUp'
 import ImageSelectionProvider from '@/context/ImageSelection'
+import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     cmsImage: CmsImage & {

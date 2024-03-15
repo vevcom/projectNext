@@ -2,6 +2,7 @@
 import styles from './ImageControls.module.scss'
 import { updateArticleSectionAction } from '@/cms/articleSections/update'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/ConfigVars'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -11,7 +12,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import type { ArticleSection } from '@prisma/client'
-import useEditing from '@/hooks/useEditing'
 
 /**
  * This component is used to control the image in the article section

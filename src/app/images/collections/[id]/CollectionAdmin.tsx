@@ -11,13 +11,13 @@ import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
 import ImageUploader from '@/app/components/Image/ImageUploader'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Image as ImageT } from '@prisma/client'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     collectionId: number,

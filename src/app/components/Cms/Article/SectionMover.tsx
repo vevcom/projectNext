@@ -1,11 +1,11 @@
 'use client'
 import styles from './SectionMover.module.scss'
 import { moveSectionOrderAction } from '@/actions/cms/articles/update'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     articleId: number

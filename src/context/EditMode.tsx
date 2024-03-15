@@ -18,15 +18,15 @@ export const EditModeContext = createContext<{
     somethingToEdit: boolean,
     addEditableContent: (key: string) => void,
     removeEditableContent: (key: string) => void,
-} | null>(null)
+        } | null>(null)
 
 export default function EditModeProvider({ defaultValue = false, children }: PropTypes) {
     const [editMode, setEditMode_] = useState(defaultValue)
     const [editableContent, setEditableContent] = useState<string[]>([])
 
-    const setEditMode = (editMode: boolean) => {
-        if (editMode === false) setEditMode_(false)
-        if (editMode === true && editableContent.length > 0) setEditMode_(true)
+    const setEditMode = (newEditMode: boolean) => {
+        if (newEditMode === false) setEditMode_(false)
+        if (newEditMode === true && editableContent.length > 0) setEditMode_(true)
     }
 
     const addEditableContent = (key: string) => {
@@ -39,9 +39,7 @@ export default function EditModeProvider({ defaultValue = false, children }: Pro
     }
 
     const removeEditableContent = (key: string) => {
-        setEditableContent((prev) => {
-            return prev.filter((k) => k !== key)
-        })
+        setEditableContent((prev) => prev.filter((k) => k !== key))
     }
 
     useEffect(() => {

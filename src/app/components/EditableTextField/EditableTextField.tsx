@@ -2,11 +2,11 @@
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import useKeyPress from '@/hooks/useKeyPress'
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import useEditing from '@/hooks/useEditing'
+import React, { useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>

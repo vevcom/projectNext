@@ -1,9 +1,9 @@
 'use client'
-import { PermissionMatrix } from "@/auth/checkPermissionMatrix"
-import { useUser } from "@/auth/useUser"
-import { EditModeContext } from "@/context/EditMode"
-import { useContext, useEffect, useRef } from "react"
-import { v4 as uuid } from 'uuid';
+import { useUser } from '@/auth/useUser'
+import { EditModeContext } from '@/context/EditMode'
+import { useContext, useEffect, useRef } from 'react'
+import { v4 as uuid } from 'uuid'
+import type { PermissionMatrix } from '@/auth/checkPermissionMatrix'
 
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.
@@ -15,13 +15,13 @@ import { v4 as uuid } from 'uuid';
  * - IF the bool is true editMode is on and the user has the required permissions
  * - IF the bool is false editMode is off or the user does not have the required permissions
  */
-export default function useEditing(requiredPermissions?: PermissionMatrix) : boolean {
+export default function useEditing(requiredPermissions?: PermissionMatrix): boolean {
     const editMode = useContext(EditModeContext)
     const { authorized } = useUser({
         requiredPermissions,
     })
     //TODO: also add visibility checks
-    const uniqueKey = useRef(uuid()).current;
+    const uniqueKey = useRef(uuid()).current
 
     useEffect(() => {
         if (editMode) {

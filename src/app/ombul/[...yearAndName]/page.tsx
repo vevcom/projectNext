@@ -35,7 +35,6 @@ export default async function Ombul({ params }: PropTypes) {
     const path = `/store/ombul/${ombul.fsLocation}`
 
     const canUpdate = user.permissions.includes('OMBUL_UPDATE')
-    const canDestroy = user.permissions.includes('OMBUL_DESTROY')
 
     const changeDescription = updateOmbulAction.bind(null, ombul.id)
 

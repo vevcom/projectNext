@@ -7,9 +7,9 @@ import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
 import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import { destroyOmbulAction } from '@/actions/ombul/destroy'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     ombul: ExpandedOmbul

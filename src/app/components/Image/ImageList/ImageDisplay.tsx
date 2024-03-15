@@ -9,12 +9,12 @@ import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext, useState, useEffect, useRef } from 'react'
 import type { Image as ImageT } from '@prisma/client'
-import useEditing from '@/hooks/useEditing'
 
 type PropTypes = {
     startImageName?: string,
