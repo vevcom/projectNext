@@ -1,4 +1,4 @@
-import type { UserWithPermissions } from '@/auth/user'
+import type { UserWithPermissions } from '@/auth/getUser'
 
 import 'next-auth'
 import 'next-auth/adapters'

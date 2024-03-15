@@ -34,7 +34,6 @@ export function useUser(options?: UseUserArgsType<false>): UseUserReturnType<fal
 export function useUser(options?: UseUserArgsType<true>): UseUserReturnType<true>
 export function useUser({ required }: UseUserArgsType<boolean> = {}): UseUserReturnType<boolean> {
     const { data: session, status } = useSession({ required: required || false })
-    
     const user = session?.user ?? null
     const authorized = Boolean(user)
 
