@@ -16,7 +16,6 @@ export default function EditModeSwitch() {
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         editingContext.setEditMode(e.target.checked)
     }
-    const isAdmin = user?.username === 'Harambe104' // TEMP
 
     const ref = useRef<HTMLInputElement>(null)
 
@@ -25,7 +24,7 @@ export default function EditModeSwitch() {
             ref.current.checked = editingContext.editMode
         }
     })
-    if (!isAdmin) return null
+    if (!editingContext.somethingToEdit) return null
 
     return (
         <div className={styles.EditModeSwitch}>
