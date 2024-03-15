@@ -122,9 +122,10 @@ model Group {
 // the specific information that only that type of group requires.
 
 model Class {
-  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  id    Int    @id
-  name  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String
 
   omegaOrder OmegaOrder @relation(fields: [order], references: [order])
   order      Int        @unique
@@ -132,18 +133,20 @@ model Class {
 }
 
 model Committee {
-  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  id    Int    @id
-  name  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String
 
   logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId Int      @unique
 }
 
 model InterestGroup {
-  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  id    Int    @id
-  name  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String
 
   // TODOD - add intereset group data
 }
@@ -155,17 +158,19 @@ enum OmegaMembershipLevel {
 }
 
 model OmegaMembershipGroup {
-  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  id    Int    @id
-  name  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String
 
   omegaMembershipLevel OmegaMembershipLevel @unique
 }
 
 model StudyProgramme {
-  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  id    Int    @id
-  name  String
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int    @unique
+  id      Int    @id @default(autoincrement())
+  name    String
 
   code          String  @unique
   insititueCode String?
