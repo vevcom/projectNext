@@ -38,6 +38,7 @@ model User {
   updatedAt     DateTime      @updatedAt // is also updated manually
   roles         RolesUsers[]
   omegaQuote    OmegaQuote[]
+  memberships   Membership[]
   credentials   Credentials?
   feideAccount  FeideAccount?
 
@@ -69,6 +70,109 @@ model FeideAccount {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+////////////
+// Groups //
+////////////
+
+model Membership {
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId     Int
+  group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId    Int
+  admin      Boolean
+  active     Boolean
+  startOrder Int
+  endOrder   Int
+
+  @@unique([userId, groupId])
+}
+
+// Currently prisma doesn't support table inheritance. What comes beneath is
+// the best approximation we can make with the current system. This NEEDS
+// to be refactored when/if prisma adds support for inheritance.
+
+// To make things the 'Group' model contains a field indicating what type of
+// group it is.
+enum GroupType {
+  CLASS
+  COMMITTEE
+  INTEREST_GROUP
+  STUDY_PROGRAMME
+  OMEGA_MEMBERSHIP_GROUP
+}
+
+// The model 'Group' should be treated as an abstract table. I.e. a generic
+// 'Group' should never be created by itself. It should always be created
+// with a reference to one specific type of group.
+model Group {
+  id                Int           @id @default(autoincrement())
+  groupType         GroupType
+  membershipRenewal Boolean
+  memberships       Membership[]
+  roles             RolesGroups[]
+
+  class                Class?
+  committee            Committee?
+  interestGroup        InterestGroup?
+  omegaMembershipGroup OmegaMembershipGroup?
+  studyProgramme       StudyProgramme?
+}
+
+// Bellow are all the specific types of groups. These models should contain
+// the specific information that only that type of group requires.
+
+model Class {
+  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id    Int    @id
+  name  String
+
+  omegaOrder OmegaOrder @relation(fields: [order], references: [order])
+  order      Int        @unique
+  year       Int        @unique
+}
+
+model Committee {
+  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id    Int    @id
+  name  String
+
+  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId Int      @unique
+}
+
+model InterestGroup {
+  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id    Int    @id
+  name  String
+
+  // TODOD - add intereset group data
+}
+
+enum OmegaMembershipLevel {
+  SOELLE // Avsky!
+  MEMBER
+  EXTERNAL
+}
+
+model OmegaMembershipGroup {
+  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id    Int    @id
+  name  String
+
+  omegaMembershipLevel OmegaMembershipLevel @unique
+}
+
+model StudyProgramme {
+  group Group  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id    Int    @id
+  name  String
+
+  code          String  @unique
+  insititueCode String?
+  yearsLength   Int?
+  startYear     Int?
+}
+
 /////////////////
 // Permissions //
 /////////////////
@@ -83,32 +187,77 @@ enum Permission {
   OMBUL_READ
   OMBUL_UPDATE
   OMBUL_DESTROY
+
+  // Groups - Generic
+  GROUP_READ
+  GROUP_DESTROY
+  // Since groups can only be created with a specific type, there is no need to
+  // have permissions to create or update a generic group.
+
+  // Groups - Classes
+  CLASS_CREATE
+  CLASS_READ
+  CLASS_UPDATE
+  CLASS_DESTROY
+
+  // Groups - Committess
+  COMMITTEE_CREATE
+  COMMITTEE_READ
+  COMMITTEE_UPDATE
+  COMMITTEE_DESTROY
+
+  // Groups - InterestGroups
+  INTEREST_GROUP_CREATE
+  INTEREST_GROUP_READ
+  INTEREST_GROUP_UPDATE
+  INTEREST_GROUP_DESTROY
+
+  // Groups - OmegaMembershipGroup
+  OMEGA_MEMBERSHIP_GROUP_READ
+  OMEGA_MEMBERSHIP_GROUP_UPDATE
+  // Since omega membership groups always need to exist there are no
+  // permissions to create or destroy them.
+
+  // Groups - StudyProgramme
+  STUDY_PROGRAMME_CREATE
+  STUDY_PROGRAMME_READ
+  STUDY_PROGRAMME_UPDATE
+  STUDY_PROGRAMME_DESTROY
 }
 
 model Role {
   id          Int              @id @default(autoincrement())
   name        String           @unique
-  users       RolesUsers[]
+  users       RolesUsers[] // Will be removed when groups are finnished
+  groups      RolesGroups[]
   permissions RolePermission[]
-
-  studyProgram StudyProgram?
 }
 
 model RolePermission {
-  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId     Int
   permission Permission
 
   @@unique([roleId, permission])
 }
 
+// Will be removed when groups are finnished
 model RolesUsers {
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId Int
-  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId Int
 
   @@id([userId, roleId])
+}
+
+model RolesGroups {
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId Int
+  role    Role  @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roleId  Int
+
+  @@unique([groupId, roleId])
 }
 
 ////////////
@@ -147,7 +296,7 @@ enum SpecialCollection {
   STANDARDIMAGES
   OMBULCOVERS
   PROFILEIMAGES
-  COMMITEELOGOS
+  COMMITTEELOGOS
 }
 
 model ImageCollection {
@@ -193,18 +342,18 @@ enum SpecialCmsImage {
 }
 
 model CmsImage {
-  id                   Int             @id @default(autoincrement())
-  name                 String          @unique @default(cuid())
-  image                Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  id                   Int              @id @default(autoincrement())
+  name                 String           @unique @default(cuid())
+  image                Image?           @relation(fields: [imageId], references: [id], onDelete: SetNull)
   imageId              Int?
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  imageSize            ImageSize       @default(MEDIUM)
-  articleSection       ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
-  articleSectionId     Int?            @unique
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  imageSize            ImageSize        @default(MEDIUM)
+  articleSection       ArticleSection?  @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId     Int?             @unique
   coverImageforArticle Article?
   Ombul                Ombul?
-  Committee            Committee?
+  committee            Committee?
   special              SpecialCmsImage? @unique
 }
 
@@ -216,14 +365,14 @@ enum SpecialCmsParagraph {
 }
 
 model CmsParagraph {
-  id               Int             @id @default(autoincrement())
-  name             String          @unique @default(cuid())
-  contentMd        String          @default("")
-  contentHtml      String          @default("")
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
-  articleSectionId Int?            @unique
+  id               Int                  @id @default(autoincrement())
+  name             String               @unique @default(cuid())
+  contentMd        String               @default("")
+  contentHtml      String               @default("")
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  articleSection   ArticleSection?      @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId Int?                 @unique
   special          SpecialCmsParagraph? @unique
 }
 
@@ -319,34 +468,22 @@ model OmegaQuote {
   userPosterId Int
 }
 
-///////////////////
-// StudyPrograms //
-///////////////////
-
-model StudyProgram {
-  // Use the name field from the role instead
-  id            Int     @id
-  code          String  @unique
-  insititueCode String?
-  yearsLength   Int?
-  startYear     Int     @default(1)
-  role          Role    @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-///////////////////////////
-// Current year of omega //
-///////////////////////////
+////////////////////////////
+// Current order of omega //
+////////////////////////////
 
 model OmegaOrder {
-  order       Int           @id
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  NewsArticle NewsArticle[]
+  order     Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  newsArticles NewsArticle[]
+  classes      Class[]
 }
 
-///////////////////////////
-// Ombul //////////////////
-///////////////////////////
+///////////
+// Ombul //
+///////////
 
 model Ombul {
   id           Int      @id @default(autoincrement())
@@ -362,11 +499,4 @@ model Ombul {
 
   @@unique([year, name])
   @@unique([year, issueNumber])
-}
-
-model Committee {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  logoImage   CmsImage @relation(fields: [logoImageId], references: [id])
-  logoImageId Int      @unique
 }
