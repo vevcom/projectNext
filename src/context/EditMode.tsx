@@ -44,6 +44,10 @@ export default function EditModeProvider({ defaultValue = false, children }: Pro
         })
     }
 
+    useEffect(() => {
+        if (editableContent.length === 0) setEditMode_(false)
+    }, [editableContent])
+
     return (
         <EditModeContext.Provider value={{
             editMode,
