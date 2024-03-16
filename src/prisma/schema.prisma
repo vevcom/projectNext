@@ -380,7 +380,7 @@ model Committee {
 // Notifications //////////
 ///////////////////////////
 
-enum SpefialNotificationChannel {
+enum SpecialNotificationChannel {
   ROOT
   NEW_EVENT
   NEW_OMBUL
@@ -388,12 +388,13 @@ enum SpefialNotificationChannel {
 }
 
 model NotificationChannel {
-  id       Int                   @id @default(autoincrement())
-  name     String                @unique
-  special  SpecialCmsImage?      @unique
-  parentId Int // ROOT should point to itself, all others must hava a parent
-  parent   NotificationChannel?  @relation(name: "parent", fields: [parentId], references: [id])
-  children NotificationChannel[] @relation(name: "parent")
+  id          Int                         @id @default(autoincrement())
+  name        String                      @unique
+  description String?
+  special     SpecialNotificationChannel? @unique
+  parentId    Int? // Root Should be the only one without a parent
+  parent      NotificationChannel?        @relation(name: "parent", fields: [parentId], references: [id])
+  children    NotificationChannel[]       @relation(name: "parent")
 
   defaultMethodsId   Int
   defaultMethods     NotificationMethod @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
