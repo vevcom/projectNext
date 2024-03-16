@@ -7,8 +7,8 @@ export default function Notifications() {
     return (
         <div className={styles.wrapper}>
             <h2>Administrasjon av Varslinger</h2>
-            <Link href="admin/notifications/sendmail">Send mail</Link>
-            <Link href="admin/notifications/channels">Varlingskanaler</Link>
+            <Link href="notifications/sendmail">Send mail</Link>
+            <Link href="notifications/channels">Varlingskanaler</Link>
         </div>
     )
 }
