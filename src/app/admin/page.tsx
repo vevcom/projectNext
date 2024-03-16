@@ -1,8 +1,5 @@
-"use client"
-
 import styles from './page.module.scss'
 import Link from 'next/link'
-import Button from '@/components/UI/Button'
 
 export default function Admin() {
 
@@ -13,7 +10,7 @@ export default function Admin() {
             <Link href="admin/cms">Edit cms</Link>
             <Link href="admin/users">Users</Link>
             <Link href="admin/permissions">Permissions</Link>
-            <Link href="admin/sendmail">Mail utsendelse</Link>
+            <Link href="admin/notifications">Varslinger</Link>
             <Link href="admin/committees">Komitéer</Link>
         </div>
     )

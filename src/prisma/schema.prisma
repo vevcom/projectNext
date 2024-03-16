@@ -86,6 +86,10 @@ enum Permission {
   OMBUL_UPDATE
   OMBUL_DESTROY
 
+  // Notifications
+  NOTIFICATION_CHANNEL_CREATE
+  NOTIFICATION_CHANNEL_UPDATE
+
   // Mail
   MAIL_SEND
 }
