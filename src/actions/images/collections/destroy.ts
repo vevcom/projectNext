@@ -1,27 +1,8 @@
 'use server'
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
+import { destroyImageCollection } from '@/server/images/collections/destroy'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function destroyImageCollection(collectionId: number): Promise<ActionReturn<ImageCollection>> {
-    try {
-        //only delete if the collection is not special
-        const collection = await prisma.imageCollection.findUnique({
-            where: {
-                id: collectionId,
-            },
-        })
-        if (!collection) return createActionError('NOT FOUND', 'Collection ikke funnet')
-        if (collection.special) return createActionError('BAD PARAMETERS', 'Kan ikke slette spesielle koleksjoner')
-
-        await prisma.imageCollection.delete({
-            where: {
-                id: collectionId,
-            },
-        })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+export async function destroyImageCollectionAction(collectionId: number): Promise<ActionReturn<ImageCollection>> {
+    return await destroyImageCollection(collectionId)
 }

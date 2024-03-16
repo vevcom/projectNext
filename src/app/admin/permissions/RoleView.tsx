@@ -1,17 +1,15 @@
 'use client'
-
 import styles from './page.module.scss'
 import CreateRoleForm from './CreateRoleForm'
 import DeleteRoleForm from './DeleteRoleForm'
 import { UpdateRoleForm } from './UpdateRoleForm'
 import UserManagmentForm from './UserManagmentForm'
-import { readUsersOfRole } from '@/actions/permissions/read'
+import { readUsersOfRoleAction } from '@/actions/rolePermissions/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
-import type { Prisma, User } from '@prisma/client'
-
-type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
+import type { User } from '@prisma/client'
+import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
 
 type PropTypes = {
     roles: RoleWithPermissions[]
@@ -35,7 +33,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
             return
         }
 
-        const res = await readUsersOfRole(selectedRole.id)
+        const res = await readUsersOfRoleAction(selectedRole.id)
 
         if (!res.success) {
             setUsers([])

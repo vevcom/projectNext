@@ -1,6 +1,6 @@
 'use client'
 
-import { updateRole } from '@/actions/permissions/update'
+import { updateRoleAction } from '@/actions/rolePermissions/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
@@ -73,7 +73,7 @@ export function UpdateRoleForm({ selectedRole }: PropTypes) {
     }, [selectedRole])
 
     return (
-        <Form submitText="Lagre" action={updateRole} successCallback={refresh}>
+        <Form submitText="Lagre" action={updateRoleAction} successCallback={refresh}>
             <input type="hidden" name="id" value={selectedRole.id} />
             <TextInput label="Navn" name="name" value={nameField} onChange={e => setNameField(e.target.value) } />
 

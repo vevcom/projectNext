@@ -1,40 +1,11 @@
 'use server'
-import { articleRealtionsIncluder } from './ConfigVars'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { ExpandedArticle } from './Types'
+import { createArticle } from '@/server/cms/articles/create'
+import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function createArticle(name: string | null, config?: {
+export async function createArticleAction(name: string | null, config?: {
     categoryId: number,
 }): Promise<ActionReturn<ExpandedArticle>> {
-    try {
-        // if name not given, create a unique new name
-        if (name === null) {
-            let i = 1
-            name = 'Ny artikkel'
-            while (await prisma.article.findFirst({ where: { name } })) {
-                name = `Ny artikkel ${i++}`
-            }
-        }
-
-
-        const article = await prisma.article.create({
-            data: {
-                name,
-                coverImage: {
-                    create: {}
-                },
-                articleCategory: config ? {
-                    connect: {
-                        id: config.categoryId
-                    }
-                } : undefined
-            },
-            include: articleRealtionsIncluder,
-        })
-        return { success: true, data: article }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    //TODO: auth on permission or visibility to categoryId
+    return await createArticle(name, config)
 }

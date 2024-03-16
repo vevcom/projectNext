@@ -3,13 +3,13 @@ import Form from '@/app/components/Form/Form'
 import PopUp from '@/app/components/PopUp/PopUp'
 import Textarea from '@/app/components/UI/Textarea'
 import TextInput from '@/app/components/UI/TextInput'
-import { updateArticleCategory } from '@/actions/cms/articleCategories/update'
-import { createArticle } from '@/actions/cms/articles/create'
-import { destroyArticleCategory } from '@/actions/cms/articleCategories/destroy'
+import { updateArticleCategoryAction } from '@/actions/cms/articleCategories/update'
+import { createArticleAction } from '@/actions/cms/articles/create'
+import { destroyArticleCategoryAction } from '@/actions/cms/articleCategories/destroy'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedArticleCategory } from '@/actions/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 type PropTypes = {
     category: ExpandedArticleCategory
@@ -34,13 +34,13 @@ export default function EditCategory({ category }: PropTypes) {
 
     if (!canEditCategory) return null
 
-    const updateCategory = updateArticleCategory.bind(null, category.id)
+    const updateCategory = updateArticleCategoryAction.bind(null, category.id)
 
     return (
         <>
             <li className={styles.newArticle}>
                 <Form
-                    action={createArticle.bind(null, null).bind(null, {
+                    action={createArticleAction.bind(null, null).bind(null, {
                         categoryId: category.id,
                     })}
                     successCallback={refresh}
@@ -58,6 +58,7 @@ export default function EditCategory({ category }: PropTypes) {
                     className={styles.EditCategory}
                     action={updateCategory}
                     successCallback={handleSuccessUpdate}
+                    submitText="oppdater"
                 >
                     <TextInput label="navn" name="name" defaultValue={'hei'} />
                     <Textarea
@@ -70,7 +71,7 @@ export default function EditCategory({ category }: PropTypes) {
             </PopUp>
             <li>
                 <Form
-                    action={destroyArticleCategory.bind(null, category.id)}
+                    action={destroyArticleCategoryAction.bind(null, category.id)}
                     successCallback={handleSuccessDestroy}
                     submitText="Slett kategori"
                     submitColor="red"

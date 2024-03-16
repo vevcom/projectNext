@@ -14,6 +14,7 @@ export default function Admin() {
             <Link href="admin/users">Users</Link>
             <Link href="admin/permissions">Permissions</Link>
             <Link href="admin/sendmail">Mail utsendelse</Link>
+            <Link href="admin/committees">Komitéer</Link>
         </div>
     )
 }

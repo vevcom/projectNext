@@ -1,6 +1,6 @@
 'use client'
 import styles from './SectionMover.module.scss'
-import { moveSectionOrder } from '@/actions/cms/articles/update'
+import { moveSectionOrderAction } from '@/actions/cms/articles/update'
 import { EditModeContext } from '@/context/EditMode'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
@@ -19,7 +19,7 @@ export default function SectionMover({ articleId, sectionId, className, showUp, 
     const editMode = useContext(EditModeContext)
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
-        await moveSectionOrder(articleId, sectionId, direction)
+        await moveSectionOrderAction(articleId, sectionId, direction)
         refresh()
     }, [sectionId, articleId, refresh])
     if (!editMode?.editMode) return null
