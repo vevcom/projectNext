@@ -1,22 +1,28 @@
-"use client"
 
 import { useUser } from "@/auth/client"
-import styles from "./page.module.scss"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
+import { readNotificaitonChannels } from "@/actions/notifications/read"
+import ChannelView from "./channelView"
+import { notFound } from "next/navigation"
 
 export default async function Channels() {
 
-    const {user, status, authorized} = useUser({
+    /*const {user, status, authorized} = useUser({
         required: true,
-    })
+    })*/
+
+    const channels = await readNotificaitonChannels();
+
+    console.log(channels)
+
+    if (!channels.success) {
+        // TODO: Handle error
+        notFound();
+    }
 
     return (
         <PageWrapper title="Varslingskanaler">
-            <div className={styles.container}>
-                <div>
-                    
-                </div>
-            </div>
+            <ChannelView channels={channels.data}/>
         </PageWrapper>
     )
 }

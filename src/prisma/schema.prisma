@@ -401,8 +401,8 @@ model NotificationChannel {
   parent      NotificationChannel?        @relation(name: "parent", fields: [parentId], references: [id])
   children    NotificationChannel[]       @relation(name: "parent")
 
-  defaultMethodsId   Int
-  defaultMethods     NotificationMethod @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
+  defaultMethodsId   Int?
+  defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
   availableMethodsId Int
   availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
 

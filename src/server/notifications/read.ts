@@ -42,7 +42,7 @@ export async function readChannels() : Promise<ActionReturn<NotificationChannelW
             data: channels.map(channel => ({
                 ...channel,
                 availableMethods: remove_id(channel.availableMethods),
-                defaultMethods: remove_id(channel.defaultMethods),
+                defaultMethods: channel.defaultMethods ? remove_id(channel.defaultMethods) : undefined,
             })),
         }
     } catch (error) {
