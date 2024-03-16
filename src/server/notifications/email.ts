@@ -22,17 +22,25 @@ const DEV_OPTIONS : SMTPTransport.Options = {
 
 const transporter = nodemailer.createTransport((process.env.NODE_ENV == 'production') ? PRODUCTION_OPTIONS : DEV_OPTIONS);
 
-export async function sendMail() {
+export async function sendMail({
+    sender,
+    recipient,
+    subject,
+    text,
+}: {
+    sender: string,
+    recipient: string,
+    subject: string,
+    text: string,
+
+}) {
 
     const info = await transporter.sendMail({
-        from: '"Maddison Foo Koch 👻" <jimmie.fisher@ethereal.email>', // sender address
-        to: "jimmie.fisher@ethereal.email", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
+        from: sender, // sender address
+        to: recipient, // list of receivers
+        subject: subject, // Subject line
+        text: text, // plain text body
     });
     
     console.log("Message sent: %s", info.messageId);
-    
 }
-
-sendMail().catch(console.error);

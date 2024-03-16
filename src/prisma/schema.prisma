@@ -83,6 +83,9 @@ enum Permission {
   OMBUL_READ
   OMBUL_UPDATE
   OMBUL_DESTROY
+
+  // Mail
+  MAIL_SEND
 }
 
 model Role {
