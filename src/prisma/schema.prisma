@@ -121,34 +121,31 @@ model Group {
 // the specific information that only that type of group requires.
 
 model Class {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int    @unique
-  id      Int    @id @default(autoincrement())
-  name    String
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  id      Int   @id @default(autoincrement())
 
-  omegaOrder OmegaOrder @relation(fields: [order], references: [order])
-  order      Int        @unique
-  year       Int        @unique
+  year Int @unique
 }
 
 model Committee {
-  group     Group  @relation(fields: [groupId], references: [id])
-  groupId   Int    @unique
-  id        Int    @id @default(autoincrement())
-  name      String
-  shortName String @unique
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  id      Int   @id @default(autoincrement())
 
+  name        String
+  shortName   String   @unique
   logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId Int      @unique
 }
 
 model InterestGroup {
-  group     Group  @relation(fields: [groupId], references: [id])
-  groupId   Int    @unique
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+
   id        Int    @id @default(autoincrement())
   name      String
   shortName String @unique
-
   // TODOD - add intereset group data
 }
 
@@ -159,10 +156,9 @@ enum OmegaMembershipLevel {
 }
 
 model OmegaMembershipGroup {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int    @unique
-  id      Int    @id @default(autoincrement())
-  name    String
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  id      Int   @id @default(autoincrement())
 
   omegaMembershipLevel OmegaMembershipLevel @unique
 }
@@ -484,7 +480,6 @@ model OmegaOrder {
   updatedAt DateTime @updatedAt
 
   newsArticles NewsArticle[]
-  classes      Class[]
   membership   Membership[]
 }
 
