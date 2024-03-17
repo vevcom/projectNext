@@ -5,6 +5,7 @@ import { updateNews } from '@/server/news/update'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { NewsArticleSchemaType } from './schema'
+import { safeServerCall } from '../safeServerCall'
 
 
 export async function updateNewsAction(
@@ -15,7 +16,7 @@ export async function updateNewsAction(
     const parse = newsArticleSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    return await updateNews(id, data)
+    return await safeServerCall(() => updateNews(id, data))
 }
 
 export async function publishNewsAction(
