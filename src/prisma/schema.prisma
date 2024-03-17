@@ -27,19 +27,20 @@ enum SEX {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  username      String        @unique
-  email         String        @unique
-  firstname     String        @default("[Fjernet]")
-  lastname      String        @default("[Fjernet]")
-  acceptedTerms DateTime?
-  sex           SEX?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt // is also updated manually
-  roles         RolesUsers[]
-  omegaQuote    OmegaQuote[]
-  credentials   Credentials?
-  feideAccount  FeideAccount?
+  id                Int                 @id @default(autoincrement())
+  username          String              @unique
+  email             String              @unique
+  firstname         String              @default("[Fjernet]")
+  lastname          String              @default("[Fjernet]")
+  acceptedTerms     DateTime?
+  sex               SEX?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt // is also updated manually
+  roles             RolesUsers[]
+  omegaQuote        OmegaQuote[]
+  credentials       Credentials?
+  feideAccount      FeideAccount?
+  LockerResorvation LockerResorvation[]
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -172,7 +173,6 @@ model CmsImage {
   articleSectionId     Int?            @unique
   coverImageforArticle Article?
   Ombul                Ombul?
-  
 }
 
 model CmsParagraph {
@@ -307,7 +307,7 @@ model OmegaOrder {
 
 model Ombul {
   id           Int      @id @default(autoincrement())
-  name         String   
+  name         String
   description  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -319,4 +319,41 @@ model Ombul {
 
   @@unique([year, name])
   @@unique([year, issueNumber])
+}
+
+///////////////////////////
+// Locker /////////////////
+///////////////////////////
+
+model Locker {
+  id                Int                 @id @default(autoincrement())
+  lockerLocation    LockerLocation      @relation(fields: [building, floor], references: [building, floor])
+  building          String
+  floor             Int
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  LockerResorvation LockerResorvation[]
+}
+
+model LockerLocation {
+  id        Int      @id @default(autoincrement())
+  building  String   
+  floor     Int   
+  lockers   Locker[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([building, floor])
+}
+
+model LockerResorvation {
+  id        Int      @id @default(autoincrement())
+  locker    Locker   @relation(fields: [lockerId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  lockerId  Int      
+  userId    Int      
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id])
 }

@@ -2,9 +2,27 @@
 
 .wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 2rem;
     background-color: ohma.$colors-gray-200;
 
+}
+
+.header {
+    padding: 2rem;
+}
+
+.lockerList {
+    width: 100%;
+    list-style-type: none;
+    margin: 1rem;
+    background-color: ohma.$colors-gray-400;
+}
+
+.lockerList li {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
 }

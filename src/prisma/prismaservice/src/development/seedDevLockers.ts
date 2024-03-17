@@ -1,35 +1,48 @@
 import type { PrismaClient } from '@/generated/pn'
 
-const locationConfig = ["ved EL5", "Kjelleren", "Koopen"]
+const buildings = ["G-Blokk", "Test-Blokk"]
+const floors = [1, 2, 3]
 const n = 10
 
 export default async function seedOrder(prisma: PrismaClient) {
-    await Promise.all(locationConfig.map(location => prisma.lockerLocation.upsert({
+    await Promise.all(buildings.map(building => Promise.all(floors.map(floor => prisma.lockerLocation.upsert({
         where: {
-            location
+            building_floor: {
+                building,
+                floor
+            }
         },
         update: {
-            location
+            building,
+            floor
         },
         create: {
-            location
+            building,
+            floor
         }
-    })))
+    })))))
 
-    locationConfig.forEach(async (location, index) => {
+
+    await Promise.all(buildings.map((building) => Promise.all(floors.map(async (floor) => {
         for (let i = 0; i < n; i++) {
-            await prisma.locker.upsert({
-                where: {
-                    id: i + n*index,
-                    location
-                },
-                update: {
-                    location
-                },
-                create: {
-                    location
+            await prisma.locker.create({
+                data: {
+                    building,
+                    floor 
                 }
             })
         }
-    })
+    }))))
+
+    try {
+        await prisma.lockerResorvation.create({
+          data: {
+            lockerId: 1,
+            userId: 1,
+          },
+        });
+        console.log('LockerReservation created successfully!');
+      } catch (error) {
+        console.error('Error creating LockerReservation:', error);
+      }
 }
