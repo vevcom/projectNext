@@ -55,12 +55,11 @@ export async function readRolesOfUser(userId: number): Promise<RoleWithPermissio
     return roles
 }
 
-export async function readPermissionsOfUser(userId: number): Promise<ActionReturn<Permission[]>> {
+export async function readPermissionsOfUser(userId: number): Promise<Permission[]> {
     const roles = await readRolesOfUser(userId)
     const permissions = roles.reduce(
         (result, role) => role.permissions.map(permission => permission.permission).concat(result),
         <Permission[]>[]
     )
-    return { success: true, data: permissions }
+    return permissions
 }
-

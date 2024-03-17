@@ -4,6 +4,7 @@ import { createCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { createCommittee } from '@/server/groups/committees/create'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { CreateCommitteeActionSchemaType } from './schema'
@@ -21,5 +22,5 @@ export async function createCommitteeAction(
 
     if (!parse.success) return createZodActionError(parse)
 
-    return createCommittee(parse.data)
+    return await safeServerCall(() => createCommittee(parse.data))
 }

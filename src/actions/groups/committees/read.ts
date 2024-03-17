@@ -4,6 +4,7 @@ import { readCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { readCommittee, readCommittees } from '@/server/groups/committees/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ReadCommitteeActionSchemaType } from './schema'
 import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -18,7 +19,7 @@ export async function readCommitteesAction(): Promise<ActionReturn<ExpandedCommi
 
     if (!authorized) return createActionError(status)
 
-    return readCommittees()
+    return await safeServerCall(() => readCommittees())
 }
 
 export async function readCommitteeAction(
@@ -34,5 +35,5 @@ export async function readCommitteeAction(
 
     if (!parse.success) return createZodActionError(parse)
 
-    return readCommittee(parse.data)
+    return await safeServerCall(() => readCommittee(parse.data))
 }
