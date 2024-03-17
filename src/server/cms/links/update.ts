@@ -1,20 +1,14 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
 import type { CmsLink, Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
 
 export async function updateCmsLink(
     id: number,
     data: Prisma.CmsLinkUpdateInput
-): Promise<ActionReturn<CmsLink>> {
-    try {
-        const cmsLink = await prisma.cmsLink.update({
-            where: { id },
-            data,
-        })
-        return { success: true, data: cmsLink }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+): Promise<CmsLink> {
+    return await prismaCall(() => prisma.cmsLink.update({
+        where: { id },
+        data,
+    }))
 }
