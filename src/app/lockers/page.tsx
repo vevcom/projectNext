@@ -16,13 +16,9 @@ export default async function Skapres() {
         throw new Error("Kunne ikke hente skapresorvasjoner")
     }
 
-    for (let i = 0; i < 10; i++) {
-        console.log("###############################")
+    for (const locker of lockers.data) {
+        console.log(locker.LockerResorvation)
     }
-    console.log(lockerResorvations.data)
-
-    lockers.data
-
 
     return (
         <div className={styles.wrapper}>
