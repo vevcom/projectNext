@@ -5,6 +5,7 @@ import { updateArticleCategory } from '@/server/cms/articleCategories/update'
 import type { ArticleCategorySchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function updateArticleCategoryVisibilityAction(
     // disable eslint rule temporarily until function is implemented
@@ -23,5 +24,6 @@ export async function updateArticleCategoryAction(
     const parse = articleCategorySchema.safeParse(rawData)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    return await updateArticleCategory(id, data)
+
+    return await safeServerCall(() => updateArticleCategory(id, data))
 }

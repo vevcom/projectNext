@@ -1,44 +1,40 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
 import type {
     ExpandedArticleCategory,
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
 } from '@/cms/articleCategories/Types'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 
 /**
  * Reads all article categories, and assaigs each of them a cover based on the cover of first article
  * in each category.
  * @returns - the article categories with a cover.
  */
-export async function readArticleCategories(): Promise<ActionReturn<ArticleCategoryWithCover[]>> {
-    try {
-        const categories = await prisma.articleCategory.findMany({
-            include: {
-                articles: {
-                    take: 1,
-                    include: {
-                        coverImage: true
-                    }
-                },
+export async function readArticleCategories(): Promise<ArticleCategoryWithCover[]> {
+    const categories = await prismaCall(() => prisma.articleCategory.findMany({
+        include: {
+            articles: {
+                take: 1,
+                include: {
+                    coverImage: true
+                }
             },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
-        const categoriesWithCover = await Promise.all(categories.map(async category => (
-            {
-                ...category,
-                coverImage: (await getCoverImage(category))
-            }
-        )))
-        return { success: true, data: categoriesWithCover }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    }))
+    const categoriesWithCover = await Promise.all(categories.map(async category => (
+        {
+            ...category,
+            coverImage: (await getCoverImage(category))
+        }
+    )))
+    return categoriesWithCover
 }
 
 
@@ -48,29 +44,25 @@ export async function readArticleCategories(): Promise<ActionReturn<ArticleCateg
  * @param name - THe name of the article category to read
  * @returns - Article with chosen cover image
  */
-export async function readArticleCategory(name: string): Promise<ActionReturn<ExpandedArticleCategoryWithCover>> {
-    try {
-        const category = await prisma.articleCategory.findUnique({
-            where: {
-                name
-            },
-            include: {
-                articles: {
-                    orderBy: {
-                        createdAt: 'desc'
-                    }
+export async function readArticleCategory(name: string): Promise<ExpandedArticleCategoryWithCover> {
+    const category = await prismaCall(() => prisma.articleCategory.findUnique({
+        where: {
+            name
+        },
+        include: {
+            articles: {
+                orderBy: {
+                    createdAt: 'desc'
                 }
-            },
-        })
-        if (!category) return createActionError('NOT FOUND', `Category ${name} not found`)
-        const categoryWithCover = {
-            ...category,
-            coverImage: await getCoverImage(category)
-        }
-        return { success: true, data: categoryWithCover }
-    } catch (error) {
-        return createPrismaActionError(error)
+            }
+        },
+    }))
+    if (!category) throw new ServerError('NOT FOUND', `Category ${name} not found`)
+    const categoryWithCover = {
+        ...category,
+        coverImage: await getCoverImage(category)
     }
+    return categoryWithCover
 }
 
 /**
@@ -82,14 +74,14 @@ export async function readArticleCategory(name: string): Promise<ActionReturn<Ex
  */
 async function getCoverImage(category: ExpandedArticleCategory): Promise<Image | null> {
     if (category.articles.length === 0) return null
-    const coverImage = await prisma.cmsImage.findUnique({
+    const coverImage = await prismaCall(() => prisma.cmsImage.findUnique({
         where: {
             id: category.articles[0].coverImageId
         },
         include: {
             image: true
         }
-    })
+    }))
     if (!coverImage) return null
     if (!coverImage.image) return null
     return coverImage.image
