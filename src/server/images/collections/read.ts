@@ -2,7 +2,6 @@ import 'server-only'
 import { readSpecialImage } from '@/server/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
-import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
@@ -10,6 +9,7 @@ import type {
 } from '@/server/images/collections/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 
 
 /**
@@ -19,23 +19,19 @@ import { prismaCall } from '@/server/prismaCall'
  */
 export async function readImageCollection(
     idOrName: number | string
-): Promise<ActionReturn<ExpandedImageCollection>> {
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: typeof idOrName === 'number' ? {
-                id: idOrName,
-            } : {
-                name: idOrName,
-            },
-            include: {
-                coverImage: true,
-            }
-        })
-        if (!collection) return createActionError('NOT FOUND', 'Collection not found')
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+): Promise<ExpandedImageCollection> {
+    const collection = await prismaCall(() => prisma.imageCollection.findUnique({
+        where: typeof idOrName === 'number' ? {
+            id: idOrName,
+        } : {
+            name: idOrName,
+        },
+        include: {
+            coverImage: true,
+        }
+    }))
+    if (!collection) throw new ServerError('NOT FOUND', 'Collection not found')
+    return collection
 }
 
 /**
@@ -45,52 +41,46 @@ export async function readImageCollection(
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
-): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
-    try {
-        const { page: pageNumber, pageSize } = page
-        const collections = await prisma.imageCollection.findMany({
-            include: {
-                coverImage: true,
-                images: {
-                    take: 1
-                },
-                _count: {
-                    select: {
-                        images: true
-                    }
-                }
+): Promise<ImageCollectionPageReturn[]> {
+    const { page: pageNumber, pageSize } = page
+    const collections = await prismaCall(() => prisma.imageCollection.findMany({
+        include: {
+            coverImage: true,
+            images: {
+                take: 1
             },
-            orderBy: [
-                { createdAt: 'desc' },
-                { name: 'asc' }
-            ],
-            skip: pageNumber * pageSize,
-            take: pageSize,
-        })
+            _count: {
+                select: {
+                    images: true
+                }
+            }
+        },
+        orderBy: [
+            { createdAt: 'desc' },
+            { name: 'asc' }
+        ],
+        skip: pageNumber * pageSize,
+        take: pageSize,
+    }))
 
-        const lensCameraRes = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
-        if (!lensCameraRes.success) return lensCameraRes
-        const lensCamera = lensCameraRes.data
+    const lensCamera = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
 
-        const chooseCoverImage = (collection: {
-            coverImage: Image | null,
-            images: Image[]
-        }) => {
-            if (collection.coverImage) return collection.coverImage
-            if (collection.images[0]) return collection.images[0]
-            if (lensCamera) return lensCamera
-            return null
-        }
-        const returnData = collections.map(collection => ({
-            ...collection,
-            coverImage: chooseCoverImage(collection),
-            numberOfImages: collection._count.images,
-        }))
-
-        return { success: true, data: returnData }
-    } catch (error) {
-        return createPrismaActionError(error)
+    const chooseCoverImage = (collection: {
+        coverImage: Image | null,
+        images: Image[]
+    }) => {
+        if (collection.coverImage) return collection.coverImage
+        if (collection.images[0]) return collection.images[0]
+        if (lensCamera) return lensCamera
+        return null
     }
+    const returnData = collections.map(collection => ({
+        ...collection,
+        coverImage: chooseCoverImage(collection),
+        numberOfImages: collection._count.images,
+    }))
+
+    return returnData 
 }
 
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ImageCollection> {

@@ -8,6 +8,7 @@ import type {
     ExpandedImageCollection,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 /**
  * Action that reads an image collection by id or name
@@ -18,7 +19,7 @@ export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    return await readImageCollection(idOrName)
+    return await safeServerCall(() => readImageCollection(idOrName))
 }
 
 /**
@@ -30,7 +31,7 @@ export async function readImageCollectionsPageAction<const PageSize extends numb
     readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    return await readImageCollectionsPage(readPageInput)
+    return await safeServerCall(() => readImageCollectionsPage(readPageInput))
 }
 
 /**
@@ -46,5 +47,5 @@ export async function readSpecialImageCollectionAction(special: SpecialCollectio
 
     //TODO: Auth special image collections on permission (not visibility)
     //TODO: Check permission associated with the special collection
-    return await readSpecialImageCollection(special)
+    return await safeServerCall(() => readSpecialImageCollection(special))
 }

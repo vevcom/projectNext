@@ -5,6 +5,7 @@ import { createImageCollection } from '@/server/images/collections/create'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { CreateImageCollectionSchemaType } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function createImageCollectionAction(
     rawdata: FormData | CreateImageCollectionSchemaType
@@ -12,5 +13,5 @@ export async function createImageCollectionAction(
     const parse = createImageCollectionSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    return createImageCollection(data)
+    return await safeServerCall(() => createImageCollection(data))
 }
