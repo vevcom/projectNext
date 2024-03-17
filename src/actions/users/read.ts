@@ -2,6 +2,7 @@
 import { readUserPage } from '@/server/users/read'
 import type { UserFiltered, UserDetails } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import { safeServerCall } from '../safeServerCall'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -14,5 +15,5 @@ export async function readUserPageAction<const PageSize extends number>(
 ): Promise<ActionReturn<UserFiltered[]>> {
     //TODO: Permission check
 
-    return await readUserPage(readPageInput)
+    return safeServerCall(() => readUserPage(readPageInput))
 }
