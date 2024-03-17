@@ -143,10 +143,11 @@ model Committee {
 }
 
 model InterestGroup {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int    @unique
-  id      Int    @id @default(autoincrement())
-  name    String
+  group     Group  @relation(fields: [groupId], references: [id])
+  groupId   Int    @unique
+  id        Int    @id @default(autoincrement())
+  name      String
+  shortName String @unique
 
   // TODOD - add intereset group data
 }
