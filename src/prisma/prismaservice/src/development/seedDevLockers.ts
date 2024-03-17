@@ -35,7 +35,7 @@ export default async function seedOrder(prisma: PrismaClient) {
     }))))
 
     try {
-        await prisma.lockerResorvation.create({
+        await prisma.lockerReservation.create({
           data: {
             lockerId: 1,
             userId: 1,

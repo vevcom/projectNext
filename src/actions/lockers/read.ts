@@ -1,10 +1,10 @@
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
-import type { Locker, LockerResorvation } from '@prisma/client'
+import type { Locker, LockerReservation } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 // type LockerWithReservation = Locker & {
-//     LockerResorvation: LockerResorvation[]
+//     LockerReservation: LockerReservation[]
 // }
 
 // export default async function readLockers(): Promise<ActionReturn<LockerWithReservation[]>> {
@@ -12,7 +12,7 @@ export default async function readLockers() {
     try {
         const lockers = await prisma.locker.findMany({
            include: {
-            LockerResorvation: {
+            LockerReservation: {
                 select: {
                     user: {
                         select: {

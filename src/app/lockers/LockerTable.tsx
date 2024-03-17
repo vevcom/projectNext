@@ -7,7 +7,7 @@ interface LockerTableProps {
         floor: number
         createdAt: Date
         updatedAt: Date
-        LockerResorvation: {
+        LockerReservation: {
             user: {
                 firstname: string;
                 lastname: string;
@@ -17,13 +17,6 @@ interface LockerTableProps {
 }
 
 export default function LockerTable(props: LockerTableProps) {
-
-    for (const locker of props.lockers) {
-        if (locker.LockerResorvation.length) {
-            console.log(locker.LockerResorvation[0].user.firstname)
-        }
-    }
-
     return (
         <table className={styles.lockerTable}>
             <thead>
@@ -43,8 +36,8 @@ export default function LockerTable(props: LockerTableProps) {
                         <td>{locker.building}</td>
                         <td>{locker.floor}</td>
                         <td>K</td>
-                        <td>{locker.LockerResorvation.length ? locker.LockerResorvation[0].user.firstname + " " +  locker.LockerResorvation[0].user.lastname: ""}</td>
-                        <td>2</td>
+                        <td>{locker.LockerReservation.length ? locker.LockerReservation[0].user.firstname + " " +  locker.LockerReservation[0].user.lastname: ""}</td>
+                        <td></td>
                     </tr>
                 ))} 
             </tbody>

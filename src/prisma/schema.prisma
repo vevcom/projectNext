@@ -40,7 +40,7 @@ model User {
   omegaQuote        OmegaQuote[]
   credentials       Credentials?
   feideAccount      FeideAccount?
-  LockerResorvation LockerResorvation[]
+  LockerReservation LockerReservation[]
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -370,7 +370,7 @@ model Committee {
   name              String              @unique
   logoImage         CmsImage            @relation(fields: [logoImageId], references: [id])
   logoImageId       Int                 @unique
-  lockerResorvation LockerResorvation[]
+  LockerReservation LockerReservation[]
 }
 
 ///////////////////////////
@@ -384,7 +384,7 @@ model Locker {
   floor             Int
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
-  LockerResorvation LockerResorvation[]
+  LockerReservation LockerReservation[]
 }
 
 model LockerLocation {
@@ -398,7 +398,7 @@ model LockerLocation {
   @@unique([building, floor])
 }
 
-model LockerResorvation {
+model LockerReservation {
   id         Int        @id @default(autoincrement())
   locker     Locker     @relation(fields: [lockerId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
