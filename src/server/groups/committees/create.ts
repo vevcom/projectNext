@@ -11,7 +11,7 @@ export async function createCommittee(data: CreateCommitteeSchemaType): Promise<
 
     if (!parse.success) return createZodActionError(parse)
 
-    const { name } = parse.data
+    const { name, shortName } = parse.data
     let { logoImageId } = parse.data
 
     if (!logoImageId) {
@@ -26,6 +26,7 @@ export async function createCommittee(data: CreateCommitteeSchemaType): Promise<
         const committee = await prisma.committee.create({
             data: {
                 name,
+                shortName,
                 logoImage: {
                     create: {
                         name: `Komitélogoen til ${name}`

@@ -1,8 +1,14 @@
-import { zfd } from 'zod-form-data'
-import { z } from 'zod'
+import { createCommitteeSchema } from '@/server/groups/committees/schema'
+import zfd from 'zod-form-data'
+import z from 'zod'
 
-export const createCommitteeSchema = zfd.formData({
-    name: z.string().max(30, 'maks lengde er 30').min(2, 'minimum lende er 2'),
+export const createCommitteeActionSchema = zfd.formData(createCommitteeSchema)
+
+export type CreateCommitteeActionSchemaType = z.infer<typeof createCommitteeSchema>
+
+export const readCommitteeActionSchema = zfd.formData({
+    id: z.number().optional(),
+    shortName: z.string().optional(),
 })
 
-export type createCommitteeSchemaType = z.infer<typeof createCommitteeSchema>
+export type ReadCommitteeActionSchemaType = z.infer<typeof readCommitteeActionSchema>

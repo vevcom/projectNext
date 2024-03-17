@@ -1,8 +1,8 @@
 import { authOptions } from './authoptions'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
+import type { BasicMembership } from '@/server/groups/Types'
 import type { Permission, User } from '@prisma/client'
-import { BasicMembership } from '@/server/groups/Types'
 
 export type ExpandedUser = Omit<User, 'id'> & {
     id: number,

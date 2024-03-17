@@ -1,8 +1,8 @@
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
 import type { ActionReturn } from '@/actions/Types'
-import { readCurrenOmegaOrder } from '../omegaOrder/read'
 
 export async function readGroups(): Promise<ActionReturn<ExpandedGroup[]>> {
     try {
@@ -55,7 +55,7 @@ export async function readMembersOfGroup(id: number): Promise<ActionReturn<Expan
 }
 
 export async function readMembershipsOfUser(
-    id: number, 
+    id: number,
     order?: number
 ): Promise<ActionReturn<BasicMembership[]>> {
     if (!order) {
@@ -65,7 +65,7 @@ export async function readMembershipsOfUser(
 
         order = currentOrderRes.data.order
     }
-    
+
     try {
         const memberships = await prisma.membership.findMany({
             where: {
@@ -79,7 +79,7 @@ export async function readMembershipsOfUser(
         })
 
         return { success: true, data: memberships }
-    } catch(e) {
+    } catch (e) {
         return createPrismaActionError(e)
     }
 }

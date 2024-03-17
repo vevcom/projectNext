@@ -1,46 +1,23 @@
-'use server'
-import { createCommitteeSchema } from './schema'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { createCommitteeActionSchema } from './schema'
+import { createActionError, createZodActionError } from '@/actions/error'
+import { getUser } from '@/auth/user'
+import { createCommittee } from '@/server/groups/committees/create'
+import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { createCommitteeSchemaType } from './schema'
-import type { Committee } from '@prisma/client'
+import type { CreateCommitteeActionSchemaType } from './schema'
 
-export default async function createCommittee(
-    committeeLogoImageId: number,
-    rawdata: FormData | createCommitteeSchemaType
-): Promise<ActionReturn<Committee>> {
-    const parse = createCommitteeSchema.safeParse(rawdata)
+export async function createCommitteeAction(
+    rawData: FormData | CreateCommitteeActionSchemaType
+): Promise<ActionReturn<ExpandedCommittee>> {
+    const { authorized, status } = await getUser({
+        requiredPermissions: ['COMMITTEE_CREATE']
+    })
+
+    if (!authorized) return createActionError(status)
+
+    const parse = createCommitteeActionSchema.safeParse(rawData)
 
     if (!parse.success) return createZodActionError(parse)
 
-    const { name } = parse.data
-
-    try {
-        const committeLogo = await prisma.cmsImage.create({
-            data: {
-                name: `${name}_logo`,
-                image: {
-                    connect: {
-                        id: committeeLogoImageId
-                    }
-                }
-            }
-        })
-
-        const committee = await prisma.committee.create({
-            data: {
-                name,
-                logoImage: {
-                    connect: {
-                        id: committeLogo.id
-                    }
-                }
-            },
-        })
-
-        return { success: true, data: committee }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return createCommittee(parse.data)
 }

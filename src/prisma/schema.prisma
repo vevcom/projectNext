@@ -75,9 +75,9 @@ model FeideAccount {
 ////////////
 
 model Membership {
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId     Int
-  group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group      Group      @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId    Int
   admin      Boolean
   omegaOrder OmegaOrder @relation(fields: [order], references: [order])
@@ -132,10 +132,11 @@ model Class {
 }
 
 model Committee {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int    @unique
-  id      Int    @id @default(autoincrement())
-  name    String
+  group     Group  @relation(fields: [groupId], references: [id])
+  groupId   Int    @unique
+  id        Int    @id @default(autoincrement())
+  name      String
+  shortName String @unique
 
   logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId Int      @unique

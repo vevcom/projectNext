@@ -1,4 +1,4 @@
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import type { ExpandedCommittee } from './Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -13,12 +13,20 @@ export async function readCommittees(): Promise<ActionReturn<ExpandedCommittee[]
     }
 }
 
-export async function readCommittee(id: number): Promise<ActionReturn<ExpandedCommittee>> {
+type ReadCommitteeArgs = {
+    id?: number,
+    shortName?: string,
+}
+
+export async function readCommittee(where: ReadCommitteeArgs): Promise<ActionReturn<ExpandedCommittee>> {
+    if (!where) return createActionError('BAD PARAMETERS', 'Navn eller id må være spesifisert for å finne en komité.')
+
     try {
         const committee = await prisma.committee.findUniqueOrThrow({
             where: {
-                id,
-            },
+                id: where.id,
+                shortName: where.shortName,
+            }
         })
 
         return { success: true, data: committee }
