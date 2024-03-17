@@ -3,6 +3,7 @@ import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection }
 import type { ArticleSection, Position } from '@prisma/client'
 import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 
 export async function updateArticleSectionAction(name: string, changes: {
@@ -10,7 +11,7 @@ export async function updateArticleSectionAction(name: string, changes: {
     imagePosition?: Position,
 }): Promise<ActionReturn<ExpandedArticleSection>> {
     //Todo: Auth by visibilty
-    return await updateArticleSection(name, changes)
+    return await safeServerCall(() => updateArticleSection(name, changes))
 }
 
 export async function addArticleSectionPartAction(
@@ -18,7 +19,7 @@ export async function addArticleSectionPartAction(
     part: ArticleSectionPart
 ): Promise<ActionReturn<ExpandedArticleSection>> {
     //Todo: Auth by visibilty
-    return await addArticleSectionPart(name, part)
+    return await safeServerCall(() => addArticleSectionPart(name, part))
 }
 
 export async function removeArticleSectionPartAction(
@@ -26,5 +27,5 @@ export async function removeArticleSectionPartAction(
     part: ArticleSectionPart
 ): Promise<ActionReturn<ArticleSection>> {
     //TODO: Auth by visibility
-    return await removeArticleSectionPart(name, part)
+    return await safeServerCall(() => removeArticleSectionPart(name, part))
 }
