@@ -5,10 +5,11 @@ import { createZodActionError } from '@/actions/error'
 import type { RemoveUserFromRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
+import { safeServerCall } from '../safeServerCall'
 
 export async function destroyRoleAction(roleId: number): Promise<ActionReturn<RoleWithPermissions>> {
     //TODO: Auth
-    return await destroyRole(roleId)
+    return await safeServerCall(() => destroyRole(roleId))
 }
 
 export async function removeUserFromRoleAction(
@@ -20,5 +21,5 @@ export async function removeUserFromRoleAction(
     if (!parse.success) return createZodActionError(parse)
     const { roleId, username } = parse.data
 
-    return await removeUserFromRole(username, roleId)
+    return await safeServerCall(() => removeUserFromRole(username, roleId))
 }
