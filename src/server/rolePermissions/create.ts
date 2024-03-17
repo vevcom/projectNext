@@ -1,73 +1,56 @@
 import 'server-only'
-import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from './Types'
+import { prismaCall } from '../prismaCall'
+import { ServerError } from '../error'
 
-export async function createRole(data: { name: string }): Promise<ActionReturn<RoleWithPermissions>> {
-    try {
-        const role = await prisma.role.create({
-            data,
-            select: {
-                id: true,
-                name: true,
-                permissions: {
-                    select: {
-                        permission: true
-                    }
+export async function createRole(data: { name: string }): Promise<RoleWithPermissions> {
+    return await prismaCall(() => prisma.role.create({
+        data,
+        select: {
+            id: true,
+            name: true,
+            permissions: {
+                select: {
+                    permission: true
                 }
             }
-        })
-
-        return { success: true, data: role }
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+        }
+    }))
 }
 
 export async function addUserToRole(
     username: string,
     roleId: number
-): Promise<ActionReturn<void, false>> {
+): Promise<void> {
     //TODO: Auth
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                username
-            },
-            select: {
-                id: true
-            },
-        })
+    const user = await prismaCall(() =>prisma.user.findUnique({
+        where: {
+            username
+        },
+        select: {
+            id: true
+        },
+    }))
 
-        if (!user) return createActionError('BAD PARAMETERS', 'Invalid username')
+    if (!user) throw new ServerError('BAD PARAMETERS', 'User not found')
 
-        return await addUserByIdToRole(user.id, roleId)
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    return await addUserByIdToRole(user.id, roleId)
 }
 
-export async function addUserByIdToRole(userId: number, roleId: number): Promise<ActionReturn<void, false>> {
+export async function addUserByIdToRole(userId: number, roleId: number): Promise<void> {
     return addUserByIdToRoles(userId, [roleId])
 }
 
-export async function addUserByIdToRoles(userId: number, roleIds: number[]): Promise<ActionReturn<void, false>> {
-    try {
-        await prisma.rolesUsers.createMany({
-            data: roleIds.map(roleId => ({
-                userId,
-                roleId,
-            }))
-        })
+export async function addUserByIdToRoles(userId: number, roleIds: number[]): Promise<void> {
+    await prismaCall(() => prisma.rolesUsers.createMany({
+        data: roleIds.map(roleId => ({
+            userId,
+            roleId,
+        }))
+    }))
 
-        const res = await invalidateOneUserSessionData(userId)
-
-        if (!res.success) return res
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
-
-    return { success: true }
+    await invalidateOneUserSessionData(userId)
 }
