@@ -27,7 +27,7 @@ export async function readCmsImage(name: string): Promise<ExpandedCmsImage> {
  * WARNING: You should assure that the special atr. is Special before calling this function
  * Reads a special cmsImage.
  * @param special SpecialCmsImage
- * @returns ActionReturn<ExpandedCmsImage>
+ * @returns ExpandedCmsImage
  */
 export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<ExpandedCmsImage> {
     const cmsImage = await prisma.cmsImage.findUnique({
