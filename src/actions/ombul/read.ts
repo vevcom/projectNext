@@ -1,4 +1,5 @@
 'use server'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
@@ -11,10 +12,9 @@ export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
-    return await readLatestOmbul()
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readLatestOmbul())
 }
 
 export async function readOmbulAction(idOrNameAndYear: number | {
@@ -25,10 +25,9 @@ export async function readOmbulAction(idOrNameAndYear: number | {
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
-    return await readOmbul(idOrNameAndYear)
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readOmbul(idOrNameAndYear))
 }
 
 export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
@@ -39,5 +38,5 @@ export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>>
     if (!authorized) {
         return createActionError(status)
     }
-    return await readOmbuls()
+    return await safeServerCall(() => readOmbuls())
 }

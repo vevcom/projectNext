@@ -2,6 +2,7 @@
 import { articleCategorySchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import { updateArticleCategory } from '@/server/cms/articleCategories/update'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ArticleCategorySchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
@@ -23,5 +24,6 @@ export async function updateArticleCategoryAction(
     const parse = articleCategorySchema.safeParse(rawData)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    return await updateArticleCategory(id, data)
+
+    return await safeServerCall(() => updateArticleCategory(id, data))
 }

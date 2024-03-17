@@ -1,4 +1,5 @@
 'use server'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { destroyUser } from '@/server/users/destroy'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
@@ -9,6 +10,6 @@ import type { User } from '@prisma/client'
  * @returns
  */
 export async function destroyUserAction(id: number): Promise<ActionReturn<User>> {
-    return await destroyUser(id)
+    return await safeServerCall(() => destroyUser(id))
 }
 

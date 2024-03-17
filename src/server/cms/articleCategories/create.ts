@@ -1,22 +1,16 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { prismaCall } from '@/server/prismaCall'
 import type { Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from './Types'
 
 export async function createArticleCategory(
     data: Required<Pick<Prisma.ArticleCategoryCreateInput, 'description' | 'name'>>
-): Promise<ActionReturn<ExpandedArticleCategory>> {
-    try {
-        const articleCategory = await prisma.articleCategory.create({
-            data,
-            include: {
-                articles: true
-            },
-        })
-        return { success: true, data: articleCategory }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+): Promise<ExpandedArticleCategory> {
+    return await prismaCall(() => prisma.articleCategory.create({
+        data,
+        include: {
+            articles: true
+        },
+    }))
 }

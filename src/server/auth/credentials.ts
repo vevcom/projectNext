@@ -1,7 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 import type { SEX } from '@prisma/client'
 
 export async function registerUser(id: number, config: {
@@ -9,43 +9,35 @@ export async function registerUser(id: number, config: {
     email: string
     username: string
     sex: SEX
-}): Promise<ActionReturn<null>> {
-    try {
-        const alredyRegistered = await prisma.user.findUnique({
+}): Promise<null> {
+    const alredyRegistered = await prismaCall(() => prisma.user.findUnique({
+        where: {
+            id
+        },
+        select: {
+            acceptedTerms: true
+        }
+    }))
+    if (alredyRegistered?.acceptedTerms !== null) throw new ServerError('DUPLICATE', 'User already registered')
+
+    await prismaCall(() => prisma.$transaction([
+        prisma.user.update({
             where: {
                 id
             },
-            select: {
-                acceptedTerms: true
+            data: {
+                email: config.email,
+                acceptedTerms: new Date(),
+                sex: config.sex
+            }
+        }),
+        prisma.credentials.create({
+            data: {
+                passwordHash: config.password,
+                userId: id,
+                username: config.username,
             }
         })
-
-        if (alredyRegistered?.acceptedTerms !== null) {
-            return createActionError('DUPLICATE', 'User already registered')
-        }
-
-        await prisma.$transaction([
-            prisma.user.update({
-                where: {
-                    id
-                },
-                data: {
-                    email: config.email,
-                    acceptedTerms: new Date(),
-                    sex: config.sex
-                }
-            }),
-            prisma.credentials.create({
-                data: {
-                    passwordHash: config.password,
-                    userId: id,
-                    username: config.username,
-                }
-            })
-        ])
-
-        return { success: true, data: null }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    ]))
+    return null
 }

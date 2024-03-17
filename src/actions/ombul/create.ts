@@ -1,5 +1,6 @@
 'use server'
 import { createOmbulSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { createOmbul } from '@/server/ombul/create'
@@ -17,15 +18,11 @@ export async function createOmbulAction(rawdata: FormData | CreateOmbulSchemaTyp
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_CREATE']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
     const parse = createOmbulSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    if (!parse.success) return createZodActionError(parse)
     const { ombulFile, ombulCoverImage, ...data } = parse.data
 
-    return await createOmbul(ombulFile, ombulCoverImage, data)
+    return await safeServerCall(() => createOmbul(ombulFile, ombulCoverImage, data))
 }

@@ -1,5 +1,6 @@
 'use server'
 import { readArticle } from '@/server/cms/articles/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -8,5 +9,5 @@ export async function readArticleAction(idOrName: number | {
     category: string
 }): Promise<ActionReturn<ExpandedArticle>> {
     //TODO: auth
-    return await readArticle(idOrName)
+    return await safeServerCall(() => readArticle(idOrName))
 }

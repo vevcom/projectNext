@@ -1,7 +1,6 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
 import type { CmsImage, ImageSize } from '@prisma/client'
 
 /**
@@ -10,24 +9,19 @@ import type { CmsImage, ImageSize } from '@prisma/client'
  * @param imageId - The id of the image to connect
  * @returns
  */
-export async function updateCmsImage(cmImageId: number, imageId: number): Promise<ActionReturn<CmsImage>> {
-    try {
-        const cmsImage = await prisma.cmsImage.update({
-            where: {
-                id: cmImageId,
-            },
-            data: {
-                image: {
-                    connect: {
-                        id: imageId,
-                    }
+export async function updateCmsImage(cmImageId: number, imageId: number): Promise<CmsImage> {
+    return await prismaCall(() => prisma.cmsImage.update({
+        where: {
+            id: cmImageId,
+        },
+        data: {
+            image: {
+                connect: {
+                    id: imageId,
                 }
             }
-        })
-        return { success: true, data: cmsImage }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+        }
+    }))
 }
 
 /**
@@ -39,18 +33,13 @@ export async function updateCmsImage(cmImageId: number, imageId: number): Promis
 export async function updateCmsImageConfig(
     cmsImageId: number,
     config: {imageSize: ImageSize}
-): Promise<ActionReturn<CmsImage>> {
-    try {
-        const cmsImage = await prisma.cmsImage.update({
-            where: {
-                id: cmsImageId,
-            },
-            data: {
-                ...config
-            }
-        })
-        return { success: true, data: cmsImage }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+): Promise<CmsImage> {
+    return await prismaCall(() => prisma.cmsImage.update({
+        where: {
+            id: cmsImageId,
+        },
+        data: {
+            ...config
+        }
+    }))
 }

@@ -1,10 +1,9 @@
 import 'server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { createArticle } from '@/server/cms/articles/create'
-import { createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from './Types'
 
 /**
@@ -24,38 +23,28 @@ export async function createNews({
     endDateTime?: Date | null,
     description: string,
     name: string,
-}): Promise<ActionReturn<ExpandedNewsArticle>> {
-    if (!endDateTime) {
-        endDateTime = new Date()
-        endDateTime.setDate(endDateTime.getDate() + defaultNewsArticleOldCutoff)
-    }
+}): Promise<ExpandedNewsArticle> {
+    const backupEndDateTime = new Date()
+    backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-    const res = await readCurrenOmegaOrder()
-    if (!res.success) return res
-    const currentOrder = res.data
+    const currentOrder = await readCurrenOmegaOrder()
 
-    try {
-        const article = await createArticle(name)
-        if (!article.success) {
-            return article
-        }
-        const news = await prisma.newsArticle.create({
-            data: {
-                description,
-                article: {
-                    connect: {
-                        id: article.data.id
-                    }
-                },
-                endDateTime,
-                omegaOrder: {
-                    connect: currentOrder,
+    const article = await createArticle(name)
+
+    const news = await prismaCall(() => prisma.newsArticle.create({
+        data: {
+            description,
+            article: {
+                connect: {
+                    id: article.id
                 }
             },
-            include: newsArticleRealtionsIncluder,
-        })
-        return { success: true, data: news }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+            endDateTime: endDateTime || backupEndDateTime,
+            omegaOrder: {
+                connect: currentOrder,
+            }
+        },
+        include: newsArticleRealtionsIncluder,
+    }))
+    return news
 }

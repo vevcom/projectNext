@@ -1,4 +1,5 @@
 'use server'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { destroyOmbul } from '@/server/ombul/destroy'
@@ -10,9 +11,7 @@ export async function destroyOmbulAction(id: number): Promise<ActionReturn<Expan
         requiredPermissions: ['OMBUL_DESTROY']
     })
 
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
-    return await destroyOmbul(id)
+    return await safeServerCall(() => destroyOmbul(id))
 }

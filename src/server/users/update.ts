@@ -1,19 +1,13 @@
 import 'server-only'
-import { createPrismaActionError } from '@/actions/error'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Prisma, User } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 
-export async function updateUser(id: number, data: Prisma.UserUpdateInput): Promise<ActionReturn<User>> {
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id,
-            },
-            data
-        })
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+export async function updateUser(id: number, data: Prisma.UserUpdateInput): Promise<User> {
+    return await prismaCall(() => prisma.user.update({
+        where: {
+            id,
+        },
+        data
+    }))
 }

@@ -1,8 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { prismaCall } from '@/server/prismaCall'
 import type { ImageCollection, Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 
 /**
  * A function that updates an image collection
@@ -13,16 +12,11 @@ import type { ActionReturn } from '@/actions/Types'
 export async function updateImageCollection(
     collectionId: number,
     data: Prisma.ImageCollectionUpdateInput
-): Promise<ActionReturn<ImageCollection>> {
-    try {
-        const collection = await prisma.imageCollection.update({
-            where: {
-                id: collectionId,
-            },
-            data
-        })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+): Promise<ImageCollection> {
+    return await prismaCall(() => prisma.imageCollection.update({
+        where: {
+            id: collectionId,
+        },
+        data
+    }))
 }

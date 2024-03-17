@@ -1,5 +1,6 @@
 'use server'
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
@@ -21,18 +22,14 @@ export async function updateOmbulAction(
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_UPDATE']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
     //Parse the data
     const parse = updateOmbulSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await updateOmbul(id, data)
+    return await safeServerCall(() => updateOmbul(id, data))
 }
 
 /**
@@ -49,15 +46,11 @@ export async function updateOmbulFileAction(
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_UPDATE']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
     const parse = updateObuleFileSchema.safeParse(rawData)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await updateOmbulFile(id, data.ombulFile)
+    return await safeServerCall(() => updateOmbulFile(id, data.ombulFile))
 }

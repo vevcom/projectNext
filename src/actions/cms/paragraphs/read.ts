@@ -2,14 +2,14 @@
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createActionError } from '@/actions/error'
 import { readCmsParagraph, readSpecialCmsParagraph } from '@/server/cms/paragraphs/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { SpecialCmsParagraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsParagraph } from '@prisma/client'
 
 export async function readCmsParagraphAction(name: string): Promise<ActionReturn<CmsParagraph>> {
-    const paragraphRes = await readCmsParagraph(name)
     //TODO: Auth on visibility (or permission if special)
-    return paragraphRes
+    return await safeServerCall(() => readCmsParagraph(name))
 }
 
 /**
@@ -22,11 +22,10 @@ export async function readSpecialCmsParagraphAction(special: SpecialCmsParagraph
         return createActionError('BAD PARAMETERS', `${special} is not special`)
     }
 
-    const specialRes = await readSpecialCmsParagraph(special)
+    const specialRes = await safeServerCall(() => readSpecialCmsParagraph(special))
     if (specialRes.success) return specialRes
     if (specialRes.errorCode === 'NOT FOUND') {
-        const created = await createCmsParagraph(special, { special })
-        return created
+        return await safeServerCall(() => createCmsParagraph(special, { special }))
     }
     return specialRes
 }

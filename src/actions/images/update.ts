@@ -1,5 +1,6 @@
 'use server'
 import { updateImageSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { updateImage } from '@/server/images/update'
 import type { Image } from '@prisma/client'
@@ -16,5 +17,5 @@ export async function updateImageAction(
 
     //TODO: auth the route
 
-    return await updateImage(imageId, data)
+    return await safeServerCall(() => updateImage(imageId, data))
 }

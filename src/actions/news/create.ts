@@ -1,5 +1,6 @@
 'use server'
 import { newsArticleSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createNews } from '@/server/news/create'
 import type { ActionReturn } from '@/actions/Types'
@@ -11,10 +12,8 @@ export async function createNewsAction(
 ): Promise<ActionReturn<ExpandedNewsArticle>> {
     //TODO: check for can create news permission
     const parse = newsArticleSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await createNews(data)
+    return await safeServerCall(() => createNews(data))
 }
