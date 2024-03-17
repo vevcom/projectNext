@@ -6,6 +6,7 @@ import { createOmbul } from '@/server/ombul/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
 import type { CreateOmbulSchemaType } from './schema'
+import { safeServerCall } from '../safeServerCall'
 
 /**
  * Create a new Ombul.
@@ -17,15 +18,11 @@ export async function createOmbulAction(rawdata: FormData | CreateOmbulSchemaTyp
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_CREATE']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
     const parse = createOmbulSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    if (!parse.success) return createZodActionError(parse)
     const { ombulFile, ombulCoverImage, ...data } = parse.data
 
-    return await createOmbul(ombulFile, ombulCoverImage, data)
+    return await safeServerCall(() => createOmbul(ombulFile, ombulCoverImage, data))
 }

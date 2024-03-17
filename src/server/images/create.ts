@@ -7,6 +7,7 @@ import logger from '@/logger'
 import sharp from 'sharp'
 import type { Image, SpecialImage } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '../prismaCall'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -18,7 +19,7 @@ export async function createImage(file: File, meta: {
     name: string,
     alt: string,
     collectionId: number,
-}): Promise<ActionReturn<Image>> {
+}): Promise<Image> {
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 
     const uploadPromises = [
@@ -27,39 +28,26 @@ export async function createImage(file: File, meta: {
         createFile(file, 'images', allowedExt),
     ]
 
-    try {
-        const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
-        if (!smallSize.success) return smallSize
-        const fsLocationSmallSize = smallSize.data.fsLocation
-        if (!mediumSize.success) return mediumSize
-        const fsLocationMediumSize = mediumSize.data.fsLocation
-        if (!original.success) return original
-        const fsLocation = original.data.fsLocation
-        const ext = original.data.ext
-        try {
-            const image = await prisma.image.create({
-                data: {
-                    name: meta.name,
-                    alt: meta.alt,
-                    fsLocation,
-                    fsLocationSmallSize,
-                    fsLocationMediumSize,
-                    ext,
-                    collection: {
-                        connect: {
-                            id: meta.collectionId,
-                        }
-                    }
+    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+    const fsLocationSmallSize = smallSize.fsLocation
+    const fsLocationMediumSize = mediumSize.fsLocation
+    const fsLocation = original.fsLocation
+    const ext = original.ext
+    return await prismaCall(() =>prisma.image.create({
+        data: {
+            name: meta.name,
+            alt: meta.alt,
+            fsLocation,
+            fsLocationSmallSize,
+            fsLocationMediumSize,
+            ext,
+            collection: {
+                connect: {
+                    id: meta.collectionId,
                 }
-            })
-
-            return { success: true, data: image }
-        } catch (err) {
-            return createPrismaActionError(err)
+            }
         }
-    } catch (err) {
-        return createActionError('UNKNOWN ERROR', [{ path: ['file'], message: 'Failed to create small size image' }])
-    }
+    }))
 }
 
 /**

@@ -9,6 +9,7 @@ import type {
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
 
 
 /**
@@ -92,25 +93,21 @@ export async function readImageCollectionsPage<const PageSize extends number>(
     }
 }
 
-export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: {
+export async function readSpecialImageCollection(special: SpecialCollection): Promise<ImageCollection> {
+    const collection = await prismaCall(() => prisma.imageCollection.findUnique({
+        where: {
+            special
+        }
+    }))
+    if (!collection) {
+        logger.warn(`Special collection ${special} did not exist, creating it`)
+        const newCollection = await prismaCall(() => prisma.imageCollection.create({
+            data: {
+                name: special,
                 special
             }
-        })
-        if (!collection) {
-            logger.warn(`Special collection ${special} did not exist, creating it`)
-            const newCollection = await prisma.imageCollection.create({
-                data: {
-                    name: special,
-                    special
-                }
-            })
-            return { success: true, data: newCollection }
-        }
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
+        }))
+        return newCollection
     }
+    return collection
 }

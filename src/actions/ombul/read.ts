@@ -5,16 +5,16 @@ import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { Ombul } from '@prisma/client'
+import { safeServerCall } from '../safeServerCall'
 
 export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
-    return await readLatestOmbul()
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readLatestOmbul())
 }
 
 export async function readOmbulAction(idOrNameAndYear: number | {
@@ -25,10 +25,9 @@ export async function readOmbulAction(idOrNameAndYear: number | {
     const { status, authorized } = await getUser({
         requiredPermissions: ['OMBUL_READ']
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
-    return await readOmbul(idOrNameAndYear)
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() =>readOmbul(idOrNameAndYear))
 }
 
 export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
@@ -39,5 +38,5 @@ export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>>
     if (!authorized) {
         return createActionError(status)
     }
-    return await readOmbuls()
+    return await safeServerCall(() =>readOmbuls())
 }

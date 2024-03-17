@@ -4,6 +4,8 @@ import { unlink } from 'fs/promises'
 import { join } from 'path'
 import type { ActionReturn } from '@/actions/Types'
 import type { StoreLocations } from './StoreLocations'
+import { Server } from 'http'
+import { ServerError } from '../error'
 
 function isErrorWithCode(error: unknown): error is { code: string } {
     return typeof error === 'object' && error !== null && 'code' in error
@@ -18,16 +20,13 @@ function isErrorWithCode(error: unknown): error is { code: string } {
 export async function destroyFile(
     destination: StoreLocations,
     fsLocation: string
-): Promise<ActionReturn<void, false>> {
+): Promise<void> {
     const filePath = join('store', destination, fsLocation)
     try {
         await unlink(filePath)
-        return {
-            success: true
-        }
     } catch (error) {
         if (isErrorWithCode(error) && error.code === 'ENOENT') {
-            return createActionError('NOT FOUND', 'Fil ikke funnet')
+            throw new ServerError('NOT FOUND', 'fil ikke funnet')
         }
         throw error
     }

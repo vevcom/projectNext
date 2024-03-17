@@ -5,6 +5,7 @@ import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
 import type { ActionReturn } from '@/actions/Types'
 import type { StoreLocations } from './StoreLocations'
+import { ServerError } from '../error'
 
 /**
  * Create a file in the store volume
@@ -20,15 +21,15 @@ export async function createFile(
     destination: StoreLocations,
     allowedExt: string[] | undefined = undefined,
     prosessor: (buffer: Buffer) => Promise<Buffer> = async (buffer) => buffer,
-): Promise<ActionReturn<{
+): Promise<{
     fsLocation: string,
     ext: string
-}>> {
+}> {
     const arrBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrBuffer)
     const ext = file.type.split('/')[1]
     if (allowedExt && !allowedExt.includes(ext)) {
-        return createActionError('BAD PARAMETERS', [
+        throw new ServerError('BAD PARAMETERS', [
             {
                 path: ['file'],
                 message: 'Invalid file type'
@@ -42,10 +43,7 @@ export async function createFile(
     await mkdir(destination_, { recursive: true })
     await writeFile(join(destination_, fsLocation), pBuffer)
     return {
-        success: true,
-        data: {
-            fsLocation,
-            ext
-        }
+        fsLocation,
+        ext
     }
 }
