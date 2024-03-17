@@ -2,10 +2,11 @@
 import { updateCmsImage, updateCmsImageConfig } from '@/server/cms/images/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage, ImageSize } from '@prisma/client'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function updateCmsImageAction(cmsImageId: number, imageId: number): Promise<ActionReturn<CmsImage>> {
     //TODO: Auth on visibility (or permission if special)
-    return await updateCmsImage(cmsImageId, imageId)
+    return await safeServerCall(() => updateCmsImage(cmsImageId, imageId))
 }
 
 export async function updateCmsImageConfigAction(
@@ -13,5 +14,5 @@ export async function updateCmsImageConfigAction(
     config: {imageSize: ImageSize}
 ): Promise<ActionReturn<CmsImage>> {
     //TODO: Auth on visibility (or permission if special)
-    return await updateCmsImageConfig(cmsImageId, config)
+    return await safeServerCall(() => updateCmsImageConfig(cmsImageId, config))
 }

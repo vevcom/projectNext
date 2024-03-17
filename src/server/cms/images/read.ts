@@ -1,30 +1,26 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
-import type { ActionReturn } from '@/actions/Types'
+import { ServerError } from '@/server/error'
+import { prismaCall } from '@/server/prismaCall'
 
 /**
  * Read a cms image including the image associated with it
  * @param name - name of the cms image the image
  * @returns - The cms image
  */
-export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedCmsImage>> {
-    try {
-        const cmsImage = await prisma.cmsImage.findUnique({
-            where: {
-                name,
-            },
-            include: {
-                image: true,
-            }
-        })
-        if (!cmsImage) return createActionError('NOT FOUND', `${name} Cms Image not found`)
-        return { success: true, data: cmsImage }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+export async function readCmsImage(name: string): Promise<ExpandedCmsImage> {
+    const cmsImage = await prismaCall(() => prisma.cmsImage.findUnique({
+        where: {
+            name,
+        },
+        include: {
+            image: true,
+        }
+    }))
+    if (!cmsImage) throw new ServerError('NOT FOUND', `${name} Cms Image not found`)
+    return cmsImage
 }
 
 /**
@@ -33,19 +29,15 @@ export async function readCmsImage(name: string): Promise<ActionReturn<ExpandedC
  * @param special SpecialCmsImage
  * @returns ActionReturn<ExpandedCmsImage>
  */
-export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<ActionReturn<ExpandedCmsImage>> {
-    try {
-        const cmsImage = await prisma.cmsImage.findUnique({
-            where: {
-                special,
-            },
-            include: {
-                image: true,
-            }
-        })
-        if (!cmsImage) return createActionError('NOT FOUND', `${special} Cms Image not found`)
-        return { success: true, data: cmsImage }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+export async function readSpecialCmsImage(special: SpecialCmsImage): Promise<ExpandedCmsImage> {
+    const cmsImage = await prisma.cmsImage.findUnique({
+        where: {
+            special,
+        },
+        include: {
+            image: true,
+        }
+    })
+    if (!cmsImage) throw new ServerError('NOT FOUND', `${special} Cms Image not found`)
+    return cmsImage
 }

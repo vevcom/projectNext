@@ -138,10 +138,10 @@ export async function removeArticleSectionPart(
         name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined
     } as const
-    const articleSection = await prisma.articleSection.findUnique({
+    const articleSection = await prismaCall(() => prisma.articleSection.findUnique({
         where,
         include: { cmsLink: true, cmsParagraph: true, cmsImage: true }
-    })
+    }))
     if (!articleSection) {
         throw new ServerError('NOT FOUND', 'ArticleSection not found')
     }

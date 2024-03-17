@@ -5,6 +5,7 @@ import { createCmsImage } from '@/server/cms/images/create'
 import { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { ActionReturn } from '@/actions/Types'
+import { safeServerCall } from '@/actions/safeServerCall'
 
 /**
  * A action to read a cms image including the image associated with it
@@ -13,7 +14,7 @@ import type { ActionReturn } from '@/actions/Types'
  */
 export async function readCmsImageAction(name: string): Promise<ActionReturn<ExpandedCmsImage>> {
     //TODO: auth on visibilty
-    return await readCmsImage(name)
+    return await safeServerCall(() => readCmsImage(name))
 }
 
 /**
@@ -25,12 +26,12 @@ export async function readSpecialCmsImageAction(special: SpecialCmsImage): Promi
     if (!Object.values(SpecialCmsImage).includes(special)) {
         return createActionError('BAD PARAMETERS', `${special} is not special`)
     }
-    const specialRes = await readSpecialCmsImage(special)
+    const specialRes = await safeServerCall(() => readSpecialCmsImage(special))
     if (!specialRes.success) {
         if (specialRes.errorCode === 'NOT FOUND') {
-            return await createCmsImage(special, {
+            return await safeServerCall(() => createCmsImage(special, {
                 special,
-            })
+            }))
         }
         return specialRes
     }
