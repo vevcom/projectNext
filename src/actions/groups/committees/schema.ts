@@ -7,7 +7,7 @@ export const createCommitteeActionSchema = zfd.formData(createCommitteeSchema)
 export type CreateCommitteeActionSchemaType = z.infer<typeof createCommitteeSchema>
 
 export const readCommitteeActionSchema = zfd.formData({
-    id: z.number().optional(),
+    id: z.coerce.number().optional(),
     shortName: z.string().optional(),
 })
 

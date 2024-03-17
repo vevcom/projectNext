@@ -22,7 +22,7 @@ export async function readCommitteesAction(): Promise<ActionReturn<ExpandedCommi
 }
 
 export async function readCommitteeAction(
-    rawData: FormData | ReadCommitteeActionSchemaType
+    rawData: FormData | ReadCommitteeActionSchemaType,
 ): Promise<ActionReturn<ExpandedCommittee>> {
     const { authorized, status } = await getUser({
         requiredPermissions: ['COMMITTEE_READ']

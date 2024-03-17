@@ -38,6 +38,13 @@ export async function updateCommittee(
                     },
                 },
             },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
         })
 
         return { success: true, data: committee }

@@ -29,8 +29,13 @@ export async function createCommittee(data: CreateCommitteeSchemaType): Promise<
                 shortName,
                 logoImage: {
                     create: {
-                        name: `Komitélogoen til ${name}`
-                    }
+                        name: `Komitélogoen til ${name}`,
+                        image: {
+                            connect: {
+                                id: logoImageId,
+                            },
+                        },
+                    },
                 },
                 group: {
                     create: {
@@ -38,7 +43,14 @@ export async function createCommittee(data: CreateCommitteeSchemaType): Promise<
                         membershipRenewal: true,
                     }
                 },
-            }
+            },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
         })
 
         return { success: true, data: committee }

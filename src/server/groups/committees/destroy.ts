@@ -9,6 +9,13 @@ export async function destroyCommittee(id: number): Promise<ActionReturn<Expande
             where: {
                 id,
             },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
         })
 
         return { success: true, data: committee }

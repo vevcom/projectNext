@@ -10,7 +10,7 @@ export default async function Committees() {
             <h1>Komiteer</h1>
             {
                 committees.map(committee => (
-                    <Link href={`/committees/${committee.name}`} key={committee.name}>
+                    <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
                         {committee.name}
                     </Link>
                 ))

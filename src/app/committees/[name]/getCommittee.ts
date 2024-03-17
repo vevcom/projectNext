@@ -11,5 +11,6 @@ export default async function getCommittee(params: PropTypes['params']) {
     const name = decodeURIComponent(params.name)
     const res = await readCommitteeAction({ shortName: name })
     if (!res.success) notFound()
+    console.log(res.data)
     return res.data
 }

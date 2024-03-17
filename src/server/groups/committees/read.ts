@@ -5,7 +5,15 @@ import type { ActionReturn } from '@/actions/Types'
 
 export async function readCommittees(): Promise<ActionReturn<ExpandedCommittee[]>> {
     try {
-        const committees = await prisma.committee.findMany()
+        const committees = await prisma.committee.findMany({
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
+        })
 
         return { success: true, data: committees }
     } catch (e) {
@@ -26,7 +34,14 @@ export async function readCommittee(where: ReadCommitteeArgs): Promise<ActionRet
             where: {
                 id: where.id,
                 shortName: where.shortName,
-            }
+            },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
         })
 
         return { success: true, data: committee }
