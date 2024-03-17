@@ -43,6 +43,24 @@ export async function addMembersToGroup(
             admin,
             order: currentOrder,
         })),
+        skipDuplicates: true,
+    }))
+}
+
+export async function addMemberToGroups(
+    userId: number,
+    data: { groupId: number, admin: boolean }[]
+): Promise<void> {
+    const currentOrder = (await readCurrenOmegaOrder()).order
+
+    await prismaCall(() => prisma.membership.createMany({
+        data: data.map(({ groupId, admin }) => ({
+            groupId,
+            userId,
+            admin,
+            order: currentOrder,
+        })),
+        skipDuplicates: true,
     }))
 }
 
