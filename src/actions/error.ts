@@ -1,9 +1,10 @@
 import { Prisma } from '@prisma/client'
 import type { SafeParseError } from 'zod'
 import type { ActionReturnError } from './Types'
-import { ErrorCode, ErrorMessage } from '@/server/error'
+import { ErrorMessage } from '@/server/error'
+import { ActionErrorCode } from './Types'
 
-export function createActionError(errorCode: ErrorCode, error?: string | ErrorMessage[]): ActionReturnError {
+export function createActionError(errorCode: ActionErrorCode, error?: string | ErrorMessage[]): ActionReturnError {
     return {
         success: false,
         errorCode,
@@ -31,5 +32,6 @@ export function createPrismaActionError(err: unknown): ActionReturnError {
         P2025: createActionError('NOT FOUND'),
     }
 
-    return errorMessages[err.code] ?? `unknown prisma error (${err.code})`
+    return errorMessages[err.code] ?? createActionError('UNKNOWN ERROR', `unknown prisma error ${err.code}`)
 }
+

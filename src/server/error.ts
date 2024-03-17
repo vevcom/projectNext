@@ -1,9 +1,7 @@
-export type ErrorCode =
+export type ServerErrorCode =
     | 'DUPLICATE'
     | 'NOT FOUND'
     | 'BAD PARAMETERS'
-    | 'UNAUTHENTICATED'
-    | 'UNAUTHORIZED'
     | 'UNKNOWN ERROR'
 
 export type ErrorMessage = {
@@ -12,18 +10,18 @@ export type ErrorMessage = {
 }
 
 export class ServerError extends Error {
-    errorCode: ErrorCode;
+    errorCode: ServerErrorCode;
     errors: ErrorMessage[];
 
-    constructor(errorCode: ErrorCode, errors: string | ErrorMessage[]) {
-        const parsed_errors = typeof errors === 'string'
+    constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[]) {
+        const parsedErrors = typeof errors === 'string'
             ? [{ message: errors }]
             : errors
         
         super(errorCode)
         
         this.errorCode = errorCode
-        this.errors = parsed_errors
+        this.errors = parsedErrors
         this.name = "ServerError"
     }
 }

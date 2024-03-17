@@ -1,0 +1,25 @@
+import { ServerError } from "@/server/error"
+import { createActionError } from "./error"
+import type { ActionReturn } from './Types'
+
+/**
+ * A function that calls a server function. If all goes well, it returns a ActionReturn with the data.
+ * If an error is thrown it returns ActionReturn of success false and the error.
+ * The function handles ServerErrors class, and treats all other errors as unknown.
+ * @param call - A async server function to call.
+ * @returns - A promise that resolves to an ActionReturn.
+ */
+export async function safeServerCall<T> (call: () => Promise<T>): Promise<ActionReturn<T>> {
+    try {
+        const data = await call()
+        return {
+            success: true,
+            data
+        }
+    } catch (error) {
+        if (error instanceof ServerError) {
+            return createActionError(error.errorCode, error.errors)
+        }
+        return createActionError('UNKNOWN ERROR', 'unknown error')
+    }
+}

@@ -1,8 +1,13 @@
-import { ErrorCode, ErrorMessage } from "@/server/error"
+import { ServerErrorCode, ErrorMessage } from "@/server/error"
+
+export type ActionErrorCode = ServerErrorCode 
+    | 'UNAUTHENTICATED'
+    | 'UNAUTHORIZED'
+    | 'UNKNOWN ERROR'
 
 export type ActionReturnError = {
     success: false,
-    errorCode: ErrorCode,
+    errorCode: ActionErrorCode,
     error?: ErrorMessage[],
 }
 
