@@ -1,13 +1,16 @@
-import { createCommitteeSchema } from './schema'
+import { updateCommitteeSchema } from './schema'
 import { createPrismaActionError, createZodActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateCommitteeSchemaType } from './schema'
+import type { UpdateCommitteeSchemaType } from './schema'
 import type { ExpandedCommittee } from './Types'
 
-export async function createCommittee(data: CreateCommitteeSchemaType): Promise<ActionReturn<ExpandedCommittee>> {
-    const parse = createCommitteeSchema.safeParse(data)
+export async function updateCommittee(
+    id: number,
+    data: UpdateCommitteeSchemaType
+): Promise<ActionReturn<ExpandedCommittee>> {
+    const parse = updateCommitteeSchema.safeParse(data)
 
     if (!parse.success) return createZodActionError(parse)
 
@@ -23,21 +26,18 @@ export async function createCommittee(data: CreateCommitteeSchemaType): Promise<
     }
 
     try {
-        const committee = await prisma.committee.create({
+        const committee = await prisma.committee.update({
+            where: {
+                id,
+            },
             data: {
                 name,
                 logoImage: {
-                    create: {
-                        name: `Komitélogoen til ${name}`
-                    }
+                    update: {
+                        imageId: logoImageId,
+                    },
                 },
-                group: {
-                    create: {
-                        groupType: 'COMMITTEE',
-                        membershipRenewal: true,
-                    }
-                },
-            }
+            },
         })
 
         return { success: true, data: committee }

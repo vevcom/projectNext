@@ -80,9 +80,8 @@ model Membership {
   group      Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId    Int
   admin      Boolean
-  active     Boolean
-  startOrder Int
-  endOrder   Int
+  omegaOrder OmegaOrder @relation(fields: [order], references: [order])
+  order      Int
 
   @@unique([userId, groupId])
 }
@@ -442,7 +441,7 @@ model NewsArticle {
   article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
   articleId      Int        @unique
   articleName    String
-  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order], onDelete: Restrict)
   orderPublished Int
 
   @@unique([articleId, articleName])
@@ -484,6 +483,7 @@ model OmegaOrder {
 
   newsArticles NewsArticle[]
   classes      Class[]
+  membership   Membership[]
 }
 
 ///////////

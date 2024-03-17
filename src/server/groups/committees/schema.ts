@@ -2,7 +2,7 @@ import 'server-only'
 import z from 'zod'
 
 export const createCommitteeSchema = z.object({
-    name: z.string().max(32, "Maks 32 tegn.").min(1, "Min 1 tegn."),
+    name: z.string().max(32, 'Maks 32 tegn.').min(1, 'Min 1 tegn.'),
     logoImageId: z.number().optional(),
 })
 

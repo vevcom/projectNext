@@ -1,3 +1,3 @@
-import { Committee } from "@prisma/client";
+import type { Committee } from '@prisma/client'
 
 export type ExpandedCommittee = Committee
