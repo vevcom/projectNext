@@ -157,14 +157,14 @@ export const authOptions: AuthOptions = {
             const userPermissions = await readPermissionsOfUser(userId)
             const userMemberships = await readMembershipsOfUser(userId)
 
-            if (!userInfo || !userPermissions.success || !userMemberships.success) {
+            if (!userInfo || !userPermissions || !userMemberships) {
                 throw new Error('Could not read user from database when setting jwt')
             }
 
             token.user = {
                 ...userInfo,
-                permissions: userPermissions.data,
-                memberships: userMemberships.data,
+                permissions: userPermissions,
+                memberships: userMemberships,
             }
 
             return token
