@@ -1,10 +1,10 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from '@/server/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, ImageDetails>
@@ -18,7 +18,6 @@ export async function readImagesPage<const PageSize extends number>(
         skip: pageNumber * pageSize,
         take: pageSize,
     }))
-
 }
 
 export async function readImage(idOrName: number | string): Promise<Image> {
@@ -31,7 +30,6 @@ export async function readImage(idOrName: number | string): Promise<Image> {
 
     if (!image) throw new ServerError('NOT FOUND', 'Image not found')
     return image
-
 }
 
 export async function readSpecialImage(special: SpecialImage): Promise<Image> {

@@ -2,14 +2,14 @@ import 'server-only'
 import { readSpecialImage } from '@/server/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
+import type { ReadPageInput } from '@/actions/Types'
 
 
 /**
@@ -80,7 +80,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
         numberOfImages: collection._count.images,
     }))
 
-    return returnData 
+    return returnData
 }
 
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ImageCollection> {

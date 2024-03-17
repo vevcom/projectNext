@@ -1,8 +1,8 @@
 import 'server-only'
 import { destroyCmsImage } from '@/cms/images/destoy'
 import prisma from '@/prisma'
-import type { Article } from '@prisma/client'
 import { prismaCall } from '@/server/prismaCall'
+import type { Article } from '@prisma/client'
 
 /**
  * A function that destroys an article and its cover image (must be deleted to to avoid

@@ -1,9 +1,9 @@
 import 'server-only'
+import { ServerError } from '@/server/error'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Ombul } from '@prisma/client'
 import type { ExpandedOmbul } from './Types'
-import { ServerError } from '../error'
-import { prismaCall } from '../prismaCall'
 
 export async function readLatestOmbul(): Promise<Ombul> {
     const ombul = await prisma.ombul.findMany({
@@ -26,7 +26,7 @@ export async function readOmbul(idOrNameAndYear: number | {
     name: string,
     year: number,
 }): Promise<ExpandedOmbul> {
-    const ombul = await prismaCall(() =>prisma.ombul.findUnique({
+    const ombul = await prismaCall(() => prisma.ombul.findUnique({
         where: typeof idOrNameAndYear === 'number' ? {
             id: idOrNameAndYear
         } : {
@@ -53,7 +53,7 @@ export async function readOmbul(idOrNameAndYear: number | {
  * @returns - All ombuls
  */
 export async function readOmbuls(): Promise<ExpandedOmbul[]> {
-    return await prismaCall(() =>prisma.ombul.findMany({
+    return await prismaCall(() => prisma.ombul.findMany({
         orderBy: [
             { year: 'desc' },
             { issueNumber: 'desc' },

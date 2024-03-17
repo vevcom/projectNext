@@ -1,8 +1,8 @@
 import 'server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import type { ExpandedArticle } from './Types'
 import { prismaCall } from '@/server/prismaCall'
+import type { ExpandedArticle } from './Types'
 
 /**
  * A function to create a new article. It will have no content (sections) and cover image will relate

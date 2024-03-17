@@ -1,9 +1,9 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Permission, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import { prismaCall } from '../prismaCall'
 
 export async function readRoles(): Promise<RoleWithPermissions[]> {
     return await prismaCall(() => prisma.role.findMany({

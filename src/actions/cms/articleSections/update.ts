@@ -1,9 +1,9 @@
 'use server'
 import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection } from '@/server/cms/articleSections/update'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ArticleSection, Position } from '@prisma/client'
 import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 
 export async function updateArticleSectionAction(name: string, changes: {

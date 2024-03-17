@@ -1,10 +1,10 @@
 import 'server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { createArticle } from '@/server/cms/articles/create'
 import type { ExpandedNewsArticle } from './Types'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to

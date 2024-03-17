@@ -1,7 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { User } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 /**
  * Action to destroy a user by the given id

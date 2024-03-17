@@ -1,8 +1,8 @@
 import { userFilterSelection } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function to read a page of users with the given details (filtering)

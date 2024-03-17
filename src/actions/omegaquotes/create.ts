@@ -1,12 +1,12 @@
 'use server'
 import { omegaquotesSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { createQuote } from '@/server/omegaquotes/create'
 import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
-import { safeServerCall } from '../safeServerCall'
 
 export async function createQuoteAction(
     rawdata: FormData | OmegaquotesSchemaType

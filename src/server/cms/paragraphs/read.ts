@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
+import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'
 
 export async function readCmsParagraph(name: string): Promise<CmsParagraph> {
     const paragraph = await prismaCall(() => prisma.cmsParagraph.findUnique({

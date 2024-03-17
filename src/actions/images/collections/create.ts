@@ -2,10 +2,10 @@
 import { createImageCollectionSchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import { createImageCollection } from '@/server/images/collections/create'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { CreateImageCollectionSchemaType } from './schema'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function createImageCollectionAction(
     rawdata: FormData | CreateImageCollectionSchemaType

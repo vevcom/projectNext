@@ -1,13 +1,13 @@
 import 'server-only'
 import prisma from '@/prisma'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import type { CmsParagraph } from '@prisma/client'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
 
 /**
  * A function to update the content of a paragraph. Takes markdown and sets both md and html content.
@@ -18,12 +18,12 @@ import { ServerError } from '@/server/error'
 export async function updateCmsParagraphContents(id: number, contentMd: string): Promise<CmsParagraph> {
     try {
         const contentHtml = (await unified()
-        .use(remarkParse)
-        .use(remarkRehype)
-        .use(rehypeFormat)
-        .use(rehypeStringify)
-        .process(contentMd)).value.toString()
-        .replace(/<img[^>]*>/g, 'Bilder i markdown er ikke støttet. Bruk det innebygde bildeverktøyet.')
+            .use(remarkParse)
+            .use(remarkRehype)
+            .use(rehypeFormat)
+            .use(rehypeStringify)
+            .process(contentMd)).value.toString()
+            .replace(/<img[^>]*>/g, 'Bilder i markdown er ikke støttet. Bruk det innebygde bildeverktøyet.')
         return await prismaCall(() => prisma.cmsParagraph.update({
             where: {
                 id

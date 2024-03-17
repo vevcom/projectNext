@@ -1,8 +1,8 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { Prisma, Permission } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -18,7 +18,7 @@ export async function updateRole(
     permissions: Permission[]
 ): Promise<void> {
     // Update name of role
-    const role = await prismaCall(() =>prisma.role.update({
+    const role = await prismaCall(() => prisma.role.update({
         where: {
             id
         },
@@ -47,7 +47,7 @@ export async function updateRole(
     }))
 
     // Create added permissions
-    await prismaCall(() =>prisma.rolePermission.createMany({
+    await prismaCall(() => prisma.rolePermission.createMany({
         data: permissions.map(permission => ({
             roleId: id,
             permission,
@@ -56,5 +56,4 @@ export async function updateRole(
     }))
 
     await invalidateManyUserSessionData(userIds)
-
 }

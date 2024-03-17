@@ -2,10 +2,10 @@
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createActionError } from '@/actions/error'
 import { readCmsParagraph, readSpecialCmsParagraph } from '@/server/cms/paragraphs/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { SpecialCmsParagraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsParagraph } from '@prisma/client'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function readCmsParagraphAction(name: string): Promise<ActionReturn<CmsParagraph>> {
     //TODO: Auth on visibility (or permission if special)

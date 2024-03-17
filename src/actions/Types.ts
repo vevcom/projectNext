@@ -1,6 +1,6 @@
-import { ServerErrorCode, ErrorMessage } from "@/server/error"
+import type { ServerErrorCode, ErrorMessage } from '@/server/error'
 
-export type ActionErrorCode = ServerErrorCode 
+export type ActionErrorCode = ServerErrorCode
     | 'UNAUTHENTICATED'
     | 'UNAUTHORIZED'
 
@@ -11,7 +11,7 @@ export type ActionReturnError = {
 }
 
 export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = (
-    ActionReturnError 
+    ActionReturnError
 ) | {
     success: true,
 } & (

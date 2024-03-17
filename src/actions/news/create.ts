@@ -1,11 +1,11 @@
 'use server'
 import { newsArticleSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createNews } from '@/server/news/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedNewsArticle } from '@/server/news/Types'
 import type { NewsArticleSchemaType } from './schema'
-import { safeServerCall } from '../safeServerCall'
 
 export async function createNewsAction(
     rawdata: FormData | NewsArticleSchemaType

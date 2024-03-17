@@ -1,11 +1,11 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
+import { prismaCall } from '@/server/prismaCall'
 import { createFile } from '@/server/store/createFile'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import sharp from 'sharp'
 import type { Image, SpecialImage } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -31,7 +31,7 @@ export async function createImage(file: File, meta: {
     const fsLocationMediumSize = mediumSize.fsLocation
     const fsLocation = original.fsLocation
     const ext = original.ext
-    return await prismaCall(() =>prisma.image.create({
+    return await prismaCall(() => prisma.image.create({
         data: {
             name: meta.name,
             alt: meta.alt,

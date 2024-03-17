@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { ArticleSection } from '@prisma/client'
 import { prismaCall } from '@/server/prismaCall'
+import type { ArticleSection } from '@prisma/client'
 
 /**
  * Destroys an article section

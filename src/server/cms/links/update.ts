@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { CmsLink, Prisma } from '@prisma/client'
 import { prismaCall } from '@/server/prismaCall'
+import type { CmsLink, Prisma } from '@prisma/client'
 
 export async function updateCmsLink(
     id: number,

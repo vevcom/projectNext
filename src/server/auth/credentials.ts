@@ -1,8 +1,8 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { SEX } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 export async function registerUser(id: number, config: {
     password: string

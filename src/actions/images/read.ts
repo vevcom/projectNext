@@ -1,4 +1,5 @@
 'use server'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { readImage, readImagesPage, readSpecialImage } from '@/server/images/read'
 import { createBadImage } from '@/server/images/create'
@@ -6,7 +7,6 @@ import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from '@/server/images/Types'
-import { safeServerCall } from '../safeServerCall'
 
 /**
  * Read one page of images.

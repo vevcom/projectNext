@@ -1,9 +1,9 @@
 import 'server-only'
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import prisma from '@/prisma'
-import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 
 /**
  * Reads an article section
@@ -19,5 +19,5 @@ export async function readArticleSection(nameOrId: string | number): Promise<Exp
         include: articleSectionsRealtionsIncluder
     }))
     if (!articleSection) throw new ServerError('NOT FOUND', 'Article section not found')
-    return articleSection 
+    return articleSection
 }

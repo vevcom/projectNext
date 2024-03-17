@@ -1,7 +1,6 @@
+import type { ErrorMessage } from '@/server/error'
 import type { SafeParseError } from 'zod'
-import type { ActionReturnError } from './Types'
-import { ErrorMessage } from '@/server/error'
-import { ActionErrorCode } from './Types'
+import type { ActionReturnError, ActionErrorCode } from './Types'
 
 export function createActionError(errorCode: ActionErrorCode, error?: string | ErrorMessage[]): ActionReturnError {
     return {

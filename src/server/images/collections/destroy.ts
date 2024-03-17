@@ -1,11 +1,11 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { ImageCollection } from '@prisma/client'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
+import type { ImageCollection } from '@prisma/client'
 
 export async function destroyImageCollection(collectionId: number): Promise<ImageCollection> {
-    const collection = await prismaCall(() =>prisma.imageCollection.findUnique({
+    const collection = await prismaCall(() => prisma.imageCollection.findUnique({
         where: {
             id: collectionId,
         },

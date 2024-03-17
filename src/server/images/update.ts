@@ -1,7 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Prisma, Image } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 export async function updateImage(
     imageId: number,

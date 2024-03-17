@@ -1,8 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { ImageCollection, Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 import { prismaCall } from '@/server/prismaCall'
+import type { ImageCollection, Prisma } from '@prisma/client'
 
 /**
  * A function that updates an image collection

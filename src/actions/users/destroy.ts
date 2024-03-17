@@ -1,8 +1,8 @@
 'use server'
+import { safeServerCall } from '../safeServerCall'
 import { destroyUser } from '@/server/users/destroy'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { safeServerCall } from '../safeServerCall'
 
 /**
  * Action to destroy a user by the given id

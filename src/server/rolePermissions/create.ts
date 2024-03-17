@@ -1,10 +1,9 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import { invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
-import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from './Types'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 export async function createRole(data: { name: string }): Promise<RoleWithPermissions> {
     return await prismaCall(() => prisma.role.create({
@@ -26,7 +25,7 @@ export async function addUserToRole(
     roleId: number
 ): Promise<void> {
     //TODO: Auth
-    const user = await prismaCall(() =>prisma.user.findUnique({
+    const user = await prismaCall(() => prisma.user.findUnique({
         where: {
             username
         },

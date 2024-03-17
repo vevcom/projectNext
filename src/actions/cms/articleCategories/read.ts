@@ -1,11 +1,11 @@
 'use server'
 import { readArticleCategories, readArticleCategory } from '@/server/cms/articleCategories/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ActionReturn } from '@/actions/Types'
 import type {
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
 } from '@/cms/articleCategories/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function readArticleCategoriesAction(): Promise<ActionReturn<ArticleCategoryWithCover[]>> {
     //TODO: only read categories that user has visibility

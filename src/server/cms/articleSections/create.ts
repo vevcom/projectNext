@@ -1,8 +1,8 @@
 import 'server-only'
 import { articleSectionsRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import type { ExpandedArticleSection } from './Types'
 import { prismaCall } from '@/server/prismaCall'
+import type { ExpandedArticleSection } from './Types'
 
 /**
  * A function to create a new articleSection

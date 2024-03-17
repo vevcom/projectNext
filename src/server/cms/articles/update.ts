@@ -2,12 +2,11 @@ import 'server-only'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
 import prisma from '@/prisma'
 import { addArticleSectionPart } from '@/server/cms/articleSections/update'
-import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
-import type { ActionReturn } from '@/actions/Types'
-import type { ArticleSection } from '@prisma/client'
-import type { ExpandedArticle } from '@/cms/articles/Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
+import type { ArticleSection } from '@prisma/client'
+import type { ExpandedArticle } from '@/cms/articles/Types'
 
 /**
  * A function to update metadata of an article. This includes for ex. name.
@@ -63,7 +62,9 @@ export async function addSectionToArticle(
             articleId: id,
         },
     })
-    if (numberOfSections >= maxSections) throw new ServerError('BAD PARAMETERS', `The maximum number of sections is ${maxSections}`)
+    if (numberOfSections >= maxSections) {
+        throw new ServerError('BAD PARAMETERS', `The maximum number of sections is ${maxSections}`)
+    }
 
     const newSectionName = `${article.name} section ${nextOreder}`
 

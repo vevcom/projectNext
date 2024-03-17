@@ -1,5 +1,6 @@
-import { ServerError, ServerErrorCode } from './error'
+import { ServerError } from './error'
 import { Prisma } from '@prisma/client'
+import type { ServerErrorCode } from './error'
 
 const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
     P2002: ['DUPLICATE', 'duplicate entry'],
@@ -9,7 +10,7 @@ const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
 /**
  * A function that translates prisma calls into ServerErorrs if they throw errors
  * @param call - A async prisma function to call.
- * @returns 
+ * @returns
  */
 export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
     try {

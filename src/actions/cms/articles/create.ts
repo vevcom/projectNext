@@ -1,8 +1,8 @@
 'use server'
 import { createArticle } from '@/server/cms/articles/create'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function createArticleAction(name: string | null, config?: {
     categoryId: number,

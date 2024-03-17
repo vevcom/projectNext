@@ -1,8 +1,8 @@
 'use server'
+import { ServerError } from '@/server/error'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { OmegaOrder } from '@prisma/client'
-import { ServerError } from '../error'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function to read the current OmegaOrder. That is the last OmegaOrder created, with

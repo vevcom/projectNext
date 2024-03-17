@@ -1,11 +1,11 @@
 'use server'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
 import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { Ombul } from '@prisma/client'
-import { safeServerCall } from '../safeServerCall'
 
 export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
     //Auth route
@@ -27,7 +27,7 @@ export async function readOmbulAction(idOrNameAndYear: number | {
     })
     if (!authorized) return createActionError(status)
 
-    return await safeServerCall(() =>readOmbul(idOrNameAndYear))
+    return await safeServerCall(() => readOmbul(idOrNameAndYear))
 }
 
 export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
@@ -38,5 +38,5 @@ export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>>
     if (!authorized) {
         return createActionError(status)
     }
-    return await safeServerCall(() =>readOmbuls())
+    return await safeServerCall(() => readOmbuls())
 }

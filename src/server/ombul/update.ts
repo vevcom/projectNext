@@ -1,11 +1,11 @@
 import 'server-only'
+import { ServerError } from '@/server/error'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { destroyFile } from '@/server/store/destroyFile'
 import type { Prisma } from '@prisma/client'
 import type { ExpandedOmbul } from './Types'
-import { ServerError } from '../error'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function Update an ombul

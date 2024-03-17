@@ -8,10 +8,10 @@ import prisma from '@/prisma'
 import { createCmsImage } from '@/server/cms/images/create'
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createCmsLink } from '@/server/cms/links/create'
-import type { ImageSize, ArticleSection, Position } from '@prisma/client'
-import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import type { ImageSize, ArticleSection, Position } from '@prisma/client'
+import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
@@ -101,7 +101,7 @@ export async function addArticleSectionPart(
         case 'cmsParagraph':
         {
             const cmsParagraph = await createCmsParagraph(`${nameOrId}_paragraph`)
-            return await prismaCall(() =>prisma.articleSection.update({
+            return await prismaCall(() => prisma.articleSection.update({
                 where,
                 data: { cmsParagraph: { connect: { id: cmsParagraph.id } } },
                 include: articleSectionsRealtionsIncluder

@@ -1,5 +1,5 @@
-import { ServerError } from "@/server/error"
-import { createActionError } from "./error"
+import { createActionError } from './error'
+import { ServerError } from '@/server/error'
 import type { ActionReturn } from './Types'
 
 /**
@@ -9,7 +9,7 @@ import type { ActionReturn } from './Types'
  * @param call - A async server function to call.
  * @returns - A promise that resolves to an ActionReturn.
  */
-export async function safeServerCall<T> (call: () => Promise<T>): Promise<ActionReturn<T>> {
+export async function safeServerCall<T>(call: () => Promise<T>): Promise<ActionReturn<T>> {
     try {
         const data = await call()
         return {

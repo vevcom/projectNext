@@ -1,8 +1,8 @@
 'use server'
 import { readArticle } from '@/server/cms/articles/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function readArticleAction(idOrName: number | {
     name: string,

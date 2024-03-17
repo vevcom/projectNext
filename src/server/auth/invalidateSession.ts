@@ -1,5 +1,5 @@
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { prismaCall } from '../prismaCall'
 
 export async function invalidateOneUserSessionData(userId: number): Promise<void> {
     await prismaCall(() => prisma.user.update({
@@ -13,5 +13,5 @@ export async function invalidateOneUserSessionData(userId: number): Promise<void
 }
 
 export async function invalidateManyUserSessionData(userIds: number[]): Promise<void> {
-    const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
+    await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
 }

@@ -1,7 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Prisma, User } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 type CreateUserType = Omit<Prisma.UserCreateInput, 'passwordHash'> & {
     password: string
@@ -24,5 +24,5 @@ export async function createUser(data: CreateUserType): Promise<User> {
             },
         },
     }))
-    return user;
+    return user
 }

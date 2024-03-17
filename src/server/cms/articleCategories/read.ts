@@ -1,13 +1,13 @@
 import 'server-only'
 import prisma from '@/prisma'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import type { Image } from '@prisma/client'
 import type {
     ExpandedArticleCategory,
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
 } from '@/cms/articleCategories/Types'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
 
 /**
  * Reads all article categories, and assaigs each of them a cover based on the cover of first article

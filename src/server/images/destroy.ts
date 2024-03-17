@@ -1,9 +1,8 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { Image } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 export async function destroyImage(imageId: number): Promise<Image> {
     const image = await prismaCall(() => prisma.image.findUnique({

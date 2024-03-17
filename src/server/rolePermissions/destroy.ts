@@ -1,9 +1,9 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { RoleWithPermissions } from './Types'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 /**
  * A function that delets a role, it will also invalidate the session of all users that have the role

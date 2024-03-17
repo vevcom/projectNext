@@ -2,10 +2,10 @@
 import { createActionError } from '@/actions/error'
 import { readCmsImage, readSpecialCmsImage } from '@/server/cms/images/read'
 import { createCmsImage } from '@/server/cms/images/create'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 /**
  * A action to read a cms image including the image associated with it

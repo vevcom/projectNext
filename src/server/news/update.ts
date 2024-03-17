@@ -1,8 +1,8 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Prisma } from '@prisma/client'
 import type { SimpleNewsArticle } from '@/server/news/Types'
-import { prismaCall } from '../prismaCall'
 
 export async function updateNews(
     id: number,

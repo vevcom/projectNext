@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
+import { prismaCall } from '@/server/prismaCall'
 import type { Image, SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from './Types'
-import { prismaCall } from '@/server/prismaCall'
 
 /**
  * A function to create a cmsImage

@@ -1,7 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { OmegaQuote, Prisma } from '@prisma/client'
-import { prismaCall } from '../prismaCall'
 
 /**
  * A function to create a quote

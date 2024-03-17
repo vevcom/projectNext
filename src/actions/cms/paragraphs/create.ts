@@ -1,8 +1,8 @@
 'use server'
 import { createCmsParagraph } from '@/server/cms/paragraphs/create'
+import { safeServerCall } from '@/actions/safeServerCall'
 import type { CmsParagraph, SpecialCmsParagraph } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { safeServerCall } from '@/actions/safeServerCall'
 
 export async function createCmsParagraphAction(name: string, config?: {
     special?: SpecialCmsParagraph

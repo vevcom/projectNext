@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { CmsParagraph, SpecialCmsParagraph } from '@prisma/client'
 import { prismaCall } from '@/server/prismaCall'
+import type { CmsParagraph, SpecialCmsParagraph } from '@prisma/client'
 
 /**
  * A function to create a cms paragraph

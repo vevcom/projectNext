@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { CmsImage, ImageSize } from '@prisma/client'
 import { prismaCall } from '@/server/prismaCall'
+import type { CmsImage, ImageSize } from '@prisma/client'
 
 /**
  * A function that changes the image of a cms image

@@ -1,11 +1,11 @@
 'use server'
 import { createUserSchema, } from './schema'
+import { safeServerCall } from '../safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createUser } from '@/server/users/create'
 import type { CreateUserSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { safeServerCall } from '../safeServerCall'
 
 /**
  * A action that creates a user by the given data. It will also hash the password

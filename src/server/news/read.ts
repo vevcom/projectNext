@@ -1,10 +1,10 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
 import prisma from '@/prisma'
 import type { ExpandedNewsArticle, SimpleNewsArticle } from '@/server/news/Types'
 import type { ReadPageInput } from '@/actions/Types'
-import { prismaCall } from '../prismaCall'
-import { ServerError } from '../error'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
