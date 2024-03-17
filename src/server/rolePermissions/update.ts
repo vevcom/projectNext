@@ -1,9 +1,8 @@
 import 'server-only'
-import { createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { Prisma, Permission } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '../prismaCall'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -17,62 +16,45 @@ export async function updateRole(
     id: number,
     data: Prisma.RoleUpdateInput,
     permissions: Permission[]
-): Promise<ActionReturn<void, false>> {
-    let userIds: number[]
-
+): Promise<void> {
     // Update name of role
-    try {
-        const role = await prisma.role.update({
-            where: {
-                id
-            },
-            data,
-            select: {
-                users: {
-                    select: {
-                        userId: true,
-                    },
+    const role = await prismaCall(() =>prisma.role.update({
+        where: {
+            id
+        },
+        data,
+        select: {
+            users: {
+                select: {
+                    userId: true,
                 },
             },
-        })
+        },
+    }))
 
-        userIds = role.users.map(user => user.userId)
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    const userIds = role.users.map(user => user.userId)
 
     // Delete removed permissions
-    try {
-        await prisma.rolePermission.deleteMany({
-            where: {
-                roleId: id,
-                permission: {
-                    not: {
-                        in: permissions
-                    }
+    await prismaCall(() => prisma.rolePermission.deleteMany({
+        where: {
+            roleId: id,
+            permission: {
+                not: {
+                    in: permissions
                 }
             }
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+        }
+    }))
 
     // Create added permissions
-    try {
-        await prisma.rolePermission.createMany({
-            data: permissions.map(permission => ({
-                roleId: id,
-                permission,
-            })),
-            skipDuplicates: true
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    await prismaCall(() =>prisma.rolePermission.createMany({
+        data: permissions.map(permission => ({
+            roleId: id,
+            permission,
+        })),
+        skipDuplicates: true
+    }))
 
-    const res = await invalidateManyUserSessionData(userIds)
+    await invalidateManyUserSessionData(userIds)
 
-    if (!res.success) return res
-
-    return { success: true }
 }

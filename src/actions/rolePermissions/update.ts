@@ -4,6 +4,7 @@ import { createZodActionError } from '@/actions/error'
 import { updateRole } from '@/server/rolePermissions/update'
 import type { UpdateRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
+import { safeServerCall } from '../safeServerCall'
 
 export async function updateRoleAction(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
     //TODO: auth
@@ -12,5 +13,5 @@ export async function updateRoleAction(rawdata: FormData | UpdateRoleSchemaType)
     if (!parse.success) return createZodActionError(parse)
     const { id, name, permissions } = parse.data
 
-    return await updateRole(id, { name }, permissions)
+    return await safeServerCall(() => updateRole(id, { name }, permissions))
 }
