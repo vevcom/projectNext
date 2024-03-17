@@ -1,6 +1,6 @@
 import { createCommitteeSchema } from '@/server/groups/committees/schema'
-import zfd from 'zod-form-data'
-import z from 'zod'
+import { zfd } from 'zod-form-data'
+import { z } from 'zod'
 
 export const createCommitteeActionSchema = zfd.formData(createCommitteeSchema)
 

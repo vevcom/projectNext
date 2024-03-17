@@ -1,4 +1,3 @@
-import 'server-only'
 import z from 'zod'
 
 export const createCommitteeSchema = z.object({

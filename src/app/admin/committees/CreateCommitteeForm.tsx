@@ -5,11 +5,6 @@ import TextInput from '@/app/components/UI/TextInput'
 import { createCommitteeAction } from '@/actions/groups/committees/create'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { useContext } from 'react'
-import type { Image } from '@prisma/client'
-
-type PropTypes = {
-    defaultImage: Image,
-}
 
 /**
  * WARNING: The component expects to be rendered inside a ImageSelectionProvider, so the form can
@@ -18,7 +13,7 @@ type PropTypes = {
  * @param defaultImage - The default image to use as a committee logo if no logo is selected
  * @returns committee form JSX
  */
-export default function CreateCommitteeForm({ defaultImage }: PropTypes) {
+export default function CreateCommitteeForm() {
     const imageSelection = useContext(ImageSelectionContext)
     if (!imageSelection) throw new Error('No context')
 

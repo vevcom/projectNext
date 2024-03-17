@@ -1,4 +1,5 @@
 'use server'
+
 import { readCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/user'
