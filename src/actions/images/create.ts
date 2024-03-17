@@ -5,6 +5,7 @@ import { createImage } from '@/server/images/create'
 import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
+import { safeServerCall } from '../safeServerCall'
 
 export async function createImageAction(
     collectionId: number,
@@ -16,7 +17,7 @@ export async function createImageAction(
     if (!parse.success) return createZodActionError(parse)
     const { file, ...data } = parse.data
 
-    return await createImage(file, { ...data, collectionId })
+    return await safeServerCall(() => createImage(file, { ...data, collectionId }))
 }
 
 export async function createImagesAction(
@@ -33,7 +34,9 @@ export async function createImagesAction(
 
     let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
-        const ret = await createImage(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        const ret = await safeServerCall(
+            () => createImage(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        )
         if (!ret.success) return ret
         finalReturn = {
             ...finalReturn,

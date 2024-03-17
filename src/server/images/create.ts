@@ -1,12 +1,10 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
 import { createFile } from '@/server/store/createFile'
-import { createPrismaActionError, createActionError } from '@/actions/error'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import sharp from 'sharp'
 import type { Image, SpecialImage } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 import { prismaCall } from '../prismaCall'
 
 /**
@@ -74,30 +72,23 @@ export async function createOneInStore(file: File, allowedExt: string[], size: n
  */
 export async function createBadImage(name: string, config: {
     special: SpecialImage
-}): Promise<ActionReturn<Image>> {
+}): Promise<Image> {
     const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
-    if (!standardCollection.success) return standardCollection
-
-    try {
-        logger.error(`Special image ${config.special} did not exist, creating it with bad conent`)
-        const newImage = await prisma.image.create({
-            data: {
-                name,
-                special: config.special,
-                fsLocation: 'not_found',
-                fsLocationMediumSize: 'not_found',
-                fsLocationSmallSize: 'not_found',
-                ext: 'jpg',
-                alt: 'not found',
-                collection: {
-                    connect: {
-                        id: standardCollection.data.id
-                    }
+    logger.warn('creating a bad image, this should only happen in extreme cases.')
+    return await prismaCall(() => prisma.image.create({
+        data: {
+            name,
+            special: config.special,
+            fsLocation: 'not_found',
+            fsLocationMediumSize: 'not_found',
+            fsLocationSmallSize: 'not_found',
+            ext: 'jpg',
+            alt: 'not found',
+            collection: {
+                connect: {
+                    id: standardCollection.id
                 }
-            },
-        })
-        return { success: true, data: newImage }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+            }
+        },
+    }))
 }

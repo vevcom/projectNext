@@ -6,6 +6,7 @@ import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ImageDetails } from '@/server/images/Types'
+import { safeServerCall } from '../safeServerCall'
 
 /**
  * Read one page of images.
@@ -16,7 +17,7 @@ export async function readImagesPageAction<const PageSize extends number>(
     pageReadInput: ReadPageInput<PageSize, ImageDetails>
 ): Promise<ActionReturn<Image[]>> {
     //TODO: auth route based on collection
-    return await readImagesPage(pageReadInput)
+    return await safeServerCall(() => readImagesPage(pageReadInput))
 }
 
 /**
@@ -26,7 +27,7 @@ export async function readImagesPageAction<const PageSize extends number>(
  */
 export async function readImageAction(nameOrId: string | number): Promise<ActionReturn<Image>> {
     //TODO: auth route based on collection
-    return await readImage(nameOrId)
+    return await safeServerCall(() => readImage(nameOrId))
 }
 
 /**
@@ -40,12 +41,12 @@ export async function readSpecialImageAction(special: SpecialImage): Promise<Act
         return createActionError('BAD PARAMETERS', `${special} is not special`)
     }
     //TODO: auth image based on collection
-    const imageRes = await readSpecialImage(special)
+    const imageRes = await safeServerCall(() => readSpecialImage(special))
     if (!imageRes.success) {
         if (imageRes.errorCode === 'NOT FOUND') {
-            return await createBadImage(special, {
+            return await safeServerCall(() => createBadImage(special, {
                 special,
-            })
+            }))
         }
         return imageRes
     }

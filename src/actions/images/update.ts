@@ -5,6 +5,7 @@ import { updateImage } from '@/server/images/update'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateImageSchemaType } from './schema'
+import { safeServerCall } from '../safeServerCall'
 
 export async function updateImageAction(
     imageId: number,
@@ -16,5 +17,5 @@ export async function updateImageAction(
 
     //TODO: auth the route
 
-    return await updateImage(imageId, data)
+    return await safeServerCall(() => updateImage(imageId, data))
 }
