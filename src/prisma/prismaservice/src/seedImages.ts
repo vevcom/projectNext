@@ -1,3 +1,4 @@
+import { seedImageConfig, seedSpecialImageConfig } from './seedImagesConfig'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
@@ -16,24 +17,36 @@ export const imageSizes = {
 const standardLocation = join(__dirname, '..', 'standard_store', 'images')
 export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
 
+/**
+ * This functions seeds all images in standard_store/images,
+ * both the ones that are special and the ones that are not.
+ * All are seeded to the special collection 'STANDARDIMAGES'
+ * @param pisama - the prisma client
+ */
 export default async function seedImages(prisma: PrismaClient) {
-    const standardCollection = await prisma.imageCollection.findUnique({
-        where: {
-            special: 'STANDARDIMAGES',
-        }
-    })
-    if (!standardCollection) {
-        throw new Error('Standard collection not found')
-    }
-
     const files = await readdir(standardLocation)
-    await Promise.all(files.map(async (file) => {
+
+    //Get the to bjects to a common format
+    const seedSpecialImagesTransformed = transformObject(seedSpecialImageConfig, (value, key) => ({
+        ...value,
+        special: key
+    }))
+    const seedImagesTransformed = seedImageConfig.map((value) => ({
+        ...value,
+        special: null
+    }))
+    const allImages = [...seedSpecialImagesTransformed, ...seedImagesTransformed]
+
+    //Seed all images
+    await Promise.all(allImages.map(async (image) => {
+        const file = files.find(file_ => file_ === image.fsLocation)
+        if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
+
         const ext = file.split('.')[1]
         if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
             console.log(`skipping image ${file}`)
             return
         }
-        const name = file.split('.')[0]
 
         //full size version of the image
         const fsLocation = `${uuid()}.${ext}`
@@ -62,22 +75,35 @@ export default async function seedImages(prisma: PrismaClient) {
 
         await prisma.image.upsert({
             where: {
-                name
+                name: image.name
             },
             update: {},
             create: {
-                name,
-                alt: name.split('_').join(' '),
+                name: image.name,
+                alt: image.alt,
                 fsLocation,
                 fsLocationSmallSize,
                 fsLocationMediumSize,
                 ext,
+                special: image.special,
                 collection: {
                     connect: {
-                        id: standardCollection.id
+                        name: image.collection
                     }
                 }
             }
         })
     }))
+}
+
+/**
+ * A function to transform an object to an array
+ * @param obj - the object to transform
+ * @param fn - the function to transform the object with
+ * @returns
+ */
+export function transformObject<K extends string | number | symbol, T, U>(
+    obj: Record<K, T>, fn: (value: T, key: K) => U
+): U[] {
+    return Object.entries(obj).map(([key, value]) => fn(value as T, key as K))
 }

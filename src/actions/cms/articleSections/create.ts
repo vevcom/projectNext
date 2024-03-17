@@ -1,4 +1,5 @@
 'use server'
+import { articleSectionsRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
@@ -11,11 +12,7 @@ export async function createArticleSection(name: string): Promise<ActionReturn<E
             data: {
                 name,
             },
-            include: {
-                cmsImage: true,
-                cmsParagraph: true,
-                cmsLink: true
-            }
+            include: articleSectionsRealtionsIncluder
         })
         return { success: true, data: articleSection }
     } catch (error) {

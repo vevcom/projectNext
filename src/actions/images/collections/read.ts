@@ -1,9 +1,11 @@
 'use server'
+import { readSpecialImage } from '@/actions/images/read'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import logger from '@/logger'
+import { SpecialCollection } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
+import type { ImageCollection, Image } from '@prisma/client'
 
 /**
  * Reads an image collection by id or name
@@ -13,6 +15,7 @@ import type { ImageCollection, Image, SpecialCollection } from '@prisma/client'
 export async function readImageCollection(
     idOrName: number | string
 ): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+    //TODO: Auth image collections on visibility or permission (if special collection)
     try {
         const collection = await prisma.imageCollection.findUnique({
             where: typeof idOrName === 'number' ? {
@@ -44,6 +47,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
+    //TODO: Auth image collections on visibility or permission (if special collection)
     try {
         const { page: pageNumber, pageSize } = page
         const collections = await prisma.imageCollection.findMany({
@@ -66,11 +70,9 @@ export async function readImageCollectionsPage<const PageSize extends number>(
             take: pageSize,
         })
 
-        const lensCamera = await prisma.image.findUnique({
-            where: {
-                name: 'lens_camera'
-            },
-        })
+        const lensCameraRes = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
+        if (!lensCameraRes.success) return lensCameraRes
+        const lensCamera = lensCameraRes.data
 
         const chooseCoverImage = (collection: {
             coverImage: Image | null,
@@ -95,10 +97,16 @@ export async function readImageCollectionsPage<const PageSize extends number>(
 
 /**
  * Reads a "special" collection read on this in the docs. If it does not exist it will create it.
- * @param special the special collection to read
+ * @param special - the special collection to read
  * @returns the special collection
  */
 export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+    //Check that the collection actually is a special collection, as the paramter is only a compile time type check
+    if (!Object.values(SpecialCollection).includes(special)) {
+        return createActionError('BAD PARAMETERS', `${special} is not special`)
+    }
+
+    //TODO: Auth special image collections on permission (not visibility)
     //TODO: Check permission associated with the special collection
     try {
         const collection = await prisma.imageCollection.findUnique({

@@ -1,6 +1,9 @@
 import type { PrismaClient } from '@/generated/pn'
 
 export default async function seedDevNews(prisma: PrismaClient) {
+    const order = await prisma.omegaOrder.findFirst()
+    if (!order) throw new Error('No omega order found to seed news to')
+
     // seed old news
     const date = new Date()
     date.setDate(date.getDate() - 365) // Subtract 365 days from the current date
@@ -25,7 +28,9 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: date,
-                orderPublished: i,
+                omegaOrder: {
+                    connect: order,
+                },
             }
         })
     }
@@ -49,7 +54,9 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: new Date(),
-                orderPublished: i,
+                omegaOrder: {
+                    connect: order,
+                }
             }
         })
     }

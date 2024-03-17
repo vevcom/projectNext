@@ -1,4 +1,5 @@
 'use server'
+import { newsArticleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedNewsArticle, SimpleNewsArticle } from './Types'
@@ -96,20 +97,7 @@ export async function readNewsByIdOrName(idOrName: number | {
                     orderPublished: idOrName.order
                 }
             },
-            include: {
-                article: {
-                    include: {
-                        coverImage: true,
-                        articleSections: {
-                            include: {
-                                cmsImage: true,
-                                cmsParagraph: true,
-                                cmsLink: true
-                            }
-                        }
-                    }
-                }
-            }
+            include: newsArticleRealtionsIncluder
         })
         if (!news) return createActionError('NOT FOUND', `article ${idOrName} not found`)
         return { success: true, data: news }
