@@ -1,5 +1,5 @@
 'use server'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { readRoles, readUsersOfRole } from '@/server/rolePermissions/read'
 import type { User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'

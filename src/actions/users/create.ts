@@ -1,6 +1,6 @@
 'use server'
 import { createUserSchema, } from './schema'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createUser } from '@/server/users/create'
 import type { CreateUserSchemaType } from './schema'

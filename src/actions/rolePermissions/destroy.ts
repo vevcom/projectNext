@@ -1,6 +1,6 @@
 'use server'
 import { removeUserFromRoleSchema } from './schema'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { destroyRole, removeUserFromRole } from '@/server/rolePermissions/destroy'
 import { createZodActionError } from '@/actions/error'
 import type { RemoveUserFromRoleSchemaType } from './schema'

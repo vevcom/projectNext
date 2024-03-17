@@ -19,7 +19,10 @@ export async function createArticle(name: string | null, config?: {
     if (name === null) {
         let i = 1
         newName = 'Ny artikkel'
-        while (await prismaCall(() => prisma.article.findFirst({ where: { name: newName } }))) {
+
+        const checkArticleExists = () => prisma.article.findFirst({ where: { name: newName } })
+
+        while (await prismaCall(checkArticleExists)) {
             newName = `Ny artikkel ${i++}`
         }
     }

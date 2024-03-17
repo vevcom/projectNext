@@ -1,6 +1,6 @@
 'use server'
 import { updateUserSchema, userRegisterSchema } from './schema'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { updateUser } from '@/server/users/update'
 import { registerUser } from '@/server/auth/credentials'
