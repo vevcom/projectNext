@@ -96,8 +96,9 @@ enum GroupType {
   CLASS
   COMMITTEE
   INTEREST_GROUP
-  STUDY_PROGRAMME
+  MANUAL_GROUP
   OMEGA_MEMBERSHIP_GROUP
+  STUDY_PROGRAMME
 }
 
 // The model 'Group' should be treated as an abstract table. I.e. a generic
@@ -113,6 +114,7 @@ model Group {
   class                Class?
   committee            Committee?
   interestGroup        InterestGroup?
+  manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
 }
@@ -142,11 +144,20 @@ model Committee {
 model InterestGroup {
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int   @unique
-  id        Int    @id @default(autoincrement())
+  id      Int   @id @default(autoincrement())
 
   name      String
   shortName String @unique
   // TODOD - add intereset group data
+}
+
+model ManualGroup {
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  id      Int   @id @default(autoincrement())
+
+  name String
+  shortName String @unique
 }
 
 enum OmegaMembershipLevel {
@@ -164,11 +175,11 @@ model OmegaMembershipGroup {
 }
 
 model StudyProgramme {
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int    @unique
-  id      Int    @id @default(autoincrement())
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @unique
+  id      Int   @id @default(autoincrement())
 
-  name    String
+  name          String
   code          String  @unique
   insititueCode String?
   yearsLength   Int?
