@@ -2,10 +2,12 @@ import { authOptions } from './authoptions'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Permission, User } from '@prisma/client'
+import { BasicMembership } from '@/server/groups/Types'
 
-export type UserWithPermissions = Omit<User, 'id'> & {
+export type ExpandedUser = Omit<User, 'id'> & {
     id: number,
     permissions: Permission[]
+    memberships: BasicMembership[]
 }
 
 type GetUserArgsType<R extends boolean = boolean> = {
@@ -16,7 +18,7 @@ type GetUserArgsType<R extends boolean = boolean> = {
 }
 
 type RequiredGetUserReturnType = {
-    user: UserWithPermissions,
+    user: ExpandedUser,
     authorized: true,
     status: 'AUTHORIZED',
 }
@@ -26,7 +28,7 @@ type GetUserReturnType = RequiredGetUserReturnType | {
     authorized: false,
     status: 'UNAUTHENTICATED',
 } | {
-    user: UserWithPermissions,
+    user: ExpandedUser,
     authorized: false,
     status: 'UNAUTHORIZED',
 }

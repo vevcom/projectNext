@@ -9,6 +9,7 @@ import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './feide/Types'
+import { readMembershipsOfUser } from '@/server/groups/read'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -154,12 +155,14 @@ export const authOptions: AuthOptions = {
             })
 
             const userPermissions = await readPermissionsOfUser(userId)
+            const userMemberships = await readMembershipsOfUser(userId)
 
-            if (!userInfo || !userPermissions.success) throw Error('Could not read user from database when setting jwt')
+            if (!userInfo || !userPermissions.success || !userMemberships.success) throw new Error('Could not read user from database when setting jwt')
 
             token.user = {
                 ...userInfo,
-                permissions: userPermissions.data
+                permissions: userPermissions.data,
+                memberships: userMemberships.data,
             }
 
             return token

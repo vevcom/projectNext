@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import type { UserWithPermissions } from './user'
+import type { ExpandedUser } from './user'
 import type { SessionContextValue } from 'next-auth/react'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
@@ -13,10 +13,10 @@ type UseUserArgsType<R extends boolean> = {
 }
 
 type UseUserReturnType<R extends boolean> = (R extends true ? {
-    user: UserWithPermissions,
+    user: ExpandedUser,
     authorized: true,
 } : {
-    user: UserWithPermissions | null,
+    user: ExpandedUser | null,
     authorized: boolean,
 }) & {
     status: SessionContextValue<R>['status']

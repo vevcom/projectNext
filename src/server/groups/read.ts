@@ -1,7 +1,8 @@
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
-import type { ExpandedGroup, ExpandedMembership } from './Types'
+import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
 import type { ActionReturn } from '@/actions/Types'
+import { readCurrenOmegaOrder } from '../omegaOrder/read'
 
 export async function readGroups(): Promise<ActionReturn<ExpandedGroup[]>> {
     try {
@@ -27,11 +28,11 @@ export async function readGroup(id: number): Promise<ActionReturn<ExpandedGroup>
     }
 }
 
-export async function readMembersOfGroup(groupId: number): Promise<ActionReturn<ExpandedMembership[]>> {
+export async function readMembersOfGroup(id: number): Promise<ActionReturn<ExpandedMembership[]>> {
     try {
         const count = await prisma.group.count({
             where: {
-                id: groupId,
+                id,
             },
         })
 
@@ -43,12 +44,42 @@ export async function readMembersOfGroup(groupId: number): Promise<ActionReturn<
     try {
         const memberships = await prisma.membership.findMany({
             where: {
-                groupId,
+                groupId: id,
             },
         })
 
         return { success: true, data: memberships }
     } catch (e) {
+        return createPrismaActionError(e)
+    }
+}
+
+export async function readMembershipsOfUser(
+    id: number, 
+    order?: number
+): Promise<ActionReturn<BasicMembership[]>> {
+    if (!order) {
+        const currentOrderRes = await readCurrenOmegaOrder()
+
+        if (!currentOrderRes.success) return currentOrderRes
+
+        order = currentOrderRes.data.order
+    }
+    
+    try {
+        const memberships = await prisma.membership.findMany({
+            where: {
+                userId: id,
+                order,
+            },
+            select: {
+                admin: true,
+                groupId: true,
+            }
+        })
+
+        return { success: true, data: memberships }
+    } catch(e) {
         return createPrismaActionError(e)
     }
 }
