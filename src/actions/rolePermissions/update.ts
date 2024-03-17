@@ -8,7 +8,6 @@ import { safeServerCall } from '../safeServerCall'
 
 export async function updateRoleAction(rawdata: FormData | UpdateRoleSchemaType): Promise<ActionReturn<void, false>> {
     //TODO: auth
-
     const parse = updateRoleSchema.safeParse(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const { id, name, permissions } = parse.data
