@@ -36,7 +36,6 @@ model User {
   sex           SEX?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt // is also updated manually
-  roles         RolesUsers[]
   omegaQuote    OmegaQuote[]
   memberships   Membership[]
   credentials   Credentials?
@@ -156,7 +155,7 @@ model ManualGroup {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name String
+  name      String
   shortName String @unique
 }
 
@@ -238,10 +237,14 @@ enum Permission {
   STUDY_PROGRAMME_DESTROY
 }
 
+enum SpecialRole {
+  DEFAULT
+}
+
 model Role {
   id          Int              @id @default(autoincrement())
   name        String           @unique
-  users       RolesUsers[] // Will be removed when groups are finnished
+  special     SpecialRole      @unique
   groups      RolesGroups[]
   permissions RolePermission[]
 }
@@ -252,16 +255,6 @@ model RolePermission {
   permission Permission
 
   @@unique([roleId, permission])
-}
-
-// Will be removed when groups are finnished
-model RolesUsers {
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId Int
-  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  roleId Int
-
-  @@id([userId, roleId])
 }
 
 model RolesGroups {
