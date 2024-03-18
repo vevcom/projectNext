@@ -1,11 +1,11 @@
 import 'server-only'
+import { readMembershipsOfUser } from '@/server/groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { Prisma } from '@prisma/client'
-import type { Permission, SpecialRole, User } from '@prisma/client'
+import type { ExpandedGroup } from '@/server/groups/Types'
+import type { Permission, SpecialRole } from '@prisma/client'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import { ExpandedGroup } from '../groups/Types'
-import { readMembershipsOfUser } from '../groups/read'
 
 const rolePermissionInclude = Prisma.validator<Prisma.RoleInclude>()({
     permissions: {

@@ -10,7 +10,8 @@ import type { ExpandedOmbul } from '@/server/ombul/Types'
 export default async function Ombuls() {
     const { user } = await getUser({
         requiredPermissions: [['OMBUL_READ']],
-        required: true,
+        shouldRedirect: true,
+        userRequired: true,
     })
 
     const showCreateButton = user.permissions.includes('OMBUL_CREATE')

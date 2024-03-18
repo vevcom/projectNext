@@ -1,5 +1,6 @@
-import { prismaCall } from "@/server/prismaCall"
-import { ExpandedManualGroup } from "./Types"
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { ExpandedManualGroup } from './Types'
 
 type CreateManualGroupArgs = {
     name: string,

@@ -1,5 +1,6 @@
-import { prismaCall } from "@/server/prismaCall";
-import { ExpandedOmegaMembershipGroup } from "./Types";
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { ExpandedOmegaMembershipGroup } from './Types'
 
 export async function readOmegaMembershipGroups(): Promise<ExpandedOmegaMembershipGroup[]> {
     return await prismaCall(() => prisma.omegaMembershipGroup.findMany())

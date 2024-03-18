@@ -1,6 +1,6 @@
-import { prismaCall } from "@/server/prismaCall";
-import { ExpandedStudyProgramme } from "./Types";
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { ExpandedStudyProgramme } from './Types'
 
 type CreateStudyProgrammeArgs = {
     code: string,
@@ -37,7 +37,7 @@ export async function upsertStudyProgrammes(programmes: CreateStudyProgrammeArgs
 
     const existingStudyCodes = new Set(existingStudyProgrammes.map(programme => programme.code))
     const newStudyProgrammes = programmes.filter(programme => !existingStudyCodes.has(programme.code))
-    
+
     if (newStudyProgrammes.length === 0) {
         return existingStudyProgrammes
     }
@@ -45,8 +45,8 @@ export async function upsertStudyProgrammes(programmes: CreateStudyProgrammeArgs
     const createdStudyProgrammes = await prismaCall(() => (
         prisma.$transaction(
             newStudyProgrammes.map(programme => (
-                prisma.studyProgramme.create({ 
-                    data: { 
+                prisma.studyProgramme.create({
+                    data: {
                         ...programme,
                         group: {
                             create: {

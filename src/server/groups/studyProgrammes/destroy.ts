@@ -1,6 +1,6 @@
-import { prismaCall } from "@/server/prismaCall";
-import { ExpandedStudyProgramme } from "./Types";
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { ExpandedStudyProgramme } from './Types'
 
 export async function destroyStudyProgramme(id: number): Promise<ExpandedStudyProgramme> {
     return await prismaCall(() => prisma.studyProgramme.delete({

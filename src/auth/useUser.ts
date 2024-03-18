@@ -1,12 +1,12 @@
 'use client'
 
 import { checkPermissionMatrix } from './checkPermissionMatrix'
+import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
 import { useSession } from 'next-auth/react'
+import { usePathname, useRouter } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { ExpandedUser } from './getUser'
 import type { SessionContextValue } from 'next-auth/react'
-import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
-import { notFound, usePathname, useRouter } from 'next/navigation'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.
@@ -57,20 +57,26 @@ export async function useUser({
     redirectUrl,
     redirectToLogin,
 }: UseUserArgsType<boolean> = {}): Promise<UseUserReturnType<boolean>> {
+    const { push } = useRouter()
+    const pathName = usePathname()
+
     if (redirectToLogin === undefined) redirectToLogin = true
 
-    const { data: session, status } = useSession({ 
-        required: shouldRedirect && (redirectToLogin ?? true) || false 
+    const { data: session, status } = useSession({
+        required: shouldRedirect && (redirectToLogin ?? true) || false
     })
 
     const user = session?.user ?? null
 
-    const userHasRequiredPermissions = async (requiredPermissions: PermissionMatrix, user: ExpandedUser | null): Promise<boolean> => {
-        const userPermissions = user
-            ? user.permissions
+    const userHasRequiredPermissions = async (
+        requiredPermissions_: PermissionMatrix,
+        user_: ExpandedUser | null
+    ): Promise<boolean> => {
+        const userPermissions = user_
+            ? user_.permissions
             : await readPermissionsOfDefaultUser()
 
-        return checkPermissionMatrix(userPermissions, requiredPermissions)
+        return checkPermissionMatrix(userPermissions, requiredPermissions_)
     }
 
     // Authorized is true if both these conditions are true
@@ -82,9 +88,6 @@ export async function useUser({
     )
 
     if (!authorized) {
-        const { push } = useRouter()
-        const pathName = usePathname()
-
         if (!user && redirectToLogin) {
             push(`/login?callbackUrl=${encodeURI(pathName)}`)
         }

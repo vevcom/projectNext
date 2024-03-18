@@ -13,7 +13,9 @@ export async function createCommitteeAction(
     rawData: FormData | CreateCommitteeActionSchemaType
 ): Promise<ActionReturn<ExpandedCommittee>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: [['COMMITTEE_CREATE']]
+        requiredPermissions: [['COMMITTEE_CREATE']],
+        shouldRedirect: false,
+        userRequired: false,
     })
 
     if (!authorized) return createActionError(status)

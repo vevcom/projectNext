@@ -1,6 +1,6 @@
-import { prismaCall } from "@/server/prismaCall";
-import { ExpandedInterestGroup } from "./Types";
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { ExpandedInterestGroup } from './Types'
 
 export async function readInterestGroups(): Promise<ExpandedInterestGroup[]> {
     return await prismaCall(() => prisma.interestGroup.findMany())

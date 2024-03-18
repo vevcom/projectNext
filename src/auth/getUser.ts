@@ -1,11 +1,11 @@
 import { authOptions } from './authoptions'
 import { checkPermissionMatrix } from './checkPermissionMatrix'
+import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { Permission, User } from '@prisma/client'
 import type { BasicMembership } from '@/server/groups/Types'
-import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
 
 export type ExpandedUser = Omit<User, 'id'> & {
     id: number,
@@ -13,21 +13,29 @@ export type ExpandedUser = Omit<User, 'id'> & {
     permissions: Permission[],
 }
 
-type GetUserArgsType<R extends boolean = boolean> = {
+type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: PermissionMatrix,
-    userRequired?: boolean,
-    shouldRedirect?: R,
+    userRequired?: UserRequired,
+    shouldRedirect?: ShouldRedirect,
     redirectUrl?: string,
     returnUrl?: string,
 }
 
-type RequiredGetUserReturnType = {
+type AuthorizedGetUserReturnType<UserRequired extends boolean = false> = {
     user: ExpandedUser,
     authorized: true,
     status: 'AUTHORIZED',
-}
+} | (
+    UserRequired extends true ? never : {
+        user: null,
+        authorized: true,
+        status: 'AUTHORIZED_NO_USER',
+    }
+)
 
-type GetUserReturnType = RequiredGetUserReturnType | {
+type GetUserReturnType<UserRequired extends boolean = false> = (
+    AuthorizedGetUserReturnType<UserRequired>
+) | {
     user: null,
     authorized: false,
     status: 'UNAUTHENTICATED',
@@ -35,10 +43,6 @@ type GetUserReturnType = RequiredGetUserReturnType | {
     user: ExpandedUser,
     authorized: false,
     status: 'UNAUTHORIZED',
-} | {
-    user: null,
-    authorized: true,
-    status: 'UNAUTHENTICATED',
 }
 
 
@@ -65,15 +69,19 @@ export type AuthStatus = GetUserReturnType['status']
  * @returns The user object and auth status (either `AUTHORIZED`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
  */
 // This function is overloaded to get correct typing for when required is set to true or false.
-export async function getUser(args?: GetUserArgsType<false>): Promise<GetUserReturnType>
-export async function getUser(args?: GetUserArgsType<true>): Promise<RequiredGetUserReturnType>
+export async function getUser<UserRequired extends boolean = false>(
+    args?: GetUserArgsType<false, UserRequired>
+): Promise<GetUserReturnType<UserRequired>>
+export async function getUser<UserRequired extends boolean = false>(
+    args?: GetUserArgsType<true, UserRequired>
+): Promise<AuthorizedGetUserReturnType<UserRequired>>
 export async function getUser({
     requiredPermissions,
     userRequired,
     shouldRedirect,
     redirectUrl,
     returnUrl,
-}: GetUserArgsType = {}): Promise<GetUserReturnType> {
+}: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
     if (user && (!requiredPermissions || checkPermissionMatrix(user.permissions, requiredPermissions))) {
@@ -82,9 +90,9 @@ export async function getUser({
 
     if (!user && !userRequired && requiredPermissions) {
         const defaultPermissions = await readPermissionsOfDefaultUser()
-    
-        if (checkPermissionMatrix(defaultPermissions, requiredPermissions)){
-            return { user, authorized: true, status: 'UNAUTHENTICATED' }
+
+        if (checkPermissionMatrix(defaultPermissions, requiredPermissions)) {
+            return { user, authorized: true, status: 'AUTHORIZED_NO_USER' }
         }
     }
 

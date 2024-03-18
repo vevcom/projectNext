@@ -12,7 +12,8 @@ type PropTypes = {
 
 export default async function User({ params }: PropTypes) {
     const { user } = await getUser({
-        required: true,
+        userRequired: true,
+        shouldRedirect: true,
         returnUrl: `/users/${params.username}`,
     })
 

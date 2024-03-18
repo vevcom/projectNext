@@ -19,7 +19,8 @@ type PropTypes = {
 export default async function Ombul({ params }: PropTypes) {
     const { user } = await getUser({
         requiredPermissions: [['OMBUL_READ']],
-        required: true,
+        userRequired: true,
+        shouldRedirect: true,
     })
 
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)

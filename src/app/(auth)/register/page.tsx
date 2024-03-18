@@ -14,7 +14,7 @@ export default async function Register() {
 
     const { push } = useRouter()
 
-    const userAuth = useUser()
+    const userAuth = await useUser()
     if (userAuth.status !== 'authenticated') {
         push('/login')
     }

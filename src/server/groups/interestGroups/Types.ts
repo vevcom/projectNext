@@ -1,3 +1,3 @@
-import { InterestGroup } from "@prisma/client";
+import type { InterestGroup } from '@prisma/client'
 
 export type ExpandedInterestGroup = InterestGroup

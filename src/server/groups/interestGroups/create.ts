@@ -1,6 +1,6 @@
-import { prismaCall } from "@/server/prismaCall";
-import { ExpandedInterestGroup } from "./Types";
-import prisma from "@/prisma";
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { ExpandedInterestGroup } from './Types'
 
 type CreateInterestGroupArgs = {
     name: string,
