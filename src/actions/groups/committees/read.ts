@@ -2,7 +2,7 @@
 
 import { readCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { readCommittee, readCommittees } from '@/server/groups/committees/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ReadCommitteeActionSchemaType } from './schema'
@@ -14,7 +14,7 @@ import type { ActionReturn } from '@/actions/Types'
  */
 export async function readCommitteesAction(): Promise<ActionReturn<ExpandedCommittee[]>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: ['COMMITTEE_READ']
+        requiredPermissions: [['COMMITTEE_READ']]
     })
 
     if (!authorized) return createActionError(status)
@@ -26,7 +26,7 @@ export async function readCommitteeAction(
     rawData: FormData | ReadCommitteeActionSchemaType,
 ): Promise<ActionReturn<ExpandedCommittee>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: ['COMMITTEE_READ']
+        requiredPermissions: [['COMMITTEE_READ']]
     })
 
     if (!authorized) return createActionError(status)

@@ -2,7 +2,7 @@
 
 import { createCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { createCommittee } from '@/server/groups/committees/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedCommittee } from '@/server/groups/committees/Types'
@@ -13,7 +13,7 @@ export async function createCommitteeAction(
     rawData: FormData | CreateCommitteeActionSchemaType
 ): Promise<ActionReturn<ExpandedCommittee>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: ['COMMITTEE_CREATE']
+        requiredPermissions: [['COMMITTEE_CREATE']]
     })
 
     if (!authorized) return createActionError(status)
