@@ -112,7 +112,7 @@ export function useUser({
         readPermissionsOfDefaultUser().then(
             permissions => setUserPermissions(permissions)
         )
-    })
+    }, [user])
 
     useEffect(() => {
         if (nextAuthStatus === 'loading' || userPermissions === undefined) return
