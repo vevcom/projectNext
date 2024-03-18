@@ -1,13 +1,13 @@
 'use client'
 
 import { checkPermissionMatrix } from './checkPermissionMatrix'
-import { readPermissionsOfDefaultUser, readSpecialRole } from '@/server/rolePermissions/read'
+import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { ExpandedUser } from './getUser'
-import { useEffect, useState } from 'react'
-import { Permission } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.
@@ -85,20 +85,20 @@ export function useUser({
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
     const { push } = useRouter()
     const pathName = usePathname()
-    const [ user, setUser ] = useState<ExpandedUser | null>(null)
-    const [ userPermissions, setUserPermissions ] = useState<Permission[] | undefined>(undefined)
-    const [ useUserReturn, setUseuserReturn ] = useState<UseUserReturnType<boolean>>({
+    const [user, setUser] = useState<ExpandedUser | null>(null)
+    const [userPermissions, setUserPermissions] = useState<Permission[] | undefined>(undefined)
+    const [useUserReturn, setUseuserReturn] = useState<UseUserReturnType<boolean>>({
         status: 'LOADING',
         authorized: null,
         user: null,
     })
 
     if (redirectToLogin === undefined) redirectToLogin = true
-    
+
     const { data: session, status: nextAuthStatus } = useSession({
         required: shouldRedirect && (redirectToLogin ?? true) || false
     })
-    
+
     useEffect(() => {
         setUser(session?.user ?? null)
     }, [session])
@@ -120,7 +120,10 @@ export function useUser({
         // Authorized is true if both these conditions are true
         // 1. The user is logged inn or the user is not logged inn, but the user session is not required
         // 2. There are no required permissions or the user has all the required permissions
-        if ((!userRequired || user) && (!requiredPermissions || checkPermissionMatrix(userPermissions, requiredPermissions))) {
+        if (
+            (!userRequired || user) &&
+            (!requiredPermissions || checkPermissionMatrix(userPermissions, requiredPermissions))
+        ) {
             setUseuserReturn(user ? {
                 user,
                 authorized: true,
@@ -137,11 +140,11 @@ export function useUser({
             if (!user && redirectToLogin) {
                 push(`/login?callbackUrl=${encodeURI(pathName)}`)
             }
-    
+
             if (redirectUrl) {
                 push(redirectUrl)
             }
-    
+
             push('/') // TODO: Should be unauthorized page
         }
 
