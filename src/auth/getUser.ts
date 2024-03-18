@@ -81,7 +81,7 @@ export async function getUser({
     shouldRedirect,
     redirectUrl,
     returnUrl,
-}: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType> {
+}: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
     if (user && (!requiredPermissions || checkPermissionMatrix(user.permissions, requiredPermissions))) {

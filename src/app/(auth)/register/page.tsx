@@ -14,10 +14,10 @@ export default async function Register() {
 
     const { push } = useRouter()
 
-    const userAuth = await useUser()
-    if (userAuth.status !== 'authenticated') {
-        push('/login')
-    }
+    const userAuth = useUser({
+        userRequired: true,
+        shouldRedirect: true,
+    })
 
     if (userAuth.user?.acceptedTerms) {
         push('/users/me')

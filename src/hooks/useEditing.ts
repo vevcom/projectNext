@@ -17,7 +17,7 @@ import type { PermissionMatrix } from '@/auth/checkPermissionMatrix'
  */
 export default async function useEditing(requiredPermissions?: PermissionMatrix): Promise<boolean> {
     const editMode = useContext(EditModeContext)
-    const { authorized } = await useUser({
+    const { authorized } = useUser({
         requiredPermissions,
     })
     //TODO: also add visibility checks
@@ -33,5 +33,5 @@ export default async function useEditing(requiredPermissions?: PermissionMatrix)
         }
     }, [authorized])
 
-    return editMode ? authorized && editMode.editMode : false
+    return editMode ? Boolean(authorized) && editMode.editMode : false
 }
