@@ -26,8 +26,8 @@ export async function readRoles(): Promise<RoleWithPermissions[]> {
     }))
 }
 
-export async function readSepcialRole(special: SpecialRole): Promise<RoleWithPermissions> {
-    return await prismaCall(() => prisma.role.findUniqueOrThrow({
+export async function readSpecialRole(special: SpecialRole): Promise<RoleWithPermissions | null> {
+    return await prismaCall(() => prisma.role.findUnique({
         where: {
             special,
         },
@@ -60,9 +60,13 @@ export async function readRolesOfGroup(groupId: number): Promise<RoleWithPermiss
         },
     }))
 
-    rolesGroups.push({
-        role: await readSepcialRole('DEFAULT')
-    })
+    const defaultRole = await readSpecialRole('DEFAULT')
+
+    if (defaultRole) {
+        rolesGroups.push({
+            role: defaultRole,
+        })
+    }
 
     return rolesGroups.map(roleGroup => roleGroup.role)
 }
@@ -94,9 +98,16 @@ export async function readRolesOfUser(userId: number): Promise<RoleWithPermissio
 
 export async function readPermissionsOfUser(userId: number): Promise<Permission[]> {
     const roles = await readRolesOfUser(userId)
-    const permissions = roles.reduce(
+    return roles.reduce(
         (result, role) => role.permissions.map(permission => permission.permission).concat(result),
         <Permission[]>[]
     )
-    return permissions
+}
+
+export async function readPermissionsOfDefaultUser(): Promise<Permission[]> {
+    const role = await readSpecialRole('DEFAULT')
+
+    if (!role) return []
+
+    return role.permissions.map(permission => permission.permission)
 }

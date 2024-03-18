@@ -1,5 +1,4 @@
 import type { Permission } from '@prisma/client'
-import type { ExpandedUser } from './getUser'
 
 export type PermissionMatrix = Permission[][]
 
@@ -10,6 +9,6 @@ export type PermissionMatrix = Permission[][]
  * [[A, B], [C, D]] means the user must have (either A or B) and (either C or D).
  * @returns - true if the user has the permission(s), false otherwise.
  */
-export function checkPermissionMatrix(user: ExpandedUser, permissionMatrix: PermissionMatrix): boolean {
-    return permissionMatrix.every((row) => row.some((p) => user.permissions.includes(p)))
+export function checkPermissionMatrix(userPermissions: Permission[], permissionMatrix: PermissionMatrix): boolean {
+    return permissionMatrix.every((row) => row.some((p) => userPermissions.includes(p)))
 }

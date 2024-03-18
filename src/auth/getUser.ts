@@ -5,6 +5,7 @@ import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { Permission, User } from '@prisma/client'
 import type { BasicMembership } from '@/server/groups/Types'
+import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
 
 export type ExpandedUser = Omit<User, 'id'> & {
     id: number,
@@ -14,7 +15,8 @@ export type ExpandedUser = Omit<User, 'id'> & {
 
 type GetUserArgsType<R extends boolean = boolean> = {
     requiredPermissions?: PermissionMatrix,
-    required?: R,
+    userRequired?: boolean,
+    shouldRedirect?: R,
     redirectUrl?: string,
     returnUrl?: string,
 }
@@ -33,7 +35,12 @@ type GetUserReturnType = RequiredGetUserReturnType | {
     user: ExpandedUser,
     authorized: false,
     status: 'UNAUTHORIZED',
+} | {
+    user: null,
+    authorized: true,
+    status: 'UNAUTHENTICATED',
 }
+
 
 export type AuthStatus = GetUserReturnType['status']
 
@@ -49,8 +56,9 @@ export type AuthStatus = GetUserReturnType['status']
  * [[A, B], [C, D]] means the user must have (either A or B) and (either C or D).
  * If non are given, the user is considered authorized.
  *
- * @param required - Wheter or not to redirect the user if user is not authorized.
+ * @param userRequired - Wheter or not to a user session is required.
  *
+ * @param redirect - Wheter or not to redirect the user if there is no session, by default false.
  * @param redirectUrl - The url to redirect the user to, by default to 404 page.
  * @param returnUrl - If set, the user is redirected to the login page and then back to the given url.
  *
@@ -61,18 +69,28 @@ export async function getUser(args?: GetUserArgsType<false>): Promise<GetUserRet
 export async function getUser(args?: GetUserArgsType<true>): Promise<RequiredGetUserReturnType>
 export async function getUser({
     requiredPermissions,
-    required,
+    userRequired,
+    shouldRedirect,
     redirectUrl,
     returnUrl,
 }: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
-    if (user && (!requiredPermissions || checkPermissionMatrix(user, requiredPermissions))) {
+    if (user && (!requiredPermissions || checkPermissionMatrix(user.permissions, requiredPermissions))) {
         return { user, authorized: true, status: 'AUTHORIZED' }
     }
+
+    if (!user && !userRequired && requiredPermissions) {
+        const defaultPermissions = await readPermissionsOfDefaultUser()
+    
+        if (checkPermissionMatrix(defaultPermissions, requiredPermissions)){
+            return { user, authorized: true, status: 'UNAUTHENTICATED' }
+        }
+    }
+
     //TODO: visibility checks
 
-    if (required) {
+    if (shouldRedirect) {
         if (!user && returnUrl) {
             redirect(`/login?callbackUrl=${encodeURI(returnUrl)}`)
         }
