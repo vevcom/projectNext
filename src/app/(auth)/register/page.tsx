@@ -4,7 +4,7 @@ import Form from '@/app/components/Form/Form'
 import Checkbox from '@/app/components/UI/Checkbox'
 import Select from '@/app/components/UI/Select'
 import TextInput from '@/app/components/UI/TextInput'
-import { useUser } from '@/auth/client'
+import { useUser } from '@/auth/useUser'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 

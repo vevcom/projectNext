@@ -1,11 +1,11 @@
 'use client'
 import styles from './RemovePart.module.scss'
-import { EditModeContext } from '@/context/EditMode'
 import { removeArticleSectionPartAction } from '@/cms/articleSections/update'
 import Form from '@/components/Form/Form'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { ArticleSectionPart } from '@/cms/articleSections/Types'
@@ -17,10 +17,10 @@ type PropTypes = {
 
 export default function RemovePart({ part, articleSectionName }: PropTypes) {
     const { refresh } = useRouter()
-    const editContext = useContext(EditModeContext)
+    const canEdit = useEditing()
     const [confirmOpen, setConfirmOpen] = useState(false)
     const confirmRef = useClickOutsideRef(() => setConfirmOpen(false))
-    if (!editContext?.editMode) return null
+    if (!canEdit) return null
     const handleRemove = removeArticleSectionPartAction.bind(null, articleSectionName).bind(null, part)
 
     return (

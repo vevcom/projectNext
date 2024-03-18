@@ -10,8 +10,8 @@ import { destroyImageCollectionAction } from '@/actions/images/collections/destr
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
-import { EditModeContext } from '@/context/EditMode'
 import ImageUploader from '@/app/components/Image/ImageUploader'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
@@ -30,9 +30,8 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     const pagingContext = useContext(ImagePagingContext)
     if (!selection) throw new Error('No context')
 
-    const editMode = useContext(EditModeContext)
-    const shouldRender = editMode?.editMode ?? true
-    if (!shouldRender) return null
+    const editMode = useEditing() //TODO: auth collection visibility
+    if (!editMode) return null
 
     const refreshImages = () => {
         if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {

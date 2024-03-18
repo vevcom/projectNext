@@ -2,8 +2,8 @@
 import styles from './AddPartToArticleSection.module.scss'
 import { addArticleSectionPartAction } from '@/cms/articleSections/update'
 import AddParts from '@/cms/AddParts'
-import { EditModeContext } from '@/context/EditMode'
-import { useCallback, useContext } from 'react'
+import useEditing from '@/hooks/useEditing'
+import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
 import type { ArticleSectionPart } from '@/cms/articleSections/Types'
@@ -16,12 +16,12 @@ type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
 
 export default function AddPartToArticleSection({ articleSectionName, children, ...props }: PropTypes) {
     const { refresh } = useRouter()
-    const editMode = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
     const handleAdd = useCallback(async (part: ArticleSectionPart) => {
         await addArticleSectionPartAction(articleSectionName, part)
         refresh()
     }, [articleSectionName])
-    if (!editMode?.editMode) return children
+    if (!canEdit) return null
 
     return (
         <div className={styles.AddPartToArticleSection}>

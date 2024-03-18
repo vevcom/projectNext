@@ -2,7 +2,7 @@
 import { updateOmbulSchema, updateObuleFileSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
 import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
@@ -20,7 +20,7 @@ export async function updateOmbulAction(
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
     if (!authorized) return createActionError(status)
 
@@ -44,7 +44,7 @@ export async function updateOmbulFileAction(
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
     if (!authorized) return createActionError(status)
 

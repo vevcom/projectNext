@@ -1,4 +1,4 @@
-import type { ExpandedUser } from '@/auth/user'
+import type { ExpandedUser } from '@/auth/getUser'
 
 import 'next-auth'
 import 'next-auth/adapters'

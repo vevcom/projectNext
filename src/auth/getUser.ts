@@ -1,17 +1,19 @@
 import { authOptions } from './authoptions'
+import { checkPermissionMatrix } from './checkPermissionMatrix'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
-import type { BasicMembership } from '@/server/groups/Types'
+import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { Permission, User } from '@prisma/client'
+import type { BasicMembership } from '@/server/groups/Types'
 
 export type ExpandedUser = Omit<User, 'id'> & {
     id: number,
-    permissions: Permission[]
     memberships: BasicMembership[]
+    permissions: Permission[],
 }
 
 type GetUserArgsType<R extends boolean = boolean> = {
-    requiredPermissions?: Permission[] | undefined,
+    requiredPermissions?: PermissionMatrix,
     required?: R,
     redirectUrl?: string,
     returnUrl?: string,
@@ -43,8 +45,12 @@ export type AuthStatus = GetUserReturnType['status']
  * This function is for server side components and actions. For client side
  * components use `useUser`.
  *
- * @param requiredPermissions - A list of permissions that the user must have.
+ * @param requiredPermissions - A list of lists that the user must have
+ * [[A, B], [C, D]] means the user must have (either A or B) and (either C or D).
+ * If non are given, the user is considered authorized.
+ *
  * @param required - Wheter or not to redirect the user if user is not authorized.
+ *
  * @param redirectUrl - The url to redirect the user to, by default to 404 page.
  * @param returnUrl - If set, the user is redirected to the login page and then back to the given url.
  *
@@ -61,15 +67,10 @@ export async function getUser({
 }: GetUserArgsType = {}): Promise<GetUserReturnType> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
-    if (
-        user && // Check if user is authenticated...
-        (
-            !requiredPermissions || // ...and if the user has all the required permissions (if any are given).
-            requiredPermissions.every(permission => user.permissions.includes(permission))
-        )
-    ) {
+    if (user && (!requiredPermissions || checkPermissionMatrix(user, requiredPermissions))) {
         return { user, authorized: true, status: 'AUTHORIZED' }
     }
+    //TODO: visibility checks
 
     if (required) {
         if (!user && returnUrl) {
