@@ -81,7 +81,7 @@ export function useUser({
     userRequired,
     shouldRedirect,
     redirectUrl,
-    redirectToLogin,
+    redirectToLogin = true,
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
     const { push } = useRouter()
     const pathName = usePathname()
@@ -92,8 +92,6 @@ export function useUser({
         authorized: null,
         user: null,
     })
-
-    if (redirectToLogin === undefined) redirectToLogin = true
 
     const { data: session, status: nextAuthStatus } = useSession({
         required: shouldRedirect && (redirectToLogin ?? true) || false
@@ -109,9 +107,7 @@ export function useUser({
             return
         }
 
-        readPermissionsOfDefaultUser().then(
-            permissions => setUserPermissions(permissions)
-        )
+        readPermissionsOfDefaultUser().then(setUserPermissions)
     }, [user])
 
     useEffect(() => {
