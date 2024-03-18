@@ -3,6 +3,7 @@ import type { ServerErrorCode, ErrorMessage } from '@/server/error'
 export type ActionErrorCode = ServerErrorCode
     | 'UNAUTHENTICATED'
     | 'UNAUTHORIZED'
+    | 'AUTHORIZED_NO_USER'
 
 export type ActionReturnError = {
     success: false,

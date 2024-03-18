@@ -2,7 +2,7 @@ import type { ErrorMessage } from '@/server/error'
 import type { SafeParseError } from 'zod'
 import type { ActionReturnError, ActionErrorCode } from './Types'
 
-export function createActionError(errorCode: ActionErrorCode, error?: string | ErrorMessage[]): ActionReturnError {
+export function createActionError(errorCode: ActionErrorCode | 'AUTHORIZED_NO_USER', error?: string | ErrorMessage[]): ActionReturnError {
     return {
         success: false,
         errorCode,
