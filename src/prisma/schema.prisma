@@ -402,10 +402,10 @@ model LockerReservation {
   id         Int        @id @default(autoincrement())
   locker     Locker     @relation(fields: [lockerId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
-  committee  Committee? @relation(fields: [committeId], references: [id])
+  committee  Committee? @relation(fields: [committeeId], references: [id])
   lockerId   Int
   userId     Int
-  committeId Int?
+  committeeId Int?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
