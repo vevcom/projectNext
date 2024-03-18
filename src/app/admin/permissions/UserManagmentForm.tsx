@@ -1,11 +1,10 @@
 'use client'
 
-import { addUserToRoleAction } from '@/actions/rolePermissions/create'
-import { removeUserFromRoleAction } from '@/actions/rolePermissions/destroy'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import type { ActionReturn } from '@/actions/Types'
 
 type PropTypes = {
     selectedRoleId: number,
@@ -16,16 +15,18 @@ export default function UserManagmentForm({ selectedRoleId }: PropTypes) {
 
     const [username, setUsername] = useState<string>('')
 
-    async function addUser(data: FormData) {
-        const result = await addUserToRoleAction(data)
+    async function addUser(data: FormData): Promise<ActionReturn<void, false>> {
+        // Removed temporaraly for refactor
+        console.warn('NOT IMPLEMENTED RIGHT NOW!', data)
         refresh()
-        return result
+        return { success: false, errorCode: 'UNKNOWN ERROR' }
     }
 
-    async function removeUser(data: FormData) {
-        const result = await removeUserFromRoleAction(data)
+    async function removeUser(data: FormData): Promise<ActionReturn<void, false>> {
+        // Removed temporaraly for refactor
+        console.warn('NOT IMPLEMENTED RIGHT NOW!', data)
         refresh()
-        return result
+        return { success: false, errorCode: 'UNKNOWN ERROR' }
     }
 
     return <>

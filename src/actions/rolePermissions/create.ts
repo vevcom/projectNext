@@ -1,11 +1,11 @@
 'use server'
-import { createRoleSchema, addUserToRoleSchema } from './schema'
+import { createRoleSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { addUserToRole, createRole } from '@/server/rolePermissions/create'
+import { createRole } from '@/server/rolePermissions/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import type { CreateRoleSchemaType, AddUserToRoleSchemaType } from './schema'
+import type { CreateRoleSchemaType } from './schema'
 
 export async function createRoleAction(
     rawdata: FormData | CreateRoleSchemaType
@@ -19,11 +19,3 @@ export async function createRoleAction(
     return await safeServerCall(() => createRole(data))
 }
 
-export async function addUserToRoleAction(rawdata: FormData | AddUserToRoleSchemaType): Promise<ActionReturn<void, false>> {
-    //TODO: Auth
-    const parse = addUserToRoleSchema.safeParse(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const { roleId, username } = parse.data
-
-    return await safeServerCall(() => addUserToRole(username, roleId))
-}

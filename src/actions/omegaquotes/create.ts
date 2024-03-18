@@ -12,7 +12,8 @@ export async function createQuoteAction(
     rawdata: FormData | OmegaquotesSchemaType
 ): Promise<ActionReturn<OmegaQuote>> {
     const { user, status, authorized } = await getUser({
-        requiredPermissions: [['OMEGAQUOTES_WRITE']]
+        requiredPermissions: [['OMEGAQUOTES_WRITE']],
+        userRequired: true,
     })
     if (!authorized) return createActionError(status)
 
