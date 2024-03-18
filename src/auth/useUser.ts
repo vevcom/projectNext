@@ -1,7 +1,7 @@
 'use client'
 
 import { checkPermissionMatrix } from './checkPermissionMatrix'
-import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
+import { readPermissionsOfDefaultUserAction } from '@/actions/rolePermissions/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -109,9 +109,11 @@ export function useUser({
             return
         }
 
-        readPermissionsOfDefaultUser().then(
-            permissions => setUserPermissions(permissions)
-        )
+        readPermissionsOfDefaultUserAction().then((permissionsRes): void => {
+            if (!permissionsRes.success) throw new Error('Could not read permissions for default user.')
+
+            setUserPermissions(permissionsRes.data)
+        })
     }, [user])
 
     useEffect(() => {
