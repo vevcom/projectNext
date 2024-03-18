@@ -1,9 +1,10 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/server/auth/invalidateSession'
 import type { RoleWithPermissions } from './Types'
+import {  } from '../groups/read'
+import { readUsersOfRole } from './read'
 
 /**
  * A function that delets a role, it will also invalidate the session of all users that have the role
@@ -15,55 +16,17 @@ export async function destroyRole(roleId: number): Promise<RoleWithPermissions> 
         where: {
             id: roleId
         },
-        select: {
-            id: true,
-            name: true,
+        include: {
             permissions: {
                 select: {
                     permission: true
                 }
             },
-            users: {
-                select: {
-                    userId: true
-                }
-            }
         }
     }))
 
-    await invalidateManyUserSessionData(role.users.map(user => user.userId))
+    const users = await readUsersOfRole(role.id)
+    await invalidateManyUserSessionData(users.map(user => user.id))
+
     return role
-}
-
-/**
- * A function that removes a user from a role. It will also invalidate the session of the user
- * @param username - The username of the user to remove from the role
- * @param roleId - The id of the role to remove the user from
- * @returns
- */
-export async function removeUserFromRole(
-    username: string,
-    roleId: number
-): Promise<void> {
-    const user = await prismaCall(() => prisma.user.findUnique({
-        where: {
-            username
-        },
-        select: {
-            id: true
-        },
-    }))
-
-    if (!user) throw new ServerError('BAD PARAMETERS', 'User not found')
-
-    await prismaCall(() => prisma.rolesUsers.delete({
-        where: {
-            userId_roleId: {
-                roleId,
-                userId: user.id
-            }
-        },
-    }))
-
-    await invalidateOneUserSessionData(user.id)
 }
