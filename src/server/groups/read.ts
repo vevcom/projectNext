@@ -2,8 +2,8 @@ import { ServerError } from '@/server/error'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
+import type { User } from '@prisma/client'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
-import { User } from '@prisma/client'
 
 export async function readGroups(): Promise<ExpandedGroup[]> {
     return await prismaCall(() => prisma.group.findMany())

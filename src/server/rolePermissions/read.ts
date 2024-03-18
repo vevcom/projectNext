@@ -3,10 +3,10 @@ import { readMembershipsOfUser, readUsersOfMemberships } from '@/server/groups/r
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { Prisma } from '@prisma/client'
-import type { BasicMembership, ExpandedGroup } from '@/server/groups/Types'
+import type { User } from '@/prisma/prismaservice/generated/pn'
+import type { BasicMembership } from '@/server/groups/Types'
 import type { Permission, RolesGroups, SpecialRole } from '@prisma/client'
 import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import { User } from '@/prisma/prismaservice/generated/pn'
 
 const rolePermissionInclude = Prisma.validator<Prisma.RoleInclude>()({
     permissions: {
@@ -107,7 +107,7 @@ export async function readPermissionsOfDefaultUser(): Promise<Permission[]> {
 
 export async function readUsersOfRole(id: number): Promise<User[]> {
     const groups = await readGroupsOfRole(id)
-    
+
     const memberships = groups.map(({ forAdminsOnly, groupId }) => ({
         groupId,
         admin: forAdminsOnly,
