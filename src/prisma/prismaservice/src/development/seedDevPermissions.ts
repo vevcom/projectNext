@@ -41,9 +41,7 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
             groups: {
                 create: {
                     forAdminsOnly: false,
-                    group: {
-                        connect: committee,
-                    },
+                    groupId: committee.groupId,
                 },
             },
         },
