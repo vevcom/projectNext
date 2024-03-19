@@ -397,7 +397,7 @@ model NotificationChannel {
   name        String                      @unique
   description String?
   special     SpecialNotificationChannel? @unique
-  parentId    Int? // Root Should be the only one without a parent
+  parentId    Int // Root is pointing to itself
   parent      NotificationChannel?        @relation(name: "parent", fields: [parentId], references: [id])
   children    NotificationChannel[]       @relation(name: "parent")
 

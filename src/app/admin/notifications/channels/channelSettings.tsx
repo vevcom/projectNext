@@ -29,6 +29,7 @@ export default function ChannelSettings({
         }
 
         if (channel.parentId === null) {
+            console.log(channel)
             console.error("No parent found, this is only allowed for other channels than root.")
             const rootAvailableMethods = allChannels.find(c => c.special === "ROOT")?.availableMethods;
             if (!rootAvailableMethods) {
@@ -62,6 +63,7 @@ export default function ChannelSettings({
             <div>
                 <Button type="submit" className={styles.saveButton}>Lagre</Button>
                 {channel.special != "ROOT" ? <Select label="Forelder" name="parent" options={selectOptions} /> : null }
+                {channel.special ? <p>Spesiell: {channel.special}</p> : null}
             </div> 
             <div className={styles.widerSettings}>
                 <TextInput label="Navn" name="name" defaultValue={channel.name} />

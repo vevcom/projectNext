@@ -1,5 +1,6 @@
 import { SpecialNotificationChannel } from '@/generated/pn'
-import type { PrismaClient } from '@/generated/pn'
+import type { NotificationChannel, PrismaClient } from '@/generated/pn'
+import { Prisma } from '@/generated/pn';
 
 type ChannelInfo = {
     name: string
@@ -77,7 +78,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         throw new Error("Not all special channels are handled")
     }
 
-    await Promise.all(keys.map((special) => prisma.notificationChannel.upsert({
+    async function upsertToPrisma(special : SpecialNotificationChannel) {
+        return prisma.notificationChannel.upsert({
             where: {
                 special
             },
@@ -92,6 +94,11 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                         update: channelInfo[special].defaultMethods,
                     },
                 } : {}),
+                parent: {
+                    connect: {
+                        special: "ROOT"
+                    }
+                },
             },
             create: {
                 name: channelInfo[special].name,
@@ -105,7 +112,33 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                         create: channelInfo[special].defaultMethods,
                     },
                 } : {}),
+                parent: {
+                    connect: {
+                        special: "ROOT"
+                    }
+                },
             }
         })
-    ))
+    }
+
+    const rChan = channelInfo.ROOT
+
+    const rootAvailable = (await prisma.notificationMethod.create({
+        data: rChan.availableMethods
+    })).id
+
+    
+    if (rChan.defaultMethods) {
+
+        let rootDefault = (await prisma.notificationMethod.create({
+            data: rChan.defaultMethods
+        })).id
+
+        await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable});`
+    } else {
+        await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootAvailable});`
+    }
+
+
+    await Promise.all(keys.filter(special => special !== "ROOT").map((special) => upsertToPrisma(special)))
 }
