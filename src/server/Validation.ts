@@ -21,9 +21,6 @@ class ValidationBase<T extends ZodRawShape> {
             this.detailedSchema = z.object(details)
         }
     }
-    typeValidate(data: FormData | SchemaType<T>) {
-        return zfd.formData(this.typeSchema).safeParse(data)
-    }
 }
 
 export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
@@ -41,7 +38,7 @@ export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]:
     detailedValidate(data: Partial<SchemaType<K>>) {
         return handleZodReturn(this.detailedSchema.partial().refine(this.refiner.func, this.refiner.message).safeParse(data))
     }
-    override typeValidate(data: FormData | Partial<SchemaType<T>>) {
+    typeValidate(data: FormData | Partial<SchemaType<T>>) {
         return zfd.formData(this.typeSchema).safeParse(data)
     }
     setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
@@ -61,6 +58,9 @@ export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}>
     }
     detailedValidate(data: SchemaType<K>) {
         return handleZodReturn(this.detailedSchema.safeParse(data))
+    }
+    typeValidate(data: FormData | SchemaType<T>) {
+        return zfd.formData(this.typeSchema).safeParse(data)
     }
     partialize() {
         return new ValidationPartial(this.detailedSchema.shape, this.detailedSchema.shape)
@@ -84,6 +84,9 @@ export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]:
     }
     detailedValidate(data: Partialized extends true ? Partial<SchemaType<K>> : SchemaType<K>) {
         return handleZodReturn(this.detailedSchema.refine(this.refiner.func, this.refiner.message).safeParse(data))
+    }
+    typeValidate(data: FormData | Partialized extends true ? Partial<SchemaType<T>> : SchemaType<T>) {
+        return zfd.formData(this.typeSchema).safeParse(data)
     }
 }
 
