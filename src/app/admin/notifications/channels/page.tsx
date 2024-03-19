@@ -4,6 +4,7 @@ import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 import { readNotificaitonChannels } from "@/actions/notifications/read"
 import ChannelView from "./channelView"
 import { notFound } from "next/navigation"
+import AdminSelectView from "@/app/components/AdminSelectView/AdminSelectView"
 
 export default async function Channels() {
 
@@ -22,7 +23,7 @@ export default async function Channels() {
 
     return (
         <PageWrapper title="Varslingskanaler">
-            <ChannelView channels={channels.data}/>
+            <AdminSelectView list={channels.data}/>
         </PageWrapper>
     )
 }
