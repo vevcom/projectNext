@@ -1,7 +1,6 @@
 import { maxOmbulFileSize } from '@/server/ombul/ConfigVars'
-import { imageFileSchema } from '@/actions/images/schema'
+import { imageFileSchema } from '@/server/images/schema'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
 import { Validation, ValidationType } from '../Validation'
 
 export const baseOmbulValidation = new Validation({
