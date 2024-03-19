@@ -16,7 +16,6 @@ export default function ChannelView({ channels }: { channels: NotificationChanne
 
 
     function onChannelSelect(channel: NotificationChannelWithMethods | undefined) {
-        console.log(channel);
         if (channel) {
             setSelectedChannel(channel);
         }

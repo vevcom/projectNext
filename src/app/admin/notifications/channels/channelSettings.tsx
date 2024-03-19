@@ -15,12 +15,14 @@ export default function ChannelSettings({
     channel: NotificationChannelWithMethods,
     allChannels: NotificationChannelWithMethods[],
 }) {
-
     const methodsAllOf = Object.fromEntries(
         Object.keys(channel.availableMethods).map((method) => [method, false])
     ) as Omit<NotificationMethod, "id">;
 
     const defaultMethods = channel.defaultMethods ?? methodsAllOf;
+
+    const [ availableMethodsSate, setAvailableMethodsState ] = useState(channel.availableMethods)
+    const [ defaultMethodsState, setDefaultMethodsState ] = useState(defaultMethods)
 
     function findInheretedAvailableMethods(channel: NotificationChannelWithMethods): Omit<NotificationMethod, 'id'> {
         
@@ -29,13 +31,8 @@ export default function ChannelSettings({
         }
 
         if (channel.parentId === null) {
-            console.log(channel)
-            console.error("No parent found, this is only allowed for other channels than root.")
-            const rootAvailableMethods = allChannels.find(c => c.special === "ROOT")?.availableMethods;
-            if (!rootAvailableMethods) {
-                throw new Error("No root channel found")
-            }
-            return rootAvailableMethods;
+            console.error(channel)
+            throw new Error("channel has no parentid")
         }
 
         const parent = allChannels.find(c => c.id === channel.parentId);
@@ -55,7 +52,6 @@ export default function ChannelSettings({
     }
 
     const availableMethodsInherited = findInheretedAvailableMethods(channel);
-
     const selectOptions = allChannels.map(c => ({ value: c.id, label: c.name }))
 
     return <div className={styles.channelSettings}>
@@ -72,8 +68,19 @@ export default function ChannelSettings({
         </div>
 
         <div className={styles.methodContainer}>
-            <ChannelMethods formPrefix="availableMethods" title="Tilgjengelige metoder" methods={channel.availableMethods} editable={availableMethodsInherited}/>
-            <ChannelMethods formPrefix="defaultMethods" title="Standard metoder" methods={defaultMethods} />
+            <ChannelMethods
+                formPrefix="availableMethods"
+                title="Tilgjengelige metoder"
+                methods={availableMethodsSate}
+                editable={availableMethodsInherited}
+                onChange={setAvailableMethodsState}
+            />
+            <ChannelMethods
+                formPrefix="defaultMethods"
+                title="Standard metoder"
+                methods={defaultMethodsState}
+                onChange={setDefaultMethodsState}
+            />
         </div>
 
     </div>

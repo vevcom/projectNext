@@ -5,14 +5,17 @@
 
     display: flex;
 
+    .channelSelect {
+        background-color: ohma.$colors-gray-200;
+        border-radius: ohma.$rounding;
+    }
+
     @media screen and (max-width: $screen-small) {
         flex-direction: column;
 
         .channelSelect {
             max-height: 200px;
             overflow-y: scroll;
-            background-color: ohma.$colors-gray-200;
-            border-radius: ohma.$rounding;
         }
     }
 
@@ -21,6 +24,9 @@
 
         .channelSelect {
             width: 200px;
+            overflow-y: auto;
+            max-height: 500px;
+            margin-right: 1rem;
         }
     }
 }
