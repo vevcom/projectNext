@@ -1,8 +1,58 @@
 @use '@/styles/ohma';
+@use "_mixins";
+@use "_colors";
+@use "_variables";
+@use "_fonts";
+
+$max-width: 1200px;
+
+//.main {
+
+//}
 
 .test {
-    min-height: 600px;
-    background-color: violet;
-    display: flex;
-    @include ohma.ImageCardListLayout;
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(4, calc((100% - 2em) / 4));
+    grid-gap: 1em;
+    overflow: visible;
+    @media screen and (max-width: variables.$mobileBreakpoint) {
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    }
+    @media screen and (max-width: 300px) {
+        grid-template-columns: 1fr;
+        place-items: center;
+        > * {
+            width: 100%;
+        }
+    }
 }
+
+.CommitteeWrapper {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
+    position: relative;
+    overflow-y: hidden;
+
+    align-self: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0 2em;
+    h1 {
+        font-family: ohma.$fonts-secondary;
+        font-size: ohma.$fonts-xxl;
+        text-transform: capitalize;
+    }
+
+    .inlineHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+//finn ut hvordan man kan få bruke mer av siden!! imagecardlistlayout kanskje

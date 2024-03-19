@@ -1,8 +1,8 @@
 @use "@/styles/ohma";
 
 $padding: 1.5em;
-$imageHeight: 200px;
-$contentHeight: 75px;
+$imageHeight: 175px;
+$contentHeight: 50px;
 $height: $imageHeight + $contentHeight;
 
 $background: lighten(ohma.$colors-secondary, 15%);
@@ -12,9 +12,11 @@ $textColor: ohma.$colors-gray-900;
 $textUnderlineColor: ohma.$colors-secondary;
 $textBoxBackgroundColor: ohma.$colors-white;
 
+//ha slik at det er plass til 5 på rad (ish)
+
 .CommitteeCard {
-    min-width: 200px; 
-    max-width: 300px;
+    min-width: 225px; 
+    max-width: 225px;
     border-radius: 50%; //ohma.$cardRounding
     padding: 0px;//$padding;
     position: relative;
@@ -22,7 +24,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
     text-decoration: none;
     display: block;
     height: $height;
-    background-color: palevioletred; //$background
+    background-color: slateblue;
     isolation: isolate;
     overflow: hidden;
     &:hover {
@@ -41,7 +43,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
                 opacity: 0%;
             }
         }
-    }
+    } // !!TRANSITION FRA BOBKLE TILK STR BOBLE, "ÅPNER SEG"
     > .image {
         position: absolute;
         top: 0;

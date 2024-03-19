@@ -2,7 +2,6 @@ import { readCommitees } from '@/actions/groups/committees/read'
 import Link from 'next/link'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import styles from './page.module.scss'
-import ImageCard from '../components/ImageCard/ImageCard'
 import CommitteeCard from '../components/CommitteeCard/CommitteeCard'
 
 export default async function Committees() {
@@ -11,8 +10,8 @@ export default async function Committees() {
     const committees = res.data
 
     return (
+        <div className={styles.CommitteeWrapper}>
         <PageWrapper title="Komiteer">
-            <h1>Komiteer</h1>
             {
                 committees.map(committee => (
                     <Link href={`/committees/${committee.name}`} key={committee.name}>
@@ -20,11 +19,11 @@ export default async function Committees() {
                     </Link>
                 ))
             }
-
-            <main className={styles.test}> { //bruk copilot, vil ha alle på rekke, endre farge osv
+        </PageWrapper>
+            <main className={styles.test}> {
                 committees.length ? (
                     committees.map((committee) => (
-                        <CommitteeCard //bytt ut HER
+                        <CommitteeCard
                             key={committee.id}
                             title={committee.name}
                             href={`/committees/${committee.name}`}
@@ -42,7 +41,7 @@ export default async function Committees() {
 
             }
             </main>
-        </PageWrapper>
+        </div>
     )
 }
 
