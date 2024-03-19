@@ -1,15 +1,14 @@
 'use server'
-import { omegaquotesSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { createQuote } from '@/server/omegaquotes/create'
-import type { OmegaquotesSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
+import { CreateOmegaguotesType, createOmegaquotesValidation } from '@/server/omegaquotes/schema'
 
 export async function createQuoteAction(
-    rawdata: FormData | OmegaquotesSchemaType
+    rawdata: FormData | CreateOmegaguotesType
 ): Promise<ActionReturn<OmegaQuote>> {
     const { user, status, authorized } = await getUser({
         requiredPermissions: [['OMEGAQUOTES_WRITE']],
@@ -17,7 +16,7 @@ export async function createQuoteAction(
     })
     if (!authorized) return createActionError(status)
 
-    const parse = omegaquotesSchema.safeParse(rawdata)
+    const parse = createOmegaquotesValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
