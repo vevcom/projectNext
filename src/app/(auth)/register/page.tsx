@@ -23,6 +23,7 @@ export default async function Register() {
         push('/users/me')
     }
 
+    // TODO: refactor to server folder
     const sexOptions = [
         { value: 'FEMALE', label: 'Kvinne' },
         { value: 'MALE', label: 'Mann' },

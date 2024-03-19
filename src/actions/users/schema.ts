@@ -21,7 +21,8 @@ export const updateUserSchema = zfd.formData(userSchema.pick({
     email: true,
     username: true,
     firstname: true,
-    lastname: true
+    lastname: true,
+    sex: true,
 }).partial())
 
 export const userRegisterSchema = zfd.formData(userSchema.pick({

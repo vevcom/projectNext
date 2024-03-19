@@ -14,7 +14,7 @@ export async function createUser(rawdata: FormData | CreateUserSchemaType): Prom
         return createZodActionError(parse)
     }
 
-    const { username, password, email, firstname, lastname } = parse.data
+    const { username, password, email, firstname, lastname, sex } = parse.data
 
     try {
         const user = await prisma.user.create({
@@ -23,6 +23,7 @@ export async function createUser(rawdata: FormData | CreateUserSchemaType): Prom
                 email,
                 firstname,
                 lastname,
+                sex,
                 credentials: {
                     create: {
                         passwordHash: password, // TEMPORARY!
