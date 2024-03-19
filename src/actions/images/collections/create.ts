@@ -2,9 +2,9 @@
 import { createZodActionError } from '@/actions/error'
 import { createImageCollection } from '@/server/images/collections/create'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { createImageCollectionValidation } from '@/server/images/collections/schema'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { createImageCollectionValidation } from '@/server/images/collections/schema'
 import type { CreateImageCollectionType } from '@/server/images/collections/schema'
 
 export async function createImageCollectionAction(

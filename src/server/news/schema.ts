@@ -1,6 +1,6 @@
+import { Validation } from '@/server/Validation'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
-import { Validation, ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 export const baseNewsArticleValidation = new Validation({
     name: z.string(),

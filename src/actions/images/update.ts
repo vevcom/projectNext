@@ -2,9 +2,9 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { updateImage } from '@/server/images/update'
+import { updateImageValidation } from '@/server/images/schema'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { updateImageValidation } from '@/server/images/schema'
 import type { UpdateImageType } from '@/server/images/schema'
 
 export async function updateImageAction(

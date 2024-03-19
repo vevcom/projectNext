@@ -2,9 +2,9 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { updateNews } from '@/server/news/update'
+import { updateNewsArticleValidation } from '@/server/news/schema'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { updateNewsArticleValidation } from '@/server/news/schema'
 import type { UpdateNewsArticleType } from '@/server/news/schema'
 
 export async function updateNewsAction(

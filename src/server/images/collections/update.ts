@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { ImageCollection, Prisma } from '@prisma/client'
 import { updateImageCollectionValidation } from '@/server/images/collections/schema'
+import type { ImageCollection } from '@prisma/client'
 import type { UpdateImageCollectionType } from '@/server/images/collections/schema'
 
 /**

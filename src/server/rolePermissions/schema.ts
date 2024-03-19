@@ -1,7 +1,8 @@
+import { Validation } from '@/server/Validation'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import { Permission } from '@prisma/client'
-import { Validation, ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 export const baseRoleValidation = new Validation({
     id: z.coerce.number(),

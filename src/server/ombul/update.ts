@@ -1,12 +1,12 @@
 import 'server-only'
+import { updateOmbulFileValidation, updateOmbulValidation } from './schema'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { destroyFile } from '@/server/store/destroyFile'
-import type { Prisma } from '@prisma/client'
+import type { UpdateOmbulFileType, UpdateOmbulType } from './schema'
 import type { ExpandedOmbul } from './Types'
-import { UpdateOmbulFileType, UpdateOmbulType, updateOmbulFileValidation, updateOmbulValidation } from './schema'
 
 /**
  * A function Update an ombul

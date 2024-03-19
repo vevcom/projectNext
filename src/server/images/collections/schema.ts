@@ -1,6 +1,6 @@
-import { Validation, ValidationType } from '@/server/Validation'
+import { Validation } from '@/server/Validation'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
+import type { ValidationType } from '@/server/Validation'
 
 export const baseImageCollectionSchema = new Validation({
     name: z.string(),

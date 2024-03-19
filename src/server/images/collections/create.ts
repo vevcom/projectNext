@@ -1,8 +1,9 @@
 import 'server-only'
+import { createImageCollectionValidation } from './schema'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
+import type { CreateImageCollectionType } from './schema'
 import type { ImageCollection } from '@prisma/client'
-import { CreateImageCollectionType, createImageCollectionValidation } from './schema'
 
 export async function createImageCollection(
     rawdata: CreateImageCollectionType

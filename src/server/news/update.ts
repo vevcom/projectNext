@@ -1,9 +1,9 @@
 import 'server-only'
+import { updateNewsArticleValidation } from './schema'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { Prisma } from '@prisma/client'
+import type { UpdateNewsArticleType } from './schema'
 import type { SimpleNewsArticle } from '@/server/news/Types'
-import { UpdateNewsArticleType, updateNewsArticleValidation } from './schema'
 
 export async function updateNews(
     id: number,

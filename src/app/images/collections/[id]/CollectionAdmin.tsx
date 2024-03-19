@@ -17,8 +17,7 @@ import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { Image as ImageT } from '@prisma/client'
-import { ExpandedImageCollection } from '@/server/images/collections/Types'
+import type { ExpandedImageCollection } from '@/server/images/collections/Types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -72,8 +71,18 @@ export default function CollectionAdmin({ collection }: PropTypes) {
                 submitText="oppdater"
                 action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput defaultValue={collection.name} color="black" label="navn" name="name" />
-                <TextInput defaultValue={collection.description || ''} color="black" label="beskrivelse" name="description" />
+                <TextInput
+                    defaultValue={collection.name}
+                    color="black"
+                    label="navn"
+                    name="name"
+                />
+                <TextInput
+                    defaultValue={collection.description || ''}
+                    color="black"
+                    label="beskrivelse"
+                    name="description"
+                />
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>

@@ -5,12 +5,21 @@ import type { ZodRawShape } from 'zod'
 
 
 type SchemaType<T extends ZodRawShape> = z.infer<ReturnType<typeof z.object<T>>>
-type Refiner<T extends ZodRawShape, Partialized extends boolean> = (data: Partialized extends true ? Partial<SchemaType<T>> : SchemaType<T>) => boolean
+
+type Refiner<T extends ZodRawShape, Partialized extends boolean> = (
+    data: Partialized extends true
+        ? Partial<SchemaType<T>>
+        : SchemaType<T>
+) => boolean
+
 class ValidationBase<T extends ZodRawShape> {
     protected typeSchema: ReturnType<typeof z.object<T>>
     protected detailedSchema: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>
 
-    constructor(obj: T | ReturnType<typeof z.object<T>>, details: {[L in keyof T]: T[L]} | ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>) {
+    constructor(
+        obj: T | ReturnType<typeof z.object<T>>,
+        details: {[L in keyof T]: T[L]} | ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>
+    ) {
         if (obj instanceof z.ZodType) {
             this.typeSchema = obj
         } else {
@@ -48,9 +57,6 @@ export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]:
 }
 
 export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    constructor(obj: T, details: {[L in keyof T]: T[L]}) {
-        super(obj, details)
-    }
     pick<L extends(keyof T)[]>(keys: L): Validation<{ [P in L[number]]: T[P] }, { [P in L[number]]: K[P] }> {
         const typeSchema = pickKeys(this.typeSchema.shape, keys)
         const detailedSchema = pickKeys(this.detailedSchema.shape, keys)
@@ -71,12 +77,21 @@ export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}>
     }
 }
 
-export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}, const Partialized extends boolean = false> extends ValidationBase<T> {
-    private refiner : {
+export class ValidationRefined<
+    T extends ZodRawShape,
+    K extends {[L in keyof T]: T[L]},
+    const Partialized extends boolean = false
+> extends ValidationBase<T> {
+    private refiner: {
         func: Refiner<T, false>,
         message: string,
     }
-    constructor(obj: ReturnType<typeof z.object<T>>, details: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>, refiner: Refiner<T, false>, message: string) {
+    constructor(
+        obj: ReturnType<typeof z.object<T>>,
+        details: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>,
+        refiner: Refiner<T, false>,
+        message: string
+    ) {
         super(obj, details)
         this.refiner = {
             func: refiner,
@@ -105,8 +120,12 @@ function handleZodReturn<T>(parse: {
 }
 
 type HasDetailedValidate = {
+    // We just want to know if the function detailedValidate exists
+    // on the validation object.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     detailedValidate: (data: any) => any;
 };
+
 export type ValidationType<
     T extends HasDetailedValidate
 > = Parameters<T['detailedValidate']>['0'];

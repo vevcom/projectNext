@@ -1,8 +1,9 @@
 import 'server-only'
+import { createOmegaquotesValidation } from './schema'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { OmegaQuote, Prisma } from '@prisma/client'
-import { CreateOmegaguotesType, createOmegaquotesValidation } from './schema'
+import type { CreateOmegaguotesType } from './schema'
+import type { OmegaQuote } from '@prisma/client'
 
 /**
  * A function to create a quote

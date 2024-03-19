@@ -1,11 +1,12 @@
 import 'server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
+import { createNewsArticleValidation } from './schema'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { createArticle } from '@/server/cms/articles/create'
+import type { CreateNewsArticleType } from './schema'
 import type { ExpandedNewsArticle } from './Types'
-import { CreateNewsArticleType, createNewsArticleValidation } from './schema'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to
@@ -18,7 +19,7 @@ import { CreateNewsArticleType, createNewsArticleValidation } from './schema'
  */
 export async function createNews(rawdata: CreateNewsArticleType): Promise<ExpandedNewsArticle> {
     const { name, description, endDateTime } = createNewsArticleValidation.detailedValidate(rawdata)
-    
+
     const backupEndDateTime = new Date()
     backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 

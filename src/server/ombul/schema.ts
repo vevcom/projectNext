@@ -1,7 +1,8 @@
+import { Validation } from '@/server/Validation'
 import { maxOmbulFileSize } from '@/server/ombul/ConfigVars'
 import { imageFileSchema } from '@/server/images/schema'
 import { z } from 'zod'
-import { Validation, ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 export const baseOmbulValidation = new Validation({
     ombulFile: z.instanceof(File),

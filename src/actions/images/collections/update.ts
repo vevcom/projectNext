@@ -2,9 +2,9 @@
 import { createZodActionError } from '@/actions/error'
 import { updateImageCollection } from '@/server/images/collections/update'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { updateImageCollectionValidation } from '@/server/images/collections/schema'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { updateImageCollectionValidation } from '@/server/images/collections/schema'
 import type { UpdateImageCollectionType } from '@/server/images/collections/schema'
 
 /**

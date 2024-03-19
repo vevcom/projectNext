@@ -1,7 +1,8 @@
+import { Validation } from '@/server/Validation'
 import { maxFileSize } from '@/server/images/ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
-import { Validation, ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 export const imageFileSchema = z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb')
 

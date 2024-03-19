@@ -1,14 +1,15 @@
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
-import type { ExpandedCommittee } from './Types'
 import { createCommitteeValidation } from '@/server/groups/committees/schema'
+import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeType } from '@/server/groups/committees/schema'
 
 export async function createCommittee(rawdata: CreateCommitteeType): Promise<ExpandedCommittee> {
-    let { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
+    const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
+    let defaultLogoImageId: number
     if (!logoImageId) {
-        logoImageId = (await readSpecialImage('DAFAULT_COMMITTEE_LOGO')).id
+        defaultLogoImageId = (await readSpecialImage('DAFAULT_COMMITTEE_LOGO')).id
     }
 
     return await prismaCall(() => prisma.committee.create({
@@ -20,7 +21,7 @@ export async function createCommittee(rawdata: CreateCommitteeType): Promise<Exp
                     name: `Komitélogoen til ${name}`,
                     image: {
                         connect: {
-                            id: logoImageId,
+                            id: logoImageId ?? defaultLogoImageId,
                         },
                     },
                 },

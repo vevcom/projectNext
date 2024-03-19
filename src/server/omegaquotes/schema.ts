@@ -1,5 +1,6 @@
+import { Validation } from '@/server/Validation'
 import { z } from 'zod'
-import { Validation, ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 export const baseOmegaquotesValidation = new Validation({
     quote: z.string(),

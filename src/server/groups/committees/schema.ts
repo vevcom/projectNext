@@ -1,5 +1,6 @@
-import { Validation, ValidationType } from '@/server/Validation'
+import { Validation } from '@/server/Validation'
 import { z } from 'zod'
+import type { ValidationType } from '@/server/Validation'
 
 const baseCommitteeValidation = new Validation({
     name: z.string(),

@@ -3,9 +3,9 @@ import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { createCommittee } from '@/server/groups/committees/create'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { createCommitteeValidation } from '@/server/groups/committees/schema'
 import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { createCommitteeValidation } from '@/server/groups/committees/schema'
 import type { CreateCommitteeType } from '@/server/groups/committees/schema'
 
 export async function createCommitteeAction(

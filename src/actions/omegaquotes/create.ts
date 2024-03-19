@@ -3,9 +3,10 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { createQuote } from '@/server/omegaquotes/create'
+import { createOmegaquotesValidation } from '@/server/omegaquotes/schema'
+import type { CreateOmegaguotesType } from '@/server/omegaquotes/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
-import { CreateOmegaguotesType, createOmegaquotesValidation } from '@/server/omegaquotes/schema'
 
 export async function createQuoteAction(
     rawdata: FormData | CreateOmegaguotesType
