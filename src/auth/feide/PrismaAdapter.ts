@@ -1,9 +1,11 @@
 import 'server-only'
-import { getAdapterUserByFeideAccount, createFeideAccount, readJWTPayload } from './index'
 import { adapterUserCutomFields } from './Types'
 import type { AdapterUserCustom } from './Types'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 import type { PrismaClient } from '@prisma/client'
+import { readAdapterUserByFeideAccount } from '@/server/auth/feide/read'
+import { readJWTPayload } from '../jwt'
+import { createFeideAccount } from '@/server/auth/feide/create'
 
 function addALotOfFrustrationWithNextAuth(user: AdapterUserCustom): AdapterUser {
     return {
@@ -114,13 +116,9 @@ export default function PrismaAdapter(prisma: PrismaClient): Adapter {
                 throw new Error('Unsupported provider')
             }
 
-            const user = await getAdapterUserByFeideAccount(providerAccountId)
+            const user = await readAdapterUserByFeideAccount(providerAccountId)
 
-            if (!user.success) {
-                return null
-            }
-
-            return HS_MAA_GAA(user.data)
+            return HS_MAA_GAA(user)
         },
 
         async updateUser(user: Partial<AdapterUser> & Pick<AdapterUser, 'id'>): Promise<AdapterUser> {
