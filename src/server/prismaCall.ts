@@ -17,6 +17,7 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
         return await call()
     } catch (error) {
         if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+            console.error(error)
             throw new ServerError('UNKNOWN ERROR', 'unknown error')
         }
 

@@ -4,12 +4,12 @@ import { createZodActionError } from '@/actions/error'
 import { createRole } from '@/server/rolePermissions/create'
 import { createRoleValidation } from '@/server/rolePermissions/schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/rolePermissions/Types'
 import type { CreateRoleType } from '@/server/rolePermissions/schema'
 
 export async function createRoleAction(
     rawdata: FormData | CreateRoleType
-): Promise<ActionReturn<RoleWithPermissions>> {
+): Promise<ActionReturn<ExpandedRole>> {
     //TODO: Auth
     const parse = createRoleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)

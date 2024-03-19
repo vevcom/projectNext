@@ -21,6 +21,15 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         throw new Error('Failed to seed groups because no omega order exists')
     }
 
+    // Only create haramebe's committee if it doesn't already exist
+    const harambeMembershipCount = await prisma.membership.count({
+        where: {
+            userId: user.id,
+        },
+    })
+
+    if (harambeMembershipCount > 0) return
+
     const memberships = {
         create: {
             user: {

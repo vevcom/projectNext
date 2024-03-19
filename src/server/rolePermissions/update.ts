@@ -5,7 +5,7 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { UpdateRoleType } from './schema'
-import type { RoleWithPermissions } from './Types'
+import type { ExpandedRole } from './Types'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -17,7 +17,7 @@ import type { RoleWithPermissions } from './Types'
  */
 export async function updateRole(
     rawdata: UpdateRoleType
-): Promise<RoleWithPermissions> {
+): Promise<ExpandedRole> {
     const { id, permissions, ...data } = updateRoleValidation.detailedValidate(rawdata)
     // Update name of role
     const role = await prismaCall(() => prisma.role.update({

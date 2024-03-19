@@ -5,9 +5,9 @@ import { updateRole } from '@/server/rolePermissions/update'
 import { updateRoleValidation } from '@/server/rolePermissions/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateRoleType } from '@/server/rolePermissions/schema'
-import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/rolePermissions/Types'
 
-export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<RoleWithPermissions>> {
+export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<ExpandedRole>> {
     //TODO: auth
     const parse = updateRoleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)

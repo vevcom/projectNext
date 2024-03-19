@@ -6,33 +6,38 @@ import { Prisma } from '@prisma/client'
 import type { User } from '@/prisma/prismaservice/generated/pn'
 import type { BasicMembership } from '@/server/groups/Types'
 import type { Permission, RolesGroups, SpecialRole } from '@prisma/client'
-import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/rolePermissions/Types'
 
-const rolePermissionInclude = Prisma.validator<Prisma.RoleInclude>()({
+const expandedRoleIncluder = Prisma.validator<Prisma.RoleInclude>()({
     permissions: {
         select: {
             permission: true,
         },
     },
+    groups: {
+        select: {
+            groupId: true,
+            forAdminsOnly: true,
+        },
+    },
 })
 
-export async function readRoles(): Promise<RoleWithPermissions[]> {
+export async function readRoles(): Promise<ExpandedRole[]> {
     return await prismaCall(() => prisma.role.findMany({
-        include: {
-            permissions: true
-        },
-        orderBy: {
-            id: 'asc'
-        }
+        include: expandedRoleIncluder,
+        orderBy: [
+            { id: 'asc' },
+            { special: 'asc' },
+        ]
     }))
 }
 
-export async function readSpecialRole(special: SpecialRole): Promise<RoleWithPermissions | null> {
+export async function readSpecialRole(special: SpecialRole): Promise<ExpandedRole | null> {
     return await prismaCall(() => prisma.role.findUnique({
         where: {
             special,
         },
-        include: rolePermissionInclude,
+        include: expandedRoleIncluder,
     }))
 }
 
@@ -44,7 +49,7 @@ export async function readGroupsOfRole(roleId: number): Promise<RolesGroups[]> {
     }))
 }
 
-export async function readRolesOfGroup(groupId: number, admin: boolean = false): Promise<RoleWithPermissions[]> {
+export async function readRolesOfGroup(groupId: number, admin: boolean = false): Promise<ExpandedRole[]> {
     const rolesGroups = await prismaCall(() => prisma.rolesGroups.findMany({
         where: {
             groupId,
@@ -52,7 +57,7 @@ export async function readRolesOfGroup(groupId: number, admin: boolean = false):
         },
         select: {
             role: {
-                include: rolePermissionInclude
+                include: expandedRoleIncluder
             },
         },
     }))
@@ -68,7 +73,7 @@ export async function readRolesOfGroup(groupId: number, admin: boolean = false):
     return rolesGroups.map(roleGroup => roleGroup.role)
 }
 
-export async function readRolesOfMemberships(data: BasicMembership[]): Promise<RoleWithPermissions[]> {
+export async function readRolesOfMemberships(data: BasicMembership[]): Promise<ExpandedRole[]> {
     const rolesGroups = await prismaCall(() => prisma.rolesGroups.findMany({
         where: {
             OR: data.map(({ groupId, admin }) => ({
@@ -78,7 +83,7 @@ export async function readRolesOfMemberships(data: BasicMembership[]): Promise<R
         },
         select: {
             role: {
-                include: rolePermissionInclude
+                include: expandedRoleIncluder
             },
         },
     }))
@@ -86,7 +91,7 @@ export async function readRolesOfMemberships(data: BasicMembership[]): Promise<R
     return rolesGroups.map(roleGroup => roleGroup.role)
 }
 
-export async function readRolesOfUser(userId: number): Promise<RoleWithPermissions[]> {
+export async function readRolesOfUser(userId: number): Promise<ExpandedRole[]> {
     const memberships = await readMembershipsOfUser(userId)
     return await readRolesOfMemberships(memberships)
 }

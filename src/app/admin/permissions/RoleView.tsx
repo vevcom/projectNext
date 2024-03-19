@@ -9,15 +9,15 @@ import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 import type { User } from '@prisma/client'
-import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/rolePermissions/Types'
 
 type PropTypes = {
-    roles: RoleWithPermissions[]
+    roles: ExpandedRole[]
 }
 
 export default function RoleView({ roles: initalRoles }: PropTypes) {
-    const [roles, setRoles] = useState<RoleWithPermissions[]>(initalRoles)
-    const [selectedRole, setSelectedRole] = useState<RoleWithPermissions | undefined>()
+    const [roles, setRoles] = useState<ExpandedRole[]>(initalRoles)
+    const [selectedRole, setSelectedRole] = useState<ExpandedRole | undefined>()
 
     const [users, setUsers] = useState<User[]>([])
 
@@ -80,9 +80,9 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                                 </td>
                                 <td>
                                     {
-                                        <Link href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-                                            {['Vevcom', 'Theodor sin komité', 'Lolcom'][i % 3]}
-                                        </Link>
+                                        role.special === 'DEFAULT'
+                                            ? 'Alle brukere'
+                                            : role.groups.map(group => String(group.groupId)).join()
                                     }
                                 </td>
                             </tr>
