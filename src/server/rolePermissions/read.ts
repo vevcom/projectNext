@@ -73,7 +73,7 @@ export async function readRolesOfMemberships(data: BasicMembership[]): Promise<R
         where: {
             OR: data.map(({ groupId, admin }) => ({
                 groupId,
-                forAdminsOnly: admin,
+                forAdminsOnly: admin === false ? false : undefined,
             })),
         },
         select: {
@@ -88,7 +88,6 @@ export async function readRolesOfMemberships(data: BasicMembership[]): Promise<R
 
 export async function readRolesOfUser(userId: number): Promise<RoleWithPermissions[]> {
     const memberships = await readMembershipsOfUser(userId)
-
     return await readRolesOfMemberships(memberships)
 }
 
