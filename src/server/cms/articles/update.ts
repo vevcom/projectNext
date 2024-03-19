@@ -1,9 +1,11 @@
 import 'server-only'
+import { updateArticleCategorySchema } from '@/server/cms/articleCategories/schema'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
 import prisma from '@/prisma'
 import { addArticleSectionPart } from '@/server/cms/articleSections/update'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import type { UpdateArticleCategoryType } from '@/server/cms/articleCategories/schema'
 import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { ExpandedArticle } from '@/cms/articles/Types'
@@ -16,8 +18,10 @@ import type { ExpandedArticle } from '@/cms/articles/Types'
  */
 export async function updateArticle(
     id: number,
-    data: { name: string }
+    rawData: UpdateArticleCategoryType,
 ): Promise<ExpandedArticle> {
+    const data = updateArticleCategorySchema.detailedValidate(rawData)
+
     return await prismaCall(() => prisma.article.update({
         where: { id },
         data,
@@ -33,7 +37,7 @@ export async function updateArticle(
  */
 export async function addSectionToArticle(
     id: number,
-    include: Partial<Record<ArticleSectionPart, boolean>>
+    include: Partial<Record<ArticleSectionPart, boolean>>,
 ): Promise<ExpandedArticle> {
     const article = await prisma.article.findUnique({
         where: {
@@ -102,7 +106,7 @@ export async function addSectionToArticle(
 export async function moveSectionOrder(
     id: number,
     sectionId: number,
-    direction: 'UP' | 'DOWN'
+    direction: 'UP' | 'DOWN',
 ): Promise<ArticleSection> {
     //TODO: auth on visability
 

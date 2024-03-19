@@ -1,7 +1,7 @@
+import { Validation } from '@/server/Validation'
 import { SEX } from '@prisma/client'
 import { z } from 'zod'
-import { Validation } from '../Validation'
-import type { ValidationType } from '../Validation'
+import type { ValidationType } from '@/server/Validation'
 
 const baseUserValidation = new Validation({
     username: z.string(),
@@ -32,7 +32,7 @@ export const createUserValidation = baseUserValidation.pick([
     'email',
     'firstname',
     'sex',
-    'username', 
+    'username',
     'lastname',
     'password',
 ]).setRefiner(data => data.password === data.confirmPassword, 'Passordene må være like')

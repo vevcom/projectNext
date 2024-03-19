@@ -4,9 +4,9 @@ import { createZodActionError, createActionError } from '@/actions/error'
 import { updateUser } from '@/server/users/update'
 import { registerUser } from '@/server/auth/credentials'
 import { getUser } from '@/auth/getUser'
+import { updateUserValidation, registerUserValidation } from '@/server/users/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { updateUserValidation, registerUserValidation } from '@/server/users/schema'
 import type { UpdateUserType, RegisterUserType } from '@/server/users/schema'
 
 export async function updateUserAction(id: number, rawdata: FormData | UpdateUserType): Promise<ActionReturn<User>> {

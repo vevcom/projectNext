@@ -1,12 +1,13 @@
 import 'server-only'
+import { createArticleCategorySchema } from './schema'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { Prisma } from '@prisma/client'
+import type { CreateArticleCategoryType } from './schema'
 import type { ExpandedArticleCategory } from './Types'
 
-export async function createArticleCategory(
-    data: Required<Pick<Prisma.ArticleCategoryCreateInput, 'description' | 'name'>>
-): Promise<ExpandedArticleCategory> {
+export async function createArticleCategory(rawData: CreateArticleCategoryType): Promise<ExpandedArticleCategory> {
+    const data = createArticleCategorySchema.detailedValidate(rawData)
+
     return await prismaCall(() => prisma.articleCategory.create({
         data,
         include: {

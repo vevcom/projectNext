@@ -1,7 +1,9 @@
 import 'server-only'
+import { createCmsImageSchema } from './schema'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { Image, SpecialCmsImage } from '@prisma/client'
+import type { CreateCmsImageType } from './schema'
+import type { Image } from '@prisma/client'
 import type { ExpandedCmsImage } from './Types'
 
 /**
@@ -12,16 +14,14 @@ import type { ExpandedCmsImage } from './Types'
  * @returns - The created cmsImage
  */
 export async function createCmsImage(
-    name: string,
-    data?: {
-        special?: SpecialCmsImage
-    },
-    image?: Image
+    rawData: CreateCmsImageType,
+    image?: Image,
 ): Promise<ExpandedCmsImage> {
+    const data = createCmsImageSchema.detailedValidate(rawData)
+
     return await prismaCall(() => prisma.cmsImage.create({
         data: {
-            name,
-            special: data?.special,
+            ...data,
             image: image ? {
                 connect: {
                     id: image?.id

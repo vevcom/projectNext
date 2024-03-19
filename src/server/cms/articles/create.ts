@@ -1,7 +1,9 @@
 import 'server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
+import { createArticleSchema } from './schema'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
+import type { CreateArticleType } from './schema'
 import type { ExpandedArticle } from './Types'
 
 /**
@@ -11,16 +13,19 @@ import type { ExpandedArticle } from './Types'
  * @param config - { categoryId } The category to connect the article to
  * @returns - The created article with cover all contents
  */
-export async function createArticle(name: string | null, config?: {
-    categoryId: number,
-}): Promise<ExpandedArticle> {
+export async function createArticle(
+    rawData: CreateArticleType,
+    categoryId?: number,
+): Promise<ExpandedArticle> {
+    const { name } = createArticleSchema.detailedValidate(rawData)
+
     // if name not given, create a unique new name
-    let newName = ''
+    let newName: string
     if (name === null) {
         let i = 1
         newName = 'Ny artikkel'
 
-        const checkArticleExists = () => prisma.article.findFirst({ where: { name: newName } })
+        const checkArticleExists = () => prismaCall(() => prisma.article.findFirst({ where: { name: newName } }))
 
         while (await prismaCall(checkArticleExists)) {
             newName = `Ny artikkel ${i++}`
@@ -29,15 +34,15 @@ export async function createArticle(name: string | null, config?: {
 
     return await prismaCall(() => prisma.article.create({
         data: {
-            name: name || newName,
+            name: name ?? newName,
             coverImage: {
-                create: {}
+                create: {},
             },
-            articleCategory: config ? {
+            articleCategory: categoryId ? {
                 connect: {
-                    id: config.categoryId
-                }
-            } : undefined
+                    id: categoryId,
+                },
+            } : undefined,
         },
         include: articleRealtionsIncluder,
     }))
