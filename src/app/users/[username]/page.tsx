@@ -40,6 +40,10 @@ export default async function User({ params }: PropTypes) {
             <ul>
                 {me && user.permissions.map(permission => <li key={uuid()}>{permission}</li>)}
             </ul>
+            <h2>Grupper:</h2>
+            <ul>
+                {me && user.memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+            </ul>
             {me && <Link href="/logout">Logg ut</Link>}
         </>
     )
