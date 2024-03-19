@@ -29,7 +29,8 @@ export async function readSpecialCmsImageAction(special: SpecialCmsImage): Promi
     const specialRes = await safeServerCall(() => readSpecialCmsImage(special))
     if (!specialRes.success) {
         if (specialRes.errorCode === 'NOT FOUND') {
-            return await safeServerCall(() => createCmsImage(special, {
+            return await safeServerCall(() => createCmsImage({
+                name: special,
                 special,
             }))
         }

@@ -1,9 +1,9 @@
 'use server'
-import { articleCategorySchema } from './schema'
 import { createZodActionError } from '@/actions/error'
 import { updateArticleCategory } from '@/server/cms/articleCategories/update'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ArticleCategorySchemaType } from './schema'
+import { updateArticleCategorySchema } from '@/server/cms/articleCategories/schema'
+import type { UpdateArticleCategoryType } from '@/server/cms/articleCategories/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
@@ -19,9 +19,9 @@ export async function updateArticleCategoryVisibilityAction(
 
 export async function updateArticleCategoryAction(
     id: number,
-    rawData: FormData | ArticleCategorySchemaType
+    rawData: FormData | UpdateArticleCategoryType
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
-    const parse = articleCategorySchema.safeParse(rawData)
+    const parse = updateArticleCategorySchema.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 

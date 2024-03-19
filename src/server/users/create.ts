@@ -1,8 +1,8 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { User } from '@prisma/client'
 import { createUserValidation } from '@/server/users/schema'
+import type { User } from '@prisma/client'
 import type { CreateUserType } from '@/server/users/schema'
 
 /**

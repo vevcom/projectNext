@@ -1,12 +1,13 @@
-import { zfd } from "zod-form-data";
-import { z, ZodRawShape } from 'zod';
-import { ServerError } from "./error";
+import { ServerError } from './error'
+import { zfd } from 'zod-form-data'
+import { z } from 'zod'
+import type { ZodRawShape } from 'zod'
 
 
 type SchemaType<T extends ZodRawShape> = z.infer<ReturnType<typeof z.object<T>>>
 type Refiner<T extends ZodRawShape, Partialized extends boolean> = (data: Partialized extends true ? Partial<SchemaType<T>> : SchemaType<T>) => boolean
 class ValidationBase<T extends ZodRawShape> {
-    protected typeSchema : ReturnType<typeof z.object<T>>
+    protected typeSchema: ReturnType<typeof z.object<T>>
     protected detailedSchema: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>
 
     constructor(obj: T | ReturnType<typeof z.object<T>>, details: {[L in keyof T]: T[L]} | ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>) {
@@ -30,7 +31,7 @@ class ValidationBase<T extends ZodRawShape> {
 }
 
 export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    private refiner : {
+    private refiner: {
         func: Refiner<T, true>,
         message: 'Dårlige parametere!'
     }
@@ -68,7 +69,7 @@ export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}>
 }
 
 export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    private refiner : {
+    private refiner: {
         func: Refiner<T, false>,
         message: string,
     }
@@ -102,9 +103,9 @@ type HasDetailedValidate = {
 };
 export type ValidationType<
     T extends HasDetailedValidate
-> = Parameters<T["detailedValidate"]>['0'];
+> = Parameters<T['detailedValidate']>['0'];
 
-function pickKeys<T, L extends (keyof T)[]>(obj: T, keys: L) : { [P in L[number]]: T[P] } {
+function pickKeys<T, L extends(keyof T)[]>(obj: T, keys: L): { [P in L[number]]: T[P] } {
     return keys.reduce((result, key) => {
         result[key] = obj[key]
         return result

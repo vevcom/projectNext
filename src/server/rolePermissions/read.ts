@@ -68,7 +68,7 @@ export async function readRolesOfGroup(groupId: number, admin: boolean = false):
     return rolesGroups.map(roleGroup => roleGroup.role)
 }
 
-export async function readRolesOfMemberships(data: BasicMembership[]): Promise<RoleWithPermissions[]> {    
+export async function readRolesOfMemberships(data: BasicMembership[]): Promise<RoleWithPermissions[]> {
     const rolesGroups = await prismaCall(() => prisma.rolesGroups.findMany({
         where: {
             OR: data.map(({ groupId, admin }) => ({

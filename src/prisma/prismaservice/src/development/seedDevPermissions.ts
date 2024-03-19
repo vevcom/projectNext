@@ -11,7 +11,7 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
     if (!user) {
         throw new Error('Failed to seed permissions because Harambe is dead')
     }
-    
+
     const committee = await prisma.committee.findFirst({
         where: {
             group: {

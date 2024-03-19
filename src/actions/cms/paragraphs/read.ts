@@ -25,7 +25,10 @@ export async function readSpecialCmsParagraphAction(special: SpecialCmsParagraph
     const specialRes = await safeServerCall(() => readSpecialCmsParagraph(special))
     if (specialRes.success) return specialRes
     if (specialRes.errorCode === 'NOT FOUND') {
-        return await safeServerCall(() => createCmsParagraph(special, { special }))
+        return await safeServerCall(() => createCmsParagraph({
+            name: special,
+            special,
+        }))
     }
     return specialRes
 }
