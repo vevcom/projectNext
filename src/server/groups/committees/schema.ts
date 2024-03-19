@@ -1,13 +1,18 @@
+import { Validation, ValidationType } from '@/server/Validation'
 import { z } from 'zod'
 
-export const createCommitteeSchema = z.object({
-    name: z.string().max(32, 'Maks 32 tegn.').min(1, 'Min 1 tegn.'),
-    shortName: z.string().max(32, 'Maks 32 tegn.').min(1, 'Min 1 tegn.'),
-    logoImageId: z.coerce.number().optional(),
+const baseCommitteeValidation = new Validation({
+    name: z.string(),
+    shortName: z.string(),
+    logoImageId: z.number().optional(),
+}, {
+    name: z.string().max(32).min(1).trim(),
+    shortName: z.string().max(32).min(1).trim(),
+    logoImageId: z.number().optional(),
 })
 
-export type CreateCommitteeSchemaType = z.infer<typeof createCommitteeSchema>
+export const createCommitteeValidation = baseCommitteeValidation
+export type CreateCommitteeType = ValidationType<typeof baseCommitteeValidation>
 
-export const updateCommitteeSchema = createCommitteeSchema.partial()
-
-export type UpdateCommitteeSchemaType = z.infer<typeof updateCommitteeSchema>
+export const updateCommitteeValidation = createCommitteeValidation.partialize()
+export type UpdateCommitteeType = ValidationType<typeof updateCommitteeValidation>

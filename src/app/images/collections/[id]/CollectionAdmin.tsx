@@ -18,13 +18,14 @@ import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Image as ImageT } from '@prisma/client'
+import { ExpandedImageCollection } from '@/server/images/collections/Types'
 
 type PropTypes = {
-    collectionId: number,
-    coverImage: ImageT | null,
+    collection: ExpandedImageCollection
 }
 
-export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
+export default function CollectionAdmin({ collection }: PropTypes) {
+    const { id: collectionId, coverImage } = collection
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
@@ -71,8 +72,8 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 submitText="oppdater"
                 action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput color="black" label="navn" name="name" />
-                <TextInput color="black" label="beskrivelse" name="description" />
+                <TextInput defaultValue={collection.name} color="black" label="navn" name="name" />
+                <TextInput defaultValue={collection.description || ''} color="black" label="beskrivelse" name="description" />
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>

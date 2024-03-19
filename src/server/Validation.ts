@@ -25,9 +25,6 @@ class ValidationBase<T extends ZodRawShape> {
     typeValidate(data: FormData | SchemaType<T>) {
         return zfd.formData(this.typeSchema).safeParse(data)
     }
-    setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
-        return new ValidationRefined(this.typeSchema, this.detailedSchema, refiner_, message)
-    }
 }
 
 export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
@@ -48,6 +45,9 @@ export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]:
     override typeValidate(data: FormData | Partial<SchemaType<T>>) {
         return zfd.formData(this.typeSchema).safeParse(data)
     }
+    setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
+        return new ValidationRefined<T, K, true>(this.typeSchema, this.detailedSchema, refiner_, message)
+    }
 }
 
 export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
@@ -66,10 +66,13 @@ export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}>
     partialize() {
         return new ValidationPartial(this.detailedSchema.shape, this.detailedSchema.shape)
     }
+    setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
+        return new ValidationRefined(this.typeSchema, this.detailedSchema, refiner_, message)
+    }
 }
 
-export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    private refiner: {
+export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}, const Partialized extends boolean = false> extends ValidationBase<T> {
+    private refiner : {
         func: Refiner<T, false>,
         message: string,
     }
@@ -80,7 +83,7 @@ export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]:
             message,
         }
     }
-    detailedValidate(data: SchemaType<K>) {
+    detailedValidate(data: Partialized extends true ? Partial<SchemaType<K>> : SchemaType<K>) {
         return handleZodReturn(this.detailedSchema.refine(this.refiner.func, this.refiner.message).safeParse(data))
     }
 }

@@ -1,16 +1,15 @@
 'use server'
-
-import { createCommitteeActionSchema } from './schema'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { createCommittee } from '@/server/groups/committees/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateCommitteeActionSchemaType } from './schema'
+import { createCommitteeValidation } from '@/server/groups/committees/schema'
+import type { CreateCommitteeType } from '@/server/groups/committees/schema'
 
 export async function createCommitteeAction(
-    rawData: FormData | CreateCommitteeActionSchemaType
+    rawData: FormData | CreateCommitteeType
 ): Promise<ActionReturn<ExpandedCommittee>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['COMMITTEE_CREATE']],
@@ -20,8 +19,7 @@ export async function createCommitteeAction(
 
     if (!authorized) return createActionError(status)
 
-    const parse = createCommitteeActionSchema.safeParse(rawData)
-
+    const parse = createCommitteeValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
 
     return await safeServerCall(() => createCommittee(parse.data))

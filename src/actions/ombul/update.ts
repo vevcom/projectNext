@@ -1,12 +1,12 @@
 'use server'
-import { updateOmbulSchema, updateObuleFileSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
-import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { ActionReturn } from '@/actions/Types'
+import { UpdateOmbulFileType, UpdateOmbulType } from '@/server/ombul/schema'
+import { updateOmbulFileValidation, updateOmbulValidation } from '@/server/ombul/schema'
 
 /**
  * A action to update an ombul
@@ -16,7 +16,7 @@ import type { ActionReturn } from '@/actions/Types'
  */
 export async function updateOmbulAction(
     id: number,
-    rawdata: FormData | UpdateOmbulSchemaType
+    rawdata: FormData | UpdateOmbulType
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // Auth route
     const { status, authorized } = await getUser({
@@ -25,7 +25,7 @@ export async function updateOmbulAction(
     if (!authorized) return createActionError(status)
 
     //Parse the data
-    const parse = updateOmbulSchema.safeParse(rawdata)
+    const parse = updateOmbulValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
@@ -40,7 +40,7 @@ export async function updateOmbulAction(
  */
 export async function updateOmbulFileAction(
     id: number,
-    rawData: FormData | UpdateOmbulFileSchemaType
+    rawData: FormData | UpdateOmbulFileType
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { status, authorized } = await getUser({
@@ -48,9 +48,9 @@ export async function updateOmbulFileAction(
     })
     if (!authorized) return createActionError(status)
 
-    const parse = updateObuleFileSchema.safeParse(rawData)
+    const parse = updateOmbulFileValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await safeServerCall(() => updateOmbulFile(id, data.ombulFile))
+    return await safeServerCall(() => updateOmbulFile(id, data))
 }

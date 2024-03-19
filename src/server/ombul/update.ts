@@ -6,6 +6,7 @@ import { createFile } from '@/server/store/createFile'
 import { destroyFile } from '@/server/store/destroyFile'
 import type { Prisma } from '@prisma/client'
 import type { ExpandedOmbul } from './Types'
+import { UpdateOmbulFileType, UpdateOmbulType, updateOmbulFileValidation, updateOmbulValidation } from './schema'
 
 /**
  * A function Update an ombul
@@ -15,8 +16,9 @@ import type { ExpandedOmbul } from './Types'
  */
 export async function updateOmbul(
     id: number,
-    data: Prisma.OmbulUpdateInput
+    rawdata: UpdateOmbulType
 ): Promise<ExpandedOmbul> {
+    const data = updateOmbulValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.ombul.update({
         where: {
             id
@@ -40,8 +42,9 @@ export async function updateOmbul(
  */
 export async function updateOmbulFile(
     id: number,
-    file: File,
+    data: UpdateOmbulFileType
 ): Promise<ExpandedOmbul> {
+    const { ombulFile: file } = updateOmbulFileValidation.detailedValidate(data)
     const ret = await createFile(file, 'ombul', ['pdf'])
     const fsLocation = ret.fsLocation
 

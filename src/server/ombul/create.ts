@@ -6,16 +6,15 @@ import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { createImage } from '@/server/images/create'
 import type { Ombul } from '@prisma/client'
-import type { OmbulCreateConfig } from './Types'
+import { CreateOmbulType, createOmbulValidation } from './schema'
 
 /**
  * Create a new Ombul.
  */
 export async function createOmbul(
-    file: File,
-    cover: File,
-    config: OmbulCreateConfig,
+    rawdata: CreateOmbulType
 ): Promise<Ombul> {
+    const { ombulFile: file, ombulCoverImage: cover, ...config } = createOmbulValidation.detailedValidate(rawdata)
     // Get the latest issue number if not provided
     const { year: givenYear, issueNumber: givenIssueNumber, ...restOfConf } = config
 
@@ -44,10 +43,11 @@ export async function createOmbul(
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
 
-    const coverImage = await createImage(cover, {
+    const coverImage = await createImage({
         name: fsLocation,
         alt: `cover of ${config.name}`,
-        collectionId: ombulCoverCollection.id
+        collectionId: ombulCoverCollection.id,
+        file: cover,
     })
 
     const cmsCoverImage = await createCmsImage(fsLocation, {}, coverImage)

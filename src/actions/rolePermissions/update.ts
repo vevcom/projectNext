@@ -1,19 +1,17 @@
 'use server'
-import { updateRoleSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { updateRole } from '@/server/rolePermissions/update'
-import type { RoleWithPermissions } from '@/server/rolePermissions/Types'
-import type { UpdateRoleSchemaType } from './schema'
 import type { ActionReturn } from '@/actions/Types'
+import { updateRoleValidation } from '@/server/rolePermissions/schema'
+import type { UpdateRoleType } from '@/server/rolePermissions/schema'
+import { RoleWithPermissions } from '@/server/rolePermissions/Types'
 
-export async function updateRoleAction(
-    rawdata: FormData | UpdateRoleSchemaType
-): Promise<ActionReturn<RoleWithPermissions, false>> {
+export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<RoleWithPermissions>> {
     //TODO: auth
-    const parse = updateRoleSchema.safeParse(rawdata)
+    const parse = updateRoleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
-    const { id, name, permissions } = parse.data
+    const data = parse.data
 
-    return await safeServerCall(() => updateRole(id, { name }, permissions))
+    return await safeServerCall(() => updateRole(data))
 }
