@@ -50,6 +50,7 @@ export const registerUserValidation = baseUserValidation.pick([
     'email',
     'password',
     'confirmPassword',
-    'sex'
+    'sex',
+    'username'
 ]).setRefiner(data => data.password === data.confirmPassword, 'Passordene må være like')
 export type RegisterUserType = ValidationType<typeof registerUserValidation>

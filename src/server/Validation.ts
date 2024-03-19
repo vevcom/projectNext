@@ -44,6 +44,9 @@ export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]:
     detailedValidate(data: Partial<SchemaType<K>>) {
         return handleZodReturn(this.detailedSchema.partial().refine(this.refiner.func, this.refiner.message).safeParse(data))
     }
+    override typeValidate(data: FormData | Partial<SchemaType<T>>) {
+        return zfd.formData(this.typeSchema).safeParse(data)
+    }
 }
 
 export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
