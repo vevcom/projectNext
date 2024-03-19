@@ -1,13 +1,15 @@
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
-import type { UpdateCommitteeSchemaType } from './schema'
 import type { ExpandedCommittee } from './Types'
+import { updateCommitteeValidation } from '@/server/groups/committees/schema'
+import type { UpdateCommitteeType } from '@/server/groups/committees/schema'
 
 export async function updateCommittee(
     id: number,
-    { name, shortName, logoImageId }: UpdateCommitteeSchemaType
+    rawdata: UpdateCommitteeType
 ): Promise<ExpandedCommittee> {
+    let { name, shortName, logoImageId } = updateCommitteeValidation.detailedValidate(rawdata)
     if (!logoImageId) {
         logoImageId = (await readSpecialImage('DAFAULT_COMMITTEE_LOGO')).id
     }
