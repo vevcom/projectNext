@@ -1,3 +1,4 @@
+'use server'
 import prisma from '@/prisma'
 import { createPrismaActionError } from '@/actions/error'
 import type { Locker, LockerReservation } from '@prisma/client'

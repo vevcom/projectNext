@@ -34,15 +34,10 @@ export default async function seedOrder(prisma: PrismaClient) {
         }
     }))))
 
-    try {
-        await prisma.lockerReservation.create({
-          data: {
-            lockerId: 1,
-            userId: 1,
-          },
-        });
-        console.log('LockerReservation created successfully!');
-      } catch (error) {
-        console.error('Error creating LockerReservation:', error);
-      }
+    await prisma.lockerReservation.create({
+        data: {
+        lockerId: 1,
+        userId: 1,
+        }
+    })
 }
