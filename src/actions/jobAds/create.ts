@@ -6,6 +6,8 @@ import { createPrismaActionError, createActionError, createZodActionError } from
 import type { JobAd } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { JobAdSchemaType } from './schema'
+import { read } from 'fs'
+import { readCurrenOmegaOrder } from '../omegaOrder/read'
 
 export async function createJobAd(rawdata: FormData | JobAdSchemaType): Promise<ActionReturn<JobAd>> {
     const parse = createJobAdSchema.safeParse(rawdata)
@@ -18,6 +20,8 @@ export async function createJobAd(rawdata: FormData | JobAdSchemaType): Promise<
     const articleRes = await createArticle(data.articleName)
     if (!articleRes.success) return articleRes
 
+    const currentOrder = await readCurrenOmegaOrder()
+    if (!currentOrder.success) return currentOrder
     try {
         const jobAds = await prisma.jobAd.create({
             data: {
@@ -27,8 +31,14 @@ export async function createJobAd(rawdata: FormData | JobAdSchemaType): Promise<
                     connect: {
                         id: articleRes.data.id
                     }
+                },
+                omegaOrder: {
+                    connect: {
+                        order: currentOrder.data.order
+                    }
                 }
-            } })
+            }
+        })
         return { success: true, data: jobAds }
     } catch (error) {
         return createPrismaActionError(error)
