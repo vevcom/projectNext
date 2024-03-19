@@ -22,6 +22,39 @@ export default function ChannelSettings({
 
     const defaultMethods = channel.defaultMethods ?? methodsAllOf;
 
+    function findInheretedAvailableMethods(channel: NotificationChannelWithMethods): Omit<NotificationMethod, 'id'> {
+        
+        if (channel.special === "ROOT") {
+            return channel.availableMethods;
+        }
+
+        if (channel.parentId === null) {
+            console.error("No parent found, this is only allowed for other channels than root.")
+            const rootAvailableMethods = allChannels.find(c => c.special === "ROOT")?.availableMethods;
+            if (!rootAvailableMethods) {
+                throw new Error("No root channel found")
+            }
+            return rootAvailableMethods;
+        }
+
+        const parent = allChannels.find(c => c.id === channel.parentId);
+        if (!parent) {
+            throw new Error("Parent not found")
+        }
+
+        const methods = findInheretedAvailableMethods(parent)
+
+        return Object.fromEntries(
+            Object
+                .entries(methods)
+                .map(([key, value]) => 
+                    [key, value && channel.availableMethods[key]]
+                )
+        ) as Omit<NotificationMethod, 'id'>;
+    }
+
+    const availableMethodsInherited = findInheretedAvailableMethods(channel);
+
     const selectOptions = allChannels.map(c => ({ value: c.id, label: c.name }))
 
     return <div className={styles.channelSettings}>
@@ -37,7 +70,7 @@ export default function ChannelSettings({
         </div>
 
         <div className={styles.methodContainer}>
-            <ChannelMethods formPrefix="availableMethods" title="Tilgjengelige metoder" methods={channel.availableMethods} />
+            <ChannelMethods formPrefix="availableMethods" title="Tilgjengelige metoder" methods={channel.availableMethods} editable={availableMethodsInherited}/>
             <ChannelMethods formPrefix="defaultMethods" title="Standard metoder" methods={defaultMethods} />
         </div>
 

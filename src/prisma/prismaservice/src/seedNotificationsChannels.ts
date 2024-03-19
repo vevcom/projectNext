@@ -27,7 +27,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
     const channelInfo = {
         ROOT: createChanneInfo({
             name: "Alle varslinger",
-            description: "Denne kanelen styrer alle varslinger",
+            description: "Denne kanalen styrer alle varslinger",
             defaultMethods: {
                 email: false,
                 push: false,
@@ -55,7 +55,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         }),
         NEW_OMBUL: createChanneInfo({
             name: "Ny ombul",
-            description: "Varling når det kommer ny ombul",
+            description: "Varsling når det kommer ny ombul",
             availableMethods: {
                 email: true,
                 push: true,
