@@ -9,6 +9,7 @@ import seedOrder from './seedOrder'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import { PrismaClient } from '@/generated/pn'
+import seedDevGroups from './development/seedDevGroups'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -31,6 +32,7 @@ async function seed() {
     await seedDevImages(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)
+    await seedDevGroups(prisma)
     console.log('seed dev done')
 }
 
