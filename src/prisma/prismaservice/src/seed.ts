@@ -28,11 +28,11 @@ async function seed() {
     if (process.env.NODE_ENV !== 'development') return
     console.log('seeding dev data....')
     await seedDevUsers(prisma)
+    await seedDevGroups(prisma)
     await seedDevPermissions(prisma)
     await seedDevImages(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)
-    await seedDevGroups(prisma)
     console.log('seed dev done')
 }
 
