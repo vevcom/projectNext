@@ -22,13 +22,7 @@ export async function updateImageCollectionAction(
     const parse = updateImageCollectionValidation.typeValidate(rawdata)
 
     if (!parse.success) return createZodActionError(parse)
-    const data = {
-        ...parse.data,
-        coverImage: coverImageId ? {
-            connect: {
-                id: coverImageId
-            }
-        } : undefined
-    }
-    return await safeServerCall(() => updateImageCollection(collectionId, data))
+    const data = parse.data
+        
+    return await safeServerCall(() => updateImageCollection(collectionId, coverImageId, data))
 }
