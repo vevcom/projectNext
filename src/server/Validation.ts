@@ -1,5 +1,6 @@
 import { zfd } from "zod-form-data";
 import { z, ZodRawShape } from 'zod';
+import { ServerError } from "./error";
 
 
 type SchemaType<T extends ZodRawShape> = z.infer<ReturnType<typeof z.object<T>>>
@@ -41,7 +42,7 @@ export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]:
         }
     }
     detailedValidate(data: Partial<SchemaType<K>>) {
-        return this.detailedSchema.partial().refine(this.refiner.func, this.refiner.message).safeParse(data)
+        return handleZodReturn(this.detailedSchema.partial().refine(this.refiner.func, this.refiner.message).safeParse(data))
     }
 }
 
@@ -56,7 +57,7 @@ export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}>
         return new Validation(typeSchema, detailedSchema);
     }
     detailedValidate(data: SchemaType<K>) {
-        return this.detailedSchema.safeParse(data)
+        return handleZodReturn(this.detailedSchema.safeParse(data))
     }
     partialize() {
         return new ValidationPartial(this.detailedSchema.shape, this.detailedSchema.shape)
@@ -76,8 +77,21 @@ export class ValidationRefined<T extends ZodRawShape, K extends {[L in keyof T]:
         }
     }
     detailedValidate(data: SchemaType<K>) {
-        return this.detailedSchema.refine(this.refiner.func, this.refiner.message).safeParse(data)
+        return handleZodReturn(this.detailedSchema.refine(this.refiner.func, this.refiner.message).safeParse(data))
     }
+}
+
+function handleZodReturn<T>(parse: {
+    success: true,
+    data: T,
+} | {
+    success: false,
+    error: z.ZodError,
+}) {
+    if (!parse.success) {
+        throw new ServerError('BAD PARAMETERS', parse.error.issues)
+    }
+    return parse.data
 }
 
 type HasDetailedValidate = {
