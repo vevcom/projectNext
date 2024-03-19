@@ -2,6 +2,9 @@
 
 .channelSettings {
 
+    $screen-small: 700px;
+    $description-max-width: 350px;
+
     width: 100%;
     
     > .methodContainer {
@@ -9,8 +12,6 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
-
-    $description-max-width: 350px;
 
     .descriptionInput {
         max-width: $description-max-width;
@@ -23,6 +24,10 @@
         justify-content: space-between;
         flex-wrap: wrap;
         width: 100%;
+
+        @media screen and (max-width: $screen-small) {
+            flex-direction: column;
+        }
 
         > div {
             display: flex;

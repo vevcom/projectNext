@@ -1,10 +1,26 @@
 @use '@/styles/ohma';
 
 .container {
-    display: flex;
-    flex-direction: row;
-}
+    $screen-small: 850px;
 
-.channelSelect {
-    width: 200px;
+    display: flex;
+
+    @media screen and (max-width: $screen-small) {
+        flex-direction: column;
+
+        .channelSelect {
+            max-height: 200px;
+            overflow-y: scroll;
+            background-color: ohma.$colors-gray-200;
+            border-radius: ohma.$rounding;
+        }
+    }
+
+    @media screen and (min-width: $screen-small) {
+        flex-direction: row;
+
+        .channelSelect {
+            width: 200px;
+        }
+    }
 }
