@@ -1,4 +1,5 @@
 'use server'
+import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { createActionError, createPrismaActionError } from '@/actions/error'
 import type { ExpandedArticle } from './Types'
@@ -18,16 +19,7 @@ export async function readArticle(idOrName: number | {
                     name: idOrName.name,
                 }
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: true,
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: true,
-            }
+            include: articleRealtionsIncluder,
         })
         if (!article) return createActionError('NOT FOUND', `Article ${name} not found`)
         if (!article.coverImage) return createActionError('BAD PARAMETERS', `Article ${name} has no cover image`)
@@ -47,16 +39,7 @@ export async function readArticles(articleCategoryId: number): Promise<ActionRet
             where: {
                 articleCategoryId
             },
-            include: {
-                articleSections: {
-                    include: {
-                        cmsImage: true,
-                        cmsParagraph: true,
-                        cmsLink: true
-                    }
-                },
-                coverImage: true,
-            }
+            include: articleRealtionsIncluder
         })
         return { success: true, data: articles }
     } catch (error) {

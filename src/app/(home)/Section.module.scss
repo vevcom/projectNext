@@ -9,12 +9,12 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        > h3 {
+        h1 {
             font-size: ohma.$fonts-xl;
             font-weight: ohma.$fonts-weight-l;
             margin-bottom: ohma.$gap;
         }
-        > p {
+        p {
             font-size: ohma.$fonts-m;
             line-height: ohma.$fonts-line-height-m;
             margin-bottom: ohma.$gap;
@@ -26,7 +26,11 @@
     }
     &.blue {
         background-color: ohma.$colors-secondary;
-        color: ohma.$colors-white;
+        > div:not(.imgContainer) > .paragraph {
+            h1, h2, h3, h4, h5, h6, p, i {
+                color: ohma.$colors-white;
+            }
+        }
         a {
             @include ohma.borderBtn(ohma.$colors-primary);
         }

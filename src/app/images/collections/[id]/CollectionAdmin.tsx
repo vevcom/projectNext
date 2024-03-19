@@ -1,9 +1,8 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import { createImage, createImages } from '@/actions/images/create'
+import { createImages } from '@/actions/images/create'
 import { updateImageCollection } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
-import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
@@ -12,6 +11,7 @@ import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
 import { EditModeContext } from '@/context/EditMode'
+import ImageUploader from '@/app/components/Image/ImageUploader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
@@ -45,16 +45,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
-                <Form
-                    successCallback={refreshImages}
-                    title="last opp bilde"
-                    submitText="last opp"
-                    action={createImage.bind(null, collectionId)}
-                >
-                    <TextInput color="black" label="navn" name="name" />
-                    <TextInput color="black" label="alternativ tekst" name="alt" />
-                    <FileInput label="fil" name="file" color="primary" />
-                </Form>
+                <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
                 <PopUp PopUpKey={uuid()} showButtonContent={
                     <>
                         Last opp mange

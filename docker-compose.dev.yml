@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   projectnext:
-    build: 
+    build:
       context: ./
       dockerfile: ./Dockerfile
       target: dev
@@ -10,6 +10,7 @@ services:
       - 3000:3000
     volumes:
       - devstore:/usr/src/app/store
+      - dotnext:/usr/src/app/.next
       - ./src:/usr/src/app/src
       - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
       - ./package.json:/usr/src/app/package.json
@@ -25,15 +26,17 @@ services:
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXT_TELEMETRY_DISABLED:  ${NEXT_TELEMETRY_DISABLED}
+      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
       FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
       FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
     depends_on:
-      - db
-      - prisma
+      db:
+        condition: service_healthy
+      prisma:
+        condition: service_completed_successfully
     links:
       - db
-    
+
   db:
     image: postgres:16.0-alpine
     ports:
@@ -46,12 +49,12 @@ services:
       - devdb:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
-      interval: 3s
-      timeout: 3s
-      retries: 10
+      interval: 0.5s
+      timeout: 0.5s
+      retries: 60
 
   prisma:
-    build: 
+    build:
       context: ./src/prisma
       dockerfile: ./prismaservice/Dockerfile
       target: dev
@@ -72,7 +75,7 @@ services:
         condition: service_healthy
     links:
       - db
-  
+
   nginx:
     image: nginx:1.21.3-alpine
     ports:
@@ -90,4 +93,5 @@ volumes:
     driver: local
   devstore:
     driver: local
-          
+  dotnext:
+    driver: local

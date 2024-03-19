@@ -18,6 +18,7 @@ export type PagingContextType<Data, PageSize extends number, FetcherDetails> = R
     serverRenderedData: Data[],
     startPage: Page<PageSize>,
     loading: boolean,
+    deatils: FetcherDetails,
 } | null>
 
 export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
@@ -132,7 +133,16 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
         }, [givenDetails])
 
         return (
-            <Context.Provider value={{ state, loadMore, refetch, serverRenderedData, startPage, setDetails, loading }}>
+            <Context.Provider value={{
+                state,
+                loadMore,
+                refetch,
+                serverRenderedData,
+                startPage,
+                setDetails,
+                loading,
+                deatils: { ...details.current },
+            }}>
                 {children}
             </Context.Provider>
         )
@@ -155,6 +165,7 @@ function generatePagingContext<
         serverRenderedData: Data[],
         startPage: Page<PageSize>,
         loading: boolean,
+        deatils: FetcherDetails,
             } | null>(null)
     return context
 }
