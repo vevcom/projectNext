@@ -25,7 +25,7 @@ export async function createNews(rawdata: CreateNewsArticleType): Promise<Expand
 
     const currentOrder = await readCurrenOmegaOrder()
 
-    const article = await createArticle(name)
+    const article = await createArticle({ name })
 
     const news = await prismaCall(() => prisma.newsArticle.create({
         data: {

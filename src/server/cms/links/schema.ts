@@ -23,7 +23,9 @@ const cmsLinkRefiner = ({ url }: { url: string }): boolean => {
 
 const cmsLinkRefinerMessage = 'Ugyldig URL.'
 
-export const createCmsLinkSchema = baseCmsLinkSchema.setRefiner(cmsLinkRefiner, cmsLinkRefinerMessage)
+export const createCmsLinkSchema = baseCmsLinkSchema
+    .partialize()
+    .setRefiner(cmsLinkRefiner, cmsLinkRefinerMessage)
 
 export type CreateCmsLinkType = ValidationType<typeof createCmsLinkSchema>
 

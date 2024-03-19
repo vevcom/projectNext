@@ -51,7 +51,7 @@ export async function createOmbul(
         file: cover,
     })
 
-    const cmsCoverImage = await createCmsImage(fsLocation, {}, coverImage)
+    const cmsCoverImage = await createCmsImage({ name: fsLocation }, coverImage)
 
     const ombul = await prismaCall(() => prisma.ombul.create({
         data: {

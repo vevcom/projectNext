@@ -40,9 +40,7 @@ export default function EditCategory({ category }: PropTypes) {
         <>
             <li className={styles.newArticle}>
                 <Form
-                    action={createArticleAction.bind(null, null).bind(null, {
-                        categoryId: category.id,
-                    })}
+                    action={createArticleAction.bind(null, {}).bind(null, category.id,)}
                     successCallback={refresh}
                     submitText="Lag ny artikkel"
                 />

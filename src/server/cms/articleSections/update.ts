@@ -91,7 +91,7 @@ export async function addArticleSectionPart(
     switch (part) {
         case 'cmsImage':
         {
-            const cmsImage = await createCmsImage(`${nameOrId}_image`)
+            const cmsImage = await createCmsImage({ name: `${nameOrId}_image` })
             return await prismaCall(() => prisma.articleSection.update({
                 where,
                 data: { cmsImage: { connect: { id: cmsImage.id } } },
@@ -100,7 +100,7 @@ export async function addArticleSectionPart(
         }
         case 'cmsParagraph':
         {
-            const cmsParagraph = await createCmsParagraph(`${nameOrId}_paragraph`)
+            const cmsParagraph = await createCmsParagraph({ name: `${nameOrId}_paragraph` })
             return await prismaCall(() => prisma.articleSection.update({
                 where,
                 data: { cmsParagraph: { connect: { id: cmsParagraph.id } } },
@@ -109,7 +109,7 @@ export async function addArticleSectionPart(
         }
         case 'cmsLink':
         {
-            const cmsLink = await createCmsLink(`${nameOrId}_link`)
+            const cmsLink = await createCmsLink({ name: `${nameOrId}_link` })
             return await prismaCall(() => prisma.articleSection.update({
                 where,
                 data: { cmsLink: { connect: { id: cmsLink.id } } },
