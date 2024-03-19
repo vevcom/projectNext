@@ -7,6 +7,7 @@ import TextInput from "@/app/components/UI/TextInput"
 import Button from "@/app/components/UI/Button"
 import Select from "@/app/components/UI/Select"
 import { useState } from "react"
+import Form from "@/app/components/Form/Form"
 
 export default function ChannelSettings({
     channel,
@@ -54,10 +55,12 @@ export default function ChannelSettings({
     const availableMethodsInherited = findInheretedAvailableMethods(channel);
     const selectOptions = allChannels.map(c => ({ value: c.id, label: c.name }))
 
-    return <div className={styles.channelSettings}>
+    return <Form
+        submitText="Lagre"
+        className={styles.channelSettings}
+    >
         <div className={styles.upperSettings}>
             <div>
-                <Button type="submit" className={styles.saveButton}>Lagre</Button>
                 {channel.special != "ROOT" ? <Select label="Forelder" name="parent" options={selectOptions} /> : null }
                 {channel.special ? <p>Spesiell: {channel.special}</p> : null}
             </div> 
@@ -83,5 +86,5 @@ export default function ChannelSettings({
             />
         </div>
 
-    </div>
+    </Form>
 }

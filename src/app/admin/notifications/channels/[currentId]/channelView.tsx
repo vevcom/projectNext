@@ -5,19 +5,33 @@ import type { NotificationChannelWithMethods } from "@/server/notifications/Type
 import LargeRadio from "@/app/components/UI/LargeRadio";
 import { useState } from "react";
 import ChannelSettings from "./channelSettings";
+import { notFound, useRouter } from "next/navigation";
 
-export default function ChannelView({ channels }: { channels: NotificationChannelWithMethods[] }) {
+export default function ChannelView({
+    channels,
+    currentId,
+}: {
+    channels: NotificationChannelWithMethods[],
+    currentId: number
+}) {
+
+    const { replace } = useRouter();
+
+    console.log(channels);
 
     if (channels.length === 0) {
         throw new Error("No channels found, the special channels should be created.");
     }
 
-    const [selectedChannel, setSelectedChannel] = useState<NotificationChannelWithMethods>(channels[0]);
+    const selectedChannel = channels.find(c => c.id === currentId);
 
+    if (!selectedChannel) {
+        notFound()
+    }
 
     function onChannelSelect(channel: NotificationChannelWithMethods | undefined) {
         if (channel) {
-            setSelectedChannel(channel);
+            replace(`/admin/notifications/channels/${channel.id}`)
         }
     }
 
