@@ -6,6 +6,7 @@ import prisma from '@/prisma'
 import logger from '@/logger'
 import sharp from 'sharp'
 import type { Image, SpecialImage } from '@prisma/client'
+import { CreateImageType, createImageValidation } from './schema'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -13,11 +14,11 @@ import type { Image, SpecialImage } from '@prisma/client'
  * @param meta - The metadata for the image for the db
  * @returns
  */
-export async function createImage(file: File, meta: {
-    name: string,
-    alt: string,
-    collectionId: number,
-}): Promise<Image> {
+export async function createImage({
+    collectionId, 
+    ...rawdata
+} : CreateImageType & { collectionId: number }): Promise<Image> {
+    const { file, ...meta } = createImageValidation.detailedValidate(rawdata)
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 
     const uploadPromises = [
@@ -41,7 +42,7 @@ export async function createImage(file: File, meta: {
             ext,
             collection: {
                 connect: {
-                    id: meta.collectionId,
+                    id: collectionId,
                 }
             }
         }
