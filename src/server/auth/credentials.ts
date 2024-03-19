@@ -2,14 +2,11 @@ import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { SEX } from '@prisma/client'
+import { RegisterUserType, registerUserValidation } from '../users/schema'
 
-export async function registerUser(id: number, config: {
-    password: string
-    email: string
-    username: string
-    sex: SEX
-}): Promise<null> {
+export async function registerUser(id: number, rawdata: RegisterUserType): Promise<null> {
+    const data = registerUserValidation.detailedValidate(rawdata)
+    
     const alredyRegistered = await prismaCall(() => prisma.user.findUnique({
         where: {
             id
@@ -26,16 +23,16 @@ export async function registerUser(id: number, config: {
                 id
             },
             data: {
-                email: config.email,
+                email: data.email,
                 acceptedTerms: new Date(),
-                sex: config.sex
+                sex: data.sex
             }
         }),
         prisma.credentials.create({
             data: {
-                passwordHash: config.password,
+                passwordHash: data.password,
                 userId: id,
-                username: config.username,
+                username: data.username,
             }
         })
     ]))

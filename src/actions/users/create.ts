@@ -1,9 +1,9 @@
 'use server'
-import { createUserSchema, } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createUser } from '@/server/users/create'
-import type { CreateUserSchemaType } from './schema'
+import { createUserValidation } from '@/server/users/schema'
+import type { CreateUserType } from '@/server/users/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 
@@ -12,8 +12,8 @@ import type { User } from '@prisma/client'
  * @param rawdata - The user to create
  * @returns - The created user
  */
-export async function createUserAction(rawdata: FormData | CreateUserSchemaType): Promise<ActionReturn<User>> {
-    const parse = createUserSchema.safeParse(rawdata)
+export async function createUserAction(rawdata: FormData | CreateUserType): Promise<ActionReturn<User>> {
+    const parse = createUserValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
