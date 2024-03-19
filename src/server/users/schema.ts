@@ -1,6 +1,7 @@
 import { SEX } from '@prisma/client'
 import { z } from 'zod'
-import { Validation } from '../extendZodTypeSchema'
+import { Validation } from '../Validation'
+import type { ValidationType } from '../Validation'
 
 const baseUserValidation = new Validation({
     username: z.string(),
@@ -10,6 +11,9 @@ const baseUserValidation = new Validation({
     firstname: z.string(),
     lastname: z.string(),
     confirmPassword: z.string(),
+    acceptedTerms: z.literal('on', {
+        errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+    }),
 }, {
     username: z.string().max(50).min(2),
     password: z.string().max(50).min(2),
@@ -18,30 +22,34 @@ const baseUserValidation = new Validation({
     firstname: z.string().max(50).min(2),
     lastname: z.string().max(50).min(2),
     confirmPassword: z.string().max(50).min(2),
+    acceptedTerms: z.literal('on', {
+        errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+    }),
 })
 
-const x = baseUserValidation.typeValidate(new FormData)
-if (x.success) {
-    x.data.password
-}
+export const createUserValidation = baseUserValidation.pick([
+    'confirmPassword',
+    'email',
+    'firstname',
+    'sex',
+    'username', 
+    'lastname',
+    'password',
+]).setRefiner(data => data.password === data.confirmPassword, 'Passordene må være like')
+export type CreateUserType = ValidationType<typeof createUserValidation>
 
-const y = baseUserValidation.detailedValidate({
-    username: 'username',
-    password: 'password',
-    sex: 'FEMALE',
-    email: 'email',
-    firstname: 'firstname',
-    lastname: 'lastname',
-    confirmPassword: 'password',
-})
+export const updateUserValidation = baseUserValidation.pick([
+    'email',
+    'username',
+    'firstname',
+    'lastname',
+]).partialize()
+export type UpdateUserType = ValidationType<typeof updateUserValidation>
 
-if (y.success) {
-    y.data.
-}
-
-const derivedUserValidation = baseUserValidation.pick(['username', 'password', 'email'])
-
-const n = derivedUserValidation.typeValidate(new FormData)
-if (n.success) {
-    n.data.
-}
+export const registerUserValidation = baseUserValidation.pick([
+    'email',
+    'password',
+    'confirmPassword',
+    'sex'
+]).setRefiner(data => data.password === data.confirmPassword, 'Passordene må være like')
+export type RegisterUserType = ValidationType<typeof registerUserValidation>
