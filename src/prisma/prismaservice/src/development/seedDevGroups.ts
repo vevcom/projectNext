@@ -6,7 +6,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             username: 'Harambe104'
         }
     })
-    
+
     if (!user) {
         throw new Error('Failed to seed groups because Harambe is dead')
     }
