@@ -1,20 +1,20 @@
 import styles from './Select.module.scss'
-import { v4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 export type Proptypes = {
     name: string,
     label?: string,
     options: {
-        value: string,
+        value: string | number,
         label?: string,
     }[],
 }
 
 export default function Select({ name, label, options }: Proptypes) {
-    const id = v4()
+    const id = uuid()
 
     const optionElements = options.map(
-        (option) => <option key={v4()} value={option.value}>
+        (option) => <option key={uuid()} value={option.value}>
             {option.label ?? option.value}
         </option>
     )

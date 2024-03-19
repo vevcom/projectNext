@@ -1,7 +1,7 @@
 "use client"
 
 import styles from './LargeRadio.module.scss'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
 type Listitem = {
@@ -12,15 +12,19 @@ type Listitem = {
 export default function LargeRadio<Type extends Listitem>({
     list: initalList,
     onSelect,
+    defaultSelection,
     name,
+    className,
 }: {
     list: Type[],
     onSelect?: (item: Type | undefined) => void,
+    defaultSelection?: Type,
     name?: string,
+    className?: string,
 }) {
 
     const [list, setList] = useState<Type[]>(initalList)
-    const [selectedItem, setSelectedItem] = useState<Type | undefined>(list.length > 0 ? list[0] : undefined)
+    const [selectedItem, setSelectedItem] = useState<Type | undefined>(defaultSelection)
 
     function onItemSelectChange(e: React.ChangeEvent<HTMLInputElement>) {
         const id = Number(e.target.value)
@@ -30,17 +34,8 @@ export default function LargeRadio<Type extends Listitem>({
         if (onSelect) onSelect(newSelect)
     }
 
-    /*useEffect(() => {
-        setList(initalList)
-        console.log("hei")
-
-        if (!initalList.some(item => item.id === selectedItem?.id)) {
-            setSelectedItem(undefined)
-        }
-    }, [initalList])*/
-
     return (
-        <ul className={styles.container}>
+        <ul className={`${styles.container} ${className ?? ""}`}>
             {list.map((item, i) =>
                 <li key={uuid()}>
                     <input

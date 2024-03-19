@@ -1,0 +1,37 @@
+@use '@/styles/ohma';
+
+.channelSettings {
+
+    width: 100%;
+    
+    > .methodContainer {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    $description-max-width: 350px;
+
+    .descriptionInput {
+        max-width: $description-max-width;
+        width: 100%;
+    }
+
+    > .upperSettings {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 100%;
+
+        > div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        > .widerSettings {
+            width: 100%;
+            max-width: $description-max-width;
+        }
+    }
+}
