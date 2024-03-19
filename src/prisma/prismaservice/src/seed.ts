@@ -8,8 +8,8 @@ import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
-import { PrismaClient } from '@/generated/pn'
 import seedDevGroups from './development/seedDevGroups'
+import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
     const prisma = new PrismaClient()

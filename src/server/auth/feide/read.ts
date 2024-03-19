@@ -1,6 +1,8 @@
 import 'server-only'
-import { AdapterUserCustom, adapterUserCutomFields } from '@/auth/feide/Types'
+import { adapterUserCutomFields } from '@/auth/feide/Types'
 import { ServerError } from '@/server/error'
+import prisma from '@/prisma'
+import type { AdapterUserCustom } from '@/auth/feide/Types'
 
 export async function readAdapterUserByFeideAccount(feideId: string): Promise<AdapterUserCustom | null> {
     const account = await prisma.feideAccount.findUnique({

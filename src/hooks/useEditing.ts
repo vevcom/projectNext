@@ -15,7 +15,7 @@ import type { PermissionMatrix } from '@/auth/checkPermissionMatrix'
  * - IF the bool is true editMode is on and the user has the required permissions
  * - IF the bool is false editMode is off or the user does not have the required permissions
  */
-export default async function useEditing(requiredPermissions?: PermissionMatrix): Promise<boolean> {
+export default function useEditing(requiredPermissions?: PermissionMatrix): boolean {
     const editMode = useContext(EditModeContext)
     const { authorized } = useUser({
         requiredPermissions,
