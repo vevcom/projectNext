@@ -1,7 +1,7 @@
 import 'server-only'
-import { prismaCall } from "@/server/prismaCall"
-import { FeideAccount } from "@prisma/client"
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { FeideAccount } from '@prisma/client'
 
 export async function createFeideAccount({
     id,

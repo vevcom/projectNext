@@ -1,11 +1,11 @@
 import 'server-only'
 import { adapterUserCutomFields } from './Types'
+import { readJWTPayload } from '@/auth/jwt'
+import { readAdapterUserByFeideAccount } from '@/server/auth/feide/read'
+import { createFeideAccount } from '@/server/auth/feide/create'
 import type { AdapterUserCustom } from './Types'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 import type { PrismaClient } from '@prisma/client'
-import { readAdapterUserByFeideAccount } from '@/server/auth/feide/read'
-import { readJWTPayload } from '../jwt'
-import { createFeideAccount } from '@/server/auth/feide/create'
 
 function addALotOfFrustrationWithNextAuth(user: AdapterUserCustom): AdapterUser {
     return {

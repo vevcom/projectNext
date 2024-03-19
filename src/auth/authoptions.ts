@@ -4,12 +4,12 @@ import signUp from './feide/signUp'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/rolePermissions/read'
 import { readMembershipsOfUser } from '@/server/groups/read'
+import { updateFeideAccount } from '@/server/auth/feide/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './feide/Types'
-import { updateFeideAccount } from '@/server/auth/feide/update'
 
 export const authOptions: AuthOptions = {
     providers: [

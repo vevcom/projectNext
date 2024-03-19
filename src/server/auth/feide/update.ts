@@ -1,15 +1,15 @@
 import 'server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { TokenSetParameters } from 'openid-client'
 import { readJWTPayload } from '@/auth/jwt'
+import type { TokenSetParameters } from 'openid-client'
 
 export async function updateFeideAccount(
     accountId: string,
     token: TokenSetParameters,
 ): Promise<boolean> {
     const expiresAt = token.expires_at ? new Date(token.expires_at * 1000) : new Date()
-    
+
     if (!token.expires_at || !token.access_token || !token.id_token) {
         throw new Error('Missing required fields in token')
     }

@@ -1,9 +1,9 @@
 import 'server-only'
 import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
 import { addMemberToGroups } from '@/server/groups/update'
+import { updateEmailForFeideAccount } from '@/server/auth/feide/update'
 import type { User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './Types'
-import { updateEmailForFeideAccount } from '@/server/auth/feide/update'
 
 export default async function signUp({ user, profile }: {user: nextAuthUser, profile: ExtendedFeideUser}) {
     const groups = profile.groups
