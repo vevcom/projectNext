@@ -1,18 +1,18 @@
 'use server'
-import { newsArticleSchema } from './schema'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { updateNews } from '@/server/news/update'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { NewsArticleSchemaType } from './schema'
+import { updateNewsArticleValidation } from '@/server/news/schema'
+import type { UpdateNewsArticleType } from '@/server/news/schema'
 
 export async function updateNewsAction(
     id: number,
-    rawdata: FormData | NewsArticleSchemaType
+    rawdata: FormData | UpdateNewsArticleType
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     //TODO: auth
-    const parse = newsArticleSchema.safeParse(rawdata)
+    const parse = updateNewsArticleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
     return await safeServerCall(() => updateNews(id, data))
