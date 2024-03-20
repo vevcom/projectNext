@@ -8,34 +8,7 @@ import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
 import type { Permission } from '@prisma/client'
-
-type PermissionCategory = {
-    title: string,
-    permissions: {
-        name: string,
-        permission: Permission,
-    }[],
-}
-
-// defines the layout of the role edit section
-const permissionCategories: PermissionCategory[] = [
-    {
-        title: '«Bulshit» og «omegaquotes»',
-        permissions: [
-            { permission: 'OMEGAQUOTES_READ', name: 'Lese omegaquotes' },
-            { permission: 'OMEGAQUOTES_WRITE', name: 'Skrive omegaquotes' },
-        ],
-    },
-    {
-        title: 'ombul',
-        permissions: [
-            { permission: 'OMBUL_READ', name: 'Lese ombul' },
-            { permission: 'OMBUL_CREATE', name: 'Lage ombul' },
-            { permission: 'OMBUL_UPDATE', name: 'Oppdatere ombul' },
-            { permission: 'OMBUL_DESTROY', name: 'Slette ombul' },
-        ],
-    }
-]
+import { permissionCategories } from '@/app/admin/(permissions)/ConfigVars'
 
 /**
  * This function returns all the permissions set to be displayed by

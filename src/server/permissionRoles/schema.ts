@@ -24,4 +24,11 @@ export const updateRoleValidation = baseRoleValidation.pick([
     'name',
     'permissions'
 ])
+
 export type UpdateRoleType = ValidationType<typeof updateRoleValidation>
+
+export const updateDefaultPermissionsValidation = baseRoleValidation.pick([
+    'permissions'
+])
+
+export type UpdateDefaultPermissionsType = ValidationType<typeof updateDefaultPermissionsValidation>

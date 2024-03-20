@@ -1,12 +1,13 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { addGroupToRole, removeGroupFromRole, updateGroupRoleRelation, updateRole } from '@/server/permissionRoles/update'
-import { updateRoleValidation } from '@/server/permissionRoles/schema'
+import { addGroupToRole, removeGroupFromRole, updateDefaultPermissions, updateGroupRoleRelation, updateRole } from '@/server/permissionRoles/update'
+import { updateDefaultPermissionsValidation, updateRoleValidation } from '@/server/permissionRoles/schema'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateRoleType } from '@/server/permissionRoles/schema'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
 import { AddGroupToRoleActionType, RemoveGroupFromRoleActionType, UpdateGroupRoleRelationActionType, addGroupToRoleActionValidation, removeGroupFromRoleActionValidation, updateGroupRoleRelationActionValidation } from './schema'
+import { Permission } from '@prisma/client'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -22,6 +23,22 @@ export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Prom
     const data = parse.data
 
     return await safeServerCall(() => updateRole(data))
+}
+
+/**
+ * A function that updates a role. The given permissions will be set as the new permissions for the role.
+ * All other permissions will be removed.
+ * @param id - The id of the role to update
+ * @param data - The new data for the role
+ * @param permissions - The new permissions for the role
+ */
+export async function updateDefaultPermissionsAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<Permission[]>> {
+    //TODO: auth
+    const parse = updateDefaultPermissionsValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
+
+    return await safeServerCall(() => updateDefaultPermissions(data))
 }
 
 /**
