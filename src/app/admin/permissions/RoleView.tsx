@@ -7,7 +7,6 @@ import UserManagmentForm from './UserManagmentForm'
 import { readUsersOfRoleAction } from '@/actions/rolePermissions/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import Link from 'next/link'
 import type { User } from '@prisma/client'
 import type { ExpandedRole } from '@/server/rolePermissions/Types'
 
@@ -65,7 +64,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         </tr>
                     </thead>
                     <tbody>
-                        {roles.map((role, i) =>
+                        {roles.map(role =>
                             <tr key={uuid()}>
                                 <td className={styles.roleSelect}>
                                     <input
@@ -79,11 +78,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                                     <label htmlFor={`role${role.id}`}>{role.name}</label>
                                 </td>
                                 <td>
-                                    {
-                                        role.special === 'DEFAULT'
-                                            ? 'Alle brukere'
-                                            : role.groups.map(group => String(group.groupId)).join()
-                                    }
+                                    {role.groups.map(group => String(group.groupId)).join()}
                                 </td>
                             </tr>
                         )}

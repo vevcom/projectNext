@@ -1,6 +1,6 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readPermissionsOfDefaultUser, readRoles, readUsersOfRole } from '@/server/rolePermissions/read'
+import { readDefaultPermissions, readRoles, readUsersOfRole } from '@/server/rolePermissions/read'
 import type { Permission, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedRole } from '@/server/rolePermissions/Types'
@@ -15,8 +15,8 @@ export async function readUsersOfRoleAction(roleId: number): Promise<ActionRetur
     return await safeServerCall(() => readUsersOfRole(roleId))
 }
 
-export async function readPermissionsOfDefaultUserAction(): Promise<ActionReturn<Permission[]>> {
+export async function readDefaultPermissionsAction(): Promise<ActionReturn<Permission[]>> {
     // Everyone can do this so no auth is required
 
-    return await safeServerCall(() => readPermissionsOfDefaultUser())
+    return await safeServerCall(() => readDefaultPermissions())
 }

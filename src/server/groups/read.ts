@@ -64,12 +64,16 @@ export async function readMembershipsOfUser(
     }))
 }
 
-export async function readUsersOfMemberships(memberships: BasicMembership[]): Promise<User[]> {
-    return await prismaCall(() => prisma.user.findMany({
+export async function readUsersOfGroups(groups: { groupId: number, admin: boolean }[]): Promise<User[]> {
+    return (await prismaCall(() => prisma.membership.findMany({
         where: {
-            id: {
-                in: memberships.map(membership => membership.groupId)
-            }
+            OR: groups.map(({ admin, groupId }) => ({
+                admin: admin !== true ? undefined : true,
+                groupId,
+            })),
+        },
+        select: {
+            user: true
         }
-    }))
+    }))).map(({ user }) => user)
 }

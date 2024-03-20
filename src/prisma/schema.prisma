@@ -237,14 +237,9 @@ enum Permission {
   STUDY_PROGRAMME_DESTROY
 }
 
-enum SpecialRole {
-  DEFAULT
-}
-
 model Role {
   id          Int              @id @default(autoincrement())
   name        String           @unique
-  special     SpecialRole?     @unique
   groups      RolesGroups[]
   permissions RolePermission[]
 }
@@ -255,6 +250,10 @@ model RolePermission {
   permission Permission
 
   @@unique([roleId, permission])
+}
+
+model DefaultPermission {
+  permission Permission @unique
 }
 
 model RolesGroups {

@@ -6,7 +6,8 @@ import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
-import type { Prisma, Permission } from '@prisma/client'
+import type { ExpandedRole } from '@/server/rolePermissions/Types'
+import type { Permission } from '@prisma/client'
 
 type PermissionCategory = {
     title: string,
@@ -36,15 +37,13 @@ const permissionCategories: PermissionCategory[] = [
     }
 ]
 
-type RoleWithPermissions = Prisma.RoleGetPayload<{include: { permissions: { select: { permission: true } } } } >
-
 /**
  * This function returns all the permissions set to be displayed by
  * `permissionCategories` in the form of an object. The permission are the
  * keys and the values are if they should be checked by default. This is
  * determinded by if they are enabeld on the role that is passed in.
  */
-function generateDisplayedPermissionsState(role: RoleWithPermissions) {
+function generateDisplayedPermissionsState(role: ExpandedRole) {
     return permissionCategories.reduce((result, category) => ({
         ...category.permissions.reduce((permissions, permission) => ({
             [permission.permission]: role.permissions.some(p => p.permission === permission.permission),
@@ -55,7 +54,7 @@ function generateDisplayedPermissionsState(role: RoleWithPermissions) {
 }
 
 type PropTypes = {
-    selectedRole: RoleWithPermissions
+    selectedRole: ExpandedRole
 }
 
 export function UpdateRoleForm({ selectedRole }: PropTypes) {

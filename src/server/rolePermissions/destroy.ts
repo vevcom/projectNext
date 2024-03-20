@@ -4,6 +4,7 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { ExpandedRole } from './Types'
+import { expandedRoleIncluder } from './ConfigVars'
 
 /**
  * A function that delets a role, it will also invalidate the session of all users that have the role
@@ -15,13 +16,7 @@ export async function destroyRole(roleId: number): Promise<ExpandedRole> {
         where: {
             id: roleId
         },
-        include: {
-            permissions: {
-                select: {
-                    permission: true
-                }
-            },
-        }
+        include: expandedRoleIncluder,
     }))
 
     const users = await readUsersOfRole(role.id)

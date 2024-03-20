@@ -1,6 +1,6 @@
 import { authOptions } from './authoptions'
 import { checkPermissionMatrix } from './checkPermissionMatrix'
-import { readPermissionsOfDefaultUser } from '@/server/rolePermissions/read'
+import { readDefaultPermissions } from '@/server/rolePermissions/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
@@ -89,7 +89,7 @@ export async function getUser({
     }
 
     if (!user && !userRequired && requiredPermissions) {
-        const defaultPermissions = await readPermissionsOfDefaultUser()
+        const defaultPermissions = await readDefaultPermissions()
 
         if (checkPermissionMatrix(defaultPermissions, requiredPermissions)) {
             return { user, authorized: true, status: 'AUTHORIZED_NO_USER' }

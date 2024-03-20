@@ -4,31 +4,12 @@ import type { PrismaClient } from '@/generated/pn'
 export default async function seedDevPermissions(prisma: PrismaClient) {
     const allPermissions = Object.values(Permission).map(permission => ({ permission }))
 
-    // Create default role
-
-    await prisma.role.upsert({
-        where: {
-            special: 'DEFAULT',
-        },
-        create: {
-            name: `Standardrollen`,
-            permissions: {
-                createMany: {
-                    data: allPermissions
-                },
-            },
-        },
-        update: {
-            permissions: {
-                createMany: {
-                    data: allPermissions
-                },
-            },
-        },
+    // Seed default permissions
+    await prisma.defaultPermission.createMany({
+        data: allPermissions
     })
 
     // Create Harambe's role
-
     const user = await prisma.user.findUnique({
         where: {
             username: 'Harambe104'
@@ -62,16 +43,15 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
         },
     })
 
-    if (haramabeCommiteeRolesCount > 0)
-        return
+    if (haramabeCommiteeRolesCount > 0) {return}
 
     await prisma.role.create({
         data: {
             name: `${user.firstname}s rolle`,
             permissions: {
-                createMany: {
-                    data: allPermissions
-                },
+                // createMany: {
+                //     data: allPermissions
+                // },
             },
             groups: {
                 create: {

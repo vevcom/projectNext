@@ -6,6 +6,7 @@ import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { UpdateRoleType } from './schema'
 import type { ExpandedRole } from './Types'
+import { expandedRoleIncluder } from './ConfigVars'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -24,13 +25,7 @@ export async function updateRole(
         where: {
             id
         },
-        include: {
-            permissions: {
-                select: {
-                    permission: true,
-                },
-            },
-        },
+        include: expandedRoleIncluder,
         data,
     }))
 
