@@ -30,5 +30,28 @@ export async function invalidateOneUserSessionData(userId: number): Promise<void
  * @param userIds - The ids of the users.
  */
 export async function invalidateManyUserSessionData(userIds: number[]): Promise<void> {
-    await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
+    await prismaCall(() => prisma.user.updateMany({
+        where: {
+            id: {
+                in: userIds,
+            },
+        },
+        data: {
+            updatedAt: new Date(),
+        },
+    }))
+}
+
+/**
+ * Invalidate all JWTs for *all* user.
+ * This should be used only when strictly necessary.
+ *
+ * @param userIds - The ids of the users.
+ */
+export async function invalidateAllUserSessionData(): Promise<void> {
+    await prismaCall(() => prisma.user.updateMany({
+        data: {
+            updatedAt: new Date(),
+        },
+    }))
 }

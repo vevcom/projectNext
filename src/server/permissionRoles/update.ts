@@ -4,7 +4,7 @@ import { updateDefaultPermissionsValidation, updateRoleValidation } from './sche
 import { expandedRoleIncluder } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
+import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { UpdateDefaultPermissionsType, UpdateRoleType } from './schema'
 import type { ExpandedRole } from './Types'
 import { Permission } from '@prisma/client'
@@ -67,8 +67,11 @@ export async function updateRole(
 export async function updateDefaultPermissions(
     rawdata: UpdateDefaultPermissionsType
 ): Promise<Permission[]> {
+    
+    console.log("yo3")
     const { permissions } = updateDefaultPermissionsValidation.detailedValidate(rawdata)
 
+    console.log("yo4")
     // Delete removed permissions
     await prismaCall(() => prisma.defaultPermission.deleteMany({
         where: {
@@ -88,14 +91,8 @@ export async function updateDefaultPermissions(
         skipDuplicates: true
     }))
 
-    const allUsers = await prismaCall(() => prisma.user.findMany({
-        select: {
-            id: true,
-        }
-    }))
-
     // Invalidate all user sessions
-    await invalidateManyUserSessionData(allUsers.map(user => user.id))
+    await invalidateAllUserSessionData()
 
     return await readDefaultPermissions()
 }
