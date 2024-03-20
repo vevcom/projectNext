@@ -14,7 +14,6 @@ import type { ExpandedRole } from './Types'
  * @param id - The id of the role to update
  * @param data - The new data for the role
  * @param permissions - The new permissions for the role
- * @returns
  */
 export async function updateRole(
     rawdata: UpdateRoleType
@@ -56,3 +55,57 @@ export async function updateRole(
     return role
 }
 
+/**
+ * Adds a group to a role.
+ * 
+ * @param groupId - The id of the group to add.
+ * @param roleId - The id of the role to add the group to.
+ * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
+ */
+export async function addGroupToRole(groupId: number, roleId: number, forAdminsOnly: boolean = false): Promise<void> {
+    await prismaCall(() => prisma.rolesGroups.create({
+        data: {
+            groupId,
+            roleId,
+            forAdminsOnly,
+        }
+    }))
+}
+
+/**
+ * Updates a relation between a group and a role.
+ * 
+ * @param groupId - The id of the group to add.
+ * @param roleId - The id of the role to add the group to.
+ * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
+ */
+export async function updateGroupRoleRelation(groupId: number, roleId: number, forAdminsOnly: boolean = false): Promise<void> {
+    await prismaCall(() => prisma.rolesGroups.update({
+        where: {
+            groupId_roleId: {
+                groupId,
+                roleId,
+            },
+        },
+        data: {
+            forAdminsOnly,
+        }
+    }))
+}
+
+/**
+ * Removes a group from a role.
+ * 
+ * @param groupId - The id of the group to remove.
+ * @param roleId - The id of the role to remove the group from.
+ */
+export async function removeGroupFromRole(groupId: number, roleId: number): Promise<void> {
+    await prismaCall(() => prisma.rolesGroups.delete({
+        where: {
+            groupId_roleId: {
+                groupId,
+                roleId,
+            },
+        },
+    }))
+}

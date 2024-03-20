@@ -3,11 +3,11 @@ import styles from './page.module.scss'
 import CreateRoleForm from './CreateRoleForm'
 import DeleteRoleForm from './DeleteRoleForm'
 import { UpdateRoleForm } from './UpdateRoleForm'
-import UserManagmentForm from './UserManagmentForm'
-import { readUsersOfRoleAction } from '@/actions/permissionRoles/read'
+import GroupManagmentForm from './GroupManagmentForm'
+import { readGroupsOfRoleAction } from '@/actions/permissionRoles/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { User } from '@prisma/client'
+import type { RolesGroups } from '@prisma/client'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
 
 type PropTypes = {
@@ -18,7 +18,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
     const [roles, setRoles] = useState<ExpandedRole[]>(initalRoles)
     const [selectedRole, setSelectedRole] = useState<ExpandedRole | undefined>()
 
-    const [users, setUsers] = useState<User[]>([])
+    const [rolesGroups, setRolesGroups] = useState<RolesGroups[]>([])
 
     function onRoleSelectChange(e: React.ChangeEvent<HTMLInputElement>) {
         const id = Number(e.target.value)
@@ -26,20 +26,20 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
         setSelectedRole(roles.find(role => role.id === id))
     }
 
-    async function refreshUsers() {
+    async function refreshRolesGroups() {
         if (!selectedRole) {
-            setUsers([])
+            setRolesGroups([])
             return
         }
 
-        const res = await readUsersOfRoleAction(selectedRole.id)
+        const res = await readGroupsOfRoleAction(selectedRole.id)
 
         if (!res.success) {
-            setUsers([])
+            setRolesGroups([])
             return
         }
 
-        setUsers(res.data)
+        setRolesGroups(res.data)
     }
 
     useEffect(() => {
@@ -51,7 +51,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
     }, [initalRoles])
 
     useEffect(() => {
-        refreshUsers().catch(() => { throw new Error('Could not refresh role users') })
+        refreshRolesGroups().catch(() => { throw new Error('Could not refresh role grou') })
     }, [selectedRole])
 
     return (
@@ -78,7 +78,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                                     <label htmlFor={`role${role.id}`}>{role.name}</label>
                                 </td>
                                 <td>
-                                    {role.groups.map(group => String(group.groupId)).join()}
+                                    {role.groups.map(group => `${group.groupId}${group.forAdminsOnly ? '*' : ''}`)}
                                 </td>
                             </tr>
                         )}
@@ -94,7 +94,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
             </div>
 
             <div className={styles.permissionsSettings}>
-                <h2>Tillatelser</h2>
+                <h2>Tillganger</h2>
                 {selectedRole ?
                     <>
                         <UpdateRoleForm selectedRole={selectedRole} />
@@ -105,13 +105,13 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
             </div>
 
             <div>
-                <h2>Brukere</h2>
+                <h2>Grupper</h2>
                 <ul>
-                    {users.map(user =>
-                        <li key={uuid()}>{user.username}</li>
+                    {rolesGroups.map(group =>
+                        <li key={uuid()}>{group.groupId}</li>
                     )}
                 </ul>
-                {selectedRole && <UserManagmentForm selectedRoleId={selectedRole.id} />}
+                {selectedRole && <GroupManagmentForm selectedRoleId={selectedRole.id} refreshRolesGroups={refreshRolesGroups}/>}
             </div>
         </div>
     )
