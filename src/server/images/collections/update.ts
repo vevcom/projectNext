@@ -13,6 +13,7 @@ import type { UpdateImageCollectionType } from '@/server/images/collections/sche
  */
 export async function updateImageCollection(
     collectionId: number,
+    coverImageId: number | undefined,
     rawdata: UpdateImageCollectionType
 ): Promise<ImageCollection> {
     const data = updateImageCollectionValidation.detailedValidate(rawdata)
@@ -20,6 +21,13 @@ export async function updateImageCollection(
         where: {
             id: collectionId,
         },
-        data
+        data: {
+            ...data,
+            coverImage: {
+                connect: coverImageId ? {
+                    id: coverImageId
+                } : undefined
+            }
+        }
     }))
 }

@@ -1,3 +1,4 @@
+'use client'
 import CmsImageClient from './CmsImageClient'
 import { readSpecialCmsImageAction } from '@/actions/cms/images/read'
 import { useEffect, useState } from 'react'
