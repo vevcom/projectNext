@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createRole } from '@/server/rolePermissions/create'
-import { createRoleValidation } from '@/server/rolePermissions/schema'
+import { createRole } from '@/server/permissionRoles/create'
+import { createRoleValidation } from '@/server/permissionRoles/schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedRole } from '@/server/rolePermissions/Types'
-import type { CreateRoleType } from '@/server/rolePermissions/schema'
+import type { ExpandedRole } from '@/server/permissionRoles/Types'
+import type { CreateRoleType } from '@/server/permissionRoles/schema'
 
 export async function createRoleAction(
     rawdata: FormData | CreateRoleType

@@ -4,11 +4,11 @@ import CreateRoleForm from './CreateRoleForm'
 import DeleteRoleForm from './DeleteRoleForm'
 import { UpdateRoleForm } from './UpdateRoleForm'
 import UserManagmentForm from './UserManagmentForm'
-import { readUsersOfRoleAction } from '@/actions/rolePermissions/read'
+import { readUsersOfRoleAction } from '@/actions/permissionRoles/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { User } from '@prisma/client'
-import type { ExpandedRole } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/permissionRoles/Types'
 
 type PropTypes = {
     roles: ExpandedRole[]
@@ -100,7 +100,7 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         <UpdateRoleForm selectedRole={selectedRole} />
                         <DeleteRoleForm selectedRoleId={selectedRole.id} />
                     </> :
-                    <p><i>Ingen tillgangsnivå valgt</i></p>
+                    <p><i>Ingen tillgangsrolle valgt</i></p>
                 }
             </div>
 

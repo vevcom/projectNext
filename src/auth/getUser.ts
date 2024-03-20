@@ -1,6 +1,6 @@
 import { authOptions } from './authoptions'
 import { checkPermissionMatrix } from './checkPermissionMatrix'
-import { readDefaultPermissions } from '@/server/rolePermissions/read'
+import { readDefaultPermissions } from '@/server/permissionRoles/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'

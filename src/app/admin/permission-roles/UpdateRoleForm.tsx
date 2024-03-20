@@ -1,12 +1,12 @@
 'use client'
 
-import { updateRoleAction } from '@/actions/rolePermissions/update'
+import { updateRoleAction } from '@/actions/permissionRoles/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
-import type { ExpandedRole } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/permissionRoles/Types'
 import type { Permission } from '@prisma/client'
 
 type PermissionCategory = {

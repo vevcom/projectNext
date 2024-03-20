@@ -1,12 +1,12 @@
 import 'server-only'
 import { readUsersOfRole } from './read'
 import { updateRoleValidation } from './schema'
+import { expandedRoleIncluder } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
 import type { UpdateRoleType } from './schema'
 import type { ExpandedRole } from './Types'
-import { expandedRoleIncluder } from './ConfigVars'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.

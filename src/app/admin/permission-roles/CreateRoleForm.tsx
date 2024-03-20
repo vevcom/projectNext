@@ -2,7 +2,7 @@
 
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { createRoleAction } from '@/actions/rolePermissions/create'
+import { createRoleAction } from '@/actions/permissionRoles/create'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 

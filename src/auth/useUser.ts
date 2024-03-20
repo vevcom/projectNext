@@ -1,7 +1,7 @@
 'use client'
 
 import { checkPermissionMatrix } from './checkPermissionMatrix'
-import { readDefaultPermissionsAction } from '@/actions/rolePermissions/read'
+import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'

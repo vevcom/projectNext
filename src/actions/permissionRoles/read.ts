@@ -1,9 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readDefaultPermissions, readRoles, readUsersOfRole } from '@/server/rolePermissions/read'
+import { readDefaultPermissions, readRoles, readUsersOfRole } from '@/server/permissionRoles/read'
 import type { Permission, User } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedRole } from '@/server/rolePermissions/Types'
+import type { ExpandedRole } from '@/server/permissionRoles/Types'
 
 export async function readRolesAction(): Promise<ActionReturn<ExpandedRole[]>> {
     //TODO: Auth
