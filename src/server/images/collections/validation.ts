@@ -6,7 +6,7 @@ export const baseImageCollectionSchema = new ValidationBase({
     type: {
         name: z.string(),
         description: z.string(),
-    }, 
+    },
     details: {
         name: z.string().max(40).min(2).trim(),
         description: z.string().max(500).min(2).trim(),

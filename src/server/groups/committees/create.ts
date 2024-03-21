@@ -1,7 +1,7 @@
+import { createCommitteeValidation } from './validation'
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
-import { createCommitteeValidation } from './validation'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
 

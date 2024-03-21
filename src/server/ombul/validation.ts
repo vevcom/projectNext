@@ -12,15 +12,15 @@ export const baseOmbulValidation = new ValidationBase({
         issueNumber: z.string().optional(),
         name: z.string(),
         description: z.string(),
-    }, 
+    },
     details: {
         ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),
         ombulCoverImage: imageFileSchema,
-        year: z.number().refine(val => 
-            (val === undefined) || (val >= 1919 && val <= (new Date()).getFullYear()), 
-            'Må være mellom 1919 og nåværende år'
+        year: z.number().refine(val =>
+            (val === undefined) || (val >= 1919 && val <= (new Date()).getFullYear()),
+        'Må være mellom 1919 og nåværende år'
         ),
-        issueNumber: z.number().optional().refine(val => 
+        issueNumber: z.number().optional().refine(val =>
             val === undefined || val <= 30, 'max 30'
         ),
         name: z.string().min(2, 'Minimum lengde er 2').max(25, 'Maximum lengde er 25').trim(),
@@ -32,8 +32,8 @@ const transformer = (data: {
     year?: string | undefined,
     issueNumber?: string | undefined,
 }) => ({
-    year: data.year ? parseInt(data.year) : new Date().getFullYear(),
-    issueNumber: data.issueNumber ? parseInt(data.issueNumber) : undefined
+    year: data.year ? parseInt(data.year, 10) : new Date().getFullYear(),
+    issueNumber: data.issueNumber ? parseInt(data.issueNumber, 10) : undefined
 })
 
 export const createOmbulValidation = baseOmbulValidation.createValidation({
@@ -46,7 +46,7 @@ export const createOmbulValidation = baseOmbulValidation.createValidation({
         'description'
     ],
     transformer: data => ({
-        ...data, 
+        ...data,
         ...transformer(data)
     }),
 })
@@ -60,7 +60,7 @@ export const updateOmbulValidation = baseOmbulValidation.createValidation({
         'description'
     ],
     transformer: (data) => ({
-        ...data, 
+        ...data,
         ...transformer(data)
     })
 })

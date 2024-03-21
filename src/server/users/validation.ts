@@ -15,7 +15,7 @@ const baseUserValidation = new ValidationBase({
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
-    }, 
+    },
     details: {
         username: z.string().max(50).min(2),
         password: z.string().max(50).min(2),
@@ -46,7 +46,7 @@ export const createUserValidation = baseUserValidation.createValidation({
         'password',
     ],
     transformer: data => data,
-    refiner: refiner,
+    refiner,
 })
 export type CreateUserTypes = ValidationTypes<typeof createUserValidation>
 
@@ -70,7 +70,7 @@ export const registerUserValidation = baseUserValidation.createValidation({
         'username'
     ],
     transformer: data => data,
-    refiner: refiner,
+    refiner,
 })
 
 export type RegisterUserTypes = ValidationTypes<typeof registerUserValidation>

@@ -1,8 +1,8 @@
 import { ValidationBase } from '@/server/Validation'
-import { ValidationTypes } from '@/server/Validation'
 import { maxFileSize } from '@/server/images/ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
+import type { ValidationTypes } from '@/server/Validation'
 
 export const imageFileSchema = z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb')
 
@@ -12,7 +12,7 @@ export const baseImageValidation = new ValidationBase({
         name: z.string(),
         alt: z.string(),
         files: zfd.repeatable(z.array(z.instanceof(File))),
-    }, 
+    },
     details: {
         file: imageFileSchema,
         name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
@@ -25,7 +25,7 @@ export const baseImageValidation = new ValidationBase({
 })
 
 export const createImageValidation = baseImageValidation.createValidation({
-    keys: ['name', 'alt' ,'file'],
+    keys: ['name', 'alt', 'file'],
     transformer: data => data
 })
 export type CreateImageTypes = ValidationTypes<typeof createImageValidation>

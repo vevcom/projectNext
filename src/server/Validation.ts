@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { ServerError } from "./error";
+import { ServerError } from './error'
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
 
 /**
  * Type for the objects that is used to make sure the  two detailed and type schemas have the same keys
@@ -10,10 +10,18 @@ type SameKeys<T, U> = {
 }
 
 /**
+ * Type that zod returns after parse.
+ */
+type PureTsTypeOfSchema<
+    T extends z.ZodRawShape,
+    Partialized extends boolean = false
+> = Partialized extends true ? Partial<z.infer<ReturnType<typeof z.object<T>>>> : z.infer<ReturnType<typeof z.object<T>>>
+
+/**
  * Type for the Transformer to transfer between type and detailed types.
  */
 type Tranformer<
-    Type extends z.ZodRawShape, 
+    Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
     Partialized extends boolean = false
 > = (data: PureTsTypeOfSchema<Type, Partialized>) => PureTsTypeOfSchema<Detailed, Partialized>
@@ -30,19 +38,11 @@ type Refiner<
 }
 
 /**
- * Type that zod returns after parse.
- */
-type PureTsTypeOfSchema<
-    T extends z.ZodRawShape, 
-    Partialized extends boolean = false
-> = Partialized extends true ? Partial<z.infer<ReturnType<typeof z.object<T>>>> : z.infer<ReturnType<typeof z.object<T>>>
-
-/**
  * A validatiorBase is meant to create Validators that wrapps zod functionality.
  * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
  * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
  * All keys in the one schema must be in the other schema.
- * 
+ *
  * @method createValidation creates a new validation with a subset of the keys and a tranformer
  * that should transform the type returned by parsing the type schema to the type detailed schema expects.
  * @method createValidationPartial Same as above but make all entries in type and detailed schema optional.
@@ -51,8 +51,8 @@ export class ValidationBase<
     Type extends SameKeys<Type, Detailed> & z.ZodRawShape,
     Detailed extends SameKeys<Detailed, Type> & z.ZodRawShape,
 > {
-    private typeSchema: z.ZodObject<Type>;
-    private detailedSchema: z.ZodObject<Detailed>;
+    private typeSchema: z.ZodObject<Type>
+    private detailedSchema: z.ZodObject<Detailed>
 
     constructor({
         type,
@@ -61,19 +61,19 @@ export class ValidationBase<
         type: Type,
         details: Detailed
     }) {
-        this.typeSchema = z.object(type);
-        this.detailedSchema = z.object(details);
+        this.typeSchema = z.object(type)
+        this.detailedSchema = z.object(details)
     }
 
     createValidation<T extends keyof Type & keyof Detailed>({
         keys,
         transformer,
         refiner,
-    }:{
-        keys: T[], 
+    }: {
+        keys: T[],
         transformer: Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>
         refiner?: Refiner<{ [P in T]: Detailed[P] }>
-    }){
+    }) {
         const typeSchema = pickKeys(this.typeSchema.shape, keys)
         const detailedSchema = pickKeys(this.detailedSchema.shape, keys)
         return new Validation<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>({
@@ -88,11 +88,11 @@ export class ValidationBase<
         keys,
         transformer,
         refiner,
-    }:{
-        keys: T[], 
+    }: {
+        keys: T[],
         transformer: Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }, true>
         refiner?: Refiner<{ [P in T]: Detailed[P] }, true>
-    }){
+    }) {
         const typeSchema = pickKeys(this.typeSchema.shape, keys)
         const detailedSchema = pickKeys(this.detailedSchema.shape, keys)
         return new ValidationPartial<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>({
@@ -115,10 +115,10 @@ class Validation<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
-    protected transformer: Tranformer<Type, Detailed>;
-    protected typeSchema: z.ZodObject<Type>;
-    protected detailedSchema: z.ZodObject<Detailed>;
-    protected refiner?: Refiner<Detailed>;
+    protected transformer: Tranformer<Type, Detailed>
+    protected typeSchema: z.ZodObject<Type>
+    protected detailedSchema: z.ZodObject<Detailed>
+    protected refiner?: Refiner<Detailed>
 
     constructor({
         type,
@@ -131,17 +131,21 @@ class Validation<
         transformer: Tranformer<Type, Detailed>
         refiner?: Refiner<Detailed>,
     }) {
-        this.typeSchema = z.object(type);
-        this.detailedSchema = z.object(details);
-        this.transformer = transformer;
-        this.refiner = refiner;
+        this.typeSchema = z.object(type)
+        this.detailedSchema = z.object(details)
+        this.transformer = transformer
+        this.refiner = refiner
     }
-    
-    typeValidate(data: FormData | PureTsTypeOfSchema<Type>) : { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
-        const parse = zfd.formData(this.typeSchema).safeParse(data);
-        if (!parse.success) return {
-            success: false,
-            error: parse.error
+
+    typeValidate(
+        data: FormData | PureTsTypeOfSchema<Type>
+    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
+        const parse = zfd.formData(this.typeSchema).safeParse(data)
+        if (!parse.success) {
+            return {
+                success: false,
+                error: parse.error
+            }
         }
         return {
             success: true,
@@ -151,10 +155,10 @@ class Validation<
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed>) {
         const parse = this.detailedSchema.refine(
-            this.refiner ? this.refiner.fcn : _ => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
-        ).safeParse(data);
+            this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
+        ).safeParse(data)
         if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
-        return parse.data;
+        return parse.data
     }
 }
 
@@ -166,11 +170,11 @@ class Validation<
 class ValidationPartial<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
->  {
-    protected transformer: Tranformer<Type, Detailed, true>;
-    protected typeSchema: z.ZodObject<Type>;
-    protected detailedSchema: z.ZodObject<Detailed>;
-    protected refiner?: Refiner<Detailed, true>;
+> {
+    protected transformer: Tranformer<Type, Detailed, true>
+    protected typeSchema: z.ZodObject<Type>
+    protected detailedSchema: z.ZodObject<Detailed>
+    protected refiner?: Refiner<Detailed, true>
 
     constructor({
         type,
@@ -183,17 +187,21 @@ class ValidationPartial<
         transformer: Tranformer<Type, Detailed, true>
         refiner?: Refiner<Detailed, true>
     }) {
-        this.typeSchema = z.object(type);
-        this.detailedSchema = z.object(details);
-        this.transformer = transformer;
-        this.refiner = refiner;
+        this.typeSchema = z.object(type)
+        this.detailedSchema = z.object(details)
+        this.transformer = transformer
+        this.refiner = refiner
     }
-    
-    typeValidate(data: FormData | Partial<PureTsTypeOfSchema<Type, true>>) : { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
-        const parse = zfd.formData(this.typeSchema.partial()).safeParse(data);
-        if (!parse.success) return {
-            success: false,
-            error: parse.error
+
+    typeValidate(
+        data: FormData | Partial<PureTsTypeOfSchema<Type, true>>
+    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
+        const parse = zfd.formData(this.typeSchema.partial()).safeParse(data)
+        if (!parse.success) {
+            return {
+                success: false,
+                error: parse.error
+            }
         }
         return {
             success: true,
@@ -203,10 +211,10 @@ class ValidationPartial<
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed, true>) {
         const parse = this.detailedSchema.partial().refine(
-            this.refiner ? this.refiner.fcn : _ => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
-        ).safeParse(data);
+            this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
+        ).safeParse(data)
         if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
-        return parse.data;
+        return parse.data
     }
 }
 
@@ -219,6 +227,8 @@ function pickKeys<T, L extends(keyof T)[]>(obj: T, keys: L): { [P in L[number]]:
 
 export type ValidationTypes<V> = V extends Validation<infer Type, infer Detailed>
     ? { Type: PureTsTypeOfSchema<Type>, Detailed: PureTsTypeOfSchema<Detailed> }
-    : V extends ValidationPartial<infer Type, infer Detailed> ? { Type: PureTsTypeOfSchema<Type, true>, Detailed: PureTsTypeOfSchema<Detailed, true> } : never;
-
+    : V extends ValidationPartial<infer Type, infer Detailed> ? {
+        Type: PureTsTypeOfSchema<Type, true>,
+        Detailed: PureTsTypeOfSchema<Detailed, true>
+    } : never;
 

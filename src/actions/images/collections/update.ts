@@ -23,6 +23,6 @@ export async function updateImageCollectionAction(
 
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-        
+
     return await safeServerCall(() => updateImageCollection(collectionId, coverImageId, data))
 }

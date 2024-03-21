@@ -7,7 +7,7 @@ export const baseCmsLinkValidation = new ValidationBase({
         name: z.string(),
         text: z.string(),
         url: z.string(),
-    }, 
+    },
     details: {
         name: z.string(),
         text: z.string().min(1, 'Linken må ha tekst på mer enn 1 bokstav').max(30, 'Max lengde er 30'),

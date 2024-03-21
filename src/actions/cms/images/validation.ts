@@ -1,5 +1,5 @@
-import { baseCmsImageValidation } from "@/server/cms/images/validation";
-import { ValidationTypes } from "@/server/Validation";
+import { baseCmsImageValidation } from '@/server/cms/images/validation'
+import type { ValidationTypes } from '@/server/Validation'
 
 export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({
     keys: ['name'],

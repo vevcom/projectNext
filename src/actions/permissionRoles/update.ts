@@ -1,23 +1,29 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { addGroupToRole, removeGroupFromRole, updateDefaultPermissions, updateGroupRoleRelation, updateRole } from '@/server/permissionRoles/update'
+import {
+    addGroupToRole,
+    removeGroupFromRole,
+    updateDefaultPermissions,
+    updateGroupRoleRelation,
+    updateRole
+} from '@/server/permissionRoles/update'
+import {
+    updateDefaultPermissionsValidation,
+    updateRoleValidation,
+    addGroupToRoleActionValidation,
+    removeGroupFromRoleActionValidation,
+    updateGroupRoleRelationActionValidation
+} from '@/server/permissionRoles/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
-import {
-    updateDefaultPermissionsValidation, 
-    updateRoleValidation,
-    addGroupToRoleActionValidation, 
-    removeGroupFromRoleActionValidation, 
-    updateGroupRoleRelationActionValidation 
+import type {
+    UpdateRoleTypes,
+    AddGroupToRoleActionTypes,
+    RemoveGroupFromRoleActionTypes,
+    UpdateGroupRoleRelationActionTypes,
 } from '@/server/permissionRoles/validation'
-import type { 
-    UpdateRoleTypes, 
-    AddGroupToRoleActionTypes, 
-    RemoveGroupFromRoleActionTypes, 
-    UpdateGroupRoleRelationActionTypes, 
-} from '@/server/permissionRoles/validation'
-import { Permission } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -55,7 +61,7 @@ export async function updateDefaultPermissionsAction(
 
 /**
  * Adds a group to a role.
- * 
+ *
  * @param groupId - The id of the group to add.
  * @param roleId - The id of the role to add the group to.
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
@@ -72,7 +78,7 @@ export async function addGroupToRoleAction(
 
 /**
  * Updates a relation between a group and a role.
- * 
+ *
  * @param groupId - The id of the group to add.
  * @param roleId - The id of the role to add the group to.
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
@@ -89,7 +95,7 @@ export async function updateGroupRoleRelationAction(
 
 /**
  * Removes a group from a role.
- * 
+ *
  * @param groupId - The id of the group to remove.
  * @param roleId - The id of the role to remove the group from.
  */

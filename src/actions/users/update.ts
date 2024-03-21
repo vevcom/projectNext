@@ -9,7 +9,10 @@ import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
 
-export async function updateUserAction(id: number, rawdata: FormData | UpdateUserTypes['Type']): Promise<ActionReturn<User>> {
+export async function updateUserAction(
+    id: number,
+    rawdata: FormData | UpdateUserTypes['Type']
+): Promise<ActionReturn<User>> {
     //TODO: Permission check
     const parse = updateUserValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
@@ -18,7 +21,9 @@ export async function updateUserAction(id: number, rawdata: FormData | UpdateUse
     return await safeServerCall(() => updateUser(id, data))
 }
 
-export async function updateUserCredentailsAction(rawdata: FormData | RegisterUserTypes['Type']): Promise<ActionReturn<null>> {
+export async function updateUserCredentailsAction(
+    rawdata: FormData | RegisterUserTypes['Type']
+): Promise<ActionReturn<null>> {
     const { user, status } = await getUser() //TODO: Permission check
     if (!user) return createActionError(status)
     //TODO: Permission check

@@ -6,7 +6,7 @@ import prisma from '@/prisma'
  * This must be done after modifying data that is stored in the JWT.
  * The *only* exception is modifying data that is on the user model
  * as this is done it automatically.
- * 
+ *
  * @param userIds - The id of the user.
  */
 export async function invalidateOneUserSessionData(userId: number): Promise<void> {
@@ -16,7 +16,7 @@ export async function invalidateOneUserSessionData(userId: number): Promise<void
         },
         data: {
             // The JWT is invalid if it was created after the user model was updated
-            updatedAt: new Date(), 
+            updatedAt: new Date(),
         }
     }))
 }
@@ -26,7 +26,7 @@ export async function invalidateOneUserSessionData(userId: number): Promise<void
  * This must be done after modifying data that is stored in the JWT.
  * The *only* exception is modifying data that is on the user model
  * as this is done it automatically.
- * 
+ *
  * @param userIds - The ids of the users.
  */
 export async function invalidateManyUserSessionData(userIds: number[]): Promise<void> {

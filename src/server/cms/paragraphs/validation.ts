@@ -7,7 +7,7 @@ export const baseCmsParagraphValidation = new ValidationBase({
     type: {
         name: z.string(),
         special: z.nativeEnum(SpecialCmsParagraph).optional(),
-    }, 
+    },
     details: {
         name: z.string(),
         special: z.nativeEnum(SpecialCmsParagraph).optional(),
@@ -15,7 +15,7 @@ export const baseCmsParagraphValidation = new ValidationBase({
 })
 
 export const createCmsParagraphValidation = baseCmsParagraphValidation.createValidation({
-    keys: ['name','special'],
+    keys: ['name', 'special'],
     transformer: data => data
 })
 

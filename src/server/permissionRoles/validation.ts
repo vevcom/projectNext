@@ -9,7 +9,7 @@ export const baseRoleValidation = new ValidationBase({
         id: z.coerce.number(),
         name: z.string(),
         permissions: zfd.repeatable(z.nativeEnum(Permission).array()),
-    }, 
+    },
     details: {
         id: z.coerce.number(),
         name: z.string(),
@@ -24,7 +24,7 @@ export const createRoleValidation = baseRoleValidation.createValidation({
 export type CreateRoleTypes = ValidationTypes<typeof createRoleValidation>
 
 export const updateRoleValidation = baseRoleValidation.createValidation({
-    keys: ['id','name','permissions'],
+    keys: ['id', 'name', 'permissions'],
     transformer: data => data
 })
 export type UpdateRoleTypes = ValidationTypes<typeof updateRoleValidation>
@@ -40,7 +40,7 @@ export const baseGroupRoleActionValidation = new ValidationBase({
         groupId: z.coerce.number(),
         roleId: z.coerce.number(),
         forAdminsOnly: z.coerce.boolean().optional(),
-    }, 
+    },
     details: {
         groupId: z.coerce.number(),
         roleId: z.coerce.number(),
@@ -49,19 +49,19 @@ export const baseGroupRoleActionValidation = new ValidationBase({
 })
 
 export const addGroupToRoleActionValidation = baseGroupRoleActionValidation.createValidation({
-    keys: ['groupId','roleId','forAdminsOnly'],
+    keys: ['groupId', 'roleId', 'forAdminsOnly'],
     transformer: data => data
 })
 export type AddGroupToRoleActionTypes = ValidationTypes<typeof addGroupToRoleActionValidation>
 
 export const updateGroupRoleRelationActionValidation = baseGroupRoleActionValidation.createValidation({
-    keys: ['groupId','roleId','forAdminsOnly'],
+    keys: ['groupId', 'roleId', 'forAdminsOnly'],
     transformer: data => data
 })
 export type UpdateGroupRoleRelationActionTypes = ValidationTypes<typeof updateGroupRoleRelationActionValidation>
 
 export const removeGroupFromRoleActionValidation = baseGroupRoleActionValidation.createValidation({
-    keys: ['groupId','roleId','forAdminsOnly'],
+    keys: ['groupId', 'roleId', 'forAdminsOnly'],
     transformer: data => data
 })
 export type RemoveGroupFromRoleActionTypes = ValidationTypes<typeof removeGroupFromRoleActionValidation>

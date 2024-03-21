@@ -1,4 +1,4 @@
-import { Permission } from "@prisma/client"
+import { Permission } from '@prisma/client'
 
 type PermissionCategory = {
     title: string,
@@ -9,7 +9,7 @@ type PermissionCategory = {
 }
 
 // defines the layout of the role edit section
-export let permissionCategories: PermissionCategory[] = [
+export const permissionCategories: PermissionCategory[] = [
     {
         title: '«Bulshit» og «omegaquotes»',
         permissions: [

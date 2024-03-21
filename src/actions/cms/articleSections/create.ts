@@ -2,9 +2,10 @@
 import { createArticleSection } from '@/server/cms/articleSections/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
+import { createArticleSectionValidation } from '@/server/cms/articleSections/validation'
+import type { CreateArticleSectionTypes } from '@/server/cms/articleSections/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
-import { CreateArticleSectionTypes, createArticleSectionValidation } from '@/server/cms/articleSections/validation'
 
 export async function createArticleSectionAction(
     rawData: FormData | CreateArticleSectionTypes['Type'],

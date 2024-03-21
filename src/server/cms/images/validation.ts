@@ -7,7 +7,7 @@ export const baseCmsImageValidation = new ValidationBase({
     type: {
         name: z.string(),
         special: z.nativeEnum(SpecialCmsImage).optional(),
-    }, 
+    },
     details: {
         name: z.string().max(200, 'Maks lengde er 20 tegn.'),
         special: z.nativeEnum(SpecialCmsImage).optional(),

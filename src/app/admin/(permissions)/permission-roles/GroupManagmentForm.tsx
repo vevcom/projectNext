@@ -2,10 +2,10 @@
 
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
+import { addGroupToRoleAction, removeGroupFromRoleAction } from '@/actions/permissionRoles/update'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
-import { addGroupToRoleAction, removeGroupFromRoleAction } from '@/actions/permissionRoles/update'
 
 type PropTypes = {
     selectedRoleId: number,
@@ -39,7 +39,7 @@ export default function GroupManagmentForm({ selectedRoleId, refreshRolesGroups 
                 <input type="checkbox" name="forAdminsOnly" value="true"/>
                 Kun for administratorere
             </label>
-            
+
         </Form>
 
         <Form

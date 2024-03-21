@@ -111,7 +111,9 @@ export default function RoleView({ roles: initalRoles }: PropTypes) {
                         <li key={uuid()}>{group.groupId}</li>
                     )}
                 </ul>
-                {selectedRole && <GroupManagmentForm selectedRoleId={selectedRole.id} refreshRolesGroups={refreshRolesGroups}/>}
+                { selectedRole &&
+                    <GroupManagmentForm selectedRoleId={selectedRole.id} refreshRolesGroups={refreshRolesGroups}/>
+                }
             </div>
         </div>
     )

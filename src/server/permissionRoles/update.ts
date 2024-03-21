@@ -2,13 +2,13 @@ import 'server-only'
 import { readDefaultPermissions, readUsersOfRole } from './read'
 import { updateDefaultPermissionsValidation, updateRoleValidation } from './validation'
 import { expandedRoleIncluder } from './ConfigVars'
+import { readMembershipsOfGroup } from '@/server/groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
+import type { Permission } from '@prisma/client'
 import type { UpdateDefaultPermissionsTypes, UpdateRoleTypes } from './validation'
 import type { ExpandedRole } from './Types'
-import { Permission } from '@prisma/client'
-import { readMembershipsOfGroup } from '../groups/read'
 
 /**
  * A function that updates a role. The given permissions will be set as the new permissions for the role.
@@ -67,11 +67,10 @@ export async function updateRole(
 export async function updateDefaultPermissions(
     rawdata: UpdateDefaultPermissionsTypes['Detailed']
 ): Promise<Permission[]> {
-    
-    console.log("yo3")
+    console.log('yo3')
     const { permissions } = updateDefaultPermissionsValidation.detailedValidate(rawdata)
 
-    console.log("yo4")
+    console.log('yo4')
     // Delete removed permissions
     await prismaCall(() => prisma.defaultPermission.deleteMany({
         where: {
@@ -99,7 +98,7 @@ export async function updateDefaultPermissions(
 
 /**
  * Adds a group to a role.
- * 
+ *
  * @param groupId - The id of the group to add.
  * @param roleId - The id of the role to add the group to.
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
@@ -112,19 +111,23 @@ export async function addGroupToRole(groupId: number, roleId: number, forAdminsO
             forAdminsOnly,
         }
     }))
-    
-    const memberships = await readMembershipsOfGroup(groupId) 
+
+    const memberships = await readMembershipsOfGroup(groupId)
     await invalidateManyUserSessionData(memberships.map(membership => membership.userId))
 }
 
 /**
  * Updates a relation between a group and a role.
- * 
+ *
  * @param groupId - The id of the group to add.
  * @param roleId - The id of the role to add the group to.
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
  */
-export async function updateGroupRoleRelation(groupId: number, roleId: number, forAdminsOnly: boolean = false): Promise<void> {
+export async function updateGroupRoleRelation(
+    groupId: number,
+    roleId: number,
+    forAdminsOnly: boolean = false
+): Promise<void> {
     await prismaCall(() => prisma.rolesGroups.update({
         where: {
             groupId_roleId: {
@@ -136,14 +139,14 @@ export async function updateGroupRoleRelation(groupId: number, roleId: number, f
             forAdminsOnly,
         }
     }))
-    
-    const memberships = await readMembershipsOfGroup(groupId) 
+
+    const memberships = await readMembershipsOfGroup(groupId)
     await invalidateManyUserSessionData(memberships.map(membership => membership.userId))
 }
 
 /**
  * Removes a group from a role.
- * 
+ *
  * @param groupId - The id of the group to remove.
  * @param roleId - The id of the role to remove the group from.
  */
@@ -156,7 +159,7 @@ export async function removeGroupFromRole(groupId: number, roleId: number): Prom
             },
         },
     }))
-    
-    const memberships = await readMembershipsOfGroup(groupId) 
+
+    const memberships = await readMembershipsOfGroup(groupId)
     await invalidateManyUserSessionData(memberships.map(membership => membership.userId))
 }

@@ -6,7 +6,7 @@ export const baseArticleCategoryValidation = new ValidationBase({
     type: {
         name: z.string(),
         description: z.string(),
-    }, 
+    },
     details: {
         name: z.string().min(2, 'Minmum lengde er 2.').max(18, 'Maks lengde er 2.').trim(),
         description: z.string().max(70, 'Maks lengde er 70.'),

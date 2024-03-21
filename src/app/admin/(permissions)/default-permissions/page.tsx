@@ -1,9 +1,9 @@
 import { updateDefaultPermissionsAction } from '@/actions/permissionRoles/update'
 import Form from '@/app/components/Form/Form'
-import React from 'react'
-import { v4 as uuid } from 'uuid'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { permissionCategories } from '@/app/admin/(permissions)/ConfigVars'
+import React from 'react'
+import { v4 as uuid } from 'uuid'
 
 export default async function Defaults() {
     const defaultPermissionsRes = await readDefaultPermissionsAction()

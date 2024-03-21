@@ -7,12 +7,12 @@ const baseCommitteeValidation = new ValidationBase({
         name: z.string(),
         shortName: z.string(),
         logoImageId: z.number().optional(),
-    }, 
+    },
     details: {
         name: z.string().max(32).min(1).trim(),
         shortName: z.string().max(32).min(1).trim(),
         logoImageId: z.number().optional(),
-    }   
+    }
 })
 
 export const createCommitteeValidation = baseCommitteeValidation.createValidation({
