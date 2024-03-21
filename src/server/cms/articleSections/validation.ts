@@ -2,7 +2,7 @@ import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
 
-export const baseArticleSectionSchema = new ValidationBase({
+export const baseArticleSectionsValidation = new ValidationBase({
     type: {
         name: z.string(),
     }, 
@@ -11,9 +11,9 @@ export const baseArticleSectionSchema = new ValidationBase({
     }   
 })
 
-export const createArticleSectionSchema = baseArticleSectionSchema.createValidation({
+export const createArticleSectionValidation = baseArticleSectionsValidation.createValidation({
     keys: ['name'],
     transformer: data => data,
 })
 
-export type CreateArticleSectionTypes = ValidationTypes<typeof createArticleSectionSchema>
+export type CreateArticleSectionTypes = ValidationTypes<typeof createArticleSectionValidation>
