@@ -2,8 +2,8 @@
 import { createZodActionError } from '@/actions/error'
 import { updateArticleCategory } from '@/server/cms/articleCategories/update'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { updateArticleCategorySchema } from '@/server/cms/articleCategories/schema'
-import type { UpdateArticleCategoryType } from '@/server/cms/articleCategories/schema'
+import { updateArticleCategorySchema } from '@/server/cms/articleCategories/validation'
+import type { UpdateArticleCategoryTypes } from '@/server/cms/articleCategories/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
@@ -19,7 +19,7 @@ export async function updateArticleCategoryVisibilityAction(
 
 export async function updateArticleCategoryAction(
     id: number,
-    rawData: FormData | UpdateArticleCategoryType
+    rawData: FormData | UpdateArticleCategoryTypes['Type']
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
     const parse = updateArticleCategorySchema.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)

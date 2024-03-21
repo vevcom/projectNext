@@ -1,11 +1,11 @@
 import 'server-only'
-import { registerUserValidation } from '@/server/users/schema'
+import { registerUserValidation } from '@/server/users/validation'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { RegisterUserType } from '@/server/users/schema'
+import type { RegisterUserTypes } from '@/server/users/validation'
 
-export async function registerUser(id: number, rawdata: RegisterUserType): Promise<null> {
+export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
     const data = registerUserValidation.detailedValidate(rawdata)
 
     const alredyRegistered = await prismaCall(() => prisma.user.findUnique({

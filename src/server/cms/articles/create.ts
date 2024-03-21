@@ -1,9 +1,9 @@
 import 'server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
-import { createArticleSchema } from './schema'
+import { createArticleValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { CreateArticleType } from './schema'
+import type { CreateArticleTypes } from './validation'
 import type { ExpandedArticle } from './Types'
 
 /**
@@ -14,10 +14,10 @@ import type { ExpandedArticle } from './Types'
  * @returns - The created article with cover all contents
  */
 export async function createArticle(
-    rawData: CreateArticleType,
+    rawData: CreateArticleTypes['Detailed'],
     categoryId?: number,
 ): Promise<ExpandedArticle> {
-    const { name } = createArticleSchema.detailedValidate(rawData)
+    const { name } = createArticleValidation.detailedValidate(rawData)
 
     // if name not given, create a unique new name
     let newName: string

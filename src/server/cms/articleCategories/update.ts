@@ -1,13 +1,13 @@
 import 'server-only'
-import { updateArticleCategorySchema } from './schema'
+import { updateArticleCategorySchema } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { UpdateArticleCategoryType } from './schema'
+import type { UpdateArticleCategoryTypes } from './validation'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 export async function updateArticleCategory(
     id: number,
-    rawData: UpdateArticleCategoryType,
+    rawData: UpdateArticleCategoryTypes['Detailed'],
 ): Promise<ExpandedArticleCategory> {
     const data = updateArticleCategorySchema.detailedValidate(rawData)
 

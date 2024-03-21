@@ -2,13 +2,13 @@
 import { createZodActionError } from '@/actions/error'
 import { createArticleCategory } from '@/server/cms/articleCategories/create'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createArticleCategorySchema } from '@/server/cms/articleCategories/schema'
-import type { CreateArticleCategoryType } from '@/server/cms/articleCategories/schema'
+import { createArticleCategorySchema } from '@/server/cms/articleCategories/validation'
+import type { CreateArticleCategoryTypes } from '@/server/cms/articleCategories/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 export async function createArticleCategoryAction(
-    rawData: FormData | CreateArticleCategoryType
+    rawData: FormData | CreateArticleCategoryTypes['Type']
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
     //TODO: check permission
     const parse = createArticleCategorySchema.typeValidate(rawData)

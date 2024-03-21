@@ -1,11 +1,11 @@
 import 'server-only'
-import { updateArticleCategorySchema } from '@/server/cms/articleCategories/schema'
+import { updateArticleValidation } from './validation'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
 import prisma from '@/prisma'
 import { addArticleSectionPart } from '@/server/cms/articleSections/update'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import type { UpdateArticleCategoryType } from '@/server/cms/articleCategories/schema'
+import type { UpdateArticleTypes } from './validation'
 import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 import type { ArticleSection } from '@prisma/client'
 import type { ExpandedArticle } from '@/cms/articles/Types'
@@ -18,9 +18,9 @@ import type { ExpandedArticle } from '@/cms/articles/Types'
  */
 export async function updateArticle(
     id: number,
-    rawData: UpdateArticleCategoryType,
+    rawData: UpdateArticleTypes['Detailed'],
 ): Promise<ExpandedArticle> {
-    const data = updateArticleCategorySchema.detailedValidate(rawData)
+    const data = updateArticleValidation.detailedValidate(rawData)
 
     return await prismaCall(() => prisma.article.update({
         where: { id },
