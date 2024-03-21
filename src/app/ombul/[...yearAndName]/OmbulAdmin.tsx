@@ -10,6 +10,7 @@ import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
+import CmsImageClient from '@/app/components/Cms/CmsImage/CmsImageClient'
 
 type PropTypes = {
     ombul: ExpandedOmbul
@@ -27,8 +28,7 @@ export default function OmbulAdmin({
     const { push, refresh } = useRouter()
     const canUpdate = useEditing([['OMBUL_UPDATE']])
     const canDestroy = useEditing([['OMBUL_DESTROY']])
-    if (!canUpdate && !canDestroy) return null
-
+    
     const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
     const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)
 
@@ -42,6 +42,7 @@ export default function OmbulAdmin({
         push('/ombul')
         refresh()
     }
+    if (!canUpdate && !canDestroy) return null
 
     return (
         <div className={styles.OmbulAdmin}>
@@ -95,7 +96,7 @@ export default function OmbulAdmin({
                 {
                     canUpdate && (
                         <div className={styles.coverImage}>
-                            <CmsImage cmsImage={ombul.coverImage} width={250} />
+                            <CmsImageClient cmsImage={ombul.coverImage} width={250} />
                         </div>
                     )
                 }
