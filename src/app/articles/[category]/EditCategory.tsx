@@ -58,11 +58,11 @@ export default function EditCategory({ category }: PropTypes) {
                     successCallback={handleSuccessUpdate}
                     submitText="oppdater"
                 >
-                    <TextInput label="navn" name="name" defaultValue={'hei'} />
+                    <TextInput label="navn" name="name" defaultValue={category.name} />
                     <Textarea
                         label="beskrivelse"
                         name="description"
-                        defaultValue={'hei'}
+                        defaultValue={category.description || ''}
                         className={styles.description}
                     />
                 </Form>

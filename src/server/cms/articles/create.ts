@@ -20,18 +20,16 @@ export async function createArticle(
     const { name } = createArticleValidation.detailedValidate(rawData)
 
     // if name not given, create a unique new name
-    let newName: string
-    if (name === null) {
+    let newName = 'Ny artikkel'
+    if (!name) {
         let i = 1
-        newName = 'Ny artikkel'
-
+        
         const checkArticleExists = () => prismaCall(() => prisma.article.findFirst({ where: { name: newName } }))
 
         while (await prismaCall(checkArticleExists)) {
             newName = `Ny artikkel ${i++}`
         }
     }
-
     return await prismaCall(() => prisma.article.create({
         data: {
             name: name ?? newName,
