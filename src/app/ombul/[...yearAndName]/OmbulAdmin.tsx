@@ -10,20 +10,23 @@ import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
-import CmsImageClient from '@/app/components/Cms/CmsImage/CmsImageClient'
+import { ReactNode } from 'react'
 
 type PropTypes = {
     ombul: ExpandedOmbul
+    children: ReactNode
 }
 
 /**
  * The admin panel for the ombul to change cover image (using cms image) anf update year, number and file.
  * The component is only shown if editmode is enabled.
  * @param ombul - The obul (expanded) to be edited
+ * @param children - The cmsimage cover. Rendered on server side.
  * @returns
  */
 export default function OmbulAdmin({
     ombul,
+    children,
 }: PropTypes) {
     const { push, refresh } = useRouter()
     const canUpdate = useEditing([['OMBUL_UPDATE']])
@@ -96,7 +99,7 @@ export default function OmbulAdmin({
                 {
                     canUpdate && (
                         <div className={styles.coverImage}>
-                            <CmsImageClient cmsImage={ombul.coverImage} width={250} />
+                            {children}
                         </div>
                     )
                 }

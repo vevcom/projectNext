@@ -52,7 +52,7 @@ export const createOmbulValidation = baseOmbulValidation.createValidation({
 })
 export type CreateOmbulTypes = ValidationTypes<typeof createOmbulValidation>
 
-export const updateOmbulValidation = baseOmbulValidation.createValidation({
+export const updateOmbulValidation = baseOmbulValidation.createValidationPartial({
     keys: [
         'year',
         'issueNumber',

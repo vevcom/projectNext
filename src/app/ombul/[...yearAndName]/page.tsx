@@ -9,6 +9,7 @@ import { updateOmbulAction } from '@/actions/ombul/update'
 import { getUser } from '@/auth/getUser'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 
 type PropTypes = {
     params: {
@@ -75,9 +76,9 @@ export default async function Ombul({ params }: PropTypes) {
                 </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin
-                    ombul={ombul}
-                />
+                <OmbulAdmin ombul={ombul}>
+                    <CmsImage cmsImage={ombul.coverImage} width={400}/>
+                </OmbulAdmin>
             </div>
         </div>
     )
