@@ -1,6 +1,6 @@
 import { ValidationBase } from '@/server/Validation'
 import { maxOmbulFileSize } from '@/server/ombul/ConfigVars'
-import { imageFileSchema } from '@/server/images/schema'
+import { imageFileSchema } from '@/server/images/validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
 

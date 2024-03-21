@@ -1,11 +1,11 @@
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
-import { createCommitteeValidation } from '@/server/groups/committees/schema'
+import { createCommitteeValidation } from './validation'
 import type { ExpandedCommittee } from './Types'
-import type { CreateCommitteeType } from '@/server/groups/committees/schema'
+import type { CreateCommitteeTypes } from './validation'
 
-export async function createCommittee(rawdata: CreateCommitteeType): Promise<ExpandedCommittee> {
+export async function createCommittee(rawdata: CreateCommitteeTypes['Type']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
     let defaultLogoImageId: number
     if (!logoImageId) {

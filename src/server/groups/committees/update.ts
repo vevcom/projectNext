@@ -1,13 +1,13 @@
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
-import { updateCommitteeValidation } from '@/server/groups/committees/schema'
+import { updateCommitteeValidation } from './validation'
 import type { ExpandedCommittee } from './Types'
-import type { UpdateCommitteeType } from '@/server/groups/committees/schema'
+import type { UpdateCommitteeTypes } from './validation'
 
 export async function updateCommittee(
     id: number,
-    rawdata: UpdateCommitteeType
+    rawdata: UpdateCommitteeTypes['Detailed']
 ): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = updateCommitteeValidation.detailedValidate(rawdata)
 
