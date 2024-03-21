@@ -3,8 +3,8 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
-import { updateOmbulFileValidation, updateOmbulValidation } from '@/server/ombul/schema'
-import type { UpdateOmbulFileType, UpdateOmbulType } from '@/server/ombul/schema'
+import { updateOmbulFileValidation, updateOmbulValidation } from '@/server/ombul/validation'
+import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/server/ombul/validation'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -16,7 +16,7 @@ import type { ActionReturn } from '@/actions/Types'
  */
 export async function updateOmbulAction(
     id: number,
-    rawdata: FormData | UpdateOmbulType
+    rawdata: FormData | UpdateOmbulTypes['Type']
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // Auth route
     const { status, authorized } = await getUser({
@@ -40,7 +40,7 @@ export async function updateOmbulAction(
  */
 export async function updateOmbulFileAction(
     id: number,
-    rawData: FormData | UpdateOmbulFileType
+    rawData: FormData | UpdateOmbulFileTypes['Type']
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { status, authorized } = await getUser({

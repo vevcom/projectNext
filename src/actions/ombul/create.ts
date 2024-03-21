@@ -3,17 +3,17 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { createOmbul } from '@/server/ombul/create'
-import { createOmbulValidation } from '@/server/ombul/schema'
+import { createOmbulValidation } from '@/server/ombul/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
-import type { CreateOmbulType } from '@/server/ombul/schema'
+import type { CreateOmbulTypes } from '@/server/ombul/validation'
 
 /**
  * Create a new Ombul.
  * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber
  * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
  */
-export async function createOmbulAction(rawdata: FormData | CreateOmbulType): Promise<ActionReturn<Ombul>> {
+export async function createOmbulAction(rawdata: FormData | CreateOmbulTypes['Type']): Promise<ActionReturn<Ombul>> {
     //Auth route
     const { status, authorized } = await getUser({
         requiredPermissions: [['OMBUL_CREATE']]

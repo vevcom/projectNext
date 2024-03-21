@@ -1,25 +1,23 @@
 import 'server-only'
-import { createOmbulValidation } from './schema'
+import { createOmbulValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import { readSpecialImageCollection } from '@/server/images/collections/read'
 import { createCmsImage } from '@/server/cms/images/create'
 import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { createImage } from '@/server/images/create'
-import type { CreateOmbulType } from './schema'
+import type { CreateOmbulTypes } from './validation'
 import type { Ombul } from '@prisma/client'
 
 /**
  * Create a new Ombul.
  */
 export async function createOmbul(
-    rawdata: CreateOmbulType
+    rawdata: CreateOmbulTypes['Detailed']
 ): Promise<Ombul> {
     const { ombulFile: file, ombulCoverImage: cover, ...config } = createOmbulValidation.detailedValidate(rawdata)
     // Get the latest issue number if not provided
-    const { year: givenYear, issueNumber: givenIssueNumber, ...restOfConf } = config
-
-    const year = givenYear || new Date().getFullYear()
+    const { year, issueNumber: givenIssueNumber, ...restOfConf } = config
 
     let latestIssueNumber = 1
     if (!givenIssueNumber) {

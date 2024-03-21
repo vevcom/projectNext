@@ -1,11 +1,11 @@
 import 'server-only'
-import { updateOmbulFileValidation, updateOmbulValidation } from './schema'
+import { updateOmbulFileValidation, updateOmbulValidation } from './validation'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { createFile } from '@/server/store/createFile'
 import { destroyFile } from '@/server/store/destroyFile'
-import type { UpdateOmbulFileType, UpdateOmbulType } from './schema'
+import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from './validation'
 import type { ExpandedOmbul } from './Types'
 
 /**
@@ -16,7 +16,7 @@ import type { ExpandedOmbul } from './Types'
  */
 export async function updateOmbul(
     id: number,
-    rawdata: UpdateOmbulType
+    rawdata: UpdateOmbulTypes['Detailed']
 ): Promise<ExpandedOmbul> {
     const data = updateOmbulValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.ombul.update({
@@ -42,7 +42,7 @@ export async function updateOmbul(
  */
 export async function updateOmbulFile(
     id: number,
-    data: UpdateOmbulFileType
+    data: UpdateOmbulFileTypes['Detailed']
 ): Promise<ExpandedOmbul> {
     const { ombulFile: file } = updateOmbulFileValidation.detailedValidate(data)
     const ret = await createFile(file, 'ombul', ['pdf'])
