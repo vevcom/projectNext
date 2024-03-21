@@ -11,7 +11,7 @@ export const baseArticleValidation = new ValidationBase({
     }
 })
 
-export const createArticleValidation = baseArticleValidation.createValidation({
+export const createArticleValidation = baseArticleValidation.createValidationPartial({
     keys: ['name'],
     transformer: data => data
 })
