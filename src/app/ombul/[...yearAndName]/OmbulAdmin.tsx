@@ -5,12 +5,11 @@ import Form from '@/app/components/Form/Form'
 import { updateOmbulAction, updateOmbulFileAction } from '@/actions/ombul/update'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
+import type { ReactNode } from 'react'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
-import { ReactNode } from 'react'
 
 type PropTypes = {
     ombul: ExpandedOmbul
@@ -31,7 +30,7 @@ export default function OmbulAdmin({
     const { push, refresh } = useRouter()
     const canUpdate = useEditing([['OMBUL_UPDATE']])
     const canDestroy = useEditing([['OMBUL_DESTROY']])
-    
+
     const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
     const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)
 

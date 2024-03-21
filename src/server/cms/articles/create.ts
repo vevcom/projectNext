@@ -23,7 +23,7 @@ export async function createArticle(
     let newName = 'Ny artikkel'
     if (!name) {
         let i = 1
-        
+
         const checkArticleExists = () => prismaCall(() => prisma.article.findFirst({ where: { name: newName } }))
 
         while (await prismaCall(checkArticleExists)) {

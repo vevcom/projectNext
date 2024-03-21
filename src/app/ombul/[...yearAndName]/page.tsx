@@ -7,9 +7,9 @@ import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/actions/ombul/update'
 import { getUser } from '@/auth/getUser'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 
 type PropTypes = {
     params: {
