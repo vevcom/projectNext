@@ -1,12 +1,12 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
-import { createImageValidation } from './schema'
+import { createImageValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import { createFile } from '@/server/store/createFile'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import sharp from 'sharp'
-import type { CreateImageType } from './schema'
+import type { CreateImageTypes } from './validation'
 import type { Image, SpecialImage } from '@prisma/client'
 
 /**
@@ -18,7 +18,7 @@ import type { Image, SpecialImage } from '@prisma/client'
 export async function createImage({
     collectionId,
     ...rawdata
-}: CreateImageType & { collectionId: number }): Promise<Image> {
+}: CreateImageTypes['Detailed'] & { collectionId: number }): Promise<Image> {
     const { file, ...meta } = createImageValidation.detailedValidate(rawdata)
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 

@@ -30,7 +30,10 @@ const baseUserValidation = new ValidationBase({
     }
 })
 
-const refiner = (data: { password: string, confirmPassword: string }) => data.password === data.confirmPassword
+const refiner = {
+    fcn: (data: { password: string, confirmPassword: string }) => data.password === data.confirmPassword,
+    message: 'Passordene må være like'
+}
 
 export const createUserValidation = baseUserValidation.createValidation({
     keys: [

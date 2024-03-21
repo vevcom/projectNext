@@ -2,14 +2,14 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createImage } from '@/server/images/create'
-import { createImagesValidation, createImageValidation } from '@/server/images/schema'
+import { createImagesValidation, createImageValidation } from '@/server/images/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
-import type { CreateImageType, CreateImagesType } from '@/server/images/schema'
+import type { CreateImageTypes, CreateImagesTypes } from '@/server/images/validation'
 
 export async function createImageAction(
     collectionId: number,
-    rawdata: FormData | CreateImageType
+    rawdata: FormData | CreateImageTypes['Type']
 ): Promise<ActionReturn<Image>> {
     //TODO: add auth
 
@@ -22,7 +22,7 @@ export async function createImageAction(
 
 export async function createImagesAction(
     collectionId: number,
-    rawdata: FormData | CreateImagesType
+    rawdata: FormData | CreateImagesTypes['Type']
 ): Promise<ActionReturn<Image[]>> {
     //TODO: add auth
 

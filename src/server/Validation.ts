@@ -18,7 +18,10 @@ type Tranformer<
 type Refiner<
     Detailed extends z.ZodRawShape,
     Partialized extends boolean = false
-> = (data: PureTsTypeOfSchema<Detailed, Partialized>) => boolean
+> = {
+    fcn: (data: PureTsTypeOfSchema<Detailed, Partialized>) => boolean
+    message: string
+}
 
 type PureTsTypeOfSchema<
     T extends z.ZodRawShape, 
@@ -121,7 +124,9 @@ class Validation<
     }
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed>) {
-        const parse = this.detailedSchema.refine(this.refiner ? this.refiner : data => true).safeParse(data);
+        const parse = this.detailedSchema.refine(
+            this.refiner ? this.refiner.fcn : _ => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
+        ).safeParse(data);
         if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
         return parse.data;
     }
@@ -154,7 +159,7 @@ class ValidationPartial<
     }
     
     typeValidate(data: FormData | Partial<PureTsTypeOfSchema<Type, true>>) : { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
-        const parse = zfd.formData(this.typeSchema).safeParse(data);
+        const parse = zfd.formData(this.typeSchema.partial()).safeParse(data);
         if (!parse.success) return {
             success: false,
             error: parse.error
@@ -166,7 +171,9 @@ class ValidationPartial<
     }
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed, true>) {
-        const parse = this.detailedSchema.refine(this.refiner ? this.refiner : data => true).safeParse(data);
+        const parse = this.detailedSchema.partial().refine(
+            this.refiner ? this.refiner.fcn : _ => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
+        ).safeParse(data);
         if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
         return parse.data;
     }
