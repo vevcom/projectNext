@@ -9,12 +9,18 @@ type SameKeys<T, U> = {
     [K in keyof T | keyof U]: K extends keyof T & keyof U ? (T[K] | U[K]) : never;
 }
 
+/**
+ * Type for the Transformer to transfer between type and detailed types.
+ */
 type Tranformer<
     Type extends z.ZodRawShape, 
     Detailed extends z.ZodRawShape,
     Partialized extends boolean = false
 > = (data: PureTsTypeOfSchema<Type, Partialized>) => PureTsTypeOfSchema<Detailed, Partialized>
 
+/**
+ * Type for the refiner to refine the detailed schema
+ */
 type Refiner<
     Detailed extends z.ZodRawShape,
     Partialized extends boolean = false
@@ -23,11 +29,24 @@ type Refiner<
     message: string
 }
 
+/**
+ * Type that zod returns after parse.
+ */
 type PureTsTypeOfSchema<
     T extends z.ZodRawShape, 
     Partialized extends boolean = false
 > = Partialized extends true ? Partial<z.infer<ReturnType<typeof z.object<T>>>> : z.infer<ReturnType<typeof z.object<T>>>
 
+/**
+ * A validatiorBase is meant to create Validators that wrapps zod functionality.
+ * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
+ * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
+ * All keys in the one schema must be in the other schema.
+ * 
+ * @method createValidation creates a new validation with a subset of the keys and a tranformer
+ * that should transform the type returned by parsing the type schema to the type detailed schema expects.
+ * @method createValidationPartial Same as above but make all entries in type and detailed schema optional.
+ */
 export class ValidationBase<
     Type extends SameKeys<Type, Detailed> & z.ZodRawShape,
     Detailed extends SameKeys<Detailed, Type> & z.ZodRawShape,
@@ -85,6 +104,13 @@ export class ValidationBase<
     }
 }
 
+/**
+ * A validation that wrapps zod functionality. It can be created fro a ValidationBase.
+ * It has a type schema and a detailed schema. The type schema is meant to check basic
+ * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
+ * @method typeValidate validates the type schema
+ * @method detailedValidate validates the detailed schema
+ */
 class Validation<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
@@ -132,6 +158,11 @@ class Validation<
     }
 }
 
+/**
+ * Same as Validation but all entries in type and detailed schema are optional.
+ * @method typeValidate validates the type schema (in a partial way)
+ * @method detailedValidate validates the detailed schema (in a partial way
+ */
 class ValidationPartial<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
