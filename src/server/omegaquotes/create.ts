@@ -1,8 +1,8 @@
 import 'server-only'
-import { createOmegaquotesValidation } from './schema'
+import { createOmegaquotesValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { CreateOmegaguotesType } from './schema'
+import type { CreateOmegaguotesTypes } from './validation'
 import type { OmegaQuote } from '@prisma/client'
 
 /**
@@ -13,7 +13,7 @@ import type { OmegaQuote } from '@prisma/client'
  */
 export async function createQuote(
     userId: number,
-    rawdata: CreateOmegaguotesType
+    rawdata: CreateOmegaguotesTypes['Detailed']
 ): Promise<OmegaQuote> {
     const data = createOmegaquotesValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.omegaQuote.create({
