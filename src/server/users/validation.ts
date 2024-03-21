@@ -56,7 +56,7 @@ export const updateUserValidation = baseUserValidation.createValidation({
     ],
     transformer: data => data,
 })
-type UpdateUserTypes = ValidationTypes<typeof updateUserValidation>
+export type UpdateUserTypes = ValidationTypes<typeof updateUserValidation>
 
 export const registerUserValidation = baseUserValidation.createValidation({
     keys: [

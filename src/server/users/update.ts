@@ -1,11 +1,11 @@
 import 'server-only'
-import { updateUserValidation } from './schema'
+import { updateUserValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { UpdateUserType } from './schema'
+import type { UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
 
-export async function updateUser(id: number, rawdata: UpdateUserType): Promise<User> {
+export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
 
     return await prismaCall(() => prisma.user.update({
