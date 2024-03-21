@@ -1,12 +1,12 @@
 import 'server-only'
-import { createRoleValidation } from './schema'
+import { createRoleValidation } from './validation'
 import { expandedRoleIncluder } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { CreateRoleType } from './schema'
+import type { CreateRoleTypes } from './validation'
 import type { ExpandedRole } from './Types'
 
-export async function createRole(rawdata: CreateRoleType): Promise<ExpandedRole> {
+export async function createRole(rawdata: CreateRoleTypes['Detailed']): Promise<ExpandedRole> {
     const data = createRoleValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.role.create({
         data,

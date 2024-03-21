@@ -1,11 +1,11 @@
 import 'server-only'
 import { readDefaultPermissions, readUsersOfRole } from './read'
-import { updateDefaultPermissionsValidation, updateRoleValidation } from './schema'
+import { updateDefaultPermissionsValidation, updateRoleValidation } from './validation'
 import { expandedRoleIncluder } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
-import type { UpdateDefaultPermissionsType, UpdateRoleType } from './schema'
+import type { UpdateDefaultPermissionsTypes, UpdateRoleTypes } from './validation'
 import type { ExpandedRole } from './Types'
 import { Permission } from '@prisma/client'
 import { readMembershipsOfGroup } from '../groups/read'
@@ -18,7 +18,7 @@ import { readMembershipsOfGroup } from '../groups/read'
  * @param permissions - The new permissions for the role
  */
 export async function updateRole(
-    rawdata: UpdateRoleType
+    rawdata: UpdateRoleTypes['Detailed']
 ): Promise<ExpandedRole> {
     const { id, permissions, ...data } = updateRoleValidation.detailedValidate(rawdata)
     // Update name of role
@@ -65,7 +65,7 @@ export async function updateRole(
  * @param permissions - The new permissions for the role
  */
 export async function updateDefaultPermissions(
-    rawdata: UpdateDefaultPermissionsType
+    rawdata: UpdateDefaultPermissionsTypes['Detailed']
 ): Promise<Permission[]> {
     
     console.log("yo3")

@@ -2,11 +2,21 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { addGroupToRole, removeGroupFromRole, updateDefaultPermissions, updateGroupRoleRelation, updateRole } from '@/server/permissionRoles/update'
-import { updateDefaultPermissionsValidation, updateRoleValidation } from '@/server/permissionRoles/schema'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateRoleType } from '@/server/permissionRoles/schema'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
-import { AddGroupToRoleActionType, RemoveGroupFromRoleActionType, UpdateGroupRoleRelationActionType, addGroupToRoleActionValidation, removeGroupFromRoleActionValidation, updateGroupRoleRelationActionValidation } from './schema'
+import {
+    updateDefaultPermissionsValidation, 
+    updateRoleValidation,
+    addGroupToRoleActionValidation, 
+    removeGroupFromRoleActionValidation, 
+    updateGroupRoleRelationActionValidation 
+} from '@/server/permissionRoles/validation'
+import type { 
+    UpdateRoleTypes, 
+    AddGroupToRoleActionTypes, 
+    RemoveGroupFromRoleActionTypes, 
+    UpdateGroupRoleRelationActionTypes, 
+} from '@/server/permissionRoles/validation'
 import { Permission } from '@prisma/client'
 
 /**
@@ -16,7 +26,7 @@ import { Permission } from '@prisma/client'
  * @param data - The new data for the role
  * @param permissions - The new permissions for the role
  */
-export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<ExpandedRole>> {
+export async function updateRoleAction(rawdata: FormData | UpdateRoleTypes['Type']): Promise<ActionReturn<ExpandedRole>> {
     //TODO: auth
     const parse = updateRoleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
@@ -32,7 +42,9 @@ export async function updateRoleAction(rawdata: FormData | UpdateRoleType): Prom
  * @param data - The new data for the role
  * @param permissions - The new permissions for the role
  */
-export async function updateDefaultPermissionsAction(rawdata: FormData | UpdateRoleType): Promise<ActionReturn<Permission[]>> {
+export async function updateDefaultPermissionsAction(
+    rawdata: FormData | UpdateRoleTypes['Type']
+): Promise<ActionReturn<Permission[]>> {
     //TODO: auth
     const parse = updateDefaultPermissionsValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
@@ -49,7 +61,7 @@ export async function updateDefaultPermissionsAction(rawdata: FormData | UpdateR
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
  */
 export async function addGroupToRoleAction(
-    rawData: FormData | AddGroupToRoleActionType
+    rawData: FormData | AddGroupToRoleActionTypes['Type']
 ): Promise<ActionReturn<void, false>> {
     const parse = addGroupToRoleActionValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
@@ -66,7 +78,7 @@ export async function addGroupToRoleAction(
  * @param forAdminsOnly - Wheter or not the role should only apply to admins of the group.
  */
 export async function updateGroupRoleRelationAction(
-    rawData: FormData | UpdateGroupRoleRelationActionType
+    rawData: FormData | UpdateGroupRoleRelationActionTypes['Type']
 ): Promise<ActionReturn<void, false>> {
     const parse = updateGroupRoleRelationActionValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
@@ -82,7 +94,7 @@ export async function updateGroupRoleRelationAction(
  * @param roleId - The id of the role to remove the group from.
  */
 export async function removeGroupFromRoleAction(
-    rawData: FormData | RemoveGroupFromRoleActionType
+    rawData: FormData | RemoveGroupFromRoleActionTypes['Type']
 ): Promise<ActionReturn<void, false>> {
     const parse = removeGroupFromRoleActionValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
