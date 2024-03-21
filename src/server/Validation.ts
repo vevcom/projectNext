@@ -1,134 +1,170 @@
-import { ServerError } from './error'
-import { zfd } from 'zod-form-data'
-import { z } from 'zod'
-import type { ZodRawShape } from 'zod'
+import { z } from "zod";
+import { zfd } from "zod-form-data";
+import { ServerError } from "./error";
 
-
-type SchemaType<T extends ZodRawShape> = z.infer<ReturnType<typeof z.object<T>>>
-
-type Refiner<T extends ZodRawShape, Partialized extends boolean> = (
-    data: Partialized extends true
-        ? Partial<SchemaType<T>>
-        : SchemaType<T>
-) => boolean
-
-class ValidationBase<T extends ZodRawShape> {
-    protected typeSchema: ReturnType<typeof z.object<T>>
-    protected detailedSchema: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>
-
-    constructor(
-        obj: T | ReturnType<typeof z.object<T>>,
-        details: {[L in keyof T]: T[L]} | ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>
-    ) {
-        if (obj instanceof z.ZodType) {
-            this.typeSchema = obj
-        } else {
-            this.typeSchema = z.object(obj)
-        }
-        if (details instanceof z.ZodType) {
-            this.detailedSchema = details
-        } else {
-            this.detailedSchema = z.object(details)
-        }
-    }
+/**
+ * Type for the objects that is used to make sure the  two detailed and type schemas have the same keys
+ */
+type SameKeys<T, U> = {
+    [K in keyof T | keyof U]: K extends keyof T & keyof U ? (T[K] | U[K]) : never;
 }
 
-export class ValidationPartial<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    private refiner: {
-        func: Refiner<T, true>,
-        message: 'Dårlige parametere!'
-    }
-    constructor(typeSchema: T, detailedSchema: K) {
-        super(typeSchema, detailedSchema)
-        this.refiner = {
-            func: () => true,
-            message: 'Dårlige parametere!'
-        }
-    }
-    detailedValidate(data: Partial<SchemaType<K>>) {
-        return handleZodReturn(this.detailedSchema.partial().refine(this.refiner.func, this.refiner.message).safeParse(data))
-    }
-    typeValidate(data: FormData | Partial<SchemaType<T>>) {
-        return zfd.formData(this.typeSchema).safeParse(data)
-    }
-    setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
-        return new ValidationRefined<T, K, true>(this.typeSchema, this.detailedSchema, refiner_, message)
-    }
-}
+type Tranformer<
+    Type extends z.ZodRawShape, 
+    Detailed extends z.ZodRawShape,
+    Partialized extends boolean = false
+> = (data: PureTsTypeOfSchema<Type, Partialized>) => PureTsTypeOfSchema<Detailed, Partialized>
 
-export class Validation<T extends ZodRawShape, K extends {[L in keyof T]: T[L]}> extends ValidationBase<T> {
-    pick<L extends(keyof T)[]>(keys: L): Validation<{ [P in L[number]]: T[P] }, { [P in L[number]]: K[P] }> {
+type Refiner<
+    Detailed extends z.ZodRawShape,
+    Partialized extends boolean = false
+> = (data: PureTsTypeOfSchema<Detailed, Partialized>) => boolean
+
+type PureTsTypeOfSchema<
+    T extends z.ZodRawShape, 
+    Partialized extends boolean = false
+> = Partialized extends true ? Partial<z.infer<ReturnType<typeof z.object<T>>>> : z.infer<ReturnType<typeof z.object<T>>>
+
+export class ValidationBase<
+    Type extends SameKeys<Type, Detailed> & z.ZodRawShape,
+    Detailed extends SameKeys<Detailed, Type> & z.ZodRawShape,
+> {
+    private typeSchema: z.ZodObject<Type>;
+    private detailedSchema: z.ZodObject<Detailed>;
+
+    constructor({
+        type,
+        details
+    }: {
+        type: Type,
+        details: Detailed
+    }) {
+        this.typeSchema = z.object(type);
+        this.detailedSchema = z.object(details);
+    }
+
+    createValidation<T extends keyof Type & keyof Detailed>({
+        keys,
+        transformer,
+        refiner,
+    }:{
+        keys: T[], 
+        transformer: Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>
+        refiner?: Refiner<{ [P in T]: Detailed[P] }>
+    }){
         const typeSchema = pickKeys(this.typeSchema.shape, keys)
         const detailedSchema = pickKeys(this.detailedSchema.shape, keys)
+        return new Validation<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>({
+            type: typeSchema,
+            details: detailedSchema,
+            transformer: transformer as Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>,
+            refiner: refiner as Refiner<{ [P in T]: Detailed[P] }>,
+        })
+    }
 
-        return new Validation(typeSchema, detailedSchema)
-    }
-    detailedValidate(data: SchemaType<K>) {
-        return handleZodReturn(this.detailedSchema.safeParse(data))
-    }
-    typeValidate(data: FormData | SchemaType<T>) {
-        return zfd.formData(this.typeSchema).safeParse(data)
-    }
-    partialize() {
-        return new ValidationPartial(this.detailedSchema.shape, this.detailedSchema.shape)
-    }
-    setRefiner(refiner_: Refiner<T, false>, message: string = 'Dårlige parametere!') {
-        return new ValidationRefined(this.typeSchema, this.detailedSchema, refiner_, message)
+    createValidationPartial<T extends keyof Type & keyof Detailed>({
+        keys,
+        transformer,
+        refiner,
+    }:{
+        keys: T[], 
+        transformer: Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }, true>
+        refiner?: Refiner<{ [P in T]: Detailed[P] }, true>
+    }){
+        const typeSchema = pickKeys(this.typeSchema.shape, keys)
+        const detailedSchema = pickKeys(this.detailedSchema.shape, keys)
+        return new ValidationPartial<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }>({
+            type: typeSchema,
+            details: detailedSchema,
+            transformer: transformer as Tranformer<{ [P in T]: Type[P] }, { [P in T]: Detailed[P] }, true>,
+            refiner: refiner as Refiner<{ [P in T]: Detailed[P] }, true>,
+        })
     }
 }
 
-export class ValidationRefined<
-    T extends ZodRawShape,
-    K extends {[L in keyof T]: T[L]},
-    const Partialized extends boolean = false
-> extends ValidationBase<T> {
-    private refiner: {
-        func: Refiner<T, false>,
-        message: string,
+class Validation<
+    Type extends z.ZodRawShape,
+    Detailed extends z.ZodRawShape,
+> {
+    protected transformer: Tranformer<Type, Detailed>;
+    protected typeSchema: z.ZodObject<Type>;
+    protected detailedSchema: z.ZodObject<Detailed>;
+    protected refiner?: Refiner<Detailed>;
+
+    constructor({
+        type,
+        details,
+        transformer,
+        refiner,
+    }: {
+        type: Type,
+        details: Detailed,
+        transformer: Tranformer<Type, Detailed>
+        refiner?: Refiner<Detailed>,
+    }) {
+        this.typeSchema = z.object(type);
+        this.detailedSchema = z.object(details);
+        this.transformer = transformer;
+        this.refiner = refiner;
     }
-    constructor(
-        obj: ReturnType<typeof z.object<T>>,
-        details: ReturnType<typeof z.object<{[L in keyof T]: T[L]}>>,
-        refiner: Refiner<T, false>,
-        message: string
-    ) {
-        super(obj, details)
-        this.refiner = {
-            func: refiner,
-            message,
+    
+    typeValidate(data: FormData | PureTsTypeOfSchema<Type>) {
+        const parse = zfd.formData(this.typeSchema).safeParse(data);
+        if (!parse.success) return parse;
+        return {
+            success: true,
+            data: this.transformer(parse.data)
         }
     }
-    detailedValidate(data: Partialized extends true ? Partial<SchemaType<K>> : SchemaType<K>) {
-        return handleZodReturn(this.detailedSchema.refine(this.refiner.func, this.refiner.message).safeParse(data))
-    }
-    typeValidate(data: FormData | (Partialized extends true ? Partial<SchemaType<T>> : SchemaType<T>)) {
-        return zfd.formData(this.typeSchema).safeParse(data)
+
+    detailedValidate(data: PureTsTypeOfSchema<Detailed>) {
+        const parse = this.detailedSchema.refine(this.refiner ? this.refiner : data => true).safeParse(data);
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
+        return parse.data;
     }
 }
 
-function handleZodReturn<T>(parse: {
-    success: true,
-    data: T,
-} | {
-    success: false,
-    error: z.ZodError,
-}) {
-    if (!parse.success) {
-        throw new ServerError('BAD PARAMETERS', parse.error.issues)
+class ValidationPartial<
+    Type extends z.ZodRawShape,
+    Detailed extends z.ZodRawShape,
+>  {
+    protected transformer: Tranformer<Type, Detailed, true>;
+    protected typeSchema: z.ZodObject<Type>;
+    protected detailedSchema: z.ZodObject<Detailed>;
+    protected refiner?: Refiner<Detailed, true>;
+
+    constructor({
+        type,
+        details,
+        transformer,
+        refiner,
+    }: {
+        type: Type,
+        details: Detailed,
+        transformer: Tranformer<Type, Detailed, true>
+        refiner?: Refiner<Detailed, true>
+    }) {
+        this.typeSchema = z.object(type);
+        this.detailedSchema = z.object(details);
+        this.transformer = transformer;
+        this.refiner = refiner;
     }
-    return parse.data
+    
+    typeValidate(data: FormData | Partial<PureTsTypeOfSchema<Type, true>>) {
+        const parse = zfd.formData(this.typeSchema).safeParse(data);
+        if (!parse.success) return parse;
+        return {
+            success: true,
+            data: this.transformer(parse.data)
+        }
+    }
+
+    detailedValidate(data: PureTsTypeOfSchema<Detailed, true>) {
+        const parse = this.detailedSchema.refine(this.refiner ? this.refiner : data => true).safeParse(data);
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
+        return parse.data;
+    }
 }
-
-type HasDetailedValidate = {
-    // We just want to know if the function detailedValidate exists
-    // on the validation object.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    detailedValidate: (data: any) => any;
-};
-
-export type ValidationType<
-    T extends HasDetailedValidate
-> = Parameters<T['detailedValidate']>['0'];
 
 function pickKeys<T, L extends(keyof T)[]>(obj: T, keys: L): { [P in L[number]]: T[P] } {
     return keys.reduce((result, key) => {
@@ -136,3 +172,9 @@ function pickKeys<T, L extends(keyof T)[]>(obj: T, keys: L): { [P in L[number]]:
         return result
     }, {} as { [P in L[number]]: T[P] })
 }
+
+export type ValidationTypes<V> = V extends Validation<infer Type, infer Detailed>
+    ? { Type: PureTsTypeOfSchema<Type>, Detailed: PureTsTypeOfSchema<Detailed> }
+    : V extends ValidationPartial<infer Type, infer Detailed> ? { Type: PureTsTypeOfSchema<Type, true>, Detailed: PureTsTypeOfSchema<Detailed, true> } : never;
+
+

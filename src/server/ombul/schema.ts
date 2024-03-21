@@ -7,19 +7,16 @@ import type { ValidationType } from '@/server/Validation'
 export const baseOmbulValidation = new Validation({
     ombulFile: z.instanceof(File),
     ombulCoverImage: imageFileSchema,
-    year: z.string().transform(val => parseInt(val, 10))
-        .refine(val => val >= 1900 && val <= new Date().getFullYear(), 'År må være mellom 1900 og nå').optional(),
-    issueNumber: z.string().transform(val => parseInt(val, 10))
-        .refine(val => val <= 30, 'max 30').optional(),
+    year: z.number(),
+    issueNumber: z.number(),
     name: z.string(),
     description: z.string(),
 }, {
     ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),
     ombulCoverImage: imageFileSchema,
-    year: z.string().transform(val => parseInt(val, 10))
-        .refine(val => val >= 1900 && val <= new Date().getFullYear(), 'År må være mellom 1900 og nå').optional(),
-    issueNumber: z.string().transform(val => parseInt(val, 10))
-        .refine(val => val <= 30, 'max 30').optional(),
+    year: z.number().refine(x => x),
+    issueNumber: z.string().optional().transform(val => val ? parseInt(val, 10) : 1)
+        .refine(val => val <= 30, 'max 30'),
     name: z.string().min(2, 'Minimum lengde er 2').max(25, 'Maximum lengde er 25').trim(),
     description: z.string().min(2, 'Minimum lengde er 2').max(100, 'Maximum lengde er 100').trim()
 })
