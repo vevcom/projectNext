@@ -1,8 +1,8 @@
 import 'server-only'
-import { createCmsParagraphSchema } from './schema'
+import { createCmsParagraphValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { CreateCmsParagraphType } from './schema'
+import type { CreateCmsParagraphTypes } from './validation'
 import type { CmsParagraph } from '@prisma/client'
 
 /**
@@ -12,9 +12,9 @@ import type { CmsParagraph } from '@prisma/client'
  * @returns
  */
 export async function createCmsParagraph(
-    rawData: CreateCmsParagraphType
+    rawData: CreateCmsParagraphTypes['Detailed']
 ): Promise<CmsParagraph> {
-    const data = createCmsParagraphSchema.detailedValidate(rawData)
+    const data = createCmsParagraphValidation.detailedValidate(rawData)
 
     return await prismaCall(() => prisma.cmsParagraph.create({
         data,

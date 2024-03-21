@@ -1,9 +1,9 @@
 import 'server-only'
 import { articleSectionsRealtionsIncluder } from './ConfigVars'
-import { createArticleSectionSchema } from './schema'
+import { createArticleSectionSchema } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { CreateArticleSectionType } from './schema'
+import type { CreateArticleSectionTypes } from './validation'
 import type { ExpandedArticleSection } from './Types'
 
 /**
@@ -11,7 +11,9 @@ import type { ExpandedArticleSection } from './Types'
  * @param name - The name of the article section to create
  * @returns
  */
-export async function createArticleSection(rawData: CreateArticleSectionType): Promise<ExpandedArticleSection> {
+export async function createArticleSection(
+    rawData: CreateArticleSectionTypes['Detailed']
+): Promise<ExpandedArticleSection> {
     const data = createArticleSectionSchema.detailedValidate(rawData)
 
     return await prismaCall(() => prisma.articleSection.create({
