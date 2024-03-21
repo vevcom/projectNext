@@ -28,7 +28,7 @@ const cmsLinkRefiner = {
     message: 'Ugyldig URL.'
 }
 
-export const createCmsLinkValidation = baseCmsLinkValidation.createValidation({
+export const createCmsLinkValidation = baseCmsLinkValidation.createValidationPartial({
     keys: ['name', 'text', 'url'],
     transformer: data => data,
     refiner: cmsLinkRefiner
