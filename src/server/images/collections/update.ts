@@ -1,9 +1,9 @@
 import 'server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import { updateImageCollectionValidation } from '@/server/images/collections/schema'
+import { updateImageCollectionValidation } from './validation'
 import type { ImageCollection } from '@prisma/client'
-import type { UpdateImageCollectionType } from '@/server/images/collections/schema'
+import type { UpdateImageCollectionTypes } from './validation'
 
 /**
  * A function that updates an image collection
@@ -14,7 +14,7 @@ import type { UpdateImageCollectionType } from '@/server/images/collections/sche
 export async function updateImageCollection(
     collectionId: number,
     coverImageId: number | undefined,
-    rawdata: UpdateImageCollectionType
+    rawdata: UpdateImageCollectionTypes['Detailed']
 ): Promise<ImageCollection> {
     const data = updateImageCollectionValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.imageCollection.update({

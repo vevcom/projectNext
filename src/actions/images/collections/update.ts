@@ -2,10 +2,10 @@
 import { createZodActionError } from '@/actions/error'
 import { updateImageCollection } from '@/server/images/collections/update'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { updateImageCollectionValidation } from '@/server/images/collections/schema'
+import { updateImageCollectionValidation } from '@/server/images/collections/validation'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateImageCollectionType } from '@/server/images/collections/schema'
+import type { UpdateImageCollectionTypes } from '@/server/images/collections/validation'
 
 /**
  * A action that updates an image collection
@@ -17,7 +17,7 @@ import type { UpdateImageCollectionType } from '@/server/images/collections/sche
 export async function updateImageCollectionAction(
     collectionId: number,
     coverImageId: number | undefined,
-    rawdata: FormData | UpdateImageCollectionType
+    rawdata: FormData | UpdateImageCollectionTypes['Type']
 ): Promise<ActionReturn<ImageCollection>> {
     const parse = updateImageCollectionValidation.typeValidate(rawdata)
 
