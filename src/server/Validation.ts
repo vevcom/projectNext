@@ -108,9 +108,12 @@ class Validation<
         this.refiner = refiner;
     }
     
-    typeValidate(data: FormData | PureTsTypeOfSchema<Type>) {
+    typeValidate(data: FormData | PureTsTypeOfSchema<Type>) : { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
         const parse = zfd.formData(this.typeSchema).safeParse(data);
-        if (!parse.success) return parse;
+        if (!parse.success) return {
+            success: false,
+            error: parse.error
+        }
         return {
             success: true,
             data: this.transformer(parse.data)
@@ -150,9 +153,12 @@ class ValidationPartial<
         this.refiner = refiner;
     }
     
-    typeValidate(data: FormData | Partial<PureTsTypeOfSchema<Type, true>>) {
+    typeValidate(data: FormData | Partial<PureTsTypeOfSchema<Type, true>>) : { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
         const parse = zfd.formData(this.typeSchema).safeParse(data);
-        if (!parse.success) return parse;
+        if (!parse.success) return {
+            success: false,
+            error: parse.error
+        }
         return {
             success: true,
             data: this.transformer(parse.data)
