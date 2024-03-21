@@ -2,14 +2,14 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { updateNews } from '@/server/news/update'
-import { updateNewsArticleValidation } from '@/server/news/schema'
+import { updateNewsArticleValidation } from '@/server/news/validation'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateNewsArticleType } from '@/server/news/schema'
+import type { UpdateNewsArticleTypes } from '@/server/news/validation'
 
 export async function updateNewsAction(
     id: number,
-    rawdata: FormData | UpdateNewsArticleType
+    rawdata: FormData | UpdateNewsArticleTypes['Type']
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
     //TODO: auth
     const parse = updateNewsArticleValidation.typeValidate(rawdata)
