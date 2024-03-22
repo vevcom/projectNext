@@ -13,7 +13,10 @@ export default async function SeedSpecialImageCollections(prisma: PrismaClient) 
             },
             create: {
                 name: special,
-                special
+                special,
+                visibility: {
+                    create: {} //TODO: Link to special visibility with permission.
+                }
             }
         })
     ))
