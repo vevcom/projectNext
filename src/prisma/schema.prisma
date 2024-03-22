@@ -236,6 +236,16 @@ enum Permission {
   STUDY_PROGRAMME_READ
   STUDY_PROGRAMME_UPDATE
   STUDY_PROGRAMME_DESTROY
+
+  // CMS permissions - it overrides the visibility of things
+  CMS_ADMIN
+
+  // User list permissions - theese are admin permissions, and do not have anything
+  // to do with a user´s ability to edit its own user.
+  USER_READ
+  USER_UPDATE
+  USER_DESTROY
+  USER_CREATE
 }
 
 model Role {
