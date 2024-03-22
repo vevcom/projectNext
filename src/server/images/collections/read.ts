@@ -94,7 +94,10 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
                 name: special,
-                special
+                special,
+                visibility: {
+                    create: {} //TODO: Look in a config obj. to see which permission to link to
+                }
             }
         }))
         return newCollection

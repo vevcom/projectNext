@@ -19,5 +19,12 @@ export async function destroyImageCollection(collectionId: number): Promise<Imag
             id: collectionId,
         },
     }))
+
+    //The visibility is "owned" by the collection, so we can delete it here
+    await prismaCall(() => prisma.visibility.delete({
+        where: {
+            id: collection.visibilityId,
+        },
+    }))
     return collection
 }

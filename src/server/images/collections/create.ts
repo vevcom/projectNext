@@ -9,6 +9,13 @@ export async function createImageCollection(
     rawdata: CreateImageCollectionTypes['Detailed']
 ): Promise<ImageCollection> {
     const data = createImageCollectionValidation.detailedValidate(rawdata)
-    return await prismaCall(() => prisma.imageCollection.create({ data }))
+    return await prismaCall(() => prisma.imageCollection.create({ 
+        data: {
+            ...data,
+            visibility: {
+                create: {}
+            }
+        }
+    }))
 }
 
