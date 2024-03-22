@@ -278,19 +278,29 @@ enum VisibilityType {
 }
 
 model Visibility {
-  id           Int                     @id @default(autoincrement())
-  type         VisibilityType          @default(REGULAR)
-  permission   Permission? //Used if type is SPECIAL. (If null everybody will have access)
-  requierments VisibilityRequirmenet[]
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-
+  id              Int              @id @default(autoincrement())
   imageCollection ImageCollection?
+  type            VisibilityType   @default(REGULAR)
+
+  regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
+  regularLevelId Int             @unique
+  adminLevel     VisibilityLevel @relation(fields: [adminLevelId], references: [id], name: "adminLevel")
+  adminLevelId   Int             @unique
+}
+
+model VisibilityLevel {
+  id                Int                     @id @default(autoincrement())
+  permission        Permission? //Used if type of the Visibility is SPECIAL. (If null everybody will have access at this level)
+  requierments      VisibilityRequirmenet[]
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  regularVisibility Visibility?             @relation(name: "regularLevel")
+  adminVisibility   Visibility?             @relation(name: "adminLevel")
 }
 
 model VisibilityRequirmenet {
   id                         Int                          @id @default(autoincrement())
-  visibility                 Visibility                   @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibility                 VisibilityLevel              @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
   visibilityId               Int
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
 }
