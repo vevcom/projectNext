@@ -110,12 +110,13 @@ model Group {
   memberships       Membership[]
   roles             RolesGroups[]
 
-  class                Class?
-  committee            Committee?
-  interestGroup        InterestGroup?
-  manualGroup          ManualGroup?
-  omegaMembershipGroup OmegaMembershipGroup?
-  studyProgramme       StudyProgramme?
+  class                      Class?
+  committee                  Committee?
+  interestGroup              InterestGroup?
+  manualGroup                ManualGroup?
+  omegaMembershipGroup       OmegaMembershipGroup?
+  studyProgramme             StudyProgramme?
+  VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -264,6 +265,32 @@ model RolesGroups {
   forAdminsOnly Boolean
 
   @@unique([groupId, roleId])
+}
+
+////////////////
+// Visibility //
+////////////////
+// The visibility system is used to determine what groups can see what content.
+model Visibility {
+  id           Int                     @id @default(autoincrement())
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  requierments VisibilityRequirmenet[]
+}
+
+model VisibilityRequirmenet {
+  id                         Int                          @id @default(autoincrement())
+  visibility                 Visibility                   @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibilityId               Int
+  VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+}
+
+model VisibilityRequirmenetGroup {
+  id                      Int                   @id @default(autoincrement())
+  visibilityRequirmenet   VisibilityRequirmenet @relation(fields: [visibilityRequirmenetId], references: [id], onDelete: Cascade)
+  visibilityRequirmenetId Int
+  group                   Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId                 Int
 }
 
 ////////////
