@@ -271,11 +271,19 @@ model RolesGroups {
 // Visibility //
 ////////////////
 // The visibility system is used to determine what groups can see what content.
+
+enum VisibilityType {
+  REGULAR //Regular visibilty evaluated to a group matrix
+  SPECIAL //Special visibility just links to a permission
+}
+
 model Visibility {
   id           Int                     @id @default(autoincrement())
+  type         VisibilityType          @default(REGULAR)
+  permission   Permission? //Used if type is SPECIAL. (If null everybody will have access)
+  requierments VisibilityRequirmenet[]
   createdAt    DateTime                @default(now())
   updatedAt    DateTime                @updatedAt
-  requierments VisibilityRequirmenet[]
 
   imageCollection ImageCollection?
 }
