@@ -62,4 +62,48 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             },
         },
     })
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.manualGroup.create({
+        data: {
+            name: `Testgruppe ${i}`,
+            shortName: `TG${i}`,
+            group: {
+                create: {
+                    groupType: 'MANUAL_GROUP',
+                    membershipRenewal: true,
+                },
+            },
+        }
+    })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.committee.create({
+        data: {
+            name: `Testkomité ${i}`,
+            shortName: `TK${i}`,
+            group: {
+                create: {
+                    groupType: 'COMMITTEE',
+                    membershipRenewal: true,
+                },
+            },
+            logoImage: {
+                create: {
+                    name: `Logoen til testkomité ${i}`
+                }
+            },
+        }
+    })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.interestGroup.create({
+        data: {
+            name: `Interessegruppe ${i}`,
+            shortName: `IG${i}`,
+            group: {
+                create: {
+                    groupType: 'INTEREST_GROUP',
+                    membershipRenewal: true,
+                },
+            },
+        }
+    })))
 }
