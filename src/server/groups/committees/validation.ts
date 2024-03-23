@@ -19,7 +19,7 @@ export const createCommitteeValidation = baseCommitteeValidation.createValidatio
     keys: ['name', 'shortName', 'logoImageId'],
     transformer: data => ({
         ...data,
-        logoImageId: data.logoImageId ? parseInt(data.logoImageId) : undefined
+        logoImageId: data.logoImageId ? parseInt(data.logoImageId, 10) : undefined
     })
 })
 export type CreateCommitteeTypes = ValidationTypes<typeof createCommitteeValidation>
@@ -28,7 +28,7 @@ export const updateCommitteeValidation = baseCommitteeValidation.createValidatio
     keys: ['name', 'shortName', 'logoImageId'],
     transformer: data => ({
         ...data,
-        logoImageId: data.logoImageId ? parseInt(data.logoImageId) : undefined
+        logoImageId: data.logoImageId ? parseInt(data.logoImageId, 10) : undefined
     })
 })
 export type UpdateCommitteeTypes = ValidationTypes<typeof updateCommitteeValidation>
