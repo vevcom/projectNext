@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import type { ImageCollection } from '@prisma/client'
+import { destroyVisibility } from '@/server/visibility/destroy'
 
 export async function destroyImageCollection(collectionId: number): Promise<ImageCollection> {
     const collection = await prismaCall(() => prisma.imageCollection.findUnique({
@@ -21,10 +22,6 @@ export async function destroyImageCollection(collectionId: number): Promise<Imag
     }))
 
     //The visibility is "owned" by the collection, so we can delete it here
-    await prismaCall(() => prisma.visibility.delete({
-        where: {
-            id: collection.visibilityId,
-        },
-    }))
+    await destroyVisibility(collection.visibilityId)
     return collection
 }
