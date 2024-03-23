@@ -12,6 +12,7 @@ import type {
 import type { ReadPageInput } from '@/actions/Types'
 import { specialCollectionsVisibilityConfig } from './ConfigVars'
 import { createVisibility } from '@/server/visibility/create'
+import { VisibilityFilter } from '@/auth/getVisibilityFilter'
 
 
 /**
@@ -42,10 +43,12 @@ export async function readImageCollection(
  * @returns - A page of image collections
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+    { page }: ReadPageInput<PageSize>,
+    visibilityFilter: VisibilityFilter
 ): Promise<ImageCollectionPageReturn[]> {
     const { page: pageNumber, pageSize } = page
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
+        where: visibilityFilter,
         include: {
             coverImage: true,
             images: {

@@ -2,18 +2,17 @@ import 'server-only'
 import { ExpandedUser } from './getUser'
 import type { Permission } from '@prisma/client'
 import type { VisibilityType } from '@prisma/client'
+import { BasicMembership } from '@/server/groups/Types'
 
 
-export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermission: Permission[], level: VisibilityType) {
-    const permissions = user ? user.permissions : defaultPaermission // if there is a user the defaultPermissions are already on the user
-    const groupIds = user ? user.memberships.map(m => m.groupId) : []
-
+export function getVisibilityFilter(groups: BasicMembership[] | undefined, permissions: Permission[], level: VisibilityType) {
+    const groupIds = groups ? groups.map(group => group.groupId) : []
 
     return level === 'REGULAR' ? {
         OR: [
             {
                 visibility: {
-                    type: 'SPECIAL',
+                    type: 'SPECIAL' as const,
                     regularLevel: {
                         permission: {
                             in: permissions
@@ -23,7 +22,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
             },
             {
                 visibility: {
-                    type: 'SPECIAL',
+                    type: 'SPECIAL' as const,
                     regularLevel: {
                         permission: null
                     }
@@ -31,7 +30,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
             },
             {
                 visibility: {
-                    type: 'REGULAR',
+                    type: 'REGULAR' as const,
                     regularLevel: {
                         requiremenets: {
                             some: {
@@ -52,7 +51,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
         OR: [
             {
                 visibility: {
-                    type: 'SPECIAL',
+                    type: 'SPECIAL' as const,
                     adminLevel: {
                         permission: {
                             in: permissions
@@ -62,7 +61,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
             },
             {
                 visibility: {
-                    type: 'SPECIAL',
+                    type: 'SPECIAL' as const,
                     adminLevel: {
                         permission: null
                     }
@@ -70,7 +69,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
             },
             {
                 visibility: {
-                    type: 'REGULAR',
+                    type: 'REGULAR' as const,
                     adminLevel: {
                         requiremenets: {
                             some: {
@@ -87,8 +86,7 @@ export function getVisibilityFilter(user: ExpandedUser | null, defaultPaermissio
                 }
             }
         ]
-    
     }
 }
 
-type VisibilityFilter = ReturnType<typeof getVisibilityFilter>
+export type VisibilityFilter = ReturnType<typeof getVisibilityFilter>

@@ -10,6 +10,7 @@ import type {
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
 import { getUser } from '@/auth/getUser'
+import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 
 /**
  * Action that reads an image collection by id or name
@@ -32,7 +33,9 @@ export async function readImageCollectionsPageAction<const PageSize extends numb
     readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     const { user } = await getUser()
-    return await safeServerCall(() => readImageCollectionsPage(readPageInput))
+    //TODO: pass in permissions returned from getUser in the future
+    const visibilityFilter = getVisibilityFilter(user?.memberships, user?.permissions || [], 'REGULAR')
+    return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
 }
 
 /**
