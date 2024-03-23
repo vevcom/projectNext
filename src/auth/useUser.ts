@@ -6,8 +6,9 @@ import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { PermissionMatrix } from './checkPermissionMatrix'
-import type { ExpandedUser } from './getUser'
-import type { Permission } from '@prisma/client'
+import { Permission } from '@prisma/client'
+import { UserFiltered } from '@/server/users/Types'
+import { BasicMembership } from '@/server/groups/Types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.
@@ -21,8 +22,8 @@ type UseUserArgsType<ShouldRedirect extends boolean = false, UserRequired extend
     redirectToLogin?: boolean,
 }
 
-type AuthorizedUseUserReturnType<UserRequired extends boolean = false> = {
-    user: ExpandedUser,
+type AuthorizedUseUserReturnType<UserRequired extends boolean = false> = ({
+    user: UserFiltered,
     authorized: true,
     status: 'AUTHORIZED',
 } | (
@@ -31,22 +32,30 @@ type AuthorizedUseUserReturnType<UserRequired extends boolean = false> = {
         authorized: true,
         status: 'AUTHORIZED_NO_USER',
     }
-) | {
-    user: null,
-    authorized: null,
+)) & {
+    permissions: Permission[],
+    memberships: BasicMembership[],
+} | {
+    user: undefined,
+    authorized: undefined,
     status: 'LOADING',
+    permissions: undefined,
+    memberships: undefined,
 }
 
 type UseUserReturnType<UserRequired extends boolean = false> = (
     AuthorizedUseUserReturnType<UserRequired>
-) | {
+) | ({
     user: null,
     authorized: false,
     status: 'UNAUTHENTICATED',
 } | {
-    user: ExpandedUser,
+    user: UserFiltered,
     authorized: false,
     status: 'UNAUTHORIZED',
+}) & {
+    permissions: Permission[],
+    memberships: BasicMembership[],
 }
 
 export type ClientAuthStatus = UseUserReturnType['status']
@@ -85,55 +94,60 @@ export function useUser({
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
     const { push } = useRouter()
     const pathName = usePathname()
-    const [user, setUser] = useState<ExpandedUser | null>(null)
-    const [userPermissions, setUserPermissions] = useState<Permission[] | undefined>(undefined)
+    const [defaultPermissions, setDefaultPermissions] = useState<Permission[]>()
     const [useUserReturn, setUseuserReturn] = useState<UseUserReturnType<boolean>>({
         status: 'LOADING',
-        authorized: null,
-        user: null,
+        authorized: undefined,
+        user: undefined,
+        memberships: undefined,
+        permissions: undefined,
     })
 
     const { data: session, status: nextAuthStatus } = useSession({
-        required: shouldRedirect && (redirectToLogin ?? true) || false
+        required: shouldRedirect && redirectToLogin,
     })
 
     useEffect(() => {
-        setUser(session?.user ?? null)
-    }, [session])
+        if (nextAuthStatus === 'loading') return  
 
-    useEffect(() => {
-        if (user !== null) {
-            setUserPermissions(user.permissions)
+        const { 
+            user = null,
+            permissions = defaultPermissions,
+            memberships = [],
+        } = session ?? {}
+
+        // If permissions are undefined it can only mean that defaultPermissions are undefined...
+        if (permissions === undefined) {
+            // ...so then we need to fetch the default permissions.
+            readDefaultPermissionsAction().then((defaultPermissionsRes): void => {
+                if (!defaultPermissionsRes.success) throw new Error('Could not read default permissions.')
+                
+                setDefaultPermissions(defaultPermissionsRes.data)
+            })
+
+            // Since reading the default permissions is an async operations we return from this 
+            // useEffect callback. Once the default permissions have been retrieved this callback
+            // will be run again.
             return
         }
-
-        readDefaultPermissionsAction().then((permissionsRes): void => {
-            if (!permissionsRes.success) throw new Error('Could not read permissions for default user.')
-
-            setUserPermissions(permissionsRes.data)
-        })
-    }, [user])
-
-    useEffect(() => {
-        if (nextAuthStatus === 'loading' || userPermissions === undefined) return
 
         // Authorized is true if both these conditions are true
         // 1. The user is logged inn or (the user is not logged inn and the user session is not required)
         // 2. The user has all the required permissions
-        if ((user || !userRequired) && checkPermissionMatrix(userPermissions, requiredPermissions)) {
-            setUseuserReturn(user ? {
-                user,
-                authorized: true,
-                status: 'AUTHORIZED',
-            } : {
-                user,
-                authorized: true,
-                status: 'AUTHORIZED_NO_USER',
-            })
+        if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
+            setUseuserReturn(user
+                ? { user, authorized: true, status: 'AUTHORIZED',         permissions, memberships } 
+                : { user, authorized: true, status: 'AUTHORIZED_NO_USER', permissions, memberships }
+            )
             return
         }
 
         if (shouldRedirect) {
+            // The next auth useSession function will redirect the user to the login page if there
+            // is no user session at all. However, since we can have authorized users without a
+            // session we can only use this feature if userRequired is true. Therefore we need to
+            // handle the case where userRequired is false and the deafult permissions aren't 
+            // enough our selves. 
             if (!user && redirectToLogin) {
                 push(`/login?callbackUrl=${encodeURI(pathName)}`)
             }
@@ -141,16 +155,11 @@ export function useUser({
             push(redirectUrl)
         }
 
-        setUseuserReturn(user ? {
-            user,
-            authorized: false,
-            status: 'UNAUTHORIZED',
-        } : {
-            user,
-            authorized: false,
-            status: 'UNAUTHENTICATED',
-        })
-    }, [user, nextAuthStatus, userPermissions])
+        setUseuserReturn(user
+            ? { user, authorized: false, status: 'UNAUTHORIZED',    permissions, memberships }
+            : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
+        )
+    }, [session, nextAuthStatus, defaultPermissions])
 
     return useUserReturn
 }

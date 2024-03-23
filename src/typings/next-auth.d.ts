@@ -1,19 +1,21 @@
-import type { ExpandedUser } from '@/auth/getUser'
-
 import 'next-auth'
 import 'next-auth/adapters'
 
 import type { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
 import type { FeideAccount } from '@/prisma/client'
+import type { BasicMembership } from '@/server/groups/Types'
+import type { Permission } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
 
 declare module 'next-auth' {
-
     interface User {
         id: number | string,
     }
 
     interface Session {
-        user: ExpandedUser,
+        user: UserFiltered,
+        permissions: Permission[],
+        memberships: BasicMembership[],
     }
 
     interface Profile extends ExtendedFeideUser {
