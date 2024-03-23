@@ -299,27 +299,27 @@ model Visibility {
 }
 
 model VisibilityLevel {
-  id                Int                     @id @default(autoincrement())
+  id                Int                      @id @default(autoincrement())
   permission        Permission? //Used if type of the Visibility is SPECIAL. (If null everybody will have access at this level)
-  requierments      VisibilityRequirmenet[]
-  createdAt         DateTime                @default(now())
-  updatedAt         DateTime                @updatedAt
-  regularVisibility Visibility?             @relation(name: "regularLevel")
-  adminVisibility   Visibility?             @relation(name: "adminLevel")
+  requiremenets     VisibilityRequiremenet[]
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  regularVisibility Visibility?              @relation(name: "regularLevel")
+  adminVisibility   Visibility?              @relation(name: "adminLevel")
 }
 
-model VisibilityRequirmenet {
-  id                         Int                          @id @default(autoincrement())
-  visibility                 VisibilityLevel              @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
-  visibilityId               Int
-  VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+model VisibilityRequiremenet {
+  id                          Int                          @id @default(autoincrement())
+  visibility                  VisibilityLevel              @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibilityId                Int
+  visibilityRequirmenetGroups VisibilityRequirmenetGroup[]
 }
 
 model VisibilityRequirmenetGroup {
-  id                      Int                   @id @default(autoincrement())
-  visibilityRequirmenet   VisibilityRequirmenet @relation(fields: [visibilityRequirmenetId], references: [id], onDelete: Cascade)
+  id                      Int                    @id @default(autoincrement())
+  visibilityRequirmenet   VisibilityRequiremenet @relation(fields: [visibilityRequirmenetId], references: [id], onDelete: Cascade)
   visibilityRequirmenetId Int
-  group                   Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group                   Group                  @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId                 Int
 }
 

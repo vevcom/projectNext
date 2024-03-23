@@ -1,18 +1,18 @@
-import type { Permission, VisibilityType } from "@prisma/client"
-import { BasicMembership } from "../groups/Types"
+import type { Permission } from "@prisma/client"
+
+export type MembershipMatrix = number[][]
 
 /**
- * Type that represents visibility in a simple form
+ * A type that represents a visibility in a simple way. 
+ * Either type is SPECIAL and and levels are based on Permissions,
+ * or type is REGULAR and the levels are represented by matrix of memberships to groups
  */
-export type VisibilityLevelCollapsed = {
-    type: 'SPECIAL',
-    permission: Permission | null
-} | {
-    type: 'REGULAR'
-    groupMatrix: BasicMembership[][]
-}
-
 export type VisibilityCollapsed = {
-    regular: VisibilityLevelCollapsed,
-    admin: VisibilityLevelCollapsed
+    type: 'REGULAR'
+    regular: MembershipMatrix,
+    admin: MembershipMatrix
+} | {
+    type: 'SPECIAL'
+    regular: Permission | null,
+    admin: Permission | null
 }
