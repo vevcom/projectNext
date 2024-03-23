@@ -1,22 +1,19 @@
 import 'server-only'
+import { createArticleCategoryValidation } from './validation'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
+import type { CreateArticleCategoryTypes } from './validation'
 import type { ExpandedArticleCategory } from './Types'
 
 export async function createArticleCategory(
-    data: Required<Pick<Prisma.ArticleCategoryCreateInput, 'description' | 'name'>>
-): Promise<ActionReturn<ExpandedArticleCategory>> {
-    try {
-        const articleCategory = await prisma.articleCategory.create({
-            data,
-            include: {
-                articles: true
-            },
-        })
-        return { success: true, data: articleCategory }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    rawData: CreateArticleCategoryTypes['Detailed']
+): Promise<ExpandedArticleCategory> {
+    const data = createArticleCategoryValidation.detailedValidate(rawData)
+
+    return await prismaCall(() => prisma.articleCategory.create({
+        data,
+        include: {
+            articles: true
+        },
+    }))
 }

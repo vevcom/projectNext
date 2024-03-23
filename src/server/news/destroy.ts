@@ -1,8 +1,7 @@
 import 'server-only'
+import { prismaCall } from '@/server/prismaCall'
 import { destroyArticle } from '@/server/cms/articles/destroy'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 
 /**
@@ -11,19 +10,12 @@ import type { SimpleNewsArticle } from '@/server/news/Types'
  * @param id - id of news article to destroy
  * @returns
  */
-export async function destroyNews(id: number): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    try {
-        const news = await prisma.newsArticle.findUnique({
-            where: { id }
-        })
-        if (!news) return createActionError('NOT FOUND', `News ${id} not found`)
-        const res = await destroyArticle(news.articleId) //This function also destoys cover cms image
-        if (!res.success) return res
-        return {
-            success: true,
-            data: news
+export async function destroyNews(id: number): Promise<Omit<SimpleNewsArticle, 'coverImage'>> {
+    const news = await prismaCall(() => prisma.newsArticle.delete({
+        where: {
+            id
         }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    }))
+    await destroyArticle(news.articleId) //This function also destoys cover cms image
+    return news
 }

@@ -6,7 +6,8 @@ import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/actions/ombul/update'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,8 +19,9 @@ type PropTypes = {
 
 export default async function Ombul({ params }: PropTypes) {
     const { user } = await getUser({
-        requiredPermissions: ['OMBUL_READ'],
-        required: true,
+        requiredPermissions: [['OMBUL_READ']],
+        userRequired: true,
+        shouldRedirect: true,
     })
 
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)
@@ -35,7 +37,6 @@ export default async function Ombul({ params }: PropTypes) {
     const path = `/store/ombul/${ombul.fsLocation}`
 
     const canUpdate = user.permissions.includes('OMBUL_UPDATE')
-    const canDestroy = user.permissions.includes('OMBUL_DESTROY')
 
     const changeDescription = updateOmbulAction.bind(null, ombul.id)
 
@@ -75,11 +76,9 @@ export default async function Ombul({ params }: PropTypes) {
                 </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin
-                    canDestroy={canDestroy}
-                    canUpdate={canUpdate}
-                    ombul={ombul}
-                />
+                <OmbulAdmin ombul={ombul}>
+                    <CmsImage cmsImage={ombul.coverImage} width={400}/>
+                </OmbulAdmin>
             </div>
         </div>
     )

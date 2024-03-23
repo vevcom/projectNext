@@ -1,7 +1,7 @@
 import 'server-only'
-import { updateEmailForFeideAccount } from '.'
-import { upsertManyStudyProgrammes } from '@/server/studyprogrammes/create'
-import { addUserByIdToRoles } from '@/server/rolePermissions/create'
+import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
+import { addMemberToGroups } from '@/server/groups/update'
+import { updateEmailForFeideAccount } from '@/server/auth/feide/update'
 import type { User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './Types'
 
@@ -16,10 +16,8 @@ export default async function signUp({ user, profile }: {user: nextAuthUser, pro
 
     const updatedEmail = updateEmailForFeideAccount(profile.sub, profile.email)
 
-    const studyPrograms = await upsertManyStudyProgrammes(groups)
-    if (studyPrograms.success) {
-        await addUserByIdToRoles(Number(user.id), studyPrograms.data.map(program => program.id))
-    }
+    const studyProgrammes = await upsertStudyProgrammes(groups)
+    await addMemberToGroups(Number(user.id), studyProgrammes.map(programme => ({ groupId: programme.id, admin: false })))
 
     await updatedEmail
 }

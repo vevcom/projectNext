@@ -7,7 +7,7 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
@@ -48,7 +48,7 @@ export default async function Collection({ params }: PropTypes) {
                     <div className={styles.wrapper}>
                         {isAdmin &&
                             <aside className={styles.admin}>
-                                <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                                <CollectionAdmin collection={collection} />
                             </aside>
                         }
                         <div className={styles.images}>

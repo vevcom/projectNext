@@ -4,9 +4,8 @@ import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import { addSectionToArticleAction } from '@/cms/articles/update'
 import { maxSections } from '@/cms/articles/ConfigVars'
-import { EditModeContext } from '@/context/EditMode'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
 import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
 
 type PropTypes = {
@@ -16,8 +15,8 @@ type PropTypes = {
 
 export default function AddSection({ articleId, currentNumberSections }: PropTypes) {
     const { refresh } = useRouter()
-    const editMode = useContext(EditModeContext)
-    if (!editMode?.editMode) return null
+    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
+    if (!canEdit) return null
 
     const handleAdd = async (part: ArticleSectionPart) => {
         addSectionToArticleAction(articleId, {

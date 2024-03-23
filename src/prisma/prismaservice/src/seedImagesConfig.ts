@@ -97,7 +97,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         name: 'default_committee_logo',
         alt: 'komité logo',
         fsLocation: 'logo_simple.png',
-        collection: 'COMMITEELOGOS',
+        collection: 'COMMITTEELOGOS',
     },
     LOGO_SIMPLE: {
         name: 'logo_simple',

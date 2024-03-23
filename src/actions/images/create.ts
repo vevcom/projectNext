@@ -1,31 +1,32 @@
 'use server'
-import { createImageSchema, createImagesSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createImage } from '@/server/images/create'
-import type { CreateImageSchemaType, CreateImagesSchemaType } from './schema'
+import { createImagesValidation, createImageValidation } from '@/server/images/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
+import type { CreateImageTypes, CreateImagesTypes } from '@/server/images/validation'
 
 export async function createImageAction(
     collectionId: number,
-    rawdata: FormData | CreateImageSchemaType
+    rawdata: FormData | CreateImageTypes['Type']
 ): Promise<ActionReturn<Image>> {
     //TODO: add auth
 
-    const parse = createImageSchema.safeParse(rawdata)
+    const parse = createImageValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
-    const { file, ...data } = parse.data
+    const data = parse.data
 
-    return await createImage(file, { ...data, collectionId })
+    return await safeServerCall(() => createImage({ ...data, collectionId }))
 }
 
 export async function createImagesAction(
     collectionId: number,
-    rawdata: FormData | CreateImagesSchemaType
+    rawdata: FormData | CreateImagesTypes['Type']
 ): Promise<ActionReturn<Image[]>> {
     //TODO: add auth
 
-    const parse = createImagesSchema.safeParse(rawdata)
+    const parse = createImagesValidation.typeValidate(rawdata)
 
     if (!parse.success) return createZodActionError(parse)
 
@@ -33,7 +34,9 @@ export async function createImagesAction(
 
     let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
     for (const file of data.files) {
-        const ret = await createImage(file, { name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        const ret = await safeServerCall(
+            () => createImage({ file, name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+        )
         if (!ret.success) return ret
         finalReturn = {
             ...finalReturn,

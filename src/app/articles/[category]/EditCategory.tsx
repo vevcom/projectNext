@@ -40,9 +40,7 @@ export default function EditCategory({ category }: PropTypes) {
         <>
             <li className={styles.newArticle}>
                 <Form
-                    action={createArticleAction.bind(null, null).bind(null, {
-                        categoryId: category.id,
-                    })}
+                    action={createArticleAction.bind(null, {}).bind(null, category.id)}
                     successCallback={refresh}
                     submitText="Lag ny artikkel"
                 />
@@ -60,11 +58,11 @@ export default function EditCategory({ category }: PropTypes) {
                     successCallback={handleSuccessUpdate}
                     submitText="oppdater"
                 >
-                    <TextInput label="navn" name="name" defaultValue={'hei'} />
+                    <TextInput label="navn" name="name" defaultValue={category.name} />
                     <Textarea
                         label="beskrivelse"
                         name="description"
-                        defaultValue={'hei'}
+                        defaultValue={category.description || ''}
                         className={styles.description}
                     />
                 </Form>

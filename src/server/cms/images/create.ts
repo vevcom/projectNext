@@ -1,9 +1,10 @@
 import 'server-only'
+import { createCmsImageValidation } from './validation'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { Image, SpecialCmsImage } from '@prisma/client'
+import { prismaCall } from '@/server/prismaCall'
+import type { CreateCmsImageTypes } from './validation'
+import type { Image } from '@prisma/client'
 import type { ExpandedCmsImage } from './Types'
-import type { ActionReturn } from '@/actions/Types'
 
 /**
  * A function to create a cmsImage
@@ -13,29 +14,22 @@ import type { ActionReturn } from '@/actions/Types'
  * @returns - The created cmsImage
  */
 export async function createCmsImage(
-    name: string,
-    data?: {
-        special?: SpecialCmsImage
-    },
-    image?: Image
-): Promise<ActionReturn<ExpandedCmsImage>> {
-    try {
-        const created = await prisma.cmsImage.create({
-            data: {
-                name,
-                special: data?.special,
-                image: image ? {
-                    connect: {
-                        id: image?.id
-                    }
-                } : undefined
-            },
-            include: {
-                image: true
-            }
-        })
-        return { success: true, data: created }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    rawData: CreateCmsImageTypes['Detailed'],
+    image?: Image,
+): Promise<ExpandedCmsImage> {
+    const data = createCmsImageValidation.detailedValidate(rawData)
+
+    return await prismaCall(() => prisma.cmsImage.create({
+        data: {
+            ...data,
+            image: image ? {
+                connect: {
+                    id: image?.id
+                }
+            } : undefined
+        },
+        include: {
+            image: true
+        }
+    }))
 }

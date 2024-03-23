@@ -1,5 +1,5 @@
 import 'server-only'
-import { readJWTPayload } from '.'
+import { readJWTPayload } from '@/auth/jwt'
 import type { Awaitable } from 'next-auth'
 import type { Provider } from 'next-auth/providers/index'
 import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from './Types'

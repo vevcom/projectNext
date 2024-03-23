@@ -1,8 +1,8 @@
 import 'server-only'
-import { createActionError, createPrismaActionError } from '@/actions/error'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import { destroyFile } from '@/server/store/destroyFile'
-import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 /**
@@ -10,38 +10,28 @@ import type { ExpandedOmbul } from '@/server/ombul/Types'
  * @param id - The id of the ombul to destroy
  * @returns
  */
-export async function destroyOmbul(id: number): Promise<ActionReturn<ExpandedOmbul>> {
-    try {
-        const ombul = await prisma.ombul.findUnique({
-            where: {
-                id
-            },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
+export async function destroyOmbul(id: number): Promise<ExpandedOmbul> {
+    const ombul = await prismaCall(() => prisma.ombul.findUnique({
+        where: {
+            id
+        },
+        include: {
+            coverImage: {
+                include: {
+                    image: true
                 }
             }
-        })
-        if (!ombul) {
-            return createActionError('NOT FOUND', 'Ombul ikke funnet.')
         }
+    }))
+    if (!ombul) throw new ServerError('NOT FOUND', 'Ombul ikke funnet.')
 
-        const res = await destroyFile('ombul', ombul.fsLocation)
-        if (!res.success) return res
+    await destroyFile('ombul', ombul.fsLocation)
 
-        await prisma.ombul.delete({
-            where: {
-                id
-            }
-        })
-
-        return {
-            success: true,
-            data: ombul
+    await prisma.ombul.delete({
+        where: {
+            id
         }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    })
+
+    return ombul
 }

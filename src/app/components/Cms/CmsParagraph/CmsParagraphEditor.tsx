@@ -1,11 +1,11 @@
 'use client'
 import styles from './CmsParagraphEditor.module.scss'
 import EditOverlay from '@/components/Cms/EditOverlay'
-import { EditModeContext } from '@/context/EditMode'
 import Form from '@/components/Form/Form'
 import { updateCmsParagraphAction } from '@/actions/cms/paragraphs/update'
 import PopUp from '@/components/PopUp/PopUp'
-import { useContext, useState } from 'react'
+import useEditing from '@/hooks/useEditing'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
@@ -27,11 +27,11 @@ type PropTypes = {
 }
 
 export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: PropTypes) {
-    const editmode = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: pass visibility / permissions to useEditing
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
 
-    if (!editmode?.editMode) return null
+    if (!canEdit) return null
 
     const handleContentChange = (value: string) => {
         setContent(value)

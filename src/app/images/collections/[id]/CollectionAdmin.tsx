@@ -10,29 +10,28 @@ import { destroyImageCollectionAction } from '@/actions/images/collections/destr
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
-import { EditModeContext } from '@/context/EditMode'
 import ImageUploader from '@/app/components/Image/ImageUploader'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { Image as ImageT } from '@prisma/client'
+import type { ExpandedImageCollection } from '@/server/images/collections/Types'
 
 type PropTypes = {
-    collectionId: number,
-    coverImage: ImageT | null,
+    collection: ExpandedImageCollection
 }
 
-export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
+export default function CollectionAdmin({ collection }: PropTypes) {
+    const { id: collectionId, coverImage } = collection
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
     if (!selection) throw new Error('No context')
 
-    const editMode = useContext(EditModeContext)
-    const shouldRender = editMode?.editMode ?? true
-    if (!shouldRender) return null
+    const editMode = useEditing() //TODO: auth collection visibility
+    if (!editMode) return null
 
     const refreshImages = () => {
         if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
@@ -72,8 +71,18 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 submitText="oppdater"
                 action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput color="black" label="navn" name="name" />
-                <TextInput color="black" label="beskrivelse" name="description" />
+                <TextInput
+                    defaultValue={collection.name}
+                    color="black"
+                    label="navn"
+                    name="name"
+                />
+                <TextInput
+                    defaultValue={collection.description || ''}
+                    color="black"
+                    label="beskrivelse"
+                    name="description"
+                />
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>

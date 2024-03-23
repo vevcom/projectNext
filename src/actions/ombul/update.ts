@@ -1,9 +1,10 @@
 'use server'
-import { updateOmbulSchema, updateObuleFileSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
-import type { UpdateOmbulSchemaType, UpdateOmbulFileSchemaType } from './schema'
+import { updateOmbulFileValidation, updateOmbulValidation } from '@/server/ombul/validation'
+import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/server/ombul/validation'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 import type { ActionReturn } from '@/actions/Types'
 
@@ -15,24 +16,20 @@ import type { ActionReturn } from '@/actions/Types'
  */
 export async function updateOmbulAction(
     id: number,
-    rawdata: FormData | UpdateOmbulSchemaType
+    rawdata: FormData | UpdateOmbulTypes['Type']
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // Auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
     //Parse the data
-    const parse = updateOmbulSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    const parse = updateOmbulValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await updateOmbul(id, data)
+    return await safeServerCall(() => updateOmbul(id, data))
 }
 
 /**
@@ -43,21 +40,17 @@ export async function updateOmbulAction(
  */
 export async function updateOmbulFileAction(
     id: number,
-    rawData: FormData | UpdateOmbulFileSchemaType
+    rawData: FormData | UpdateOmbulFileTypes['Type']
 ): Promise<ActionReturn<ExpandedOmbul>> {
     // auth route
     const { status, authorized } = await getUser({
-        requiredPermissions: ['OMBUL_UPDATE']
+        requiredPermissions: [['OMBUL_UPDATE']]
     })
-    if (!authorized) {
-        return createActionError(status)
-    }
+    if (!authorized) return createActionError(status)
 
-    const parse = updateObuleFileSchema.safeParse(rawData)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    const parse = updateOmbulFileValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await updateOmbulFile(id, data.ombulFile)
+    return await safeServerCall(() => updateOmbulFile(id, data))
 }

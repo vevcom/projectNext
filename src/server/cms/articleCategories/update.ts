@@ -1,26 +1,23 @@
 import 'server-only'
+import { updateArticleCategoryValidation } from './validation'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
+import type { UpdateArticleCategoryTypes } from './validation'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 export async function updateArticleCategory(
     id: number,
-    data: Required<Pick<Prisma.ArticleCategoryUpdateInput, 'name' | 'description'>>
-): Promise<ActionReturn<ExpandedArticleCategory>> {
-    try {
-        const articleCategory = await prisma.articleCategory.update({
-            where: {
-                id
-            },
-            data,
-            include: {
-                articles: true
-            }
-        })
-        return { success: true, data: articleCategory }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    rawData: UpdateArticleCategoryTypes['Detailed'],
+): Promise<ExpandedArticleCategory> {
+    const data = updateArticleCategoryValidation.detailedValidate(rawData)
+
+    return await prismaCall(() => prisma.articleCategory.update({
+        where: {
+            id
+        },
+        data,
+        include: {
+            articles: true
+        }
+    }))
 }

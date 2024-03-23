@@ -1,28 +1,57 @@
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { createPrismaActionError, createActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 
-export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
-    try {
-        await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                updatedAt: new Date(),
-            }
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
-
-    return { success: true }
+/**
+ * Invalidate a given user.
+ * This must be done after modifying data that is stored in the JWT.
+ * The *only* exception is modifying data that is on the user model
+ * as this is done it automatically.
+ *
+ * @param userIds - The id of the user.
+ */
+export async function invalidateOneUserSessionData(userId: number): Promise<void> {
+    await prismaCall(() => prisma.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            // The JWT is invalid if it was created after the user model was updated
+            updatedAt: new Date(),
+        }
+    }))
 }
 
-export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
-    const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
+/**
+ * Invalidate all JWTs for given users.
+ * This must be done after modifying data that is stored in the JWT.
+ * The *only* exception is modifying data that is on the user model
+ * as this is done it automatically.
+ *
+ * @param userIds - The ids of the users.
+ */
+export async function invalidateManyUserSessionData(userIds: number[]): Promise<void> {
+    await prismaCall(() => prisma.user.updateMany({
+        where: {
+            id: {
+                in: userIds,
+            },
+        },
+        data: {
+            updatedAt: new Date(),
+        },
+    }))
+}
 
-    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
-
-    return { success: true }
+/**
+ * Invalidate all JWTs for *all* user.
+ * This should be used only when strictly necessary.
+ *
+ * @param userIds - The ids of the users.
+ */
+export async function invalidateAllUserSessionData(): Promise<void> {
+    await prismaCall(() => prisma.user.updateMany({
+        data: {
+            updatedAt: new Date(),
+        },
+    }))
 }

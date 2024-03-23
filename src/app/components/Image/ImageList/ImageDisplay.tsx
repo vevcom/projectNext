@@ -9,7 +9,7 @@ import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import { ImageSelectionContext } from '@/context/ImageSelection'
-import { EditModeContext } from '@/context/EditMode'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,8 +24,7 @@ type PropTypes = {
 export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
-    const editContect = useContext(EditModeContext)
-    const edit = editContect?.editMode || false
+    const canEdit = useEditing() //TODO: authe
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')
@@ -104,7 +103,7 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                 </div>
             </div>
             {
-                (edit && !disableEditing) && (
+                (canEdit && !disableEditing) && (
                     <aside className={styles.admin}>
                         <Form
                             title="Rediger metadata"

@@ -4,15 +4,16 @@ import CreateOmegaquoteForm from './CreateOmegaquoteForm'
 import OmegaquotePagingProvider from '@/context/paging/omegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readQuotesPageAction } from '@/actions/omegaquotes/read'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const { user } = await getUser({
-        required: true,
-        requiredPermissions: ['OMEGAQUOTES_READ'],
+        userRequired: true,
+        shouldRedirect: true,
+        requiredPermissions: [['OMEGAQUOTES_READ']],
     })
 
     const showCreateButton = user.permissions.includes('OMEGAQUOTES_WRITE')

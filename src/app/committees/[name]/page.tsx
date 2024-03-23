@@ -24,7 +24,7 @@ export default async function Committee({ params }: PropTypes) {
         <BackdropImage image={committeeLogo}>
             <div className={styles.wrapper}>
                 <h1>{committee.name}</h1>
-                <Link href={`/committees/${committee.name}/admin`}> Admin </Link>
+                <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
             </div>
         </BackdropImage>
     )

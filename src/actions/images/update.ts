@@ -1,20 +1,21 @@
 'use server'
-import { updateImageSchema } from './schema'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { updateImage } from '@/server/images/update'
+import { updateImageValidation } from '@/server/images/validation'
 import type { Image } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateImageSchemaType } from './schema'
+import type { UpdateImageTypes } from '@/server/images/validation'
 
 export async function updateImageAction(
     imageId: number,
-    rawdata: FormData | UpdateImageSchemaType
+    rawdata: FormData | UpdateImageTypes['Type']
 ): Promise<ActionReturn<Image>> {
-    const parse = updateImageSchema.safeParse(rawdata)
+    const parse = updateImageValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
     //TODO: auth the route
 
-    return await updateImage(imageId, data)
+    return await safeServerCall(() => updateImage(imageId, data))
 }

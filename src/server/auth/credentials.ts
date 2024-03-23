@@ -1,51 +1,44 @@
 import 'server-only'
+import { registerUserValidation } from '@/server/users/validation'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
-import type { SEX } from '@prisma/client'
+import type { RegisterUserTypes } from '@/server/users/validation'
 
-export async function registerUser(id: number, config: {
-    password: string
-    email: string
-    username: string
-    sex: SEX
-}): Promise<ActionReturn<null>> {
-    try {
-        const alredyRegistered = await prisma.user.findUnique({
+export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
+    const { email, sex, password } = registerUserValidation.detailedValidate(rawdata)
+
+    const alredyRegistered = await prismaCall(() => prisma.user.findUnique({
+        where: {
+            id
+        },
+        select: {
+            acceptedTerms: true
+        }
+    }))
+    if (alredyRegistered?.acceptedTerms !== null) throw new ServerError('DUPLICATE', 'User already registered')
+
+    await prismaCall(() => prisma.$transaction([
+        prisma.user.update({
             where: {
                 id
             },
-            select: {
-                acceptedTerms: true
+            data: {
+                email,
+                acceptedTerms: new Date(),
+                sex
             }
-        })
-
-        if (alredyRegistered?.acceptedTerms !== null) {
-            return createActionError('DUPLICATE', 'User already registered')
-        }
-
-        await prisma.$transaction([
-            prisma.user.update({
-                where: {
-                    id
+        }),
+        prisma.credentials.create({
+            data: {
+                passwordHash: password,
+                user: {
+                    connect: {
+                        id,
+                    },
                 },
-                data: {
-                    email: config.email,
-                    acceptedTerms: new Date(),
-                    sex: config.sex
-                }
-            }),
-            prisma.credentials.create({
-                data: {
-                    passwordHash: config.password,
-                    userId: id,
-                    username: config.username,
-                }
-            })
-        ])
-
-        return { success: true, data: null }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+            },
+        })
+    ]))
+    return null
 }

@@ -1,17 +1,14 @@
 import 'server-only'
+import { createImageCollectionValidation } from './validation'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { ImageCollection, Prisma } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { prismaCall } from '@/server/prismaCall'
+import type { CreateImageCollectionTypes } from './validation'
+import type { ImageCollection } from '@prisma/client'
 
 export async function createImageCollection(
-    data: Prisma.ImageCollectionCreateInput
-): Promise<ActionReturn<ImageCollection>> {
-    try {
-        const collection = await prisma.imageCollection.create({ data })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    rawdata: CreateImageCollectionTypes['Detailed']
+): Promise<ImageCollection> {
+    const data = createImageCollectionValidation.detailedValidate(rawdata)
+    return await prismaCall(() => prisma.imageCollection.create({ data }))
 }
 

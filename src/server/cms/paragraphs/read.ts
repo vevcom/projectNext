@@ -1,24 +1,17 @@
 import 'server-only'
-import { createActionError, createPrismaActionError } from '@/actions/error'
 import prisma from '@/prisma'
+import { ServerError } from '@/server/error'
+import { prismaCall } from '@/server/prismaCall'
 import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
 
-export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsParagraph>> {
-    try {
-        const paragraph = await prisma.cmsParagraph.findUnique({
-            where: {
-                name
-            }
-        })
-        if (!paragraph) return createActionError('NOT FOUND', 'CmsParagraph not found')
-        return {
-            success: true,
-            data: paragraph
+export async function readCmsParagraph(name: string): Promise<CmsParagraph> {
+    const paragraph = await prismaCall(() => prisma.cmsParagraph.findUnique({
+        where: {
+            name
         }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    }))
+    if (!paragraph) throw new ServerError('NOT FOUND', 'CmsParagraph not found')
+    return paragraph
 }
 
 /**
@@ -26,21 +19,12 @@ export async function readCmsParagraph(name: string): Promise<ActionReturn<CmsPa
  * @param special - special paragraph to read
  * @returns - the special paragraph
  */
-export async function readSpecialCmsParagraph(special: SpecialCmsParagraph): Promise<ActionReturn<CmsParagraph>> {
-    try {
-        const paragraph = await prisma.cmsParagraph.findUnique({
-            where: {
-                special
-            }
-        })
-        if (paragraph) {
-            return {
-                success: true,
-                data: paragraph
-            }
+export async function readSpecialCmsParagraph(special: SpecialCmsParagraph): Promise<CmsParagraph> {
+    const paragraph = await prismaCall(() => prisma.cmsParagraph.findUnique({
+        where: {
+            special
         }
-        return createActionError('NOT FOUND', 'Special CmsParagraph not found')
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    }))
+    if (!paragraph) throw new ServerError('NOT FOUND', 'Special CmsParagraph not found')
+    return paragraph
 }

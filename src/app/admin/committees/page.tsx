@@ -9,7 +9,7 @@ import { readSpecialImageAction } from '@/actions/images/read'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 export default async function adminCommittee() {
-    const committeeLogoCollectionRes = await readSpecialImageCollectionAction('COMMITEELOGOS')
+    const committeeLogoCollectionRes = await readSpecialImageCollectionAction('COMMITTEELOGOS')
     if (!committeeLogoCollectionRes.success) throw new Error('Kunne ikke finne komitelogoer')
     const { id: collectionId } = committeeLogoCollectionRes.data
 
@@ -40,7 +40,7 @@ export default async function adminCommittee() {
                             <ImageList withUpload />
                         </div>
                         <div className={styles.form}>
-                            <CreateCommitteeForm defaultImage={defaultCommitteeLogo} />
+                            <CreateCommitteeForm />
                         </div>
                     </div>
                 </ImageSelectionProvider>
