@@ -13,7 +13,10 @@ export default async function seedDevImages(prisma: PrismaClient) {
                 name: `test_collection_${i}`,
                 description: 'just a test',
                 visibility: {
-                    create: {}
+                    create: {
+                        regularLevel: { create: {} },
+                        adminLevel: { create: {} },
+                    }
                 }
             }
         })
