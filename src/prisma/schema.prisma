@@ -291,6 +291,7 @@ model Visibility {
   id              Int              @id @default(autoincrement())
   imageCollection ImageCollection?
   type            VisibilityType   @default(REGULAR)
+  published       Boolean          @default(false)
 
   regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
   regularLevelId Int             @unique
