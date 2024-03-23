@@ -1,5 +1,5 @@
 import CmsImage from './CmsImage'
-import { readSpecialCmsImage } from '@/actions/cms/images/read'
+import { readSpecialCmsImageAction } from '@/actions/cms/images/read'
 import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 import type { PropTypes as CmsImageProps } from './CmsImage'
 
@@ -13,7 +13,7 @@ export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
  * @returns
  */
 export default async function SpecialCmsImage({ special, ...props }: PropTypes) {
-    const imageRes = await readSpecialCmsImage(special)
+    const imageRes = await readSpecialCmsImageAction(special)
     if (!imageRes.success) throw new Error(`No special cms image found for ${special}`)
     const cmsImage = imageRes.data
 

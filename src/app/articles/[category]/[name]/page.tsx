@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import Article from '@/cms/Article/Article'
-import { readArticle } from '@/cms/articles/read'
+import { readArticleAction } from '@/cms/articles/read'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
@@ -10,11 +10,11 @@ type PropTypes = {
     },
 }
 
-export default async function ArticleCategory({ params }: PropTypes) {
+export default async function ArticleCategorArticley({ params }: PropTypes) {
     //This fixes æ, ø, å and spaces in the url
     const name = decodeURIComponent(params.name)
     const category = decodeURIComponent(params.category)
-    const res = await readArticle({
+    const res = await readArticleAction({
         name,
         category
     })

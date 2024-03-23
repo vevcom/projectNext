@@ -1,32 +1,22 @@
 'use server'
-
-import { articleLinkSchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import type { ArticleLinkSchemaType } from './schema'
+import { createZodActionError } from '@/actions/error'
+import { updateCmsLink } from '@/server/cms/links/update'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { updateCmsLinkValidation } from '@/server/cms/links/validation'
+import type { UpdateCmsLinkTypes } from '@/server/cms/links/validation'
 import type { CmsLink } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function updateCmsLink(id: number, rawData: FormData | ArticleLinkSchemaType): Promise<ActionReturn<CmsLink>> {
-    const parse = articleLinkSchema.safeParse(rawData)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
+export async function updateCmsLinkAction(
+    id: number,
+    rawData: FormData | UpdateCmsLinkTypes['Type']
+): Promise<ActionReturn<CmsLink>> {
+    //TODO: auth on visibility
+    const parse = updateCmsLinkValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    if (data.url.includes('.') && !data.url.startsWith('http://') && !data.url.startsWith('https://')) {
+    if (data.url && data.url.includes('.') && !data.url.startsWith('http://') && !data.url.startsWith('https://')) {
         data.url = `https://${data.url}`
     }
-    const { text, url } = data
-
-    try {
-        const cmsLink = await prisma.cmsLink.update({
-            where: { id },
-            data: { text, url }
-        })
-        return { success: true, data: cmsLink }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => updateCmsLink(id, data))
 }

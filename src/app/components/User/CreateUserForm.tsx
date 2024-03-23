@@ -1,6 +1,6 @@
 'use client'
 import styles from './CreateUserForm.module.scss'
-import { createUser } from '@/actions/users/create'
+import { createUserAction } from '@/actions/users/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import React from 'react'
@@ -19,7 +19,7 @@ export default function CreateUserForm({ className }: PropTypes) {
             <Form
                 title="Lag en bruker"
                 submitText="Create user"
-                action={createUser}
+                action={createUserAction}
                 successCallback={refresh}
             >
                 <TextInput label="username" name="username" key={uuid()}/>

@@ -3,7 +3,7 @@ import styles from './ChangeImage.module.scss'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import Form from '@/components/Form/Form'
-import { updateCmsImage, updateCmsImageConfig } from '@/actions/cms/images/update'
+import { updateCmsImageAction, updateCmsImageConfigAction } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
@@ -64,7 +64,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
             {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
                     <Form
-                        action={updateCmsImage.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
+                        action={updateCmsImageAction.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
                         submitText="change"
                         successCallback={refresh}
                     />
@@ -72,7 +72,11 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
                         <Form
-                            action={updateCmsImageConfig.bind(null, cmsImageId).bind(null, { imageSize: changeToSize })}
+                            action={
+                                updateCmsImageConfigAction
+                                    .bind(null, cmsImageId)
+                                    .bind(null, { imageSize: changeToSize })
+                            }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             successCallback={refresh}
                             submitColor="secondary"

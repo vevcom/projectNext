@@ -1,9 +1,10 @@
 import FeideProvider from './feide/FeideProvider'
 import PrismaAdapter from './feide/PrismaAdapter'
 import signUp from './feide/signUp'
-import { updateFeideAccount } from './feide/index'
 import prisma from '@/prisma'
-import { readPermissionsOfUser } from '@/actions/permissions/read'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
+import { readMembershipsOfUser } from '@/server/groups/read'
+import { updateFeideAccount } from '@/server/auth/feide/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
@@ -154,12 +155,16 @@ export const authOptions: AuthOptions = {
             })
 
             const userPermissions = await readPermissionsOfUser(userId)
+            const userMemberships = await readMembershipsOfUser(userId)
 
-            if (!userInfo || !userPermissions.success) throw Error('Could not read user from database when setting jwt')
+            if (!userInfo || !userPermissions || !userMemberships) {
+                throw new Error('Could not read user from database when setting jwt')
+            }
 
             token.user = {
                 ...userInfo,
-                permissions: userPermissions.data
+                permissions: userPermissions,
+                memberships: userMemberships,
             }
 
             return token
