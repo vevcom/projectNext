@@ -31,5 +31,5 @@ export async function updateUserCredentailsAction(
     const parse = registerUserValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
 
-    return await safeServerCall(() => registerUser(user.id, { ...parse.data, username: user.username }))
+    return await safeServerCall(() => registerUser(user.id, parse.data))
 }
