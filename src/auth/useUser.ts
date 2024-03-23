@@ -60,7 +60,7 @@ export type ClientAuthStatus = UseUserReturnType['status']
 * @param requiredPermissions - A list of lists that the user must have. If non are given, the user is considered authorized
 * regardless of their permissions.
 * @param userRequired - False by default. If true the user will only be unauthorized if they are not logged inn.
-* @param shouldRedirect - False by default. If true the user will be redirected when not authorized. Where the user will be
+* @param shouldRedirect - True by default. If true the user will be redirected when not authorized. Where the user will be
 * redirected to will depend on the arguments below.
 * @param redirectUrl - The homepage by default, if the user is not authorized they will be redirected here if
 * redirect to login is disabled.
@@ -77,10 +77,10 @@ export function useUser<UserRequired extends boolean = false>(
     args?: UseUserArgsType<true, UserRequired>
 ): AuthorizedUseUserReturnType<UserRequired>
 export function useUser({
-    requiredPermissions,
-    userRequired,
-    shouldRedirect,
-    redirectUrl,
+    requiredPermissions = [],
+    userRequired = false,
+    shouldRedirect = true,
+    redirectUrl = '/', // TODO: Should be unauthorized page by default
     redirectToLogin = true,
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
     const { push } = useRouter()
@@ -118,12 +118,9 @@ export function useUser({
         if (nextAuthStatus === 'loading' || userPermissions === undefined) return
 
         // Authorized is true if both these conditions are true
-        // 1. The user is logged inn or the user is not logged inn, but the user session is not required
-        // 2. There are no required permissions or the user has all the required permissions
-        if (
-            (!userRequired || user) &&
-            (!requiredPermissions || checkPermissionMatrix(userPermissions, requiredPermissions))
-        ) {
+        // 1. The user is logged inn or (the user is not logged inn and the user session is not required)
+        // 2. The user has all the required permissions
+        if ((user || !userRequired) && checkPermissionMatrix(userPermissions, requiredPermissions)) {
             setUseuserReturn(user ? {
                 user,
                 authorized: true,
@@ -141,11 +138,7 @@ export function useUser({
                 push(`/login?callbackUrl=${encodeURI(pathName)}`)
             }
 
-            if (redirectUrl) {
-                push(redirectUrl)
-            }
-
-            push('/') // TODO: Should be unauthorized page
+            push(redirectUrl)
         }
 
         setUseuserReturn(user ? {

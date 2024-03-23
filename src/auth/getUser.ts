@@ -76,15 +76,15 @@ export async function getUser<UserRequired extends boolean = false>(
     args?: GetUserArgsType<true, UserRequired>
 ): Promise<AuthorizedGetUserReturnType<UserRequired>>
 export async function getUser({
-    requiredPermissions,
-    userRequired,
-    shouldRedirect,
-    redirectUrl,
-    returnUrl,
+    requiredPermissions = [],
+    userRequired = false,
+    shouldRedirect = false,
+    redirectUrl = undefined,
+    returnUrl = undefined,
 }: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
     const user = (await getServerSession(authOptions))?.user ?? null
 
-    if (user && (!requiredPermissions || checkPermissionMatrix(user.permissions, requiredPermissions))) {
+    if (user && checkPermissionMatrix(user.permissions, requiredPermissions)) {
         return { user, authorized: true, status: 'AUTHORIZED' }
     }
 
