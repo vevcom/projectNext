@@ -6,7 +6,7 @@ import prisma from '@/prisma'
 import type { RegisterUserTypes } from '@/server/users/validation'
 
 export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
-    const data = registerUserValidation.detailedValidate(rawdata)
+    const { email, sex, password } = registerUserValidation.detailedValidate(rawdata)
 
     const alredyRegistered = await prismaCall(() => prisma.user.findUnique({
         where: {
@@ -24,17 +24,20 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
                 id
             },
             data: {
-                email: data.email,
+                email,
                 acceptedTerms: new Date(),
-                sex: data.sex
+                sex
             }
         }),
         prisma.credentials.create({
             data: {
-                passwordHash: data.password,
-                userId: id,
-                username: data.username,
-            }
+                passwordHash: password,
+                user: {
+                    connect: {
+                        id,
+                    },
+                },
+            },
         })
     ]))
     return null

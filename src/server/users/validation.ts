@@ -67,7 +67,6 @@ export const registerUserValidation = baseUserValidation.createValidation({
         'password',
         'confirmPassword',
         'sex',
-        'username'
     ],
     transformer: data => data,
     refiner,
