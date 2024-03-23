@@ -21,7 +21,7 @@ export default function AddPartToArticleSection({ articleSectionName, children, 
         await addArticleSectionPartAction(articleSectionName, part)
         refresh()
     }, [articleSectionName])
-    if (!canEdit) return null
+    if (!canEdit) return children
 
     return (
         <div className={styles.AddPartToArticleSection}>
