@@ -10,6 +10,7 @@ import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedDevGroups from './development/seedDevGroups'
 import { PrismaClient } from '@/generated/pn'
+import seedGroups from './seedGroups'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -19,6 +20,7 @@ async function seed() {
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
+    await seedGroups(prisma)
     console.log('seed standard done')
 
     const shouldMigrate = process.env.MIGRATE_FROM_VEVEN === 'true'

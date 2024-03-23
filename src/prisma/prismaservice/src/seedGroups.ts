@@ -6,7 +6,7 @@ import { OmegaMembershipLevel } from '@/generated/pn';
  * @param prisma - The prisma client
  */
 export default async function seedGroups(prisma: PrismaClient) {
-    await Promise.all([0,1,2,3,4,5].map(i => prisma.class.create({
+    await Promise.all([0,1,2,3,4,5,6].map(i => prisma.class.create({
         data: {
             year: i,
             group: {

@@ -51,7 +51,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    membershipRenewal: true,
+                    membershipRenewal: false,
                     memberships,
                 },
             },

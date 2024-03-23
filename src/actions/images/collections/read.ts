@@ -9,6 +9,7 @@ import type {
     ExpandedImageCollection,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
+import { getUser } from '@/auth/getUser'
 
 /**
  * Action that reads an image collection by id or name
@@ -30,7 +31,7 @@ export async function readImageCollectionAction(
 export async function readImageCollectionsPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
-    //TODO: Auth image collections on visibility or permission (if special collection)
+    const { user } = await getUser()
     return await safeServerCall(() => readImageCollectionsPage(readPageInput))
 }
 
