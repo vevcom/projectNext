@@ -5,7 +5,7 @@ import { prismaCall } from '@/server/prismaCall'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
 
-export async function createCommittee(rawdata: CreateCommitteeTypes['Type']): Promise<ExpandedCommittee> {
+export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
     let defaultLogoImageId: number
     if (!logoImageId) {
