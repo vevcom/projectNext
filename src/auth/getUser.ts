@@ -4,14 +4,9 @@ import { readDefaultPermissions } from '@/server/permissionRoles/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
-import type { Permission, User } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 import type { BasicMembership } from '@/server/groups/Types'
-
-export type ExpandedUser = Omit<User, 'id'> & {
-    id: number,
-    memberships: BasicMembership[]
-    permissions: Permission[],
-}
+import type { UserFiltered } from '@/server/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: PermissionMatrix,
@@ -21,29 +16,37 @@ type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extend
     returnUrl?: string,
 }
 
-type AuthorizedGetUserReturnType<UserRequired extends boolean = false> = {
-    user: ExpandedUser,
-    authorized: true,
+type AuthorizedGetUserReturnType<UserRequired extends boolean = false> = ({
+    user: UserFiltered,
     status: 'AUTHORIZED',
 } | (
     UserRequired extends true ? never : {
         user: null,
-        authorized: true,
         status: 'AUTHORIZED_NO_USER',
     }
-)
+)) & {
+    authorized: true,
+    permissions: Permission[],
+    memberships: BasicMembership[],
+}
+
+type UnAuthorizedGetUserReturnType = ({
+    user: null,
+    status: 'UNAUTHENTICATED',
+} | {
+    user: UserFiltered,
+    status: 'UNAUTHORIZED',
+}) & {
+    authorized: false,
+    permissions: Permission[],
+    memberships: BasicMembership[],
+}
 
 type GetUserReturnType<UserRequired extends boolean = false> = (
     AuthorizedGetUserReturnType<UserRequired>
-) | {
-    user: null,
-    authorized: false,
-    status: 'UNAUTHENTICATED',
-} | {
-    user: ExpandedUser,
-    authorized: false,
-    status: 'UNAUTHORIZED',
-}
+) | (
+    UnAuthorizedGetUserReturnType
+)
 
 
 export type AuthStatus = GetUserReturnType['status']
@@ -76,24 +79,23 @@ export async function getUser<UserRequired extends boolean = false>(
     args?: GetUserArgsType<true, UserRequired>
 ): Promise<AuthorizedGetUserReturnType<UserRequired>>
 export async function getUser({
-    requiredPermissions,
-    userRequired,
-    shouldRedirect,
-    redirectUrl,
-    returnUrl,
+    requiredPermissions = [],
+    userRequired = false,
+    shouldRedirect = false,
+    redirectUrl = undefined,
+    returnUrl = undefined,
 }: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
-    const user = (await getServerSession(authOptions))?.user ?? null
+    const {
+        user = null,
+        permissions = await readDefaultPermissions(),
+        memberships = [],
+    } = await getServerSession(authOptions) ?? {}
 
-    if (user && (!requiredPermissions || checkPermissionMatrix(user.permissions, requiredPermissions))) {
-        return { user, authorized: true, status: 'AUTHORIZED' }
-    }
-
-    if (!user && !userRequired && requiredPermissions) {
-        const defaultPermissions = await readDefaultPermissions()
-
-        if (checkPermissionMatrix(defaultPermissions, requiredPermissions)) {
-            return { user, authorized: true, status: 'AUTHORIZED_NO_USER' }
-        }
+    if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
+        // Cannot have ternary expression for just status because then ts gets confused.
+        return user
+            ? { user, authorized: true, status: 'AUTHORIZED', permissions, memberships }
+            : { user, authorized: true, status: 'AUTHORIZED_NO_USER', permissions, memberships }
     }
 
     //TODO: visibility checks
@@ -112,6 +114,6 @@ export async function getUser({
 
     // Cannot have ternary expression for just status because then ts gets confused.
     return user
-        ? { user, authorized: false, status: 'UNAUTHORIZED' }
-        : { user, authorized: false, status: 'UNAUTHENTICATED' }
+        ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
+        : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
 }
