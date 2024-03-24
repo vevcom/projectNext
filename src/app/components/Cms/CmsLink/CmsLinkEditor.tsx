@@ -14,7 +14,7 @@ type PropTypes = {
 }
 
 export default function CmsLinkEditor({ cmsLink }: PropTypes) {
-    const canEdit = useEditing() //TODO: check visibility of cmsLink for user and pass it to useEditing
+    const canEdit = useEditing({}) //TODO: check visibility of cmsLink for user and pass it to useEditing
     const { refresh } = useRouter()
     if (!canEdit) return null
 

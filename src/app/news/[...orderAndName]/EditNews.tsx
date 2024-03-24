@@ -23,7 +23,7 @@ type PropTypes = {
 export default function EditNews({ news, children }: PropTypes) {
     const { refresh, push } = useRouter()
     //TODO: chack visibility
-    const canEdit = useEditing()
+    const canEdit = useEditing({})
     if (!canEdit) return children
 
     //TODO: add publish functionality with visibility

@@ -30,10 +30,9 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
-    if (!selection) throw new Error('No context')
-
-    const editMode = useEditing() //TODO: auth collection visibility
+    const editMode = useEditing({}) //TODO: auth collection visibility
     if (!editMode) return null
+    if (!selection) throw new Error('No context')
 
     const refreshImages = () => {
         if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
