@@ -2,8 +2,9 @@ import { readGroup } from '@/server/groups/read';
 import styles from './page.module.scss';
 import { readGroupsAction } from '@/actions/groups/read';
 import { notFound } from 'next/navigation';
-import type { GroupType } from '@prisma/client';
+import { GroupType } from '@prisma/client';
 import type { ExpandedGroup } from '@/server/groups/Types';
+import { GroupTypesConfig } from '@/server/groups/ConfigVars';
 
 /**
  * A page that displays memberships in all groups for admins
@@ -15,30 +16,42 @@ export default async function GroupsAdmin() {
     //SOrt grups on type
     const sortedGroups = groups.reduce((acc, group) => {
         if (!acc[group.groupType]) {
-            acc[group.groupType] = []
+            acc[group.groupType] = {
+                name: GroupTypesConfig[group.groupType].name,
+                description: GroupTypesConfig[group.groupType].description,
+                groups: []
+            }
         }
-        acc[group.groupType].push(group)
+        acc[group.groupType].groups.push(group)
         return acc
-    }, {} as { [key: string]: ExpandedGroup[] })
+    }, {} as { 
+        [key: string]: {
+            name: string,
+            description: string,
+            groups: ExpandedGroup[] 
+        }
+    })
 
     return (
         <div className={styles.wrapper}>
-        {
-            Object.keys(sortedGroups).map((groupType) => (
-                <div key={groupType}>
-                    <h1>{groupType}</h1>
-                    <ul>
-                    {
-                        sortedGroups[groupType].map(group => (
-                            <li key={group.id}>
-                                <h2>{group.id}</h2>
-                            </li>
-                        ))
-                    }
-                    </ul>
-                </div>
-            ))
-        }    
+            <h1>Grupper</h1>
+            {
+                Object.entries(sortedGroups).map(([key, groupType]) => (
+                    <div key={key}>
+                        <h2>{groupType.name}</h2>
+                        <i>{groupType.description}</i>
+                        <ul>
+                        {
+                            groupType.groups.map(group => (
+                                <li key={group.id}>
+                                    <h2>{group.id}</h2>
+                                </li>
+                            ))
+                        }
+                        </ul>
+                    </div>
+                ))
+            }    
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { GroupType } from "@prisma/client";
 /**
  * A object that describes the different group types in a friendly way
  */
-export const GroupTypes = {
+export const GroupTypesConfig = {
     OMEGA_MEMBERSHIP_GROUP: {
         name: 'Medlemsgruppe',
         description: 'Grupper som beskriver hvilken tilknytning en bruker har til sct. Omega Broderskab'
