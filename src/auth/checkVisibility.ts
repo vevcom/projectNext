@@ -1,6 +1,7 @@
 import { GroupMatrix, VisibilityCollapsed } from '@/server/visibility/Types';
 import { BasicMembership } from '@/server/groups/Types';
 import { Permission, VisibilityLevel } from '@prisma/client';
+import { BuypassPermissions } from '@/server/visibility/ConfigVars';
 
 type MembershipAndPermission = {
     memberships: BasicMembership[],
@@ -21,8 +22,10 @@ export function checkVisibility({
     permissions
 } : MembershipAndPermission, 
     visibility: VisibilityCollapsed, 
-    level: 'REGULAR' | 'ADMIN'
+    level: 'REGULAR' | 'ADMIN',
+    buypassPermission?: BuypassPermissions
 ) {
+    if (buypassPermission && permissions.includes(buypassPermission)) return true
     if (visibility.type === 'REGULAR' && !visibility.published) return false
     if (visibility.type === 'SPECIAL') {
         if (level === 'REGULAR') {

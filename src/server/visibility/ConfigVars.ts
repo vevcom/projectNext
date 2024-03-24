@@ -10,4 +10,4 @@ export const BuypassPermissions = {
     events: 'EVENT_ADMIN'
 } as const satisfies { [key: string]: Permission }
 
-type BuyPassPermissions = typeof BuypassPermissions[keyof typeof BuypassPermissions]
+export type BuypassPermissions = typeof BuypassPermissions[keyof typeof BuypassPermissions]
