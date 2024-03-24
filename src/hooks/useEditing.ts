@@ -37,7 +37,7 @@ export default function useEditing({
         requiredPermissions,
         shouldRedirect: false,
     })
-
+    const [authorized, setAuthorized] = useState<boolean>(false)
     //Editable if ctx is on and user has the required permissions and/or visibility
     const [editable, setEditable] = useState<boolean>(false)
     
@@ -48,15 +48,20 @@ export default function useEditing({
             memberships: memberships ?? [],
         }, requiredVisibility, level) : true
     
-        const authorized = operation === 'OR' ? permissionAuthorized || visibilityAuthorized : permissionAuthorized && visibilityAuthorized
+        const authorized = (operation === 'OR' ? permissionAuthorized || visibilityAuthorized : permissionAuthorized && visibilityAuthorized) ?? false
         if (!editModeCtx) return  
         if (authorized) editModeCtx.addEditableContent(uniqueKey)
         if (!authorized) editModeCtx.removeEditableContent(uniqueKey)
-        setEditable(editModeCtx ? Boolean(authorized) && editModeCtx.editMode : false)
+        setAuthorized(authorized)
         return () => {
             if (editModeCtx) editModeCtx.removeEditableContent(uniqueKey)
         }
     }, [permissionAuthorized, requiredVisibility, permissions, memberships])
+
+    useEffect(() => {
+        console.log('eh')
+        setEditable(editModeCtx ? Boolean(authorized) && editModeCtx.editMode : false)
+    }, [authorized, editModeCtx?.editMode])
 
     return editable
 }
