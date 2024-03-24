@@ -32,11 +32,14 @@ export default async function GroupsAdmin() {
         }
     })
 
+    const ordering : string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME', 
+    'COMMITTEE', 'INTEREST_GROUP', 'MANUAL_GROUP'] satisfies GroupType[];
+
     return (
         <div className={styles.wrapper}>
             <h1>Grupper</h1>
             {
-                Object.entries(sortedGroups).map(([key, groupType]) => (
+                Object.entries(sortedGroups).sort(([a], [b]) => ordering.indexOf(a) - ordering.indexOf(b)).map(([key, groupType]) => (
                     <div key={key}>
                         <h2>{groupType.name}</h2>
                         <i>{groupType.description}</i>
