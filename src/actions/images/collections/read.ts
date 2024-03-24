@@ -21,8 +21,12 @@ export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    return await safeServerCall(() => readImageCollection(idOrName))
-}
+    const { user } = await getUser()
+
+    const collection = await safeServerCall(() => readImageCollection(idOrName))
+
+    return collection
+}   
 
 /**
  * Action that returns a page of image collections, orders by createdAt (and then name)

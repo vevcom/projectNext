@@ -10,6 +10,7 @@ import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
+import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
 
 type PropTypes = {
     params: {
@@ -32,7 +33,6 @@ export default async function Collection({ params }: PropTypes) {
     })
     if (!readImages.success) notFound()
     const images = readImages.data
-    const isAdmin = user?.username === 'Harambe104' //temp
 
     return (
         <ImageSelectionProvider>
@@ -46,11 +46,9 @@ export default async function Collection({ params }: PropTypes) {
             >
                 <PopUpProvider>
                     <div className={styles.wrapper}>
-                        {isAdmin &&
-                            <aside className={styles.admin}>
-                                <CollectionAdmin collection={collection} />
-                            </aside>
-                        }
+                        <aside className={styles.admin}>
+                            <CollectionAdmin collection={collection} />
+                        </aside>
                         <div className={styles.images}>
                             <h1>{collection.name}</h1>
                             <i>{collection.description}</i>
@@ -60,6 +58,9 @@ export default async function Collection({ params }: PropTypes) {
                                 } />
                             </main>
                         </div>
+                        <span>
+                            <VisibilityAdmin />
+                        </span>
                     </div>
                 </PopUpProvider>
             </ImagePagingProvider>

@@ -246,6 +246,9 @@ enum Permission {
   USER_UPDATE
   USER_DESTROY
   USER_CREATE
+
+  IMAGE_COLLECTION_CREATE
+  IMAGE_ADMIN
 }
 
 model Role {
