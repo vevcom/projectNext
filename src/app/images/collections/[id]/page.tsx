@@ -42,6 +42,7 @@ export default async function Collection({ params }: PropTypes) {
             >
                 <PopUpProvider>
                     <div className={styles.wrapper}>
+                        <CollectionAdmin visibility={collection.visibility} collection={collection} />
                         <div className={styles.images}>
                             <h1>{collection.name}</h1>
                             <i>{collection.description}</i>
@@ -51,7 +52,6 @@ export default async function Collection({ params }: PropTypes) {
                                 } />
                             </main>
                         </div>
-                        <CollectionAdmin visibility={collection.visibility} collection={collection} />
                     </div>
                 </PopUpProvider>
             </ImagePagingProvider>
