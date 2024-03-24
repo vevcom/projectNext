@@ -55,36 +55,42 @@ export default function ChannelSettings({
     const availableMethodsInherited = findInheretedAvailableMethods(channel);
     const selectOptions = allChannels.map(c => ({ value: c.id, label: c.name }))
 
-    return <Form
-        submitText="Lagre"
-        className={styles.channelSettings}
-    >
-        <div className={styles.upperSettings}>
-            <div>
-                {channel.special != "ROOT" ? <Select label="Forelder" name="parent" options={selectOptions} /> : null }
-                {channel.special ? <p>Spesiell: {channel.special}</p> : null}
-            </div> 
-            <div className={styles.widerSettings}>
-                <TextInput label="Navn" name="name" defaultValue={channel.name} />
+    return <div className={styles.channelSettings}>
+        {channel.special ? <p>Spesiell: {channel.special}</p> : null}
+        <Form
+            submitText="Lagre"
+        >
+
+            
+            <TextInput label="Navn" name="name" defaultValue={channel.name} />
+            <div className={styles.widerDiv}>
                 <TextInput label="Beskrivelse" name="description" defaultValue={channel.description ?? ""} className={styles.descriptionInput} />
-            </div>   
-        </div>
+            </div>
 
-        <div className={styles.methodContainer}>
-            <ChannelMethods
-                formPrefix="availableMethods"
-                title="Tilgjengelige metoder"
-                methods={availableMethodsSate}
-                editable={availableMethodsInherited}
-                onChange={setAvailableMethodsState}
-            />
-            <ChannelMethods
-                formPrefix="defaultMethods"
-                title="Standard metoder"
-                methods={defaultMethodsState}
-                onChange={setDefaultMethodsState}
-            />
-        </div>
+            <div className={styles.widerDiv}>
+                {channel.special != "ROOT" ? <Select label="Forelder" name="parent" options={selectOptions} /> : null }
+            </div>
 
-    </Form>
+            <div className={styles.methodContainer} id="123456">
+
+                <ChannelMethods
+                    formPrefix="availableMethods"
+                    title="Tilgjengelige metoder"
+                    methods={availableMethodsSate}
+                    editable={availableMethodsInherited}
+                    onChange={setAvailableMethodsState}
+                />
+                <ChannelMethods
+                    formPrefix="defaultMethods"
+                    title="Standard metoder"
+                    methods={defaultMethodsState}
+                    onChange={setDefaultMethodsState}
+                />
+
+            </div>
+
+
+        </Form>
+    </div>
+    
 }

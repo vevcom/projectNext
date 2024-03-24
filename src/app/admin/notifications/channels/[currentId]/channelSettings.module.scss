@@ -1,42 +1,27 @@
 @use '@/styles/ohma';
 
 .channelSettings {
+    width: 100%;
 
-    $screen-small: 700px;
+    > p {
+        font-weight: lighter;
+        margin-bottom: 1rem;
+    }
+}
+
+.widerDiv {
     $description-max-width: 350px;
 
-    width: 100%;
-    
-    > .methodContainer {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+    max-width: $description-max-width;
 
     .descriptionInput {
         max-width: $description-max-width;
         width: 100%;
     }
+}
 
-    > .upperSettings {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        width: 100%;
-
-        @media screen and (max-width: $screen-small) {
-            flex-direction: column;
-        }
-
-        > div {
-            display: flex;
-            flex-direction: column;
-        }
-
-        > .widerSettings {
-            width: 100%;
-            max-width: $description-max-width;
-        }
-    }
+.methodContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
