@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
-export const expandedRoleIncluder = Prisma.validator<Prisma.RoleInclude>()({
+export const expandedRoleIncluder = {
     permissions: {
         select: {
             permission: true,
@@ -12,4 +12,4 @@ export const expandedRoleIncluder = Prisma.validator<Prisma.RoleInclude>()({
             forAdminsOnly: true,
         },
     },
-})
+} as const satisfies Prisma.RoleInclude

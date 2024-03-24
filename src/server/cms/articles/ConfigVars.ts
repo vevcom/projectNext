@@ -1,9 +1,9 @@
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 export const maxSections = 10 // Max 10 sections in an article
 
-export const articleRealtionsIncluder = Prisma.validator<Prisma.ArticleInclude>()({
+export const articleRealtionsIncluder = {
     articleSections: {
         include: articleSectionsRealtionsIncluder
     },
@@ -12,4 +12,4 @@ export const articleRealtionsIncluder = Prisma.validator<Prisma.ArticleInclude>(
             image: true
         },
     },
-})
+} as const satisfies Prisma.ArticleInclude

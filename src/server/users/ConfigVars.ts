@@ -10,5 +10,5 @@ export const userFieldsToExpose = [
     'createdAt',
     'updatedAt',
     'acceptedTerms'
-] satisfies (keyof User)[]
+] as const satisfies (keyof User)[]
 export const userFilterSelection = createSelection([...userFieldsToExpose])

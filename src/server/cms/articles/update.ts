@@ -87,7 +87,7 @@ export async function addSectionToArticle(
         include: articleRealtionsIncluder,
     }))
 
-    for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] as const) {
+    for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] satisfies ArticleSectionPart[]) {
         if (include[part]) {
             await addArticleSectionPart(newSectionName, part)
         }
