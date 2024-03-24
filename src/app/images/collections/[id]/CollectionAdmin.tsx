@@ -18,12 +18,14 @@ import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
+import { VisibilityCollapsed } from '@/server/visibility/Types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
+    visibility: VisibilityCollapsed
 }
 
-export default function CollectionAdmin({ collection }: PropTypes) {
+export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const { id: collectionId, coverImage } = collection
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)

@@ -1,8 +1,13 @@
 'use client'
-
+import { VisibilityCollapsed } from '@/server/visibility/Types'
 import styles from './VisibilityAdmin.module.scss'
 
-export default function VisibilityAdmin() {
+type PropTypes = {
+    visibility: VisibilityCollapsed
+}
+
+
+export default function VisibilityAdmin({ visibility }: PropTypes) {
     return (
         <div className={styles.VisibilityAdmin}>
             VisibilityAdmin

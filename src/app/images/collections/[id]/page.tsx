@@ -7,7 +7,6 @@ import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
@@ -19,12 +18,10 @@ type PropTypes = {
 }
 
 export default async function Collection({ params }: PropTypes) {
-    const { user } = await getUser()
-
     const pageSize: PageSizeImage = 30
 
     const readCollection = await readImageCollectionAction(Number(params.id))
-    if (!readCollection.success) notFound()
+    if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 
     const readImages = await readImagesPageAction({
@@ -47,7 +44,7 @@ export default async function Collection({ params }: PropTypes) {
                 <PopUpProvider>
                     <div className={styles.wrapper}>
                         <aside className={styles.admin}>
-                            <CollectionAdmin collection={collection} />
+                            <CollectionAdmin visibility={collection.visibility} collection={collection} />
                         </aside>
                         <div className={styles.images}>
                             <h1>{collection.name}</h1>
@@ -59,7 +56,7 @@ export default async function Collection({ params }: PropTypes) {
                             </main>
                         </div>
                         <span>
-                            <VisibilityAdmin />
+                            <VisibilityAdmin visibility={collection.visibility} />
                         </span>
                     </div>
                 </PopUpProvider>
