@@ -1,43 +1,22 @@
-"use client"
-
-import sendMail from "@/actions/sendmail/send"
-import Form from "@/app/components/Form/Form"
 import PageWrapper from "@/components/PageWrapper/PageWrapper"
-import styles from './page.module.scss'
-import TextInput from "@/app/components/UI/TextInput"
-import Textarea from "@/app/components/UI/Textarea"
-import { useUser } from "@/auth/client"
+import { getUser } from '@/auth/getUser'
 import { notFound } from "next/navigation"
+import MailForm from "./mailForm"
 
-
-
-export default function SendMail() {
+export default async function SendMail() {
 
     // TODO: permission checks
-    const user = useUser({
-        required: true,
+    const { authorized } = await getUser({
+        requiredPermissions: [['MAIL_SEND']],
     })
 
-    if (!user.authorized) {
+    if (!authorized) {
         notFound();
     }
 
-
     return (
         <PageWrapper title="Elektronisk postutsendelse">
-            <Form
-                action={sendMail}
-                submitText="Send elektronisk post"
-                className={styles.mailForm}
-                buttonClassName={styles.mailButton}
-            >
-                <TextInput name="sender" label="Avsender"/>
-                <TextInput name="recipient" label="Mottaker"/>
-                <TextInput name="subject" label="Emne"/>
-
-                <Textarea name="text" label="Melding" className={styles.textArea}/>
-
-            </Form>
+            <MailForm />
         </PageWrapper>
     )
 }

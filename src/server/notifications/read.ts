@@ -2,7 +2,6 @@ import 'server-only'
 import prisma from '@/prisma'
 import type { NotificationChannel, NotificationMethod } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import { getUser } from '@/auth/user'
 import { createPrismaActionError } from '@/actions/error'
 import type { NotificationChannelWithMethods } from './Types'
 
@@ -11,10 +10,6 @@ import type { NotificationChannelWithMethods } from './Types'
  * @returns - A list of all notification channels.
  */
 export async function readChannels() : Promise<ActionReturn<NotificationChannelWithMethods[]>> {
-    await getUser({
-        required: true,
-        requiredPermissions: [ "NOTIFICATION_CHANNEL_READ" ]
-    })
 
     try {
         const channels = await prisma.notificationChannel.findMany({
