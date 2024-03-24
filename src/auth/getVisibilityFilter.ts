@@ -1,7 +1,7 @@
 import 'server-only'
 import type { Permission, Prisma } from '@prisma/client'
 import { BasicMembership } from '@/server/groups/Types'
-import { BuypassPermissions } from '@/server/visibility/ConfigVars'
+import { BypassPermissions } from '@/server/visibility/ConfigVars'
 
 /**
  * Creates a where-filter that can be used in db queries to only return items that mach the users groups (or permission if type is special).
@@ -13,9 +13,9 @@ import { BuypassPermissions } from '@/server/visibility/ConfigVars'
 export function getVisibilityFilter(
     groups: BasicMembership[] | undefined, 
     permissions: Permission[],
-    buypassPermission?: BuypassPermissions
+    bypassPermission?: BypassPermissions
 ) {
-    if (buypassPermission && permissions.includes(buypassPermission)) return {}
+    if (bypassPermission && permissions.includes(bypassPermission)) return {}
 
     const groupIds = groups ? groups.map(group => group.groupId) : []
 

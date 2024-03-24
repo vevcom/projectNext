@@ -23,13 +23,12 @@ import { VisibilityCollapsed } from '@/server/visibility/Types'
 export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection & {visibility: VisibilityCollapsed}>> {
-    //TODO: Auth image collections on visibility or permission (if special collection)
     const collection = await safeServerCall(() => includeVisibility(
         () => readImageCollection(idOrName), 
         data => data.visibilityId
     ))
     if (!collection.success) return collection
-    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR')) {
+    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR', 'IMAGE_ADMIN')) {
         return createActionError('UNAUTHORIZED', 'You do not have permission to view this collection')
     }
 
@@ -45,7 +44,7 @@ export async function readImageCollectionsPageAction<const PageSize extends numb
     readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     const { memberships, permissions } = await getUser()
-    const visibilityFilter = getVisibilityFilter(memberships, permissions || [])
+    const visibilityFilter = getVisibilityFilter(memberships, permissions || [], 'IMAGE_ADMIN')
     return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
 }
 

@@ -1,7 +1,7 @@
 import { GroupMatrix, VisibilityCollapsed } from '@/server/visibility/Types';
 import { BasicMembership } from '@/server/groups/Types';
 import { Permission, VisibilityLevel } from '@prisma/client';
-import { BuypassPermissions } from '@/server/visibility/ConfigVars';
+import { BypassPermissions } from '@/server/visibility/ConfigVars';
 
 type MembershipAndPermission = {
     memberships: BasicMembership[],
@@ -16,6 +16,8 @@ type MembershipAndPermission = {
  * getUser and useUser will return an empty array. Used if type of visibility is SPECIAL
  * @param visibility - the visibility to require
  * @param level - the level of visibility to require
+ * @param bypassPermission - the permission that bypasses the visibility system
+ * @returns - true if the user meets the visibility requirements, false otherwise
  */
 export function checkVisibility({ 
     memberships, 
@@ -23,9 +25,9 @@ export function checkVisibility({
 } : MembershipAndPermission, 
     visibility: VisibilityCollapsed, 
     level: 'REGULAR' | 'ADMIN',
-    buypassPermission?: BuypassPermissions
+    bypassPermission?: BypassPermissions
 ) {
-    if (buypassPermission && permissions.includes(buypassPermission)) return true
+    if (bypassPermission && permissions.includes(bypassPermission)) return true
     if (visibility.type === 'REGULAR' && !visibility.published) return false
     if (visibility.type === 'SPECIAL') {
         if (level === 'REGULAR') {
