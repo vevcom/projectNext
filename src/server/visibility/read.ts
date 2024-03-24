@@ -15,6 +15,12 @@ const levelSelector = {
     }
 }
 
+/**
+ * Reads visibility with levels, and with relation to groups, and returns the data 
+ * in a matrix format if type is REGULAR, or as permissions if type is SPECIAL
+ * @param id - the id of the visibility to read
+ * @returns 
+ */
 export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCollapsed> {
     const visibility = await prismaCall(() => prisma.visibility.findUnique({
         where: { id },
@@ -38,6 +44,12 @@ export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCo
     }
 }
 
+/**
+ * A higher order function that includes visibility in the result of a server call
+ * @param serverCall - A function to get some data, with a relation to visibility
+ * @param getVisibilityId - A methode to retrive the visibility id from the result of the server call
+ * @returns - The data from the server call, with the visibility included
+ */
 export async function includeVisibility<T>(serverCall: () => Promise<T>, getVisibilityId: (result: T) => number) {
     const result = await serverCall()
     const visibility = await readVisibilityCollapsed(getVisibilityId(result))
