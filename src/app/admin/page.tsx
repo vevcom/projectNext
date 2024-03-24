@@ -23,6 +23,7 @@ export default function Admin() {
             <h3><FontAwesomeIcon icon={faKey} />Tillgangsstyring</h3>
             <Link href="admin/permission-roles">Tillgangsroller</Link>
             <Link href="admin/default-permissions">Standard tillganger</Link>
+            <Link href="admin/groups">Grupper</Link>
         </div>
     )
 }
