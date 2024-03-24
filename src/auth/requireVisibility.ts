@@ -1,5 +1,5 @@
-import { VisibilityCollapsed } from '@/server/visibility/Types';
 import 'server-only'
+import { VisibilityCollapsed } from '@/server/visibility/Types';
 import { ExpandedUser } from './getUser';
 
 /**
