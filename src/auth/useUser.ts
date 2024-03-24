@@ -88,7 +88,7 @@ export function useUser<UserRequired extends boolean = false>(
 export function useUser({
     requiredPermissions = [],
     userRequired = false,
-    shouldRedirect = true,
+    shouldRedirect = false,
     redirectUrl = '/', // TODO: Should be unauthorized page by default
     redirectToLogin = true,
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
