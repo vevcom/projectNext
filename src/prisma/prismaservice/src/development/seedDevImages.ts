@@ -14,6 +14,7 @@ export default async function seedDevImages(prisma: PrismaClient) {
                 description: 'just a test',
                 visibility: {
                     create: {
+                        published: true,
                         regularLevel: { create: {} },
                         adminLevel: { create: {} },
                     }
