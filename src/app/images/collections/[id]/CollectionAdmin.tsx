@@ -20,6 +20,7 @@ import { v4 as uuid } from 'uuid'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
 import { VisibilityCollapsed } from '@/server/visibility/Types'
 import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
+import { BuypassPermissions } from '@/server/visibility/ConfigVars'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -33,7 +34,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const pagingContext = useContext(ImagePagingContext)
     const canEdit = useEditing({
         requiredVisibility: visibility,
-        requiredPermissions: [['IMAGE_ADMIN']],
+        requiredPermissions: [[BuypassPermissions.images]],
         operation: 'OR'
     })
     if (!canEdit) return null
