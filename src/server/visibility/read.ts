@@ -38,7 +38,12 @@ export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCo
     }
 }
 
+export async function includeVisibility<T>(serverCall: () => Promise<T>, getVisibilityId: (result: T) => number) {
+    const result = await serverCall()
+    const visibility = await readVisibilityCollapsed(getVisibilityId(result))
+    return { ...result, visibility }
+}
+
 function collapseVisibilityLevel(level: {requirements: {visibilityRequirmenetGroups: VisibilityRequirmenetGroup[]}[]}){
     return level.requirements.map(r => r.visibilityRequirmenetGroups.map(g => g.groupId))
-
 }
