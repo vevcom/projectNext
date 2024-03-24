@@ -34,12 +34,12 @@ const manualPermissions: Permission[] = permissionCategories
     .flat()
     .map(({ permission }) => permission)
 const allPermissions: Permission[] = Object.values(Permission)
-const missionPermissions: Permission[] = allPermissions.filter(permission => !manualPermissions.includes(permission))
+const missingPermissions: Permission[] = allPermissions.filter(permission => !manualPermissions.includes(permission))
 
 // Add missing permissions to permission categories
 permissionCategories.push({
     title: 'Øvrige tillganger',
-    permissions: missionPermissions.map(permission => ({
+    permissions: missingPermissions.map(permission => ({
         permission,
         name: permission,
     }))

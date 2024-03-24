@@ -8,13 +8,13 @@ import { getUser } from '@/auth/getUser'
 import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 export default async function Ombuls() {
-    const { user } = await getUser({
+    const { permissions } = await getUser({
         requiredPermissions: [['OMBUL_READ']],
         shouldRedirect: true,
         userRequired: true,
     })
 
-    const showCreateButton = user.permissions.includes('OMBUL_CREATE')
+    const showCreateButton = permissions.includes('OMBUL_CREATE')
 
     const latestOmbulRes = await readLatestOmbulAction()
     const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null

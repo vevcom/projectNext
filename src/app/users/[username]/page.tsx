@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const { user } = await getUser({
+    const { user, permissions, memberships } = await getUser({
         userRequired: true,
         shouldRedirect: true,
         returnUrl: `/users/${params.username}`,
@@ -38,11 +38,11 @@ export default async function User({ params }: PropTypes) {
             <p>{`Bruker-ID: ${user.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
-                {me && user.permissions.map(permission => <li key={uuid()}>{permission}</li>)}
+                {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
             </ul>
             <h2>Grupper:</h2>
             <ul>
-                {me && user.memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+                {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
         </>
