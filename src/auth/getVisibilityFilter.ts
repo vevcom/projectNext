@@ -1,14 +1,22 @@
 import 'server-only'
-import { ExpandedUser } from './getUser'
 import type { Permission } from '@prisma/client'
-import type { VisibilityType } from '@prisma/client'
 import { BasicMembership } from '@/server/groups/Types'
 
-
-export function getVisibilityFilter(groups: BasicMembership[] | undefined, permissions: Permission[], level: VisibilityType) {
+/**
+ * Creates a where-filter that can be used in db queries to only return items that mach the users groups (or permission if type is special).
+ * This should be used for regularVisibility level.
+ * @param groups - The groups the user is a member of
+ * @param permissions - The permissions the user has
+ * @returns - A where-filter that can be used in db queries. Used n query as ```where: getVisibilityFilter(user.memberships, user.permissions)```
+ */
+export function getVisibilityFilter(
+    groups: BasicMembership[] | undefined, 
+    permissions: Permission[],
+) {
     const groupIds = groups ? groups.map(group => group.groupId) : []
 
-    return level === 'REGULAR' ? {
+    return {
+        published: true,
         OR: [
             {
                 visibility: {
@@ -46,46 +54,7 @@ export function getVisibilityFilter(groups: BasicMembership[] | undefined, permi
                     }
                 }
             }
-        ]
-    } : {
-        OR: [
-            {
-                visibility: {
-                    type: 'SPECIAL' as const,
-                    adminLevel: {
-                        permission: {
-                            in: permissions
-                        }
-                    }
-                }
-            },
-            {
-                visibility: {
-                    type: 'SPECIAL' as const,
-                    adminLevel: {
-                        permission: null
-                    }
-                }
-            },
-            {
-                visibility: {
-                    type: 'REGULAR' as const,
-                    adminLevel: {
-                        requiremenets: {
-                            some: {
-                                visibilityRequirmenetGroups: {
-                                    some: {
-                                        groupId: {
-                                            in: groupIds
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ]
+        ] 
     }
 }
 
