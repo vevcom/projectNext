@@ -42,7 +42,7 @@ export function getVisibilityFilter(
                     published: true,
                     type: 'REGULAR' as const,
                     regularLevel: {
-                        requiremenets: {
+                        requirements: {
                             some: {
                                 visibilityRequirmenetGroups: {
                                     some: {

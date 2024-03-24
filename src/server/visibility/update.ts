@@ -8,7 +8,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
 
     await prismaCall(() => prisma.$transaction([
         //first remove all the old conditions. This will also remove all join tables to groups on cascade.
-        prisma.visibilityRequiremenet.deleteMany({
+        prisma.visibilityRequirement.deleteMany({
             where: {
                 visibilityId: id
             }
@@ -39,7 +39,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
                 type: 'REGULAR',
                 regularLevel: {
                     create: {
-                        requiremenets: {
+                        requirements: {
                             create: data.regular.map(row => ({
                                 visibilityRequirementGroups: {
                                     create: row.map(groupId => ({
@@ -52,7 +52,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
                 },
                 adminLevel: {
                     create: {
-                        requiremenets: {
+                        requirements: {
                             create: data.admin.map(row => ({
                                 visibilityRequirementGroups: {
                                     create: row.map(groupId => ({
