@@ -1,4 +1,3 @@
-import 'server-only'
 import { GroupMatrix, VisibilityCollapsed } from '@/server/visibility/Types';
 import { BasicMembership } from '@/server/groups/Types';
 import { Permission, VisibilityLevel } from '@prisma/client';

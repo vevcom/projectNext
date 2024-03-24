@@ -13,6 +13,7 @@ import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 import { includeVisibility } from '@/server/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
+import { VisibilityCollapsed } from '@/server/visibility/Types'
 
 /**
  * Action that reads an image collection by id or name
@@ -21,7 +22,7 @@ import { checkVisibility } from '@/auth/checkVisibility'
  */
 export async function readImageCollectionAction(
     idOrName: number | string
-): Promise<ActionReturn<ExpandedImageCollection>> {
+): Promise<ActionReturn<ExpandedImageCollection & {visibility: VisibilityCollapsed}>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
     const collection = await safeServerCall(() => includeVisibility(
         () => readImageCollection(idOrName), 
