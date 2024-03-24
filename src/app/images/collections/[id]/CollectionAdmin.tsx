@@ -19,6 +19,7 @@ import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
 import { VisibilityCollapsed } from '@/server/visibility/Types'
+import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -30,8 +31,12 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
-    const editMode = useEditing({}) //TODO: auth collection visibility
-    if (!editMode) return null
+    const canEdit = useEditing({
+        requiredVisibility: visibility,
+        requiredPermissions: [['IMAGE_ADMIN']],
+        operation: 'OR'
+    })
+    if (!canEdit) return null
     if (!selection) throw new Error('No context')
 
     const refreshImages = () => {
@@ -43,7 +48,8 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     }
 
     return (
-        <div className={styles.CollectionAdmin}>
+    <>
+        <aside className={styles.CollectionAdmin}>
             <div className={styles.upload}>
                 <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
                 <PopUp PopUpKey={uuid()} showButtonContent={
@@ -141,6 +147,8 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     text: 'Er du sikker på at du vil slette samlingen. Dette vil også slette alle bilder i salingen.'
                 }}
             />
-        </div>
+        </aside>
+        <VisibilityAdmin visibility={visibility} />
+    </>
     )
 }

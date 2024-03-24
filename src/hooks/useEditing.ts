@@ -18,8 +18,8 @@ import { checkVisibility } from '@/auth/checkVisibility'
  * @param operation - The operation to perform on the permissions and visibility. AND or OR, OR by default
  * @param level - The level of visibility required to pass visibility test. ADMIN by default
  * @returns - A bool indicating:
- * - IF the bool is true editMode is on and the user has the required permissions
- * - IF the bool is false editMode is off or the user does not have the required permissions
+ * - IF the bool is true editMode is on, and the user has the required permissions and/or visibility
+ * - IF the bool is false editMode is off or the user does not have the required permissions and/or visibility
  */
 export default function useEditing({
     requiredPermissions,

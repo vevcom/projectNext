@@ -4,11 +4,8 @@
     padding: ohma.$gap;
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: auto auto;
     position: relative;
-    > .admin {
-        position: relative
-    }
     > .images {
         padding: 3*ohma.$gap;
         width: 100%;

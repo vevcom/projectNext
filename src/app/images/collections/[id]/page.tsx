@@ -9,7 +9,6 @@ import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
-import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
 
 type PropTypes = {
     params: {
@@ -43,9 +42,6 @@ export default async function Collection({ params }: PropTypes) {
             >
                 <PopUpProvider>
                     <div className={styles.wrapper}>
-                        <aside className={styles.admin}>
-                            <CollectionAdmin visibility={collection.visibility} collection={collection} />
-                        </aside>
                         <div className={styles.images}>
                             <h1>{collection.name}</h1>
                             <i>{collection.description}</i>
@@ -55,9 +51,7 @@ export default async function Collection({ params }: PropTypes) {
                                 } />
                             </main>
                         </div>
-                        <span>
-                            <VisibilityAdmin visibility={collection.visibility} />
-                        </span>
+                        <CollectionAdmin visibility={collection.visibility} collection={collection} />
                     </div>
                 </PopUpProvider>
             </ImagePagingProvider>
