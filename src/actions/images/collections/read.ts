@@ -11,6 +11,7 @@ import type {
 } from '@/server/images/collections/Types'
 import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
+import { includeVisibility } from '@/server/visibility/read'
 
 /**
  * Action that reads an image collection by id or name
@@ -23,7 +24,11 @@ export async function readImageCollectionAction(
     //TODO: Auth image collections on visibility or permission (if special collection)
     const { user } = await getUser()
 
-    const collection = await safeServerCall(() => readImageCollection(idOrName))
+    const collection = await safeServerCall(() => includeVisibility(
+        () => readImageCollection(idOrName), 
+        data => data.visibilityId
+    ))
+    if (!collection.success) return collection
 
     return collection
 }   
