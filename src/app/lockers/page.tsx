@@ -1,27 +1,16 @@
 import styles from './page.module.scss'
-import readLockers from '@/actions/lockers/read'
-import readLockerReservations from '@/actions/lockers/reservations/read'
-import LockerTable from './LockerTable'
+import { readLockerPage } from '@/actions/lockers/read'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import LockerList from './LockerList'
 import Form from '../components/Form/Form'
-import TextInput from '../components/UI/TextInput'
 import NumberInput from '../components/UI/NumberInput'
-import Checkbox from '../components/UI/Checkbox'
 import { createLockerResorvation } from '@/actions/lockers/reservations/create'
+import LockerPagingProvider from '@/context/paging/LockerPaging'
+import { notFound } from 'next/navigation'
 
 export default async function Skapres() {
-    const lockers = await readLockers()
-    if (!lockers.success) {
-        throw new Error("Kunne ikke hente skapdata")
-    }
-
-    const lockerReservations = await readLockerReservations()
-    if (!lockerReservations.success) {
-        throw new Error("Kunne ikke hente skapresorvasjoner")
-    }
-
     return (
-        <div className={styles.wrapper}>
-            <h1 className={styles.header}>Skapreservasjon</h1>
+        <PageWrapper title="Skapreservasjon">
             <Form
                 title="Reserver skap"
                 submitText="Reserver skap"
@@ -30,7 +19,16 @@ export default async function Skapres() {
                 <NumberInput name="lockerId" label="Skap nr."></NumberInput>
                 <NumberInput name="userId" label="userId"></NumberInput>
             </Form>
-            <LockerTable lockers={lockers.data}></LockerTable>
-        </div>
+            <LockerPagingProvider
+                    startPage={{
+                        pageSize: 20,
+                        page: 0
+                    }}
+                    details={undefined}
+                    serverRenderedData={[]}
+                >
+                    <LockerList />
+            </LockerPagingProvider>
+        </PageWrapper>
     )
 }

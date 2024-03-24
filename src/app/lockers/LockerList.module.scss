@@ -1,0 +1,16 @@
+@use '@/styles/ohma';
+
+
+.lockerTable {
+    background-color: ohma.$colors-gray-400;
+}
+
+.lockerTableHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.lockerRow {
+    display: flex;
+    justify-content: space-between;
+}
