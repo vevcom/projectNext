@@ -4,7 +4,7 @@ import { readDefaultPermissions } from '@/server/permissionRoles/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
-import type { Permission, User } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 import type { BasicMembership } from '@/server/groups/Types'
 import type { UserFiltered } from '@/server/users/Types'
 
@@ -94,7 +94,7 @@ export async function getUser({
     if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
         // Cannot have ternary expression for just status because then ts gets confused.
         return user
-            ? { user, authorized: true, status: 'AUTHORIZED',         permissions, memberships }
+            ? { user, authorized: true, status: 'AUTHORIZED', permissions, memberships }
             : { user, authorized: true, status: 'AUTHORIZED_NO_USER', permissions, memberships }
     }
 
@@ -114,6 +114,6 @@ export async function getUser({
 
     // Cannot have ternary expression for just status because then ts gets confused.
     return user
-        ? { user, authorized: false, status: 'UNAUTHORIZED',    permissions, memberships }
+        ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
         : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
 }

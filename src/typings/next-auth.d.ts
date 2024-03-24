@@ -30,7 +30,9 @@ declare module 'next-auth/adapters' {
 
 declare module 'next-auth/jwt' {
     interface JWT {
-        user: ExpandedUser,
+        user: UserFiltered,
+        permissions: Permission[],
+        memberships: BasicMembership[],
 
         // The standard JWT payload is hidden by next auth. To get correct
         // type hinting we need to declare the properties we wish to

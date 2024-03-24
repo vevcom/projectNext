@@ -5,10 +5,10 @@ import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import type { Permission } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
 import type { PermissionMatrix } from './checkPermissionMatrix'
-import { Permission } from '@prisma/client'
-import { UserFiltered } from '@/server/users/Types'
-import { BasicMembership } from '@/server/groups/Types'
+import type { BasicMembership } from '@/server/groups/Types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.
@@ -108,9 +108,9 @@ export function useUser({
     })
 
     useEffect(() => {
-        if (nextAuthStatus === 'loading') return  
+        if (nextAuthStatus === 'loading') return
 
-        const { 
+        const {
             user = null,
             permissions = defaultPermissions,
             memberships = [],
@@ -121,11 +121,11 @@ export function useUser({
             // ...so then we need to fetch the default permissions.
             readDefaultPermissionsAction().then((defaultPermissionsRes): void => {
                 if (!defaultPermissionsRes.success) throw new Error('Could not read default permissions.')
-                
+
                 setDefaultPermissions(defaultPermissionsRes.data)
             })
 
-            // Since reading the default permissions is an async operations we return from this 
+            // Since reading the default permissions is an async operations we return from this
             // useEffect callback. Once the default permissions have been retrieved this callback
             // will be run again.
             return
@@ -136,7 +136,7 @@ export function useUser({
         // 2. The user has all the required permissions
         if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
             setUseuserReturn(user
-                ? { user, authorized: true, status: 'AUTHORIZED',         permissions, memberships } 
+                ? { user, authorized: true, status: 'AUTHORIZED', permissions, memberships }
                 : { user, authorized: true, status: 'AUTHORIZED_NO_USER', permissions, memberships }
             )
             return
@@ -146,8 +146,8 @@ export function useUser({
             // The next auth useSession function will redirect the user to the login page if there
             // is no user session at all. However, since we can have authorized users without a
             // session we can only use this feature if userRequired is true. Therefore we need to
-            // handle the case where userRequired is false and the deafult permissions aren't 
-            // enough our selves. 
+            // handle the case where userRequired is false and the deafult permissions aren't
+            // enough our selves.
             if (!user && redirectToLogin) {
                 push(`/login?callbackUrl=${encodeURI(pathName)}`)
             }
@@ -156,7 +156,7 @@ export function useUser({
         }
 
         setUseuserReturn(user
-            ? { user, authorized: false, status: 'UNAUTHORIZED',    permissions, memberships }
+            ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
             : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
         )
     }, [session, nextAuthStatus, defaultPermissions])
