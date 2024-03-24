@@ -249,6 +249,9 @@ enum Permission {
 
   IMAGE_COLLECTION_CREATE
   IMAGE_ADMIN
+
+  EVENT_CREATE
+  EVENT_ADMIN
 }
 
 model Role {
