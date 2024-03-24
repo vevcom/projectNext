@@ -33,12 +33,14 @@ export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCo
     if (visibility.type === 'SPECIAL') {
         return {
             type: 'SPECIAL',
+            published: visibility.published,
             regular: visibility.regularLevel.permission,
             admin: visibility.adminLevel.permission
         }
     } 
     return {
         type: 'REGULAR',
+        published: visibility.published,
         regular: collapseVisibilityLevel(visibility.regularLevel),
         admin: collapseVisibilityLevel(visibility.adminLevel)
     }

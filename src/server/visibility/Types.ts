@@ -8,11 +8,13 @@ export type GroupMatrix = number[][]
  * or type is REGULAR and the levels are represented by matrix of ids of groups
  */
 export type VisibilityCollapsed = {
-    type: 'REGULAR'
+    type: 'REGULAR',
+    published: boolean,
     regular: GroupMatrix,
     admin: GroupMatrix
 } | {
     type: 'SPECIAL'
+    published: boolean,
     regular: Permission | null,
     admin: Permission | null
 }
