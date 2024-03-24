@@ -12,6 +12,7 @@ import type {
 import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 import { includeVisibility } from '@/server/visibility/read'
+import { checkVisibility } from '@/auth/checkVisibility'
 
 /**
  * Action that reads an image collection by id or name
@@ -22,13 +23,14 @@ export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    const { user } = await getUser()
-
     const collection = await safeServerCall(() => includeVisibility(
         () => readImageCollection(idOrName), 
         data => data.visibilityId
     ))
     if (!collection.success) return collection
+    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR')) {
+        return createActionError('UNAUTHORIZED', 'You do not have permission to view this collection')
+    }
 
     return collection
 }   
