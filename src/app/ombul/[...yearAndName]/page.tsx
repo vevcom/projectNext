@@ -18,7 +18,7 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
-    const { user } = await getUser({
+    const { permissions } = await getUser({
         requiredPermissions: [['OMBUL_READ']],
         userRequired: true,
         shouldRedirect: true,
@@ -36,7 +36,7 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = user.permissions.includes('OMBUL_UPDATE')
+    const canUpdate = permissions.includes('OMBUL_UPDATE')
 
     const changeDescription = updateOmbulAction.bind(null, ombul.id)
 

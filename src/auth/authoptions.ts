@@ -95,6 +95,8 @@ export const authOptions: AuthOptions = {
     callbacks: {
         async session({ session, token }) {
             session.user = token.user
+            session.permissions = token.permissions
+            session.memberships = token.memberships
             return session
         },
         async jwt({
@@ -148,7 +150,7 @@ export const authOptions: AuthOptions = {
             const userId = user ? Number(user.id) : token?.user.id
 
             // TODO - refactor when read user action exists
-            const userInfo = await prisma.user.findUnique({
+            const userInfo = await prisma.user.findUniqueOrThrow({
                 where: {
                     id: userId,
                 },
@@ -157,12 +159,8 @@ export const authOptions: AuthOptions = {
             const userPermissions = await readPermissionsOfUser(userId)
             const userMemberships = await readMembershipsOfUser(userId)
 
-            if (!userInfo || !userPermissions || !userMemberships) {
-                throw new Error('Could not read user from database when setting jwt')
-            }
-
-            token.user = {
-                ...userInfo,
+            token = {
+                user: userInfo,
                 permissions: userPermissions,
                 memberships: userMemberships,
             }
