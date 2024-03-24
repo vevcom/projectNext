@@ -16,10 +16,10 @@ export function getVisibilityFilter(
     const groupIds = groups ? groups.map(group => group.groupId) : []
 
     return {
-        published: true,
         OR: [
             {
                 visibility: {
+                    published: true,
                     type: 'SPECIAL' as const,
                     regularLevel: {
                         permission: {
@@ -30,6 +30,7 @@ export function getVisibilityFilter(
             },
             {
                 visibility: {
+                    published: true, 
                     type: 'SPECIAL' as const,
                     regularLevel: {
                         permission: null
@@ -38,6 +39,7 @@ export function getVisibilityFilter(
             },
             {
                 visibility: {
+                    published: true,
                     type: 'REGULAR' as const,
                     regularLevel: {
                         requiremenets: {
