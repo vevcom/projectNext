@@ -23,6 +23,7 @@ export function checkVisibility({
     visibility: VisibilityCollapsed, 
     level: 'REGULAR' | 'ADMIN'
 ) {
+    if (visibility.type === 'REGULAR' && !visibility.published) return false
     if (visibility.type === 'SPECIAL') {
         if (level === 'REGULAR') {
             return visibility.regular ? permissions.includes(visibility.regular) : true //null permission means no permission required
