@@ -1,13 +1,13 @@
 'use client'
 import styles from './AddNews.module.scss'
 import Textarea from '@/components/UI/Textarea'
-import { createNews } from '@/actions/news/create'
+import { createNewsAction } from '@/actions/news/create'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { EditModeContext } from '@/context/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ExpandedNewsArticle } from '@/actions/news/Types'
+import type { ExpandedNewsArticle } from '@/server/news/Types'
 
 export default function AddNews() {
     const { push } = useRouter()
@@ -20,7 +20,7 @@ export default function AddNews() {
     return (
         <div className={styles.AddNews}>
             <Form
-                action={createNews}
+                action={createNewsAction}
                 successCallback={handleCreate}
                 submitText="Lag nyhet"
             >

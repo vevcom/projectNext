@@ -1,35 +1,19 @@
 'use server'
-import { articleCategorySchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import type { ArticleCategorySchemaType } from './schema'
+import { createZodActionError } from '@/actions/error'
+import { createArticleCategory } from '@/server/cms/articleCategories/create'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createArticleCategoryValidation } from '@/server/cms/articleCategories/validation'
+import type { CreateArticleCategoryTypes } from '@/server/cms/articleCategories/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleCategory } from './Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
-export async function createArticleCategory(
-    rawData: FormData | ArticleCategorySchemaType
+export async function createArticleCategoryAction(
+    rawData: FormData | CreateArticleCategoryTypes['Type']
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
-    const parse = articleCategorySchema.safeParse(rawData)
+    //TODO: check permission
+    const parse = createArticleCategoryValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { name, description } = parse.data
-
-    try {
-        // TODO: Check for permission to create article category
-        const articleCategory = await prisma.articleCategory.create({
-            data: {
-                name,
-                description
-            },
-            include: {
-                articles: true
-            },
-        })
-        return { success: true, data: articleCategory }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => createArticleCategory(data))
 }

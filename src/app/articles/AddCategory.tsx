@@ -3,14 +3,14 @@ import styles from './AddCategory.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import { createArticleCategory } from '@/actions/cms/articleCategories/create'
+import { createArticleCategoryAction } from '@/actions/cms/articleCategories/create'
 import { useRouter } from 'next/navigation'
 
 export default function AddCategory() {
     const { refresh } = useRouter()
     return (
         <Form
-            action={createArticleCategory}
+            action={createArticleCategoryAction}
             className={styles.AddCategory}
             successCallback={refresh}
         >

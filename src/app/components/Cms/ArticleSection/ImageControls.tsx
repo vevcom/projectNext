@@ -1,9 +1,8 @@
 'use client'
 import styles from './ImageControls.module.scss'
-import { updateArticleSection } from '@/cms/articleSections/update'
-import { EditModeContext } from '@/context/EditMode'
-import { imageSizeIncrement, maxImageSize, minImageSize } from '@/actions/cms/articleSections/ConfigVars'
-import { useContext } from 'react'
+import { updateArticleSectionAction } from '@/cms/articleSections/update'
+import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/ConfigVars'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -25,27 +24,27 @@ type PropTypes = {
 }
 
 export default function ImageControls({ articleSection, className }: PropTypes) {
-    const editModeContext = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
     const { refresh } = useRouter()
-    if (!editModeContext?.editMode) return null
+    if (!canEdit) return null
 
     const moveLeft = async () => {
-        await updateArticleSection(articleSection.name, { imagePosition: 'LEFT' })
+        await updateArticleSectionAction(articleSection.name, { imagePosition: 'LEFT' })
         refresh()
     }
 
     const moveRight = async () => {
-        await updateArticleSection(articleSection.name, { imagePosition: 'RIGHT' })
+        await updateArticleSectionAction(articleSection.name, { imagePosition: 'RIGHT' })
         refresh()
     }
 
     const increaseSize = async () => {
-        await updateArticleSection(articleSection.name, { imageSize: articleSection.imageSize + imageSizeIncrement })
+        await updateArticleSectionAction(articleSection.name, { imageSize: articleSection.imageSize + imageSizeIncrement })
         refresh()
     }
 
     const decreaseSize = async () => {
-        await updateArticleSection(articleSection.name, { imageSize: articleSection.imageSize - imageSizeIncrement })
+        await updateArticleSectionAction(articleSection.name, { imageSize: articleSection.imageSize - imageSizeIncrement })
         refresh()
     }
 

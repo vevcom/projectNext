@@ -1,30 +1,17 @@
 'use server'
-import { createImageCollectionSchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createZodActionError } from '@/actions/error'
+import { createImageCollection } from '@/server/images/collections/create'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createImageCollectionValidation } from '@/server/images/collections/validation'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateImageCollectionSchemaType } from './schema'
+import type { CreateImageCollectionTypes } from '@/server/images/collections/validation'
 
-export async function createImageCollection(
-    rawdata: FormData | CreateImageCollectionSchemaType
+export async function createImageCollectionAction(
+    rawdata: FormData | CreateImageCollectionTypes['Type']
 ): Promise<ActionReturn<ImageCollection>> {
-    const parse = createImageCollectionSchema.safeParse(rawdata)
-
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+    const parse = createImageCollectionValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-
-    try {
-        const collection = await prisma.imageCollection.create({
-            data: {
-                name: data.name,
-                description: data.description,
-            }
-        })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => createImageCollection(data))
 }

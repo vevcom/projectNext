@@ -1,8 +1,8 @@
-import { Prisma } from '@prisma/client'
+import type { ErrorMessage } from '@/server/error'
 import type { SafeParseError } from 'zod'
-import type { ActionErrorCode, ActionError, ActionReturnError } from './Types'
+import type { ActionReturnError, ActionErrorCode } from './Types'
 
-export function createActionError(errorCode: ActionErrorCode, error?: string | ActionError[]): ActionReturnError {
+export function createActionError(errorCode: ActionErrorCode, error?: string | ErrorMessage[]): ActionReturnError {
     return {
         success: false,
         errorCode,
@@ -18,17 +18,3 @@ export function createZodActionError<T>(parse: SafeParseError<T>): ActionReturnE
     }
 }
 
-export function createPrismaActionError(err: unknown): ActionReturnError {
-    // TODO - LOGGER
-
-    if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {
-        return createActionError('UNKNOWN ERROR', 'unknown error')
-    }
-
-    const errorMessages: { [key: string]: ActionReturnError } = {
-        P2002: createActionError('DUPLICATE'),
-        P2025: createActionError('NOT FOUND'),
-    }
-
-    return errorMessages[err.code] ?? `unknown prisma error (${err.code})`
-}

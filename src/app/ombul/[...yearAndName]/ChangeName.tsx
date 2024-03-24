@@ -2,9 +2,9 @@
 
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateOmbul } from '@/actions/ombul/update'
+import { updateOmbulAction } from '@/actions/ombul/update'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/actions/ombul/Types'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 type PropTypes = {
     children: ReactNode
@@ -21,7 +21,7 @@ type PropTypes = {
  * @returns The component jsx
  */
 export default function ChangeName({ children, editable, ombulId }: PropTypes) {
-    const changeName = updateOmbul.bind(null, ombulId)
+    const changeName = updateOmbulAction.bind(null, ombulId)
 
     const handleChange = async (data: ExpandedOmbul | undefined) => {
         const name = data?.name

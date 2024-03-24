@@ -1,12 +1,13 @@
 'use server'
-import { articleCategorySchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import type { ArticleCategorySchemaType } from './schema'
+import { createZodActionError } from '@/actions/error'
+import { updateArticleCategory } from '@/server/cms/articleCategories/update'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { updateArticleCategoryValidation } from '@/server/cms/articleCategories/validation'
+import type { UpdateArticleCategoryTypes } from '@/server/cms/articleCategories/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleCategory } from './Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
-export async function updateArticleCategoryVisibility(
+export async function updateArticleCategoryVisibilityAction(
     // disable eslint rule temporarily until function is implemented
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id: number,
@@ -16,33 +17,13 @@ export async function updateArticleCategoryVisibility(
     throw new Error('Not implemented')
 }
 
-export async function updateArticleCategory(
+export async function updateArticleCategoryAction(
     id: number,
-    rawData: FormData | ArticleCategorySchemaType
+    rawData: FormData | UpdateArticleCategoryTypes['Type']
 ): Promise<ActionReturn<ExpandedArticleCategory>> {
-    const parse = articleCategorySchema.safeParse(rawData)
+    const parse = updateArticleCategoryValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-
-    const { name, description } = parse.data
-
-    try {
-        const articleCategory = await prisma.articleCategory.update({
-            where: {
-                id
-            },
-            data: {
-                name,
-                description
-            },
-            include: {
-                articles: true
-            }
-        })
-        return { success: true, data: articleCategory }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => updateArticleCategory(id, data))
 }

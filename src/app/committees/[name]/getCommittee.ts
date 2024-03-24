@@ -1,4 +1,4 @@
-import { readCommittee } from '@/actions/groups/committees/read'
+import { readCommitteeAction } from '@/actions/groups/committees/read'
 import { notFound } from 'next/navigation'
 import type { PropTypes } from './page'
 
@@ -9,7 +9,8 @@ import type { PropTypes } from './page'
  */
 export default async function getCommittee(params: PropTypes['params']) {
     const name = decodeURIComponent(params.name)
-    const res = await readCommittee(name)
+    const res = await readCommitteeAction({ shortName: name })
     if (!res.success) notFound()
+    console.log(res.data)
     return res.data
 }
