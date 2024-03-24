@@ -1,5 +1,5 @@
 import 'server-only'
-import type { Permission } from '@prisma/client'
+import type { Permission, Prisma } from '@prisma/client'
 import { BasicMembership } from '@/server/groups/Types'
 
 /**
@@ -42,22 +42,31 @@ export function getVisibilityFilter(
                     published: true,
                     type: 'REGULAR' as const,
                     regularLevel: {
-                        requirements: {
-                            some: {
-                                visibilityRequirmenetGroups: {
+                        OR: [
+                            {
+                                requirements: {
                                     some: {
-                                        groupId: {
-                                            in: groupIds
+                                        visibilityRequirmenetGroups: {
+                                            some: {
+                                                groupId: {
+                                                    in: groupIds
+                                                }
+                                            }
                                         }
                                     }
                                 }
+                            },
+                            {
+                                requirements: {
+                                    none: {}
+                                }
                             }
-                        }
+                        ]
                     }
                 }
             }
         ] 
-    }
+    } satisfies Prisma.ImageCollectionWhereInput
 }
 
 export type VisibilityFilter = ReturnType<typeof getVisibilityFilter>
