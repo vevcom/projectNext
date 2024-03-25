@@ -1,9 +1,10 @@
+import { ExpandedGroup } from "@/server/groups/Types"
 import type { ReactNode } from "react"
 import { createContext, useState } from "react"
 
 export const GroupSelectionContext = createContext<{
-    group: number | null,
-    setGroup: (groupId: number | null) => void,
+    group: ExpandedGroup | null,
+    setGroup: (group: ExpandedGroup | null) => void,
 } |null>(null)
 
 type PropTypes = {
@@ -11,7 +12,7 @@ type PropTypes = {
 }
 
 export default function GroupSelectionProvider({ children }: PropTypes) {
-    const [group, setGroup] = useState<number | null>(null)
+    const [group, setGroup] = useState<ExpandedGroup | null>(null)
 
     return (
         <GroupSelectionContext.Provider value={{

@@ -40,9 +40,9 @@ export default async function GroupsAdmin() {
                                 groupType.groups.map(group => (
                                     <tr key={group.id}>
                                         <td>{group.id}</td>
-                                        <td>{'navn'}</td>
+                                        <td>{group.name}</td>
                                         <td>{10}</td>
-                                        <td><GroupSelector groupId={group.id} /></td>
+                                        <td><GroupSelector group={group} /></td>
                                     </tr>
                                 ))
                             }

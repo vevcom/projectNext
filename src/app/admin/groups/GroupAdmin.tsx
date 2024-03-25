@@ -17,6 +17,8 @@ export default function GroupAdmin() {
         groupSelectionCtx.setGroup(null)
     }, [groupSelectionCtx.setGroup])
 
+    const group = groupSelectionCtx.group
+
     return (
         <UserPagingProvider
             serverRenderedData={[]}
@@ -26,7 +28,7 @@ export default function GroupAdmin() {
             }}
             details={{
                 groups: [{
-                    groupId: groupSelectionCtx.group,
+                    groupId: group.id,
                     groupOrder: null
                 }],
                 partOfName: ''
@@ -36,6 +38,7 @@ export default function GroupAdmin() {
                 <button className={styles.close} onClick={handleClose}>
                     <FontAwesomeIcon icon={faX} />
                 </button>
+                <h2>{group.name}</h2>
                 <UserList />
             </div>
         </UserPagingProvider>
