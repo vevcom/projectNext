@@ -244,6 +244,7 @@ enum Permission {
 
   // User list permissions - theese are admin permissions, and do not have anything
   // to do with a user´s ability to edit its own user.
+  // USER_READ for example means that the user can read the list of users.
   USER_READ
   USER_UPDATE
   USER_DESTROY
