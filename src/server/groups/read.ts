@@ -4,6 +4,7 @@ import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import type { User } from '@prisma/client'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
+import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 
 export async function readGroups(): Promise<ExpandedGroup[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -44,6 +45,13 @@ export async function readMembershipsOfGroups(ids: number[]): Promise<ExpandedMe
     }))
 }
 
+/**
+ * Reads valid memberships of a user of a order
+ * @param id - The id of the user
+ * @param order - The order of what is considered valid membership. If undefined all memberships
+ * are returned.
+ * @returns 
+ */
 export async function readMembershipsOfUser(
     id: number,
     order?: number
@@ -53,10 +61,10 @@ export async function readMembershipsOfUser(
     }
 
     return await prismaCall(() => prisma.membership.findMany({
-        where: {
+        where: order ? {
             userId: id,
-            order,
-        },
+            ...getActiveMembershipFilter(order)
+        } : { userId: id },
         select: {
             admin: true,
             groupId: true,

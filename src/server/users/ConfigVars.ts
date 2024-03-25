@@ -1,6 +1,8 @@
 import { createSelection } from '@/server/createSelection'
 import type { User } from '@prisma/client'
 
+export const maxNumberOfGroupsInFilter = 7;
+
 export const userFieldsToExpose = [
     'id',
     'username',

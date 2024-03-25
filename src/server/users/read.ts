@@ -1,9 +1,11 @@
-import { userFilterSelection } from './ConfigVars'
+import { maxNumberOfGroupsInFilter, userFilterSelection } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 import { readGroup } from '../groups/read'
+import { ServerError } from '../error'
+import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -17,30 +19,40 @@ export async function readUserPage<const PageSize extends number>({
 }: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
     const words = details.partOfName.split(' ')
 
-    const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => ({
-        groupId,
-        groupOrder: groupOrder ?? (await readGroup(groupId)).order
-    })))
+    if (details.groups.length > maxNumberOfGroupsInFilter) throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
+    const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => {
+        const { order } = await readGroup(groupId)
+        return {
+            groupId,
+            groupOrder: groupOrder ?? order,
+        }
+    }))
 
     return await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
         take: page.pageSize,
         select: userFilterSelection,
         where: {
-            AND: words.map((word, i) => {
-                const condition = {
-                    [i === words.length - 1 ? 'contains' : 'equals']: word,
-                    mode: 'insensitive'
-                } as const
-                return {
-                    OR: [
-                        { firstname: condition },
-                        { lastname: condition },
-                        { username: condition },
-                    ],
-                }
-            })
-            //TODO select on groups
+            AND: [
+                ...words.map((word, i) => {
+                    const condition = {
+                        [i === words.length - 1 ? 'contains' : 'equals']: word,
+                        mode: 'insensitive'
+                    } as const
+                    return {
+                        OR: [
+                            { firstname: condition },
+                            { lastname: condition },
+                            { username: condition },
+                        ],
+                    }
+                }),
+                ...groups.map(group => ({
+                    memberships: {
+                        some: getActiveMembershipFilter(group.groupOrder),
+                    }
+                }))
+            ],
         },
         orderBy: [
             { lastname: 'asc' },
