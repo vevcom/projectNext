@@ -5,6 +5,7 @@ $selectionBtnSize: 25px;
 .UserList {
     height: 100%;
     > .filters {
+        padding-right: 3em;
         width: 100%;
         display: flex;
         flex-flow: row wrap;

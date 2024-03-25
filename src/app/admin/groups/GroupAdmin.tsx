@@ -62,7 +62,7 @@ export default function GroupAdmin() {
                         }}
                     >
                         <UserSelectionProvider>
-                            <AddUsersToGroup />
+                            <AddUsersToGroup groupId={group.id} />
                         </UserSelectionProvider>
                     </UserPagingProvider>
                 </PopUp>

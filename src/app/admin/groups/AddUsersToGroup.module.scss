@@ -1,6 +1,8 @@
 @use '@/styles/ohma';
 
 .AddUsersToGroup {
+    position: relative;
+    width: 100%;
     .addUsersList {
         overflow-y: scroll;
         overflow-x: hidden;
@@ -8,6 +10,13 @@
         min-width: 70vw;
         > * {
             height: 100%;
+        }
+    }
+    .submitForm {
+        button {
+            position: absolute;
+            top: -3em;
+            right: 0;
         }
     }
 }
