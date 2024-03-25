@@ -2,20 +2,72 @@ import { ServerError } from '@/server/error'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { User } from '@prisma/client'
+import type { Group, User } from '@prisma/client'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
+import { OmegaMembershipLevelConfig } from './ConfigVars'
 
-export async function readGroups(): Promise<ExpandedGroup[]> {
+export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
 }
 
-export async function readGroup(id: number): Promise<ExpandedGroup> {
+export async function readGroup(id: number): Promise<Group> {
     return await prismaCall(() => prisma.group.findUniqueOrThrow({
         where: {
             id,
         },
     }))
+}
+
+export async function readGroupsExpanded(id: number): Promise<ExpandedGroup[]> {
+    const groups = await prismaCall(() => prisma.group.findMany({
+        include: {
+            memberships: {
+                take:  1,
+                orderBy: {
+                    order: 'asc'
+                }
+            },
+            committee: { select: { name: true } },
+            manualGroup: { select: { name: true } },
+            class: { select: { year: true } },
+            interestGroup: { select: { name: true } },
+            omegaMembershipGroup: { select: { omegaMembershipLevel: true } },
+            studyProgramme: { select: { name: true } },
+        }
+    }))
+
+    return groups.map(group => {
+        let name = `group id ${group.id}`
+        switch (group.groupType) {
+            case 'COMMITTEE':
+                name = group.committee?.name ?? name
+                break
+            case 'MANUAL_GROUP':
+                name = group.manualGroup?.name ?? name
+                break
+            case 'CLASS':
+                name = `${group.class?.year ?? '??'}. Klasse`
+                break
+            case 'INTEREST_GROUP':
+                name = group.interestGroup?.name ?? name
+                break
+            case 'OMEGA_MEMBERSHIP_GROUP':
+                name = group.omegaMembershipGroup?.omegaMembershipLevel ?
+                    OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name : 
+                    name
+                break
+            case 'STUDY_PROGRAMME':
+                name = group.studyProgramme?.name ?? name
+                break
+        }
+        const firstOrder = group.memberships[0]?.order ?? group.order
+        return {
+            ...group,
+            firstOrder,
+            name,
+        }
+    })
 }
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {

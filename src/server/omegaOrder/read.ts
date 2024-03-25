@@ -18,3 +18,7 @@ export async function readCurrenOmegaOrder(): Promise<OmegaOrder> {
     if (!omegaOrder) throw new ServerError('NOT FOUND', 'Current OmegaOrder not found')
     return omegaOrder
 }
+
+export async function readOmegaOrders(): Promise<OmegaOrder[]> {
+    return await prismaCall(() => prisma.omegaOrder.findMany())
+}
