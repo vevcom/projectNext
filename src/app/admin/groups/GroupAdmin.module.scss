@@ -26,6 +26,14 @@
         justify-content: center;
         align-items: center;
     }
+    .addUsers {
+        position: absolute;
+        top: 0;
+        right: 1em;
+        @include ohma.btn(ohma.$colors-primary);
+        width: 200px;
+    }
+
     .userlist {
         overflow-y: scroll;
         height: 100%;
@@ -34,5 +42,13 @@
     .groupInfo {
         border-bottom: 3px solid ohma.$colors-gray-800;
         margin-bottom: ohma.$gap;
+    }
+}
+
+.addUsersList {
+    overflow-y: scroll;
+    max-height: 80vh;
+    > * {
+        height: 100%;
     }
 }

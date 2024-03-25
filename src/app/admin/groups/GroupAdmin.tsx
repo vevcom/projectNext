@@ -3,11 +3,12 @@
 import styles from './GroupAdmin.module.scss'
 import UserList from '@/app/components/User/UserList/UserList'
 import { GroupSelectionContext } from '@/context/groupSelection'
-import UserPagingProvider from '@/context/paging/UserPaging'
+import UserPagingProvider, { UserPagingContext } from '@/context/paging/UserPaging'
 import { useCallback, useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
+import PopUp from '@/app/components/PopUp/PopUp'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
@@ -43,7 +44,24 @@ export default function GroupAdmin() {
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>
-                <UserList />
+                <UserList disableFilters={{commitees: true}} />
+                <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
+                    <>Legg til brukere</>
+                }>
+                    <UserPagingProvider
+                        serverRenderedData={[]}
+                        startPage={{
+                            page: 0,
+                            pageSize: 50
+                        }}
+                        details={{
+                            groups:[],
+                            partOfName: ''
+                        }}
+                    >
+                        <UserList className={styles.addUsersList} />
+                    </UserPagingProvider>
+                </PopUp>
             </div>
         </UserPagingProvider>
     )
