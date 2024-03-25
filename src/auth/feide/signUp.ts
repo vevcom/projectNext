@@ -1,6 +1,6 @@
 import 'server-only'
 import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
-import { addMemberToGroups } from '@/server/groups/update'
+import { createMembershipsForUser } from '@/server/groups/memberships/create'
 import { updateEmailForFeideAccount } from '@/server/auth/feide/update'
 import type { User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './Types'
@@ -17,7 +17,7 @@ export default async function signUp({ user, profile }: {user: nextAuthUser, pro
     const updatedEmail = updateEmailForFeideAccount(profile.sub, profile.email)
 
     const studyProgrammes = await upsertStudyProgrammes(groups)
-    await addMemberToGroups(Number(user.id), studyProgrammes.map(programme => ({ groupId: programme.id, admin: false })))
+    await createMembershipsForUser(Number(user.id), studyProgrammes.map(programme => ({ groupId: programme.id, admin: false })))
 
     await updatedEmail
 }
