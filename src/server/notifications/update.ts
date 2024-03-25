@@ -78,6 +78,37 @@ export async function updateNotificationChannel({
         }
     }
 
+    // To prevent a child channel from having more available methods than the parent
+    if (availableMethods) {
+        let parentChannel = allChannels[parentId];
+        if (!parentChannel) {
+            throw new ServerError("UNKNOWN ERROR", "A relation is pointing to a non-existing parent channel")
+        }
+
+        // In the case where the availableMethods is null, search upward the three
+        while (!parentChannel?.availableMethods && parentChannel?.special !== "ROOT") {
+            parentChannel = allChannels[parentChannel?.parentId];
+            if (!parentChannel) {
+                throw new ServerError("UNKNOWN ERROR", "A relation is pointing to a non-existing parent channel")
+            }
+        }
+
+        if (parentChannel?.special === "ROOT" && !parentChannel?.availableMethods) {
+            throw new ServerError("UNKNOWN ERROR", "The ROOT channel should have available methods")
+        }
+
+        Object.entries(prisma.notificationMethod)
+            .map(([key]) => key)
+            .forEach((key) => {
+                if (parentChannel.availableMethods?.[key] || availableMethods[key] !== parentChannel.availableMethods?.[key]) {
+                    throw new ServerError(
+                        "BAD PARAMETERS",
+                        "Child channel cannot have more available methods than its parent"
+                    )
+                }
+            })
+    }
+
     const results = await prisma.notificationChannel.update({
         where: {
             id,
