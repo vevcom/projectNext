@@ -2,10 +2,10 @@ import { ServerError } from '@/server/error'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { Group, OmegaMembershipGroup, OmegaMembershipLevel, Prisma, User } from '@prisma/client'
-import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
+import type { Group, OmegaMembershipLevel, User } from '@prisma/client'
+import type { BasicMembership, ExpandedGroup, ExpandedMembership, GroupsStructured } from './Types'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import { OmegaMembershipLevelConfig } from './ConfigVars'
+import { GroupTypeOrdering, GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -19,7 +19,7 @@ export async function readGroup(id: number): Promise<Group> {
     }))
 }
 
-export async function readGroupsExpanded(id: number): Promise<ExpandedGroup[]> {
+export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
     const groups = await prismaCall(() => prisma.group.findMany({
         include: {
             memberships: {
@@ -46,6 +46,26 @@ export async function readGroupsExpanded(id: number): Promise<ExpandedGroup[]> {
             name,
         }
     })
+}
+
+/**
+ * Reads expanded groups and sorts them by group type
+ */
+export async function readGroupsStructured(): Promise<GroupsStructured> {
+    const groups = await readGroupsExpanded()
+    
+    const stuctured = groups.reduce((acc, group) => {
+        if (!acc[group.groupType]) {
+            acc[group.groupType] = {
+                name: GroupTypesConfig[group.groupType].name,
+                description: GroupTypesConfig[group.groupType].description,
+                groups: []
+            }
+        }
+        acc[group.groupType].groups.push(group)
+        return acc
+    }, {} as GroupsStructured)
+    return stuctured
 }
 
 /**

@@ -23,6 +23,11 @@ export async function readUserPageAction<const PageSize extends number>(
     return safeServerCall(() => readUserPage(readPageInput))
 }
 
-export async function readGroupsForFiteringAction() {
+export async function readGroupsForPageFiteringAction() {
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['USER_READ']]
+    })
+    if (!authorized) return createActionError(status)
+
 
 }

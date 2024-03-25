@@ -35,6 +35,9 @@ export const GroupTypesConfig = {
     } 
 }
 
+export const GroupTypeOrdering : string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME', 
+    'COMMITTEE', 'INTEREST_GROUP', 'MANUAL_GROUP'] satisfies GroupType[];
+
 export const OmegaMembershipLevelConfig = {
     SOELLE: {
         name: 'Solle noice',

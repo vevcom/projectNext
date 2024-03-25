@@ -206,6 +206,7 @@ enum Permission {
   // Groups - Generic
   GROUP_READ
   GROUP_DESTROY
+  GROUP_ADMIN //TODO: Temp needs discussion about this
   // Since groups can only be created with a specific type, there is no need to
   // have permissions to create or update a generic group.
 

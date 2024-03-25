@@ -1,5 +1,5 @@
 import styles from './page.module.scss';
-import { readGroupsAction } from '@/actions/groups/read';
+import { readGroupsExpandedAction } from '@/actions/groups/read';
 import { notFound } from 'next/navigation';
 import { GroupType } from '@prisma/client';
 import type { ExpandedGroup } from '@/server/groups/Types';
@@ -11,7 +11,7 @@ import GroupSelector from './GroupSelector';
  * A page that displays memberships in all groups for admins
  */
 export default async function GroupsAdmin() {
-    const res = await readGroupsAction()
+    const res = await readGroupsExpandedAction()
     if (!res.success) return notFound() //TODO: replace with better error page if error is e.g UNAUTHORIZED.
     const groups = res.data
     //SOrt grups on type
