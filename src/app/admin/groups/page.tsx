@@ -1,9 +1,7 @@
 import styles from './page.module.scss';
-import { readGroupsAdmin, readGroupsExpandedAction } from '@/actions/groups/read';
+import { readGroupsAdmin } from '@/actions/groups/read';
 import { notFound } from 'next/navigation';
-import { GroupType } from '@prisma/client';
-import type { ExpandedGroup } from '@/server/groups/Types';
-import { GroupTypeOrdering, GroupTypesConfig } from '@/server/groups/ConfigVars';
+import { GroupTypeOrdering } from '@/server/groups/ConfigVars';
 import GroupAdmin from './GroupAdmin';
 import GroupSelector from './GroupSelector';
 

@@ -4,9 +4,8 @@ import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import type { Group, OmegaMembershipLevel, User } from '@prisma/client'
 import type { ExpandedGroup, GroupsStructured } from './Types'
-import type { ExpandedMembership, BasicMembership } from './memberships/Types'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import { GroupTypeOrdering, GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
+import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -118,60 +117,6 @@ export function inferGroupName(group: {
             break
     }
     return name
-}
-
-export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {
-    const count = await prismaCall(() => prisma.group.count({
-        where: {
-            id,
-        },
-    }))
-
-    if (count !== 1) throw new ServerError('BAD PARAMETERS', 'Kan ikke lese medlemmer til en gruppe som ikke finnes.')
-
-
-    return await prismaCall(() => prisma.membership.findMany({
-        where: {
-            groupId: id,
-        },
-    }))
-}
-
-export async function readMembershipsOfGroups(ids: number[]): Promise<ExpandedMembership[]> {
-    return await prismaCall(() => prisma.membership.findMany({
-        where: {
-            groupId: {
-                in: ids,
-            },
-        },
-    }))
-}
-
-/**
- * Reads valid memberships of a user of a order
- * @param id - The id of the user
- * @param order - The order of what is considered valid membership. If undefined all memberships
- * are returned.
- * @returns 
- */
-export async function readMembershipsOfUser(
-    id: number,
-    order?: number
-): Promise<BasicMembership[]> {
-    if (order === undefined) {
-        order = (await readCurrenOmegaOrder()).order
-    }
-
-    return await prismaCall(() => prisma.membership.findMany({
-        where: order ? {
-            userId: id,
-            ...getActiveMembershipFilter(order)
-        } : { userId: id },
-        select: {
-            admin: true,
-            groupId: true,
-        }
-    }))
 }
 
 export async function readUsersOfGroups(groups: { groupId: number, admin: boolean }[]): Promise<User[]> {

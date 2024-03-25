@@ -1,23 +1,18 @@
 import 'server-only'
 import { readCurrenOmegaOrder } from "@/server/omegaOrder/read"
 import { prismaCall } from "@/server/prismaCall"
-import { CanEasalyManageMembership } from './ConfigVars'
 import { ServerError } from '@/server/error'
 import type { ExpandedMembership } from './Types'
+import { canEasalyManageMembershipOfGroup, canEasalyManageMembershipOfGroups } from './canEasalyManageMembership'
 
-export async function createMembership(
+export async function createMembershipForUser(
     groupId: number,
     userId: number,
     admin: boolean,
     orderArg?: number
 ): Promise<ExpandedMembership> {
-    const group = await prismaCall(() => prisma.group.findUniqueOrThrow({
-        where: {
-            id: groupId
-        }
-    }))
-    if (!CanEasalyManageMembership[group.groupType]) 
-        throw new ServerError('BAD PARAMETERS', 'Man kan ikke lage medlemskap til denne gruppen på denne måten')
+    if (!canEasalyManageMembershipOfGroup(groupId))
+        throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     return await prismaCall(() => prisma.membership.create({
@@ -47,6 +42,8 @@ export async function createMembershipsForGroup(
     data: { userId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
+    if (!canEasalyManageMembershipOfGroup(groupId))
+        throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
@@ -65,6 +62,8 @@ export async function createMembershipsForUser(
     data: { groupId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
+    if (!canEasalyManageMembershipOfGroups(data.map(group => group.groupId)))
+        throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
