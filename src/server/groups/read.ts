@@ -2,7 +2,7 @@ import { ServerError } from '@/server/error'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import type { Group, User } from '@prisma/client'
+import type { Group, OmegaMembershipGroup, OmegaMembershipLevel, Prisma, User } from '@prisma/client'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 import { OmegaMembershipLevelConfig } from './ConfigVars'
@@ -38,29 +38,7 @@ export async function readGroupsExpanded(id: number): Promise<ExpandedGroup[]> {
     }))
 
     return groups.map(group => {
-        let name = `group id ${group.id}`
-        switch (group.groupType) {
-            case 'COMMITTEE':
-                name = group.committee?.name ?? name
-                break
-            case 'MANUAL_GROUP':
-                name = group.manualGroup?.name ?? name
-                break
-            case 'CLASS':
-                name = `${group.class?.year ?? '??'}. Klasse`
-                break
-            case 'INTEREST_GROUP':
-                name = group.interestGroup?.name ?? name
-                break
-            case 'OMEGA_MEMBERSHIP_GROUP':
-                name = group.omegaMembershipGroup?.omegaMembershipLevel ?
-                    OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name : 
-                    name
-                break
-            case 'STUDY_PROGRAMME':
-                name = group.studyProgramme?.name ?? name
-                break
-        }
+        const name = inferGroupName(group)
         const firstOrder = group.memberships[0]?.order ?? group.order
         return {
             ...group,
@@ -68,6 +46,47 @@ export async function readGroupsExpanded(id: number): Promise<ExpandedGroup[]> {
             name,
         }
     })
+}
+
+/**
+ * This function tries to give a name to a group based on the group type and the group data.
+ * @param group - The group to infer the name of
+ * @returns 
+ */
+export function inferGroupName(group: {
+    id: Group['id'],
+    groupType: Group['groupType'],
+    committee?: { name: string } | null,
+    manualGroup?: { name: string } | null,
+    class?: { year: number } | null,
+    interestGroup?: { name: string } | null,
+    omegaMembershipGroup?: { omegaMembershipLevel: OmegaMembershipLevel } | null,
+    studyProgramme?: { name: string } | null,
+}) {
+    let name = `group id ${group.id}`
+    switch (group.groupType) {
+        case 'COMMITTEE':
+            name = group.committee?.name ?? name
+            break
+        case 'MANUAL_GROUP':
+            name = group.manualGroup?.name ?? name
+            break
+        case 'CLASS':
+            name = `${group.class?.year ?? '??'}. Klasse`
+            break
+        case 'INTEREST_GROUP':
+            name = group.interestGroup?.name ?? name
+            break
+        case 'OMEGA_MEMBERSHIP_GROUP':
+            name = group.omegaMembershipGroup?.omegaMembershipLevel ?
+                OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name : 
+                name
+            break
+        case 'STUDY_PROGRAMME':
+            name = group.studyProgramme?.name ?? name
+            break
+    }
+    return name
 }
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {
