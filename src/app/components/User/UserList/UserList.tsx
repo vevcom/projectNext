@@ -3,7 +3,7 @@ import styles from './UserList.module.scss'
 import { UserPagingContext } from '@/context/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserRow'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import useActionCall from '@/hooks/useActionCall'
 import { readGroupsForPageFiteringAction } from '@/actions/users/read'
@@ -13,6 +13,13 @@ import { ExpandedGroup } from '@/server/groups/Types'
 
 type PropTypes = {
     className?: string
+    disableFilters?: {
+        name?: boolean,
+        commitees?: boolean
+        membershipGroups?: boolean
+        classes?: boolean
+        studyProgrammes?: boolean
+    }
 }
 
 function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
@@ -20,24 +27,44 @@ function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
 }
 
 function getGroupOptions(groups: ExpandedGroup[] | null, type: GroupType) {
-    return getGroupType(groups, type).map(group => ({
-        value: group.id.toString(),
-        label: group.name,
-        key: group.id.toString()
-    }))
+    return [
+        ...getGroupType(groups, type).map(group => ({
+            value: group.id.toString(),
+            label: group.name,
+            key: group.id.toString()
+        })),
+        {
+            value: 'null',
+            label: 'Alle',
+            key: 'null'
+        }
+    ]
 }
 
 function getOrdereOptions(group: ExpandedGroup) {
-    return Array.from({ length: group.order - group.firstOrder + 1 }, (_, i) => group.firstOrder + i).map(order => ({
-        value: order.toString(),
-        label: order.toString(),
-        key: order.toString()
-    }));
+    return [
+        {
+            value: 'null',
+            label: 'Alle aktive',
+            key: 'null'
+        },
+        ...Array.from({ length: group.order - group.firstOrder + 1 }, (_, i) => group.firstOrder + i).map(order => ({
+            value: order.toString(),
+            label: order.toString(),
+            key: order.toString()
+        })),
+    ];
 }
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 
-export default function UserList({ className }: PropTypes) {
+export default function UserList({ className, disableFilters = {
+    name: false,
+    commitees: false,
+    membershipGroups: false,
+    classes: false,
+    studyProgrammes: false
+} }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
     const [groupSelection, setGroupSelection] = useState<{
@@ -64,6 +91,21 @@ export default function UserList({ className }: PropTypes) {
         }
     })
 
+    useEffect(() => {
+        userPaging?.setDetails({
+            ...userPaging.deatils,
+            groups: Object.entries(groupSelection).reduce((acc, [type, { group, groupOrder }]) => {
+                if (group) {
+                    acc.push({
+                        groupId: group.id,
+                        groupOrder: groupOrder
+                    })
+                }
+                return acc
+            }, [] as { groupId: number, groupOrder: number | null }[])
+        })
+    }, [groupSelection])
+
     if (!userPaging) throw new Error('UserPagingContext not found')
 
 
@@ -89,7 +131,7 @@ export default function UserList({ className }: PropTypes) {
             ...groupSelection,
             [type]: {
                 ...groupSelection[type],
-                groupOrder
+                groupOrder: e.target.value === 'null' ? null : groupOrder
             }
         })
     }
@@ -97,66 +139,86 @@ export default function UserList({ className }: PropTypes) {
     return (
         <div className={`${styles.UserList} ${className}`}>
             <div className={styles.filters}>
-                <div className={styles.name}>
-                    <label>Navn</label>
-                    <input onChange={handleChangeName} />
-                </div>
-                <div className={styles.group}>
-                    <Select 
-                        name='komité' 
-                        onChange={(e) => handleGroupSelect(e, 'COMMITTEE')} 
-                        options={getGroupOptions(groups, 'COMMITTEE')}
-                    />
-                    {
-                    groupSelection.COMMITTEE.group && <Select
-                        name='orden'
-                        onChange={(e) => handleGroupOrderSelect(e, 'COMMITTEE')}
-                        options={getOrdereOptions(groupSelection.COMMITTEE.group)}
-                    />
-                    }
-                </div>
-                <div className={styles.group}>
-                    <Select 
-                        name='klasse' 
-                        onChange={(e) => handleGroupSelect(e, 'CLASS')} 
-                        options={getGroupOptions(groups, 'CLASS')}
-                    />
-                    {
-                    groupSelection.CLASS.group && <Select
-                        name='orden'
-                        onChange={(e) => handleGroupOrderSelect(e, 'CLASS')}
-                        options={getOrdereOptions(groupSelection.CLASS.group)}
-                    />
-                    }
-                </div>
-                <div className={styles.group}>
-                    <Select 
-                        name='studie' 
-                        onChange={(e) => handleGroupSelect(e, 'STUDY_PROGRAMME')} 
-                        options={getGroupOptions(groups, 'STUDY_PROGRAMME')}
-                    />
-                    {
-                    groupSelection.STUDY_PROGRAMME.group && <Select
-                        name='orden'
-                        onChange={(e) => handleGroupOrderSelect(e, 'STUDY_PROGRAMME')}
-                        options={getOrdereOptions(groupSelection.STUDY_PROGRAMME.group)}
-                    />
-                    }
-                </div>
-                <div className={styles.group}>
-                    <Select 
-                        name='omega' 
-                        onChange={(e) => handleGroupSelect(e, 'OMEGA_MEMBERSHIP_GROUP')} 
-                        options={getGroupOptions(groups, 'OMEGA_MEMBERSHIP_GROUP')}
-                    />
-                    {
-                    groupSelection.OMEGA_MEMBERSHIP_GROUP.group && <Select
-                        name='orden'
-                        onChange={(e) => handleGroupOrderSelect(e, 'OMEGA_MEMBERSHIP_GROUP')}
-                        options={getOrdereOptions(groupSelection.OMEGA_MEMBERSHIP_GROUP.group)}
-                    />
-                    }
-                </div>
+                {
+                    !disableFilters.name && (
+                        <div className={styles.group}>
+                            <label>Navn</label>
+                            <input onChange={handleChangeName} />
+                        </div>
+                    )
+                }
+                {
+                    !disableFilters.commitees && (
+                        <div className={styles.group}>
+                            <Select 
+                                name='komite' 
+                                onChange={(e) => handleGroupSelect(e, 'COMMITTEE')} 
+                                options={getGroupOptions(groups, 'COMMITTEE')}
+                            />
+                            {
+                            groupSelection.COMMITTEE.group && <Select
+                                name='orden'
+                                onChange={(e) => handleGroupOrderSelect(e, 'COMMITTEE')}
+                                options={getOrdereOptions(groupSelection.COMMITTEE.group)}
+                            />
+                            }
+                        </div>
+                    )
+                }
+                {
+                    !disableFilters.classes && (
+                        <div className={styles.group}>
+                            <Select 
+                                name='klasse' 
+                                onChange={(e) => handleGroupSelect(e, 'CLASS')} 
+                                options={getGroupOptions(groups, 'CLASS')}
+                            />
+                            {
+                            groupSelection.CLASS.group && <Select
+                                name='orden'
+                                onChange={(e) => handleGroupOrderSelect(e, 'CLASS')}
+                                options={getOrdereOptions(groupSelection.CLASS.group)}
+                            />
+                            }
+                        </div>
+                    )
+                }
+                {
+                    !disableFilters.studyProgrammes && (
+                        <div className={styles.group}>
+                            <Select 
+                                name='studie' 
+                                onChange={(e) => handleGroupSelect(e, 'STUDY_PROGRAMME')} 
+                                options={getGroupOptions(groups, 'STUDY_PROGRAMME')}
+                            />
+                            {
+                            groupSelection.STUDY_PROGRAMME.group && <Select
+                                name='orden'
+                                onChange={(e) => handleGroupOrderSelect(e, 'STUDY_PROGRAMME')}
+                                options={getOrdereOptions(groupSelection.STUDY_PROGRAMME.group)}
+                            />
+                            }
+                        </div>
+                    )
+                }
+                {
+                    !disableFilters.membershipGroups && (
+                        <div className={styles.group}>
+                            <Select 
+                                name='medlemskap' 
+                                onChange={(e) => handleGroupSelect(e, 'OMEGA_MEMBERSHIP_GROUP')} 
+                                options={getGroupOptions(groups, 'OMEGA_MEMBERSHIP_GROUP')}
+                            />
+                            {
+                            groupSelection.OMEGA_MEMBERSHIP_GROUP.group && <Select
+                                name='orden'
+                                onChange={(e) => handleGroupOrderSelect(e, 'OMEGA_MEMBERSHIP_GROUP')}
+                                options={getOrdereOptions(groupSelection.OMEGA_MEMBERSHIP_GROUP.group)}
+                            />
+                            }
+                        </div>
+                    )
+                }
             </div>
             <div className={styles.list}>
                 <span className={styles.head}>
