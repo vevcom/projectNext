@@ -28,4 +28,9 @@
         overflow-y: scroll;
         height: 100%;
     }
+
+    .groupInfo {
+        border-bottom: 3px solid ohma.$colors-gray-800;
+        margin-bottom: ohma.$gap;
+    }
 }

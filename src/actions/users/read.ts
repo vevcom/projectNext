@@ -28,6 +28,4 @@ export async function readGroupsForPageFiteringAction() {
         requiredPermissions: [['USER_READ']]
     })
     if (!authorized) return createActionError(status)
-
-
 }

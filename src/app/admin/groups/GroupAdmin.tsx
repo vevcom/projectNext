@@ -38,7 +38,11 @@ export default function GroupAdmin() {
                 <button className={styles.close} onClick={handleClose}>
                     <FontAwesomeIcon icon={faX} />
                 </button>
-                <h2>{group.name}</h2>
+                <div className={styles.groupInfo}>
+                    <h2>{group.name}</h2>
+                    <p>Medlemmer: {group.members}</p>
+                    <p>Orden: {group.order}</p>
+                </div>
                 <UserList />
             </div>
         </UserPagingProvider>

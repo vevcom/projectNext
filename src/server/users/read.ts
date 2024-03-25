@@ -6,6 +6,7 @@ import type { ReadPageInput } from '@/actions/Types'
 import { readGroup } from '../groups/read'
 import { ServerError } from '../error'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
+import { strict } from 'assert'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -25,6 +26,7 @@ export async function readUserPage<const PageSize extends number>({
         return {
             groupId,
             groupOrder: groupOrder ?? order,
+            strictness: groupOrder ? 'EXACT' as const : 'ACTIVE' as const
         }
     }))
 
@@ -51,7 +53,7 @@ export async function readUserPage<const PageSize extends number>({
                     memberships: {
                         some: {
                             groupId: group.groupId,
-                            ...getActiveMembershipFilter(group.groupOrder),
+                            ...getActiveMembershipFilter(group.groupOrder, group.strictness),
                         }
                     }
                 }))
