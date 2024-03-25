@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { PermissionMatrix } from './checkPermissionMatrix'
 import type { Permission } from '@prisma/client'
-import type { BasicMembership } from '@/server/groups/Types'
+import type { BasicMembership } from '@/server/groups/memberships/Types'
 import type { UserFiltered } from '@/server/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {

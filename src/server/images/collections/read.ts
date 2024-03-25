@@ -99,6 +99,7 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         const permissionLevels = specialCollectionsVisibilityConfig[special]
         const visability = await createVisibility({
             type: 'SPECIAL',
+            published: true,
             admin: permissionLevels.adminLevel,
             regular: permissionLevels.regularLevel
         })
