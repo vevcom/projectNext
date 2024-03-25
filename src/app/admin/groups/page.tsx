@@ -51,6 +51,7 @@ export default async function GroupsAdmin() {
                                     <td>Id</td>
                                     <td>Navn</td>
                                     <td>Medlemmer</td>
+                                    <td></td>
                                 </tr>
                             </thead>
                             <tbody>

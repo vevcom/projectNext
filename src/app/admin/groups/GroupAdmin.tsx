@@ -25,7 +25,10 @@ export default function GroupAdmin() {
                 pageSize: 50
             }}
             details={{
-                groups: [],
+                groups: [{
+                    groupId: groupSelectionCtx.group,
+                    groupOrder: null
+                }],
                 partOfName: ''
             }}
         >

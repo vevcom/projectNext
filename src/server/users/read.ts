@@ -49,7 +49,10 @@ export async function readUserPage<const PageSize extends number>({
                 }),
                 ...groups.map(group => ({
                     memberships: {
-                        some: getActiveMembershipFilter(group.groupOrder),
+                        some: {
+                            groupId: group.groupId,
+                            ...getActiveMembershipFilter(group.groupOrder),
+                        }
                     }
                 }))
             ],
