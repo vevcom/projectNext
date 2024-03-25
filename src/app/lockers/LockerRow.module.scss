@@ -1,0 +1,14 @@
+.lockerRow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-decoration: none;
+    color: inherit;
+}
+
+.lockerRow:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.lockerRow p {
+    padding: .5rem 1rem 0.5rem 1rem;
+}

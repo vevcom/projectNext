@@ -237,6 +237,11 @@ enum Permission {
   STUDY_PROGRAMME_READ
   STUDY_PROGRAMME_UPDATE
   STUDY_PROGRAMME_DESTROY
+
+  // Lockers
+  LOCKERRESERVATION_CREATE
+  LOCKERRESERVATION_UPDATE
+  LOCKERRESERVATION_DESTROY
 }
 
 model Role {
@@ -544,6 +549,7 @@ model LockerReservation {
   committeeId Int?
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  endDate   DateTime?
 
   @@unique([id])
 }

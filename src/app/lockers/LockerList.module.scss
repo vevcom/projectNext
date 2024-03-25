@@ -1,16 +1,19 @@
 @use '@/styles/ohma';
 
 
-.lockerTable {
-    background-color: ohma.$colors-gray-400;
+.lockerList {
+    background-color: ohma.$colors-gray-100;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid ohma.$colors-gray-300;
+    border-radius: 10px;
 }
 
-.lockerTableHeader {
-    display: flex;
-    justify-content: space-between;
+.lockerListHeader {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 2px solid ohma.$colors-gray-300;
 }
 
-.lockerRow {
-    display: flex;
-    justify-content: space-between;
+.lockerListHeader h3 {
+    padding: 1rem;
 }

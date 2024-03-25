@@ -1,14 +1,12 @@
 import styles from './page.module.scss'
-import { readLockerPage } from '@/actions/lockers/read'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import LockerList from './LockerList'
 import Form from '../components/Form/Form'
 import NumberInput from '../components/UI/NumberInput'
 import { createLockerResorvation } from '@/actions/lockers/reservations/create'
 import LockerPagingProvider from '@/context/paging/LockerPaging'
-import { notFound } from 'next/navigation'
 
-export default async function Skapres() {
+export default async function Lockers() {
     return (
         <PageWrapper title="Skapreservasjon">
             <Form
