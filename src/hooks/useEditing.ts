@@ -59,7 +59,6 @@ export default function useEditing({
     }, [permissionAuthorized, requiredVisibility, permissions, memberships])
 
     useEffect(() => {
-        console.log('eh')
         setEditable(editModeCtx ? Boolean(authorized) && editModeCtx.editMode : false)
     }, [authorized, editModeCtx?.editMode])
 

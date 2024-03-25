@@ -1,5 +1,15 @@
 'use client'
+import GroupSelectionProvider from '@/context/groupSelection'
+import { ReactNode } from 'react'
 
-export default function GroupAdminLayout() {
-
+type PropTypes = {
+    children: ReactNode
 }
+
+export default function GroupAdminLayout({ children }: PropTypes) {
+    return (
+        <GroupSelectionProvider>
+            {children}
+        </GroupSelectionProvider>
+    )
+}   

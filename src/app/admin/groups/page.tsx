@@ -1,10 +1,10 @@
-import { readGroup } from '@/server/groups/read';
 import styles from './page.module.scss';
 import { readGroupsAction } from '@/actions/groups/read';
 import { notFound } from 'next/navigation';
 import { GroupType } from '@prisma/client';
 import type { ExpandedGroup } from '@/server/groups/Types';
 import { GroupTypesConfig } from '@/server/groups/ConfigVars';
+import GroupAdmin from './GroupAdmin';
 
 /**
  * A page that displays memberships in all groups for admins
@@ -69,7 +69,7 @@ export default async function GroupsAdmin() {
             }  
             </div>
             <div className={styles.group}>
-
+                <GroupAdmin />
             </div>
         </div>
     )
