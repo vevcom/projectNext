@@ -1,7 +1,7 @@
 'use client'
 
 import { GroupSelectionContext } from '@/context/groupSelection'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useContext } from 'react'
 import styles from './GroupSelector.module.scss'
@@ -23,7 +23,7 @@ export default function GroupSelector({ groupId }: PropTypes) {
             `${styles.GroupSelector} ${styles.checked}` :
             `${styles.GroupSelector}` 
         }>
-            <FontAwesomeIcon icon={faCheck} />
+            <FontAwesomeIcon icon={faArrowRight} />
         </button>
     )
 }

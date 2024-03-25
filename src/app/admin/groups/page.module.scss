@@ -25,16 +25,22 @@
             thead {
                 font-weight: ohma.$fonts-weight-l;
                 border-bottom: 2px solid ohma.$colors-gray-800;
+                td {
+                    height: 30px;
+                }
             }
             tbody {
                 font-weight: ohma.$fonts-weight-m;
+                td {
+                    height: 40px;
+                }
             }
-            
         }
     }
     .group {
-        position: absolute;
-        top: 1em;
+        position: fixed;
+        top: 50%;
         right: -1em;
+        transform: translateY(-50%);
     }
 }

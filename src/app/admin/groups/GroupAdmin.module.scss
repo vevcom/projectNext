@@ -4,12 +4,14 @@
     height: 80vh;
     width: 80vw; 
     box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
-    background-color: ohma.$colors-secondary;
+    background-color: lighten(ohma.$colors-secondary, 40);
     position: relative;
     @include ohma.card;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    z-index: 5;
     .close {
+        border: none;
         position: absolute;
         top: 0;
         left: 0;
