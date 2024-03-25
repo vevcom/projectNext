@@ -5,6 +5,7 @@ import { GroupType } from '@prisma/client';
 import type { ExpandedGroup } from '@/server/groups/Types';
 import { GroupTypesConfig } from '@/server/groups/ConfigVars';
 import GroupAdmin from './GroupAdmin';
+import GroupSelector from './GroupSelector';
 
 /**
  * A page that displays memberships in all groups for admins
@@ -59,6 +60,7 @@ export default async function GroupsAdmin() {
                                         <td>{group.id}</td>
                                         <td>{'navn'}</td>
                                         <td>{10}</td>
+                                        <td><GroupSelector groupId={group.id} /></td>
                                     </tr>
                                 ))
                             }

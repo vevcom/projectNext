@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.GroupSelector {
+    width: 25px;
+    height: 25px;
+    border: none;
+    background-color: ohma.$colors-gray-800;
+    &.checked {
+        background-color: ohma.$colors-primary;
+    }
+}

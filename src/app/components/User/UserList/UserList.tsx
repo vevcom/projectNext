@@ -5,7 +5,12 @@ import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserRow'
 import { useContext } from 'react'
 import type { ChangeEvent } from 'react'
-export default function UserList() {
+
+type PropTypes = {
+    className?: string
+}
+
+export default function UserList({ className }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     if (!userPaging) throw new Error('UserPagingContext not found')
 
@@ -14,7 +19,7 @@ export default function UserList() {
     }
 
     return (
-        <div className={styles.UserList}>
+        <div className={`${styles.UserList} ${className}`}>
             <div className={styles.filters}>
                 <input onChange={handleChange}></input>
             </div>

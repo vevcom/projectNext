@@ -1,17 +1,11 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
+    position: relative;
     > h1 {
         margin-left: ohma.$gap;
-        grid-column: 1/3;
-        grid-row: 1/2;
     }
     .groupType {
-        grid-column: 1/2;
-        grid-row: 2/3;
         border-radius: ohma.$rounding;
         padding: ohma.$rounding;
         margin: ohma.$gap;
@@ -39,8 +33,8 @@
         }
     }
     .group {
-        grid-column: 2/3;
-        grid-row: 2/3;
-        min-width: 600px;
+        position: absolute;
+        top: 1em;
+        right: -1em;
     }
 }

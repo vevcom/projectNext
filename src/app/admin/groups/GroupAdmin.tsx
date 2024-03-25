@@ -5,11 +5,13 @@ import { GroupSelectionContext } from "@/context/groupSelection"
 import UserPagingProvider from "@/context/paging/UserPaging"
 import { useContext } from "react"
 import styles from './GroupAdmin.module.scss'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faX } from "@fortawesome/free-solid-svg-icons"
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
-    if (!groupSelectionCtx) return <div className={styles.center}>Kan ikke velge gruppe</div>
-    if (!groupSelectionCtx.group) return <div className={styles.center}>Ingen gruppe valgt</div>
+    if (!groupSelectionCtx) return null
+    if (!groupSelectionCtx.group) return null
     return (
         <UserPagingProvider
             serverRenderedData={[]}
@@ -22,7 +24,12 @@ export default function GroupAdmin() {
                 partOfName: ''
             }}
         >
-            <UserList />
+            <div className={styles.GroupAdmin}>
+                <div className={styles.close}>
+                    <FontAwesomeIcon icon={faX} />
+                </div>
+                <UserList />
+            </div>
         </UserPagingProvider>
     )
 }

@@ -1,14 +1,21 @@
 @use '@/styles/ohma';
 
 .UserList {
+    height: 100%;
     > .filters {
         width: 100%;
     }
     > .list {
+        height: 100%;
+        overflow-y: scroll;
         border-radius: ohma.$rounding;
         background-color: ohma.$colors-white;
         width: 100%;
         > .head {
+            position: sticky;
+            top: 0;
+            left: 0;
+            box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
             padding: 2*ohma.$gap ohma.$gap;
             border-radius: ohma.$rounding;
             background-color: ohma.$colors-secondary;
