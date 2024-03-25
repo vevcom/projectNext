@@ -3,13 +3,14 @@
 import styles from './GroupAdmin.module.scss'
 import UserList from '@/app/components/User/UserList/UserList'
 import { GroupSelectionContext } from '@/context/groupSelection'
-import UserPagingProvider, { UserPagingContext } from '@/context/paging/UserPaging'
+import UserPagingProvider from '@/context/paging/UserPaging'
 import { useCallback, useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
+import AddUsersToGroup from './AddUsersToGroup'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
@@ -61,7 +62,7 @@ export default function GroupAdmin() {
                         }}
                     >
                         <UserSelectionProvider>
-                            <UserList className={styles.addUsersList} />
+                            <AddUsersToGroup />
                         </UserSelectionProvider>
                     </UserPagingProvider>
                 </PopUp>

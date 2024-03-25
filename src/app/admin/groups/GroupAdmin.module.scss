@@ -44,12 +44,3 @@
         margin-bottom: ohma.$gap;
     }
 }
-
-.addUsersList {
-    overflow-y: scroll;
-    max-height: 80vh;
-    min-width: 70vw;
-    > * {
-        height: 100%;
-    }
-}

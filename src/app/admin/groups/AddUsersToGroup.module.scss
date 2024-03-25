@@ -1,0 +1,14 @@
+@use '@/styles/ohma';
+
+.AddUsersToGroup {
+    .addUsersList {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 80vh;
+        min-width: 70vw;
+        > * {
+            height: 100%;
+        }
+    }
+}
+
