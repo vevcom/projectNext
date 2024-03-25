@@ -5,12 +5,14 @@ import Form from "@/app/components/Form/Form"
 import { createMembershipsForGroupAction } from "@/actions/groups/memberships/create"
 import { use, useContext } from "react"
 import { UserSelectionContext } from "@/context/UserSelection"
+import { useRouter } from "next/navigation"
 
 type PropTypes = {
     groupId: number
 }
 
 export default function AddUsersToGroup({ groupId }: PropTypes) {
+    const { refresh } = useRouter()
     const selectedUsersCtx = useContext(UserSelectionContext)
     const users = selectedUsersCtx?.users || []
 
@@ -28,6 +30,7 @@ export default function AddUsersToGroup({ groupId }: PropTypes) {
                                 admin: false
                             }))
                         })}
+                        successCallback={refresh}
                     />
                 ) : null
             }

@@ -43,4 +43,10 @@
         border-bottom: 3px solid ohma.$colors-gray-800;
         margin-bottom: ohma.$gap;
     }
+
+    .groupMembers {
+        flex: 1 1 100%;
+        overflow-y: hidden; 
+        border-radius: ohma.$rounding;
+    }
 }

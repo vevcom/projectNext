@@ -46,7 +46,7 @@ export default function GroupAdmin() {
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>
-                <UserList disableFilters={{commitees: true}} />
+                <UserList className={styles.groupMembers} disableFilters={{commitees: true}} />
                 <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
                     <>Legg til brukere</>
                 }>
