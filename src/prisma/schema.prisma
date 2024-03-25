@@ -82,7 +82,7 @@ model Membership {
   omegaOrder OmegaOrder @relation(fields: [order], references: [order])
   order      Int
 
-  @@unique([userId, groupId])
+  @@unique([userId, groupId, order])
 }
 
 // Currently prisma doesn't support table inheritance. What comes beneath is

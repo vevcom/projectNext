@@ -6,9 +6,10 @@ import type { ExpandedMembership } from './Types'
 export async function addMemberToGroup(
     groupId: number,
     userId: number,
-    admin: boolean
+    admin: boolean,
+    orderArg: number,
 ): Promise<ExpandedMembership> {
-    const currentOrder = await readCurrenOmegaOrder()
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     return await prismaCall(() => prisma.membership.create({
         data: {
@@ -23,7 +24,9 @@ export async function addMemberToGroup(
                 },
             },
             omegaOrder: {
-                connect: currentOrder,
+                connect: {
+                    order,
+                }
             },
             admin,
         },
@@ -32,16 +35,17 @@ export async function addMemberToGroup(
 
 export async function addMembersToGroup(
     groupId: number,
-    data: { userId: number, admin: boolean }[]
+    data: { userId: number, admin: boolean }[],
+    orderArg?: number,
 ): Promise<void> {
-    const currentOrder = (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ userId, admin }) => ({
             groupId,
             userId,
             admin,
-            order: currentOrder,
+            order: order,
         })),
         skipDuplicates: true,
     }))
@@ -49,27 +53,35 @@ export async function addMembersToGroup(
 
 export async function addMemberToGroups(
     userId: number,
-    data: { groupId: number, admin: boolean }[]
+    data: { groupId: number, admin: boolean }[],
+    orderArg?: number,
 ): Promise<void> {
-    const currentOrder = (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ groupId, admin }) => ({
             groupId,
             userId,
             admin,
-            order: currentOrder,
+            order,
         })),
         skipDuplicates: true,
     }))
 }
 
-export async function removeMemberFromGroup(groupId: number, userId: number): Promise<ExpandedMembership> {
+export async function removeMemberFromGroup(
+    groupId: number,
+    userId: number,
+    orderArg?: number
+): Promise<ExpandedMembership> {
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+
     return await prismaCall(() => prisma.membership.delete({
         where: {
-            userId_groupId: {
+            userId_groupId_order: {
                 groupId,
                 userId,
+                order,
             }
         },
     }))
@@ -77,14 +89,18 @@ export async function removeMemberFromGroup(groupId: number, userId: number): Pr
 
 export async function removeMembersFromGroup(
     groupId: number,
-    userIds: number[]
+    userIds: number[],
+    orderArg?: number,
 ): Promise<void> {
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+
     await prismaCall(() => prisma.membership.deleteMany({
         where: {
             groupId,
             userId: {
                 in: userIds,
             },
+            order,
         },
     }))
 }
@@ -93,19 +109,17 @@ export async function updateMembership(
     groupId: number,
     userId: number,
     admin: boolean,
-    order?: number
+    orderArg?: number
 ): Promise<ExpandedMembership> {
-    if (order === undefined) {
-        order = (await readCurrenOmegaOrder()).order
-    }
+    const order = orderArg ?? (await readCurrenOmegaOrder()).order
 
     return await prismaCall(() => prisma.membership.update({
         where: {
-            userId_groupId: {
+            userId_groupId_order: {
                 groupId,
                 userId,
+                order,
             },
-            order,
         },
         data: {
             admin,
