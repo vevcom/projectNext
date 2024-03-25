@@ -7,7 +7,6 @@ import type { LockerWithReservation } from './Types'
 
 
 export async function readLocker(id: number): Promise<ActionReturn<LockerWithReservation>> {
-// export async function readLocker(id: number) {
     try {
         const locker = await prisma.locker.findUnique({
             where: {
@@ -19,6 +18,7 @@ export async function readLocker(id: number): Promise<ActionReturn<LockerWithRes
                         active: true
                     },
                     select: {
+                        id: true,
                         user: {
                             select: {
                                 firstname: true,
@@ -33,47 +33,18 @@ export async function readLocker(id: number): Promise<ActionReturn<LockerWithRes
         if (!locker) {
             return createActionError("NOT FOUND", "locker not found")
         }
+
+        await updateLockerReservationIfExpired(locker)
         return {success: true, data: locker}
-    } catch (error) {
+    }
+    catch (error) {
         if (error instanceof ServerError) {
             return createActionError(error.errorCode, error.errors)
         }
-        return createActionError("UNKNOWN ERROR", "unknown error from readLockers")
+        return createActionError("UNKNOWN ERROR", "unknown error from readLocker")
     }
 }
 
-
-export async function readLockers(): Promise<ActionReturn<LockerWithReservation[]>> {
-    try {
-        const lockers = await prisma.locker.findMany({
-            orderBy: {
-                id: "asc"
-            },
-            include: {
-                LockerReservation: {
-                    where: {
-                        active: true
-                    },
-                    select: {
-                        user: {
-                            select: {
-                                firstname: true,
-                                lastname: true
-                            }
-                        },
-                        endDate: true
-                    }
-                }
-            } 
-        })
-        return {success: true, data: lockers}
-    } catch (error) {
-        if (error instanceof ServerError) {
-            return createActionError(error.errorCode, error.errors)
-        }
-        return createActionError("UNKNOWN ERROR", "unknown error from readLockers")
-    }
-}
 
 export async function readLockerPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize>
@@ -92,6 +63,7 @@ export async function readLockerPage<const PageSize extends number>(
                         active: true
                     },
                     select: {
+                        id: true,
                         user: {
                             select: {
                                 firstname: true,
@@ -103,11 +75,42 @@ export async function readLockerPage<const PageSize extends number>(
                 }
             } 
         })
+
+        for (let locker of lockers) {
+            await updateLockerReservationIfExpired(locker)
+        }
         return {success: true, data: lockers}
-    } catch (error) {
+    }
+    catch (error) {
         if (error instanceof ServerError) {
             return createActionError(error.errorCode, error.errors)
         }
         return createActionError('UNKNOWN ERROR', 'unknown error from readLockerPage')
+    }
+}
+
+
+async function updateLockerReservationIfExpired(locker: LockerWithReservation) {
+    if (locker.LockerReservation.length && locker.LockerReservation[0].endDate != null && locker.LockerReservation[0].endDate.getTime() < Date.now()) {
+        try {
+            const updateResult = await prisma.lockerReservation.update({
+                where: {
+                    id: locker.LockerReservation[0].id
+                },
+                data: {
+                    active: false
+                }
+            })
+            if (!updateResult) {
+                return createActionError("NOT FOUND", "lockerReservation not found while updating") 
+            }
+            locker.LockerReservation = []
+        }
+        catch (error) {
+            if (error instanceof ServerError) {
+                return createActionError(error.errorCode, error.errors)
+            }
+            return createActionError("UNKNOWN ERROR", "unknown error while updating expired locker")
+        }
     }
 }
