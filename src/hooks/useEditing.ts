@@ -19,6 +19,7 @@ export default function useEditing(requiredPermissions?: PermissionMatrix): bool
     const editMode = useContext(EditModeContext)
     const { authorized } = useUser({
         requiredPermissions,
+        shouldRedirect: false,
     })
     //TODO: also add visibility checks
     const uniqueKey = useRef(uuid()).current

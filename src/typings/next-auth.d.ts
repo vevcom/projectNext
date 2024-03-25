@@ -1,19 +1,21 @@
-import type { ExpandedUser } from '@/auth/getUser'
-
 import 'next-auth'
 import 'next-auth/adapters'
 
 import type { AdapterUserCustom, ExtendedFeideUser } from '@/auth/feide/Types'
 import type { FeideAccount } from '@/prisma/client'
+import type { BasicMembership } from '@/server/groups/Types'
+import type { Permission } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
 
 declare module 'next-auth' {
-
     interface User {
         id: number | string,
     }
 
     interface Session {
-        user: ExpandedUser,
+        user: UserFiltered,
+        permissions: Permission[],
+        memberships: BasicMembership[],
     }
 
     interface Profile extends ExtendedFeideUser {
@@ -28,7 +30,9 @@ declare module 'next-auth/adapters' {
 
 declare module 'next-auth/jwt' {
     interface JWT {
-        user: ExpandedUser,
+        user: UserFiltered,
+        permissions: Permission[],
+        memberships: BasicMembership[],
 
         // The standard JWT payload is hidden by next auth. To get correct
         // type hinting we need to declare the properties we wish to
