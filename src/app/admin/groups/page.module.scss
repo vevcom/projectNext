@@ -1,5 +1,34 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    
+    > h1 {
+        margin-left: ohma.$gap;
+    }
+    .groupType {
+        border-radius: ohma.$rounding;
+        padding: ohma.$rounding;
+        margin: ohma.$gap;
+        &:nth-child(2n) {
+            background-color: ohma.$colors-secondary;
+        }
+        &:nth-child(2n+1) {
+            background-color: lighten(ohma.$colors-secondary, 20);
+        }
+        font-size: ohma.$fonts-m;
+        table {
+            margin: ohma.$gap 0;
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+
+            thead {
+                font-weight: ohma.$fonts-weight-l;
+                border-bottom: 2px solid ohma.$colors-gray-800;
+            }
+            tbody {
+                font-weight: ohma.$fonts-weight-m;
+            }
+            
+        }
+    }
 }
