@@ -27,7 +27,7 @@ export async function readGroupsExpandedAction(): Promise<ActionReturn<ExpandedG
 
 export async function readForGroupAdmin(): Promise<ActionReturn<GroupsStructured>> {
     const { status, authorized  } = await getUser({
-        requiredPermissions: [['GROUP_DESTROY']] 
+        requiredPermissions: [['GROUP_ADMIN']] //TODO: We need to discuss permission structure for groups
     })
     if (!authorized) return createActionError(status)
 

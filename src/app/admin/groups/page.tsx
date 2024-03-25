@@ -33,8 +33,7 @@ export default async function GroupsAdmin() {
         }
     })
 
-    const ordering : string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME', 
-    'COMMITTEE', 'INTEREST_GROUP', 'MANUAL_GROUP'] satisfies GroupType[];
+    
 
     return (
         <div className={styles.wrapper}>
