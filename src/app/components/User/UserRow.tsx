@@ -3,11 +3,12 @@ import type { UserFiltered } from '@/server/users/Types'
 
 type PropTypes = {
     user: UserFiltered
+    className?: string
 }
 
-export default function UserRow({ user }: PropTypes) {
+export default function UserRow({ user, className }: PropTypes) {
     return (
-        <span className={styles.UserRow}>
+        <span className={`${styles.UserRow} ${className}`}>
             <p>{user.lastname}, {user.firstname}</p>
             <p>{user.username}</p>
             <p>MTTK</p>

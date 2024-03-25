@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+$selectionBtnSize: 25px;
+
 .UserList {
     height: 100%;
     > .filters {
@@ -33,6 +35,25 @@
         border-radius: ohma.$rounding;
         background-color: ohma.$colors-white;
         width: 100%;
+        .row {
+            display: flex;
+            justify-content: space-between;
+            > .userRow {
+                flex: 1 1 100%;
+            }
+            > button {
+                border: none;
+                width: $selectionBtnSize;
+                height: $selectionBtnSize;
+                display: grid;
+                place-items: center;
+                border-radius: ohma.$rounding;
+                &.selected {
+                    background-color: ohma.$colors-primary;                
+                }
+                margin-right: 1em;
+            }
+        }
         > .head {
             position: sticky;
             top: 0;
@@ -50,4 +71,9 @@
             }
         } 
     }
+}
+
+.adjust {
+    width: calc(100% - $selectionBtnSize - 1em);
+    transform: translateX(calc($selectionBtnSize + 1em));
 }

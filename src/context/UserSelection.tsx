@@ -14,6 +14,8 @@ export const UserSelectionContext = createContext<{
     users: UserFiltered[]
     addUser: (user: UserFiltered) => void
     removeUser: (user: UserFiltered) => void
+    toggle: (user: UserFiltered) => void
+    includes: (user: UserFiltered) => boolean
 } | null>(null)
 
 export default function UserSelectionProvider({ children }: PropTypes) {
@@ -25,8 +27,17 @@ export default function UserSelectionProvider({ children }: PropTypes) {
     const removeUser = (user: UserFiltered) => {
         setUsers(users.filter(u => u !== user))
     }
+    const toggle = (user: UserFiltered) => {
+        if (users.includes(user)) {
+            removeUser(user)
+        } else {
+            addUser(user)
+        }
+    }
 
-    return <UserSelectionContext.Provider value={{ users, addUser, removeUser }}>
+    const includes = (user: UserFiltered) => users.includes(user)
+
+    return <UserSelectionContext.Provider value={{ users, addUser, removeUser, toggle, includes }}>
         {children}
     </UserSelectionContext.Provider>
 }

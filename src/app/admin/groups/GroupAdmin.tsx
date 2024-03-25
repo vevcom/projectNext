@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
+import UserSelectionProvider from '@/context/UserSelection'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
@@ -59,7 +60,9 @@ export default function GroupAdmin() {
                             partOfName: ''
                         }}
                     >
-                        <UserList className={styles.addUsersList} />
+                        <UserSelectionProvider>
+                            <UserList className={styles.addUsersList} />
+                        </UserSelectionProvider>
                     </UserPagingProvider>
                 </PopUp>
             </div>

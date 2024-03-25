@@ -10,6 +10,9 @@ import { useContext, useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import type { GroupType } from '@prisma/client'
 import type { ExpandedGroup } from '@/server/groups/Types'
+import { UserSelectionContext } from '@/context/UserSelection'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     className?: string
@@ -66,6 +69,8 @@ export default function UserList({ className, disableFilters = {
     studyProgrammes: false
 } }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
+    const userSelection = useContext(UserSelectionContext)
+
     const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
     const [groupSelection, setGroupSelection] = useState<{
         [X in GroupSelectionType]: {
@@ -138,7 +143,7 @@ export default function UserList({ className, disableFilters = {
 
     return (
         <div className={`${styles.UserList} ${className}`}>
-            <div className={styles.filters}>
+            <div className={userSelection ? `${styles.filters} ${styles.adjust}` : styles.filters}>
                 {
                     !disableFilters.name && (
                         <div className={styles.group}>
@@ -221,7 +226,7 @@ export default function UserList({ className, disableFilters = {
                 }
             </div>
             <div className={styles.list}>
-                <span className={styles.head}>
+                <span className={userSelection ? `${styles.head} ${styles.adjust}` : styles.head}>
                     <h3>Navn</h3>
                     <h3>Brukernavn</h3>
                     <h3>Studie</h3>
@@ -229,7 +234,16 @@ export default function UserList({ className, disableFilters = {
                 </span>
 
                 <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
-                    <UserRow key={user.id} user={user} />
+                    <span className={styles.row} key={user.id}>
+                        { userSelection &&
+                            <button 
+                                className={userSelection.includes(user) ? styles.selected : ''} 
+                                onClick={() => userSelection.toggle(user)}>
+                                <FontAwesomeIcon icon={faCheck} />
+                            </button>
+                        }
+                        <UserRow className={styles.userRow} user={user} />
+                    </span>
                 )} />
             </div>
 
