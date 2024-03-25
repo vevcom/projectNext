@@ -53,6 +53,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                     groupType: 'COMMITTEE',
                     membershipRenewal: false,
                     memberships,
+                    order: order.order,
                 },
             },
             logoImage: {
@@ -71,6 +72,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 create: {
                     groupType: 'MANUAL_GROUP',
                     membershipRenewal: true,
+                    order: order.order,
                 },
             },
         }
@@ -84,6 +86,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 create: {
                     groupType: 'COMMITTEE',
                     membershipRenewal: true,
+                    order: order.order,
                 },
             },
             logoImage: {
@@ -102,6 +105,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 create: {
                     groupType: 'INTEREST_GROUP',
                     membershipRenewal: true,
+                    order: order.order,
                 },
             },
         }

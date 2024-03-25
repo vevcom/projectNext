@@ -109,6 +109,8 @@ model Group {
   membershipRenewal Boolean
   memberships       Membership[]
   roles             RolesGroups[]
+  omegaOrder        OmegaOrder    @relation(fields: [order], references: [order])
+  order             Int           //The order the group is in currently.
 
   class                      Class?
   committee                  Committee?
@@ -551,6 +553,7 @@ model OmegaOrder {
 
   newsArticles NewsArticle[]
   membership   Membership[]
+  Group        Group[]
 }
 
 ///////////

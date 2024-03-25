@@ -3,6 +3,7 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
+import { readGroup } from '../groups/read'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -15,6 +16,12 @@ export async function readUserPage<const PageSize extends number>({
     details
 }: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
     const words = details.partOfName.split(' ')
+
+    const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => ({
+        groupId,
+        groupOrder: groupOrder ?? (await readGroup(groupId)).order
+    })))
+
     return await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
         take: page.pageSize,

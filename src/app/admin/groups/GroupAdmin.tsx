@@ -25,7 +25,7 @@ export default function GroupAdmin() {
                 pageSize: 50
             }}
             details={{
-                groups: [groupSelectionCtx.group],
+                groups: [],
                 partOfName: ''
             }}
         >
