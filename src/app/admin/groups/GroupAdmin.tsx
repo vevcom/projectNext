@@ -4,11 +4,12 @@ import UserList from "@/app/components/User/UserList/UserList"
 import { GroupSelectionContext } from "@/context/groupSelection"
 import UserPagingProvider from "@/context/paging/UserPaging"
 import { useContext } from "react"
+import styles from './GroupAdmin.module.scss'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
-    if (!groupSelectionCtx) return <>Kan ikke velge gruppe</>
-    if (!groupSelectionCtx.group) return <>Ingen gruppe valgt</>
+    if (!groupSelectionCtx) return <div className={styles.center}>Kan ikke velge gruppe</div>
+    if (!groupSelectionCtx.group) return <div className={styles.center}>Ingen gruppe valgt</div>
     return (
         <UserPagingProvider
             serverRenderedData={[]}
