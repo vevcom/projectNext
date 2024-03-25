@@ -11,7 +11,7 @@ export async function destoryMembershipOfUser(
     userId: number,
     orderArg?: number
 ): Promise<ExpandedMembership> {
-    if (!canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
@@ -32,7 +32,7 @@ export async function destroyMembershipOfUsers(
     userIds: number[],
     orderArg?: number,
 ): Promise<void> {
-    if (!canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? (await readCurrenOmegaOrder()).order

@@ -12,7 +12,7 @@ export async function createMembershipForUser(
     admin: boolean,
     orderArg?: number
 ): Promise<ExpandedMembership> {
-    if (!canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
@@ -44,7 +44,7 @@ export async function createMembershipsForGroup(
     data: { userId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
-    if (!canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
@@ -65,7 +65,7 @@ export async function createMembershipsForUser(
     data: { groupId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
-    if (!canEasalyManageMembershipOfGroups(data.map(group => group.groupId))) {
+    if (!await canEasalyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? (await readCurrenOmegaOrder()).order
