@@ -14,14 +14,14 @@ export default function UserList({ className }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     if (!userPaging) throw new Error('UserPagingContext not found')
 
-    const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        userPaging.setDetails({ partOfName: e.target.value, groups: [] })
+    const handleChangeName = async (e: ChangeEvent<HTMLInputElement>) => {
+        userPaging.setDetails({ ...userPaging.deatils, partOfName: e.target.value })
     }
 
     return (
         <div className={`${styles.UserList} ${className}`}>
             <div className={styles.filters}>
-                <input onChange={handleChange}></input>
+                <input onChange={handleChangeName}></input>
             </div>
             <div className={styles.list}>
                 <span className={styles.head}>

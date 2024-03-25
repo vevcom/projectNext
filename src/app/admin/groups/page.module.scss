@@ -39,7 +39,7 @@
     }
     .group {
         position: fixed;
-        top: 50%;
+        top: calc(50% + 30px);
         right: -1em;
         transform: translateY(-50%);
     }
