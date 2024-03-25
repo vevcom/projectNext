@@ -1,18 +1,18 @@
 import 'server-only'
+import { specialCollectionsVisibilityConfig } from './ConfigVars'
 import { readSpecialImage } from '@/server/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import { SpecialCollection, ImageCollection, Image } from '@prisma/client'
+import { createVisibility } from '@/server/visibility/create'
+import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
 import type { ReadPageInput } from '@/actions/Types'
-import { specialCollectionsVisibilityConfig } from './ConfigVars'
-import { createVisibility } from '@/server/visibility/create'
-import { VisibilityFilter } from '@/auth/getVisibilityFilter'
+import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
 
 
 /**

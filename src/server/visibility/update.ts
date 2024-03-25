@@ -1,9 +1,9 @@
 import 'server-only'
-import { VisibilityCollapsed } from './Types';
-import { prismaCall } from '../prismaCall';
-import prisma from '@/prisma';
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { VisibilityCollapsed } from './Types'
 
-export async function updateVisibility(id: number, data: VisibilityCollapsed) : Promise<void> {
+export async function updateVisibility(id: number, data: VisibilityCollapsed): Promise<void> {
     //TODO chack that the admin is a subset of the regular
 
     await prismaCall(() => prisma.$transaction([
@@ -16,7 +16,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
         //Then create many new requirements
         data.type === 'SPECIAL' ? prisma.visibility.update({
             where: {
-                id: id
+                id
             },
             data: {
                 type: 'SPECIAL',
@@ -33,7 +33,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
             }
         }) : prisma.visibility.update({
             where: {
-                id: id
+                id
             },
             data: {
                 type: 'REGULAR',
@@ -43,7 +43,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
                             create: data.regular.map(row => ({
                                 visibilityRequirementGroups: {
                                     create: row.map(groupId => ({
-                                        groupId: groupId
+                                        groupId
                                     }))
                                 }
                             }))
@@ -56,7 +56,7 @@ export async function updateVisibility(id: number, data: VisibilityCollapsed) : 
                             create: data.admin.map(row => ({
                                 visibilityRequirementGroups: {
                                     create: row.map(groupId => ({
-                                        groupId: groupId
+                                        groupId
                                     }))
                                 }
                             }))

@@ -1,12 +1,11 @@
 import { maxNumberOfGroupsInFilter, userFilterSelection } from './ConfigVars'
+import { readGroup } from '@/server/groups/read'
+import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
-import { readGroup } from '../groups/read'
-import { ServerError } from '../error'
-import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import { strict } from 'assert'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -20,7 +19,9 @@ export async function readUserPage<const PageSize extends number>({
 }: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
     const words = details.partOfName.split(' ')
 
-    if (details.groups.length > maxNumberOfGroupsInFilter) throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
+    if (details.groups.length > maxNumberOfGroupsInFilter) {
+        throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
+    }
     const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => {
         const { order } = await readGroup(groupId)
         return {

@@ -1,5 +1,5 @@
-import { PrismaClient } from '@/generated/pn';
-import { OmegaMembershipLevel } from '@/generated/pn';
+import { OmegaMembershipLevel } from '@/generated/pn'
+import type { PrismaClient } from '@/generated/pn'
 
 /**
  * Seeds classes and omega membership groups.
@@ -10,7 +10,7 @@ export default async function seedGroups(prisma: PrismaClient) {
     if (!omegaOrder) throw new Error('No omega order found')
     const order = omegaOrder.order
 
-    await Promise.all([0,1,2,3,4,5,6].map(i => prisma.class.create({
+    await Promise.all([0, 1, 2, 3, 4, 5, 6].map(i => prisma.class.create({
         data: {
             year: i,
             group: {
@@ -21,7 +21,7 @@ export default async function seedGroups(prisma: PrismaClient) {
                 },
             }
         }
-    }))) 
+    })))
 
     for (const level of Object.values(OmegaMembershipLevel)) {
         await prisma.omegaMembershipGroup.create({

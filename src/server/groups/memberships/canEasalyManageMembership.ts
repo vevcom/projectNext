@@ -1,5 +1,6 @@
-import { CanEasalyManageMembership } from "./ConfigVars"
-import { prismaCall } from "@/server/prismaCall"
+import { CanEasalyManageMembership } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
 
 export async function canEasalyManageMembershipOfGroup(groupId: number): Promise<boolean> {
     const group = await prismaCall(() => prisma.group.findUniqueOrThrow({

@@ -26,7 +26,7 @@ export default async function Register() {
     const sexOptions = [
         { value: 'FEMALE', label: 'Kvinne', key: 'k' },
         { value: 'MALE', label: 'Mann', key: 'm' },
-        { value: 'OTHER', label: 'Annet', key: 'a'},
+        { value: 'OTHER', label: 'Annet', key: 'a' },
     ]
 
     const lastUsername = userAuth.user?.username

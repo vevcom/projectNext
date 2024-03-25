@@ -1,7 +1,7 @@
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { ExpandedStudyProgramme } from './Types'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import type { ExpandedStudyProgramme } from './Types'
 
 type CreateStudyProgrammeArgs = {
     code: string,
@@ -13,7 +13,7 @@ type CreateStudyProgrammeArgs = {
 
 export async function createStudyProgramme(data: CreateStudyProgrammeArgs): Promise<ExpandedStudyProgramme> {
     const order = (await readCurrenOmegaOrder()).order
-    
+
     return await prismaCall(() => prisma.studyProgramme.create({
         data: {
             ...data,

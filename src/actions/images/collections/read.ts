@@ -2,18 +2,18 @@
 import { createActionError } from '@/actions/error'
 import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { SpecialCollection } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageCollection } from '@prisma/client'
-import type {
-    ExpandedImageCollection,
-    ImageCollectionPageReturn
-} from '@/server/images/collections/Types'
 import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 import { includeVisibility } from '@/server/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
-import { VisibilityCollapsed } from '@/server/visibility/Types'
+import { SpecialCollection } from '@prisma/client'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
+import type {
+    ExpandedImageCollection,
+    ImageCollectionPageReturn
+} from '@/server/images/collections/Types'
+import type { ImageCollection } from '@prisma/client'
+import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 /**
  * Action that reads an image collection by id or name
@@ -24,7 +24,7 @@ export async function readImageCollectionAction(
     idOrName: number | string
 ): Promise<ActionReturn<ExpandedImageCollection & {visibility: VisibilityCollapsed}>> {
     const collection = await safeServerCall(() => includeVisibility(
-        () => readImageCollection(idOrName), 
+        () => readImageCollection(idOrName),
         data => data.visibilityId
     ))
     if (!collection.success) return collection
@@ -33,7 +33,7 @@ export async function readImageCollectionAction(
     }
 
     return collection
-}   
+}
 
 /**
  * Action that returns a page of image collections, orders by createdAt (and then name)

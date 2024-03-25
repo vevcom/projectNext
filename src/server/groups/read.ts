@@ -1,11 +1,10 @@
-import { ServerError } from '@/server/error'
+import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
+import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 import type { Group, OmegaMembershipLevel, User } from '@prisma/client'
 import type { ExpandedGroup, GroupsStructured } from './Types'
-import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -25,7 +24,7 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
     const groups = await prismaCall(() => prisma.group.findMany({
         include: {
             memberships: {
-                take:  1,
+                take: 1,
                 orderBy: {
                     order: 'asc'
                 },
@@ -40,11 +39,11 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
     }))
 
     const groupsWithMembers = await Promise.all(groups.map(group => prisma.membership.count({
-            where: {
-                groupId: group.id,
-                ...membershipFilter,
-            },
-        })
+        where: {
+            groupId: group.id,
+            ...membershipFilter,
+        },
+    })
     )).then(members => groups.map((group, i) => ({ ...group, members: members[i] })))
 
     return groupsWithMembers.map(group => {
@@ -63,7 +62,7 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
  */
 export async function readGroupsStructured(): Promise<GroupsStructured> {
     const groups = await readGroupsExpanded()
-    
+
     const stuctured = groups.reduce((acc, group) => {
         if (!acc[group.groupType]) {
             acc[group.groupType] = {
@@ -81,7 +80,7 @@ export async function readGroupsStructured(): Promise<GroupsStructured> {
 /**
  * This function tries to give a name to a group based on the group type and the group data.
  * @param group - The group to infer the name of
- * @returns 
+ * @returns
  */
 export function inferGroupName(group: {
     id: Group['id'],
@@ -109,11 +108,13 @@ export function inferGroupName(group: {
             break
         case 'OMEGA_MEMBERSHIP_GROUP':
             name = group.omegaMembershipGroup?.omegaMembershipLevel ?
-                OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name : 
+                OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name :
                 name
             break
         case 'STUDY_PROGRAMME':
             name = group.studyProgramme?.name ?? name
+            break
+        default:
             break
     }
     return name

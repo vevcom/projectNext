@@ -1,8 +1,8 @@
-import { Permission } from "@prisma/client";
+import type { Permission } from '@prisma/client'
 
 /**
  * These are the permissions that buypass the visibiity system. i.e. for reading images
- * if the user has the permission it does not matter if the visibility is fullfilled. 
+ * if the user has the permission it does not matter if the visibility is fullfilled.
  */
 export const BypassPermissions = {
     images: 'IMAGE_ADMIN',

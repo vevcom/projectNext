@@ -1,8 +1,9 @@
 import 'server-only'
-import { VisibilityCollapsed } from './Types';
-import { prismaCall } from '../prismaCall';
-import { ServerError } from '../error';
-import { VisibilityRequirmenetGroup } from '@prisma/client';
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
+import prisma from '@/prisma'
+import type { VisibilityRequirmenetGroup } from '@prisma/client'
+import type { VisibilityCollapsed } from './Types'
 
 const levelSelector = {
     select: {
@@ -16,12 +17,12 @@ const levelSelector = {
 }
 
 /**
- * Reads visibility with levels, and with relation to groups, and returns the data 
+ * Reads visibility with levels, and with relation to groups, and returns the data
  * in a matrix format if type is REGULAR, or as permissions if type is SPECIAL
  * @param id - the id of the visibility to read
- * @returns 
+ * @returns
  */
-export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCollapsed> {
+export async function readVisibilityCollapsed(id: number): Promise<VisibilityCollapsed> {
     const visibility = await prismaCall(() => prisma.visibility.findUnique({
         where: { id },
         include: {
@@ -37,7 +38,7 @@ export async function readVisibilityCollapsed(id: number) : Promise<VisibilityCo
             regular: visibility.regularLevel.permission,
             admin: visibility.adminLevel.permission
         }
-    } 
+    }
     return {
         type: 'REGULAR',
         published: visibility.published,
@@ -58,6 +59,6 @@ export async function includeVisibility<T>(serverCall: () => Promise<T>, getVisi
     return { ...result, visibility }
 }
 
-function collapseVisibilityLevel(level: {requirements: {visibilityRequirmenetGroups: VisibilityRequirmenetGroup[]}[]}){
+function collapseVisibilityLevel(level: {requirements: {visibilityRequirmenetGroups: VisibilityRequirmenetGroup[]}[]}) {
     return level.requirements.map(r => r.visibilityRequirmenetGroups.map(g => g.groupId))
 }

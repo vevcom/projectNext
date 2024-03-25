@@ -1,7 +1,7 @@
 import 'server-only'
 import { expandedRoleIncluder } from './ConfigVars'
+import { readUsersOfGroups } from '@/server/groups/read'
 import { readMembershipsOfUser } from '@/server/groups/memberships/read'
-import { readUsersOfGroups } from '../groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { User } from '@/prisma/prismaservice/generated/pn'

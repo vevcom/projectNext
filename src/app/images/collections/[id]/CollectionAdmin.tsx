@@ -12,15 +12,15 @@ import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
 import ImageUploader from '@/app/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
+import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
+import { BypassPermissions } from '@/server/visibility/ConfigVars'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
-import { VisibilityCollapsed } from '@/server/visibility/Types'
-import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -49,107 +49,107 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     }
 
     return (
-    <>
-        <aside className={styles.CollectionAdmin}>
-            <div className={styles.upload}>
-                <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
-                <PopUp PopUpKey={uuid()} showButtonContent={
-                    <>
+        <>
+            <aside className={styles.CollectionAdmin}>
+                <div className={styles.upload}>
+                    <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
+                    <PopUp PopUpKey={uuid()} showButtonContent={
+                        <>
                         Last opp mange
-                        <FontAwesomeIcon icon={faUpload} />
-                    </>
-                }>
-                    <Form
-                        className={styles.uploadMany}
-                        successCallback={refreshImages}
-                        title="last opp bilder"
-                        submitText="last opp"
-                        action={createImagesAction.bind(null, collectionId)}
-                    >
-                        <Dropzone label="last opp" name="files"/>
-                    </Form>
-                </PopUp>
-            </div>
-            <Form
-                successCallback={() => {
-                    router.refresh()
-                    selection.setSelectionMode(false)
-                }}
-                title="Rediger samling"
-                submitText="oppdater"
-                action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
-            >
-                <TextInput
-                    defaultValue={collection.name}
-                    color="black"
-                    label="navn"
-                    name="name"
-                />
-                <TextInput
-                    defaultValue={collection.description || ''}
-                    color="black"
-                    label="beskrivelse"
-                    name="description"
-                />
-                <div className={styles.coverImage}>
-                    <div>
-                        <h5>forsidebilde</h5>
-                        <div className={styles.showCurrentCover}>
-                            <FontAwesomeIcon icon={faQuestion} />
-                            <div className={styles.currentCover}>
-                                {
-                                    coverImage ? (
-                                        <>
-                                            <i>nåværende forsidebilde</i>
-                                            <Image image={coverImage} width={120}/>
-                                        </>
-                                    ) : (
-                                        <i>ingen forsidebilde</i>
-                                    )
-                                }
+                            <FontAwesomeIcon icon={faUpload} />
+                        </>
+                    }>
+                        <Form
+                            className={styles.uploadMany}
+                            successCallback={refreshImages}
+                            title="last opp bilder"
+                            submitText="last opp"
+                            action={createImagesAction.bind(null, collectionId)}
+                        >
+                            <Dropzone label="last opp" name="files"/>
+                        </Form>
+                    </PopUp>
+                </div>
+                <Form
+                    successCallback={() => {
+                        router.refresh()
+                        selection.setSelectionMode(false)
+                    }}
+                    title="Rediger samling"
+                    submitText="oppdater"
+                    action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
+                >
+                    <TextInput
+                        defaultValue={collection.name}
+                        color="black"
+                        label="navn"
+                        name="name"
+                    />
+                    <TextInput
+                        defaultValue={collection.description || ''}
+                        color="black"
+                        label="beskrivelse"
+                        name="description"
+                    />
+                    <div className={styles.coverImage}>
+                        <div>
+                            <h5>forsidebilde</h5>
+                            <div className={styles.showCurrentCover}>
+                                <FontAwesomeIcon icon={faQuestion} />
+                                <div className={styles.currentCover}>
+                                    {
+                                        coverImage ? (
+                                            <>
+                                                <i>nåværende forsidebilde</i>
+                                                <Image image={coverImage} width={120}/>
+                                            </>
+                                        ) : (
+                                            <i>ingen forsidebilde</i>
+                                        )
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className={styles.chosenImage}>
-                        <p>Valgt bilde:</p>
-                        <span>
-                            {
-                                selection.selectedImage ? (
-                                    <>
-                                        <Image image={selection.selectedImage} width={120}/>
-                                        <button type="button" onClick={() => selection.setSelectedImage(null)}>
-                                            <FontAwesomeIcon icon={faTrash} />
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p>Intet bilde valgt</p>
-                                    </>
-                                )
-                            }
-                        </span>
-                        <button type="button" onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
-                            {
-                                selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
-                            }
-                        </button>
-                    </div>
+                        <div className={styles.chosenImage}>
+                            <p>Valgt bilde:</p>
+                            <span>
+                                {
+                                    selection.selectedImage ? (
+                                        <>
+                                            <Image image={selection.selectedImage} width={120}/>
+                                            <button type="button" onClick={() => selection.setSelectedImage(null)}>
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p>Intet bilde valgt</p>
+                                        </>
+                                    )
+                                }
+                            </span>
+                            <button type="button" onClick={() => selection.setSelectionMode(!selection.selectionMode)}>
+                                {
+                                    selection.selectionMode ? 'Avslutt valg' : 'Velg bilde'
+                                }
+                            </button>
+                        </div>
 
-                </div>
-            </Form>
-            <Form
-                submitText="slett samling"
-                successCallback={() => router.push('/images')}
-                action={destroyImageCollectionAction.bind(null, collectionId)}
-                submitColor="red"
-                confirmation={{
-                    confirm: true,
-                    text: 'Er du sikker på at du vil slette samlingen. Dette vil også slette alle bilder i salingen.'
-                }}
-            />
-        </aside>
-        <VisibilityAdmin visibility={visibility} />
-    </>
+                    </div>
+                </Form>
+                <Form
+                    submitText="slett samling"
+                    successCallback={() => router.push('/images')}
+                    action={destroyImageCollectionAction.bind(null, collectionId)}
+                    submitColor="red"
+                    confirmation={{
+                        confirm: true,
+                        text: 'Er du sikker på at du vil slette samlingen. Dette vil også slette alle bilder i salingen.'
+                    }}
+                />
+            </aside>
+            <VisibilityAdmin visibility={visibility} />
+        </>
     )
 }

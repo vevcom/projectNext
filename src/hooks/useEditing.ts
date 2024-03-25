@@ -1,11 +1,11 @@
 'use client'
 import { useUser } from '@/auth/useUser'
 import { EditModeContext } from '@/context/EditMode'
+import { checkVisibility } from '@/auth/checkVisibility'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { PermissionMatrix } from '@/auth/checkPermissionMatrix'
-import { VisibilityCollapsed } from '@/server/visibility/Types'
-import { checkVisibility } from '@/auth/checkVisibility'
 
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.
@@ -26,8 +26,8 @@ export default function useEditing({
     requiredVisibility,
     operation = 'OR',
     level = 'ADMIN'
-}:{
-    requiredPermissions?: PermissionMatrix, 
+}: {
+    requiredPermissions?: PermissionMatrix,
     requiredVisibility?: VisibilityCollapsed
     operation?: 'AND' | 'OR',
     level?: 'ADMIN' | 'REGULAR'
@@ -40,19 +40,22 @@ export default function useEditing({
     const [authorized, setAuthorized] = useState<boolean>(false)
     //Editable if ctx is on and user has the required permissions and/or visibility
     const [editable, setEditable] = useState<boolean>(false)
-    
+
     const uniqueKey = useRef(uuid()).current
     useEffect(() => {
         const visibilityAuthorized = requiredVisibility ? checkVisibility({
-            permissions: permissions ?? [], 
+            permissions: permissions ?? [],
             memberships: memberships ?? [],
         }, requiredVisibility, level) : true
-    
-        const authorized = (operation === 'OR' ? permissionAuthorized || visibilityAuthorized : permissionAuthorized && visibilityAuthorized) ?? false
-        if (!editModeCtx) return  
-        if (authorized) editModeCtx.addEditableContent(uniqueKey)
-        if (!authorized) editModeCtx.removeEditableContent(uniqueKey)
-        setAuthorized(authorized)
+
+        const authorized_ = (operation === 'OR' ?
+            permissionAuthorized || visibilityAuthorized :
+            permissionAuthorized && visibilityAuthorized) ?? false
+        if (editModeCtx) {
+            if (authorized_) editModeCtx.addEditableContent(uniqueKey)
+            if (!authorized_) editModeCtx.removeEditableContent(uniqueKey)
+            setAuthorized(authorized_)
+        }
         return () => {
             if (editModeCtx) editModeCtx.removeEditableContent(uniqueKey)
         }

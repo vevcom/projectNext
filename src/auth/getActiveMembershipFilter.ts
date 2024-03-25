@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 /**
  * A function to return a filter that only selects valid memberships of a order.
@@ -11,7 +11,7 @@ import { Prisma } from '@prisma/client'
  * @returns - A filter that only selects valid memberships of a order.
  */
 export function getActiveMembershipFilter(
-    order: number, 
+    order: number,
     strictness: 'ACTIVE' | 'EXACT' = 'ACTIVE'
 ) {
     return {
@@ -20,7 +20,7 @@ export function getActiveMembershipFilter(
                 group: {
                     membershipRenewal: false,
                 },
-                order: order,
+                order,
             },
             {
                 group: {

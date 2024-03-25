@@ -1,4 +1,4 @@
-import { GroupType, OmegaMembershipLevel } from "@prisma/client";
+import type { GroupType, OmegaMembershipLevel } from '@prisma/client'
 
 /**
  * A object that describes the different group types in a friendly way
@@ -34,16 +34,16 @@ export const GroupTypesConfig = {
         namePlural: 'Andre grupper',
         description: 'øvrige grupper'
     }
-} as const satisfies { 
+} as const satisfies {
     [key in GroupType]: {
         name: string,
         namePlural: string,
         description: string
-    } 
+    }
 }
 
-export const GroupTypeOrdering : string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME', 
-    'COMMITTEE', 'INTEREST_GROUP', 'MANUAL_GROUP'] satisfies GroupType[];
+export const GroupTypeOrdering: string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME',
+    'COMMITTEE', 'INTEREST_GROUP', 'MANUAL_GROUP'] satisfies GroupType[]
 
 export const OmegaMembershipLevelConfig = {
     SOELLE: {

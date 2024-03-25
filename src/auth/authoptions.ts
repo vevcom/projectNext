@@ -5,12 +5,12 @@ import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { updateFeideAccount } from '@/server/auth/feide/update'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
 import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
 import type { ExtendedFeideUser } from './feide/Types'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 
 export const authOptions: AuthOptions = {
     providers: [

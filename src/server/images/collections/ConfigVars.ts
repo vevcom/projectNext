@@ -1,4 +1,4 @@
-import type { Permission, SpecialCollection } from "@prisma/client"
+import type { Permission, SpecialCollection } from '@prisma/client'
 
 type SpecialCollectionsVisibilityConfig = {
     [T in SpecialCollection]: {
@@ -10,10 +10,10 @@ type SpecialCollectionsVisibilityConfig = {
 /**
  * An object that defines the visibility of special collections. The visibility of special collections
  * is linked to permissions, not a grop matrix. (Visibility type special).
- * This object delares the speial visibility of special collections. So if one special collection 
+ * This object delares the speial visibility of special collections. So if one special collection
  * were to misteriously disappear, it will be created again with visibility based on this object.
  */
-export const specialCollectionsVisibilityConfig : SpecialCollectionsVisibilityConfig = {
+export const specialCollectionsVisibilityConfig: SpecialCollectionsVisibilityConfig = {
     OMBULCOVERS: {
         regularLevel: 'OMBUL_READ',
         adminLevel: 'OMBUL_CREATE'

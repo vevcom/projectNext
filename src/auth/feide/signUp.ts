@@ -17,7 +17,10 @@ export default async function signUp({ user, profile }: {user: nextAuthUser, pro
     const updatedEmail = updateEmailForFeideAccount(profile.sub, profile.email)
 
     const studyProgrammes = await upsertStudyProgrammes(groups)
-    await createMembershipsForUser(Number(user.id), studyProgrammes.map(programme => ({ groupId: programme.id, admin: false })))
+    await createMembershipsForUser(
+        Number(user.id),
+        studyProgrammes.map(programme => ({ groupId: programme.id, admin: false }))
+    )
 
     await updatedEmail
 }

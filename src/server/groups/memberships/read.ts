@@ -1,9 +1,10 @@
 import 'server-only'
-import type { ExpandedMembership, BasicMembership } from './Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import prisma from '@/prisma'
+import type { ExpandedMembership, BasicMembership } from './Types'
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {
     const count = await prismaCall(() => prisma.group.count({
@@ -37,7 +38,7 @@ export async function readMembershipsOfGroups(ids: number[]): Promise<ExpandedMe
  * @param id - The id of the user
  * @param order - The order of what is considered valid membership. If undefined all memberships
  * are returned.
- * @returns 
+ * @returns
  */
 export async function readMembershipsOfUser(
     id: number,

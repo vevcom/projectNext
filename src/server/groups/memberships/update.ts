@@ -1,7 +1,8 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
-import type { ExpandedMembership } from './Types'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import prisma from '@/prisma'
+import type { ExpandedMembership } from './Types'
 
 export async function updateMembership(
     groupId: number,

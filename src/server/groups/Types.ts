@@ -10,6 +10,6 @@ export type GroupsStructured = {
     [key: string]: {
         name: string,
         description: string,
-        groups: ExpandedGroup[] 
+        groups: ExpandedGroup[]
     }
 }

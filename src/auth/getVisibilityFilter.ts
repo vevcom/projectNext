@@ -1,17 +1,19 @@
 import 'server-only'
+import type { BasicMembership } from '@/server/groups/memberships/Types'
+import type { BypassPermissions } from '@/server/visibility/ConfigVars'
 import type { Permission, Prisma } from '@prisma/client'
-import { BasicMembership } from '@/server/groups/Types'
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
 
 /**
- * Creates a where-filter that can be used in db queries to only return items that mach the users groups (or permission if type is special).
+ * Creates a where-filter that can be used in db queries to only return
+ * items that mach the users groups (or permission if type is special).
  * This should be used for regularVisibility level.
  * @param groups - The groups the user is a member of
  * @param permissions - The permissions the user has
- * @returns - A where-filter that can be used in db queries. Used n query as ```where: getVisibilityFilter(user.memberships, user.permissions)```
+ * @returns - A where-filter that can be used in db queries. Used n query as
+ * ```where: getVisibilityFilter(user.memberships, user.permissions)```
  */
 export function getVisibilityFilter(
-    groups: BasicMembership[] | undefined, 
+    groups: BasicMembership[] | undefined,
     permissions: Permission[],
     bypassPermission?: BypassPermissions
 ) {
@@ -34,7 +36,7 @@ export function getVisibilityFilter(
             },
             {
                 visibility: {
-                    published: true, 
+                    published: true,
                     type: 'SPECIAL' as const,
                     regularLevel: {
                         permission: null
@@ -69,7 +71,7 @@ export function getVisibilityFilter(
                     }
                 }
             }
-        ] 
+        ]
     } satisfies Prisma.ImageCollectionWhereInput
 }
 

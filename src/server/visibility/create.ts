@@ -1,16 +1,16 @@
 import 'server-only'
-import { prismaCall } from '../prismaCall'
-import prisma from '@/prisma'
-import { Visibility } from '@prisma/client'
-import { VisibilityCollapsed } from './Types'
 import { updateVisibility } from './update'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { Visibility } from '@prisma/client'
+import type { VisibilityCollapsed } from './Types'
 
 /**
  * A function to create visibility
  * @param data - the visibility to create with.. If not given it will create a empty visibility (accessable to all)
- * @returns 
+ * @returns
  */
-export async function createVisibility(data?: VisibilityCollapsed) : Promise<Visibility> {
+export async function createVisibility(data?: VisibilityCollapsed): Promise<Visibility> {
     const visibility = await prismaCall(() => prisma.visibility.create({
         data: {
             regularLevel: {
@@ -22,6 +22,7 @@ export async function createVisibility(data?: VisibilityCollapsed) : Promise<Vis
         }
     }))
     await updateVisibility(visibility.id, data || {
+        published: false,
         type: 'REGULAR',
         admin: [],
         regular: []

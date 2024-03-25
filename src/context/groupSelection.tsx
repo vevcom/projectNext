@@ -1,11 +1,11 @@
-import { ExpandedGroup } from "@/server/groups/Types"
-import type { ReactNode } from "react"
-import { createContext, useState } from "react"
+import { createContext, useState } from 'react'
+import type { ExpandedGroup } from '@/server/groups/Types'
+import type { ReactNode } from 'react'
 
 export const GroupSelectionContext = createContext<{
     group: ExpandedGroup | null,
     setGroup: (group: ExpandedGroup | null) => void,
-} |null>(null)
+        } |null>(null)
 
 type PropTypes = {
     children: ReactNode

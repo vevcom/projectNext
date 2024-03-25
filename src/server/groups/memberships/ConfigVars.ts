@@ -1,4 +1,4 @@
-import { GroupType } from "@prisma/client";
+import type { GroupType } from '@prisma/client'
 
 /**
  * This object defines which group types can easily create memberships, by calling createMembership
@@ -7,10 +7,10 @@ import { GroupType } from "@prisma/client";
  * - OMEGA_MEMBERSHIP_GROUP: use the admition system
  */
 export const CanEasalyManageMembership = {
-    'CLASS': false,
-    'COMMITTEE': true,
-    'INTEREST_GROUP': true,
-    'MANUAL_GROUP': true,
-    'OMEGA_MEMBERSHIP_GROUP': false,
-    'STUDY_PROGRAMME': true,
-} satisfies { [K in GroupType] : boolean }
+    CLASS: false,
+    COMMITTEE: true,
+    INTEREST_GROUP: true,
+    MANUAL_GROUP: true,
+    OMEGA_MEMBERSHIP_GROUP: false,
+    STUDY_PROGRAMME: true,
+} satisfies { [K in GroupType]: boolean }

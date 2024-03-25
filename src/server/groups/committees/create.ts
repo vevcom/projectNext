@@ -2,9 +2,9 @@ import { createCommitteeValidation } from './validation'
 import prisma from '@/prisma'
 import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)

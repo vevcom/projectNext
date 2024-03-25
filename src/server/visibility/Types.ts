@@ -1,9 +1,9 @@
-import type { Permission } from "@prisma/client"
+import type { Permission } from '@prisma/client'
 
 export type GroupMatrix = number[][]
 
 /**
- * A type that represents a visibility in a simple way. 
+ * A type that represents a visibility in a simple way.
  * Either type is SPECIAL and and levels are based on Permissions,
  * or type is REGULAR and the levels are represented by matrix of ids of groups
  */
