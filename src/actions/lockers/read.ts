@@ -1,8 +1,46 @@
 'use server'
 import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createActionError } from '@/actions/error'
+import { ServerError } from '@/server/error'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { LockerWithReservation } from './Types'
+
+
+export async function readLocker(id: number): Promise<ActionReturn<LockerWithReservation>> {
+    try {
+        const locker = await prisma.locker.findUnique({
+            where: {
+                id
+            },
+            include: {
+                LockerReservation: {
+                    select: {
+                        user: {
+                            select: {
+                                firstname: true,
+                                lastname: true
+                            }
+                        }
+                    },
+                    orderBy: {
+                        createdAt: "desc"
+                    },
+                    take: 1
+                }
+            } 
+        })
+        if (!locker) {
+            return createActionError("NOT FOUND", "locker not found")
+        }
+        return {success: true, data: locker}
+    } catch (error) {
+        if (error instanceof ServerError) {
+            return createActionError(error.errorCode, error.errors)
+        }
+        return createActionError("UNKNOWN ERROR", "unknown error from readLockers")
+    }
+}
+
 
 export async function readLockers(): Promise<ActionReturn<LockerWithReservation[]>> {
     try {
@@ -28,8 +66,11 @@ export async function readLockers(): Promise<ActionReturn<LockerWithReservation[
             } 
         })
         return {success: true, data: lockers}
-    } catch (e) {
-        return createPrismaActionError(e)
+    } catch (error) {
+        if (error instanceof ServerError) {
+            return createActionError(error.errorCode, error.errors)
+        }
+        return createActionError("UNKNOWN ERROR", "unknown error from readLockers")
     }
 }
 
@@ -62,7 +103,10 @@ export async function readLockerPage<const PageSize extends number>(
             } 
         })
         return {success: true, data: lockers}
-    } catch (e) {
-        return createPrismaActionError(e)
-    } 
+    } catch (error) {
+        if (error instanceof ServerError) {
+            return createActionError(error.errorCode, error.errors)
+        }
+        return createActionError('UNKNOWN ERROR', 'unknown error from readLockerPage')
+    }
 }
