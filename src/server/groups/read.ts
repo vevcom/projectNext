@@ -20,13 +20,15 @@ export async function readGroup(id: number): Promise<Group> {
 }
 
 export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
+    const membershipFilter = getActiveMembershipFilter((await readCurrenOmegaOrder()).order)
+
     const groups = await prismaCall(() => prisma.group.findMany({
         include: {
             memberships: {
                 take:  1,
                 orderBy: {
                     order: 'asc'
-                }
+                },
             },
             committee: { select: { name: true } },
             manualGroup: { select: { name: true } },
@@ -37,7 +39,15 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
         }
     }))
 
-    return groups.map(group => {
+    const groupsWithMembers = await Promise.all(groups.map(group => prisma.membership.count({
+            where: {
+                groupId: group.id,
+                ...membershipFilter,
+            },
+        })
+    )).then(members => groups.map((group, i) => ({ ...group, members: members[i] })))
+
+    return groupsWithMembers.map(group => {
         const name = inferGroupName(group)
         const firstOrder = group.memberships[0]?.order ?? group.order
         return {

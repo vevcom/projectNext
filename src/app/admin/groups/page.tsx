@@ -37,11 +37,11 @@ export default async function GroupsAdmin() {
                             </thead>
                             <tbody>
                             {
-                                groupType.groups.map(group => (
+                                groupType.groups.sort((a, b) => a.name.localeCompare(b.name)).map(group => (
                                     <tr key={group.id}>
                                         <td>{group.id}</td>
                                         <td>{group.name}</td>
-                                        <td>{10}</td>
+                                        <td>{group.members}</td>
                                         <td><GroupSelector group={group} /></td>
                                     </tr>
                                 ))
