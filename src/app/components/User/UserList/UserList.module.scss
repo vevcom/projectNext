@@ -7,6 +7,7 @@ $selectionBtnSize: 25px;
     > .filters {
         padding-right: 3em;
         width: 100%;
+        padding-left: .3em;
         display: flex;
         flex-flow: row wrap;
         margin-bottom: ohma.$gap;
@@ -36,10 +37,12 @@ $selectionBtnSize: 25px;
         border-radius: ohma.$rounding;
         background-color: ohma.$colors-white;
         width: 100%;
-        padding: .5em;
+        padding: 0 .5em;
+        padding-top: .3em;
         .row {
             display: flex;
             justify-content: space-between;
+            padding: 0 .5em;
             > .userRow {
                 flex: 1 1 100%;
             }
