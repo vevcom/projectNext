@@ -1,8 +1,10 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { NotificationMethod } from '@prisma/client'
+import type { SpecialNotificationChannel } from '@prisma/client'
 import type { NotificationChannelWithMethods } from './Types'
 import { prismaCall } from '../prismaCall'
+import { ServerError } from '../error'
+import { convertFromPrismaMethods } from './ConfigVars'
 
 /**
  * Reads all notification channels from the database.
@@ -14,25 +16,40 @@ export async function readChannels() : Promise<NotificationChannelWithMethods[]>
         orderBy: {
             id: 'asc',
         },
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            special: true,
-            parentId: true,
+        include: {
             availableMethods: true,
             defaultMethods: true,
         }
     }))
 
-    const remove_id = (channel: NotificationMethod) => {
-        const { id, ...rest } = channel
-        return rest
+    return channels.map(convertFromPrismaMethods)
+}
+
+export async function readSpecialChannel(special: SpecialNotificationChannel) : Promise<NotificationChannelWithMethods> {
+    const results = await prismaCall(() => prisma.notificationChannel.findUnique({
+        where: {
+            special,
+        },
+        include: {
+            availableMethods: true,
+            defaultMethods: true,
+        }
+    }))
+
+    if (!results) {
+        throw new ServerError('NOT FOUND', 'Special channel not found')
     }
 
-    return channels.map(channel => ({
-        ...channel,
-        availableMethods: remove_id(channel.availableMethods),
-        defaultMethods: channel.defaultMethods ? remove_id(channel.defaultMethods) : undefined,
-    }))
+    return convertFromPrismaMethods(results)
+}
+
+export async function readChannelsAsFlatObject() : Promise<{
+    [key: number]: NotificationChannelWithMethods
+}> {
+    const channels = await readChannels()
+
+    return channels.reduce((acc, channel) => {
+        acc[channel.id] = channel
+        return acc
+    }, {} as {[key: number]: NotificationChannelWithMethods})
 }

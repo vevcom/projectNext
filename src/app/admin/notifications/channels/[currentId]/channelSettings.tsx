@@ -60,7 +60,6 @@ export default function ChannelSettings({
         <Form
             submitText="Lagre"
         >
-
             
             <TextInput label="Navn" name="name" defaultValue={channel.name} />
             <div className={styles.widerDiv}>

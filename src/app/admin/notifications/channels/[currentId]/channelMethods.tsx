@@ -3,8 +3,8 @@
 import type { NotificationMethod } from "@prisma/client"
 import Checkbox from "@/app/components/UI/Checkbox"
 import styles from "./channelMethods.module.scss"
-import { useState } from "react"
 import { v4 as uuid } from "uuid"
+import type { NotificationMethodType } from "src/server/notifications/Types"
 
 export default function ChannelMethods({
     title,
@@ -14,7 +14,7 @@ export default function ChannelMethods({
     onChange,
 } : {
     title: string,
-    formPrefix: string,
+    formPrefix: NotificationMethodType,
     methods: Omit<NotificationMethod, "id">
     editable?: Omit<NotificationMethod, "id"> & {[key: string]: boolean},
     onChange?: (methods: Omit<NotificationMethod, "id">) => any

@@ -3,6 +3,7 @@ import prisma from '@/prisma'
 import type { NotificationChannel, NotificationMethod } from '@prisma/client';
 import { createPrismaActionError } from '@/actions/error';
 import { ActionReturn } from '@/actions/Types';
+import { prismaCall } from '../prismaCall';
 
 /**
  * A function to send a notification
@@ -31,28 +32,24 @@ export async function createNotificationChannel({
     parentChannelId: number,
     defaultMethods: Omit<NotificationMethod, 'id'>,
     availableMethods: Omit<NotificationMethod, 'id'>,
-}): Promise<ActionReturn<NotificationChannel>> {
-    try {
-        const results = await prisma.notificationChannel.create({
-            data: {
-                name,
-                parent: {
-                    connect: {
-                        id: parentChannelId,
-                    }
-                
-                },
-                defaultMethods: {
-                    create: defaultMethods,
-                },
-                availableMethods: {
-                    create: availableMethods,
-                },
-            }
-        })
+}): Promise<NotificationChannel> {
+    
 
-        return { success: true, data: results }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await prismaCall(() => prisma.notificationChannel.create({
+        data: {
+            name,
+            description,
+            parent: {
+                connect: {
+                    id: parentChannelId,
+                }
+            },
+            defaultMethods: {
+                create: defaultMethods,
+            },
+            availableMethods: {
+                create: availableMethods,
+            },
+        }
+    }))
 }

@@ -537,9 +537,9 @@ model NotificationChannel {
   children    NotificationChannel[]       @relation(name: "parent")
 
   defaultMethodsId   Int?
-  defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
-  availableMethodsId Int
-  availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
+  defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id], onDelete: SetNull)
+  availableMethodsId Int?
+  availableMethods   NotificationMethod? @relation(name: "availableMethods", fields: [availableMethodsId], references: [id], onDelete: SetNull)
 
   subscriptions NotificationSubscription[]
   notifications NotificationChannelJT[]
