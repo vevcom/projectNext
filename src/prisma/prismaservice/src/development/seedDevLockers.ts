@@ -35,12 +35,24 @@ export default async function seedOrder(prisma: PrismaClient) {
         }
     }))))
 
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     for (let i = 1; i < m; i++) {
         await prisma.lockerReservation.create({
             data: {
-            lockerId: i,
-            userId: i,
+                lockerId: i,
+                userId: i,
+                endDate: tomorrow
             }
         })
     }
+
+    await prisma.lockerReservation.create({
+        data: {
+            lockerId: m,
+            userId: m,
+            endDate: null
+        }
+    })
 }

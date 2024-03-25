@@ -1,9 +1,7 @@
 'use server'
 import { lockerReservationSchema } from './schema'
 import prisma from '@/prisma'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
-// import type { OmegaquotesSchemaType } from './schema'
+import { createActionError, createZodActionError } from '@/actions/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
 
@@ -18,14 +16,14 @@ export async function createLockerResorvation(rawdata: FormData): Promise<Action
     const { lockerId, userId } = parse.data
 
     try {
-        const results = await prisma.lockerReservation.create({
+        const result = await prisma.lockerReservation.create({
             data: {
                 lockerId,
-                userId
+                userId,
             }
         })
 
-        return { success: true, data: results }
+        return { success: true, data: result }
     } catch (error) {
         return createPrismaActionError(error)
     }

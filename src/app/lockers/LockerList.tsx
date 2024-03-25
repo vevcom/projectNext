@@ -17,10 +17,11 @@ export default function LockerList() {
                 <h3>Etasje</h3>
                 <h3>Person</h3>
                 <h3>Komité</h3>
+                <h3>Dato</h3>
             </div>
             <div>
                 <EndlessScroll pagingContext={LockerPagingContext} renderer={locker => (
-                    <LockerRow locker={locker} />
+                    <LockerRow locker={locker} key={locker.id} />
                 )} />
             </div>
         </div>

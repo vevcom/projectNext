@@ -7,6 +7,7 @@ import type { LockerWithReservation } from './Types'
 
 
 export async function readLocker(id: number): Promise<ActionReturn<LockerWithReservation>> {
+// export async function readLocker(id: number) {
     try {
         const locker = await prisma.locker.findUnique({
             where: {
@@ -14,18 +15,18 @@ export async function readLocker(id: number): Promise<ActionReturn<LockerWithRes
             },
             include: {
                 LockerReservation: {
+                    where: {
+                        active: true
+                    },
                     select: {
                         user: {
                             select: {
                                 firstname: true,
                                 lastname: true
                             }
-                        }
-                    },
-                    orderBy: {
-                        createdAt: "desc"
-                    },
-                    take: 1
+                        },
+                        endDate: true
+                    }
                 }
             } 
         })
@@ -50,18 +51,18 @@ export async function readLockers(): Promise<ActionReturn<LockerWithReservation[
             },
             include: {
                 LockerReservation: {
+                    where: {
+                        active: true
+                    },
                     select: {
                         user: {
                             select: {
                                 firstname: true,
                                 lastname: true
                             }
-                        }
-                    },
-                    orderBy: {
-                        createdAt: "desc"
-                    },
-                    take: 1
+                        },
+                        endDate: true
+                    }
                 }
             } 
         })
@@ -87,18 +88,18 @@ export async function readLockerPage<const PageSize extends number>(
             take: pageSize,
             include: {
                 LockerReservation: {
+                    where: {
+                        active: true
+                    },
                     select: {
                         user: {
                             select: {
                                 firstname: true,
                                 lastname: true
                             }
-                        }
-                    },
-                    orderBy: {
-                        createdAt: "desc"
-                    },
-                    take: 1
+                        },
+                        endDate: true
+                    }
                 }
             } 
         })

@@ -3,8 +3,9 @@ import type { Locker } from '@prisma/client'
 export type LockerWithReservation = Locker & {
     LockerReservation: {
         user: {
-            firstname: string;
-            lastname: string;
-        };
-    }[];
+            firstname: string
+            lastname: string
+        },
+        endDate: Date | null
+    }[]
 }

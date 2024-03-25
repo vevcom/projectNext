@@ -135,10 +135,10 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name        String
-  shortName   String   @unique
-  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId Int      @unique
+  name              String
+  shortName         String              @unique
+  logoImage         CmsImage            @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId       Int                 @unique
   LockerReservation LockerReservation[]
 }
 
@@ -540,16 +540,17 @@ model LockerLocation {
 }
 
 model LockerReservation {
-  id         Int        @id @default(autoincrement())
-  locker     Locker     @relation(fields: [lockerId], references: [id])
-  user       User       @relation(fields: [userId], references: [id])
-  committee  Committee? @relation(fields: [committeeId], references: [id])
-  lockerId   Int
-  userId     Int
+  id          Int        @id @default(autoincrement())
+  locker      Locker     @relation(fields: [lockerId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+  committee   Committee? @relation(fields: [committeeId], references: [id])
+  lockerId    Int
+  userId      Int
   committeeId Int?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  endDate   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  endDate     DateTime?
+  active      Boolean    @default(true)
 
   @@unique([id])
 }
