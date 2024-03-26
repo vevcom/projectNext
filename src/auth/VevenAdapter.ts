@@ -98,7 +98,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         },
 
         async getUser(id) {
-            console.log("get id")
+            console.log('get id')
 
             const user = await readUserOrNull({ id: Number(id) })
 
@@ -106,7 +106,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         },
 
         async getUserByEmail(email) {
-            console.log("get email")
+            console.log('get email')
             console.log(email)
             const user = await readUserOrNull({ email })
             console.log(user)
@@ -115,7 +115,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         },
 
         async getUserByAccount({ providerAccountId, provider }) {
-            console.log("get account")
+            console.log('get account')
 
             if (provider !== 'feide') {
                 throw new Error('Unsupported provider')
@@ -127,7 +127,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         },
 
         async updateUser(user) {
-            console.log("update u")
+            console.log('update u')
 
             const updatedUser = await updateUser(Number(user.id), {
                 email: user.email,
@@ -140,7 +140,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         },
 
         async linkAccount(account) {
-            console.log("link acc")
+            console.log('link acc')
 
             if (!account.access_token || !account.expires_at || !account.id_token) {
                 throw new Error('Missing required fields in account')

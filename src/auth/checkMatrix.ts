@@ -1,7 +1,4 @@
-import type { Permission } from '@prisma/client'
-
 export type Matrix<T> = T[][]
-export type PermissionMatrix = Matrix<Permission>
 
 /**
  * Utility function for checking if an array of a given type fulfills the a requirement matrix.
@@ -12,6 +9,6 @@ export type PermissionMatrix = Matrix<Permission>
  * @param required - The requirements matrix.
  * @returns - true if the given array fulfills the required matrix, false otherwise.
  */
-export function checkPermissionMatrix<T>(given: T[], required: Matrix<T>): boolean {
+export default function checkMatrix<T>(given: T[], required: Matrix<T>): boolean {
     return required.every((row) => row.some((p) => given.includes(p)))
 }
