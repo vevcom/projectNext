@@ -41,7 +41,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             },
         }),
         NEW_EVENT: createChanneInfo({
-            name: "Nye hendelser",
+            name: "Ny hendelse",
             description: "Varslinger om nye hendelser",
             defaultMethods: {
                 email: true,
@@ -64,7 +64,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             },
         }),
         NEW_ARTICLE: createChanneInfo({
-            name: "Nye artikler",
+            name: "Ny artikkel",
             description: "Varslinger om nye artikler",
             availableMethods: {
                 email: true,

@@ -9,7 +9,6 @@ import { useState } from "react"
 import Form from "@/app/components/Form/Form"
 import { updateNotificationChannelAction } from "@/actions/notifications/update"
 import { NotificationMethods } from "@/server/notifications/ConfigVars"
-import { on } from "events"
 
 export default function ChannelSettings({
     currentChannel,
@@ -37,34 +36,21 @@ export default function ChannelSettings({
         throw new Error("Channel not found")
     }
 
-    function findInheretedAvailableMethods(channel: NotificationChannelWithMethods): Omit<NotificationMethod, 'id'> {
-        
-        if (channel.special === "ROOT") {
-            return methodsAllOn;
+    let selectOptions = allChannels.filter(c => c.id != currentChannelState.id)
+    // Remove chrildren of the current channel
+    let channelIDS = new Set(selectOptions.map(c => c.id))
+    while (true) {
+        const lengthBeforeReduction = channelIDS.size
+        for (let i = selectOptions.length - 1; i >= 0; i--) {
+            if (!channelIDS.has(selectOptions[i].parentId)) {
+                channelIDS.delete(selectOptions[i].id)
+                selectOptions.splice(i, 1)
+            }
         }
-
-        if (channel.parentId === null) {
-            console.error(channel)
-            throw new Error("channel has no parentid")
+        if (lengthBeforeReduction === channelIDS.size) {
+            break;
         }
-
-        const parent = allChannels.find(c => c.id === channel.parentId);
-        if (!parent) {
-            throw new Error("Parent not found")
-        }
-
-        const methods = findInheretedAvailableMethods(parent)
-
-        return Object.fromEntries(
-            Object
-                .entries(methods)
-                .map(([key, value]) => 
-                    [key, value && channel.availableMethods?.[key]]
-                )
-        ) as Omit<NotificationMethod, 'id'>;
     }
-
-    const selectOptions = allChannels.filter(c => c.id != currentChannelState.id).map(c => ({ value: c.id, label: c.name }))
 
     return <div className={styles.channelSettings}>
         {currentChannelState.special ? <p>Spesiell: {currentChannelState.special}</p> : null}
@@ -91,7 +77,12 @@ export default function ChannelSettings({
 
             <div className={styles.widerDiv}>
                 {currentChannelState.special != "ROOT" ?
-                    <Select label="Forelder" name="parentId" options={selectOptions} />
+                    <Select
+                        label="Forelder"
+                        name="parentId"
+                        options={selectOptions.map(c => ({ value: c.id, label: c.name }))}
+                        defaultValue={currentChannelState.parentId}
+                    />
                 :
                     <input type="hidden" name="parentId" value={currentChannelState.parentId} />
                 }

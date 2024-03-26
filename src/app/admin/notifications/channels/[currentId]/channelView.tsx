@@ -42,9 +42,6 @@ export default function ChannelView({
             allChannels={allChannelsState}
             onUpdate={(channel) => {
                 setAllChannelsState(allChannelsState.map(c => (c.id === channel.id) ? channel : c))
-                console.log(channel)
-                console.log(allChannelsState.map(c => (c.id === channel.id) ? channel : c))
-                console.log(allChannelsState)
             }}
         />
     </div>
