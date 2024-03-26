@@ -8,6 +8,7 @@ export type VisibilityRequiermentForAdmin = {
 }
 
 export type VisibilityStructuredForAdmin = {
+    published: boolean
     purpose: string
 } & (
     {

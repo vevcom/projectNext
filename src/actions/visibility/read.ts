@@ -31,6 +31,7 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
         return {
             success: true,
             data: {
+                published: visibility.published,
                 purpose,
                 type: 'SPECIAL',
                 message: 'Denne syneligheten er spessiell',
@@ -42,6 +43,7 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
     return {
         success: true,
         data: {
+            published: visibility.published,
             purpose,
             type: 'REGULAR',
             regular: expandOneLevel(visibility.regular, groups),
