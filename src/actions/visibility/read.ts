@@ -76,6 +76,7 @@ const standardGroupings = ['CLASS','OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] 
 function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : VisibilityRequiermentForAdmin[] {
     const res : VisibilityRequiermentForAdmin[] = []
     standardGroupings.forEach(groupType => {
+        if (!groups[groupType]) return
         const standardRequriment : VisibilityRequiermentForAdmin = {
             name: GroupTypesConfig[groupType].name,
             groups: groups[groupType].groups.map(group => ({
@@ -117,8 +118,8 @@ function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : Visibil
 }
 
 function findGroupOfId(id: number, groups: GroupsStructured) : ExpandedGroup | null {
-    Object.keys(groups).forEach(groupType => {
-        groups[groupType].groups.forEach(group => {
+    Object.values(groups).forEach(groupType => {
+        groupType.groups.forEach(group => {
             if (group.id === id) return group
         })
     })
@@ -126,8 +127,8 @@ function findGroupOfId(id: number, groups: GroupsStructured) : ExpandedGroup | n
 }
 
 function groupTypeOfId(id: number, groups: GroupsStructured) : GroupType {
-    Object.keys(groups).forEach(groupType => {
-        groups[groupType].groups.forEach(group => {
+    Object.values(groups).forEach((groupType) => {
+        groupType.groups.forEach(group => {
             if (group.id === id) return group.groupType
         })
     })

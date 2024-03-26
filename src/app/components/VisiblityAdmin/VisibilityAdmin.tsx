@@ -11,7 +11,8 @@ type PropTypes = {
 
 export default function VisibilityAdmin({ visibilityId }: PropTypes) {
     const action = useCallback(() => readVisibilityForAdminAction(visibilityId), [visibilityId])
-    const { error, data } = useActionCall(action)
+    const { data } = useActionCall(action)
+    console.log(data)
     if (!data) return null
     return (
         <div className={styles.VisibilityAdmin}>
@@ -19,7 +20,18 @@ export default function VisibilityAdmin({ visibilityId }: PropTypes) {
             <p>{data.purpose}</p>
             {
                 data.type === 'REGULAR' ? (
-                    <>{}</>
+                    <>{
+                        data.regular.map(requiement => 
+                            <div key={requiement.groups[0]?.id || requiement.name}>
+                                <p>{requiement.name}</p>
+                                {
+                                    requiement.groups.map(group => 
+                                        <p key={group.id}>{group.name}</p>
+                                    )
+                                }
+                            </div>
+                        )
+                    }</>
                 ) : (<>
                     <p>{data.message}</p>
                     <p>{data.regular}</p>

@@ -1,4 +1,4 @@
-import type { Group } from '@prisma/client'
+import type { Group, GroupType } from '@prisma/client'
 
 export type ExpandedGroup = Group & {
     firstOrder: number
@@ -7,7 +7,7 @@ export type ExpandedGroup = Group & {
 }
 
 export type GroupsStructured = {
-    [key: string]: {
+    [key in GroupType]: {
         name: string,
         description: string,
         groups: ExpandedGroup[]
