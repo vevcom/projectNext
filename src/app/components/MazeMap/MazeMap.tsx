@@ -26,17 +26,17 @@ export default function MazeMap({
     sharePoi = 83, // lophtet <3
 }: PropTypes) {
     return <div className={style.MazeMapWrapper} style={{ height }}>
-        <iframe 
+        <iframe
             src={
-                `https://use.mazemap.com/embed.html#v=1&` +
-                `campusid=${campusId}&`+
+                'https://use.mazemap.com/embed.html#v=1&' +
+                `campusid=${campusId}&` +
                 `zlevel=${zLevel}&` +
                 `center=${center.x},${center.y}&` +
                 `zoom=${zoom}&` +
-                `sharepoitype=poi&` +
+                'sharepoitype=poi&' +
                 `sharepoi=${sharePoi}&` +
-                `utm_medium=iframe`
-            
+                'utm_medium=iframe'
+
             }
             className={style.MazeMap}
         />

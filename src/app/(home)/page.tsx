@@ -1,15 +1,14 @@
 import Section from './Section'
 import styles from './page.module.scss'
 import InfoBubbles from './InfoBubbles'
+import MazeMap from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
 import { getUser } from '@/auth/getUser'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import MazeMap from '../components/MazeMap/MazeMap'
 
 export default async function Home() {
     const { user } = await getUser()
@@ -72,7 +71,7 @@ export default async function Home() {
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
-                <MazeMap height={"80vh"}/>
+                <MazeMap height={'80vh'}/>
                 <div className={styles.emptyPart} />
             </div>
         </div>
