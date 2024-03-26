@@ -1,0 +1,15 @@
+@use "@/styles/ohma";
+
+.MazeMapWrapper { 
+    display: flex;
+    justify-content: center;
+}
+
+.MazeMap {
+    width: 80%;
+    height: 100%;
+    border: none;
+    border-radius: ohma.$rounding;
+    background-color: white;
+    box-shadow: 10px 10px 15px ohma.$colors-gray-700;
+}
