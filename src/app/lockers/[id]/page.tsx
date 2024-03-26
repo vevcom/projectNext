@@ -1,4 +1,4 @@
-import { readLocker } from "@/actions/lockers/read"
+import { readLockerAction } from "@/actions/lockers/read"
 import LockerNotFound from "./LockerNotFound"
 
 type PropTypes = {
@@ -8,7 +8,7 @@ type PropTypes = {
 }
 
 export default async function Locker({ params }: PropTypes) {
-    const locker = await readLocker(parseInt(params.id))
+    const locker = await readLockerAction(parseInt(params.id))
     if (!locker.success) {
         return <LockerNotFound />
     }
