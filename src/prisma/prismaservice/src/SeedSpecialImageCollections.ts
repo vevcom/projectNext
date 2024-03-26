@@ -1,24 +1,22 @@
 import { SpecialCollection } from '@/generated/pn'
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient, SpecialVisibilityPurpose } from '@/generated/pn'
 
 export const specialCollectionsVisibility = {
     OMBULCOVERS: {
-        regularLevel: 'OMBUL_READ',
-        adminLevel: 'OMBUL_CREATE'
-    },
-    STANDARDIMAGES: {
-        regularLevel: null,
-        adminLevel: 'CMS_ADMIN'
-    },
-    COMMITTEELOGOS: {
-        regularLevel: 'COMMITTEE_READ',
-        adminLevel: 'COMMITTEE_CREATE'
+        specialVisibility: 'OMBUL'
     },
     PROFILEIMAGES: {
-        regularLevel: 'USER_READ',
-        adminLevel: 'USER_CREATE'
+        specialVisibility: 'USER'
+    },
+    STANDARDIMAGES: {
+        specialVisibility: 'PUBLIC'
+    },
+    COMMITTEELOGOS: {
+        specialVisibility: 'COMMITTEE'
     }
-} as const
+} satisfies {[T in SpecialCollection] : {
+    specialVisibility: SpecialVisibilityPurpose
+}}
 
 export default async function SeedSpecialImageCollections(prisma: PrismaClient) {
     const keys = Object.keys(SpecialCollection) as SpecialCollection[]
@@ -34,17 +32,9 @@ export default async function SeedSpecialImageCollections(prisma: PrismaClient) 
                 name: special,
                 special,
                 visibility: {
-                    create: {
-                        purpose: 'IMAGE',
-                        published: true,
-                        type: 'SPECIAL',
-                        regularLevel: { create: {
-                            permission: specialCollectionsVisibility[special].regularLevel
-                        } },
-                        adminLevel: { create: {
-                            permission: specialCollectionsVisibility[special].adminLevel
-                        } }
-                    } //TODO: Link to special visibility with permission.
+                    connect: {
+                        specialPurpose: specialCollectionsVisibility[special].specialVisibility
+                    }
                 }
             }
         })

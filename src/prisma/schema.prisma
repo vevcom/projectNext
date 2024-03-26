@@ -110,7 +110,7 @@ model Group {
   memberships       Membership[]
   roles             RolesGroups[]
   omegaOrder        OmegaOrder    @relation(fields: [order], references: [order])
-  order             Int           //The order the group is in currently.
+  order             Int //The order the group is in currently.
 
   class                      Class?
   committee                  Committee?
@@ -296,23 +296,27 @@ model RolesGroups {
 ////////////////
 // The visibility system is used to determine what groups can see what content.
 
-enum VisibilityType {
-  REGULAR //Regular visibilty evaluated to a group matrix
-  SPECIAL //Special visibility just links to a permission
-}
-
 enum VisibilityPurpose {
   IMAGE
   EVENT
-  CMS
+  ARTICLE_CATEGORY
+  NEWS_ARTICLE
+  SPECIAL
+}
+
+enum SpecialVisibilityPurpose {
+  OMBUL
+  COMMITTEE
+  USER
+  PUBLIC
 }
 
 model Visibility {
-  id              Int              @id @default(autoincrement())
+  id              Int                       @id @default(autoincrement())
   imageCollection ImageCollection?
-  type            VisibilityType   @default(REGULAR)
-  published       Boolean          @default(false)
+  published       Boolean                   @default(false)
   purpose         VisibilityPurpose
+  specialPurpose  SpecialVisibilityPurpose? @unique
 
   regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
   regularLevelId Int             @unique
