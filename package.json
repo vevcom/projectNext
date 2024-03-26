@@ -44,7 +44,6 @@
     "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
-    "@types/google-map-react": "^2.1.10",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
