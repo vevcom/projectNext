@@ -11,29 +11,7 @@ import type { ExpandedGroup, GroupsStructured } from '@/server/groups/Types'
 import type { GroupMatrix } from '@/server/visibility/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { GroupType } from '@prisma/client'
-
-type VisibilityRequiermentForAdmin = {
-    name: string
-    groups: (ExpandedGroup & {
-        selected: boolean
-    })[]
-}
-
-type VisibilityStructuredForAdmin = {
-    purpose: string
-} & (
-    {
-        type: 'REGULAR'
-        groups: GroupsStructured
-        regular: VisibilityRequiermentForAdmin[]
-        admin: VisibilityRequiermentForAdmin[]
-    } | {
-        type: 'SPECIAL'
-        message: string
-        regular: string
-        admin: string
-    }
-)
+import type { VisibilityRequiermentForAdmin, VisibilityStructuredForAdmin } from './Types'
 
 export async function readVisibilityForAdminAction(id: number): Promise<ActionReturn<VisibilityStructuredForAdmin>> {
     const [visibilityRes, groupsRes] = await Promise.all([

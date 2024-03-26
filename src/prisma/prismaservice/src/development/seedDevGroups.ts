@@ -110,4 +110,18 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             },
         }
     })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6].map(i => prisma.studyProgramme.create({
+        data: {
+            code: `COCO${i}`,
+            name: `Studieprogram ${i}`,
+            group: {
+                create: {
+                    groupType: 'STUDY_PROGRAMME',
+                    membershipRenewal: true,
+                    order: order.order,
+                },
+            },
+        }
+    })))
 }

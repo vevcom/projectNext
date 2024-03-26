@@ -3,6 +3,7 @@ import styles from './VisibilityAdmin.module.scss'
 import useActionCall from '@/hooks/useActionCall'
 import { readVisibilityForAdminAction } from '@/actions/visibility/read'
 import { useCallback } from 'react'
+import VisibilityLevelAdmin from './VisibilityLevelAdmin'
 
 type PropTypes = {
     visibilityId: number
@@ -17,22 +18,12 @@ export default function VisibilityAdmin({ visibilityId }: PropTypes) {
     return (
         <div className={styles.VisibilityAdmin}>
             <h2>Administrer synelighet</h2>
-            <p>{data.purpose}</p>
+            <p>Synelighet for: {data.purpose}</p>
             {
-                data.type === 'REGULAR' ? (
-                    <>{
-                        data.regular.map(requiement =>
-                            <div key={requiement.groups[0]?.id || requiement.name}>
-                                <p>{requiement.name}</p>
-                                {
-                                    requiement.groups.map(group =>
-                                        <p key={group.id}>{group.name}</p>
-                                    )
-                                }
-                            </div>
-                        )
-                    }</>
-                ) : (<>
+                data.type === 'REGULAR' ? (<>
+                    <VisibilityLevelAdmin level='REGULAR' levelName='Synelig' data={data.regular} />
+                    <VisibilityLevelAdmin level='ADMIN' levelName='Admin' data={data.admin} />
+                </>) : (<>
                     <p>{data.message}</p>
                     <p>{data.regular}</p>
                     <p>{data.admin}</p>
