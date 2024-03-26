@@ -2,6 +2,7 @@ import { getUser } from '@/auth/getUser'
 import styles from './page.module.scss'
 import { notFound } from 'next/navigation'
 import { readCurrentOmegaOrderAction } from '@/actions/omegaOrder/read'
+import CreateOrder from './CreateOrder'
 
 export default async function stateOfOmega() {
     const { authorized } = await getUser({
@@ -15,6 +16,7 @@ export default async function stateOfOmega() {
     return (
         <div className={styles.wrapper}>
             <h1>Omega er i orden: { currentOreder.data.order }</h1>
+            <CreateOrder />
         </div>
     )
 }
