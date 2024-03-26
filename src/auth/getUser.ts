@@ -1,3 +1,4 @@
+import 'server-only'
 import { authOptions } from './authoptions'
 import { checkPermissionMatrix } from './checkPermissionMatrix'
 import { readDefaultPermissions } from '@/server/permissionRoles/read'

@@ -1,8 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateUser } from '@/server/users/update'
-import { registerUser } from '@/server/auth/credentials'
+import { updateUser, registerUser } from '@/server/users/update'
 import { getUser } from '@/auth/getUser'
 import { updateUserValidation, registerUserValidation } from '@/server/users/validation'
 import type { ActionReturn } from '@/actions/Types'
@@ -21,11 +20,13 @@ export async function updateUserAction(
     return await safeServerCall(() => updateUser(id, data))
 }
 
-export async function updateUserCredentailsAction(
+export async function registerOwnUser(
     rawdata: FormData | RegisterUserTypes['Type']
 ): Promise<ActionReturn<null>> {
-    const { user, status } = await getUser() //TODO: Permission check
-    if (!user) return createActionError(status)
+    const { authorized, status, user } = await getUser({
+        userRequired: true,
+    }) //TODO: Permission check
+    if (!authorized) return createActionError(status)
     //TODO: Permission check
 
     const parse = registerUserValidation.typeValidate(rawdata)

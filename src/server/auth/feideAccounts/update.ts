@@ -2,28 +2,35 @@ import 'server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { readJWTPayload } from '@/auth/jwt'
-import type { TokenSetParameters } from 'openid-client'
+import { ServerError } from '@/server/error'
+import type { Account } from 'next-auth'
 
 export async function updateFeideAccount(
     accountId: string,
-    token: TokenSetParameters,
+    account: Account,
 ): Promise<boolean> {
-    const expiresAt = token.expires_at ? new Date(token.expires_at * 1000) : new Date()
-
-    if (!token.expires_at || !token.access_token || !token.id_token) {
-        throw new Error('Missing required fields in token')
+    if (account.provider !== 'feide') {
+        throw new ServerError('UNKNOWN ERROR', 'Tried to update feide account with data for a non feide account.')
     }
 
-    const tokenData = readJWTPayload(token.id_token)
+    if (!account.expires_at || !account.access_token || !account.id_token) {
+        throw new Error('Missing required fields in account')
+    }
+
+    const tokenData = readJWTPayload(account.id_token)
+
+    const accessToken = account.access_token
+    const expiresAt = new Date(account.expires_at * 1000)
+    const issuedAt = new Date(tokenData.iat * 1000)
 
     await prismaCall(() => prisma.feideAccount.update({
         where: {
             id: accountId
         },
         data: {
-            accessToken: token.access_token,
+            accessToken,
             expiresAt,
-            issuedAt: new Date(tokenData.iat * 1000),
+            issuedAt,
         }
     }))
 

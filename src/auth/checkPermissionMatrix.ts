@@ -1,14 +1,17 @@
 import type { Permission } from '@prisma/client'
 
-export type PermissionMatrix = Permission[][]
+export type Matrix<T> = T[][]
+export type PermissionMatrix = Matrix<Permission>
 
 /**
- * @param user - The user object to check permissions for.
- * @param permission - permission(s) to chaeck for.
- * The user must have at least one permission for each array in the matrix.
- * [[A, B], [C, D]] means the user must have (either A or B) and (either C or D).
- * @returns - true if the user has the permission(s), false otherwise.
+ * Utility function for checking if an array of a given type fulfills the a requirement matrix.
+ * The given array must have at least one item for each array (row) in the matrix.
+ * [[A, B], [C, D]] means the given array must have (either A or B) and (either C or D).
+ *
+ * @param given - An array of a given type.
+ * @param required - The requirements matrix.
+ * @returns - true if the given array fulfills the required matrix, false otherwise.
  */
-export function checkPermissionMatrix(userPermissions: Permission[], permissionMatrix: PermissionMatrix): boolean {
-    return permissionMatrix.every((row) => row.some((p) => userPermissions.includes(p)))
+export function checkPermissionMatrix<T>(given: T[], required: Matrix<T>): boolean {
+    return required.every((row) => row.some((p) => given.includes(p)))
 }
