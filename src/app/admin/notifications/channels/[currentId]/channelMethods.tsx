@@ -38,7 +38,7 @@ export default function ChannelMethods({
                 key={uuid()}
                 label={key}
                 name={`${formPrefix}_${key}`}
-                checked={value}
+                checked={canEdit && value}
                 disabled={!canEdit}
                 onChange={handleChange.bind(key)}
             />

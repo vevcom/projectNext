@@ -9,30 +9,38 @@ import { useState } from "react"
 import Form from "@/app/components/Form/Form"
 import { updateNotificationChannelAction } from "@/actions/notifications/update"
 import { NotificationMethods } from "@/server/notifications/ConfigVars"
+import { on } from "events"
 
 export default function ChannelSettings({
-    channel,
+    currentChannel,
     allChannels,
+    onUpdate,
 }: {
-    channel: NotificationChannelWithMethods,
+    currentChannel: Number,
     allChannels: NotificationChannelWithMethods[],
+    onUpdate?: (channel: NotificationChannelWithMethods) => void
 }) {
-    const methodsAllOf = Object.fromEntries(
+    const methodsAllOff = Object.fromEntries(
         NotificationMethods.map((method) => [method, false])
     ) as Omit<NotificationMethod, "id">;
 
-    const defaultMethods = channel.defaultMethods ?? methodsAllOf;
+    const methodsAllOn = Object.fromEntries(
+        NotificationMethods.map((method) => [method, true])
+    ) as Omit<NotificationMethod, "id">;
+    
+    const [ currentChannelState, setCurrentChannel ] = useState({
+        ...allChannels.find(c => c.id === currentChannel),
+        defaultMethods: allChannels.find(c => c.id === currentChannel)?.defaultMethods ?? methodsAllOff
+    })
 
-    const [ availableMethodsSate, setAvailableMethodsState ] = useState(channel.availableMethods)
-    const [ defaultMethodsState, setDefaultMethodsState ] = useState(defaultMethods)
+    if (!currentChannelState) {
+        throw new Error("Channel not found")
+    }
 
     function findInheretedAvailableMethods(channel: NotificationChannelWithMethods): Omit<NotificationMethod, 'id'> {
         
         if (channel.special === "ROOT") {
-            if (!channel.availableMethods) {
-                throw new Error("Root channel has no available methods")
-            }
-            return channel.availableMethods;
+            return methodsAllOn;
         }
 
         if (channel.parentId === null) {
@@ -56,27 +64,36 @@ export default function ChannelSettings({
         ) as Omit<NotificationMethod, 'id'>;
     }
 
-    const availableMethodsInherited = findInheretedAvailableMethods(channel);
-    const selectOptions = allChannels.map(c => ({ value: c.id, label: c.name }))
+    const selectOptions = allChannels.filter(c => c.id != currentChannelState.id).map(c => ({ value: c.id, label: c.name }))
 
     return <div className={styles.channelSettings}>
-        {channel.special ? <p>Spesiell: {channel.special}</p> : null}
+        {currentChannelState.special ? <p>Spesiell: {currentChannelState.special}</p> : null}
         <Form
             action={updateNotificationChannelAction}
             submitText="Lagre"
+            successCallback={(data) => {
+                if (onUpdate && data) {
+                    onUpdate(data)
+                }
+            }}
         >
-            <input type="hidden" name="id" value={channel.id} />
+            <input type="hidden" name="id" value={currentChannelState.id} />
             
-            <TextInput label="Navn" name="name" defaultValue={channel.name} />
+            <TextInput label="Navn" name="name" defaultValue={currentChannelState.name} />
             <div className={styles.widerDiv}>
-                <TextInput label="Beskrivelse" name="description" defaultValue={channel.description ?? ""} className={styles.descriptionInput} />
+                <TextInput
+                    label="Beskrivelse"
+                    name="description"
+                    defaultValue={currentChannelState.description ?? ""}
+                    className={styles.descriptionInput}
+                />
             </div>
 
             <div className={styles.widerDiv}>
-                {channel.special != "ROOT" ?
+                {currentChannelState.special != "ROOT" ?
                     <Select label="Forelder" name="parentId" options={selectOptions} />
                 :
-                    <input type="hidden" name="parentId" value={channel.parentId} />
+                    <input type="hidden" name="parentId" value={currentChannelState.parentId} />
                 }
             </div>
 
@@ -85,15 +102,25 @@ export default function ChannelSettings({
                 <ChannelMethods
                     formPrefix="availableMethods"
                     title="Tilgjengelige metoder"
-                    methods={availableMethodsSate}
-                    editable={availableMethodsInherited}
-                    onChange={setAvailableMethodsState}
-                />
+                    methods={currentChannelState.availableMethods ?? methodsAllOff}
+                    onChange={(data) => {
+                        setCurrentChannel({
+                            ...currentChannelState,
+                            availableMethods: data,
+                        })
+                    }}
+                    />
                 <ChannelMethods
                     formPrefix="defaultMethods"
                     title="Standard metoder"
-                    methods={defaultMethodsState}
-                    onChange={setDefaultMethodsState}
+                    methods={currentChannelState.defaultMethods ?? methodsAllOff}
+                    editable={currentChannelState.availableMethods ?? methodsAllOn}
+                    onChange={(data) => {
+                        setCurrentChannel({
+                            ...currentChannelState,
+                            defaultMethods: data,
+                        })
+                    }}
                 />
 
             </div>
