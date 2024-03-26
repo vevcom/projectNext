@@ -1,8 +1,18 @@
 @use "@/styles/ohma";
 
+.YouTubeWrapper {
+    display: flex;
+    justify-content: center;
+}
+
 .YouTube {
     display: block;
-    width: 100%;
+    width: 80%;
+    max-height: 80vh;
+    max-width: calc(80vh*16/9);
     aspect-ratio: 16/9;
     border: none;
+    border-radius: ohma.$rounding;
+    background-color: white;
+    box-shadow: 10px 10px 15px ohma.$colors-gray-700;
 }

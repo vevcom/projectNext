@@ -54,6 +54,7 @@ export default async function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
+                <div className={styles.emptyPart} />
                 <Section
                     specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
