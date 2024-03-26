@@ -1,6 +1,6 @@
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import type { ExpandedManualGroup } from './Types'
 
 type CreateManualGroupArgs = {
@@ -10,7 +10,7 @@ type CreateManualGroupArgs = {
 }
 
 export async function createManualGroup(data: CreateManualGroupArgs): Promise<ExpandedManualGroup> {
-    const order = (await readCurrenOmegaOrder()).order
+    const order = (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.manualGroup.create({
         data: {

@@ -1,7 +1,7 @@
 import 'server-only'
 import { canEasalyManageMembershipOfGroup } from './canEasalyManageMembership'
 import { prismaCall } from '@/server/prismaCall'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
@@ -14,7 +14,7 @@ export async function destoryMembershipOfUser(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.membership.delete({
         where: {
@@ -35,7 +35,7 @@ export async function destroyMembershipOfUsers(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrentOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.deleteMany({
         where: {

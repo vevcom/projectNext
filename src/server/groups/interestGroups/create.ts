@@ -1,6 +1,6 @@
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import type { ExpandedInterestGroup } from './Types'
 
 type CreateInterestGroupArgs = {
@@ -9,7 +9,7 @@ type CreateInterestGroupArgs = {
 }
 
 export async function createInterestGroup({ name, shortName }: CreateInterestGroupArgs): Promise<ExpandedInterestGroup> {
-    const order = (await readCurrenOmegaOrder()).order
+    const order = (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.interestGroup.create({
         data: {

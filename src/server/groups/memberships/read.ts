@@ -2,7 +2,7 @@ import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import type { ExpandedMembership, BasicMembership } from './Types'
 
@@ -45,7 +45,7 @@ export async function readMembershipsOfUser(
     order?: number
 ): Promise<BasicMembership[]> {
     if (order === undefined) {
-        order = (await readCurrenOmegaOrder()).order
+        order = (await readCurrentOmegaOrder()).order
     }
 
     return await prismaCall(() => prisma.membership.findMany({

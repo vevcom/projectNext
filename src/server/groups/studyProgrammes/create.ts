@@ -1,6 +1,6 @@
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import type { ExpandedStudyProgramme } from './Types'
 
 type CreateStudyProgrammeArgs = {
@@ -12,7 +12,7 @@ type CreateStudyProgrammeArgs = {
 }
 
 export async function createStudyProgramme(data: CreateStudyProgrammeArgs): Promise<ExpandedStudyProgramme> {
-    const order = (await readCurrenOmegaOrder()).order
+    const order = (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.studyProgramme.create({
         data: {
@@ -46,7 +46,7 @@ export async function upsertStudyProgrammes(programmes: CreateStudyProgrammeArgs
         return existingStudyProgrammes
     }
 
-    const order = (await readCurrenOmegaOrder()).order
+    const order = (await readCurrentOmegaOrder()).order
 
     const createdStudyProgrammes = await prismaCall(() => (
         prisma.$transaction(

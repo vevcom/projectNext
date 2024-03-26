@@ -210,6 +210,10 @@ enum Permission {
   // Since groups can only be created with a specific type, there is no need to
   // have permissions to create or update a generic group.
 
+  // omega order
+  OMEGA_ORDER_READ
+  OMEGA_ORDER_CREATE
+
   // Groups - Classes
   CLASS_CREATE
   CLASS_READ

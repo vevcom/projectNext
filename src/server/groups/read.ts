@@ -1,5 +1,5 @@
 import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
@@ -19,7 +19,7 @@ export async function readGroup(id: number): Promise<Group> {
 }
 
 export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
-    const membershipFilter = getActiveMembershipFilter((await readCurrenOmegaOrder()).order)
+    const membershipFilter = getActiveMembershipFilter((await readCurrentOmegaOrder()).order)
 
     const groups = await prismaCall(() => prisma.group.findMany({
         include: {

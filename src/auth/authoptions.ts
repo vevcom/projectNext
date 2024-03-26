@@ -5,7 +5,7 @@ import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { updateFeideAccount } from '@/server/auth/feide/update'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { JWT } from 'next-auth/jwt'
@@ -157,7 +157,7 @@ export const authOptions: AuthOptions = {
                 },
             })
 
-            const { order } = await readCurrenOmegaOrder()
+            const { order } = await readCurrentOmegaOrder()
             const userPermissions = await readPermissionsOfUser(userId)
             const userMemberships = await readMembershipsOfUser(userId, order)
 

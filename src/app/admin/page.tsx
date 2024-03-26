@@ -24,7 +24,7 @@ export default function Admin() {
 
             <h3><FontAwesomeIcon icon={faUserGroup} />Grupper</h3>
             <Link href="admin/groups">Grupper</Link>
-            <Link href="admin/classes"></Link>
+            <Link href="admin/classes">Klasser</Link>
 
             <h3><FontAwesomeIcon icon={faKey} />Tillgangsstyring</h3>
             <Link href="admin/permission-roles">Tillgangsroller</Link>

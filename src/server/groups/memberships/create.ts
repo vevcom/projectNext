@@ -1,6 +1,6 @@
 import 'server-only'
 import { canEasalyManageMembershipOfGroup, canEasalyManageMembershipOfGroups } from './canEasalyManageMembership'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
@@ -15,7 +15,7 @@ export async function createMembershipForUser(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.membership.create({
         data: {
@@ -47,7 +47,7 @@ export async function createMembershipsForGroup(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrentOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ userId, admin }) => ({
@@ -68,7 +68,7 @@ export async function createMembershipsForUser(
     if (!await canEasalyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrenOmegaOrder()).order
+    const order = orderArg ?? (await readCurrentOmegaOrder()).order
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ groupId, admin }) => ({
