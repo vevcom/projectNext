@@ -1,9 +1,9 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { VisibilityCollapsed } from './Types'
+import type { VisibilityCollapsed, VisibilityCollapsedWithouPurpose } from './Types'
 
-export async function updateVisibility(id: number, data: VisibilityCollapsed): Promise<void> {
+export async function updateVisibility(id: number, data: VisibilityCollapsedWithouPurpose): Promise<void> {
     //TODO chack that the admin is a subset of the regular
 
     await prismaCall(() => prisma.$transaction([

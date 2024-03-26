@@ -36,12 +36,14 @@ export async function readVisibilityCollapsed(id: number): Promise<VisibilityCol
             type: 'SPECIAL',
             published: visibility.published,
             regular: visibility.regularLevel.permission,
-            admin: visibility.adminLevel.permission
+            admin: visibility.adminLevel.permission,
+            purpose: visibility.purpose
         }
     }
     return {
         type: 'REGULAR',
         published: visibility.published,
+        purpose: visibility.purpose,
         regular: collapseVisibilityLevel(visibility.regularLevel),
         admin: collapseVisibilityLevel(visibility.adminLevel)
     }

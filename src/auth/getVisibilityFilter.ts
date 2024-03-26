@@ -1,7 +1,18 @@
 import 'server-only'
 import type { BasicMembership } from '@/server/groups/memberships/Types'
-import type { BypassPermissions } from '@/server/visibility/ConfigVars'
-import type { Permission, Prisma } from '@prisma/client'
+import type { Permission, Prisma, VisibilityPurpose } from '@prisma/client'
+import { BypassPermissions } from '@/server/visibility/ConfigVars'
+
+function userMayBypassVisibilityBasedOnPermission(
+    permissions: Permission[],
+    purpose: VisibilityPurpose,
+) {
+    return permissions.includes(BypassPermissions[purpose])
+}
+
+function isVisibilityPurpose(purpose: string): purpose is VisibilityPurpose {
+    return Object.keys(BypassPermissions).includes(purpose)
+}
 
 /**
  * Creates a where-filter that can be used in db queries to only return
@@ -15,14 +26,30 @@ import type { Permission, Prisma } from '@prisma/client'
 export function getVisibilityFilter(
     groups: BasicMembership[] | undefined,
     permissions: Permission[],
-    bypassPermission?: BypassPermissions
 ) {
-    if (bypassPermission && permissions.includes(bypassPermission)) return {}
-
     const groupIds = groups ? groups.map(group => group.groupId) : []
+
+    const bypassers = Object.keys(BypassPermissions).reduce((acc, purpose) => {
+        if (!isVisibilityPurpose(purpose)) return acc
+        if (!userMayBypassVisibilityBasedOnPermission(permissions, purpose)) return acc
+        acc.push({
+            visibility: {
+                published: true,
+                purpose: purpose,
+            }
+        })
+        return acc
+    }, [] as {
+        visibility: {
+            published: true,
+            purpose: VisibilityPurpose
+        }
+    }[]
+    )
 
     return {
         OR: [
+            ...bypassers,
             {
                 visibility: {
                     published: true,
