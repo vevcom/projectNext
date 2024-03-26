@@ -14,15 +14,15 @@ import { UserSelectionContext } from '@/context/UserSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
+type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
+
+type DisableGroupFilters = { [K in GroupSelectionType]?: boolean }
+
 type PropTypes = {
     className?: string
-    disableFilters?: {
+    disableFilters?: DisableGroupFilters & {
         name?: boolean,
-        commitees?: boolean
-        membershipGroups?: boolean
-        classes?: boolean
-        studyProgrammes?: boolean
-    }
+    } 
 }
 
 function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
@@ -59,14 +59,12 @@ function getOrdereOptions(group: ExpandedGroup) {
     ]
 }
 
-type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
-
 export default function UserList({ className, disableFilters = {
     name: false,
-    commitees: false,
-    membershipGroups: false,
-    classes: false,
-    studyProgrammes: false
+    COMMITTEE: false,
+    CLASS: false,
+    STUDY_PROGRAMME: false,
+    OMEGA_MEMBERSHIP_GROUP: false
 } }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const userSelection = useContext(UserSelectionContext)
@@ -153,7 +151,7 @@ export default function UserList({ className, disableFilters = {
                     )
                 }
                 {
-                    !disableFilters.commitees && (
+                    !disableFilters.COMMITTEE && (
                         <div className={styles.group}>
                             <Select
                                 name="komite"
@@ -171,7 +169,7 @@ export default function UserList({ className, disableFilters = {
                     )
                 }
                 {
-                    !disableFilters.classes && (
+                    !disableFilters.CLASS && (
                         <div className={styles.group}>
                             <Select
                                 name="klasse"
@@ -189,7 +187,7 @@ export default function UserList({ className, disableFilters = {
                     )
                 }
                 {
-                    !disableFilters.studyProgrammes && (
+                    !disableFilters.STUDY_PROGRAMME && (
                         <div className={styles.group}>
                             <Select
                                 name="studie"
@@ -207,7 +205,7 @@ export default function UserList({ className, disableFilters = {
                     )
                 }
                 {
-                    !disableFilters.membershipGroups && (
+                    !disableFilters.OMEGA_MEMBERSHIP_GROUP && (
                         <div className={styles.group}>
                             <Select
                                 name="medlemskap"
