@@ -16,7 +16,6 @@ type MembershipAndPermission = {
  * getUser and useUser will return an empty array. Used if type of visibility is SPECIAL
  * @param visibility - the visibility to require
  * @param level - the level of visibility to require
- * @param bypassPermission - the permission that bypasses the visibility system
  * @returns - true if the user meets the visibility requirements, false otherwise
  */
 export function checkVisibility({

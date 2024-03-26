@@ -28,7 +28,7 @@ export async function readImageCollectionAction(
         data => data.visibilityId
     ))
     if (!collection.success) return collection
-    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR', 'IMAGE_ADMIN')) {
+    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR')) {
         return createActionError('UNAUTHORIZED', 'You do not have permission to view this collection')
     }
 
@@ -44,7 +44,7 @@ export async function readImageCollectionsPageAction<const PageSize extends numb
     readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     const { memberships, permissions } = await getUser()
-    const visibilityFilter = getVisibilityFilter(memberships, permissions || [], 'IMAGE_ADMIN')
+    const visibilityFilter = getVisibilityFilter(memberships, permissions)
     return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
 }
 

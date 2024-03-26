@@ -65,5 +65,26 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             },
         },
     })
+
+    const vever = await prisma.user.upsert({
+        where: {
+            email: 'vever@vevcom.com'
+        },
+        update: {
+
+        },
+        create: {
+            firstname: 'Vever',
+            lastname: 'Vevsen',
+            email: 'vever@vevcom.com',
+            username: 'Vever104',
+            credentials: {
+                create: {
+                    passwordHash: 'password',
+                },
+            },
+        },
+    })
     console.log(harambe)
+    console.log(vever)
 }

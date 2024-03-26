@@ -1,16 +1,15 @@
 'use client'
 import styles from './VisibilityAdmin.module.scss'
 import useActionCall from '@/hooks/useActionCall'
-import { readGroupsAction } from '@/actions/groups/read'
-import type { VisibilityCollapsed } from '@/server/visibility/Types'
+import { readVisibilityForAdminAction } from '@/actions/visibility/read'
 
 type PropTypes = {
-    visibility: VisibilityCollapsed
+    visibilityId: number
 }
 
 
-export default function VisibilityAdmin({ visibility }: PropTypes) {
-    const { error, data } = useActionCall(readGroupsAction)
+export default function VisibilityAdmin({ visibilityId }: PropTypes) {
+    const { error, data } = useActionCall(readVisibilityForAdminAction)
 
     return (
         <div className={styles.VisibilityAdmin}>
