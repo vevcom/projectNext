@@ -2,6 +2,7 @@
 import styles from './VisibilityAdmin.module.scss'
 import useActionCall from '@/hooks/useActionCall'
 import { readVisibilityForAdminAction } from '@/actions/visibility/read'
+import { useCallback, useEffect } from 'react'
 
 type PropTypes = {
     visibilityId: number
@@ -9,7 +10,8 @@ type PropTypes = {
 
 
 export default function VisibilityAdmin({ visibilityId }: PropTypes) {
-    const { error, data } = useActionCall(readVisibilityForAdminAction.bind(null, visibilityId))
+    const action = useCallback(() => readVisibilityForAdminAction(visibilityId), [visibilityId])
+    const { error, data } = useActionCall(action)
 
     return (
         <div className={styles.VisibilityAdmin}>

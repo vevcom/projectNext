@@ -37,7 +37,6 @@ export async function readVisibilityForAdminAction(id: number) : Promise<ActionR
         safeServerCall(() => readGroupsStructured())
     ])
     if (!visibilityRes.success || !groupsRes.success) return createActionError('UNKNOWN ERROR', 'noe gikk galt')
-    
         
     const visibility = visibilityRes.data
     const groups = groupsRes.data
@@ -73,8 +72,6 @@ const standardGroupings = ['CLASS','OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] 
 function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : VisibilityRequiermentForAdmin[] {
     const res : VisibilityRequiermentForAdmin[] = []
     standardGroupings.forEach(groupType => {
-        console.log(groupType)
-        console.log(groups)
     })
 
     return res
