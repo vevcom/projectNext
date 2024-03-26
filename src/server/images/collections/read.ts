@@ -5,7 +5,7 @@ import prisma from '@/prisma'
 import logger from '@/logger'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import { createVisibility } from '@/server/visibility/create'
+import { readSpecialVisibility } from '@/server/visibility/read'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
@@ -13,7 +13,6 @@ import type {
 } from '@/server/images/collections/Types'
 import type { ReadPageInput } from '@/actions/Types'
 import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
-import { readSpecialVisibility } from '@/server/visibility/read'
 
 
 /**

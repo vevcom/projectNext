@@ -18,8 +18,8 @@ import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
-import { VisibilityCollapsed } from '@/server/visibility/Types'
 
 type PropTypes = {
     collection: ExpandedImageCollection

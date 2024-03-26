@@ -2,7 +2,7 @@
 import styles from './VisibilityAdmin.module.scss'
 import useActionCall from '@/hooks/useActionCall'
 import { readVisibilityForAdminAction } from '@/actions/visibility/read'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 
 type PropTypes = {
     visibilityId: number
@@ -21,11 +21,11 @@ export default function VisibilityAdmin({ visibilityId }: PropTypes) {
             {
                 data.type === 'REGULAR' ? (
                     <>{
-                        data.regular.map(requiement => 
+                        data.regular.map(requiement =>
                             <div key={requiement.groups[0]?.id || requiement.name}>
                                 <p>{requiement.name}</p>
                                 {
-                                    requiement.groups.map(group => 
+                                    requiement.groups.map(group =>
                                         <p key={group.id}>{group.name}</p>
                                     )
                                 }

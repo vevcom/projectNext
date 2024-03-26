@@ -1,11 +1,11 @@
 import 'server-only'
 import { canEasalyManageMembershipOfGroup, canEasalyManageMembershipOfGroups } from './canEasalyManageMembership'
+import { readCurrentGroupOrder, readCurrentGroupOrders } from '@/server/groups/read'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
-import { readCurrentGroupOrder, readCurrentGroupOrders } from '../read'
 
 export async function createMembershipForUser(
     groupId: number,
@@ -70,7 +70,7 @@ export async function createMembershipsForUser(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const ordersMap = await readCurrentGroupOrders(data.map(group => group.groupId))
-    const { order: fallbackOrder } = await readCurrentOmegaOrder()
+    const { order: fallbackOrder } = await readCurrentOmegaOrder()
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ groupId, admin }) => ({

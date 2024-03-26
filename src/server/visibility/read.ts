@@ -1,10 +1,10 @@
 import 'server-only'
+import { SpecialVisibilityConfig } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
+import type { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
 import type { VisibilityCollapsed } from './Types'
-import { SpecialVisibilityConfig } from './ConfigVars'
 
 const levelSelector = {
     select: {

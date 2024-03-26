@@ -1,7 +1,7 @@
 import 'server-only'
+import { BypassPermissions } from '@/server/visibility/ConfigVars'
 import type { BasicMembership } from '@/server/groups/memberships/Types'
 import type { Permission, Prisma, VisibilityPurpose } from '@prisma/client'
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
 
 function userMayBypassVisibilityBasedOnPermission(
     permissions: Permission[],
@@ -37,7 +37,7 @@ export function getVisibilityFilter(
         acc.push({
             visibility: {
                 published: true,
-                purpose: purpose,
+                purpose,
             }
         })
         return acc

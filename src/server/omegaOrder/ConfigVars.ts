@@ -1,7 +1,7 @@
 import type { GroupType } from '@prisma/client'
 
 /**
- * This object defines which group types can automatically increase its order 
+ * This object defines which group types can automatically increase its order
  * when a new omegaOrder is created.
  */
 export const AutomaticallyIncreaseOrder = {

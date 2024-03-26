@@ -11,7 +11,7 @@ export default function CreateOrder() {
         <Form
             action={createOmegaOrderAction}
             successCallback={refresh}
-            submitText='Inkrementer omega'
+            submitText="Inkrementer omega"
             confirmation={{
                 confirm: true,
                 text: 'Dette er en alvorlig operasjon å gjøre, er du sikker på at du vil fortsette?'

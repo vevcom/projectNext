@@ -11,7 +11,7 @@ import type { VisibilityLevelMatrices } from './Types'
  * @returns
  */
 export async function createVisibility(
-    purpose: VisibilityPurpose, 
+    purpose: VisibilityPurpose,
     data?: VisibilityLevelMatrices
 ): Promise<Visibility> {
     const visibility = await prismaCall(() => prisma.visibility.create({

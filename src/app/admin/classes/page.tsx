@@ -1,6 +1,6 @@
 
 export default function classes() {
-  return (
-    <div>Klasser</div>
-  )
+    return (
+        <div>Klasser</div>
+    )
 }

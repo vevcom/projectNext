@@ -1,11 +1,11 @@
 'use client'
-import UserList from "@/app/components/User/UserList/UserList"
 import styles from './AddUsersToGroup.module.scss'
-import Form from "@/app/components/Form/Form"
-import { createMembershipsForGroupAction } from "@/actions/groups/memberships/create"
-import { use, useContext } from "react"
-import { UserSelectionContext } from "@/context/UserSelection"
-import { useRouter } from "next/navigation"
+import UserList from '@/app/components/User/UserList/UserList'
+import Form from '@/app/components/Form/Form'
+import { createMembershipsForGroupAction } from '@/actions/groups/memberships/create'
+import { UserSelectionContext } from '@/context/UserSelection'
+import { useContext } from 'react'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     groupId: number
@@ -20,7 +20,7 @@ export default function AddUsersToGroup({ groupId }: PropTypes) {
         <div className={styles.AddUsersToGroup}>
             {
                 users.length ? (
-                    <Form 
+                    <Form
                         submitText="Legg til brukere"
                         className={styles.submitForm}
                         action={createMembershipsForGroupAction.bind(null, {
@@ -34,7 +34,7 @@ export default function AddUsersToGroup({ groupId }: PropTypes) {
                     />
                 ) : null
             }
-            
+
             <UserList className={styles.addUsersList} />
         </div>
     )

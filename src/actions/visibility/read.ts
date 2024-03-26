@@ -1,16 +1,16 @@
 'use server'
-import { readVisibilityCollapsed } from "@/server/visibility/read"
-import { safeServerCall } from "../safeServerCall"
-import { readGroupsStructured } from "@/server/groups/read"
-import { ActionReturn } from "../Types"
-import { createActionError } from "../error"
-import { GroupType } from "@prisma/client"
-import { checkVisibility } from "@/auth/checkVisibility"
-import { getUser } from "@/auth/getUser"
-import { ExpandedGroup, GroupsStructured } from "@/server/groups/Types"
-import { PurposeTextsConfig } from "@/server/visibility/ConfigVars"
-import { GroupMatrix } from "@/server/visibility/Types"
-import { GroupTypesConfig } from "@/server/groups/ConfigVars"
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError } from '@/actions/error'
+import { readGroupsStructured } from '@/server/groups/read'
+import { readVisibilityCollapsed } from '@/server/visibility/read'
+import { checkVisibility } from '@/auth/checkVisibility'
+import { getUser } from '@/auth/getUser'
+import { PurposeTextsConfig } from '@/server/visibility/ConfigVars'
+import { GroupTypesConfig } from '@/server/groups/ConfigVars'
+import type { ExpandedGroup, GroupsStructured } from '@/server/groups/Types'
+import type { GroupMatrix } from '@/server/visibility/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { GroupType } from '@prisma/client'
 
 type VisibilityRequiermentForAdmin = {
     name: string
@@ -35,13 +35,13 @@ type VisibilityStructuredForAdmin = {
     }
 )
 
-export async function readVisibilityForAdminAction(id: number) : Promise<ActionReturn<VisibilityStructuredForAdmin>> {
-    const [visibilityRes, groupsRes]  = await Promise.all([
+export async function readVisibilityForAdminAction(id: number): Promise<ActionReturn<VisibilityStructuredForAdmin>> {
+    const [visibilityRes, groupsRes] = await Promise.all([
         safeServerCall(() => readVisibilityCollapsed(id)),
         safeServerCall(() => readGroupsStructured())
     ])
     if (!visibilityRes.success || !groupsRes.success) return createActionError('UNKNOWN ERROR', 'noe gikk galt')
-        
+
     const visibility = visibilityRes.data
     const groups = groupsRes.data
     const purpose = PurposeTextsConfig[visibility.purpose]
@@ -49,14 +49,16 @@ export async function readVisibilityForAdminAction(id: number) : Promise<ActionR
     if (!checkVisibility(await getUser(), visibility, 'ADMIN')) {
         return createActionError('UNAUTHORIZED', 'You do not have permission to admin this collection')
     }
-    if (visibility.type === 'SPECIAL') return {
-        success: true,
-        data: {
-            purpose,
-            type: 'SPECIAL',
-            message: `Denne syneligheten er spessiell`,
-            regular: `Brukere med ${visibility.regular} har vanlig tilgang`,
-            admin: `Brukere med ${visibility.admin} har admin tilgang`,
+    if (visibility.type === 'SPECIAL') {
+        return {
+            success: true,
+            data: {
+                purpose,
+                type: 'SPECIAL',
+                message: 'Denne syneligheten er spessiell',
+                regular: `Brukere med ${visibility.regular} har vanlig tilgang`,
+                admin: `Brukere med ${visibility.admin} har admin tilgang`,
+            }
         }
     }
     return {
@@ -71,13 +73,13 @@ export async function readVisibilityForAdminAction(id: number) : Promise<ActionR
     }
 }
 
-const standardGroupings = ['CLASS','OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] satisfies GroupType[]
+const standardGroupings = ['CLASS', 'OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] satisfies GroupType[]
 
-function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : VisibilityRequiermentForAdmin[] {
-    const res : VisibilityRequiermentForAdmin[] = []
+function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured): VisibilityRequiermentForAdmin[] {
+    const res: VisibilityRequiermentForAdmin[] = []
     standardGroupings.forEach(groupType => {
         if (!groups[groupType]) return
-        const standardRequriment : VisibilityRequiermentForAdmin = {
+        const standardRequriment: VisibilityRequiermentForAdmin = {
             name: GroupTypesConfig[groupType].name,
             groups: groups[groupType].groups.map(group => ({
                 ...group,
@@ -104,7 +106,7 @@ function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : Visibil
             if (g) acc.push(g)
             return acc
         }, [] as ExpandedGroup[])
-        const nonStandardRequriment : VisibilityRequiermentForAdmin = {
+        const nonStandardRequriment: VisibilityRequiermentForAdmin = {
             name: 'ekstra',
             groups: groups_.map(g => ({
                 ...g,
@@ -117,20 +119,26 @@ function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured) : Visibil
     return res
 }
 
-function findGroupOfId(id: number, groups: GroupsStructured) : ExpandedGroup | null {
+function findGroupOfId(id: number, groups: GroupsStructured): ExpandedGroup | null {
+    let found: ExpandedGroup | null = null
     Object.values(groups).forEach(groupType => {
         groupType.groups.forEach(group => {
-            if (group.id === id) return group
+            if (group.id === id) {
+                found = group
+            }
         })
     })
-    return null
+    return found
 }
 
-function groupTypeOfId(id: number, groups: GroupsStructured) : GroupType {
+function groupTypeOfId(id: number, groups: GroupsStructured): GroupType {
+    let type: GroupType | null = null
     Object.values(groups).forEach((groupType) => {
         groupType.groups.forEach(group => {
-            if (group.id === id) return group.groupType
+            if (group.id === id) {
+                type = group.groupType
+            }
         })
     })
-    return 'MANUAL_GROUP'
+    return type || 'MANUAL_GROUP'
 }

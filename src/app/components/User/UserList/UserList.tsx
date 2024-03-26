@@ -6,13 +6,13 @@ import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserRow'
 import useActionCall from '@/hooks/useActionCall'
 import { readGroupsForPageFiteringAction } from '@/actions/users/read'
+import { UserSelectionContext } from '@/context/UserSelection'
 import { useContext, useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import type { ChangeEvent } from 'react'
 import type { GroupType } from '@prisma/client'
 import type { ExpandedGroup } from '@/server/groups/Types'
-import { UserSelectionContext } from '@/context/UserSelection'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 
@@ -22,7 +22,7 @@ type PropTypes = {
     className?: string
     disableFilters?: DisableGroupFilters & {
         name?: boolean,
-    } 
+    }
 }
 
 function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
@@ -234,8 +234,8 @@ export default function UserList({ className, disableFilters = {
                 <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
                     <span className={styles.row} key={user.id}>
                         { userSelection &&
-                            <button 
-                                className={userSelection.includes(user) ? styles.selected : ''} 
+                            <button
+                                className={userSelection.includes(user) ? styles.selected : ''}
                                 onClick={() => userSelection.toggle(user)}>
                                 <FontAwesomeIcon icon={faCheck} />
                             </button>

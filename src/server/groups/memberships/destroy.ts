@@ -1,10 +1,10 @@
 import 'server-only'
 import { canEasalyManageMembershipOfGroup } from './canEasalyManageMembership'
+import { readCurrentGroupOrder } from '@/server/groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
-import { readCurrentGroupOrder } from '../read'
 
 export async function destoryMembershipOfUser(
     groupId: number,

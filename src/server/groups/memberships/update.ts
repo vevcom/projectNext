@@ -1,8 +1,8 @@
 import 'server-only'
+import { readCurrentGroupOrder } from '@/server/groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
-import { readCurrentGroupOrder } from '../read'
 
 export async function updateMembership(
     groupId: number,

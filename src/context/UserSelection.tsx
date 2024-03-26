@@ -1,6 +1,6 @@
-import { UserFiltered } from "@/server/users/Types";
-import { createContext, useState } from "react";
-import { ReactNode } from "react";
+import { createContext, useState } from 'react'
+import type { ReactNode } from 'react'
+import type { UserFiltered } from '@/server/users/Types'
 
 type PropTypes = {
     children: ReactNode
@@ -16,7 +16,7 @@ export const UserSelectionContext = createContext<{
     removeUser: (user: UserFiltered) => void
     toggle: (user: UserFiltered) => void
     includes: (user: UserFiltered) => boolean
-} | null>(null)
+        } | null>(null)
 
 export default function UserSelectionProvider({ children }: PropTypes) {
     const [users, setUsers] = useState<UserFiltered[]>([])

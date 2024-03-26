@@ -1,16 +1,16 @@
 'use server'
 
-import { ActionReturn } from "@/actions/Types"
-import { createActionError } from "@/actions/error"
-import { safeServerCall } from "@/actions/safeServerCall"
-import { getUser } from "@/auth/getUser"
-import { createMembershipsForGroup } from "@/server/groups/memberships/create"
+import { createActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { getUser } from '@/auth/getUser'
+import { createMembershipsForGroup } from '@/server/groups/memberships/create'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * WARNING: This action will lead to error if used with group types in CanEasalyManageMembership
  */
-export async function createMembershipsForGroupAction({ 
-    groupId, 
+export async function createMembershipsForGroupAction({
+    groupId,
     users
 }: {
     groupId: number,
@@ -18,7 +18,7 @@ export async function createMembershipsForGroupAction({
         userId: number,
         admin: boolean
     }[]
-}) : Promise<ActionReturn<void>> {
+}): Promise<ActionReturn<void>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['GROUP_ADMIN']]
     })

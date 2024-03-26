@@ -43,7 +43,7 @@ export const SpecialVisibilityConfig = {
         regularLevel: 'USER_READ',
         adminLevel: 'USER_CREATE'
     }
-} satisfies {[T in SpecialVisibilityPurpose] : {
+} satisfies {[T in SpecialVisibilityPurpose]: {
     regularLevel: Permission | null,
     adminLevel: Permission | null
 }}

@@ -1,5 +1,4 @@
-import { Permission, SpecialVisibilityPurpose } from "@/generated/pn";
-import { PrismaClient } from "@/generated/pn";
+import type { Permission, SpecialVisibilityPurpose, PrismaClient } from '@/generated/pn'
 
 const SpecialVisibilityConfig = {
     OMBUL: {
@@ -18,7 +17,7 @@ const SpecialVisibilityConfig = {
         regularLevel: 'USER_READ',
         adminLevel: 'USER_CREATE'
     }
-} satisfies {[T in SpecialVisibilityPurpose] : {
+} satisfies {[T in SpecialVisibilityPurpose]: {
     regularLevel: Permission | null,
     adminLevel: Permission | null
 }}

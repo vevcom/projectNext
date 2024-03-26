@@ -1,8 +1,8 @@
-import { getUser } from '@/auth/getUser'
 import styles from './page.module.scss'
-import { notFound } from 'next/navigation'
-import { readCurrentOmegaOrderAction } from '@/actions/omegaOrder/read'
 import CreateOrder from './CreateOrder'
+import { getUser } from '@/auth/getUser'
+import { readCurrentOmegaOrderAction } from '@/actions/omegaOrder/read'
+import { notFound } from 'next/navigation'
 
 export default async function stateOfOmega() {
     const { authorized } = await getUser({
