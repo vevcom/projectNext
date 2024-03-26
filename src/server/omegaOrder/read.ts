@@ -9,7 +9,7 @@ import type { OmegaOrder } from '@prisma/client'
  * heighst order.
  * @returns - the current OmegaOrder
  */
-export async function readCurrenOmegaOrder(): Promise<OmegaOrder> {
+export async function readCurrentOmegaOrder(): Promise<OmegaOrder> {
     const omegaOrder = await prismaCall(() => prisma.omegaOrder.findFirst({
         orderBy: {
             order: 'desc'

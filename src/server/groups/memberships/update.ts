@@ -1,8 +1,8 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
-import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
+import { readCurrentGroupOrder } from '../read'
 
 export async function updateMembership(
     groupId: number,
@@ -10,7 +10,7 @@ export async function updateMembership(
     admin: boolean,
     orderArg?: number
 ): Promise<ExpandedMembership> {
-    const order = orderArg ?? (await readCurrentOmegaOrder()).order
+    const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
     return await prismaCall(() => prisma.membership.update({
         where: {

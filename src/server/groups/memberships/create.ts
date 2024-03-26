@@ -5,6 +5,7 @@ import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
+import { readCurrentGroupOrder, readCurrentGroupOrders } from '../read'
 
 export async function createMembershipForUser(
     groupId: number,
@@ -15,7 +16,7 @@ export async function createMembershipForUser(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrentOmegaOrder()).order
+    const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
     return await prismaCall(() => prisma.membership.create({
         data: {
@@ -47,7 +48,7 @@ export async function createMembershipsForGroup(
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrentOmegaOrder()).order
+    const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ userId, admin }) => ({
@@ -68,14 +69,15 @@ export async function createMembershipsForUser(
     if (!await canEasalyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? (await readCurrentOmegaOrder()).order
+    const ordersMap = await readCurrentGroupOrders(data.map(group => group.groupId))
+    const { order: fallbackOrder } = await readCurrentOmegaOrder()
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ groupId, admin }) => ({
             groupId,
             userId,
             admin,
-            order,
+            order: orderArg ?? ordersMap.find(order => order.id === groupId)?.order ?? fallbackOrder,
         })),
         skipDuplicates: true,
     }))

@@ -10,6 +10,31 @@ export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
 }
 
+export async function readCurrentGroupOrder(id: number) : Promise<number> {
+    return (await prismaCall(() => prisma.group.findUniqueOrThrow({
+        where: {
+            id,
+        },
+        select: {
+            order: true,
+        }
+    }))).order
+}
+
+export async function readCurrentGroupOrders(ids: number[]) : Promise<{id: number, order: number}[]> {
+    return await prismaCall(() => prisma.group.findMany({
+        where: {
+            id: {
+                in: ids,
+            },
+        },
+        select: {
+            id: true,
+            order: true,
+        }
+    }))
+}
+
 export async function readGroup(id: number): Promise<Group> {
     return await prismaCall(() => prisma.group.findUniqueOrThrow({
         where: {
