@@ -13,14 +13,13 @@ import Image from '@/components/Image/Image'
 import ImageUploader from '@/app/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
 import VisibilityAdmin from '@/app/components/VisiblityAdmin/VisibilityAdmin'
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { ExpandedImageCollection } from '@/server/images/collections/Types'
+import { VisibilityCollapsed } from '@/server/visibility/Types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -34,8 +33,6 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const pagingContext = useContext(ImagePagingContext)
     const canEdit = useEditing({
         requiredVisibility: visibility,
-        requiredPermissions: [[BypassPermissions.images]],
-        operation: 'OR'
     })
     if (!canEdit) return null
     if (!selection) throw new Error('No context')
@@ -149,7 +146,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     }}
                 />
             </aside>
-            <VisibilityAdmin visibility={visibility} />
+            <VisibilityAdmin visibilityId={visibility.id} />
         </>
     )
 }

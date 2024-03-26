@@ -46,7 +46,7 @@ export default function useEditing({
         const visibilityAuthorized = requiredVisibility ? checkVisibility({
             permissions: permissions ?? [],
             memberships: memberships ?? [],
-        }, requiredVisibility, level) : true
+        }, requiredVisibility, level) : undefined
 
         const authorized_ = (operation === 'OR' ?
             permissionAuthorized || visibilityAuthorized :

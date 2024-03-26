@@ -21,5 +21,6 @@ export type VisibilityCollapsedWithouPurpose = {
  * or type is REGULAR and the levels are represented by matrix of ids of groups
  */
 export type VisibilityCollapsed = VisibilityCollapsedWithouPurpose & {
+    id: number,
     purpose: VisibilityPurpose
 }

@@ -11,3 +11,9 @@ export const BypassPermissions = {
 } as const satisfies { [key in VisibilityPurpose]: Permission }
 
 export type BypassPermissions = typeof BypassPermissions[keyof typeof BypassPermissions]
+
+export const PurposeTextsConfig = {
+    IMAGE: 'Bilder',
+    CMS: 'CMS',
+    EVENT: 'Arrangementer (Hvad der hender)'
+} as const satisfies { [key in VisibilityPurpose]: string }

@@ -11,9 +11,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 export default async function MobileNavBar() {
     const { user } = await getUser()
     const isLoggedIn = user !== null
-    const applicationPeriod = false //temp
-    const isAdmin = user?.username === 'Harambe104' // temp
-
+    const applicationPeriod = false //TODO
+    const isAdmin =  true //TODO
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 2)
     const itemsForMenu = navItems.slice(2, navItems.length)
@@ -45,9 +44,7 @@ export default async function MobileNavBar() {
                 </div>
             }/>
             <div className={styles.editMode}>
-                {
-                    isAdmin && <EditModeSwitch />
-                }
+                <EditModeSwitch />
             </div>
         </nav>
     )

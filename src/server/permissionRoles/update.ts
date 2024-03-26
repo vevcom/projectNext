@@ -67,10 +67,8 @@ export async function updateRole(
 export async function updateDefaultPermissions(
     rawdata: UpdateDefaultPermissionsTypes['Detailed']
 ): Promise<Permission[]> {
-    console.log('yo3')
     const { permissions } = updateDefaultPermissionsValidation.detailedValidate(rawdata)
 
-    console.log('yo4')
     // Delete removed permissions
     await prismaCall(() => prisma.defaultPermission.deleteMany({
         where: {

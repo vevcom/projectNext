@@ -44,9 +44,7 @@ export default async function NavBar() {
                     />
                 </li>
                 <li className={styles.rightSide}>
-                    {
-                        isAdmin && <EditModeSwitch />
-                    }
+                    <EditModeSwitch />
                     <div className={styles.magicHat}>
                         <SpecialCmsImage
                             special="NAV_LOGIN_BUTTON"

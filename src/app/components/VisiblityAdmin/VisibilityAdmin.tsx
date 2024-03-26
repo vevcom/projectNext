@@ -9,13 +9,11 @@ type PropTypes = {
 
 
 export default function VisibilityAdmin({ visibilityId }: PropTypes) {
-    const { error, data } = useActionCall(readVisibilityForAdminAction)
+    const { error, data } = useActionCall(readVisibilityForAdminAction.bind(null, visibilityId))
 
     return (
         <div className={styles.VisibilityAdmin}>
-            { error?.errorCode && <p>{error.errorCode}</p> }
-            { data && <p>{data[0].id}</p> }
-            { visibility.type }
+           
         </div>
     )
 }
