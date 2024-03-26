@@ -72,6 +72,7 @@ export async function readSpecialVisibility(specialPurpose: SpecialVisibilityPur
             data: {
                 purpose: 'SPECIAL',
                 specialPurpose,
+                published: true,
                 regularLevel: {
                     create: {
                         permission: SpecialVisibilityConfig[specialPurpose].regularLevel

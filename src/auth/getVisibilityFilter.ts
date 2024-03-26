@@ -48,7 +48,7 @@ export function getVisibilityFilter(
         }
     }[]
     )
-
+    console.log(permissions)
     return {
         OR: [
             // A user has access if it has the bypass permission for spesific purpose

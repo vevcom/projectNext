@@ -44,6 +44,7 @@ export default async function SeedSpecialVisibility(prisma: PrismaClient) {
             },
             create: {
                 purpose: 'SPECIAL',
+                published: true,
                 specialPurpose: special,
                 regularLevel: {
                     create: {

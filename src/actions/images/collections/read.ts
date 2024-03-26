@@ -45,6 +45,7 @@ export async function readImageCollectionsPageAction<const PageSize extends numb
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     const { memberships, permissions } = await getUser()
     const visibilityFilter = getVisibilityFilter(memberships, permissions)
+    console.log(visibilityFilter)
     return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
 }
 
