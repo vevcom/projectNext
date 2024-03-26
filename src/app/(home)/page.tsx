@@ -1,9 +1,9 @@
 import Section from './Section'
 import styles from './page.module.scss'
 import InfoBubbles from './InfoBubbles'
+import MazeMap from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import GoogleMap from '@/components/GoogleMap/GoogleMap'
 import YouTube from '@/components/YouTube/YouTube'
 import { getUser } from '@/auth/getUser'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -54,6 +54,7 @@ export default async function Home() {
             <div className={`${styles.part} ${styles.omegamai}`}>
                 <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
+                <div className={styles.emptyPart} />
                 <Section
                     specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
@@ -71,10 +72,8 @@ export default async function Home() {
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
-                <GoogleMap height={500} location = {{
-                    lat: 37.42216,
-                    lng: -122.08427,
-                }}/>
+                <MazeMap height={'80vh'}/>
+                <div className={styles.emptyPart} />
             </div>
         </div>
     )
