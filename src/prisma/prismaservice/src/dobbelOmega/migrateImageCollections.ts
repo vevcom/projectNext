@@ -36,6 +36,7 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
                 //TODO: Link to right committee through visibility
                 visibility: {
                     create: {
+                        purpose: 'IMAGE',
                         published: true,
                         regularLevel: { create: {} },
                         adminLevel: { create: {} }

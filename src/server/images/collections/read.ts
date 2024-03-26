@@ -97,7 +97,7 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
         const permissionLevels = specialCollectionsVisibilityConfig[special]
-        const visability = await createVisibility({
+        const visability = await createVisibility('IMAGE', {
             type: 'SPECIAL',
             published: true,
             admin: permissionLevels.adminLevel,

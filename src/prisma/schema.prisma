@@ -301,8 +301,8 @@ enum VisibilityType {
   SPECIAL //Special visibility just links to a permission
 }
 
-enum Purpose {
-  IMAGE_COLLECTION
+enum VisibilityPurpose {
+  IMAGE
   EVENT
   CMS
 }
@@ -312,7 +312,7 @@ model Visibility {
   imageCollection ImageCollection?
   type            VisibilityType   @default(REGULAR)
   published       Boolean          @default(false)
-  purpose         Purpose
+  purpose         VisibilityPurpose
 
   regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
   regularLevelId Int             @unique

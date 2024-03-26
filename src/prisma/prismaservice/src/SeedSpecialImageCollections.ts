@@ -35,6 +35,7 @@ export default async function SeedSpecialImageCollections(prisma: PrismaClient) 
                 special,
                 visibility: {
                     create: {
+                        purpose: 'IMAGE',
                         published: true,
                         type: 'SPECIAL',
                         regularLevel: { create: {

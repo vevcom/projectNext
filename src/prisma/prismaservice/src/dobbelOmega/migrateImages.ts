@@ -35,6 +35,7 @@ export default async function migrateImages(
             description: 'Denne samlingen inneholder bilder som ikke tilhører noen samling',
             visibility: {
                 create: {
+                    purpose: 'IMAGE',
                     published: true,
                     type: 'REGULAR',
                     regularLevel: {},
