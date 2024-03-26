@@ -538,8 +538,8 @@ model NotificationChannel {
 
   defaultMethodsId   Int?
   defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id], onDelete: SetNull)
-  availableMethodsId Int?
-  availableMethods   NotificationMethod? @relation(name: "availableMethods", fields: [availableMethodsId], references: [id], onDelete: SetNull)
+  availableMethodsId Int
+  availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
 
   subscriptions NotificationSubscription[]
   notifications NotificationChannelJT[]

@@ -4,10 +4,11 @@ import styles from "./channelSettings.module.scss"
 import ChannelMethods from "./channelMethods"
 import { NotificationMethod } from "@prisma/client"
 import TextInput from "@/app/components/UI/TextInput"
-import Button from "@/app/components/UI/Button"
 import Select from "@/app/components/UI/Select"
 import { useState } from "react"
 import Form from "@/app/components/Form/Form"
+import { updateNotificationChannelAction } from "@/actions/notifications/update"
+import { NotificationMethods } from "@/server/notifications/ConfigVars"
 
 export default function ChannelSettings({
     channel,
@@ -17,7 +18,7 @@ export default function ChannelSettings({
     allChannels: NotificationChannelWithMethods[],
 }) {
     const methodsAllOf = Object.fromEntries(
-        Object.keys(channel.availableMethods).map((method) => [method, false])
+        NotificationMethods.map((method) => [method, false])
     ) as Omit<NotificationMethod, "id">;
 
     const defaultMethods = channel.defaultMethods ?? methodsAllOf;
@@ -28,6 +29,9 @@ export default function ChannelSettings({
     function findInheretedAvailableMethods(channel: NotificationChannelWithMethods): Omit<NotificationMethod, 'id'> {
         
         if (channel.special === "ROOT") {
+            if (!channel.availableMethods) {
+                throw new Error("Root channel has no available methods")
+            }
             return channel.availableMethods;
         }
 
@@ -47,7 +51,7 @@ export default function ChannelSettings({
             Object
                 .entries(methods)
                 .map(([key, value]) => 
-                    [key, value && channel.availableMethods[key]]
+                    [key, value && channel.availableMethods?.[key]]
                 )
         ) as Omit<NotificationMethod, 'id'>;
     }
@@ -58,8 +62,10 @@ export default function ChannelSettings({
     return <div className={styles.channelSettings}>
         {channel.special ? <p>Spesiell: {channel.special}</p> : null}
         <Form
+            action={updateNotificationChannelAction}
             submitText="Lagre"
         >
+            <input type="hidden" name="id" value={channel.id} />
             
             <TextInput label="Navn" name="name" defaultValue={channel.name} />
             <div className={styles.widerDiv}>
@@ -67,10 +73,14 @@ export default function ChannelSettings({
             </div>
 
             <div className={styles.widerDiv}>
-                {channel.special != "ROOT" ? <Select label="Forelder" name="parent" options={selectOptions} /> : null }
+                {channel.special != "ROOT" ?
+                    <Select label="Forelder" name="parentId" options={selectOptions} />
+                :
+                    <input type="hidden" name="parentId" value={channel.parentId} />
+                }
             </div>
 
-            <div className={styles.methodContainer} id="123456">
+            <div className={styles.methodContainer}>
 
                 <ChannelMethods
                     formPrefix="availableMethods"

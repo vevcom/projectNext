@@ -5,10 +5,18 @@ import type { ActionReturn } from "@/actions/Types";
 import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
 import { updateNotificationValidation } from "@/server/notifications/validation"
 import type { NotificationMethodType } from "@/server/notifications/Types"
+import { createZodActionError } from "@/actions/error";
 
 export async function updateNotificationChannelAction(rawdata: FormData): Promise<ActionReturn<NotificationChannelWithMethods>> {
-    return await safeServerCall(() => {
-        const parsedData = updateNotificationValidation.detailedValidate(rawdata)
+
+    console.log(rawdata)
+
+    const typeVerifiedData = updateNotificationValidation.typeValidate(rawdata)
+    console.log(typeVerifiedData)
+    if (!typeVerifiedData.success) return createZodActionError(typeVerifiedData)
+    
+    const results = await safeServerCall(() => {
+        const parsedData = updateNotificationValidation.detailedValidate(typeVerifiedData.data)
 
         function countPrefix(prefix: NotificationMethodType) {
             return Object
@@ -27,17 +35,15 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
             }
 
             return {
-                [prefix]: {
-                    update: Object
-                        .fromEntries(Object
-                            .entries(parsedData)
-                            .filter(([key]) => key.startsWith(`${prefix}_`))
-                            .map(([key, value]) => [
-                                key.replace(`${prefix}_`, ''),
-                                { set: value }
-                            ])
-                        )
-                }
+                [prefix]: Object
+                    .fromEntries(Object
+                        .entries(parsedData)
+                        .filter(([key]) => key.startsWith(`${prefix}_`))
+                        .map(([key, value]) => [
+                            key.replace(`${prefix}_`, ''),
+                            value
+                        ])
+                    )
             }
         }
 
@@ -45,8 +51,13 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
             id: parsedData.id,
             name: parsedData.name,
             description: parsedData.description,
+            parentId: parsedData.parentId,
             ...addMethod('availableMethods'),
             ...addMethod('defaultMethods'),
         })
     });
+
+    console.log(results)
+
+    return results;
 }
