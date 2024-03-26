@@ -1,3 +1,4 @@
+import 'server-only'
 import prisma from '@/prisma'
 import { createActionError } from '@/actions/error'
 import { ServerError } from '@/server/error'
