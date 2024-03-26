@@ -54,9 +54,9 @@ export async function readVisibilityForAdminAction(id: number) : Promise<ActionR
         data: {
             purpose,
             type: 'SPECIAL',
-            message: `Denne visibility er spessiell`,
-            regular: `Folk med ${visibility.regular} har vanlig tilgang`,
-            admin: `Folk med ${visibility.admin} har admin tilgang`,
+            message: `Denne syneligheten er spessiell`,
+            regular: `Brukere med ${visibility.regular} har vanlig tilgang`,
+            admin: `Brukere med ${visibility.admin} har admin tilgang`,
         }
     }
     return {

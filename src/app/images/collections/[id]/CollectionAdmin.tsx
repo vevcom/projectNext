@@ -146,7 +146,9 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     }}
                 />
             </aside>
-            <VisibilityAdmin visibilityId={visibility.id} />
+            <div className={styles.visibility}>
+                <VisibilityAdmin visibilityId={visibility.id} />
+            </div>
         </>
     )
 }
