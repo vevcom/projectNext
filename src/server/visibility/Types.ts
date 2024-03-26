@@ -2,17 +2,9 @@ import type { Permission, VisibilityPurpose } from '@prisma/client'
 
 export type GroupMatrix = number[][]
 
-
-export type VisibilityCollapsedWithouPurpose = {
-    type: 'REGULAR',
-    published: boolean,
+export type VisibilityLevelMatrices = {
     regular: GroupMatrix,
     admin: GroupMatrix
-} | {
-    type: 'SPECIAL'
-    published: boolean,
-    regular: Permission | null,
-    admin: Permission | null
 }
 
 /**
@@ -20,7 +12,16 @@ export type VisibilityCollapsedWithouPurpose = {
  * Either type is SPECIAL and and levels are based on Permissions,
  * or type is REGULAR and the levels are represented by matrix of ids of groups
  */
-export type VisibilityCollapsed = VisibilityCollapsedWithouPurpose & {
+export type VisibilityCollapsed = {
     id: number,
     purpose: VisibilityPurpose
-}
+    published: boolean,
+} & ({
+    type: 'REGULAR',
+    regular: GroupMatrix,
+    admin: GroupMatrix
+} | {
+    type: 'SPECIAL'
+    regular: Permission | null,
+    admin: Permission | null
+})

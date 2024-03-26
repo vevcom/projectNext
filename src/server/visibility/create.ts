@@ -3,7 +3,7 @@ import { updateVisibility } from './update'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { Visibility, VisibilityPurpose } from '@prisma/client'
-import type { VisibilityCollapsed, VisibilityCollapsedWithouPurpose } from './Types'
+import type { VisibilityLevelMatrices } from './Types'
 
 /**
  * A function to create visibility
@@ -12,7 +12,7 @@ import type { VisibilityCollapsed, VisibilityCollapsedWithouPurpose } from './Ty
  */
 export async function createVisibility(
     purpose: VisibilityPurpose, 
-    data?: VisibilityCollapsedWithouPurpose
+    data?: VisibilityLevelMatrices
 ): Promise<Visibility> {
     const visibility = await prismaCall(() => prisma.visibility.create({
         data: {
@@ -26,8 +26,6 @@ export async function createVisibility(
         }
     }))
     await updateVisibility(visibility.id, data || {
-        published: false,
-        type: 'REGULAR',
         admin: [],
         regular: []
     })

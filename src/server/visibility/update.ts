@@ -1,9 +1,9 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { VisibilityCollapsed, VisibilityCollapsedWithouPurpose } from './Types'
+import type { VisibilityLevelMatrices } from './Types'
 
-export async function updateVisibility(id: number, data: VisibilityCollapsedWithouPurpose): Promise<void> {
+export async function updateVisibility(id: number, data: VisibilityLevelMatrices): Promise<void> {
     //TODO chack that the admin is a subset of the regular
 
     await prismaCall(() => prisma.$transaction([
@@ -14,29 +14,11 @@ export async function updateVisibility(id: number, data: VisibilityCollapsedWith
             }
         }),
         //Then create many new requirements
-        data.type === 'SPECIAL' ? prisma.visibility.update({
+        prisma.visibility.update({
             where: {
                 id
             },
             data: {
-                type: 'SPECIAL',
-                regularLevel: {
-                    update: {
-                        permission: data.regular
-                    }
-                },
-                adminLevel: {
-                    update: {
-                        permission: data.admin
-                    }
-                }
-            }
-        }) : prisma.visibility.update({
-            where: {
-                id
-            },
-            data: {
-                type: 'REGULAR',
                 regularLevel: {
                     create: {
                         requirements: {
@@ -66,4 +48,15 @@ export async function updateVisibility(id: number, data: VisibilityCollapsedWith
             }
         })
     ]))
+}
+
+export async function updateVisibilityPublished(id: number, published: boolean): Promise<void> {
+    await prismaCall(() => prisma.visibility.update({
+        where: {
+            id
+        },
+        data: {
+            published
+        }
+    }))
 }

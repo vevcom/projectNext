@@ -1,33 +1,21 @@
-import type { Permission, SpecialCollection } from '@prisma/client'
-
-type SpecialCollectionsVisibilityConfig = {
-    [T in SpecialCollection]: {
-        regularLevel: Permission | null, // Null signifies no authorization needed
-        adminLevel: Permission | null // Null signifies no authorization needed
-    }
-}
+import type { SpecialCollection, SpecialVisibilityPurpose } from '@prisma/client'
 
 /**
- * An object that defines the visibility of special collections. The visibility of special collections
- * is linked to permissions, not a grop matrix. (Visibility type special).
- * This object delares the speial visibility of special collections. So if one special collection
- * were to misteriously disappear, it will be created again with visibility based on this object.
+ * Each special image collection links to a special visibility known at compile time
  */
-export const specialCollectionsVisibilityConfig: SpecialCollectionsVisibilityConfig = {
+export const specialCollectionsSpecialVisibilityMap = {
     OMBULCOVERS: {
-        regularLevel: 'OMBUL_READ',
-        adminLevel: 'OMBUL_CREATE'
-    },
-    STANDARDIMAGES: {
-        regularLevel: null,
-        adminLevel: 'CMS_ADMIN'
-    },
-    COMMITTEELOGOS: {
-        regularLevel: 'COMMITTEE_READ',
-        adminLevel: 'COMMITTEE_CREATE'
+        specialVisibility: 'OMBUL'
     },
     PROFILEIMAGES: {
-        regularLevel: 'USER_READ',
-        adminLevel: 'USER_CREATE'
+        specialVisibility: 'USER'
+    },
+    STANDARDIMAGES: {
+        specialVisibility: 'PUBLIC'
+    },
+    COMMITTEELOGOS: {
+        specialVisibility: 'COMMITTEE'
     }
-}
+} satisfies {[T in SpecialCollection] : {
+    specialVisibility: SpecialVisibilityPurpose
+}}

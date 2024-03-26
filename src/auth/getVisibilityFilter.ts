@@ -7,7 +7,9 @@ function userMayBypassVisibilityBasedOnPermission(
     permissions: Permission[],
     purpose: VisibilityPurpose,
 ) {
-    return permissions.includes(BypassPermissions[purpose])
+    const bypassPermissionForPurpose = BypassPermissions[purpose]
+    if (!bypassPermissionForPurpose) return false
+    return permissions.includes(bypassPermissionForPurpose)
 }
 
 function isVisibilityPurpose(purpose: string): purpose is VisibilityPurpose {
@@ -49,11 +51,17 @@ export function getVisibilityFilter(
 
     return {
         OR: [
+            // A user has access if it has the bypass permission for spesific purpose
             ...bypassers,
+
+            // A user has access if the visibility is special and the user has the permission or the
+            // permission is null
             {
                 visibility: {
                     published: true,
-                    type: 'SPECIAL' as const,
+                    specialPurpose: {
+                        not: null
+                    },
                     regularLevel: {
                         permission: {
                             in: permissions
@@ -64,16 +72,21 @@ export function getVisibilityFilter(
             {
                 visibility: {
                     published: true,
-                    type: 'SPECIAL' as const,
+                    specialPurpose: {
+                        not: null
+                    },
                     regularLevel: {
                         permission: null
                     }
                 }
             },
+
+            // If the visibility is not special, the user has access if it
+            // meets the requirements of the visibility. Or if there are no requirements
             {
                 visibility: {
                     published: true,
-                    type: 'REGULAR' as const,
+                    specialPurpose: null,
                     regularLevel: {
                         OR: [
                             {

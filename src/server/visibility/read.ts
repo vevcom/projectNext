@@ -2,8 +2,9 @@ import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { VisibilityRequirmenetGroup } from '@prisma/client'
+import { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
 import type { VisibilityCollapsed } from './Types'
+import { SpecialVisibilityConfig } from './ConfigVars'
 
 const levelSelector = {
     select: {
@@ -18,7 +19,8 @@ const levelSelector = {
 
 /**
  * Reads visibility with levels, and with relation to groups, and returns the data
- * in a matrix format if type is REGULAR, or as permissions if type is SPECIAL
+ * in a matrix format if type is REGULAR, or as permissions if type is SPECIAL i.e has
+ * a special purpose.
  * @param id - the id of the visibility to read
  * @returns
  */
@@ -31,7 +33,7 @@ export async function readVisibilityCollapsed(id: number): Promise<VisibilityCol
         }
     }))
     if (!visibility) throw new ServerError('NOT FOUND', `Visibility ikke funnet for id ${id}`)
-    if (visibility.type === 'SPECIAL') {
+    if (visibility.specialPurpose) {
         return {
             type: 'SPECIAL',
             published: visibility.published,
@@ -48,6 +50,60 @@ export async function readVisibilityCollapsed(id: number): Promise<VisibilityCol
         id: visibility.id,
         regular: collapseVisibilityLevel(visibility.regularLevel),
         admin: collapseVisibilityLevel(visibility.adminLevel)
+    }
+}
+
+/**
+ * This function reads a special visibility, and creates it if it does not exist
+ * (this should not happen in production)
+ * @param specialPurpose - The purpose of the special visibility
+ * @returns - The visibility
+ */
+export async function readSpecialVisibility(specialPurpose: SpecialVisibilityPurpose): Promise<VisibilityCollapsed> {
+    const visibility = await prismaCall(() => prisma.visibility.findFirst({
+        where: { specialPurpose },
+        include: {
+            regularLevel: levelSelector,
+            adminLevel: levelSelector,
+        }
+    }))
+    if (!visibility) {
+        const created = await prismaCall(() => prisma.visibility.create({
+            data: {
+                purpose: 'SPECIAL',
+                specialPurpose,
+                regularLevel: {
+                    create: {
+                        permission: SpecialVisibilityConfig[specialPurpose].regularLevel
+                    }
+                },
+                adminLevel: {
+                    create: {
+                        permission: SpecialVisibilityConfig[specialPurpose].adminLevel
+                    }
+                },
+            },
+            include: {
+                regularLevel: levelSelector,
+                adminLevel: levelSelector,
+            }
+        }))
+        return {
+            type: 'SPECIAL',
+            published: created.published,
+            id: created.id,
+            regular: created.regularLevel.permission,
+            admin: created.adminLevel.permission,
+            purpose: created.purpose
+        }
+    }
+    return {
+        type: 'SPECIAL',
+        published: visibility.published,
+        id: visibility.id,
+        regular: visibility.regularLevel.permission,
+        admin: visibility.adminLevel.permission,
+        purpose: visibility.purpose
     }
 }
 

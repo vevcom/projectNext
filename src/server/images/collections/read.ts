@@ -1,5 +1,5 @@
 import 'server-only'
-import { specialCollectionsVisibilityConfig } from './ConfigVars'
+import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
 import { readSpecialImage } from '@/server/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
@@ -13,6 +13,7 @@ import type {
 } from '@/server/images/collections/Types'
 import type { ReadPageInput } from '@/actions/Types'
 import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
+import { readSpecialVisibility } from '@/server/visibility/read'
 
 
 /**
@@ -96,13 +97,8 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     }))
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
-        const permissionLevels = specialCollectionsVisibilityConfig[special]
-        const visability = await createVisibility('IMAGE', {
-            type: 'SPECIAL',
-            published: true,
-            admin: permissionLevels.adminLevel,
-            regular: permissionLevels.regularLevel
-        })
+        const permissionLevels = specialCollectionsSpecialVisibilityMap[special]
+        const visability = await readSpecialVisibility(permissionLevels.specialVisibility)
 
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
