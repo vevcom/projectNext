@@ -301,11 +301,18 @@ enum VisibilityType {
   SPECIAL //Special visibility just links to a permission
 }
 
+enum Purpose {
+  IMAGE_COLLECTION
+  EVENT
+  CMS
+}
+
 model Visibility {
   id              Int              @id @default(autoincrement())
   imageCollection ImageCollection?
   type            VisibilityType   @default(REGULAR)
   published       Boolean          @default(false)
+  purpose         Purpose
 
   regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
   regularLevelId Int             @unique
