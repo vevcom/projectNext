@@ -11,12 +11,14 @@ import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedDevGroups from './development/seedDevGroups'
 import seedGroups from './seedGroups'
 import { PrismaClient } from '@/generated/pn'
+import SeedSpecialVisibility from './seedSpecialVisibility'
 
 async function seed() {
     const prisma = new PrismaClient()
 
     console.log('seeding standard data....')
     await seedOrder(prisma)
+    await SeedSpecialVisibility(prisma)
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
