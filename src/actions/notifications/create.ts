@@ -5,8 +5,9 @@ import type { NotificationChannelWithMethods } from '@/server/notifications/Type
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
+import { ServerError } from '@/server/error'
 
-export async function readNotificaitonChannels(): Promise<ActionReturn<NotificationChannelWithMethods[]>> {
+export async function createNotificaitonChannel(): Promise<ActionReturn<void>> {
 
     const { authorized, status } = await getUser({
         requiredPermissions: [[ 'NOTIFICATION_CHANNEL_READ' ]],
@@ -14,5 +15,7 @@ export async function readNotificaitonChannels(): Promise<ActionReturn<Notificat
     });
     if (!authorized) return createActionError(status)
 
-    return await safeServerCall(() => readChannels());
+    return await safeServerCall(() => {
+        throw new ServerError('UNKNOWN ERROR', "Not implemented")
+    });
 }

@@ -22,7 +22,15 @@ export function convertFromPrismaMethods(
 
     return {
         ...channel,
-        availableMethods: channel.availableMethods ? remove_id(channel.availableMethods) : undefined,
+        availableMethods: channel.availableMethods ? remove_id(channel.availableMethods) : NotificationMethodsAllOn,
         defaultMethods: channel.defaultMethods ? remove_id(channel.defaultMethods) : undefined,
     }
 }
+
+export const NotificationMethodsAllOn = Object.fromEntries(
+    NotificationMethods.map((method) => [method, true])
+) as Omit<NotificationMethod, "id">;
+
+export const NotificationMethodsAllOff = Object.fromEntries(
+    NotificationMethods.map((method) => [method, false])
+) as Omit<NotificationMethod, "id">;

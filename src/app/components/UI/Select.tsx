@@ -1,19 +1,23 @@
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
 
-export default function Select({
+export default function Select<V extends number | string>({
     name,
     label,
     defaultValue,
+    value,
     options,
+    onChange,
 } : {
     name: string,
     label?: string,
-    defaultValue?: string | number,
+    value?: V,
+    defaultValue?: V,
     options: {
-        value: string | number,
+        value: V,
         label?: string,
     }[],
+    onChange?: (value: V) => void,
 }) {
     const id = uuid()
 
@@ -28,7 +32,19 @@ export default function Select({
 
     return <div className={styles.Select}>
         <label htmlFor={id}>{label ?? name}</label>
-        <select id={id} name={name} defaultValue={defaultValue}>
+        <select
+            id={id}
+            name={name}
+            {
+                ...(value ? { value } : { defaultValue })
+            }
+            onChange={(event) => {
+                if (onChange && options.length > 0) {
+                    const value = event.target.value
+                    onChange((typeof(options[0].value) === 'number' ? Number(value) : value) as V)
+                }
+            }
+        }>
             {optionElements}
         </select>
     </div>

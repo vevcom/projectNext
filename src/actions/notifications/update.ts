@@ -5,9 +5,16 @@ import type { ActionReturn } from "@/actions/Types";
 import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
 import { updateNotificationValidation } from "@/server/notifications/validation"
 import type { NotificationMethodType } from "@/server/notifications/Types"
-import { createZodActionError } from "@/actions/error";
+import { createActionError, createZodActionError } from "@/actions/error";
+import { getUser } from "@/auth/getUser";
 
 export async function updateNotificationChannelAction(rawdata: FormData): Promise<ActionReturn<NotificationChannelWithMethods>> {
+
+    const { authorized, status } = await getUser({
+        requiredPermissions: [[ 'NOTIFICATION_CHANNEL_UPDATE' ]],
+        userRequired: true,
+    });
+    if (!authorized) return createActionError(status)
 
     console.log(rawdata)
 

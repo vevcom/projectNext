@@ -2,13 +2,12 @@
 import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
 import styles from "./channelSettings.module.scss"
 import ChannelMethods from "./channelMethods"
-import { NotificationMethod } from "@prisma/client"
 import TextInput from "@/app/components/UI/TextInput"
 import Select from "@/app/components/UI/Select"
 import { useState } from "react"
 import Form from "@/app/components/Form/Form"
 import { updateNotificationChannelAction } from "@/actions/notifications/update"
-import { NotificationMethods } from "@/server/notifications/ConfigVars"
+import { NotificationMethodsAllOff, NotificationMethodsAllOn } from "@/server/notifications/ConfigVars"
 
 export default function ChannelSettings({
     currentChannel,
@@ -19,17 +18,10 @@ export default function ChannelSettings({
     allChannels: NotificationChannelWithMethods[],
     onUpdate?: (channel: NotificationChannelWithMethods) => void
 }) {
-    const methodsAllOff = Object.fromEntries(
-        NotificationMethods.map((method) => [method, false])
-    ) as Omit<NotificationMethod, "id">;
-
-    const methodsAllOn = Object.fromEntries(
-        NotificationMethods.map((method) => [method, true])
-    ) as Omit<NotificationMethod, "id">;
     
     const [ currentChannelState, setCurrentChannel ] = useState({
         ...allChannels.find(c => c.id === currentChannel),
-        defaultMethods: allChannels.find(c => c.id === currentChannel)?.defaultMethods ?? methodsAllOff
+        defaultMethods: allChannels.find(c => c.id === currentChannel)?.defaultMethods ?? NotificationMethodsAllOff
     })
 
     if (!currentChannelState) {
@@ -93,7 +85,7 @@ export default function ChannelSettings({
                 <ChannelMethods
                     formPrefix="availableMethods"
                     title="Tilgjengelige metoder"
-                    methods={currentChannelState.availableMethods ?? methodsAllOff}
+                    methods={currentChannelState.availableMethods ?? NotificationMethodsAllOff}
                     onChange={(data) => {
                         setCurrentChannel({
                             ...currentChannelState,
@@ -104,8 +96,8 @@ export default function ChannelSettings({
                 <ChannelMethods
                     formPrefix="defaultMethods"
                     title="Standard metoder"
-                    methods={currentChannelState.defaultMethods ?? methodsAllOff}
-                    editable={currentChannelState.availableMethods ?? methodsAllOn}
+                    methods={currentChannelState.defaultMethods ?? NotificationMethodsAllOff}
+                    editable={currentChannelState.availableMethods ?? NotificationMethodsAllOn}
                     onChange={(data) => {
                         setCurrentChannel({
                             ...currentChannelState,
