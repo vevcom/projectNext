@@ -9,6 +9,7 @@ import { getUser } from '@/auth/getUser'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import MazeMap from '../components/MazeMap/MazeMap'
 
 export default async function Home() {
     const { user } = await getUser()
@@ -71,10 +72,8 @@ export default async function Home() {
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
-                <GoogleMap height={500} location = {{
-                    lat: 37.42216,
-                    lng: -122.08427,
-                }}/>
+                <MazeMap height={"80vh"}/>
+                <div className={styles.emptyPart} />
             </div>
         </div>
     )
