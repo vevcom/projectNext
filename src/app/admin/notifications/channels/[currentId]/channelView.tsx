@@ -6,6 +6,9 @@ import LargeRadio from "@/app/components/UI/LargeRadio";
 import { useState } from "react";
 import ChannelSettings from "./channelSettings";
 import { notFound, useRouter } from "next/navigation";
+import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp"
+import AddNotificationChannel from "./addNotificationChannel"
+import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 
 export default function ChannelView({
     channels,
@@ -35,14 +38,23 @@ export default function ChannelView({
         notFound()
     }
 
-    return <div className={styles.container}>
-        <LargeRadio list={channels} defaultSelection={selectedChannel} onSelect={onChannelSelect} className={styles.channelSelect} />
-        <ChannelSettings
-            currentChannel={currentId}
-            allChannels={allChannelsState}
-            onUpdate={(channel) => {
-                setAllChannelsState(allChannelsState.map(c => (c.id === channel.id) ? channel : c))
-            }}
-        />
-    </div>
+    return <PageWrapper
+        title="Varslingskanaler"
+        headerItem={
+            <AddHeaderItemPopUp PopUpKey="createNewsPop">
+                <AddNotificationChannel channels={allChannelsState}/>
+            </AddHeaderItemPopUp>
+        }
+    >
+        <div className={styles.container}>
+            <LargeRadio list={channels} defaultSelection={selectedChannel} onSelect={onChannelSelect} className={styles.channelSelect} />
+            <ChannelSettings
+                currentChannel={currentId}
+                allChannels={allChannelsState}
+                onUpdate={(channel) => {
+                    setAllChannelsState(allChannelsState.map(c => (c.id === channel.id) ? channel : c))
+                }}
+            />
+        </div>
+    </PageWrapper>
 }
