@@ -79,6 +79,7 @@ model Membership {
   group      Group      @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId    Int
   admin      Boolean
+  title      String     @default("Medlem")
   omegaOrder OmegaOrder @relation(fields: [order], references: [order])
   order      Int
 

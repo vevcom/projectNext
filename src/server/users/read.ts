@@ -1,5 +1,5 @@
 import { maxNumberOfGroupsInFilter, userFilterSelection } from './ConfigVars'
-import { readGroup } from '@/server/groups/read'
+import { readCurrentGroupOrder, readGroup } from '@/server/groups/read'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
@@ -23,7 +23,7 @@ export async function readUserPage<const PageSize extends number>({
         throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
     }
     const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => {
-        const { order } = await readGroup(groupId)
+        const order = await readCurrentGroupOrder(groupId)
         return {
             groupId,
             groupOrder: groupOrder ?? order,
