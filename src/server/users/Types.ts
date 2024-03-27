@@ -1,12 +1,19 @@
 import type { userFieldsToExpose } from './ConfigVars'
-import type { User } from '@prisma/client'
+import type { OmegaMembershipLevel, User } from '@prisma/client'
 
 export type UserFiltered = Pick<User, typeof userFieldsToExpose[number]>
 
-export type UserPagingReturn = UserFiltered & {
-    tilte?: string
-    studyProgramme?: string
+export type StandardMembeships = {
     class?: number
+    studyProgramme?: string
+    membershipType?: OmegaMembershipLevel
+}
+
+export type UserPagingReturn = UserFiltered & StandardMembeships & {
+    extraInfoOnMembership?: { //If extraInfoOnMembership is not null, this will be the extra info.
+        title?: string
+        admin?: boolean
+    }
 }
 
 /**
@@ -19,7 +26,8 @@ export type UserDetails = {
         groupOrder: number | null //null means take current order.
     }[]
     partOfName: string
-    extraInfoOnMembership: {
+    extraInfoOnMembership?: {
         groupId: number
+        groupOrder: number | null //null means take current order.
     }
 }

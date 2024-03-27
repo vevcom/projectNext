@@ -1,10 +1,10 @@
 import { maxNumberOfGroupsInFilter, userFilterSelection } from './ConfigVars'
-import { readCurrentGroupOrder, readGroup } from '@/server/groups/read'
+import { readCurrentGroupOrder } from '@/server/groups/read'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import type { UserFiltered, UserDetails, UserPagingReturn } from './Types'
+import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 
 /**
@@ -31,10 +31,51 @@ export async function readUserPage<const PageSize extends number>({
         }
     }))
 
-    return await prismaCall(() => prisma.user.findMany({
+    const selectExtraInfoAboutMembership = details.extraInfoOnMembership ? [{
+        groupId: details.extraInfoOnMembership.groupId,
+        order: details.extraInfoOnMembership.groupOrder ?? await readCurrentGroupOrder(details.extraInfoOnMembership.groupId)
+    }] : []
+
+    const users = await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
         take: page.pageSize,
-        select: userFilterSelection,
+        select: {
+            ...userFilterSelection,
+            memberships: {
+                select: {
+                    admin: true,
+                    title: true,
+                    groupId: true,
+                    group: {
+                        select: {
+                            class: { select: { year: true } },
+                            studyProgramme: { select: { code: true } },
+                            omegaMembershipGroup: { select: { omegaMembershipLevel: true } }
+                        }
+                    }
+                },
+                where: {
+                    OR: [
+                        ...selectExtraInfoAboutMembership,
+                        {
+                            group: {
+                                groupType: 'CLASS'
+                            }
+                        },
+                        {
+                            group: {
+                                groupType: 'OMEGA_MEMBERSHIP_GROUP'
+                            }
+                        },
+                        {
+                            group: {
+                                groupType: 'STUDY_PROGRAMME'
+                            }
+                        }
+                    ]
+                },
+            },
+        },
         where: {
             AND: [
                 ...words.map((word, i) => {
@@ -69,4 +110,22 @@ export async function readUserPage<const PageSize extends number>({
             { username: 'asc' },
         ]
     }))
+    return users.map(user => {
+        const clas = user.memberships.find(m => m.group.class !== null)?.group.class?.year
+        const studyProgramme = user.memberships.find(m => m.group.studyProgramme !== null)?.group.studyProgramme?.code
+        const membershipType = user.memberships.find(m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
+        const title = user.memberships.find(m => m.groupId === details.extraInfoOnMembership?.groupId)?.title
+        const admin = user.memberships.find(m => m.groupId === details.extraInfoOnMembership?.groupId)?.admin
+        return {
+            ...user,
+            class: clas,
+            studyProgramme,
+            membershipType,
+            extraInfoOnMembership: {
+                title,
+                admin
+            }
+        }
+    })
+
 }

@@ -4,7 +4,7 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { readUserPage } from '@/server/users/read'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/server/groups/read'
-import type { UserFiltered, UserDetails, UserPagingReturn } from '@/server/users/Types'
+import type { UserDetails, UserPagingReturn } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ExpandedGroup } from '@/server/groups/Types'
 
