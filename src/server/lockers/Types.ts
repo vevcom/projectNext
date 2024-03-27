@@ -4,6 +4,7 @@ export type LockerWithReservation = Locker & {
     LockerReservation: {
         id: number,
         user: {
+            id: number
             firstname: string
             lastname: string
         },

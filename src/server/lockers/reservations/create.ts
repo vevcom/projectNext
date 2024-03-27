@@ -13,17 +13,18 @@ import type { LockerReservation } from '@prisma/client'
  */
 export async function createLockerReservation(
     userId: number,
+    lockerId: number,
     data: CreateLockerReservationTypes['Detailed']
 ): Promise<LockerReservation> {
     // const data = createLockerReservationValidation.detailedValidate(rawdata)
     if (data.committeeId == -1) {
         delete (data as any).committeeId
     }
-    console.log("test")
     return await prismaCall(() => prisma.lockerReservation.create({
         data: {
             ...data,
             userId,
+            lockerId
         }
     }))
 }

@@ -21,6 +21,7 @@ export async function readLocker(id: number): Promise<LockerWithReservation> {
                     id: true,
                     user: {
                         select: {
+                            id: true,
                             firstname: true,
                             lastname: true
                         }
@@ -54,6 +55,7 @@ export async function readLockerPage<const PageSize extends number>(
                     id: true,
                     user: {
                         select: {
+                            id: true,
                             firstname: true,
                             lastname: true
                         }
