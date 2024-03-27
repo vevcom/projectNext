@@ -1,5 +1,7 @@
 import { VisibilityRequiermentForAdmin } from '@/actions/visibility/Types'
 import styles from './VisibilityLevelAdmin.module.scss'
+import Form from '../Form/Form'
+import { updateVisibilityAction } from '@/actions/visibility/update'
 
 type PropTypes = {
     data: VisibilityRequiermentForAdmin[]
@@ -10,7 +12,10 @@ export default function VisibilityLevelAdmin({ level, data, levelName } : PropTy
     return (
         <div className={styles.VisibilityLevelAdmin}>
             <h2>{levelName}</h2>
-            <div className={styles.requierments}>
+            <Form 
+                className={styles.requierments}
+                action={updateVisibilityAction}
+            >
             {
                 data.map(requiement =>
                     <div key={requiement.groups[0]?.id || requiement.name}>
@@ -23,7 +28,7 @@ export default function VisibilityLevelAdmin({ level, data, levelName } : PropTy
                     </div>
                 )
             }
-            </div>
+            </Form>
         </div>
     )
 }

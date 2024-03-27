@@ -17,21 +17,3 @@ export async function updateNewsAction(
     const data = parse.data
     return await safeServerCall(() => updateNews(id, data))
 }
-
-export async function publishNewsAction(
-    // disable eslint rule temporarily until todo is resolved
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    id: number,
-    // disable eslint rule temporarily until todo is resolved
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    shouldPublish: boolean
-): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    return createActionError('UNKNOWN ERROR', 'Not implemented')
-}
-
-// disable eslint rule temporarily until todo is resolved
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function updateVisibilityAction(id: number, visible: unknown): Promise<ActionReturn<unknown>> {
-    //TODO: add visible field to news
-    return createActionError('UNKNOWN ERROR', 'Not implemented')
-}
