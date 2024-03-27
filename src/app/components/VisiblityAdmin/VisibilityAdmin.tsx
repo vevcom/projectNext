@@ -17,12 +17,18 @@ export default function VisibilityAdmin({ visibilityId }: PropTypes) {
     if (!data) return null
     return (
         <div className={styles.VisibilityAdmin}>
-            <h2>Administrer synelighet</h2>
-            <p>Synelighet for: {data.purpose}</p>
+            <div className={styles.info}>
+                <h1>Administrer synelighet</h1>
+                <i>Synelighet for: {data.purpose}</i>
+            </div>
             {
                 data.type === 'REGULAR' ? (<>
+                <div className={styles.borderBottom}>
                     <VisibilityLevelAdmin level='REGULAR' levelName='Synelig' data={data.regular} />
+                </div>
+                <div>
                     <VisibilityLevelAdmin level='ADMIN' levelName='Admin' data={data.admin} />
+                </div>
                 </>) : (<>
                     <p>{data.message}</p>
                     <p>{data.regular}</p>
