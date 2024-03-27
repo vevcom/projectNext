@@ -4,7 +4,7 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
-import type { UserFiltered, UserDetails } from './Types'
+import type { UserFiltered, UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 
 /**
@@ -16,7 +16,7 @@ import type { ReadPageInput } from '@/actions/Types'
 export async function readUserPage<const PageSize extends number>({
     page,
     details
-}: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
+}: ReadPageInput<PageSize, UserDetails>): Promise<UserPagingReturn[]> {
     const words = details.partOfName.split(' ')
 
     if (details.groups.length > maxNumberOfGroupsInFilter) {
