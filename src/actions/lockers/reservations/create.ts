@@ -7,6 +7,7 @@ import { createLockerReservationValidation } from '@/server/lockers/reservations
 import type { CreateLockerReservationTypes } from '@/server/lockers/reservations/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
+import { readLockerAction } from '../read'
 
 export async function createLockerReservationAction(
     lockerId: number,
@@ -21,6 +22,13 @@ export async function createLockerReservationAction(
     const parse = createLockerReservationValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
+
+    const locker = await readLockerAction(lockerId)
+    if (locker.success) {
+        if (locker.data.LockerReservation.length) {
+            return createActionError("DUPLICATE")
+        }
+    }
 
     return await safeServerCall(() => createLockerReservation(user.id, lockerId, data))
 }
