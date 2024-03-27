@@ -20,7 +20,7 @@ export default function UpdateLockerReservationForm({ reservationId }: PropTypes
             action={updateLockerReservationAction.bind(null, reservationId)}
         >   
             <Select label="Reserver for" name="committeeId" options={[{value: "-1", label: "Meg selv"}]} />
-            <DateInput label="date" name="endDate"/>
+            <DateInput label="Reserver fram til" name="endDate"/>
         </Form>
     )
 }

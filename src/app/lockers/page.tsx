@@ -12,7 +12,7 @@ export default async function Lockers() {
     })
 
     return (
-        <PageWrapper title="Skapreservasjon">
+        <PageWrapper title="Skap">
             <LockerPagingProvider
                     startPage={{
                         pageSize: 20,

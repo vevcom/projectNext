@@ -1,3 +1,5 @@
+import styles from './page.module.scss'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/actions/lockers/read'
 import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
@@ -29,28 +31,30 @@ export default async function Locker({ params }: PropTypes) {
     const reserved = locker.data.LockerReservation.length > 0
 
     return (
-        <div>
-            <h1>Skap nr. {params.id}</h1>
-            <p>{locker.data.building} {locker.data.floor}. etasje</p>
-            {
-                reserved 
-                ?
+        <PageWrapper title="Skapreservasjon">
+            <div className={styles.lockerCard}>
+                <h2>Skap nr. {params.id}</h2>
+                <p>{locker.data.building} {locker.data.floor}. etasje</p>
+                {
+                    reserved 
+                    ?
                     <>
-                        <p>Dette skapet er reservert av {locker.data.LockerReservation[0].user.firstname} {locker.data.LockerReservation[0].user.lastname} {locker.data.LockerReservation[0].endDate == null ? "på ubestemt tid" : `fram til ${locker.data.LockerReservation[0].endDate.toLocaleDateString()}`}</p>
-                        {
-                            user.id == locker.data.LockerReservation[0].user.id
-                            ?
+                            <p>Dette skapet er reservert av {locker.data.LockerReservation[0].user.firstname} {locker.data.LockerReservation[0].user.lastname} {locker.data.LockerReservation[0].endDate == null ? "på ubestemt tid" : `fram til ${locker.data.LockerReservation[0].endDate.toLocaleDateString()}`}</p>
+                            {
+                                user.id == locker.data.LockerReservation[0].user.id
+                                ?
                                 <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id}/>
-                            :
+                                :
                                 <></>
-                        }
-                    </>
-                :   
+                            }
+                        </>
+                    :   
                     <>
-                        <p>Dette skapet er ledig</p>
-                        <CreateLockerReservationForm lockerId={lockerId} />
-                    </>
-            }
-        </div>
+                            <p>Dette skapet er ledig</p>
+                            <CreateLockerReservationForm lockerId={lockerId} />
+                        </>
+                }
+            </div>
+        </PageWrapper>
     )
 }
