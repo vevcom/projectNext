@@ -35,7 +35,7 @@ export default function GroupAdmin() {
             details={{
                 groups: [{
                     groupId: group.id,
-                    groupOrder: null
+                    groupOrder: 'ACTIVE'
                 }],
                 partOfName: ''
             }}

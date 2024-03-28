@@ -1,7 +1,7 @@
 'use client'
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
-import { publishNewsAction, updateNewsAction, updateVisibilityAction } from '@/actions/news/update'
+import { updateNewsAction } from '@/actions/news/update'
 import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
@@ -26,13 +26,9 @@ export default function EditNews({ news, children }: PropTypes) {
     const canEdit = useEditing({})
     if (!canEdit) return children
 
-    //TODO: add publish functionality with visibility
-    const isPublished = false //temp
+    // TODO: VISINILITY ADMIN
 
-    const publishAction = publishNewsAction.bind(null, news.id).bind(null, true)
-    const unpublishAction = publishNewsAction.bind(null, news.id).bind(null, false)
     const updateAction = updateNewsAction.bind(null, news.id)
-    const updateVisibilityActionBind = updateVisibilityAction.bind(null, news.id).bind(null, true)
 
     return (
         <div className={styles.EditNews}>
@@ -41,6 +37,7 @@ export default function EditNews({ news, children }: PropTypes) {
                     action={updateAction}
                     successCallback={(data) => {
                         push(`/news/${data?.orderPublished}/${data?.articleName}`)
+                        refresh()
                     }}
                     submitText="oppdater"
                 >
@@ -62,6 +59,7 @@ export default function EditNews({ news, children }: PropTypes) {
                     action={destroyNewsAction.bind(null, news.id)}
                     successCallback={() => {
                         push('/news')
+                        refresh()
                     }}
                     submitText="slett nyhet"
                     confirmation={{
@@ -74,38 +72,11 @@ export default function EditNews({ news, children }: PropTypes) {
             </div>
             <div className={styles.visibility}>
                 Her kommer visibility settings
-                <Form
-                    action={updateVisibilityActionBind}
-                    submitText="oppdater synlighet"
 
-                >
-
-                </Form>
             </div>
 
             <div className={styles.publish}>
-                {
-                    isPublished ? (
-                        <>
-                            <p>Denne nyheten er publisert</p>
-                            <Form
-                                action={unpublishAction}
-                                successCallback={refresh}
-                                submitText="avpubliser"
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <p>Denne nyheten er ikke publisert enda</p>
-                            <Form
-                                action={publishAction}
-                                successCallback={refresh}
-                                submitText="publiser"
-                            />
-                        </>
-                    )
 
-                }
             </div>
         </div>
     )
