@@ -23,11 +23,11 @@ export type UserPagingReturn = UserFiltered & StandardMembeships & {
 export type UserDetails = {
     groups: {
         groupId: number
-        groupOrder: number | null //null means take current order.
+        groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }[]
     partOfName: string
     extraInfoOnMembership?: {
         groupId: number
-        groupOrder: number | null //null means take current order.
+        groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }
 }

@@ -1,11 +1,11 @@
-import { maxNumberOfGroupsInFilter, userFilterSelection } from './ConfigVars'
-import { readCurrentGroupOrder } from '@/server/groups/read'
+import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
 import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
+import { Prisma } from '@prisma/client'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -22,19 +22,15 @@ export async function readUserPage<const PageSize extends number>({
     if (details.groups.length > maxNumberOfGroupsInFilter) {
         throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
     }
-    const groups = await Promise.all(details.groups.map(async ({ groupId, groupOrder }) => {
-        const order = await readCurrentGroupOrder(groupId)
-        return {
-            groupId,
-            groupOrder: groupOrder ?? order,
-            strictness: groupOrder ? 'EXACT' as const : 'ACTIVE' as const
-        }
-    }))
-
-    const selectExtraInfoAboutMembership = details.extraInfoOnMembership ? [{
-        groupId: details.extraInfoOnMembership.groupId,
-        order: details.extraInfoOnMembership.groupOrder ?? await readCurrentGroupOrder(details.extraInfoOnMembership.groupId)
-    }] : []
+    const extraInforAboutMembershipSelection = details.extraInfoOnMembership ? [
+        getActiveMembershipFilter(details.extraInfoOnMembership.groupOrder, details.extraInfoOnMembership.groupId)
+    ] : []
+    const membershipWhereSelection : Prisma.MembershipWhereInput[] = [
+        ...standardMembershipSelection,
+        ...extraInforAboutMembershipSelection
+    ]
+    
+    const groups = details.groups
 
     const users = await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
@@ -55,25 +51,8 @@ export async function readUserPage<const PageSize extends number>({
                     }
                 },
                 where: {
-                    OR: [
-                        ...selectExtraInfoAboutMembership,
-                        {
-                            group: {
-                                groupType: 'CLASS'
-                            }
-                        },
-                        {
-                            group: {
-                                groupType: 'OMEGA_MEMBERSHIP_GROUP'
-                            }
-                        },
-                        {
-                            group: {
-                                groupType: 'STUDY_PROGRAMME'
-                            }
-                        }
-                    ]
-                },
+                    OR: membershipWhereSelection,
+                }
             },
         },
         where: {
@@ -94,8 +73,7 @@ export async function readUserPage<const PageSize extends number>({
                 ...groups.map(group => ({
                     memberships: {
                         some: {
-                            groupId: group.groupId,
-                            ...getActiveMembershipFilter(group.groupOrder, group.strictness),
+                            ...getActiveMembershipFilter(group.groupOrder, group.groupId),
                         }
                     }
                 }))

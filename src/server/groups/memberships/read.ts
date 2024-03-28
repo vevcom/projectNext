@@ -36,18 +36,15 @@ export async function readMembershipsOfGroups(ids: number[]): Promise<ExpandedMe
 /**
  * Reads valid memberships of a user of a order
  * @param id - The id of the user
- * @param order - The order of what is considered valid membership. If undefined all memberships
- * are returned.
- * @returns
+ * @param order - The order of what is considered valid membership.
+ * If 'ACTIVE' is given, only active memberships are returned.
+ * If undefined is given, all memberships are returned.
+ * @returns - The memberships of a user of a order of 'ACTIVE' memberships, or all memberships.
  */
 export async function readMembershipsOfUser(
     id: number,
-    order?: number
+    order?: number | 'ACTIVE'
 ): Promise<BasicMembership[]> {
-    if (order === undefined) {
-        order = (await readCurrentOmegaOrder()).order
-    }
-
     return await prismaCall(() => prisma.membership.findMany({
         where: order ? {
             userId: id,
@@ -56,6 +53,7 @@ export async function readMembershipsOfUser(
         select: {
             admin: true,
             groupId: true,
+            active: true,
         }
     }))
 }
