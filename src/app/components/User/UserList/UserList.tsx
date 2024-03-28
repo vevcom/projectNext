@@ -73,24 +73,24 @@ export default function UserList({ className, disableFilters = {
     const [groupSelection, setGroupSelection] = useState<{
         [X in GroupSelectionType]: {
             group: ExpandedGroup | null,
-            groupOrder: number | null
+            groupOrder: number | 'ACTIVE'
         }
     }>({
         COMMITTEE: {
             group: null,
-            groupOrder: null
+            groupOrder: 'ACTIVE'
         },
         CLASS: {
             group: null,
-            groupOrder: null
+            groupOrder: 'ACTIVE'
         },
         STUDY_PROGRAMME: {
             group: null,
-            groupOrder: null
+            groupOrder: 'ACTIVE'
         },
         OMEGA_MEMBERSHIP_GROUP: {
             group: null,
-            groupOrder: null
+            groupOrder: 'ACTIVE'
         }
     })
 
@@ -105,7 +105,7 @@ export default function UserList({ className, disableFilters = {
                     })
                 }
                 return acc
-            }, [] as { groupId: number, groupOrder: number | null }[])
+            }, [] as { groupId: number, groupOrder: number | 'ACTIVE' }[])
         })
     }, [groupSelection])
 
@@ -123,7 +123,7 @@ export default function UserList({ className, disableFilters = {
             ...groupSelection,
             [type]: {
                 group: groups.find(group => group.id === groupId) ?? null,
-                groupOrder: null
+                groupOrder: 'ACTIVE'
             }
         })
     }
