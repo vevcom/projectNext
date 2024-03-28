@@ -1,7 +1,7 @@
 import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
+import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import type { Group, OmegaMembershipLevel, User } from '@prisma/client'
 import type { ExpandedGroup, GroupsStructured } from './Types'
 
@@ -43,8 +43,6 @@ export async function readGroup(id: number): Promise<Group> {
 }
 
 export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
-    const membershipFilter = getActiveMembershipFilter('ACTIVE')
-
     const groups = await prismaCall(() => prisma.group.findMany({
         include: {
             memberships: {
@@ -63,10 +61,7 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
     }))
 
     const groupsWithMembers = await Promise.all(groups.map(group => prisma.membership.count({
-        where: {
-            groupId: group.id,
-            ...membershipFilter,
-        },
+        where: getMembershipFilter('ACTIVE', group.id)
     })
     )).then(members => groups.map((group, i) => ({ ...group, members: members[i] })))
 

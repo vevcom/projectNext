@@ -1,7 +1,7 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
+import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import type { ExpandedMembership, BasicMembership } from './Types'
@@ -48,7 +48,7 @@ export async function readMembershipsOfUser(
     return await prismaCall(() => prisma.membership.findMany({
         where: order ? {
             userId: id,
-            ...getActiveMembershipFilter(order)
+            ...getMembershipFilter(order)
         } : { userId: id },
         select: {
             admin: true,

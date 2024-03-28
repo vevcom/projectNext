@@ -6,7 +6,7 @@ import type { Prisma } from '@prisma/client'
  * @param groupId - The id of the group to filter by. I.e only memberships of this group.
  * @returns - A filter that only selects valid memberships of a order.
  */
-export function getActiveMembershipFilter(
+export function getMembershipFilter(
     order: number | 'ACTIVE',
     groupId?: number | undefined,
 ) {

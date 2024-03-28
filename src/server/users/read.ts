@@ -2,7 +2,7 @@ import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelec
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { getActiveMembershipFilter } from '@/auth/getActiveMembershipFilter'
+import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 import { Prisma } from '@prisma/client'
@@ -23,7 +23,7 @@ export async function readUserPage<const PageSize extends number>({
         throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
     }
     const extraInforAboutMembershipSelection = details.extraInfoOnMembership ? [
-        getActiveMembershipFilter(details.extraInfoOnMembership.groupOrder, details.extraInfoOnMembership.groupId)
+        getMembershipFilter(details.extraInfoOnMembership.groupOrder, details.extraInfoOnMembership.groupId)
     ] : []
     const membershipWhereSelection : Prisma.MembershipWhereInput[] = [
         ...standardMembershipSelection,
@@ -73,7 +73,7 @@ export async function readUserPage<const PageSize extends number>({
                 ...groups.map(group => ({
                     memberships: {
                         some: {
-                            ...getActiveMembershipFilter(group.groupOrder, group.groupId),
+                            ...getMembershipFilter(group.groupOrder, group.groupId),
                         }
                     }
                 }))
