@@ -32,7 +32,6 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    membershipRenewal: true,
                     order,
                 }
             },

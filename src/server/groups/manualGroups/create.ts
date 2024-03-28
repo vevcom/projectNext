@@ -6,7 +6,6 @@ import type { ExpandedManualGroup } from './Types'
 type CreateManualGroupArgs = {
     name: string,
     shortName: string,
-    membershipRenewal: boolean,
 }
 
 export async function createManualGroup(data: CreateManualGroupArgs): Promise<ExpandedManualGroup> {
@@ -18,7 +17,6 @@ export async function createManualGroup(data: CreateManualGroupArgs): Promise<Ex
             group: {
                 create: {
                     groupType: 'MANUAL_GROUP',
-                    membershipRenewal: data.membershipRenewal,
                     order,
                 }
             }

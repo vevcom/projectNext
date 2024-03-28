@@ -18,7 +18,6 @@ export async function createInterestGroup({ name, shortName }: CreateInterestGro
             group: {
                 create: {
                     groupType: 'INTEREST_GROUP',
-                    membershipRenewal: false,
                     order,
                 }
             }

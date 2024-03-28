@@ -4,7 +4,6 @@ import prisma from '@/prisma'
 type UpdateManualGroupArgs = {
     name?: string,
     shortName?: string,
-    membershipRenewal?: boolean,
 }
 
 export async function updateManualGroup(id: number, data: UpdateManualGroupArgs) {
@@ -12,13 +11,6 @@ export async function updateManualGroup(id: number, data: UpdateManualGroupArgs)
         where: {
             id,
         },
-        data: {
-            ...data,
-            group: {
-                update: {
-                    membershipRenewal: data.membershipRenewal,
-                },
-            },
-        },
+        data
     }))
 }

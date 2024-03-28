@@ -36,6 +36,7 @@ export async function createMembershipForUser(
                 }
             },
             admin,
+            active: true,
         },
     }))
 }
@@ -56,6 +57,7 @@ export async function createMembershipsForGroup(
             userId,
             admin,
             order,
+            active: true,
         })),
         skipDuplicates: true,
     }))
@@ -78,6 +80,7 @@ export async function createMembershipsForUser(
             userId,
             admin,
             order: orderArg ?? ordersMap.find(order => order.id === groupId)?.order ?? fallbackOrder,
+            active: true,
         })),
         skipDuplicates: true,
     }))

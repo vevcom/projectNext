@@ -20,7 +20,6 @@ export async function createStudyProgramme(data: CreateStudyProgrammeArgs): Prom
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
                     order,
                 }
             }
@@ -57,7 +56,6 @@ export async function upsertStudyProgrammes(programmes: CreateStudyProgrammeArgs
                         group: {
                             create: {
                                 groupType: 'STUDY_PROGRAMME',
-                                membershipRenewal: true,
                                 order,
                             },
                         },
