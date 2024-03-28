@@ -16,7 +16,6 @@ export default async function seedGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'CLASS',
-                    membershipRenewal: false,
                     order,
                 },
             }
@@ -30,7 +29,6 @@ export default async function seedGroups(prisma: PrismaClient) {
                 group: {
                     create: {
                         groupType: 'OMEGA_MEMBERSHIP_GROUP',
-                        membershipRenewal: true,
                         order,
                     },
                 }

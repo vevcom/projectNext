@@ -79,6 +79,7 @@ model Membership {
   group      Group      @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId    Int
   admin      Boolean
+  active     Boolean
   title      String     @default("Medlem")
   omegaOrder OmegaOrder @relation(fields: [order], references: [order])
   order      Int
@@ -107,7 +108,6 @@ enum GroupType {
 model Group {
   id                Int           @id @default(autoincrement())
   groupType         GroupType
-  membershipRenewal Boolean
   memberships       Membership[]
   roles             RolesGroups[]
   omegaOrder        OmegaOrder    @relation(fields: [order], references: [order])

@@ -41,6 +41,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 connect: order
             },
             admin: true,
+            active: true,
         },
     }
 
@@ -51,7 +52,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    membershipRenewal: false,
                     memberships,
                     order: order.order,
                 },
@@ -71,7 +71,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'MANUAL_GROUP',
-                    membershipRenewal: true,
                     order: order.order,
                 },
             },
@@ -85,7 +84,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    membershipRenewal: false,
                     order: order.order,
                 },
             },
@@ -104,7 +102,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'INTEREST_GROUP',
-                    membershipRenewal: true,
                     order: order.order,
                 },
             },
@@ -118,7 +115,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
                     order: order.order,
                 },
             },
