@@ -1,6 +1,10 @@
 'use server'
-import { ActionReturn } from "../Types";
- 
-export async function updateVisibilityAction(formdata: FormData) : Promise<ActionReturn<void>> {
-    return {success: true, data: undefined}
-}   
+import type { ActionReturn } from '@/actions/Types'
+
+export async function updateVisibilityAction(
+    level: 'REGULAR' | 'ADMIN',
+    formdata: FormData
+): Promise<ActionReturn<void>> {
+    console.log(formdata)
+    return { success: true, data: undefined }
+}

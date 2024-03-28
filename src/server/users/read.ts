@@ -3,9 +3,9 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
+import type { Prisma } from '@prisma/client'
 import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
-import { Prisma } from '@prisma/client'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -25,11 +25,11 @@ export async function readUserPage<const PageSize extends number>({
     const extraInforAboutMembershipSelection = details.extraInfoOnMembership ? [
         getMembershipFilter(details.extraInfoOnMembership.groupOrder, details.extraInfoOnMembership.groupId)
     ] : []
-    const membershipWhereSelection : Prisma.MembershipWhereInput[] = [
+    const membershipWhereSelection: Prisma.MembershipWhereInput[] = [
         ...standardMembershipSelection,
         ...extraInforAboutMembershipSelection
     ]
-    
+
     const groups = details.groups
 
     const users = await prismaCall(() => prisma.user.findMany({
@@ -89,11 +89,16 @@ export async function readUserPage<const PageSize extends number>({
         ]
     }))
     return users.map(user => {
-        const clas = user.memberships.find(m => m.group.class !== null)?.group.class?.year
-        const studyProgramme = user.memberships.find(m => m.group.studyProgramme !== null)?.group.studyProgramme?.code
-        const membershipType = user.memberships.find(m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
-        const title = user.memberships.find(m => m.groupId === details.extraInfoOnMembership?.groupId)?.title
-        const admin = user.memberships.find(m => m.groupId === details.extraInfoOnMembership?.groupId)?.admin
+        const clas = user.memberships.find(
+            m => m.group.class !== null)?.group.class?.year
+        const studyProgramme = user.memberships.find(
+            m => m.group.studyProgramme !== null)?.group.studyProgramme?.code
+        const membershipType = user.memberships.find(
+            m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
+        const title = user.memberships.find(
+            m => m.groupId === details.extraInfoOnMembership?.groupId)?.title
+        const admin = user.memberships.find(
+            m => m.groupId === details.extraInfoOnMembership?.groupId)?.admin
         return {
             ...user,
             class: clas,
@@ -105,5 +110,4 @@ export async function readUserPage<const PageSize extends number>({
             }
         }
     })
-
 }

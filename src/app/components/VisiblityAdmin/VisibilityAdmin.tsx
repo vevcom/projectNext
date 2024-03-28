@@ -1,9 +1,9 @@
 'use client'
 import styles from './VisibilityAdmin.module.scss'
+import VisibilityLevelAdmin from './VisibilityLevelAdmin'
 import useActionCall from '@/hooks/useActionCall'
 import { readVisibilityForAdminAction } from '@/actions/visibility/read'
 import { useCallback } from 'react'
-import VisibilityLevelAdmin from './VisibilityLevelAdmin'
 
 type PropTypes = {
     visibilityId: number
@@ -23,12 +23,12 @@ export default function VisibilityAdmin({ visibilityId }: PropTypes) {
             </div>
             {
                 data.type === 'REGULAR' ? (<>
-                <div className={styles.borderBottom}>
-                    <VisibilityLevelAdmin level='REGULAR' levelName='Synelig' data={data.regular} />
-                </div>
-                <div>
-                    <VisibilityLevelAdmin level='ADMIN' levelName='Admin' data={data.admin} />
-                </div>
+                    <div className={styles.borderBottom}>
+                        <VisibilityLevelAdmin level="REGULAR" levelName="Synelig" data={data.regular} />
+                    </div>
+                    <div>
+                        <VisibilityLevelAdmin level="ADMIN" levelName="Admin" data={data.admin} />
+                    </div>
                 </>) : (<>
                     <p>{data.message}</p>
                     <p>{data.regular}</p>

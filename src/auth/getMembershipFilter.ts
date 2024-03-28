@@ -11,10 +11,10 @@ export function getMembershipFilter(
     groupId?: number | undefined,
 ) {
     return order === 'ACTIVE' ? {
-        groupId: groupId,
+        groupId,
         active: true,
     } : {
-        groupId: groupId,
-        order: order,
+        groupId,
+        order,
     } satisfies Prisma.MembershipWhereInput
 }

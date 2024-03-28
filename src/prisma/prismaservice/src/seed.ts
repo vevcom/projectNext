@@ -10,8 +10,8 @@ import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedDevGroups from './development/seedDevGroups'
 import seedGroups from './seedGroups'
-import { PrismaClient } from '@/generated/pn'
 import SeedSpecialVisibility from './seedSpecialVisibility'
+import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
     const prisma = new PrismaClient()

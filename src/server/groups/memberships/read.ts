@@ -2,7 +2,6 @@ import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import prisma from '@/prisma'
 import type { ExpandedMembership, BasicMembership } from './Types'
 
