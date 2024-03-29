@@ -4,15 +4,27 @@ import type { UserPagingReturn } from '@/server/users/Types'
 type PropTypes = {
     user: UserPagingReturn
     className?: string
+    groupSelected?: boolean
 }
 
-export default function UserRow({ user, className }: PropTypes) {
+export default function UserRow({ 
+    user, 
+    className, 
+    groupSelected = false 
+}: PropTypes) {
     return (
         <span className={`${styles.UserRow} ${className}`}>
             <p>{user.lastname}, {user.firstname}</p>
             <p>{user.username}</p>
             <p>{user.studyProgramme}</p>
             <p>{user.class}</p>
+            {
+                groupSelected && (<>
+                    <p>{user.extraInfoOnMembership?.admin ? 'Ja' : 'Nei'}</p>
+                    <p>{user.extraInfoOnMembership?.title}</p>
+                </>)
+            }
+            
         </span>
     )
 }

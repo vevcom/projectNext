@@ -69,6 +69,8 @@ export default function UserList({ className, disableFilters = {
     const userPaging = useContext(UserPagingContext)
     const userSelection = useContext(UserSelectionContext)
 
+    const groupSelected = userPaging?.deatils.selectedGroup ? true : false
+
     const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
     const [groupSelection, setGroupSelection] = useState<{
         [X in GroupSelectionType]: {
@@ -224,11 +226,23 @@ export default function UserList({ className, disableFilters = {
                 }
             </div>
             <div className={styles.list}>
-                <span className={userSelection ? `${styles.head} ${styles.adjust}` : styles.head}>
+                <span className={
+                    styles.head + ' '
+                    + (userSelection ? styles.adjust + ' ' : ' ')
+                    + (groupSelected ? styles.extraInfo : '')
+                }>
                     <h3>Navn</h3>
                     <h3>Brukernavn</h3>
                     <h3>Studie</h3>
                     <h3>Klasse</h3>
+                    {
+                        groupSelected && (
+                            <>
+                                <h3>Tittel</h3>
+                                <h3>Admin</h3>
+                            </>
+                        )
+                    }
                 </span>
 
                 <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
@@ -240,7 +254,14 @@ export default function UserList({ className, disableFilters = {
                                 <FontAwesomeIcon icon={faCheck} />
                             </button>
                         }
-                        <UserRow className={styles.userRow} user={user} />
+                        <UserRow 
+                            groupSelected
+                            className={
+                                styles.userRow + ' '
+                                + groupSelected ? styles.extraInfo : ''
+                            } 
+                            user={user} 
+                        />
                     </span>
                 )} />
             </div>

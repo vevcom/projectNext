@@ -22,8 +22,8 @@ export async function readUserPage<const PageSize extends number>({
     if (details.groups.length > maxNumberOfGroupsInFilter) {
         throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
     }
-    const extraInforAboutMembershipSelection = details.extraInfoOnMembership ? [
-        getMembershipFilter(details.extraInfoOnMembership.groupOrder, details.extraInfoOnMembership.groupId)
+    const extraInforAboutMembershipSelection = details.selectedGroup ? [
+        getMembershipFilter(details.selectedGroup.groupOrder, details.selectedGroup.groupId)
     ] : []
     const membershipWhereSelection: Prisma.MembershipWhereInput[] = [
         ...standardMembershipSelection,
@@ -31,6 +31,7 @@ export async function readUserPage<const PageSize extends number>({
     ]
 
     const groups = details.groups
+    if (details.selectedGroup) groups.concat(details.selectedGroup)
 
     const users = await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
@@ -51,7 +52,12 @@ export async function readUserPage<const PageSize extends number>({
                     }
                 },
                 where: {
-                    OR: membershipWhereSelection,
+                    AND: [
+                        {
+                            OR: membershipWhereSelection,
+                        },
+                        getMembershipFilter('ACTIVE')
+                    ]
                 }
             },
         },
@@ -96,9 +102,9 @@ export async function readUserPage<const PageSize extends number>({
         const membershipType = user.memberships.find(
             m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
         const title = user.memberships.find(
-            m => m.groupId === details.extraInfoOnMembership?.groupId)?.title
+            m => m.groupId === details.selectedGroup?.groupId)?.title
         const admin = user.memberships.find(
-            m => m.groupId === details.extraInfoOnMembership?.groupId)?.admin
+            m => m.groupId === details.selectedGroup?.groupId)?.admin
         return {
             ...user,
             class: clas,

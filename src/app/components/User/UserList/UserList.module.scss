@@ -68,11 +68,14 @@ $selectionBtnSize: 25px;
             border-radius: ohma.$rounding;
             background-color: ohma.$colors-secondary;
         }
-        span {
+        .head, .userRow {
             display: grid;
             grid-template-columns: 3fr 2fr 1fr 1fr;
             > * {
                 text-align: left;
+            }
+            &.extraInfo {
+                grid-template-columns: 1fr 1.3fr 1fr 1fr 1fr 1fr;
             }
         } 
     }

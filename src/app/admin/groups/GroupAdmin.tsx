@@ -37,7 +37,11 @@ export default function GroupAdmin() {
                     groupId: group.id,
                     groupOrder: 'ACTIVE'
                 }],
-                partOfName: ''
+                partOfName: '',
+                extraInfoOnMembership: {
+                    groupId: group.id,
+                    groupOrder: 'ACTIVE'
+                }
             }}
         >
             <div className={styles.GroupAdmin}>

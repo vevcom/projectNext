@@ -19,6 +19,8 @@ export type UserPagingReturn = UserFiltered & StandardMembeships & {
 /**
  * Groups is an array of group ids and order. They will be ANDed together.
  * PartOfName is a string that is part of the name of the user.
+ * selectedGroup will also filter on that group, but will also return extra
+ * info about that membership.
  */
 export type UserDetails = {
     groups: {
@@ -26,7 +28,7 @@ export type UserDetails = {
         groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }[]
     partOfName: string
-    extraInfoOnMembership?: {
+    selectedGroup?: {
         groupId: number
         groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }
