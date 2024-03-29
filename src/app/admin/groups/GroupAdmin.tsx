@@ -33,12 +33,9 @@ export default function GroupAdmin() {
                 pageSize: 50
             }}
             details={{
-                groups: [{
-                    groupId: group.id,
-                    groupOrder: 'ACTIVE'
-                }],
+                groups: [],
                 partOfName: '',
-                extraInfoOnMembership: {
+                selectedGroup: {
                     groupId: group.id,
                     groupOrder: 'ACTIVE'
                 }

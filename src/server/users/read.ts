@@ -22,12 +22,12 @@ export async function readUserPage<const PageSize extends number>({
     if (details.groups.length > maxNumberOfGroupsInFilter) {
         throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
     }
-    const extraInforAboutMembershipSelection = details.selectedGroup ? [
+    const groupSelection = details.selectedGroup ? [
         getMembershipFilter(details.selectedGroup.groupOrder, details.selectedGroup.groupId)
     ] : []
     const membershipWhereSelection: Prisma.MembershipWhereInput[] = [
         ...standardMembershipSelection,
-        ...extraInforAboutMembershipSelection
+        ...groupSelection
     ]
 
     const groups = details.groups
@@ -110,7 +110,7 @@ export async function readUserPage<const PageSize extends number>({
             class: clas,
             studyProgramme,
             membershipType,
-            extraInfoOnMembership: {
+            selectedGroupInfo: {
                 title,
                 admin
             }

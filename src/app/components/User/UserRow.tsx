@@ -20,8 +20,8 @@ export default function UserRow({
             <p>{user.class}</p>
             {
                 groupSelected && (<>
-                    <p>{user.extraInfoOnMembership?.admin ? 'Ja' : 'Nei'}</p>
-                    <p>{user.extraInfoOnMembership?.title}</p>
+                    <p>{user.selectedGroupInfo?.admin ? 'Ja' : 'Nei'}</p>
+                    <p>{user.selectedGroupInfo?.title}</p>
                 </>)
             }
             
