@@ -1,55 +1,35 @@
 'use server'
-
-import { updateUserSchema } from './schema'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError, createActionError } from '@/actions/error'
+import { updateUser } from '@/server/users/update'
+import { registerUser } from '@/server/auth/credentials'
+import { getUser } from '@/auth/getUser'
+import { updateUserValidation, registerUserValidation } from '@/server/users/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import type { UpdateUserSchemaType } from './schema'
+import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
 
-
-export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
-    const parse = updateUserSchema.safeParse(rawdata)
-
+export async function updateUserAction(
+    id: number,
+    rawdata: FormData | UpdateUserTypes['Type']
+): Promise<ActionReturn<User>> {
+    //TODO: Permission check
+    const parse = updateUserValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id,
-            },
-            data
-        })
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => updateUser(id, data))
 }
 
-// These function should maybe be in another place than server actions? @Paulijuz
+export async function updateUserCredentailsAction(
+    rawdata: FormData | RegisterUserTypes['Type']
+): Promise<ActionReturn<null>> {
+    const { user, status } = await getUser() //TODO: Permission check
+    if (!user) return createActionError(status)
+    //TODO: Permission check
 
-export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
-    try {
-        await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                updatedAt: new Date(),
-            }
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    const parse = registerUserValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
 
-    return { success: true }
-}
-
-export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
-    const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
-
-    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
-
-    return { success: true }
+    return await safeServerCall(() => registerUser(user.id, parse.data))
 }

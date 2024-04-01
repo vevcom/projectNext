@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import EditNews from './EditNews'
 import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
-import { readNewsByIdOrName } from '@/actions/news/read'
+import { readNewsAction } from '@/actions/news/read'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import { notFound } from 'next/navigation'
 
@@ -16,7 +16,7 @@ export default async function NewsArticle({ params }: PropTypes) {
     const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
     const name = decodeURIComponent(params.orderAndName[1])
     if (!order || !name || params.orderAndName.length > 2) notFound()
-    const res = await readNewsByIdOrName({
+    const res = await readNewsAction({
         articleName: name,
         order,
     })

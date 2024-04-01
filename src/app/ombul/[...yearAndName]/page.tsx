@@ -1,12 +1,13 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
-import { readOmbul } from '@/actions/ombul/read'
+import { readOmbulAction } from '@/actions/ombul/read'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
-import { updateOmbul } from '@/actions/ombul/update'
-import { getUser } from '@/auth/user'
+import { updateOmbulAction } from '@/actions/ombul/update'
+import { getUser } from '@/auth/getUser'
+import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -17,15 +18,16 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
-    const { user } = await getUser({
-        requiredPermissions: ['OMBUL_READ'],
-        required: true,
+    const { permissions } = await getUser({
+        requiredPermissions: [['OMBUL_READ']],
+        userRequired: true,
+        shouldRedirect: true,
     })
 
     const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)
     const name = decodeURIComponent(params.yearAndName[1])
     if (!year || !name || params.yearAndName.length > 2) notFound()
-    const ombulRes = await readOmbul({
+    const ombulRes = await readOmbulAction({
         name,
         year
     })
@@ -34,10 +36,9 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = user.permissions.includes('OMBUL_UPDATE')
-    const canDestroy = user.permissions.includes('OMBUL_DESTROY')
+    const canUpdate = permissions.includes('OMBUL_UPDATE')
 
-    const changeDescription = updateOmbul.bind(null, ombul.id)
+    const changeDescription = updateOmbulAction.bind(null, ombul.id)
 
     return (
         <div className={styles.wrapper}>
@@ -75,11 +76,9 @@ export default async function Ombul({ params }: PropTypes) {
                 </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin
-                    canDestroy={canDestroy}
-                    canUpdate={canUpdate}
-                    ombul={ombul}
-                />
+                <OmbulAdmin ombul={ombul}>
+                    <CmsImage cmsImage={ombul.coverImage} width={400}/>
+                </OmbulAdmin>
             </div>
         </div>
     )

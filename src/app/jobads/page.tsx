@@ -6,7 +6,7 @@ import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 import CreateJobAdForm from './CreateJobAdForm'
 
 export default async function JobAds() {
-    const testImageRes = await readImage('ohma')
+    const testImageRes = await readImageAction('ohma')
     if (!testImageRes.success) throw new Error('Failed to read image')
     const testImage = testImageRes.data
 

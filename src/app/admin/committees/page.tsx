@@ -3,17 +3,17 @@ import CreateCommitteeForm from './CreateCommitteeForm'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import ImageList from '@/app/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
-import { readSpecialImageCollection } from '@/actions/images/collections/read'
+import { readSpecialImageCollectionAction } from '@/actions/images/collections/read'
 import PopUpProvider from '@/context/PopUp'
-import { readSpecialImage } from '@/actions/images/read'
+import { readSpecialImageAction } from '@/actions/images/read'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
 export default async function adminCommittee() {
-    const committeeLogoCollectionRes = await readSpecialImageCollection('COMMITEELOGOS')
+    const committeeLogoCollectionRes = await readSpecialImageCollectionAction('COMMITTEELOGOS')
     if (!committeeLogoCollectionRes.success) throw new Error('Kunne ikke finne komitelogoer')
     const { id: collectionId } = committeeLogoCollectionRes.data
 
-    const defaultCommitteeLogoRes = await readSpecialImage('DAFAULT_COMMITTEE_LOGO')
+    const defaultCommitteeLogoRes = await readSpecialImageAction('DAFAULT_COMMITTEE_LOGO')
     if (!defaultCommitteeLogoRes.success) throw new Error('Kunne ikke finne standard komitelogo')
     const defaultCommitteeLogo = defaultCommitteeLogoRes.data
 
@@ -40,7 +40,7 @@ export default async function adminCommittee() {
                             <ImageList withUpload />
                         </div>
                         <div className={styles.form}>
-                            <CreateCommitteeForm defaultImage={defaultCommitteeLogo} />
+                            <CreateCommitteeForm />
                         </div>
                     </div>
                 </ImageSelectionProvider>

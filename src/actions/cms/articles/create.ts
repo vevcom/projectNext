@@ -1,40 +1,21 @@
 'use server'
-import { articleRealtionsIncluder } from './ConfigVars'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
-import type { ExpandedArticle } from './Types'
+import { createArticle } from '@/server/cms/articles/create'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError } from '@/actions/error'
+import { createArticleValidation } from '@/server/cms/articles/validation'
+import type { CreateArticleTypes } from '@/server/cms/articles/validation'
+import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function createArticle(name: string | null, config?: {
-    categoryId: number,
-}): Promise<ActionReturn<ExpandedArticle>> {
-    try {
-        // if name not given, create a unique new name
-        if (name === null) {
-            let i = 1
-            name = 'Ny artikkel'
-            while (await prisma.article.findFirst({ where: { name } })) {
-                name = `Ny artikkel ${i++}`
-            }
-        }
+export async function createArticleAction(
+    rawData: FormData | CreateArticleTypes['Type'],
+    categoryId?: number,
+): Promise<ActionReturn<ExpandedArticle>> {
+    //TODO: auth on permission or visibility to categoryId
 
+    const parse = createArticleValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-        const article = await prisma.article.create({
-            data: {
-                name,
-                coverImage: {
-                    create: {}
-                },
-                articleCategory: config ? {
-                    connect: {
-                        id: config.categoryId
-                    }
-                } : undefined
-            },
-            include: articleRealtionsIncluder,
-        })
-        return { success: true, data: article }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => createArticle(data, categoryId))
 }

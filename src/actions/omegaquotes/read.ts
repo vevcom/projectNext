@@ -1,41 +1,19 @@
 'use server'
-
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import { getUser } from '@/auth/user'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError } from '@/actions/error'
+import { getUser } from '@/auth/getUser'
+import { readQuotesPage } from '@/server/omegaquotes/read'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { OmegaquoteFiltered } from './Types'
+import type { OmegaquoteFiltered } from '@/server/omegaquotes/Types'
 
-export async function readQuotesPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+export async function readQuotesPageAction<const PageSize extends number>(
+    readPageInput: ReadPageInput<PageSize>
 ): Promise<ActionReturn<OmegaquoteFiltered[]>> {
-    // REFACTOR when new permission system is working
-    const { status } = await getUser({
-        requiredPermissions: ['OMEGAQUOTES_READ']
+    //TODO:  REFACTOR when new permission system is working
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['OMEGAQUOTES_READ']]
     })
+    if (!authorized) return createActionError(status)
 
-    if (status !== 'AUTHORIZED') {
-        return createActionError(status)
-    }
-
-    try {
-        const { page: pageNumber, pageSize } = page
-        const results = await prisma.omegaQuote.findMany({
-            orderBy: {
-                timestamp: 'desc',
-            },
-            skip: pageNumber * pageSize,
-            take: pageSize,
-            select: {
-                id: true,
-                author: true,
-                quote: true,
-                timestamp: true,
-            },
-        })
-
-        return { success: true, data: results }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => readQuotesPage(readPageInput))
 }

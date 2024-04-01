@@ -1,46 +1,26 @@
 'use server'
-import { createCommitteeSchema } from './schema'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { createActionError, createZodActionError } from '@/actions/error'
+import { getUser } from '@/auth/getUser'
+import { createCommittee } from '@/server/groups/committees/create'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createCommitteeValidation } from '@/server/groups/committees/validation'
+import type { ExpandedCommittee } from '@/server/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { createCommitteeSchemaType } from './schema'
-import type { Committee } from '@prisma/client'
+import type { CreateCommitteeTypes } from '@/server/groups/committees/validation'
 
-export default async function createCommittee(
-    committeeLogoImageId: number,
-    rawdata: FormData | createCommitteeSchemaType
-): Promise<ActionReturn<Committee>> {
-    const parse = createCommitteeSchema.safeParse(rawdata)
+export async function createCommitteeAction(
+    rawData: FormData | CreateCommitteeTypes['Type']
+): Promise<ActionReturn<ExpandedCommittee>> {
+    const { authorized, status } = await getUser({
+        requiredPermissions: [['COMMITTEE_CREATE']],
+        shouldRedirect: false,
+        userRequired: false,
+    })
 
+    if (!authorized) return createActionError(status)
+
+    const parse = createCommitteeValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
 
-    const { name } = parse.data
-
-    try {
-        const committeLogo = await prisma.cmsImage.create({
-            data: {
-                name: `${name}_logo`,
-                image: {
-                    connect: {
-                        id: committeeLogoImageId
-                    }
-                }
-            }
-        })
-
-        const committee = await prisma.committee.create({
-            data: {
-                name,
-                logoImage: {
-                    connect: {
-                        id: committeLogo.id
-                    }
-                }
-            },
-        })
-
-        return { success: true, data: committee }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => createCommittee(parse.data))
 }

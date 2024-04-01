@@ -1,10 +1,10 @@
 'use client'
 import styles from './SectionMover.module.scss'
-import { moveSectionOrder } from '@/actions/cms/articles/update'
-import { EditModeContext } from '@/context/EditMode'
+import { moveSectionOrderAction } from '@/actions/cms/articles/update'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
 type PropTypes = {
@@ -16,13 +16,13 @@ type PropTypes = {
 }
 
 export default function SectionMover({ articleId, sectionId, className, showUp, showDown }: PropTypes) {
-    const editMode = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: check visibility of section for user and pass it to useEditing
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
-        await moveSectionOrder(articleId, sectionId, direction)
+        await moveSectionOrderAction(articleId, sectionId, direction)
         refresh()
     }, [sectionId, articleId, refresh])
-    if (!editMode?.editMode) return null
+    if (!canEdit) return null
 
     return (
         <div className={`${styles.SectionMover} ${className}`}>

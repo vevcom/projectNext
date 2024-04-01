@@ -6,7 +6,8 @@ import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
-import type { Action, ActionError } from '@/actions/Types'
+import type { Action } from '@/actions/Types'
+import type { ErrorMessage } from '@/server/error'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 type Colors = ButtonPropTypes['color']
@@ -27,7 +28,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
 }
 type InputType = {
     input: ReactNode & { label?: string },
-    errors: ActionError[],
+    errors: ErrorMessage[],
 }
 type Inputs = InputType[]
 
@@ -40,7 +41,7 @@ function SubmitButton({
     confirmation,
 }: {
     children: ReactNode, generalErrors?:
-    ActionError[],
+    ErrorMessage[],
     success: boolean,
     color: Colors,
     confirmation: Confirmation,
@@ -154,7 +155,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     className,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
-    const [generalErrors, setGeneralErrors] = useState<ActionError[]>()
+    const [generalErrors, setGeneralErrors] = useState<ErrorMessage[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
 
