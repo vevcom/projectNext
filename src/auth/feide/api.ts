@@ -69,7 +69,7 @@ export async function fetchGroupsFromFeide(accessToken: string): Promise<FeideGr
 }
 
 /**
- * A wrapper for `feideFetchGroupsRaw` witch returns an array of studyprogrammes
+ * A wrapper for `fetchGroupsFromFeide` witch returns an array of studyprogrammes
  * that the user is currently part of.
  *
  * @param accessToken - The access token of a Feide account.
