@@ -25,13 +25,8 @@ export async function readUserPage<const PageSize extends number>({
     const groupSelection = details.selectedGroup ? [
         getMembershipFilter(details.selectedGroup.groupOrder, details.selectedGroup.groupId)
     ] : []
-    const membershipWhereSelection: Prisma.MembershipWhereInput[] = [
-        ...standardMembershipSelection,
-        ...groupSelection
-    ]
 
-    const groups = details.groups
-    if (details.selectedGroup) groups.concat(details.selectedGroup)
+    const groups = [...details.groups, ...(details.selectedGroup ? [details.selectedGroup] : [])]
 
     const users = await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
@@ -52,12 +47,20 @@ export async function readUserPage<const PageSize extends number>({
                     }
                 },
                 where: {
-                    AND: [
+                    OR: [
                         {
-                            OR: membershipWhereSelection,
+                            AND: [
+                                {
+                                    OR: standardMembershipSelection,
+                                },
+                                getMembershipFilter('ACTIVE')
+                            ]
                         },
-                        getMembershipFilter('ACTIVE')
+                        {
+                            OR: groupSelection
+                        }
                     ]
+                    
                 }
             },
         },
