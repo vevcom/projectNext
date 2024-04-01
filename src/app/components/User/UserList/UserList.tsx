@@ -257,8 +257,7 @@ export default function UserList({ className, disableFilters = {
                         <UserRow 
                             groupSelected
                             className={
-                                styles.userRow + ' '
-                                + groupSelected ? styles.extraInfo : ''
+                                styles.userRow + ' ' + (groupSelected ? styles.extraInfo : '')
                             } 
                             user={user} 
                         />

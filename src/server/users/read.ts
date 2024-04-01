@@ -3,7 +3,6 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import type { Prisma } from '@prisma/client'
 import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 

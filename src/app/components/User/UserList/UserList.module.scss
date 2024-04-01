@@ -64,7 +64,7 @@ $selectionBtnSize: 25px;
             top: 0;
             left: 0;
             box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
-            padding: 2*ohma.$gap ohma.$gap;
+            padding: 2*ohma.$gap 2*ohma.$gap;
             border-radius: ohma.$rounding;
             background-color: ohma.$colors-secondary;
         }
@@ -75,7 +75,7 @@ $selectionBtnSize: 25px;
                 text-align: left;
             }
             &.extraInfo {
-                grid-template-columns: 1fr 1.3fr 1fr 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1.3fr 1fr 1fr 1fr 0.5fr;
             }
         } 
     }

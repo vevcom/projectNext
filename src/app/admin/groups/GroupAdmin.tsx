@@ -1,5 +1,4 @@
 'use client'
-
 import styles from './GroupAdmin.module.scss'
 import AddUsersToGroup from './AddUsersToGroup'
 import UserList from '@/app/components/User/UserList/UserList'
