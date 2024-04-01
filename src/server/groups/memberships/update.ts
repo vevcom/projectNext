@@ -4,12 +4,17 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
 
-export async function updateMembership(
+export async function updateMembership({
+    groupId,
+    userId,
+    admin,
+    orderArg,
+} : {
     groupId: number,
     userId: number,
     admin: boolean,
     orderArg?: number
-): Promise<ExpandedMembership> {
+}): Promise<ExpandedMembership> {
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
     return await prismaCall(() => prisma.membership.update({
