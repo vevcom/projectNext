@@ -5,6 +5,11 @@ import { safeServerCall } from "@/actions/safeServerCall"
 import { ExpandedMembership } from "@/server/groups/memberships/Types"
 import { destoryMembershipOfUser } from "@/server/groups/memberships/destroy"
 
+/**
+ * WARNING: Do not use this action, usually you want updateMemebershipInactivate
+ * @param 
+ * @returns 
+ */
 export async function destroyMembership({
     groupId,
     userId,

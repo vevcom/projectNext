@@ -12,6 +12,16 @@ export async function updateMembershipAdminAcion(membership: {
     //TODO: make function to check that. user is admin of group
     return await safeServerCall(() => updateMembership({
         ...membership,
-        admin
-    }))
+    }, { admin }))
+}
+
+export async function updateMembershipActiveAction(membership: {
+    groupId: number
+    userId: number
+    order?: number
+}, active: boolean) : Promise<ActionReturn<ExpandedMembership>>{
+    //TODO: make function to check that. user is admin of group
+    return await safeServerCall(() => updateMembership({
+        ...membership,
+    }, { active }))
 }

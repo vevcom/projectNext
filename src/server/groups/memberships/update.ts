@@ -7,13 +7,14 @@ import type { ExpandedMembership } from './Types'
 export async function updateMembership({
     groupId,
     userId,
-    admin,
     orderArg,
 } : {
     groupId: number,
     userId: number,
-    admin: boolean,
     orderArg?: number
+}, data: {
+    admin?: boolean
+    active?: boolean
 }): Promise<ExpandedMembership> {
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
@@ -25,8 +26,7 @@ export async function updateMembership({
                 order,
             },
         },
-        data: {
-            admin,
-        }
+        data
     }))
+
 }
