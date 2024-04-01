@@ -523,9 +523,3 @@ model JobAd {
   @@unique([articleName, orderPublished])
 }
 
-model Committee {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  logoImage   CmsImage @relation(fields: [logoImageId], references: [id])
-  logoImageId Int      @unique
-}
