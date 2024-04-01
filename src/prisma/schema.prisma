@@ -56,7 +56,6 @@ model Credentials {
   // We need to explicitly mark the combination of 'userId' and 'username' as
   // unique to make the relation to 'User' work.
   @@unique([userId, username])
-  @@map("Authentication")
 }
 
 model FeideAccount {
