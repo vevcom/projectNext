@@ -6,11 +6,15 @@ import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
 
-export async function destoryMembershipOfUser(
+export async function destoryMembershipOfUser({
+    groupId,
+    userId,
+    orderArg,
+} : {
     groupId: number,
     userId: number,
     orderArg?: number
-): Promise<ExpandedMembership> {
+}): Promise<ExpandedMembership> {
     if (!await canEasalyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
