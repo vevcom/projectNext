@@ -1,19 +1,19 @@
 'use server'
-import { ActionReturn } from "@/actions/Types"
-import { safeServerCall } from "@/actions/safeServerCall"
-import { ExpandedMembership } from "@/server/groups/memberships/Types"
-import { destoryMembershipOfUser } from "@/server/groups/memberships/destroy"
+import { safeServerCall } from '@/actions/safeServerCall'
+import { destoryMembershipOfUser } from '@/server/groups/memberships/destroy'
+import type { ActionReturn } from '@/actions/Types'
+import type { ExpandedMembership } from '@/server/groups/memberships/Types'
 
 /**
  * WARNING: Do not use this action, usually you want updateMemebershipInactivate
- * @param 
- * @returns 
+ * @param
+ * @returns
  */
 export async function destroyMembership({
     groupId,
     userId,
     orderArg,
-} : {
+}: {
     groupId: number,
     userId: number,
     orderArg: number

@@ -7,10 +7,10 @@ type PropTypes = {
     groupSelected?: boolean
 }
 
-export default function UserRow({ 
-    user, 
-    className, 
-    groupSelected = false 
+export default function UserRow({
+    user,
+    className,
+    groupSelected = false
 }: PropTypes) {
     return (
         <span className={`${styles.UserRow} ${className}`}>
@@ -24,7 +24,7 @@ export default function UserRow({
                     <p>{user.selectedGroupInfo?.admin ? 'Ja' : 'Nei'}</p>
                 </>)
             }
-            
+
         </span>
     )
 }

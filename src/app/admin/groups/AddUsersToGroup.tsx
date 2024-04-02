@@ -6,7 +6,7 @@ import { createMembershipsForGroupAction } from '@/actions/groups/memberships/cr
 import { UserSelectionContext } from '@/context/UserSelection'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import { PopUpKeyType } from '@/context/PopUp'
+import type { PopUpKeyType } from '@/context/PopUp'
 
 type PropTypes = {
     groupId: number,

@@ -8,7 +8,7 @@ export async function updateMembership({
     groupId,
     userId,
     orderArg,
-} : {
+}: {
     groupId: number,
     userId: number,
     orderArg?: number | 'ACTIVE'
@@ -28,5 +28,4 @@ export async function updateMembership({
         },
         data
     }))
-
 }

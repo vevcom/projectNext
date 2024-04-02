@@ -10,7 +10,7 @@ export async function destoryMembershipOfUser({
     groupId,
     userId,
     orderArg,
-} : {
+}: {
     groupId: number,
     userId: number,
     orderArg?: number

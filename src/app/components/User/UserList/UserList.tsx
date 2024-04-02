@@ -10,10 +10,10 @@ import { UserSelectionContext } from '@/context/UserSelection'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import type { UserPagingReturn } from '@/server/users/Types'
 import type { ChangeEvent, ReactNode } from 'react'
 import type { GroupType } from '@prisma/client'
 import type { ExpandedGroup } from '@/server/groups/Types'
-import { UserPagingReturn } from '@/server/users/Types'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 
@@ -70,8 +70,8 @@ function getOrdereOptions(group: ExpandedGroup) {
  * names of the filters and the values are booleans. If a key is not present, the filter is enabled.
  * @returns - A component that displays a list of users with filters for groups and a search bar.
  */
-export default function UserList({ 
-    className, 
+export default function UserList({
+    className,
     displayForUser,
     disableFilters = {
         name: false,
@@ -79,12 +79,12 @@ export default function UserList({
         CLASS: false,
         STUDY_PROGRAMME: false,
         OMEGA_MEMBERSHIP_GROUP: false
-    } 
+    }
 }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const userSelection = useContext(UserSelectionContext)
 
-    const groupSelected = userPaging?.deatils.selectedGroup ? true : false
+    const groupSelected = !!userPaging?.deatils.selectedGroup
 
     const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
     const [groupSelection, setGroupSelection] = useState<{
@@ -242,9 +242,9 @@ export default function UserList({
             </div>
             <div className={styles.list}>
                 <span className={
-                    styles.head + ' '
-                    + (userSelection || displayForUser ? styles.adjust + ' ' : ' ')
-                    + (groupSelected ? styles.extraInfo : '')
+                    `${styles.head} ${
+                        userSelection || displayForUser ? `${styles.adjust} ` : ' '
+                    }${groupSelected ? styles.extraInfo : ''}`
                 }>
                     <h3>Navn</h3>
                     <h3>Brukernavn</h3>
@@ -272,12 +272,12 @@ export default function UserList({
                         {
                             displayForUser && displayForUser(user)
                         }
-                        <UserRow 
+                        <UserRow
                             groupSelected={groupSelected}
                             className={
-                                styles.userRow + ' ' + (groupSelected ? styles.extraInfo : '')
-                            } 
-                            user={user} 
+                                `${styles.userRow} ${groupSelected ? styles.extraInfo : ''}`
+                            }
+                            user={user}
                         />
                     </span>
                 )} />

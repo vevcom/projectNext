@@ -55,7 +55,11 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
     }
 }
 
-function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured, standardGroupings: GroupType[]): VisibilityRequiermentForAdmin[] {
+function expandOneLevel(
+    matrix: GroupMatrix,
+    groups: GroupsStructured,
+    standardGroupings: GroupType[]
+): VisibilityRequiermentForAdmin[] {
     const res: VisibilityRequiermentForAdmin[] = []
     standardGroupings.forEach(groupType => {
         if (!groups[groupType]) return

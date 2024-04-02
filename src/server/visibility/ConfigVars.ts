@@ -19,7 +19,7 @@ export const PurposeTextsConfig = {
     NEWS_ARTICLE: 'Nyheter',
     ARTICLE_CATEGORY: 'Artikkelkategorier',
     EVENT: 'Arrangementer (Hvad der hender)',
-    SPECIAL: 'Speesielle ting'
+    SPECIAL: 'Spessielle ting'
 } as const satisfies { [key in VisibilityPurpose]: string }
 
 /**

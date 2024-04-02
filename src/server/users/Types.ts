@@ -10,7 +10,7 @@ export type StandardMembeships = {
 }
 
 export type UserPagingReturn = UserFiltered & StandardMembeships & {
-    selectedGroupInfo?: { 
+    selectedGroupInfo?: {
         title?: string
         admin?: boolean
     }

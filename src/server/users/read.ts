@@ -59,7 +59,7 @@ export async function readUserPage<const PageSize extends number>({
                             OR: groupSelection
                         }
                     ]
-                    
+
                 }
             },
         },

@@ -1,15 +1,16 @@
 'use client'
 import styles from './Form.module.scss'
 import Button from '@/components/UI/Button'
+import { PopUpContext } from '@/context/PopUp'
 import { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
+import type { PopUpKeyType } from '@/context/PopUp'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
 import type { ErrorMessage } from '@/server/error'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
-import { PopUpContext, PopUpKeyType } from '@/context/PopUp'
 
 type Colors = ButtonPropTypes['color']
 type Confirmation = {

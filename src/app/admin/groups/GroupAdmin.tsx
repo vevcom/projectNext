@@ -7,12 +7,12 @@ import UserPagingProvider from '@/context/paging/UserPaging'
 import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
+import Form from '@/app/components/Form/Form'
+import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
 import { faCog, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useContext } from 'react'
 import Link from 'next/link'
-import Form from '@/app/components/Form/Form'
-import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
 import { useRouter } from 'next/navigation'
 
 export default function GroupAdmin() {
@@ -54,18 +54,18 @@ export default function GroupAdmin() {
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>
-                <UserList 
+                <UserList
                     displayForUser={user => (
-                        <PopUp 
-                            PopUpKey={`Admin for ${user.id}`} 
+                        <PopUp
+                            PopUpKey={`Admin for ${user.id}`}
                             showButtonContent={
                                 <FontAwesomeIcon icon={faCog} />
                             }
                         >
                             <p>{user.firstname} {user.lastname}</p>
                             <i>{user.username}</i>
-                            <Form 
-                                submitText='Deaktiver medlemsskap'
+                            <Form
+                                submitText="Deaktiver medlemsskap"
                                 action={updateMembershipActiveAction.bind(null, {
                                     groupId: group.id,
                                     userId: user.id
@@ -74,7 +74,7 @@ export default function GroupAdmin() {
                                 key={`Deactivate ${user.id}`}
                                 closePopUpOnSuccess={`Admin for ${user.id}`}
                             />
-                            <Form 
+                            <Form
                                 submitText={user.selectedGroupInfo?.admin ? 'Fjern admin' : 'Gjør til admin'}
                                 action={updateMembershipAdminAcion.bind(null, {
                                     groupId: group.id,
@@ -86,8 +86,8 @@ export default function GroupAdmin() {
                             />
                         </PopUp>
                     )}
-                    className={styles.groupMembers} 
-                    disableFilters={{ [group.groupType]: true }} 
+                    className={styles.groupMembers}
+                    disableFilters={{ [group.groupType]: true }}
                 />
                 {
                     canEasalyManageMembership ? (
