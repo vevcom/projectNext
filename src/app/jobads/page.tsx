@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readImage } from '@/actions/images/read'
+import { readImageAction } from '@/actions/images/read'
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 import CreateJobAdForm from './CreateJobAdForm'
 
