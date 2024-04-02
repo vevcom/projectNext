@@ -234,7 +234,7 @@ export default function UserList({
             <div className={styles.list}>
                 <span className={
                     styles.head + ' '
-                    + (userSelection ? styles.adjust + ' ' : ' ')
+                    + (userSelection || displayForUser ? styles.adjust + ' ' : ' ')
                     + (groupSelected ? styles.extraInfo : '')
                 }>
                     <h3>Navn</h3>

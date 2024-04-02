@@ -59,6 +59,8 @@ export default function GroupAdmin() {
                                 <FontAwesomeIcon icon={faCog} />
                             }
                         >
+                            <p>{user.firstname} {user.lastname}</p>
+                            <i>{user.username}</i>
                             <Form 
                                 submitText='Deaktiver medlemsskap'
                                 action={updateMembershipAdminAcion.bind(null, {
