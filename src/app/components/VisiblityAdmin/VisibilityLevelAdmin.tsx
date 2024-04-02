@@ -15,6 +15,7 @@ export default function VisibilityLevelAdmin({ level, data, levelName }: PropTyp
             <Form
                 className={styles.requierments}
                 action={updateVisibilityAction.bind(null, level)}
+                submitText='Endre'
             >
                 {
                     data.map(requiement =>

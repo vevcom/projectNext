@@ -40,22 +40,22 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
             }
         }
     }
+    const standardGroupingsRefular = ['CLASS', 'OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] satisfies GroupType[]
+    const standardGroupingsAdmin = ['COMMITTEE', 'OMEGA_MEMBERSHIP_GROUP'] satisfies GroupType[]
     return {
         success: true,
         data: {
             published: visibility.published,
             purpose,
             type: 'REGULAR',
-            regular: expandOneLevel(visibility.regular, groups),
-            admin: expandOneLevel(visibility.admin, groups),
+            regular: expandOneLevel(visibility.regular, groups, standardGroupingsRefular),
+            admin: expandOneLevel(visibility.admin, groups, standardGroupingsAdmin),
             groups,
         }
     }
 }
 
-const standardGroupings = ['CLASS', 'OMEGA_MEMBERSHIP_GROUP', 'STUDY_PROGRAMME'] satisfies GroupType[]
-
-function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured): VisibilityRequiermentForAdmin[] {
+function expandOneLevel(matrix: GroupMatrix, groups: GroupsStructured, standardGroupings: GroupType[]): VisibilityRequiermentForAdmin[] {
     const res: VisibilityRequiermentForAdmin[] = []
     standardGroupings.forEach(groupType => {
         if (!groups[groupType]) return
