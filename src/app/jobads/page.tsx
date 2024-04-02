@@ -4,6 +4,7 @@ import ImageCard from '@/components/ImageCard/ImageCard'
 import { readImageAction } from '@/actions/images/read'
 import AddHeaderItemPopUp from '../components/AddHeaderItem/AddHeaderItemPopUp'
 import CreateJobAdForm from './CreateJobAdForm'
+import CurrentJobAds from './currentJobAds'
 
 export default async function JobAds() {
     const testImageRes = await readImageAction('ohma')
@@ -14,9 +15,8 @@ export default async function JobAds() {
         <PageWrapper title="jobbannonser" 
         headerItem={<AddHeaderItemPopUp PopUpKey={"jobAdForm"}><CreateJobAdForm/></AddHeaderItemPopUp>}>
             <div className={styles.wrapper}>
-                <ImageCard href="/jobads/kongsberg" title="Kongsberg" image={testImage}>
-                    <p>Sommerjobb ellerno</p>
-                </ImageCard>
+                <CurrentJobAds/>
+
             </div>
         </PageWrapper>
 
