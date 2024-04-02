@@ -3,7 +3,7 @@ import styles from './UserList.module.scss'
 import Select from '@/UI/Select'
 import { UserPagingContext } from '@/context/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import UserRow from '@/components/User/UserRow'
+import UserRow from '@/app/components/User/UserList/UserRow'
 import useActionCall from '@/hooks/useActionCall'
 import { readGroupsForPageFiteringAction } from '@/actions/users/read'
 import { UserSelectionContext } from '@/context/UserSelection'
@@ -255,7 +255,7 @@ export default function UserList({ className, disableFilters = {
                             </button>
                         }
                         <UserRow 
-                            groupSelected
+                            groupSelected={groupSelected}
                             className={
                                 styles.userRow + ' ' + (groupSelected ? styles.extraInfo : '')
                             } 

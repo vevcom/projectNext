@@ -1,5 +1,4 @@
 'use server'
-
 import { ActionReturn } from "@/actions/Types"
 import { safeServerCall } from "@/actions/safeServerCall"
 import { ExpandedMembership } from "@/server/groups/memberships/Types"
