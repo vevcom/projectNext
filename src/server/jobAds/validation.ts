@@ -26,7 +26,7 @@ export const createJobAdValidation = baseJobAdValidation.createValidation({
         ...data,
     })
 })
-export type CreateNewsArticleTypes = ValidationTypes<typeof createJobAdValidation>
+export type CreateJobAdTypes = ValidationTypes<typeof createJobAdValidation>
 
 export const updateJobAdValidation = baseJobAdValidation.createValidation({
     keys: [
@@ -38,7 +38,7 @@ export const updateJobAdValidation = baseJobAdValidation.createValidation({
         ...data,
     })
 })
-export type UpdateNewsArticleTypes = ValidationTypes<typeof updateJobAdValidation>
+export type UpdateJobAdTypes = ValidationTypes<typeof updateJobAdValidation>
 
 
 export const createJobAdSchema = zfd.formData({
