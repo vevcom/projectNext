@@ -71,6 +71,8 @@ export default function GroupAdmin() {
                                     userId: user.id
                                 }).bind(null, false)}
                                 successCallback={refresh}
+                                key={`Deactivate ${user.id}`}
+                                closePopUpOnSuccess={`Admin for ${user.id}`}
                             />
                             <Form 
                                 submitText={user.selectedGroupInfo?.admin ? 'Fjern admin' : 'Gjør til admin'}
@@ -79,6 +81,8 @@ export default function GroupAdmin() {
                                     userId: user.id
                                 }).bind(null, !user.selectedGroupInfo?.admin)}
                                 successCallback={refresh}
+                                key={`Admin ${user.id}`}
+                                closePopUpOnSuccess={`Admin for ${user.id}`}
                             />
                         </PopUp>
                     )}
