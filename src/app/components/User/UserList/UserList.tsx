@@ -10,9 +10,10 @@ import { UserSelectionContext } from '@/context/UserSelection'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import type { ChangeEvent } from 'react'
+import type { ChangeEvent, ReactNode } from 'react'
 import type { GroupType } from '@prisma/client'
 import type { ExpandedGroup } from '@/server/groups/Types'
+import { UserPagingReturn } from '@/server/users/Types'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 
@@ -20,6 +21,7 @@ type DisableGroupFilters = { [K in GroupSelectionType]?: boolean }
 
 type PropTypes = {
     className?: string
+    displayForUser?: (user: UserPagingReturn) => ReactNode
     disableFilters?: DisableGroupFilters & {
         name?: boolean,
     }
@@ -59,13 +61,17 @@ function getOrdereOptions(group: ExpandedGroup) {
     ]
 }
 
-export default function UserList({ className, disableFilters = {
-    name: false,
-    COMMITTEE: false,
-    CLASS: false,
-    STUDY_PROGRAMME: false,
-    OMEGA_MEMBERSHIP_GROUP: false
-} }: PropTypes) {
+export default function UserList({ 
+    className, 
+    displayForUser,
+    disableFilters = {
+        name: false,
+        COMMITTEE: false,
+        CLASS: false,
+        STUDY_PROGRAMME: false,
+        OMEGA_MEMBERSHIP_GROUP: false
+    } 
+}: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const userSelection = useContext(UserSelectionContext)
 
@@ -73,7 +79,7 @@ export default function UserList({ className, disableFilters = {
 
     const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
     const [groupSelection, setGroupSelection] = useState<{
-        [X in GroupSelectionType]: {
+        [T in GroupSelectionType]: {
             group: ExpandedGroup | null,
             groupOrder: number | 'ACTIVE'
         }
@@ -124,19 +130,19 @@ export default function UserList({ className, disableFilters = {
         setGroupSelection({
             ...groupSelection,
             [type]: {
+                ...groupSelection[type],
                 group: groups.find(group => group.id === groupId) ?? null,
-                groupOrder: 'ACTIVE'
             }
         })
     }
 
     const handleGroupOrderSelect = (e: ChangeEvent<HTMLSelectElement>, type: GroupSelectionType) => {
-        const groupOrder = parseInt(e.target.value, 10)
+        const groupOrder = e.target.value === 'null' ? null : parseInt(e.target.value, 10)
         setGroupSelection({
             ...groupSelection,
             [type]: {
                 ...groupSelection[type],
-                groupOrder: e.target.value === 'null' ? null : groupOrder
+                groupOrder,
             }
         })
     }
@@ -253,6 +259,9 @@ export default function UserList({ className, disableFilters = {
                                 onClick={() => userSelection.toggle(user)}>
                                 <FontAwesomeIcon icon={faCheck} />
                             </button>
+                        }
+                        {
+                            displayForUser && displayForUser(user)
                         }
                         <UserRow 
                             groupSelected={groupSelected}

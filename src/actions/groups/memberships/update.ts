@@ -7,17 +7,21 @@ import { updateMembership } from "@/server/groups/memberships/update"
 export async function updateMembershipAdminAcion(membership: {
     groupId: number
     userId: number
-    order?: number
 }, admin: boolean) : Promise<ActionReturn<ExpandedMembership>>{
     //TODO: make function to check that user is admin of group
-    return await safeServerCall(() => updateMembership(membership, { admin }))
+    return await safeServerCall(() => updateMembership({
+        ...membership,
+        orderArg: 'ACTIVE'
+    }, { admin }))
 }
 
 export async function updateMembershipActiveAction(membership: {
     groupId: number
     userId: number
-    order?: number
 }, active: boolean) : Promise<ActionReturn<ExpandedMembership>>{
     //TODO: make function to check that user is admin of group
-    return await safeServerCall(() => updateMembership(membership, { active }))
+    return await safeServerCall(() => updateMembership({
+        ...membership,
+        orderArg: 'ACTIVE'
+    }, { active }))
 }

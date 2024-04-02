@@ -7,10 +7,12 @@ import UserPagingProvider from '@/context/paging/UserPaging'
 import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
-import { faX } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useContext } from 'react'
 import Link from 'next/link'
+import Form from '@/app/components/Form/Form'
+import { updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
@@ -49,7 +51,33 @@ export default function GroupAdmin() {
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>
-                <UserList className={styles.groupMembers} disableFilters={{ [group.groupType]: true }} />
+                <UserList 
+                    displayForUser={user => (
+                        <PopUp 
+                            PopUpKey={`Admin for ${user.id}`} 
+                            showButtonContent={
+                                <FontAwesomeIcon icon={faCog} />
+                            }
+                        >
+                            <Form 
+                                submitText='Deaktiver medlemsskap'
+                                action={updateMembershipAdminAcion.bind(null, {
+                                    groupId: group.id,
+                                    userId: user.id
+                                }).bind(null, false)}
+                            />
+                            <Form 
+                                submitText={user.selectedGroupInfo?.admin ? 'Fjern admin' : 'Gjør til admin'}
+                                action={updateMembershipAdminAcion.bind(null, {
+                                    groupId: group.id,
+                                    userId: user.id
+                                }).bind(null, !user.selectedGroupInfo?.admin)}
+                            />
+                        </PopUp>
+                    )}
+                    className={styles.groupMembers} 
+                    disableFilters={{ [group.groupType]: true }} 
+                />
                 {
                     canEasalyManageMembership ? (
                         <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
@@ -74,7 +102,7 @@ export default function GroupAdmin() {
                     ) : (
                         (
                             group.groupType === 'CLASS' &&
-                                <Link href="/admin/classes" className={styles.link}>Gå til Kalssersiden</Link>
+                                <Link href="/admin/classes" className={styles.link}>Gå til Kalsseadministrasjon</Link>
                         )
                         || (
                             group.groupType === 'OMEGA_MEMBERSHIP_GROUP' &&

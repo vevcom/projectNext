@@ -11,12 +11,12 @@ export async function updateMembership({
 } : {
     groupId: number,
     userId: number,
-    orderArg?: number
+    orderArg?: number | 'ACTIVE'
 }, data: {
     admin?: boolean
     active?: boolean
 }): Promise<ExpandedMembership> {
-    const order = orderArg ?? await readCurrentGroupOrder(groupId)
+    const order = (orderArg && typeof orderArg === 'number') ? orderArg : await readCurrentGroupOrder(groupId)
 
     return await prismaCall(() => prisma.membership.update({
         where: {
