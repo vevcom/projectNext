@@ -45,8 +45,7 @@ export async function createMembershipForUser(
  * This function creates memberships for a group. If the membership already exists, it will be updated to active.
  * @param groupId - The id of the group to create memberships for
  * @param data - An array of objects containing userId and admin
- * @param orderArg - The order to create the memberships in if 'ACTIVE' is passed, the current order of the group will be used
- * if undefined, the current order of the group will be used also
+ * @param orderArg - The order to create the memberships in if undefined, the current order of the group will be used
  */
 export async function createMembershipsForGroup(
     groupId: number,
@@ -83,6 +82,12 @@ export async function createMembershipsForGroup(
     }))
 }
 
+/**
+ * Create many memberships for a user. If the membership already exists, it will be updated to active.
+ * @param userId - The id of the user to create memberships for
+ * @param data - An array of objects containing groupId and admin representing the memberships to create
+ * @param orderArg - The order to create the memberships in if undefined, the current order of the group will be used
+ */
 export async function createMembershipsForUser(
     userId: number,
     data: { groupId: number, admin: boolean }[],
@@ -93,6 +98,18 @@ export async function createMembershipsForUser(
     }
     const ordersMap = await readCurrentGroupOrders(data.map(group => group.groupId))
     const { order: fallbackOrder } = await readCurrentOmegaOrder()
+
+    await prismaCall(() => prisma.membership.updateMany({
+        where: {
+            userId,
+            groupId: {
+                in: data.map(({ groupId }) => groupId),
+            },
+        },
+        data: {
+            active: true,
+        },
+    }))
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ groupId, admin }) => ({
