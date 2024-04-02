@@ -1,15 +1,18 @@
-'use server'
+import 'server-only'
 import prisma from '@/prisma'
 import { createActionError } from '@/actions/error'
-import type { ExpandedJobAd } from './Types'
+import type { ExpandedJobAd, SimpleJobAd } from './Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-
+import { jobAdArticleRealtionsIncluder } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
+import { simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
 
 export async function readJobAdByNameAndOrder(idOrName: number | {
     articleName: string
     order: number
-}): Promise<ActionReturn<ExpandedJobAd>> {
-        const news = await prisma.newsArticle.findUnique({
+}): Promise<ExpandedJobAd> {
+        const jobAd = await prisma.jobAd.findUnique({
             where: typeof idOrName === 'number' ? {
                 id: idOrName
             } : {
@@ -18,9 +21,24 @@ export async function readJobAdByNameAndOrder(idOrName: number | {
                     orderPublished: idOrName.order
                 }
             },
-            include: newsArticleRealtionsIncluder
+            include: jobAdArticleRealtionsIncluder
         })
-        if (!news) return createActionError('NOT FOUND', `article ${idOrName} not found`)
-        return { success: true, data: news }
+        if (!jobAd) throw new ServerError('NOT FOUND', `job ad ${idOrName} not found`)
+        return jobAd
    
+}
+
+export async function readJobAdsCurrent(): Promise<SimpleJobAd[]> {
+    const jobAds = await prismaCall(() => prisma.jobAd.findMany({
+        orderBy: {
+            article: {
+                createdAt: 'desc',
+            },
+        },
+        include: simpleJobAdArticleRealtionsIncluder,
+    }))
+    return jobAds.map(ad => ({
+        ...ad,
+        coverImage: ad.article.coverImage.image
+    }))
 }
