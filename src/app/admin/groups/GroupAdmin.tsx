@@ -12,13 +12,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useContext } from 'react'
 import Link from 'next/link'
 import Form from '@/app/components/Form/Form'
-import { updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
+import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
+import { useRouter } from 'next/navigation'
 
 export default function GroupAdmin() {
     const groupSelectionCtx = useContext(GroupSelectionContext)
     const handleClose = useCallback(() => {
         groupSelectionCtx?.setGroup(null)
     }, [groupSelectionCtx?.setGroup])
+    const { refresh } = useRouter()
+
     if (!groupSelectionCtx) return null
     if (!groupSelectionCtx.group) return null
 
@@ -63,10 +66,11 @@ export default function GroupAdmin() {
                             <i>{user.username}</i>
                             <Form 
                                 submitText='Deaktiver medlemsskap'
-                                action={updateMembershipAdminAcion.bind(null, {
+                                action={updateMembershipActiveAction.bind(null, {
                                     groupId: group.id,
                                     userId: user.id
                                 }).bind(null, false)}
+                                successCallback={refresh}
                             />
                             <Form 
                                 submitText={user.selectedGroupInfo?.admin ? 'Fjern admin' : 'Gjør til admin'}
@@ -74,6 +78,7 @@ export default function GroupAdmin() {
                                     groupId: group.id,
                                     userId: user.id
                                 }).bind(null, !user.selectedGroupInfo?.admin)}
+                                successCallback={refresh}
                             />
                         </PopUp>
                     )}

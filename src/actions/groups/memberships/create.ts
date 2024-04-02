@@ -7,7 +7,7 @@ import { createMembershipsForGroup } from '@/server/groups/memberships/create'
 import type { ActionReturn } from '@/actions/Types'
 
 /**
- * WARNING: This action will lead to error if used with group types in CanEasalyManageMembership
+ * WARNING: This action will lead to error if used with group types not in CanEasalyManageMembership
  */
 export async function createMembershipsForGroupAction({
     groupId,

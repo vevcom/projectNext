@@ -41,6 +41,13 @@ export async function createMembershipForUser(
     }))
 }
 
+/**
+ * This function creates memberships for a group. If the membership already exists, it will be updated to active.
+ * @param groupId - The id of the group to create memberships for
+ * @param data - An array of objects containing userId and admin
+ * @param orderArg - The order to create the memberships in if 'ACTIVE' is passed, the current order of the group will be used
+ * if undefined, the current order of the group will be used also
+ */
 export async function createMembershipsForGroup(
     groupId: number,
     data: { userId: number, admin: boolean }[],
@@ -50,6 +57,19 @@ export async function createMembershipsForGroup(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
+
+    await prismaCall(() => prisma.membership.updateMany({
+        where: {
+            groupId,
+            userId: {
+                in: data.map(({ userId }) => userId),
+            },
+            order,
+        },
+        data: {
+            active: true,
+        },
+    }))
 
     await prismaCall(() => prisma.membership.createMany({
         data: data.map(({ userId, admin }) => ({
