@@ -5,7 +5,7 @@ import type { NotificationChannelWithMethods } from './Types';
 
 export const NotificationMethods = Object
     .keys(Prisma.NotificationMethodScalarFieldEnum)
-    .filter(v => v != 'id') as (keyof NotificationMethod)[];
+    .filter(v => v != 'id') as (keyof Omit<NotificationMethod, 'id'>)[];
 
 export const NotificationMethodTypes = ['availableMethods', 'defaultMethods'] as const;
 

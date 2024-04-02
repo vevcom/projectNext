@@ -3,6 +3,7 @@ export type ServerErrorCode =
     | 'NOT FOUND'
     | 'BAD PARAMETERS'
     | 'UNKNOWN ERROR'
+    | 'SERVER ERROR'
 
 export type ErrorMessage = {
     path?: (number | string)[],

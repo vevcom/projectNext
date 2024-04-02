@@ -1,9 +1,104 @@
-import 'server-only';
+import 'server-only'
 import prisma from '@/prisma'
-import type { NotificationChannel, NotificationMethod } from '@prisma/client';
-import { createPrismaActionError } from '@/actions/error';
-import { ActionReturn } from '@/actions/Types';
-import { prismaCall } from '../prismaCall';
+import type { NotificationChannel, NotificationMethod, Notification, User } from '@prisma/client';
+import { prismaCall } from '@/server/prismaCall';
+import { ServerError } from '@/server/error';
+import { Server } from 'http';
+import { NotificationMethods, NotificationMethodsAllOff } from './ConfigVars';
+import { dispatchMethods } from './methods/methods';
+
+export async function dispatchNotification(notification: Notification): Promise<Notification> {
+
+    const results = await prismaCall(() => prisma.notification.findUnique({
+        where: {
+            id: notification.id,
+        },
+        select: {
+            channel: {
+                select: {
+                    id: true,
+                    name: true,
+                    parentId: true,
+                    availableMethods: true,
+                }
+            }
+        }
+    }))
+
+    if (!results) {
+        throw new ServerError('NOT FOUND', "Cannot find the notification")
+    }
+
+    const channel = results.channel
+
+    type RecordWithMethods = Record<number, Omit<NotificationMethod, 'id'>>
+
+    async function findUsers(channelId: number, iterations=50): Promise<RecordWithMethods> {
+        if (iterations < 0) {
+            throw new ServerError('SERVER ERROR', "Too many iterations when finding users")
+        }
+
+        const subscriptionsP = prismaCall(() => prisma.notificationSubscription.findMany({
+            where: {
+                channelId,
+            },
+            select: {
+                userId: true,
+                methods: true,
+            }
+        }))
+
+        const channelP = prismaCall(() => prisma.notificationChannel.findUnique({
+            where: {
+                id: channelId,
+            },
+            select: {
+                special: true,
+                parentId: true,
+            }
+        }))
+
+        const [subscriptions, channel] = await Promise.all([subscriptionsP, channelP])
+
+        const parsedResults = Object.fromEntries(
+            subscriptions.filter(u => u.methods).map(u => [
+                u.userId,
+                Object.fromEntries(
+                    Object.entries(u.methods).filter(([key]) => key != 'id')
+                ) as Omit<NotificationMethod, 'id'>,
+            ])
+        )
+
+        if (!channel) {
+            throw new ServerError('SERVER ERROR', "Invalid channelId")
+        }
+
+        if (channel.special === "ROOT") {
+            return parsedResults
+        }
+
+        const parentResults = await findUsers(channel.parentId, iterations - 1)
+
+        Object.entries(parentResults).forEach(([key, value]) => {
+            if (!parsedResults[key]) {
+                parsedResults[key] = value
+            }
+        })
+
+        return parsedResults
+    }
+
+    const users = await findUsers(channel.id)
+    const methods = channel.availableMethods
+    
+    await Promise.all(
+        NotificationMethods.filter(m => methods[m]).map(method => 
+            dispatchMethods[method](Object.keys(users).map(u => Number(u)))
+        )
+    )
+
+    return notification
+}
 
 /**
  * A function to send a notification
@@ -13,8 +108,27 @@ import { prismaCall } from '../prismaCall';
  * @param message - The message of the notification
  * @returns
  */
-export function createNotification(channelId: number, visibilityId: number, title: string, message: string): void {
-    return;
+export async function createNotification(
+    channelId: number,
+//  visibilityId: number,
+    title: string,
+    message: string
+): Promise<Notification> {
+    const results = await prismaCall(() => prisma.notification.create({
+        data: {
+            title,
+            message,
+            channel: {
+                connect: {
+                    id: channelId
+                }
+            }
+        }
+    }))
+
+    await dispatchNotification(results);
+
+    return results
 }
 
 /**
@@ -24,17 +138,18 @@ export function createNotification(channelId: number, visibilityId: number, titl
  */
 export async function createNotificationChannel({
     name,
+    description,
     parentChannelId,
     defaultMethods,
     availableMethods,
 } : {
     name: string,
+    description?: string,
     parentChannelId: number,
     defaultMethods: Omit<NotificationMethod, 'id'>,
     availableMethods: Omit<NotificationMethod, 'id'>,
 }): Promise<NotificationChannel> {
     
-
     return await prismaCall(() => prisma.notificationChannel.create({
         data: {
             name,

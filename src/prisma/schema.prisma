@@ -539,10 +539,10 @@ model NotificationChannel {
   defaultMethodsId   Int?
   defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id], onDelete: SetNull)
   availableMethodsId Int
-  availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
+  availableMethods   NotificationMethod  @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
 
   subscriptions NotificationSubscription[]
-  notifications NotificationChannelJT[]
+  notifications Notification[]
 }
 
 model NotificationMethod {
@@ -568,22 +568,14 @@ model NotificationSubscription {
   methods   NotificationMethod  @relation(fields: [methodsId], references: [id], onDelete: Cascade)
 }
 
-model NotificationChannelJT {
-  channelId      Int
-  channel        NotificationChannel @relation(fields: [channelId], references: [id])
-  notificationId Int
-  notification   Notification        @relation(fields: [notificationId], references: [id])
-
-  @@id([channelId, notificationId])
-}
-
 model Notification {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   title     String
   message   String
 
-  channels NotificationChannelJT[] @relation()
+  channelId Int
+  channel   NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   // Add visibility later
 }
