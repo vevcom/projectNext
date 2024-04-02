@@ -6,12 +6,14 @@ import { createMembershipsForGroupAction } from '@/actions/groups/memberships/cr
 import { UserSelectionContext } from '@/context/UserSelection'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
+import { PopUpKeyType } from '@/context/PopUp'
 
 type PropTypes = {
-    groupId: number
+    groupId: number,
+    closePopUpOnSuccess: PopUpKeyType
 }
 
-export default function AddUsersToGroup({ groupId }: PropTypes) {
+export default function AddUsersToGroup({ groupId, closePopUpOnSuccess }: PropTypes) {
     const { refresh } = useRouter()
     const selectedUsersCtx = useContext(UserSelectionContext)
     const users = selectedUsersCtx?.users || []
@@ -31,6 +33,7 @@ export default function AddUsersToGroup({ groupId }: PropTypes) {
                             }))
                         })}
                         successCallback={refresh}
+                        closePopUpOnSuccess={closePopUpOnSuccess}
                     />
                 ) : null
             }

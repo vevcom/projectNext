@@ -1,7 +1,7 @@
 'use client'
 import styles from './Form.module.scss'
 import Button from '@/components/UI/Button'
-import { Children, useEffect, useState } from 'react'
+import { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
@@ -9,6 +9,7 @@ import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
 import type { ErrorMessage } from '@/server/error'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
+import { PopUpContext, PopUpKeyType } from '@/context/PopUp'
 
 type Colors = ButtonPropTypes['color']
 type Confirmation = {
@@ -25,6 +26,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
+    closePopUpOnSuccess?: PopUpKeyType
 }
 type InputType = {
     input: ReactNode & { label?: string },
@@ -153,11 +155,13 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     action,
     successCallback,
     className,
+    closePopUpOnSuccess,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ErrorMessage[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
+    const PopUpCtx = useContext(PopUpContext)
 
     useEffect(() => {
         setInputs(() => makeInputArray(children))
@@ -173,6 +177,11 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         if (res.success) {
             setSuccess(true)
             successCallback?.(res.data)
+            if (closePopUpOnSuccess) {
+                setTimeout(() => {
+                    PopUpCtx?.remove(closePopUpOnSuccess)
+                }, 2000)
+            }
             return setTimeout(() => {
                 setSuccess(false)
             }, 3000)

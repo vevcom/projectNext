@@ -102,7 +102,7 @@ export default function GroupAdmin() {
                                 }}
                             >
                                 <UserSelectionProvider>
-                                    <AddUsersToGroup groupId={group.id} />
+                                    <AddUsersToGroup groupId={group.id} closePopUpOnSuccess={`Add user ${group.id}`} />
                                 </UserSelectionProvider>
                             </UserPagingProvider>
                         </PopUp>
