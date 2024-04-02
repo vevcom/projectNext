@@ -1,12 +1,18 @@
 import 'server-only'
 import prisma from '@/prisma'
-import type { NotificationChannel, NotificationMethod, Notification, User } from '@prisma/client';
+import type { NotificationChannel, NotificationMethod, Notification } from '@prisma/client';
 import { prismaCall } from '@/server/prismaCall';
 import { ServerError } from '@/server/error';
-import { Server } from 'http';
-import { NotificationMethods, NotificationMethodsAllOff } from './ConfigVars';
+import { NotificationMethods } from './ConfigVars';
 import { dispatchMethods } from './methods/methods';
 
+/**
+ * Dispatches a notification to the subscribing users
+ * 
+ * @param notification - The notification to be dispatched.
+ * @returns A promise that resolves to the dispatched notification.
+ * @throws {ServerError} If the notification is not found or if there is an error finding users.
+ */
 export async function dispatchNotification(notification: Notification): Promise<Notification> {
 
     const results = await prismaCall(() => prisma.notification.findUnique({
@@ -93,7 +99,7 @@ export async function dispatchNotification(notification: Notification): Promise<
     
     await Promise.all(
         NotificationMethods.filter(m => methods[m]).map(method => 
-            dispatchMethods[method](Object.keys(users).map(u => Number(u)))
+            dispatchMethods[method](notification, channel, Object.keys(users).map(u => Number(u)))
         )
     )
 
@@ -106,7 +112,7 @@ export async function dispatchNotification(notification: Notification): Promise<
  * @param visibilityId - Who can se the notification
  * @param title - The title of the notification
  * @param message - The message of the notification
- * @returns
+ * @returns The notification
  */
 export async function createNotification(
     channelId: number,

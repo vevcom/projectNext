@@ -1,11 +1,10 @@
 "use server"
-import { readChannels } from '@/server/notifications/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { NotificationChannelWithMethods } from '@/server/notifications/Types'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { ServerError } from '@/server/error'
+import { createNotification } from '@/server/notifications/create'
 
 export async function createNotificaitonChannel(): Promise<ActionReturn<void>> {
 
@@ -18,4 +17,10 @@ export async function createNotificaitonChannel(): Promise<ActionReturn<void>> {
     return await safeServerCall(() => {
         throw new ServerError('UNKNOWN ERROR', "Not implemented")
     });
+}
+
+export async function createNotificationAction(): Promise<ActionReturn<void>> {
+    return await safeServerCall(async () => {
+        await createNotification(4, "Hei", "Dette skal være en ny hendelse");
+    })
 }
