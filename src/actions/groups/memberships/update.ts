@@ -9,10 +9,8 @@ export async function updateMembershipAdminAcion(membership: {
     userId: number
     order?: number
 }, admin: boolean) : Promise<ActionReturn<ExpandedMembership>>{
-    //TODO: make function to check that. user is admin of group
-    return await safeServerCall(() => updateMembership({
-        ...membership,
-    }, { admin }))
+    //TODO: make function to check that user is admin of group
+    return await safeServerCall(() => updateMembership(membership, { admin }))
 }
 
 export async function updateMembershipActiveAction(membership: {
@@ -20,8 +18,6 @@ export async function updateMembershipActiveAction(membership: {
     userId: number
     order?: number
 }, active: boolean) : Promise<ActionReturn<ExpandedMembership>>{
-    //TODO: make function to check that. user is admin of group
-    return await safeServerCall(() => updateMembership({
-        ...membership,
-    }, { active }))
+    //TODO: make function to check that user is admin of group
+    return await safeServerCall(() => updateMembership(membership, { active }))
 }
