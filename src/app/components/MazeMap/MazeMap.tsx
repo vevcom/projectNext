@@ -25,7 +25,7 @@ export default function MazeMap({
     zoom = 18,
     sharePoi = 83, // lophtet <3
 }: PropTypes) {
-    return <div className={style.MazeMapWrapper} style={{ height }}>
+    return <div className={style.MazeMap} style={{ height }}>
         <iframe
             src={
                 'https://use.mazemap.com/embed.html#v=1&' +
@@ -38,7 +38,7 @@ export default function MazeMap({
                 'utm_medium=iframe'
 
             }
-            className={style.MazeMap}
+            className={style.MazeMapIframe}
         />
     </div>
 }

@@ -1,11 +1,11 @@
 @use "@/styles/ohma";
 
-.YouTubeWrapper {
+.YouTube {
     display: flex;
     justify-content: center;
 }
 
-.YouTube {
+.YouTubeIframe {
     display: block;
     width: 80%;
     max-height: 80vh;

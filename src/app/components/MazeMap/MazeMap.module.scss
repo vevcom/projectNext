@@ -1,11 +1,11 @@
 @use "@/styles/ohma";
 
-.MazeMapWrapper { 
+.MazeMap { 
     display: flex;
     justify-content: center;
 }
 
-.MazeMap {
+.MazeMapIframe {
     width: 80%;
     height: 100%;
     border: none;

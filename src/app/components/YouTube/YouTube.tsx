@@ -5,8 +5,8 @@ type PropTypes = {
 }
 
 function YouTube({ src }: PropTypes) {
-    return <div className={styles.YouTubeWrapper}>
-        <iframe allowFullScreen className={styles.YouTube} src={src.replace('/watch?v=', '/embed/')} />
+    return <div className={styles.YouTube}>
+        <iframe allowFullScreen className={styles.YouTubeIframe} src={src.replace('/watch?v=', '/embed/')} />
     </div>
 }
 
