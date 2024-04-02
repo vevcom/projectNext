@@ -1,6 +1,6 @@
 'use client'
 import styles from './CreateJobAdForm.module.scss'
-import { createJobAd } from '@/actions/jobAds/create'
+import { createJobAdAction } from '@/actions/jobAds/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import React from 'react'
@@ -15,7 +15,7 @@ export default function CreateJobAdForm() {
             <Form
                 title="Create a job ad"
                 submitText="Create job ad"
-                action={createJobAd}
+                action={createJobAdAction}
                 successCallback={refresh}
             >
                 <TextInput label="title" name="articleName" key={uuid()}/>
