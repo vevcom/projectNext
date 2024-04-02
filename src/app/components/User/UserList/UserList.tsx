@@ -61,6 +61,15 @@ function getOrdereOptions(group: ExpandedGroup) {
     ]
 }
 
+/**
+ * Display users in UserPagingContext with filters for groups and a search bar.
+ * @param className - The class name of the component
+ * @param displayForUser - A function that returns a ReactNode for each user. It is displayed
+ * to the left of the user's name, username, study, and class.
+ * @param disableFilters - An object that specifies which filters to disable. The keys are the
+ * names of the filters and the values are booleans. If a key is not present, the filter is enabled.
+ * @returns - A component that displays a list of users with filters for groups and a search bar.
+ */
 export default function UserList({ 
     className, 
     displayForUser,
