@@ -1,44 +1,36 @@
-'use server'
-import { createJobAdSchema } from './validation'
-import { createArticleAction } from '@/cms/articles/create'
+import 'server-only'
+import { createJobAdValidation, CreateJobAdTypes } from './validation'
+import { createArticle } from '@/server/cms/articles/create'
 import prisma from '@/prisma'
-import { createZodActionError } from '@/actions/error'
-import type { JobAd } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
-import type { JobAdSchemaType } from './validation'
-import { read } from 'fs'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import { ActionErrorCode } from '@/actions/Types'
+import { ExpandedJobAd } from './Types'
+import { prismaCall } from '../prismaCall'
+import { jobAdArticleRealtionsIncluder } from './ConfigVars'
 
-export async function createJobAd(rawdata: FormData | JobAdSchemaType): Promise<ActionReturn<JobAd>> {
-    const parse = createJobAdSchema.safeParse(rawdata)
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
+export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promise<ExpandedJobAd>  {
 
-    const data = parse.data
+    
+    const { articleName, company, description } = createJobAdValidation.detailedValidate(rawdata)
 
-    const articleRes = await createArticleAction(data.articleName)
-    if (!articleRes.success) return articleRes
+    const article = await createArticle({ name: articleName })
 
     const currentOrder = await readCurrenOmegaOrder()
-    if (!currentOrder.success) return currentOrder
-        const jobAds = await prisma.jobAd.create({
-            data: {
-                company: data.company,
-                description: data.description,
-                article: {
-                    connect: {
-                        id: articleRes.data.id
-                    }
-                },
-                omegaOrder: {
-                    connect: {
-                        order: currentOrder.data.order
-                    }
+
+    const jobAd = await prismaCall(() => prisma.jobAd.create({
+        data: {
+            company,
+            description,
+            article: {
+                connect: {
+                    id: article.id
                 }
+            },
+            omegaOrder: {
+                connect: currentOrder,
             }
-        })
-        return { success: true, data: jobAds }
+        },
+        include: jobAdArticleRealtionsIncluder,
+    }))
+    return jobAd
    
 }
