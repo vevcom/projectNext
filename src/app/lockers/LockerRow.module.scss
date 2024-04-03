@@ -3,6 +3,20 @@
     grid-template-columns: repeat(6, 1fr);
     text-decoration: none;
     color: inherit;
+
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(5, 1fr);
+        .hideFirst {
+            display: none;
+        }
+    }
+
+    @media (max-width: 500px) {
+        grid-template-columns: repeat(4, 1fr);
+        .hideSecond {
+            display: none;
+        }
+    }
 }
 
 .lockerRow:hover {
