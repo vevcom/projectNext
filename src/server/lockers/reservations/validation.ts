@@ -10,7 +10,7 @@ export const baseLockerReservationValidation = new ValidationBase({
         endDate: z.string().optional()
     },
     details: {
-        committeeId: z.number(),
+        committeeId: z.number().nullable(),
         indefinateDate: z.boolean(),
         endDate: z.date().nullable()
     }
@@ -24,9 +24,9 @@ export const createLockerReservationValidation = baseLockerReservationValidation
         'endDate'
         ],
     transformer: data => ({
-        committeeId: parseInt(data.committeeId),
+        committeeId: data.committeeId === "-1" ? null : parseInt(data.committeeId),
         indefinateDate: data.indefinateDate ? data.indefinateDate === "on" : false,
-        endDate: data.endDate ? new Date(data.endDate) : null
+        endDate: data.endDate ? (new Date(data.endDate)) : null
     })
 })
 

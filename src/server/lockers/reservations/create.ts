@@ -12,13 +12,10 @@ export async function createLockerReservation(
     rawdata: CreateLockerReservationTypes['Detailed']
 ): Promise<LockerReservation> {
     const data = createLockerReservationValidation.detailedValidate(rawdata)
-    if (data.committeeId == -1) {
-        delete (data as any).committeeId
-    }
-    delete (data as any).indefinateDate
     return await prismaCall(() => prisma.lockerReservation.create({
         data: {
-            ...data,
+            committeeId: data.committeeId,
+            endDate: data.endDate,
             userId,
             lockerId
         }
