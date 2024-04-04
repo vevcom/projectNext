@@ -505,3 +505,83 @@ model Ombul {
   @@unique([year, name])
   @@unique([year, issueNumber])
 }
+
+///////////
+// Money //
+///////////
+
+model MoneyAccount {
+  id              Int           @id @default(autoincrement())
+  transactionsOut Transaction[] @relation(name: "TransactionFromAccount")
+  transactionsIn  Transaction[] @relation(name: "TransactionToAccount")
+}
+
+model Commodity {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String
+  price       Int
+  // Todo - add commodity image
+
+  purchases   Purchase[]
+}
+
+enum TransactionType {
+  DEPOSIT
+  PURCHASE
+  REFUND
+  PAYOUT
+}
+
+model Transaction {
+  id            Int          @id @default(autoincrement())
+  amount        Int
+  fromAccount   MoneyAccount? @relation(fields: [fromAccountId], references: [id], name: "TransactionFromAccount")
+  fromAccountId Int?
+  toAccount     MoneyAccount? @relation(fields: [toAccountId], references: [id], name: "TransactionToAccount")
+  toAccountId   Int?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  transactionType TransactionType
+  deposit         Deposit?
+  purchases       Purchase[]
+  refunds         Refund[]
+  payout          Payout?
+}
+
+model Deposit {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int         @unique
+
+  // Todo add stripe info
+}
+
+model Purchase {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int
+  commodity     Commodity   @relation(fields: [commodityId], references: [id])
+  commodityId   Int
+  quantity      Int
+  price         Int
+  refunds       Refund[]
+}
+
+model Refund {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int         @unique
+  purchase      Purchase    @relation(fields: [purchaseId], references: [id])
+  purchaseId    Int
+  quantity      Int
+  amount        Int
+}
+
+model Payout {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int         @unique
+  // Todo - add payout info
+}
