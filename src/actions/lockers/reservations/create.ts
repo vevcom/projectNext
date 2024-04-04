@@ -18,7 +18,7 @@ export async function createLockerReservationAction(
         userRequired: true,
     })
     if (!authorized) return createActionError(status)
-
+    console.log(rawdata)
     const parse = createLockerReservationValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
