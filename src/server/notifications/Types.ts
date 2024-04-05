@@ -1,4 +1,4 @@
-import type { NotificationChannel, NotificationMethod } from "@prisma/client";
+import type { NotificationChannel, NotificationMethod, NotificationSubscription } from "@prisma/client";
 
 export type NotificationChannelWithMethods = Omit<NotificationChannel, 'availableMethodsId' | 'defaultMethodsId'> & {
     availableMethods: Omit<NotificationMethod, 'id'> & {
@@ -10,3 +10,11 @@ export type NotificationChannelWithMethods = Omit<NotificationChannel, 'availabl
 };
 
 export type NotificationMethodType = 'availableMethods' | 'defaultMethods';
+
+export type NotificationSubscriptionWithMethods = NotificationSubscription & {
+    methods: Omit<NotificationMethod, 'id'>
+}
+
+export type NotificationChannelSubscription = NotificationChannelWithMethods & {
+    subscription?: NotificationSubscriptionWithMethods
+}

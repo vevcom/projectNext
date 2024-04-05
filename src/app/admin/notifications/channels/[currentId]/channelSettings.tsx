@@ -1,7 +1,7 @@
 
 import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
 import styles from "./channelSettings.module.scss"
-import ChannelMethods from "./channelMethods"
+import NotificationMethodSelector from "@/components/NotificaionMethodSelector/NotificaionMethodSelector"
 import TextInput from "@/app/components/UI/TextInput"
 import Select from "@/app/components/UI/Select"
 import { useState } from "react"
@@ -82,7 +82,7 @@ export default function ChannelSettings({
 
             <div className={styles.methodContainer}>
 
-                <ChannelMethods
+                <NotificationMethodSelector
                     formPrefix="availableMethods"
                     title="Tilgjengelige metoder"
                     methods={currentChannelState.availableMethods ?? NotificationMethodsAllOff}
@@ -93,7 +93,7 @@ export default function ChannelSettings({
                         })
                     }}
                     />
-                <ChannelMethods
+                <NotificationMethodSelector
                     formPrefix="defaultMethods"
                     title="Standard metoder"
                     methods={currentChannelState.defaultMethods ?? NotificationMethodsAllOff}

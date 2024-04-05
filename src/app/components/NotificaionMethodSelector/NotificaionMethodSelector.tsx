@@ -6,15 +6,15 @@ import styles from "./channelMethods.module.scss"
 import { v4 as uuid } from "uuid"
 import type { NotificationMethodType } from "src/server/notifications/Types"
 
-export default function ChannelMethods({
+export default function NotificationMethodSelector({
     title,
     formPrefix,
     methods,
     editable,
     onChange,
 } : {
-    title: string,
-    formPrefix: NotificationMethodType,
+    title?: string,
+    formPrefix?: NotificationMethodType,
     methods: Omit<NotificationMethod, "id">
     editable?: Omit<NotificationMethod, "id"> & {[key: string]: boolean},
     onChange?: (methods: Omit<NotificationMethod, "id">) => any
@@ -30,14 +30,16 @@ export default function ChannelMethods({
     }
 
     return <div className={styles.channelMethods}>
-        <h4>{title}</h4>
+        {title ? 
+            <h4>{title}</h4> : null
+        }
 
         {Object.entries(state).map(([key, value]) => {
             const canEdit = !editable || editable[key];
             return <Checkbox
                 key={uuid()}
                 label={key}
-                name={`${formPrefix}_${key}`}
+                name={formPrefix ? `${formPrefix}_${key}` : key}
                 checked={canEdit && value}
                 disabled={!canEdit}
                 onChange={handleChange.bind(key)}

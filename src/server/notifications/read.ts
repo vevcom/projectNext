@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
 import type { SpecialNotificationChannel } from '@prisma/client'
-import type { NotificationChannelWithMethods } from './Types'
+import type { NotificationChannelWithMethods, NotificationSubscriptionWithMethods } from './Types'
 import { prismaCall } from '../prismaCall'
 import { ServerError } from '../error'
 import { convertFromPrismaMethods } from './ConfigVars'
@@ -63,4 +63,25 @@ export async function readChannelsAsFlatObject() : Promise<{
         acc[channel.id] = channel
         return acc
     }, {} as {[key: number]: NotificationChannelWithMethods})
+}
+
+/**
+ * Retrieves the notification subscriptions for a given user.
+ * 
+ * @param userId - The ID of the user.
+ * @returns A promise that resolves to an array of notification subscriptions.
+ */
+export async function readUserSubscriptions(userId: number):
+Promise<NotificationSubscriptionWithMethods[]>
+{
+
+    return await prismaCall(() => prisma.notificationSubscription.findMany({
+        where: {
+            userId,
+        },
+        include: {
+            methods: true,
+        }
+    }))
+
 }

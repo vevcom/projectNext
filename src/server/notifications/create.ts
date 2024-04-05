@@ -43,6 +43,8 @@ export async function dispatchNotification(notification: Notification): Promise<
 
     const channel = {...results.channel, subscriptions: undefined}
     const users = results.channel.subscriptions
+
+    // TODO: Filter users by visibility
     
     await Promise.all(
         NotificationMethods.filter(m => channel.availableMethods[m]).map(method => 

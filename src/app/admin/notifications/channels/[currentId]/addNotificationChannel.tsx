@@ -3,7 +3,7 @@ import Form from "@/components/Form/Form";
 import TextInput from "@/components/UI/TextInput";
 import { NotificationChannelWithMethods } from "@/server/notifications/Types";
 import Select from "@/components/UI/Select";
-import ChannelMethods from "./channelMethods";
+import NotificationMethodSelector from "@/components/NotificaionMethodSelector/NotificaionMethodSelector";
 import { NotificationMethodsAllOn } from "@/server/notifications/ConfigVars";
 import { useState } from "react";
 import { createNotificaitonChannel } from "@/actions/notifications/create";
@@ -40,7 +40,7 @@ export default function AddNotificationChannel({
             onChange={handleNewParent}
         />
 
-        <ChannelMethods
+        <NotificationMethodSelector
             formPrefix="availableMethods"
             title="Tilgjengelige metoder"
             methods={availableMethods}
