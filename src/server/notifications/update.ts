@@ -2,10 +2,11 @@ import "server-only"
 import { NotificationChannelWithMethods } from "./Types"
 import { prismaCall } from "@/server/prismaCall"
 import type { NotificationMethodType } from "./Types"
-import type { NotificationMethod, Prisma } from "@prisma/client"
+import type { NotificationMethod } from "@prisma/client"
 import { ServerError } from "@/server/error"
-import { convertFromPrismaMethods } from "./ConfigVars"
+import { NotificationMethods, convertFromPrismaMethods } from "./ConfigVars"
 import { readChannelsAsFlatObject } from "./read"
+import { UpdateSubscriptionTypes, updateSubscriptionValidation } from "./validation"
 
 export async function updateNotificationChannel({
     id,
@@ -112,7 +113,7 @@ export async function updateNotificationChannel({
             })
     }
 
-    const results = await prisma.notificationChannel.update({
+    const results = await prismaCall(() => prisma.notificationChannel.update({
         where: {
             id,
         },
@@ -127,7 +128,77 @@ export async function updateNotificationChannel({
             availableMethods: true,
             defaultMethods: true,
         }
-    })
+    }))
 
     return convertFromPrismaMethods(results)
+}
+
+
+export async function updateSubscription(
+    userId: number,
+    rawdata: UpdateSubscriptionTypes['Detailed']
+): Promise<void> {
+
+    const parsedData = updateSubscriptionValidation.detailedValidate(rawdata)
+
+    const methods = Object.fromEntries(
+        Object.entries(parsedData)
+            .filter(([key, value]) => NotificationMethods.includes(key))
+    ) as Omit<NotificationMethod, 'id'>
+
+    /*const exists = await prismaCall(() => prisma.notificationSubscription.findUnique({
+        where: {
+            userId_channelId: {
+                userId,
+                channelId: parsedData.channelId,
+            }
+        }
+    }))
+
+    if (exists) {
+        await prismaCall(() => prisma.notificationSubscription.update({
+            where: {
+                userId_channelId: {
+                    userId,
+                    channelId: parsedData.channelId,
+                }
+            },
+            data: {
+                methods: {
+                    update: methods,
+                },
+            },
+        }))
+
+        return
+    }*/
+
+    await prismaCall(() => prisma.notificationSubscription.upsert({
+        where: {
+            userId_channelId: {
+                userId,
+                channelId: parsedData.channelId as number,
+            },
+        },
+        update: {
+            methods: {
+                update: methods,
+            }
+        },
+        create: {
+            user: {
+                connect: {
+                    id: userId,
+                }
+            },
+            channel: {
+                connect: {
+                    id: parsedData.channelId as number,
+                }
+            },
+            methods: {
+                create: methods,
+            },
+        }
+    }))
 }

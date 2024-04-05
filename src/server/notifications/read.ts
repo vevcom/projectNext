@@ -74,13 +74,20 @@ export async function readChannelsAsFlatObject() : Promise<{
 export async function readUserSubscriptions(userId: number):
 Promise<NotificationSubscriptionWithMethods[]>
 {
-
-    return await prismaCall(() => prisma.notificationSubscription.findMany({
+    const results = await prismaCall(() => prisma.notificationSubscription.findMany({
         where: {
             userId,
         },
         include: {
             methods: true,
+        }
+    }))
+
+    return results.map(r => ({
+        ...r,
+        methods: {
+            ...r.methods,
+            id: undefined
         }
     }))
 

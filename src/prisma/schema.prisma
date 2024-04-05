@@ -570,6 +570,8 @@ model NotificationSubscription {
   channel   NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
   methodsId Int
   methods   NotificationMethod  @relation(fields: [methodsId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channelId])
 }
 
 model Notification {

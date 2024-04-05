@@ -5,7 +5,7 @@ import { SubscriptionThreeObject } from "./Types"
 import NotificationMethodSelector from "@/app/components/NotificaionMethodSelector/NotificaionMethodSelector"
 import Form from "@/app/components/Form/Form"
 import { useState } from "react"
-import { updateOwnSubscription } from "@/actions/notifications/update"
+import { updateOwnSubscriptionAction } from "@/actions/notifications/update"
 
 export default function NotificationSettingsView({
     channel,
@@ -16,6 +16,7 @@ export default function NotificationSettingsView({
 }) {
 
     const [ childrenCollaped, setChildrenCollapsed ] = useState(collapsed);
+    const [methodState, setMethodState] = useState(channel.subscription?.methods ?? NotificationMethodsAllOff)
 
     return (
         <div className={styles.notificaionSettingView}>
@@ -24,15 +25,16 @@ export default function NotificationSettingsView({
 
             <Form
                 submitText="Oppdater"
-                action={updateOwnSubscription}
+                action={updateOwnSubscriptionAction}
 
             >
                 <input type="hidden" name="channelId" value={channel.id}/>
                 <input type="hidden" name="id" value={channel.subscription?.id}/>
 
                 <NotificationMethodSelector
-                    methods={channel.subscription?.methods ?? NotificationMethodsAllOff}
+                    methods={methodState}
                     editable={channel.availableMethods}
+                    onChange={setMethodState}
                 />
             </Form>
 

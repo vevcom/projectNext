@@ -88,7 +88,7 @@ const baseSubscriptionValidation = new ValidationBase({
     } as Record<string, z.ZodType>,
 })
 
-export const updateOwnNotificaionSettings = baseSubscriptionValidation.createValidation({
+export const updateSubscriptionValidation = baseSubscriptionValidation.createValidation({
     keys: [
         "id",
         "channelId",
@@ -105,3 +105,4 @@ export const updateOwnNotificaionSettings = baseSubscriptionValidation.createVal
     })
 })
 
+export type UpdateSubscriptionTypes = ValidationTypes<typeof updateSubscriptionValidation>

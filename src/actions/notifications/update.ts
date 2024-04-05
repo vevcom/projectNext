@@ -1,9 +1,9 @@
 "use server"
-import { updateNotificationChannel } from "@/server/notifications/update"
+import { updateNotificationChannel, updateSubscription } from "@/server/notifications/update"
 import { safeServerCall } from "@/actions/safeServerCall";
 import type { ActionReturn } from "@/actions/Types";
 import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
-import { updateNotificationValidation } from "@/server/notifications/validation"
+import { updateNotificationValidation, updateSubscriptionValidation } from "@/server/notifications/validation"
 import type { NotificationMethodType } from "@/server/notifications/Types"
 import { createActionError, createZodActionError } from "@/actions/error";
 import { getUser } from "@/auth/getUser";
@@ -18,10 +18,8 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
     });
     if (!authorized) return createActionError(status)
 
-    console.log(rawdata)
 
     const typeVerifiedData = updateNotificationValidation.typeValidate(rawdata)
-    console.log(typeVerifiedData)
     if (!typeVerifiedData.success) return createZodActionError(typeVerifiedData)
     
     const results = await safeServerCall(() => {
@@ -77,11 +75,11 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
     return results;
 }
 
-export async function updateOwnSubscription(rawdata: FormData):
-    Promise<ActionReturn<null>>
+export async function updateOwnSubscriptionAction(rawdata: FormData):
+    Promise<ActionReturn<void>>
 {
 
-    const { authorized, status } = await getUser({
+    const { authorized, status, user } = await getUser({
         requiredPermissions: [
             [ 'NOTIFICATION_SUBSCRIPTION_CREATE' ],
             [ 'NOTIFICATION_SUBSCRIPTION_UPDATE' ],
@@ -90,7 +88,9 @@ export async function updateOwnSubscription(rawdata: FormData):
     });
     if (!authorized) return createActionError(status)
 
-    console.log(rawdata)
+    const typeVerifiedData = updateSubscriptionValidation.typeValidate(rawdata)
+    if (!typeVerifiedData.success) return createZodActionError(typeVerifiedData)
 
-    return {success: true, data: null};
+
+    return safeServerCall(() => updateSubscription(user.id, typeVerifiedData.data))
 }
