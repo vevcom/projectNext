@@ -5,6 +5,7 @@ import { SubscriptionThreeObject } from "./Types"
 import NotificationMethodSelector from "@/app/components/NotificaionMethodSelector/NotificaionMethodSelector"
 import Form from "@/app/components/Form/Form"
 import { useState } from "react"
+import { updateOwnSubscription } from "@/actions/notifications/update"
 
 export default function NotificationSettingsView({
     channel,
@@ -23,7 +24,11 @@ export default function NotificationSettingsView({
 
             <Form
                 submitText="Oppdater"
+                action={updateOwnSubscription}
+
             >
+                <input type="hidden" name="channelId" value={channel.id}/>
+                <input type="hidden" name="id" value={channel.subscription?.id}/>
 
                 <NotificationMethodSelector
                     methods={channel.subscription?.methods ?? NotificationMethodsAllOff}

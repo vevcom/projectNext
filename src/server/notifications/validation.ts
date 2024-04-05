@@ -4,18 +4,18 @@ import type { ValidationTypes } from '@/server/Validation'
 import { NotificationMethodType } from './Types';
 import { NotificationMethods } from './ConfigVars';
 
-function createMethodFields(type : boolean, prefix: NotificationMethodType) : Record<string, z.ZodType> {
+function createMethodFields(type : boolean, prefix?: NotificationMethodType) : Record<string, z.ZodType> {
     const ret : Record<string, z.ZodType> = {};
 
     NotificationMethods.forEach(field => {
-        ret[`${prefix}_${field}`] = type ? z.string().optional() : z.boolean().optional()
+        ret[prefix ? `${prefix}_${field}` : field] = type ? z.string().optional() : z.boolean().optional()
     })
     
     return ret
 }
 
-function createMethodFieldString(prefix: NotificationMethodType) {
-    return NotificationMethods.map(field => `${prefix}_${field}`)
+function createMethodFieldString(prefix?: NotificationMethodType) {
+    return NotificationMethods.map(field => prefix ? `${prefix}_${field}` : field)
 }
 
 const baseNotificationValidation = new ValidationBase({
@@ -74,4 +74,34 @@ export const updateNotificationValidation = baseNotificationValidation.createVal
 })
 
 export type UpdateNotificationTypes = ValidationTypes<typeof updateNotificationValidation>
+
+const baseSubscriptionValidation = new ValidationBase({
+    type: {
+        id: z.string(),
+        channelId: z.string(),
+        ...createMethodFields(true),
+    } as Record<string, z.ZodType>,
+    details: {
+        id: z.number().min(1).optional(),
+        channelId: z.number().min(1),
+        ...createMethodFields(false)
+    } as Record<string, z.ZodType>,
+})
+
+export const updateOwnNotificaionSettings = baseSubscriptionValidation.createValidation({
+    keys: [
+        "id",
+        "channelId",
+    ].concat(createMethodFieldString()),
+    transformer: data => ({
+        id: data.id ? Number(data.id) : undefined,
+        channelId: Number(data.channelId),
+        ...Object.fromEntries(
+            NotificationMethods.map(field => ([
+                field,
+                data[field] === 'on'
+            ]))
+        )
+    })
+})
 

@@ -5,6 +5,7 @@ import Checkbox from "@/app/components/UI/Checkbox"
 import styles from "./NotificaionMethodSelector.module.scss"
 import { v4 as uuid } from "uuid"
 import type { NotificationMethodType } from "src/server/notifications/Types"
+import { NotificationMethodDisplayName } from "@/server/notifications/ConfigVars"
 
 export default function NotificationMethodSelector({
     title,
@@ -36,13 +37,14 @@ export default function NotificationMethodSelector({
 
         {Object.entries(state).map(([key, value]) => {
             const canEdit = !editable || editable[key];
+
             return <Checkbox
                 key={uuid()}
-                label={key}
+                label={NotificationMethodDisplayName(key as keyof(Omit<NotificationMethod, "id">))}
                 name={formPrefix ? `${formPrefix}_${key}` : key}
-                checked={canEdit && value}
+                {...(onChange ? {checked: canEdit && value} : {defaultChecked: value})}
                 disabled={!canEdit}
-                onChange={handleChange.bind(key)}
+                onChange={handleChange.bind(key as keyof(Omit<NotificationMethod, "id">))}
             />
         })}
     </div>

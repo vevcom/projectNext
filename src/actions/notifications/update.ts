@@ -7,6 +7,8 @@ import { updateNotificationValidation } from "@/server/notifications/validation"
 import type { NotificationMethodType } from "@/server/notifications/Types"
 import { createActionError, createZodActionError } from "@/actions/error";
 import { getUser } from "@/auth/getUser";
+import { NotificationMethod } from "@prisma/client";
+import { NotificationMethodsAllOn } from "@/server/notifications/ConfigVars";
 
 export async function updateNotificationChannelAction(rawdata: FormData): Promise<ActionReturn<NotificationChannelWithMethods>> {
 
@@ -34,11 +36,15 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
                 )
         }
 
-        function addMethod(prefix: NotificationMethodType) {
+        function addMethod(prefix: NotificationMethodType) :
+        Record<
+            NotificationMethodType,
+            Omit<NotificationMethod, 'id'>
+        > | null {
             const prefixIncluded = countPrefix(prefix)
             
             if (prefixIncluded === 0) {
-                return {}
+                return null
             }
 
             return {
@@ -51,7 +57,11 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
                             value
                         ])
                     )
-            }
+            } as Record<NotificationMethodType, Omit<NotificationMethod, 'id'>>
+        }
+
+        const availableMethods = addMethod('availableMethods') ?? {
+            availableMethods: NotificationMethodsAllOn,
         }
 
         return updateNotificationChannel({
@@ -59,12 +69,28 @@ export async function updateNotificationChannelAction(rawdata: FormData): Promis
             name: parsedData.name,
             description: parsedData.description,
             parentId: parsedData.parentId,
-            ...addMethod('availableMethods'),
+            ...availableMethods,
             ...addMethod('defaultMethods'),
         })
     });
 
-    console.log(results)
-
     return results;
+}
+
+export async function updateOwnSubscription(rawdata: FormData):
+    Promise<ActionReturn<null>>
+{
+
+    const { authorized, status } = await getUser({
+        requiredPermissions: [
+            [ 'NOTIFICATION_SUBSCRIPTION_CREATE' ],
+            [ 'NOTIFICATION_SUBSCRIPTION_UPDATE' ],
+    ],
+        userRequired: true,
+    });
+    if (!authorized) return createActionError(status)
+
+    console.log(rawdata)
+
+    return {success: true, data: null};
 }

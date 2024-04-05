@@ -34,3 +34,13 @@ export const NotificationMethodsAllOn = Object.fromEntries(
 export const NotificationMethodsAllOff = Object.fromEntries(
     NotificationMethods.map((method) => [method, false])
 ) as Omit<NotificationMethod, "id">;
+
+export function NotificationMethodDisplayName(key: keyof(Omit<NotificationMethod, "id">)): string {
+    const mapping = {
+        email: "Epost",
+        push: "Push varsling",
+        emailWeekly: "Ukentlig epost",
+    } as Record<keyof(NotificationMethod), string>
+
+    return mapping[key] ?? key
+}

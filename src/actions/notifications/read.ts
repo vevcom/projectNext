@@ -25,7 +25,10 @@ Promise<
 >
 {
     const { authorized, status, user } = await getUser({
-        requiredPermissions: [[ 'NOTIFICATION_CHANNEL_READ' ]],
+        requiredPermissions: [
+            [ 'NOTIFICATION_CHANNEL_READ' ],
+            [ 'NOTIDICATION_SUBSCRIPTION_READ' ],
+        ],
         userRequired: true,
     });
     if (!authorized) return createActionError(status)
