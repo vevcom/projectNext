@@ -1,5 +1,6 @@
 import 'server-only'
 import type { Notification, NotificationChannel } from '@prisma/client'
+import { prismaCall } from '@/server/prismaCall'
 
 export async function dispatchEmailNotifications(
     notification: Notification,
@@ -11,4 +12,22 @@ export async function dispatchEmailNotifications(
     console.log(channel)
     console.log(notification)
 
+    const userInfo = await prismaCall(() => prisma.user.findMany({
+        where: {
+            id: {
+                in: usersIds,
+            },
+        },
+        select: {
+            id: true,
+            email: true,
+            firstname: true,
+            lastname: true,
+        }
+    }))
+
+    console.log(userInfo)
+
+    // TODO: SEND MAIL
+    // RabbitMQ?
 }
