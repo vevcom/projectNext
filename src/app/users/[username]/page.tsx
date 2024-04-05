@@ -33,7 +33,7 @@ export default async function User({ params }: PropTypes) {
     }
 
     return (
-        <>
+        <div style={{marginLeft: "2rem"}}>
             <h1>{`${user.firstname} ${user.lastname}`}</h1>
             <p>{`E-post: '${user.email}'`}</p>
             <p>{`Bruker-ID: ${user.id}`}</p>
@@ -48,6 +48,6 @@ export default async function User({ params }: PropTypes) {
             {me && <Link href="/logout">Logg ut</Link>}
 
             <NotificationSettings/>
-        </>
+        </div>
     )
 }

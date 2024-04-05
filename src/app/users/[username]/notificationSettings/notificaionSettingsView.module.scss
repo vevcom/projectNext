@@ -1,0 +1,30 @@
+@use '@/styles/ohma';
+
+.notificaionSettingView {
+
+
+    > .childrenContainer {
+        margin-left: 2rem;
+
+        h4 {
+            padding-bottom: 1rem;
+            transition: all 200ms;
+            text-decoration: underline;
+        }
+
+        h4:hover {
+            opacity: 70%;
+        }
+
+        > .collapsable {
+            transition: all 500ms ease;
+            max-height: 100rem;
+            overflow-y: hidden;
+        }
+
+        > .collapseHidden {
+            max-height: 0;
+        }
+    }
+
+}
