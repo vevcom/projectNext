@@ -141,4 +141,30 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
 
 
     await Promise.all(keys.filter(special => special !== "ROOT").map((special) => upsertToPrisma(special)))
+
+    await prisma.notificationChannel.create({
+        data: {
+            name: "Info fra HS",
+            description: "Elektronisk postutsendelse fra Hoved styret",
+            parent: {
+                connect: {
+                    special: "ROOT",
+                }
+            },
+            defaultMethods: {
+                create: {
+                    email: true,
+                    push: false,
+                    emailWeekly: false,
+                }
+            },
+            availableMethods: {
+                create: {
+                    email: true,
+                    push: false,
+                    emailWeekly: false,
+                }
+            }
+        }
+    })
 }

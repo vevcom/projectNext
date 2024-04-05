@@ -2,7 +2,7 @@
 
 import type { NotificationMethod } from "@prisma/client"
 import Checkbox from "@/app/components/UI/Checkbox"
-import styles from "./channelMethods.module.scss"
+import styles from "./NotificaionMethodSelector.module.scss"
 import { v4 as uuid } from "uuid"
 import type { NotificationMethodType } from "src/server/notifications/Types"
 
