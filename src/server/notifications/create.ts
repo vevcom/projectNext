@@ -26,6 +26,12 @@ export async function dispatchNotification(notification: Notification): Promise<
                     name: true,
                     parentId: true,
                     availableMethods: true,
+                    subscriptions: {
+                        select: {
+                            methods: true,
+                            userId: true,
+                        }
+                    }
                 }
             }
         }
@@ -35,71 +41,16 @@ export async function dispatchNotification(notification: Notification): Promise<
         throw new ServerError('NOT FOUND', "Cannot find the notification")
     }
 
-    const channel = results.channel
-
-    type RecordWithMethods = Record<number, Omit<NotificationMethod, 'id'>>
-
-    async function findUsers(channelId: number, iterations=50): Promise<RecordWithMethods> {
-        if (iterations < 0) {
-            throw new ServerError('SERVER ERROR', "Too many iterations when finding users")
-        }
-
-        const subscriptionsP = prismaCall(() => prisma.notificationSubscription.findMany({
-            where: {
-                channelId,
-            },
-            select: {
-                userId: true,
-                methods: true,
-            }
-        }))
-
-        const channelP = prismaCall(() => prisma.notificationChannel.findUnique({
-            where: {
-                id: channelId,
-            },
-            select: {
-                special: true,
-                parentId: true,
-            }
-        }))
-
-        const [subscriptions, channel] = await Promise.all([subscriptionsP, channelP])
-
-        const parsedResults = Object.fromEntries(
-            subscriptions.filter(u => u.methods).map(u => [
-                u.userId,
-                Object.fromEntries(
-                    Object.entries(u.methods).filter(([key]) => key != 'id')
-                ) as Omit<NotificationMethod, 'id'>,
-            ])
-        )
-
-        if (!channel) {
-            throw new ServerError('SERVER ERROR', "Invalid channelId")
-        }
-
-        if (channel.special === "ROOT") {
-            return parsedResults
-        }
-
-        const parentResults = await findUsers(channel.parentId, iterations - 1)
-
-        Object.entries(parentResults).forEach(([key, value]) => {
-            if (!parsedResults[key]) {
-                parsedResults[key] = value
-            }
-        })
-
-        return parsedResults
-    }
-
-    const users = await findUsers(channel.id)
-    const methods = channel.availableMethods
+    const channel = {...results.channel, subscriptions: undefined}
+    const users = results.channel.subscriptions
     
     await Promise.all(
-        NotificationMethods.filter(m => methods[m]).map(method => 
-            dispatchMethods[method](notification, channel, Object.keys(users).map(u => Number(u)))
+        NotificationMethods.filter(m => channel.availableMethods[m]).map(method => 
+            dispatchMethods[method](
+                notification,
+                channel,
+                users.filter(u => u.methods[method]).map(u => u.userId)
+            )
         )
     )
 
