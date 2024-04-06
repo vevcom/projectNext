@@ -614,7 +614,7 @@ model MailAlias {
   users        UserMailAlias[]
   forwardsTo   ForwardMailAlias[]    @relation(name: "source")
   forwardsFrom ForwardMailAlias[]    @relation(name: "drain")
-  rawAddress   rawAddressMailAlias[]
+  rawAddress   RawAddressMailAlias[]
 }
 
 model GroupMailAlias {
@@ -644,7 +644,7 @@ model ForwardMailAlias {
   @@unique([sourceId, drainId])
 }
 
-model rawAddressMailAlias {
+model RawAddressMailAlias {
   id      Int       @id @default(autoincrement())
   address String
   aliasId Int
