@@ -215,6 +215,10 @@ enum Permission {
 
   // Mail
   MAIL_SEND
+
+  // Mail Aliases
+  MAILALIAS_CREATE
+
   // Groups - Generic
   GROUP_READ
   GROUP_DESTROY
@@ -597,7 +601,7 @@ model MailAlias {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   description String
-  address     String
+  address     String   @unique
 
   groups       GroupMailAlias[]
   users        UserMailAlias[]
