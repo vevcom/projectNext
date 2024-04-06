@@ -27,7 +27,7 @@ export default function PageWrapper({
                     { headerItem }
                 </div>
             </div>
-
+            
             { children }
         </div>
     )

@@ -12,17 +12,19 @@ export default function MailAliasDestory({
 
     const { push } = useRouter();
 
-    return <Form
-        action={destroyMailAliasAction.bind(null, aliasId)}
-        successCallback={() => {
-            push('./')
-        }}
-        submitText="Slett alias"
-        confirmation={{
-            confirm: true,
-            text: 'Er du sikker på at du vil slette dette aliaset? Dette kan ikke angres.'
-        }}
-        submitColor="red"
-    >
-    </Form>
+    return <div>
+        <Form
+            action={destroyMailAliasAction.bind(null, aliasId)}
+            successCallback={() => {
+                push('./')
+            }}
+            submitText="Slett alias"
+            confirmation={{
+                confirm: true,
+                text: 'Er du sikker på at du vil slette dette aliaset? Dette kan ikke angres.'
+            }}
+            submitColor="red"
+        >
+        </Form>
+    </div>
 }

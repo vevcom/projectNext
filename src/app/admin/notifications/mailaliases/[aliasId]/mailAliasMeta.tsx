@@ -13,7 +13,7 @@ export default function MailAliasMeta({
     description: string,
 }) {
 
-    return (
+    return <div>
         <Form
             submitText="Oppdater"
         >
@@ -21,5 +21,5 @@ export default function MailAliasMeta({
             <TextInput name="address" label="Alias" defaultValue={address} />
             <TextInput name="description" label="Beskrivelse" defaultValue={description} />
         </Form>
-    )
+    </div>
 }
