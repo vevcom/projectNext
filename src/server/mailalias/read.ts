@@ -68,7 +68,6 @@ export async function findValidMailAliasForwardRelations(id: number): Promise<Ma
     })
 
     function invalidateAlias(id: number) {
-        console.log(id)
         if (!relationObject[id].valid) return;
         relationObject[id].valid = false;
 

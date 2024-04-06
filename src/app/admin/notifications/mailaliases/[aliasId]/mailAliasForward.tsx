@@ -1,9 +1,10 @@
 "use client"
+import { createMailAliasForwardRelationAction } from "@/actions/mailalias/create";
 import Form from "@/app/components/Form/Form";
 import Select from "@/app/components/UI/Select";
 import { MailAlias } from "@prisma/client";
 import { useState } from "react";
-
+import {v4 as uuid } from "uuid";
 
 export default function MailAliasForward({
     aliasId,
@@ -21,24 +22,33 @@ export default function MailAliasForward({
 
     const [ relAdr, setRelAdr ] = useState(addresses)
 
-    console.log(aliasId)
-
     return <div>
         <h4>{title}</h4>
 
         <ul>
             {relAdr.map(a => 
-                <li>{a.address}</li>
+                <li key={uuid()}>{a.address}</li>
             )}
         </ul>
 
         <Form
             submitText="Legg til"
+            action={createMailAliasForwardRelationAction}
+            successCallback={data => {
+                if(!data) return;
+                console.log(data)
+                const idToAdd = chooseSource ? data.sourceId : data.drainId
+                const newAlias = possibleOptions.find(a => a.id == idToAdd)
+                if (newAlias) {
+                    setRelAdr(relAdr.concat(newAlias))
+                }
+            }}
+
         >
             <input
                 type="hidden"
                 value={aliasId}
-                name={chooseSource ? "dranId" : "sourceId"}
+                name={chooseSource ? "drainId" : "sourceId"}
             />
             <Select
                 name={chooseSource ? "sourceId" : "drainId"}

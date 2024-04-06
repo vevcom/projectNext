@@ -5,6 +5,7 @@ import Form from "@/app/components/Form/Form";
 import TextInput from "@/app/components/UI/TextInput";
 import { RawAddressMailAlias } from "@prisma/client";
 import { useState } from "react";
+import {v4 as uuid } from "uuid"
 
 export default function MailAliasRawAddress({
     aliasId,
@@ -22,7 +23,7 @@ export default function MailAliasRawAddress({
     return <div>
         <ul>
             {addresses.map(a => {
-                return <li>
+                return <li key={uuid()}>
                     {a.address}
                 </li>
             })}
@@ -38,7 +39,7 @@ export default function MailAliasRawAddress({
             }}
         >
             <TextInput
-                label="Epost adresse"
+                label="Epost"
                 name="rawAddress"
                 value={inputFieldValue}
                 onChange={e => setInputFieldValue(e.target.value)}

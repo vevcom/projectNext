@@ -1,8 +1,10 @@
 import 'server-only'
-import { createMailAliasValidation, type CreateMailAliasTypes, CreateMailAliasRawAddressTypes, createMailAliasRawAddressValidation } from './validation';
+import { createMailAliasValidation, type CreateMailAliasTypes, CreateMailAliasRawAddressTypes, createMailAliasRawAddressValidation, CreateMailAliasForwardRelationTypes, createMailAliasForwardRelationValidation } from './validation';
 import { prismaCall } from '@/server/prismaCall';
 import prisma from '@/prisma';
-import { MailAlias, RawAddressMailAlias } from '@prisma/client';
+import { ForwardMailAlias, MailAlias, RawAddressMailAlias } from '@prisma/client';
+import { findValidMailAliasForwardRelations } from './read';
+import { ServerError } from '../error';
 
 export async function createMailAlias(rawdata: CreateMailAliasTypes['Detailed']):
     Promise<MailAlias>
@@ -27,6 +29,22 @@ export async function createMailAliasRawAddress(rawdata: CreateMailAliasRawAddre
                     id,
                 },
             },
+        }
+    }))
+}
+
+export async function createMailAliasForwardRelation(rawdata: CreateMailAliasForwardRelationTypes['Detailed']):
+    Promise<ForwardMailAlias>
+{
+    const { sourceId, drainId } = createMailAliasForwardRelationValidation.detailedValidate(rawdata)
+
+    const validRelations = await findValidMailAliasForwardRelations(sourceId)
+    if (!validRelations.map(r => r.id).includes(drainId)) throw new ServerError('BAD PARAMETERS', 'Cannot set mailforwarding in a loop.')
+
+    return await prismaCall(() => prisma.forwardMailAlias.create({
+        data: {
+            sourceId,
+            drainId,
         }
     }))
 }
