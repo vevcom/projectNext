@@ -20,5 +20,5 @@ export default async function Alias({ params } : {
     }
     
 
-    return <MailAliasView mailAlias={mailAliasData.data} />
+    return <MailAliasView mailAlias={mailAliasData.data.alias} validForwardingAliases={mailAliasData.data.validForwardingAliases}/>
 }

@@ -6,12 +6,15 @@ import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 import MailAliasRawAddress from "./mailAliasRawAddress"
 import MailAliasDestory from "./mailAliasDestroy"
 import MailAliasForward from "./mailAliasForward"
+import { MailAlias } from "@prisma/client"
 
 
 export default function MailAliasView({
     mailAlias,
+    validForwardingAliases,
 }: {
-    mailAlias: MailAliasExtended
+    mailAlias: MailAliasExtended,
+    validForwardingAliases: MailAlias[],
 }) {
 
     return (
@@ -23,14 +26,14 @@ export default function MailAliasView({
                     aliasId={mailAlias.id}
                     title="Videresender fra"
                     addresses={mailAlias.forwardsFrom.map(a => a.source)}
-                    possibleOptions={[]}
+                    possibleOptions={validForwardingAliases}
                     chooseSource={true}
                 />
                 <MailAliasForward
                     aliasId={mailAlias.id}
                     title="Videresender til"
                     addresses={mailAlias.forwardsTo.map(a => a.drain)}
-                    possibleOptions={[]}
+                    possibleOptions={validForwardingAliases}
                     chooseSource={false}
                 />
                 <MailAliasDestory aliasId={mailAlias.id}/>

@@ -40,3 +40,49 @@ export async function readMailAliasById(id: number): Promise<MailAliasExtended> 
         }
     }));
 }
+
+export async function findValidMailAliasForwardRelations(id: number): Promise<MailAlias[]> {
+
+    const [ aliases, relations ] = await Promise.all([
+        prismaCall(() => prisma.mailAlias.findMany()),
+        prismaCall(() => prisma.forwardMailAlias.findMany()),
+    ])
+    
+    const relationObject: Record<number, {
+        source: number[],
+        drain: number[],
+        valid: boolean
+    }> = {}
+
+    aliases.forEach(a => {
+        relationObject[a.id] = {
+            source: [],
+            drain: [],
+            valid: true,
+        }
+    })
+
+    relations.forEach(r => {
+        relationObject[r.sourceId].drain.push(r.drainId)
+        relationObject[r.drainId].source.push(r.sourceId)
+    })
+
+    function invalidateAlias(id: number) {
+        console.log(id)
+        if (!relationObject[id].valid) return;
+        relationObject[id].valid = false;
+
+        relationObject[id].source.forEach(invalidateAlias)
+        relationObject[id].drain.forEach(invalidateAlias)
+    }
+
+    invalidateAlias(id)
+
+    const validAliasIds = Object
+        .entries(relationObject)
+        .filter(([id, data]) => data.valid)
+        .map(([id, data]) => id)
+        .map(id => Number(id))
+
+    return aliases.filter(a => validAliasIds.includes(a.id));
+}
