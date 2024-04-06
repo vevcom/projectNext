@@ -1,3 +1,6 @@
+import { readMailAliasAction } from "@/actions/mailalias/read"
+import MailAliasView from "./mailAliasView"
+import { notFound } from "next/navigation"
 
 
 export default async function Alias({ params } : {
@@ -6,11 +9,16 @@ export default async function Alias({ params } : {
     }
 }) {
 
+    const mailAliasData = await readMailAliasAction(Number(params.aliasId))
+    if (!mailAliasData.success && mailAliasData.errorCode === 'NOT FOUND') {
+        notFound()
+    }
+
+    if (!mailAliasData.success) {
+        console.error(mailAliasData)
+        throw new Error("Failed to fetch mailAlias data.")
+    }
     
 
-    return (
-        <div>
-            Hei
-        </div>
-    )
+    return <MailAliasView mailAlias={mailAliasData.data} />
 }
