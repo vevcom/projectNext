@@ -28,7 +28,7 @@ export async function createMailAliasRawAddressAction(rawdata: FormData):
     Promise<ActionReturn<RawAddressMailAlias>>
 {
     const {authorized, status} = await getUser({
-        requiredPermissions: [[ 'MAILALIAS_UPDATE_RAWADDRESS' ]],
+        requiredPermissions: [[ 'MAILALIAS_CREATE_RAWADDRESS' ]],
     })
     if (!authorized) return createActionError(status)
 

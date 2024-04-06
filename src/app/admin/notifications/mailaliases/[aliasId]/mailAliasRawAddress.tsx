@@ -15,8 +15,9 @@ export default function MailAliasRawAddress({
 }) {
     // TODO: Check if user can update raw addresses
 
-    const [ addresses, setAddresses ] = useState(rawAddresses);
+    const [ addresses, setAddresses ] = useState(rawAddresses)
 
+    const [ inputFieldValue, setInputFieldValue ] = useState("")
 
     return <div>
         <ul>
@@ -33,10 +34,16 @@ export default function MailAliasRawAddress({
             successCallback={data => {
                 if(!data) return
                 setAddresses(addresses.concat(data))
+                setInputFieldValue("")
             }}
         >
+            <TextInput
+                label="Epost adresse"
+                name="rawAddress"
+                value={inputFieldValue}
+                onChange={e => setInputFieldValue(e.target.value)}
+            />
             <input type="hidden" name="id" value={aliasId} />
-            <TextInput label="Epost adresse" name="rawAddress"/>
         </Form>
     </div>
 }
