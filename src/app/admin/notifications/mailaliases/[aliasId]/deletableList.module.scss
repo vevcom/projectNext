@@ -1,0 +1,19 @@
+@use '@/styles/ohma';
+
+.deleteableList {
+    list-style: none;
+
+    font-size: ohma.$fonts-m;
+
+    > li {
+        padding-left: 1rem;
+
+        > span {
+            margin-left: 1rem;
+        }
+
+    }
+    :hover {
+        background-color: ohma.$colors-gray-200;
+    }
+}

@@ -5,7 +5,8 @@ import Form from "@/app/components/Form/Form";
 import TextInput from "@/app/components/UI/TextInput";
 import { RawAddressMailAlias } from "@prisma/client";
 import { useState } from "react";
-import {v4 as uuid } from "uuid"
+import { DeleteableList } from "./deletableList";
+import { destroyMailAliasRawAddressAction } from "@/actions/mailalias/destory";
 
 export default function MailAliasRawAddress({
     aliasId,
@@ -21,14 +22,19 @@ export default function MailAliasRawAddress({
     const [ inputFieldValue, setInputFieldValue ] = useState("")
 
     return <div>
-        <ul>
-            {addresses.map(a => {
-                return <li key={uuid()}>
-                    {a.address}
-                </li>
-            })}
-        </ul>
+        <h4>Epostadresser</h4>
 
+        <DeleteableList
+            items={addresses.map(a => ({
+                id: a.id,
+                label: a.address,
+            }))}
+            deleteFunction={async (id) => {
+                const results = await destroyMailAliasRawAddressAction(id)
+                if (!results.success) return;
+                setAddresses(addresses.filter(a => a.id != results.data.id))
+            }}
+        />
         <Form
             submitText="Legg til"
             action={createMailAliasRawAddressAction}

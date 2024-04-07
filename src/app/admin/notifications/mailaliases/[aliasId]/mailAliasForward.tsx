@@ -4,7 +4,7 @@ import Form from "@/app/components/Form/Form";
 import Select from "@/app/components/UI/Select";
 import { MailAlias } from "@prisma/client";
 import { useState } from "react";
-import {v4 as uuid } from "uuid";
+import { DeleteableList } from "./deletableList";
 
 export default function MailAliasForward({
     aliasId,
@@ -25,11 +25,13 @@ export default function MailAliasForward({
     return <div>
         <h4>{title}</h4>
 
-        <ul>
-            {relAdr.map(a => 
-                <li key={uuid()}>{a.address}</li>
-            )}
-        </ul>
+        <DeleteableList
+            items={relAdr.map(a => ({
+                id: a.id,
+                label: a.address,
+            }))}
+            deleteFunction={() => {}}
+        />
 
         <Form
             submitText="Legg til"
