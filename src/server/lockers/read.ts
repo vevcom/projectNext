@@ -5,31 +5,14 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import type { ReadPageInput } from '@/actions/Types'
 import type { LockerWithReservation } from '@/server/lockers/Types'
-
+import { lockerReservationIncluder } from './reservations/ConfigVars'
 
 export async function readLocker(id: number): Promise<LockerWithReservation> {
     const locker = await prismaCall(() => prisma.locker.findUnique({
         where: {
             id
         },
-        include: {
-            LockerReservation: {
-                where: {
-                    active: true
-                },
-                select: {
-                    id: true,
-                    user: {
-                        select: {
-                            id: true,
-                            firstname: true,
-                            lastname: true
-                        }
-                    },
-                    endDate: true
-                }
-            }
-        } 
+        include: lockerReservationIncluder 
     }))
     if (!locker) throw new ServerError('NOT FOUND', `locker ${id} not found`)
     return locker
@@ -46,24 +29,7 @@ export async function readLockerPage<const PageSize extends number>(
         },
         skip: pageNumber * pageSize,
         take: pageSize,
-        include: {
-            LockerReservation: {
-                where: {
-                    active: true
-                },
-                select: {
-                    id: true,
-                    user: {
-                        select: {
-                            id: true,
-                            firstname: true,
-                            lastname: true
-                        }
-                    },
-                    endDate: true
-                }
-            }
-        } 
+        include: lockerReservationIncluder
     }))        
 }
 

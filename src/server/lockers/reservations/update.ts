@@ -12,7 +12,7 @@ export async function updateLockerReservation(id: number, rawData: UpdateLockerR
             id
         },
         data: {
-            committeeId: data.committeeId,
+            groupId: data.groupId,
             endDate: data.endDate,
         }
     }))

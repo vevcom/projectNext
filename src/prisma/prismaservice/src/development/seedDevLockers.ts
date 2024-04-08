@@ -5,7 +5,7 @@ const floors = [1, 2, 3]
 const n = 10
 const m = 10
 
-export default async function seedOrder(prisma: PrismaClient) {
+export default async function seedDevLockers(prisma: PrismaClient) {
     await Promise.all(buildings.map(building => Promise.all(floors.map(floor => prisma.lockerLocation.upsert({
         where: {
             building_floor: {

@@ -22,6 +22,7 @@ export async function createLockerReservationAction(
     const parse = createLockerReservationValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
+    console.log(data)
 
     const locker = await readLockerAction(lockerId)
     if (locker.success) {

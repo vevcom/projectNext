@@ -5,6 +5,7 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm' 
 import { getUser } from '@/auth/getUser'
+import { readGroups } from '@/server/groups/read'
 
 
 type PropTypes = {
@@ -30,6 +31,9 @@ export default async function Locker({ params }: PropTypes) {
 
     const reserved = locker.data.LockerReservation.length > 0
 
+    const groups = await readGroups()
+    const committeesFormData = groups.map(group => ({value: group.id.toString(), label: group.id.toString()}))
+
     return (
         <PageWrapper title="Skapreservasjon">
             <div className={styles.lockerCard}>
@@ -39,11 +43,11 @@ export default async function Locker({ params }: PropTypes) {
                     reserved 
                     ?
                     <>
-                            <p>Dette skapet er reservert av {locker.data.LockerReservation[0].user.firstname} {locker.data.LockerReservation[0].user.lastname} {locker.data.LockerReservation[0].endDate == null ? "på ubestemt tid" : `fram til ${locker.data.LockerReservation[0].endDate.toLocaleDateString()}`}</p>
+                            <p>Dette skapet er reservert av {locker.data.LockerReservation[0].user.firstname} {locker.data.LockerReservation[0].user.lastname} {locker.data.LockerReservation[0].group ? `på vegne av ${locker.data.LockerReservation[0].group.id}` : ""} {locker.data.LockerReservation[0].endDate == null ? "på ubestemt tid" : `fram til ${locker.data.LockerReservation[0].endDate.toLocaleDateString()}`}</p>
                             {
                                 user.id == locker.data.LockerReservation[0].user.id
                                 ?
-                                <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id}/>
+                                <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id} committeesFormData={committeesFormData}/>
                                 :
                                 <></>
                             }
@@ -51,7 +55,7 @@ export default async function Locker({ params }: PropTypes) {
                     :   
                     <>
                             <p>Dette skapet er ledig</p>
-                            <CreateLockerReservationForm lockerId={lockerId} />
+                            <CreateLockerReservationForm lockerId={lockerId} committeesFormData={committeesFormData}/>
                         </>
                 }
             </div>

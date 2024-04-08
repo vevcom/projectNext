@@ -12,9 +12,10 @@ export async function createLockerReservation(
     rawdata: CreateLockerReservationTypes['Detailed']
 ): Promise<LockerReservation> {
     const data = createLockerReservationValidation.detailedValidate(rawdata)
+    console.log(data)
     return await prismaCall(() => prisma.lockerReservation.create({
         data: {
-            committeeId: data.committeeId,
+            groupId: data.groupId,
             endDate: data.endDate,
             userId,
             lockerId

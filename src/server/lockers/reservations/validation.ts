@@ -5,12 +5,12 @@ import type { ValidationTypes } from '@/server/Validation'
 
 export const baseLockerReservationValidation = new ValidationBase({
     type: {
-        committeeId: z.string(),
+        groupId: z.string(),
         indefinateDate: z.string().optional(),
         endDate: z.string().optional()
     },
     details: {
-        committeeId: z.number().nullable(),
+        groupId: z.number().nullable(),
         indefinateDate: z.boolean(),
         endDate: z.date().nullable()
     }
@@ -19,12 +19,12 @@ export const baseLockerReservationValidation = new ValidationBase({
 
 export const createLockerReservationValidation = baseLockerReservationValidation.createValidation({
     keys: [
-        'committeeId',
+        'groupId',
         'indefinateDate',
         'endDate'
         ],
     transformer: data => ({
-        committeeId: data.committeeId === "-1" ? null : parseInt(data.committeeId),
+        groupId: data.groupId === "-1" ? null : parseInt(data.groupId),
         indefinateDate: data.indefinateDate ? data.indefinateDate === "on" : false,
         endDate: data.endDate ? (new Date(data.endDate)) : null
     })
@@ -35,12 +35,12 @@ export type CreateLockerReservationTypes = ValidationTypes<typeof createLockerRe
 
 export const updateLockerReservationValidation = baseLockerReservationValidation.createValidation({
     keys: [
-        'committeeId',
+        'groupId',
         'indefinateDate',
         'endDate'
     ],
     transformer: data => ({
-        committeeId: parseInt(data.committeeId),
+        groupId: parseInt(data.groupId),
         indefinateDate: data.indefinateDate ? data.indefinateDate === "on" : false,
         endDate: data.endDate ? new Date(data.endDate) : null
     })

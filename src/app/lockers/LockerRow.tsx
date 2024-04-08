@@ -7,13 +7,14 @@ type PropTypes = {
 }
 
 export default function LockerRow({ locker }: PropTypes) {
+    const isReserved = locker.LockerReservation.length > 0
     return (
         <Link href={`/lockers/${locker.id}`} className={styles.lockerRow}>
             <p>{locker.id}</p>
             <p>{locker.building}</p>
             <p>{locker.floor}</p>
-            <p className={styles.hideSecond}>{locker.LockerReservation.length ? locker.LockerReservation[0].user.firstname + " " +  locker.LockerReservation[0].user.lastname : ""}</p>
-            <p className={styles.hideFirst}></p>
+            <p className={styles.hideSecond}>{isReserved ? locker.LockerReservation[0].user.firstname + " " +  locker.LockerReservation[0].user.lastname : ""}</p>
+            <p className={styles.hideFirst}>{(isReserved && locker.LockerReservation[0].group) ? locker.LockerReservation[0].group.id : ""}</p>
             <p>
                 {
                 locker.LockerReservation.length

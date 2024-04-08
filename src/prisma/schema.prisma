@@ -105,11 +105,12 @@ enum GroupType {
 // 'Group' should never be created by itself. It should always be created
 // with a reference to one specific type of group.
 model Group {
-  id                Int           @id @default(autoincrement())
+  id                Int                 @id @default(autoincrement())
   groupType         GroupType
   membershipRenewal Boolean
   memberships       Membership[]
   roles             RolesGroups[]
+  LockerReservation LockerReservation[]
 
   class                Class?
   committee            Committee?
@@ -135,11 +136,10 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name              String
-  shortName         String              @unique
-  logoImage         CmsImage            @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId       Int                 @unique
-  LockerReservation LockerReservation[]
+  name        String
+  shortName   String   @unique
+  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId Int      @unique
 }
 
 model InterestGroup {
@@ -541,17 +541,17 @@ model LockerLocation {
 }
 
 model LockerReservation {
-  id          Int        @id @default(autoincrement())
-  locker      Locker     @relation(fields: [lockerId], references: [id])
-  user        User       @relation(fields: [userId], references: [id])
-  committee   Committee? @relation(fields: [committeeId], references: [id])
-  lockerId    Int
-  userId      Int
-  committeeId Int?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  endDate     DateTime?
-  active      Boolean    @default(true)
+  id        Int       @id @default(autoincrement())
+  locker    Locker    @relation(fields: [lockerId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  group     Group?    @relation(fields: [groupId], references: [id])
+  lockerId  Int
+  userId    Int
+  groupId   Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  endDate   DateTime?
+  active    Boolean   @default(true)
 
   @@unique([id])
 }

@@ -9,9 +9,13 @@ import { useState } from 'react'
 
 type PropTypes = {
     lockerId: number
+    committeesFormData: {
+        value: string,
+        label: string
+    }[]
 }
 
-export default function LockerReservationForm({ lockerId }: PropTypes) {
+export default function LockerReservationForm({ lockerId, committeesFormData }: PropTypes) {
     const { refresh } = useRouter()
     const [indefinateDate, setIndefinateDate] = useState(false)
 
@@ -22,7 +26,7 @@ export default function LockerReservationForm({ lockerId }: PropTypes) {
             submitText="Reserver" 
             action={createLockerReservationAction.bind(null, lockerId)}
         >   
-            <Select label="Reserver for" name="committeeId" options={[{value: "-1", label: "Meg selv"}]} />
+            <Select label="Reserver for" name="groupId" options={[{value: "-1", label: "Meg selv"}, ...committeesFormData]} />
             <Checkbox label="Reserver på ubestemt tid" name="indefinateDate" onChange={() => setIndefinateDate(!indefinateDate)}/>
             {!indefinateDate && <DateInput label="Reserver fram til" name="endDate"/>}
         </Form>
