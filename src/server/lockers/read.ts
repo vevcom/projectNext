@@ -12,7 +12,7 @@ export async function readLocker(id: number): Promise<LockerWithReservation> {
         where: {
             id
         },
-        include: lockerReservationIncluder 
+        include: lockerReservationIncluder
     }))
     if (!locker) throw new ServerError('NOT FOUND', `locker ${id} not found`)
     return locker

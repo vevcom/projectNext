@@ -9,6 +9,12 @@ import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
 import { readLockerAction } from '../read'
 
+/**
+ * An action that creates a locker reservation based on the given data. Duplicate lockers will not be created
+ * @param lockerId - The id of the locker to be reserved
+ * @param rawdata - The locker reservation to be created
+ * @returns - A Promise that resolves to an ActionReturn containing the LockerReservation created
+ */
 export async function createLockerReservationAction(
     lockerId: number,
     rawdata: FormData | CreateLockerReservationTypes['Type']
@@ -18,11 +24,9 @@ export async function createLockerReservationAction(
         userRequired: true,
     })
     if (!authorized) return createActionError(status)
-    console.log(rawdata)
     const parse = createLockerReservationValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
-    console.log(data)
 
     const locker = await readLockerAction(lockerId)
     if (locker.success) {

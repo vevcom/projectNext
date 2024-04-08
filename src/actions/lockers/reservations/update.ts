@@ -8,6 +8,12 @@ import type { CreateLockerReservationTypes } from '@/server/lockers/reservations
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
 
+/**
+ * An action that updates a locker reservation based on the given data
+ * @param reservationId - The id of the reservation to be updated
+ * @param rawdata - The data to be updated
+ * @returns - A Promise that resolves to an ActionReturn containing the LockerReservation updated
+ */
 export async function updateLockerReservationAction(
     reservationId: number,
     rawdata: FormData | CreateLockerReservationTypes['Type']
