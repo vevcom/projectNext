@@ -2,7 +2,7 @@ import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
 import { destroyArticle } from '@/server/cms/articles/destroy'
 import prisma from '@/prisma'
-import { SimpleJobAd } from './Types'
+import type { SimpleJobAd } from './Types'
 
 /**
  * This function destroys a jobAd. It is also responsible for sleaning up the article,

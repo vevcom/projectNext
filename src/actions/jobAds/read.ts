@@ -1,8 +1,8 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readJobAdByNameAndOrder, readJobAdsCurrent } from '@/server/jobAds/read'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import { ExpandedJobAd, SimpleJobAd } from '@/server/jobAds/Types'
+import type { ExpandedJobAd, SimpleJobAd } from '@/server/jobAds/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 
 export async function readJobAdsCurrentAction(): Promise<ActionReturn<SimpleJobAd[]>> {
@@ -14,6 +14,5 @@ export async function readJobAdAction(idOrName: number | {
     articleName: string
     order: number
 }): Promise<ActionReturn<ExpandedJobAd>> {
-
     return await safeServerCall(() => readJobAdByNameAndOrder(idOrName))
 }

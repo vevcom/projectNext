@@ -1,8 +1,7 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
+import { readJobAdsCurrentAction } from '@/actions/jobAds/read'
+
 import React from 'react'
-import { readJobAdAction, readJobAdsCurrentAction } from '@/actions/jobAds/read'
-import { ExpandedJobAd } from '@/server/jobAds/Types'
-import { readJobAdsCurrent } from '@/server/jobAds/read'
 
 type PropTypes = {
     not?: number
@@ -23,7 +22,15 @@ export default async function CurrentJobAds({ not }: PropTypes) {
 
     return (
         jobAds.length ? (
-            jobAds.map(ad => <ImageCard href={`/jobads/${ad.orderPublished}/${ad.articleName}`} title={ad.company} image={ad.coverImage}><p>{ad.description}</p></ImageCard>)
+            jobAds.map(ad =>
+                <ImageCard
+                    href={`/jobads/${ad.orderPublished}/${ad.articleName}`}
+                    title={ad.company}
+                    image={ad.coverImage}
+                    key={ad.id}
+                >
+                    <p>{ad.description}</p>
+                </ImageCard>)
         ) : (
             <i>Det er for tiden ingen jobbannonser</i>
         )

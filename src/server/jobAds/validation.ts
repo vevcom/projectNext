@@ -1,6 +1,6 @@
+import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
-import { ValidationBase } from '@/server/Validation'
 import type { ValidationTypes } from '@/server/Validation'
 
 export const baseJobAdValidation = new ValidationBase({

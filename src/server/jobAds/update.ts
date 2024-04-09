@@ -2,8 +2,8 @@ import 'server-only'
 import { updateJobAdValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { SimpleJobAd } from './Types'
 import type { UpdateJobAdTypes } from './validation'
-import { SimpleJobAd } from './Types'
 
 export async function updateJobAd(
     id: number,

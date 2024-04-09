@@ -1,9 +1,9 @@
 
-import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
+import EditJobAd from './EditJobAd'
 import { readJobAdAction } from '@/actions/jobAds/read'
 import Article from '@/app/components/Cms/Article/Article'
-import EditJobAd from './EditJobAd'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {
@@ -14,12 +14,12 @@ type PropTypes = {
 
 export default async function JobAd({ params }: PropTypes) {
     if (params.orderAndName.length !== 2) notFound()
-    const order = parseInt(decodeURIComponent(params.orderAndName[0]))
+    const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
     const name = decodeURIComponent(params.orderAndName[1])
 
     const jobAdRes = await readJobAdAction({ articleName: name, order })
     if (!jobAdRes.success) {
-        if (jobAdRes.errorCode === "NOT FOUND") notFound()
+        if (jobAdRes.errorCode === 'NOT FOUND') notFound()
         throw new Error('Failed to read jobAd')
     }
     const jobAd = jobAdRes.data

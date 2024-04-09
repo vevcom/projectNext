@@ -1,15 +1,14 @@
 import 'server-only'
-import { createJobAdValidation, CreateJobAdTypes } from './validation'
+import { createJobAdValidation } from './validation'
+import { jobAdArticleRealtionsIncluder } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
 import { createArticle } from '@/server/cms/articles/create'
 import prisma from '@/prisma'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import { ExpandedJobAd } from './Types'
-import { prismaCall } from '../prismaCall'
-import { jobAdArticleRealtionsIncluder } from './ConfigVars'
+import type { ExpandedJobAd } from './Types'
+import type { CreateJobAdTypes } from './validation'
 
-export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promise<ExpandedJobAd>  {
-
-    
+export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promise<ExpandedJobAd> {
     const { articleName, company, description } = createJobAdValidation.detailedValidate(rawdata)
 
     const article = await createArticle({ name: articleName })
@@ -32,5 +31,4 @@ export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promis
         include: jobAdArticleRealtionsIncluder,
     }))
     return jobAd
-   
 }

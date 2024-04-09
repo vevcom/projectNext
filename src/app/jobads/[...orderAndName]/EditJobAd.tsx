@@ -20,13 +20,11 @@ type PropTypes = {
  * pass it not: id of article to make sure not to display that article
  */
 export default function EditJobAd({ jobAd, children }: PropTypes) {
-    const { refresh, push } = useRouter()
+    const { push } = useRouter()
     //TODO: chack visibility
     const canEdit = useEditing()
     if (!canEdit) return children
 
-    //TODO: add publish functionality with visibility
-    const isPublished = false //temp
 
     const updateAction = updateJobAdAction.bind(null, jobAd.id)
 
@@ -39,7 +37,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         push(`/jobads/${data?.orderPublished}/${data?.articleName}`)
                     }}
                     submitText="oppdater"
-                >   
+                >
                     <TextInput
                         color="white"
                         defaultValue={jobAd.company}
@@ -64,7 +62,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
             <div className={styles.visibility}>
                 Her kommer visibility settings
                 <Form
-                    action={async () => ({success: true})}
+                    action={async () => ({ success: true })}
                     submitText="oppdater synlighet"
 
                 >
