@@ -7,6 +7,7 @@ import { getUser } from '@/auth/getUser'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import User from '@/app/users/[username]/page'
 
 export default async function MobileNavBar() {
     const { user } = await getUser()
@@ -36,7 +37,7 @@ export default async function MobileNavBar() {
             </div>
             <div className={styles.magicHat}>
                 <SpecialCmsImage special="MOBILE_NAV_LOGIN_BUTTON" width={25} height={25} alt="log in button">
-                    <Link className={styles.imagelink} href={isLoggedIn ? '/users/me' : '/login'} />
+                    <Link className={styles.imagelink} href={isLoggedIn ? `/users/${user.username}`: '/login'} />
                 </SpecialCmsImage>
             </div>
             <Menu items={itemsForMenu} openBtnContent={
