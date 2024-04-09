@@ -3,8 +3,8 @@ import { useUser } from '@/auth/useUser'
 import { EditModeContext } from '@/context/EditMode'
 import { useContext, useEffect, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { Permission } from '@prisma/client'
 import type { Matrix } from '@/utils/checkMatrix'
-import { Permission } from '@prisma/client'
 
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.
