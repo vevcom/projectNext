@@ -1,38 +1,37 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import { createImage, createImages } from '@/actions/images/create'
-import { updateImageCollection } from '@/actions/images/collections/update'
+import { createImagesAction } from '@/actions/images/create'
+import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/app/components/Form/Form'
-import FileInput from '@/app/components/UI/FileInput'
 import TextInput from '@/app/components/UI/TextInput'
 import Dropzone from '@/app/components/UI/Dropzone'
 import PopUp from '@/app/components/PopUp/PopUp'
-import { destroyImageCollection } from '@/actions/images/collections/destroy'
+import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImageSelectionContext } from '@/context/ImageSelection'
 import { ImagePagingContext } from '@/context/paging/ImagePaging'
 import Image from '@/components/Image/Image'
-import { EditModeContext } from '@/context/EditMode'
+import ImageUploader from '@/app/components/Image/ImageUploader'
+import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { Image as ImageT } from '@prisma/client'
+import type { ExpandedImageCollection } from '@/server/images/collections/Types'
 
 type PropTypes = {
-    collectionId: number,
-    coverImage: ImageT | null,
+    collection: ExpandedImageCollection
 }
 
-export default function CollectionAdmin({ collectionId, coverImage }: PropTypes) {
+export default function CollectionAdmin({ collection }: PropTypes) {
+    const { id: collectionId, coverImage } = collection
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
     if (!selection) throw new Error('No context')
 
-    const editMode = useContext(EditModeContext)
-    const shouldRender = editMode?.editMode ?? true
-    if (!shouldRender) return null
+    const editMode = useEditing() //TODO: auth collection visibility
+    if (!editMode) return null
 
     const refreshImages = () => {
         if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
@@ -45,16 +44,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
     return (
         <div className={styles.CollectionAdmin}>
             <div className={styles.upload}>
-                <Form
-                    successCallback={refreshImages}
-                    title="last opp bilde"
-                    submitText="last opp"
-                    action={createImage.bind(null, collectionId)}
-                >
-                    <TextInput color="black" label="navn" name="name" />
-                    <TextInput color="black" label="alternativ tekst" name="alt" />
-                    <FileInput label="fil" name="file" color="primary" />
-                </Form>
+                <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
                 <PopUp PopUpKey={uuid()} showButtonContent={
                     <>
                         Last opp mange
@@ -66,7 +56,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                         successCallback={refreshImages}
                         title="last opp bilder"
                         submitText="last opp"
-                        action={createImages.bind(null, collectionId)}
+                        action={createImagesAction.bind(null, collectionId)}
                     >
                         <Dropzone label="last opp" name="files"/>
                     </Form>
@@ -79,10 +69,20 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
                 }}
                 title="Rediger samling"
                 submitText="oppdater"
-                action={updateImageCollection.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
+                action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
             >
-                <TextInput color="black" label="navn" name="name" />
-                <TextInput color="black" label="beskrivelse" name="description" />
+                <TextInput
+                    defaultValue={collection.name}
+                    color="black"
+                    label="navn"
+                    name="name"
+                />
+                <TextInput
+                    defaultValue={collection.description || ''}
+                    color="black"
+                    label="beskrivelse"
+                    name="description"
+                />
                 <div className={styles.coverImage}>
                     <div>
                         <h5>forsidebilde</h5>
@@ -133,7 +133,7 @@ export default function CollectionAdmin({ collectionId, coverImage }: PropTypes)
             <Form
                 submitText="slett samling"
                 successCallback={() => router.push('/images')}
-                action={destroyImageCollection.bind(null, collectionId)}
+                action={destroyImageCollectionAction.bind(null, collectionId)}
                 submitColor="red"
                 confirmation={{
                     confirm: true,

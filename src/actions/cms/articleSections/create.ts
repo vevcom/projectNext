@@ -1,24 +1,19 @@
 'use server'
-import prisma from '@/prisma'
-import { createPrismaActionError } from '@/actions/error'
+import { createArticleSection } from '@/server/cms/articleSections/create'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError } from '@/actions/error'
+import { createArticleSectionValidation } from '@/server/cms/articleSections/validation'
+import type { CreateArticleSectionTypes } from '@/server/cms/articleSections/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleSection } from './Types'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 
+export async function createArticleSectionAction(
+    rawData: FormData | CreateArticleSectionTypes['Type'],
+): Promise<ActionReturn<ExpandedArticleSection>> {
+    //TODO: Auth on general cms permission
+    const parse = createArticleSectionValidation.typeValidate(rawData)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-export async function createArticleSection(name: string): Promise<ActionReturn<ExpandedArticleSection>> {
-    try {
-        const articleSection = await prisma.articleSection.create({
-            data: {
-                name,
-            },
-            include: {
-                cmsImage: true,
-                cmsParagraph: true,
-                cmsLink: true
-            }
-        })
-        return { success: true, data: articleSection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => createArticleSection(data))
 }

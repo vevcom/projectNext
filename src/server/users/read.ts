@@ -1,0 +1,68 @@
+import { userFilterSelection } from './ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { UserFiltered, UserDetails } from './Types'
+import type { ReadPageInput } from '@/actions/Types'
+import { ServerError } from '../error'
+import { User } from '@prisma/client'
+
+/**
+ * A function to read a page of users with the given details (filtering)
+ * @param readPageInput - This is a) the page to read and b) the details to filter by like
+ * name and groups
+ * @returns
+ */
+export async function readUserPage<const PageSize extends number>({
+    page,
+    details
+}: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
+    const words = details.partOfName.split(' ')
+    return await prismaCall(() => prisma.user.findMany({
+        skip: page.page * page.pageSize,
+        take: page.pageSize,
+        select: userFilterSelection,
+        where: {
+            AND: words.map((word, i) => {
+                const condition = {
+                    [i === words.length - 1 ? 'contains' : 'equals']: word,
+                    mode: 'insensitive'
+                } as const
+                return {
+                    OR: [
+                        { firstname: condition },
+                        { lastname: condition },
+                        { username: condition },
+                    ],
+                }
+            })
+            //TODO select on groups
+        },
+        orderBy: [
+            { lastname: 'asc' },
+            { firstname: 'asc' },
+            // We have to sort with at least one unique field to have a
+            // consistent order. Sorting rows by fieds that have the same
+            // value is undefined behaviour in postgresql.
+            { username: 'asc' },
+        ]
+    }))
+}
+
+type readUserArg = {
+    id?: number,
+    username?: string,
+    email?: string,
+}
+
+export async function readUser({ id, username, email }: readUserArg): Promise<User> {
+    if (!id && !username && !email) {
+        throw new ServerError('BAD PARAMETERS', 'oh no :(')
+    }
+    return await prismaCall(() => prisma.user.findUniqueOrThrow({
+        where: {
+            id,
+            username,
+            email,
+        },
+    }))
+}

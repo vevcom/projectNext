@@ -4,8 +4,8 @@ import migrateImages from './migrateImages'
 import { getLimits } from './migrationLimits'
 import migrateOmegaquotes from './migrateOmegaquotes'
 import migrateArticles from './migateArticles'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 
 /**
  * !DobbelOmega!

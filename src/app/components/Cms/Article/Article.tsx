@@ -16,7 +16,7 @@ export default function Article({ article, coverImageClass }: PropTypes) {
     return (
         <span className={styles.Article}>
             <span className={`${coverImageClass} ${styles.coverImage}`}>
-                <CmsImage width={500} name={article.coverImage.name} />
+                <CmsImage width={500} cmsImage={article.coverImage} />
                 <SlideInOnView direction="bottom">
                     <ChangeName article={article} />
                 </SlideInOnView>

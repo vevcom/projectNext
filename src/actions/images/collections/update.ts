@@ -1,39 +1,28 @@
 'use server'
-import { updateImageCollectionSchema } from './schema'
-import prisma from '@/prisma'
-import { createPrismaActionError, createZodActionError } from '@/actions/error'
+import { createZodActionError } from '@/actions/error'
+import { updateImageCollection } from '@/server/images/collections/update'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { updateImageCollectionValidation } from '@/server/images/collections/validation'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateImageCollectionSchemaType } from './schema'
+import type { UpdateImageCollectionTypes } from '@/server/images/collections/validation'
 
-export async function updateImageCollection(
+/**
+ * A action that updates an image collection
+ * @param collectionId - the id of the collection to update
+ * @param coverImageId - the id of the image to set as the cover image (optional)
+ * @param rawdata - the data to update the collection with
+ * @returns - the updated collection in ActionReturn
+ */
+export async function updateImageCollectionAction(
     collectionId: number,
     coverImageId: number | undefined,
-    rawdata: FormData | UpdateImageCollectionSchemaType
+    rawdata: FormData | UpdateImageCollectionTypes['Type']
 ): Promise<ActionReturn<ImageCollection>> {
-    const parse = updateImageCollectionSchema.safeParse(rawdata)
+    const parse = updateImageCollectionValidation.typeValidate(rawdata)
 
-    if (!parse.success) {
-        return createZodActionError(parse)
-    }
-    const data = {
-        ...parse.data,
-        coverImage: coverImageId ? {
-            connect: {
-                id: coverImageId
-            }
-        } : undefined
-    }
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
 
-    try {
-        const collection = await prisma.imageCollection.update({
-            where: {
-                id: collectionId,
-            },
-            data
-        })
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => updateImageCollection(collectionId, coverImageId, data))
 }

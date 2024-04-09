@@ -1,24 +1,17 @@
-export type ActionErrorCode =
-    | 'DUPLICATE'
-    | 'NOT FOUND'
-    | 'BAD PARAMETERS'
-    | 'UNAUTHENTICATED'
-    | 'UNAUTHORIZED'
-    | 'UNKNOWN ERROR'
+import type { AuthStatus } from '@/auth/getUser'
+import type { ServerErrorCode, ErrorMessage } from '@/server/error'
 
-export type ActionError = {
-    path?: (number | string)[],
-    message: string,
-}
+export type ActionErrorCode = ServerErrorCode | AuthStatus
 
 export type ActionReturnError = {
     success: false,
     errorCode: ActionErrorCode,
-    error?: ActionError[],
+    error?: ErrorMessage[],
 }
 
-export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> =
-ActionReturnError | {
+export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = (
+    ActionReturnError
+) | {
     success: true,
 } & (
     DataGuarantee extends true ? {

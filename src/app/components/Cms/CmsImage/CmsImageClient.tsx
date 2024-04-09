@@ -1,47 +1,46 @@
 'use client'
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
-import Image from '@/components/Image/Image'
-import { readCmsImage } from '@/cms/images/read'
-import { readImage } from '@/actions/images/read'
+import { fallbackImage } from './CmsImage'
+import Image, { SrcImage } from '@/components/Image/Image'
+import { readSpecialImageAction } from '@/actions/images/read'
 import { useState, useEffect } from 'react'
-import type { Image as ImageT, CmsImage } from '@prisma/client'
 import type { PropTypes } from './CmsImage'
+import type { Image as ImageT } from '@prisma/client'
 
-export default function CmsImageClient({ name, width, alt, children, ...props }: PropTypes) {
-    const [cmsImage, setCmsImage] = useState<CmsImage & {image: ImageT} | null>(null)
+/**
+ * WARNING: This component is only meant for the client
+ * A function to display a cms image with image relation.
+ * If the cms image does not have a image it will use the default image
+ * By calling on special image DEFAULT_IMAGE
+ * @param cmsImage - the cms image to display with image relation
+ * @param children - the children to display besides image
+ * @returns
+ */
+export default function CmsImageClient({ cmsImage, children, ...props }: PropTypes) {
+    const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
+    const [fallback, setFallback] = useState(false)
 
     useEffect(() => {
-        readCmsImage(name).then(res => {
-            // No error should be thrown as the read action creates a link that does not exist
-            if (!res.success) throw new Error('No image link found')
-
-            const { image } = res.data
-
-            if (!image) {
-                return readImage('default_image').then(defaultres => {
-                    if (!defaultres.success) throw new Error('No default image found')
-                    return setCmsImage({ ...res.data, image: defaultres.data })
-                })
-            }
-
-            return setCmsImage({ ...res.data, image })
+        if (image) return
+        readSpecialImageAction('DEFAULT_IMAGE').then(res => {
+            if (!res.success) return setFallback(true)
+            return setCmsImage(res.data)
         })
     }, [])
 
     return (
         <div className={styles.CmsImage}>
-            {cmsImage && <CmsImageEditor cmsImage={cmsImage}/>}
+            {image && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
             <div className={styles.children}>{children}</div>
-            {cmsImage?.image &&
+            {image &&
                 <Image
                     imageSize={cmsImage.imageSize}
-                    alt={alt}
-                    image={cmsImage.image}
-                    width={width}
+                    image={image}
                     {...props}
                 />
             }
+            {fallback && <SrcImage src={fallbackImage} {...props}/>}
         </div>
     )
 }
