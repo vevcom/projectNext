@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import styles from './page.module.scss'
 import { readJobAdAction } from '@/actions/jobAds/read'
 import Article from '@/app/components/Cms/Article/Article'
+import EditJobAd from './EditJobAd'
+
 type PropTypes = {
     params: {
         orderAndName: string[]
@@ -24,6 +26,7 @@ export default async function JobAd({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <Article article={jobAd.article} />
+            <EditJobAd jobAd={jobAd}/>
         </div>
 
     )
