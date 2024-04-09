@@ -3,7 +3,7 @@ import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import { readUser } from '@/actions/users/read'
+import { readUserAction } from '@/actions/users/read'
 
 type PropTypes = {
     params: {
@@ -21,7 +21,7 @@ export default async function User({ params }: PropTypes) {
     const username = params.username
     const me = params.username === user.username
     // TODO REFACTOR
-    const userProfile = readUser({username})
+    const userProfile = readUserAction({username})
 
     return (
         <>

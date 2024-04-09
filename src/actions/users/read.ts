@@ -1,8 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readUserPage } from '@/server/users/read'
+import { readUser, readUserPage } from '@/server/users/read'
 import type { UserFiltered, UserDetails } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import { User } from '@prisma/client'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -16,4 +17,17 @@ export async function readUserPageAction<const PageSize extends number>(
     //TODO: Permission check
 
     return safeServerCall(() => readUserPage(readPageInput))
+}
+
+type readUserArg = {
+    id?: number,
+    username?: string,
+    email?: string,
+}
+
+export async function readUserAction(input: readUserArg): Promise<ActionReturn<User>> {
+
+// export async function readUserAction({ id, username, email }: readUserArg): Promise<ActionReturn<User>> {
+
+    return safeServerCall(() => readUser(input))
 }

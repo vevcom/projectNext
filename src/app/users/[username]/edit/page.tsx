@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './page.module.scss'
 import UpdateUserForm from '@/app/components/User/UpdateUserForm'
-import { readUser } from '@/actions/users/read'
+import { readUserAction } from '@/actions/users/read'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 export default async function editUser({params }: PropTypes) {
-    const userRes = (await readUser(params))
+    const userRes = (await readUserAction(params))
     if (!userRes.success) {
         notFound()
     }

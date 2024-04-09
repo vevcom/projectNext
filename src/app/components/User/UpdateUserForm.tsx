@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import Form from '../Form/Form'
 import { v4 as uuid } from 'uuid'
-import { updateUser } from '@/actions/users/update'
+import { updateUserAction } from '@/actions/users/update'
 import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import { User } from "@prisma/client"
@@ -20,7 +20,7 @@ type PropTypes = {
 
 export default function UpdateUserForm({className, user} : PropTypes) {
     const { replace } = useRouter()
-    const updateUserWithId = updateUser.bind(null, user.id)
+    const updateUserWithId = updateUserAction.bind(null, user.id)
 
      // TODO: refactor to server folder
      const sexOptions = [
