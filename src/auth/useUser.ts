@@ -1,13 +1,13 @@
 'use client'
 
-import checkMatrix from './checkMatrix'
+import checkMatrix from '@/utils/checkMatrix'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
-import type { Matrix } from './checkMatrix'
+import type { Matrix } from '@/utils/checkMatrix'
 import type { BasicMembership } from '@/server/groups/Types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
