@@ -12,13 +12,6 @@ export async function updateJobAd(
     const data = updateJobAdValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.jobAd.update({
         where: { id },
-        data: {
-            description: data.description,
-            article: {
-                update: {
-                    name: data.articleName
-                }
-            }
-        }
+        data,
     }))
 }
