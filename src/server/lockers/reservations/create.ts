@@ -12,7 +12,6 @@ export async function createLockerReservation(
     rawdata: CreateLockerReservationTypes['Detailed']
 ): Promise<LockerReservation> {
     const data = createLockerReservationValidation.detailedValidate(rawdata)
-    console.log(data)
     return await prismaCall(() => prisma.lockerReservation.create({
         data: {
             groupId: data.groupId,

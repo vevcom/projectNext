@@ -23,6 +23,9 @@ export default function Admin() {
             <h3><FontAwesomeIcon icon={faKey} />Tillgangsstyring</h3>
             <Link href="admin/permission-roles">Tillgangsroller</Link>
             <Link href="admin/default-permissions">Standard tillganger</Link>
+
+            <h3>Skap</h3>
+            <Link href="admin/lockers">Skap</Link>
         </div>
     )
 }

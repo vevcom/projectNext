@@ -1,4 +1,3 @@
-import styles from './page.module.scss'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import LockerList from './LockerList'
 import LockerPagingProvider from '@/context/paging/LockerPaging'
