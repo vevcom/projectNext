@@ -33,6 +33,16 @@ export const createMailAliasValidation = baseMailAliasValidation.createValidatio
 })
 export type CreateMailAliasTypes = ValidationTypes<typeof createMailAliasValidation>
 
+export const updateMailAliasValidation = baseMailAliasValidation.createValidation({
+    keys: [
+        'id',
+        'address',
+        'description',
+    ],
+    transformer: data => ({...data, id: Number(data.id)})
+})
+export type UpdateMailAliasTypes = ValidationTypes<typeof updateMailAliasValidation>
+
 export const createMailAliasRawAddressValidation = baseMailAliasValidation.createValidation({
     keys: [
         'id',
