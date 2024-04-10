@@ -42,7 +42,7 @@ model User {
   feideAccount  FeideAccount?
 
   notificationSubscriptions NotificationSubscription[]
-  UserMailAlias             UserMailAlias[]
+  MailingLists              MailingListUser[]
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -119,7 +119,7 @@ model Group {
   manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
-  GroupMailAlias       GroupMailAlias[]
+  MailingLists         MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -219,17 +219,24 @@ enum Permission {
   // Mail Aliases
   MAILALIAS_CREATE
   MAILALIAS_READ
-  MAILALIAS_UPDATE
   MAILALIAS_DESTORY
-  
-  MAILALIAS_CREATE_GROUP
-  MAILALIAS_DESTROY_GROUP
-  MAILALIAS_CREATE_USER
-  MAILALIAS_DESTROY_USER
-  MAILALIAS_CREATE_FORWARD
-  MAILALIAS_DESTORY_FORWARD
-  MAILALIAS_CREATE_RAWADDRESS
-  MAILALIAS_DESTORY_RAWADDRESS
+
+  MAILINGLIST_CREATE
+  MAILINGLIST_READ
+  MAILINGLIST_UPDATE
+  MAILINGLIST_DESTROY
+
+  MAILINGLIST_GROUP_CREATE
+  MAILINGLIST_GROUP_DESTROY
+  MAILINGLIST_USER_CREATE
+  MAILINGLIST_USER_DESTROY
+  MAILINGLIST_RAWADDRESS_CREATE
+  MAILINGLIST_RAWADDRESS_DESTORY
+
+  RAWMAILADDRESS_CREATE
+  RAWMAILADDRESS_READ
+  RAWMAILADDRESS_UPDATE
+  RAWMAILADDRESS_DESTROY
 
   // Groups - Generic
   GROUP_READ
@@ -609,51 +616,67 @@ model Notification {
 ///////////////////////////
 
 model MailAlias {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  address   String   @unique
+
+  MailingLists MailAliasMailingList[]
+}
+
+model MailAliasMailingList {
+  mailAliasId   Int
+  mailAlias     MailAlias   @relation(fields: [mailAliasId], references: [id], onDelete: Cascade)
+  mailingListId Int
+  mailingList   MailingList @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
+
+  @@unique([mailAliasId, mailingListId])
+}
+
+model MailingList {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  description String
-  address     String   @unique
+  name        String   @unique
+  description String?
 
-  groups       GroupMailAlias[]
-  users        UserMailAlias[]
-  forwardsTo   ForwardMailAlias[]    @relation(name: "source")
-  forwardsFrom ForwardMailAlias[]    @relation(name: "drain")
-  rawAddress   RawAddressMailAlias[]
+  MailAliases      MailAliasMailingList[]
+  Groups           MailingListGroup[]
+  Users            MailingListUser[]
+  RawMailAddresses MailingListRawMailAddress[]
 }
 
-model GroupMailAlias {
-  groupId Int
-  group   Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  aliasId Int
-  aslias  MailAlias @relation(fields: [aliasId], references: [id], onDelete: Cascade)
+model MailingListGroup {
+  mailingListId Int
+  mailingList   MailingList @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
+  groupId       Int
+  group         Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  @@unique([groupId, aliasId])
+  @@unique([mailingListId, groupId])
 }
 
-model UserMailAlias {
-  userId  Int
-  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  aliasId Int
-  aslias  MailAlias @relation(fields: [aliasId], references: [id], onDelete: Cascade)
+model MailingListUser {
+  mailingListId Int
+  mailingList   MailingList @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, aliasId])
+  @@unique([mailingListId, userId])
 }
 
-model ForwardMailAlias {
-  sourceId Int
-  source   MailAlias @relation(name: "source", fields: [sourceId], references: [id], onDelete: Cascade)
-  drainId  Int
-  drain    MailAlias @relation(name: "drain", fields: [drainId], references: [id], onDelete: Cascade)
-
-  @@unique([sourceId, drainId])
+model RawMailAddress {
+  id           Int                         @id @default(autoincrement())
+  name         String
+  description  String
+  address      String
+  MailingLists MailingListRawMailAddress[]
 }
 
-model RawAddressMailAlias {
-  id      Int       @id @default(autoincrement())
-  address String
-  aliasId Int
-  alias   MailAlias @relation(fields: [aliasId], references: [id], onDelete: Cascade)
+model MailingListRawMailAddress {
+  mailingListId     Int
+  mailingList       MailingList    @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
+  rawMailAddresssId Int
+  rawMailAddress    RawMailAddress @relation(fields: [rawMailAddresssId], references: [id], onDelete: Cascade)
 
-  @@unique([address, aliasId])
+  @@unique([mailingListId, rawMailAddresssId])
 }
