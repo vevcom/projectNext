@@ -1,6 +1,6 @@
 import 'server-only'
 import { ForwardMailAlias, MailAlias, RawAddressMailAlias } from '@prisma/client';
-import { prismaCall } from '../prismaCall';
+import { prismaCall } from '../../prismaCall';
 import prisma from '@/prisma';
 import { CreateMailAliasForwardRelationTypes, createMailAliasForwardRelationValidation, destoryMailAliasValidation } from './validation';
 

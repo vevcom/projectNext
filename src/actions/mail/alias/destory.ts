@@ -2,10 +2,10 @@
 import { ForwardMailAlias, MailAlias, RawAddressMailAlias } from "@prisma/client";
 import { ActionReturn } from "@/actions/Types";
 import { getUser } from "@/auth/getUser";
-import { createActionError, createZodActionError } from "../error";
-import { safeServerCall } from "../safeServerCall";
-import { destroyMailAliasById, destroyMailAliasForward, destroyMailAliasRawAddress } from "@/server/mailalias/destroy";
-import { CreateMailAliasForwardRelationTypes, createMailAliasForwardRelationValidation, destoryMailAliasValidation } from "@/server/mailalias/validation";
+import { createActionError, createZodActionError } from "../../error";
+import { safeServerCall } from "../../safeServerCall";
+import { destroyMailAliasById, destroyMailAliasForward, destroyMailAliasRawAddress } from "@/server/mail/alias/destroy";
+import { CreateMailAliasForwardRelationTypes, createMailAliasForwardRelationValidation, destoryMailAliasValidation } from "@/server/mail/alias/validation";
 
 export async function destroyMailAliasAction(id: number): Promise<ActionReturn<MailAlias>> {
 

@@ -1,0 +1,16 @@
+@use '@/styles/ohma';
+
+h1.pageWrapperTitle {
+    text-transform: none;
+}
+
+.mailingListView {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    > div {
+        margin: 2rem;
+        min-width: 20rem;
+    }
+}

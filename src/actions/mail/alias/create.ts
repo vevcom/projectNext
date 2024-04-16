@@ -2,10 +2,10 @@
 
 import type { MailAlias } from "@prisma/client";
 import type { ActionReturn } from "@/actions//Types";
-import { createMailAliasValidation } from "@/server/mailalias/validation";
+import { createMailAliasValidation } from "@/server/mail/alias/validation";
 import { createZodActionError } from "@/actions/error";
 import { safeServerCall } from "@/actions/safeServerCall";
-import { createMailAlias } from "@/server/mailalias/create";
+import { createMailAlias } from "@/server/mail/alias/create";
 import { getUser } from "@/auth/getUser";
 import { createActionError } from "@/actions/error";
 
@@ -23,3 +23,4 @@ export async function createMailAliasAction(rawdata: FormData):
     
     return safeServerCall(() => createMailAlias(parse.data))
 }
+

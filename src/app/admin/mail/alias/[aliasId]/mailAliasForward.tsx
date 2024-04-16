@@ -1,11 +1,11 @@
 "use client"
-import { createMailAliasForwardRelationAction } from "@/actions/mailalias/create";
+import { createMailAliasForwardRelationAction } from "@/actions/mail/alias/create";
 import Form from "@/app/components/Form/Form";
 import Select from "@/app/components/UI/Select";
 import { MailAlias } from "@prisma/client";
 import { useState } from "react";
 import { DeleteableList } from "./deletableList";
-import { destroyMailAliasForwardAction } from "@/actions/mailalias/destory";
+import { destroyMailAliasForwardAction } from "@/actions/mail/alias/destory";
 
 export default function MailAliasForward({
     aliasId,

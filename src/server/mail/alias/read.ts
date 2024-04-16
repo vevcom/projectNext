@@ -1,6 +1,6 @@
 import { MailAlias } from '@prisma/client';
 import 'server-only'
-import { prismaCall } from '../prismaCall';
+import { prismaCall } from '../../prismaCall';
 import { MailAliasExtended } from './Types';
 
 

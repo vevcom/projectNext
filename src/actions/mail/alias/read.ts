@@ -1,11 +1,11 @@
 "use server"
 
 import { getUser } from "@/auth/getUser"
-import { createActionError } from "../error"
-import { safeServerCall } from "../safeServerCall"
-import { findValidMailAliasForwardRelations, readMailAliasById } from "@/server/mailalias/read"
-import { ActionReturn } from "../Types"
-import { MailAliasExtended } from "@/server/mailalias/Types"
+import { createActionError } from "../../error"
+import { safeServerCall } from "../../safeServerCall"
+import { findValidMailAliasForwardRelations, readMailAliasById } from "@/server/mail/alias/read"
+import { ActionReturn } from "../../Types"
+import { MailAliasExtended } from "@/server/mail/alias/Types"
 import { MailAlias } from "@prisma/client"
 
 

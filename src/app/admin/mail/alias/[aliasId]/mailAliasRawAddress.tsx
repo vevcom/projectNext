@@ -1,12 +1,12 @@
 "use client"
 
-import { createMailAliasRawAddressAction } from "@/actions/mailalias/create";
+import { createMailAliasRawAddressAction } from "@/actions/mail/alias/create";
 import Form from "@/app/components/Form/Form";
 import TextInput from "@/app/components/UI/TextInput";
 import { RawAddressMailAlias } from "@prisma/client";
 import { useState } from "react";
 import { DeleteableList } from "./deletableList";
-import { destroyMailAliasRawAddressAction } from "@/actions/mailalias/destory";
+import { destroyMailAliasRawAddressAction } from "@/actions/mail/alias/destory";
 
 export default function MailAliasRawAddress({
     aliasId,

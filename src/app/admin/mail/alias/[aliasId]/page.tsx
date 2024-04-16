@@ -1,4 +1,4 @@
-import { readMailAliasAction } from "@/actions/mailalias/read"
+import { readMailAliasAction } from "@/actions/mail/alias/read"
 import MailAliasView from "./mailAliasView"
 import { notFound } from "next/navigation"
 

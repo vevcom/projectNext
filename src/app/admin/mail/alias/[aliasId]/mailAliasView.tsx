@@ -1,5 +1,5 @@
 
-import { MailAliasExtended } from "@/server/mailalias/Types"
+import { MailAliasExtended } from "@/server/mail/alias/Types"
 import styles from "./mailAliasView.module.scss"
 import MailAliasMeta from "./mailAliasMeta"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper"

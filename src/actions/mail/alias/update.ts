@@ -1,12 +1,12 @@
 "use server"
 
 import { MailAlias } from "@prisma/client";
-import { ActionReturn } from "../Types";
+import { ActionReturn } from "../../Types";
 import { getUser } from "@/auth/getUser";
 import { createActionError, createZodActionError } from "@/actions/error";
-import { updateMailAliasValidation } from "@/server/mailalias/validation";
-import { safeServerCall } from "../safeServerCall";
-import { updateMailAlias } from "@/server/mailalias/update";
+import { updateMailAliasValidation } from "@/server/mail/alias/validation";
+import { safeServerCall } from "../../safeServerCall";
+import { updateMailAlias } from "@/server/mail/alias/update";
 
 export async function updateMailAliasAction(rawdata: FormData): Promise<ActionReturn<MailAlias>> {
 

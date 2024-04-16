@@ -1,4 +1,4 @@
-import { createMailAliasAction } from "@/actions/mailalias/create";
+import { createMailAliasAction } from "@/actions/mail/alias/create";
 import Form from "@/app/components/Form/Form";
 import TextInput from "@/app/components/UI/TextInput";
 

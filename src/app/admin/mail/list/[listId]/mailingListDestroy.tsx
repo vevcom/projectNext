@@ -1,27 +1,27 @@
 "use client"
-import { destroyMailAliasAction } from "@/actions/mail/alias/destory";
+import { destroyMailingListAction } from "@/actions/mail/list/destory";
 import Form from "@/app/components/Form/Form"
 import { useRouter } from "next/navigation"
 
 
-export default function MailAliasDestory({
-    aliasId,
+export default function MailingListDestory({
+    mailingListId,
 }: {
-    aliasId: number,
+    mailingListId: number,
 }) {
 
     const { push } = useRouter();
 
     return <div>
         <Form
-            action={destroyMailAliasAction.bind(null, aliasId)}
+            action={destroyMailingListAction.bind(null, mailingListId)}
             successCallback={() => {
                 push('./')
             }}
-            submitText="Slett alias"
+            submitText="Slett mail liste"
             confirmation={{
                 confirm: true,
-                text: 'Er du sikker på at du vil slette dette aliaset? Dette kan ikke angres.'
+                text: 'Er du sikker på at du vil slette denne mailing listen? Dette kan ikke angres.'
             }}
             submitColor="red"
         >
