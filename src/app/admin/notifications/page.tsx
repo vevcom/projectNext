@@ -11,7 +11,6 @@ export default function Notifications() {
             <h2>Administrasjon av Varslinger</h2>
             <Link href="notifications/sendmail">Send mail</Link>
             <Link href="notifications/channels">Varlingskanaler</Link>
-            <Link href="notifications/mailaliases">Mail aliaser</Link>
             <Button
                 onClick={() => createNotificationAction()}
             >

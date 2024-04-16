@@ -27,6 +27,8 @@ export default function Admin() {
 
             <h3><FontAwesomeIcon icon={faPaperPlane} />Varslinger</h3>
             <Link href="admin/notifications">Varslinger</Link>
+            <Link href="admin/mail">Mailing lister</Link>
+            
         </div>
     )
 }
