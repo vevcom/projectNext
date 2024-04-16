@@ -17,9 +17,9 @@ export type MailingListExtended = Prisma.MailingListGetPayload<{
                 user: true,
             },
         },
-        rawMailAddresses: {
+        mailAddressExternal: {
             include: {
-                rawMailAddress: true,
+                mailAddressExternal: true,
             },
         },
     }

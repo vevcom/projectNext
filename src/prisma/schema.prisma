@@ -640,10 +640,10 @@ model MailingList {
   name        String   @unique
   description String   @default("")
 
-  mailAliases      MailAliasMailingList[]
-  groups           MailingListGroup[]
-  users            MailingListUser[]
-  rawMailAddresses MailingListRawMailAddress[]
+  mailAliases         MailAliasMailingList[]
+  groups              MailingListGroup[]
+  users               MailingListUser[]
+  mailAddressExternal MailingListMailAddressExternal[]
 }
 
 model MailingListGroup {
@@ -664,20 +664,19 @@ model MailingListUser {
   @@unique([mailingListId, userId])
 }
 
-model RawMailAddress {
+model MailAddressExternal {
   id          Int    @id @default(autoincrement())
-  name        String @unique
+  address     String @unique
   description String @default("")
-  address     String
 
-  MailingLists MailingListRawMailAddress[]
+  mailingLists MailingListMailAddressExternal[]
 }
 
-model MailingListRawMailAddress {
-  mailingListId     Int
-  mailingList       MailingList    @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
-  rawMailAddresssId Int
-  rawMailAddress    RawMailAddress @relation(fields: [rawMailAddresssId], references: [id], onDelete: Cascade)
+model MailingListMailAddressExternal {
+  mailingListId         Int
+  mailingList           MailingList         @relation(fields: [mailingListId], references: [id], onDelete: Cascade)
+  mailAddressExternalId Int
+  mailAddressExternal   MailAddressExternal @relation(fields: [mailAddressExternalId], references: [id], onDelete: Cascade)
 
-  @@unique([mailingListId, rawMailAddresssId])
+  @@unique([mailingListId, mailAddressExternalId])
 }

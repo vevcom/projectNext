@@ -27,9 +27,9 @@ export async function readMailingListById(id: number): Promise<MailingListExtend
                     user: true,
                 },
             },
-            rawMailAddresses: {
+            mailAddressExternal: {
                 include: {
-                    rawMailAddress: true,
+                    mailAddressExternal: true,
                 },
             },
         }
