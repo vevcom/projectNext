@@ -32,6 +32,7 @@ services:
       MAIL_SERVER: ${MAIL_SERVER}
       DEVELOPMENT_ETHEREAL_USERNAME: ${DEVELOPMENT_ETHEREAL_USERNAME}
       DEVELOPMENT_ETHEREAL_PASSWORD: ${DEVELOPMENT_ETHEREAL_PASSWORD}
+      DOMAIN: ${DOMAIN}
     depends_on:
       db:
         condition: service_healthy

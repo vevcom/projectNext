@@ -20,6 +20,7 @@ services:
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
+      DOMAIN: ${DOMAIN}
     depends_on:
       db:
         condition: service_healthy

@@ -11,7 +11,15 @@ export const basemailAddressExternalValidation = new ValidationBase({
     },
     details: {
         id: z.number().min(1),
-        address: z.string().min(2).max(50),
+        address: z.string().min(2).max(50)
+            .refine(
+                address => (!process.env.DOMAIN || !address.trim().endsWith(`@${process.env.DOMAIN}`)),
+                `The address cannot contain the domain: ${process.env.DOMAIN}`,
+            )
+            .refine(
+                address => !address.trim().endsWith(`@stud.ntnu.no`),
+                "The address cannot be a stud.ntnu.no address. The person must a regsitered user to recieve mail",
+            ),
         description: z.string().max(200).optional(),
     }
 })
