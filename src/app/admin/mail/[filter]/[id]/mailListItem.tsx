@@ -1,6 +1,9 @@
 
 import { Group, MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
 import { UserFiltered } from "@/server/users/Types";
+import Link from "next/link";
+import { MailListTypeArray } from "@/server/mail/Types";
+import { notFound } from "next/navigation";
 
 export type PropType = {
     type: 'alias',
@@ -26,6 +29,10 @@ export default function MailListItem({
 
     let displayText = ""
 
+    if (!MailListTypeArray.includes(type)) {
+        notFound()
+    }
+
     if (type == "alias" || type == "mailaddressExternal") {
         displayText = item.address;
     }
@@ -34,5 +41,5 @@ export default function MailListItem({
         displayText = item.name;
     }
     
-    return <li>{displayText}</li>
+    return <li><Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link></li>
 }
