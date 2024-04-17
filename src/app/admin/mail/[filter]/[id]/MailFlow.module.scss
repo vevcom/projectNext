@@ -1,5 +1,14 @@
 @use '@/styles/ohma';
 
+.editContainer {
+    background-color: ohma.$colors-secondary;
+    @include ohma.card();
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: top;
+    gap: 2em;
+}
 
 .mailListContainer {
     display: flex;

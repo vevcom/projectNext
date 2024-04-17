@@ -7,7 +7,6 @@ import { notFound } from "next/navigation";
 import { readMailFlowAction } from "@/actions/mail/read";
 
 
-
 export default async function MailFlowPage({
     params
 }: {
@@ -36,9 +35,6 @@ export default async function MailFlowPage({
     return <PageWrapper
         title="Innkommende elektronisk post"
     >
-        <div>
-            Noe info om noen greier. Metadata og slikt
-        </div>
         <MailFlow filter={filter} id={id} data={results.data} />
     </PageWrapper>
 }
