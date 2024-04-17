@@ -1,6 +1,6 @@
 import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
-import CreateMailAlias from "./createAliasForm";
+import CreateMailAlias from "../createMailAliasForm";
 import { getUser } from "@/auth/getUser";
 
 
