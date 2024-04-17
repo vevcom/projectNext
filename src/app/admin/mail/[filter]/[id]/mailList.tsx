@@ -40,7 +40,7 @@ export default function MailList({
         <h3>{typeDisplayName[type]}</h3>
 
         <ul>
-            { items.map(i => <MailListItem item={i} key={uuid()} />) }
+            { items.map(i => <MailListItem type={type} item={i} key={uuid()} />) }
         </ul>
     </div>
 }
