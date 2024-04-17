@@ -25,11 +25,7 @@ export default async function mailAliases() {
         <PageWrapper
             title="Innkommende elektronisk post"
         >
-            <Link href="./mail/alias">Aliases</Link><br/>
-            <Link href="./mail/list">Lister</Link><br/>
-            <Link href="./mail/mailAddressExternal">Eksterne mottaker adresser</Link><br/>
-            <Link href="./mail/user">Brukere</Link><br/>
-            <Link href="./mail/show">Trykk på meg!</Link><br/>
+            <Link href="./mail/alias/1">Trykk på meg!</Link><br/>
 
 
             {showAdminPanel ? <div className={styles.adminContainer}>

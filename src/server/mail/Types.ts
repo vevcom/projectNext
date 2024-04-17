@@ -3,7 +3,8 @@ import { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/clie
 import { UserFiltered } from '@/server/users/Types';
 
 
-export type MailListTypes = "alias" | "mailingList" | "group" | "user" | "mailaddressExternal";
+export const MailListTypeArray = ["alias", "mailingList", "group", "user", "mailaddressExternal"] as const
+export type MailListTypes = typeof MailListTypeArray[number];
 
 export type MailFlowObject = {
     alias: MailAlias[],

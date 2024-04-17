@@ -2,26 +2,19 @@
 
 import MailList from "./mailList";
 import styles from "./MailFlow.module.scss"
-import { MailListTypes } from "@/server/mail/Types";
-import { readMailFlowAction } from "@/actions/mail/read";
+import { MailFlowObject, MailListTypes } from "@/server/mail/Types";
 
 
 
 export default async function MailFlow({
     filter,
     id,
+    data,
 }: {
     filter: MailListTypes,
     id: number,
+    data: MailFlowObject
 }) {
-
-    const results = await readMailFlowAction("alias", 1);
-    console.log(results)
-    if (!results.success) {
-        throw new Error("Could not fetch mail flow");
-    }
-
-    const data = results.data
 
     return (
         <div className={styles.mailListContainer}>
