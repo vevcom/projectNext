@@ -7,16 +7,19 @@ export const baseMailAliasValidation = new ValidationBase({
     type: {
         id: z.string().or(z.number()),
         address: z.string(),
+        description: z.string(),
     },
     details: {
         id: z.number().min(1),
         address: z.string().email(),
+        description: z.string(),
     }
 })
 
 export const createMailAliasValidation = baseMailAliasValidation.createValidation({
     keys: [
         'address',
+        'description',
     ],
     transformer: data => data
 })
@@ -26,6 +29,7 @@ export const updateMailAliasValidation = baseMailAliasValidation.createValidatio
     keys: [
         'id',
         'address',
+        'description',
     ],
     transformer: data => ({...data, id: Number(data.id)})
 })

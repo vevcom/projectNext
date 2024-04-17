@@ -4,7 +4,7 @@ import { UserFiltered } from "@/server/users/Types";
 
 export type PropType = {
     type: 'alias',
-    item: MailAlias
+    item: MailAlias,
 } | {
     type: 'mailingList',
     item: MailingList,
