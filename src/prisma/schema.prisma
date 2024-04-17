@@ -621,7 +621,7 @@ model MailAlias {
   updatedAt DateTime @updatedAt
   address   String   @unique
 
-  MailingLists MailAliasMailingList[]
+  mailingLists MailAliasMailingList[]
 }
 
 model MailAliasMailingList {

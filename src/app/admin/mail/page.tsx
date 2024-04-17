@@ -29,6 +29,8 @@ export default async function mailAliases() {
             <Link href="./mail/list">Lister</Link><br/>
             <Link href="./mail/mailAddressExternal">Eksterne mottaker adresser</Link><br/>
             <Link href="./mail/user">Brukere</Link><br/>
+            <Link href="./mail/show">Trykk på meg!</Link><br/>
+
 
             {showAdminPanel ? <div className={styles.adminContainer}>
                 {createMailAlias ? <div>
