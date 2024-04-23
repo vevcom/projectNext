@@ -21,7 +21,6 @@
     "@types/heic-convert": "^1.2.3",
     "eslint": "8.57.0",
     "eslint-config-next": "^14.1.4",
-    "google-map-react": "^2.2.1",
     "next": "^14.1.4",
     "next-auth": "^4.24.7",
     "react": "^18.2.0",
@@ -45,7 +44,6 @@
     "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
-    "@types/google-map-react": "^2.1.10",
     "@types/node": "^20.12.5",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",

@@ -1,16 +1,13 @@
 @use "@/styles/ohma";
 
-.YouTube {
+.MazeMap { 
     display: flex;
     justify-content: center;
 }
 
-.YouTubeIframe {
-    display: block;
+.MazeMapIframe {
     width: 80%;
-    max-height: 80vh;
-    max-width: calc(80vh*16/9);
-    aspect-ratio: 16/9;
+    height: 100%;
     border: none;
     border-radius: ohma.$rounding;
     background-color: white;
