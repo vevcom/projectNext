@@ -6,6 +6,7 @@ import { MailFlowObject, MailListTypes } from "@/server/mail/Types";
 import EditMailAlias from "./(editComponents)/mailAlias";
 import { MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
 import EditMailingList from "./(editComponents)/mailingList";
+import EditMailAddressExternal from "./(editComponents)/mailAddressExternal";
 
 
 
@@ -27,16 +28,21 @@ export default async function MailFlow({
 
     return <>
         <div className={styles.editContainer}>
-            {filter == "alias" ? <EditMailAlias
+            {filter === "alias" ? <EditMailAlias
                 id={id}
                 data={data}
                 mailingLists={mailOptions.mailingList}
             /> : null}
-            {filter == "mailingList" ? <EditMailingList
+            {filter === "mailingList" ? <EditMailingList
                 id={id}
                 data={data}
                 mailaliases={mailOptions.alias}
                 mailAddressExternal={mailOptions.mailaddressExternal}
+            /> : null}
+            {filter === "mailaddressExternal" ? <EditMailAddressExternal
+                id={id}
+                data={data}
+                mailingLists={mailOptions.mailingList}
             /> : null}
         </div>
         <div className={styles.mailListContainer}>
