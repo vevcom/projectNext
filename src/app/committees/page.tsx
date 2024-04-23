@@ -3,6 +3,7 @@ import Link from 'next/link'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import styles from './page.module.scss'
 import CommitteeCard from '../components/CommitteeCard/CommitteeCard'
+import BackdropImage from '../components/BackdropImage/BackdropImage'
 
 export default async function Committees() {
     const res = await readCommitees()
@@ -27,7 +28,7 @@ export default async function Committees() {
                             key={committee.id}
                             title={committee.name}
                             href={`/committees/${committee.name}`}
-                            image={committee.logoImage}
+                            image={committee.logoImage.image}
                         >
                             {committee.description}
                         </CommitteeCard>
@@ -44,11 +45,3 @@ export default async function Committees() {
         </div>
     )
 }
-
-
-//lag egen funksjon for oversikt over komitteene:
-//export default async function CommitteeList() {
-//    const res = await readCommitteeList()
-//    if (!res.success) throw new Error(res.error ? res.error[0].message : 'Noe uforutsett skjedde')
-//    const committees = res.data
-//}
