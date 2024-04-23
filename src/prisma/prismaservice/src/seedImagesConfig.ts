@@ -7,7 +7,7 @@ type ImageSeedConfigBase = {
     collection: string,
 }
 
-const defaultCollection = 'STANDARDIMAGES' as const
+const defaultCollection = 'STANDARDIMAGES' satisfies SpecialCollection
 
 type ImageSeedConfig = ImageSeedConfigBase[]
 
