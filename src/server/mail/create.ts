@@ -1,6 +1,6 @@
 import 'server-only'
-import { CreateAliasMailingListType, CreateMailingListExternalType, createAliasMailingListValidation, createMailingListExternalValidation } from './validation';
-import { MailAliasMailingList, MailingListMailAddressExternal } from '@prisma/client';
+import { CreateAliasMailingListType, CreateMailingListExternalType, CreateMailingListGroupType, CreateMailingListUserType, createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from './validation';
+import { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client';
 import { prismaCall } from '../prismaCall';
 import prisma from '@/prisma';
 import { connect } from 'http2';
@@ -42,6 +42,50 @@ export async function createMailingListExternalRelation(
             mailAddressExternal: {
                 connect: {
                     id: parse.mailAddressExternalId,
+                },
+            },
+        }
+    }))
+
+}
+
+export async function createMailingListUserRelation(
+    rawdata: CreateMailingListUserType['Detailed']
+): Promise<MailingListUser> {
+    const parse = createMailingListUserValidation.detailedValidate(rawdata)
+
+    return await prismaCall(() => prisma.mailingListUser.create({
+        data: {
+            mailingList: {
+                connect: {
+                    id: parse.mailingListId,
+                },
+            },
+            user: {
+                connect: {
+                    id: parse.userId,
+                },
+            },
+        }
+    }))
+
+}
+
+export async function createMailingListGroupRelation(
+    rawdata: CreateMailingListGroupType['Detailed']
+): Promise<MailingListGroup> {
+    const parse = createMailingListGroupValidation.detailedValidate(rawdata)
+
+    return await prismaCall(() => prisma.mailingListGroup.create({
+        data: {
+            mailingList: {
+                connect: {
+                    id: parse.mailingListId,
+                },
+            },
+            group: {
+                connect: {
+                    id: parse.groupId,
                 },
             },
         }

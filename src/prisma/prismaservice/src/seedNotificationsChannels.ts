@@ -167,4 +167,30 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             }
         }
     })
+
+    await prisma.notificationChannel.create({
+        data: {
+            name: "Informasjon on merch",
+            description: "Informasjon om ny merch fra blæstcom",
+            parent: {
+                connect: {
+                    special: "ROOT",
+                }
+            },
+            defaultMethods: {
+                create: {
+                    email: true,
+                    push: false,
+                    emailWeekly: false,
+                }
+            },
+            availableMethods: {
+                create: {
+                    email: true,
+                    push: true,
+                    emailWeekly: true,
+                }
+            }
+        }
+    })
 }

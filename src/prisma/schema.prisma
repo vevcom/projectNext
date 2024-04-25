@@ -42,7 +42,7 @@ model User {
   feideAccount  FeideAccount?
 
   notificationSubscriptions NotificationSubscription[]
-  MailingLists              MailingListUser[]
+  mailingLists              MailingListUser[]
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -119,7 +119,7 @@ model Group {
   manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
-  MailingLists         MailingListGroup[]
+  mailingLists         MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain

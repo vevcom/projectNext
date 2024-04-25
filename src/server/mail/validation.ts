@@ -10,11 +10,15 @@ export const baseMailRelationValidation = new ValidationBase({
         aliasId: typeIdTemplate,
         mailingListId: typeIdTemplate,
         mailAddressExternalId: typeIdTemplate,
+        userId: typeIdTemplate,
+        groupId: typeIdTemplate,
     },
     details: {
         aliasId: detailsIdTemplate,
         mailingListId: detailsIdTemplate,
         mailAddressExternalId: detailsIdTemplate,
+        userId: detailsIdTemplate,
+        groupId: detailsIdTemplate,
     }
 })
 
@@ -41,4 +45,28 @@ export const createMailingListExternalValidation = baseMailRelationValidation.cr
     }),
 })
 export type CreateMailingListExternalType = ValidationTypes<typeof createMailingListExternalValidation>
+
+export const createMailingListUserValidation = baseMailRelationValidation.createValidation({
+    keys: [
+        'userId',
+        'mailingListId',
+    ],
+    transformer: data => ({
+        userId: Number(data.userId),
+        mailingListId: Number(data.mailingListId),
+    }),
+})
+export type CreateMailingListUserType = ValidationTypes<typeof createMailingListUserValidation>
+
+export const createMailingListGroupValidation = baseMailRelationValidation.createValidation({
+    keys: [
+        'groupId',
+        'mailingListId',
+    ],
+    transformer: data => ({
+        groupId: Number(data.groupId),
+        mailingListId: Number(data.mailingListId),
+    }),
+})
+export type CreateMailingListGroupType = ValidationTypes<typeof createMailingListGroupValidation>
 

@@ -5,7 +5,8 @@ import { MailFlowObject } from "@/server/mail/Types"
 import { MailAddressExternal, MailAlias } from "@prisma/client"
 import Form from "@/app/components/Form/Form"
 import Select from "@/app/components/UI/Select"
-import { createAliasMailingListRelationAction, createMailingListExternalRelationAction } from "@/actions/mail/create"
+import { createAliasMailingListRelationAction, createMailingListExternalRelationAction, createMailingListGroupRelationAction, createMailingListUserRelationAction } from "@/actions/mail/create"
+import { UserFiltered } from "@/server/users/Types"
 
 
 export default function EditMailingList({
@@ -13,11 +14,13 @@ export default function EditMailingList({
     data,
     mailaliases,
     mailAddressExternal,
+    users,
 }: {
     id: number,
     data: MailFlowObject,
     mailaliases: MailAlias[],
     mailAddressExternal: MailAddressExternal[],
+    users: UserFiltered[],
 }) {
 
     const focusedMailingList = data.mailingList[0]
@@ -41,6 +44,26 @@ export default function EditMailingList({
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
                 <Select options={mailaliases.map(a => ({value: a.id, label: a.address}))} name="aliasId" label="Mailalias" />
+            </Form>
+        </div>
+        <div>
+            <Form
+                title="Grupper"
+                submitText="Legg til"
+                action={createMailingListGroupRelationAction}
+            >
+                <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
+                <TextInput type="text" name="groupId" label="Gruppe id" />
+            </Form>
+        </div>
+        <div>
+            <Form
+                title="Brukere"
+                submitText="Legg til"
+                action={createMailingListUserRelationAction}
+            >
+                <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
+                <TextInput type="text" name="userId" label="Bruker id" />
             </Form>
         </div>
         <div>

@@ -40,6 +40,14 @@ export default function MailListItem({
     if (type == "mailingList") {
         displayText = item.name;
     }
+
+    if (type === "user") {
+        displayText = `${item.firstname} ${item.lastname}`
+    }
+
+    if (type === "group") {
+        displayText = String(item.id);
+    }
     
     return <li><Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link></li>
 }

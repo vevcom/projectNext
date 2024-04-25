@@ -19,7 +19,18 @@ async function readAliasFlow(id : number): Promise<MailFlowObject> {
                         include: {
                             groups: {
                                 include: {
-                                    group: true, // Need to find users here as well
+                                    group: {
+                                        include: {
+                                            memberships: {
+                                                // TODO: only find valid memberships
+                                                include: {
+                                                    user: {
+                                                        select: userFilterSelection,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 },
                             },
                             users: {
@@ -42,19 +53,22 @@ async function readAliasFlow(id : number): Promise<MailFlowObject> {
     }))
 
     const mailAlias = results
-    const mailingLists = results.mailingLists.map(list => list.mailingList) ?? []
-    const groups: Group[] = [];
-    mailingLists.forEach(list => list.groups.forEach(group => groups.push(group.group)));
-    const users: UserFiltered[] = []
-    mailingLists.forEach(list => list.users.forEach(user => users.push(user.user)));
-    const mailaddressExternal: MailAddressExternal[] = []
-    mailingLists.forEach(list => list.mailAddressExternal.forEach(address => mailaddressExternal.push(address.mailAddressExternal)))
+    const mailingList = results.mailingLists.map(list => list.mailingList)
+    const group = results.mailingLists.map(l => l.mailingList.groups.map(g => g.group)).flat();
 
+    const user = results.mailingLists.map(l => l.mailingList.users.map(u => u.user))
+        .concat(results.mailingLists.map(l =>
+            l.mailingList.groups.map(g => g.group.memberships.map(m => m.user)).flat()
+        )).flat()
+
+    const mailaddressExternal = results.mailingLists
+        .map(l => l.mailingList.mailAddressExternal.map(a => a.mailAddressExternal)).flat()
+    
     return {
         alias: [mailAlias],
-        mailingList: mailingLists,
-        group: groups,
-        user: users,
+        mailingList,
+        group,
+        user,
         mailaddressExternal,
     }
 }
@@ -72,7 +86,20 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
             },
             groups: {
                 include: {
-                    group: true, // TODO: Add users in group
+                    group: {
+                        include: {
+                            memberships: {
+                                /*where: {
+                                    active: true,
+                                },*/
+                                include: {
+                                    user: {
+                                        select: userFilterSelection,
+                                    }
+                                }
+                            }
+                        }
+                    }, // TODO: Add users in group
                 },
             },
             users: {
@@ -93,7 +120,13 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
     const mailingList = results;
     const alias = mailingList.mailAliases.map(alias => alias.mailAlias)
     const group = mailingList.groups.map(group => group.group);
-    const user = mailingList.users.map(user => user.user);
+    const user = mailingList.users
+        .map(user => user.user)
+        .concat(
+            mailingList.groups
+            .map(g => g.group.memberships.map(m => m.user))
+            .reduce((acc, users) => acc.concat(users), [])
+        );
     const mailaddressExternal = mailingList.mailAddressExternal.map(address => address.mailAddressExternal);
 
     return {
@@ -141,6 +174,123 @@ async function readMailaddressExternalFlow(id: number): Promise<MailFlowObject> 
     }
 }
 
+async function readGroupFlow(id: number): Promise<MailFlowObject> {
+    const results = await prismaCall(() => prisma.group.findUniqueOrThrow({
+        where: {
+            id,
+        },
+        include: {
+            memberships: {
+                include: {
+                    user: {
+                        select: userFilterSelection,
+                    }
+                }
+            },
+            mailingLists: {
+                include: {
+                    mailingList: {
+                        include: {
+                            mailAliases: {
+                                include: {
+                                    mailAlias: true,
+                                },
+                            }
+                        },
+                    },
+                },
+            },
+        }
+    }))
+
+    const group = results;
+    const mailingList = results.mailingLists.map(list => list.mailingList);
+    const alias = mailingList
+        .map(list => list.mailAliases.map(alias => alias.mailAlias))
+        .flat();
+    
+    const user = results.memberships.map(m => m.user)
+
+    return {
+        mailaddressExternal: [],
+        mailingList,
+        alias,
+        user,
+        group: [group],
+    }
+}
+
+async function readUserFlow(id: number): Promise<MailFlowObject> {
+    const results = await prismaCall(() => prisma.user.findUniqueOrThrow({
+        where: {
+            id,
+        },
+        include: {
+            mailingLists: {
+                include: {
+                    mailingList: {
+                        include: {
+                            mailAliases: {
+                                include: {
+                                    mailAlias: true,
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            memberships: {
+                include: {
+                    group: {
+                        include: {
+                            mailingLists: {
+                                include: {
+                                    mailingList: {
+                                        include: {
+                                            mailAliases: {
+                                                include: {
+                                                    mailAlias: true,
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }))
+
+    const user = results;
+    const mailingList = results.mailingLists
+        .map(list => list.mailingList)
+        .concat(
+            results.memberships.map(m => m.group.mailingLists.map(l => l.mailingList))
+                .flat()
+        )
+
+    const alias = results.mailingLists
+        .map(l => l.mailingList.mailAliases.map(a => a.mailAlias))
+        .concat(
+            results.memberships
+                .map(m => m.group.mailingLists
+                    .map(l => l.mailingList.mailAliases.map(a => a.mailAlias)).flat()
+                )
+        ).flat()
+    
+    const group = results.memberships.map(m => m.group)
+
+    return {
+        mailaddressExternal: [],
+        mailingList,
+        alias,
+        user: [user],
+        group,
+    }
+}
+
 export async function readMailFlow({
     filter,
     id,
@@ -159,6 +309,14 @@ export async function readMailFlow({
 
     if (filter === "mailaddressExternal") {
         return await readMailaddressExternalFlow(id);
+    }
+
+    if (filter === "group") {
+        return await readGroupFlow(id);
+    }
+
+    if (filter === "user") {
+        return await readUserFlow(id);
     }
 
     throw new ServerError("UNKNOWN ERROR", "Not implemented");
