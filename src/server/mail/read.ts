@@ -1,11 +1,37 @@
 import 'server-only'
-import { MailFlowObject, MailListTypes } from './Types'
+import { MailFlowObject, MailListTypes, ViaType } from './Types'
 import prisma from '@/prisma'
 import { prismaCall } from '../prismaCall'
 import { Group, MailAddressExternal, MailAlias } from '@prisma/client'
 import { userFilterSelection } from '../users/ConfigVars'
 import { UserFiltered } from '../users/Types'
 import { ServerError } from '../error'
+
+function removeDuplicates<T extends {
+    id: number,
+} & ViaType>(objects: T[]): T[] {
+    const seenIds = new Set()
+    const ret: T[] = [];
+
+    for (const obj of objects) {
+        if (seenIds.has(obj.id)) {
+            const exisingObj = ret.find(item => item.id === obj.id);
+            if (exisingObj && exisingObj.via && obj.via && obj.via instanceof Array) {
+                const via = obj.via[0]
+
+                const alredyAdded = exisingObj.via.find(item => (item.type == via.type && item.id == via.id))
+                if (!alredyAdded) {
+                    exisingObj.via.push(via)
+                }
+            }
+        } else {
+            seenIds.add(obj.id)
+            ret.push(obj)
+        }
+    }
+
+    return ret;
+}
 
 async function readAliasFlow(id : number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.mailAlias.findUniqueOrThrow({
@@ -52,24 +78,49 @@ async function readAliasFlow(id : number): Promise<MailFlowObject> {
         }
     }))
 
-    const mailAlias = results
-    const mailingList = results.mailingLists.map(list => list.mailingList)
-    const group = results.mailingLists.map(l => l.mailingList.groups.map(g => g.group)).flat();
+    const mailAlias = results;
 
-    const user = results.mailingLists.map(l => l.mailingList.users.map(u => u.user))
+    const mailingList = results.mailingLists.map(list => list.mailingList)
+
+    const group = results.mailingLists.map(l => l.mailingList.groups.map(g => ({
+        ...g.group,
+        via: [{type: "mailingList" as MailListTypes, id: l.mailingListId, label: l.mailingList.name}]
+    }))).flat()
+
+    const user = results.mailingLists.map(l => l.mailingList.users.map(u => ({
+            ...u.user,
+            via: [{type: "mailingList" as MailListTypes, id: l.mailingListId, label: l.mailingList.name}],
+        })))
         .concat(results.mailingLists.map(l =>
-            l.mailingList.groups.map(g => g.group.memberships.map(m => m.user)).flat()
+            l.mailingList.groups.map(g => g.group.memberships.map(m => ({
+                ...m.user,
+                via: [{type: "group" as MailListTypes, id: g.groupId, label: g.groupId.toString()}]
+            }))).flat()
         )).flat()
 
     const mailaddressExternal = results.mailingLists
-        .map(l => l.mailingList.mailAddressExternal.map(a => a.mailAddressExternal)).flat()
+        .map(l => l.mailingList.mailAddressExternal.map(a => ({
+            ...a.mailAddressExternal,
+            via: [{type: "mailingList" as MailListTypes, id: l.mailingListId, label: l.mailingList.name}]
+        }))).flat()
+    
+    
+    delete mailAlias.mailingLists;
     
     return {
         alias: [mailAlias],
-        mailingList,
-        group,
-        user,
-        mailaddressExternal,
+        mailingList: mailingList.map(list => {
+            delete list.users;
+            delete list.groups;
+            delete list.mailAddressExternal;
+            return list
+        }),
+        group: removeDuplicates(group.map(g => {
+            delete g.memberships;
+            return g
+        })),
+        user: removeDuplicates(user),
+        mailaddressExternal: removeDuplicates(mailaddressExternal),
     }
 }
 
@@ -124,8 +175,11 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
         .map(user => user.user)
         .concat(
             mailingList.groups
-            .map(g => g.group.memberships.map(m => m.user))
-            .reduce((acc, users) => acc.concat(users), [])
+            .map(g => g.group.memberships.map(m => ({
+                ...m.user,
+                via: [{type: "group" as MailListTypes, id: g.groupId, label: g.groupId}],
+            })))
+            .flat()
         );
     const mailaddressExternal = mailingList.mailAddressExternal.map(address => address.mailAddressExternal);
 
@@ -133,7 +187,7 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
         mailingList: [mailingList],
         alias,
         group,
-        user,
+        user: removeDuplicates(user),
         mailaddressExternal,
     }
 }
@@ -162,13 +216,17 @@ async function readMailaddressExternalFlow(id: number): Promise<MailFlowObject> 
 
     const mailAddressExternal = results;
     const mailingList = results.mailingLists.map(list => list.mailingList);
-    const aliases: MailAlias[] = [];
-    mailingList.forEach(list => list.mailAliases.forEach(alias => aliases.push(alias.mailAlias)))
+    const aliases = results.mailingLists.map(
+        list => list.mailingList.mailAliases.map(a => ({
+            ...a.mailAlias,
+            via: [{type: "mailingList" as MailListTypes, id: list.mailingListId, label: list.mailingList.name}],
+        })),
+    ).flat()
 
     return {
         mailaddressExternal: [mailAddressExternal],
         mailingList,
-        alias: aliases,
+        alias: removeDuplicates(aliases),
         user: [],
         group: [],
     }
@@ -206,7 +264,10 @@ async function readGroupFlow(id: number): Promise<MailFlowObject> {
     const group = results;
     const mailingList = results.mailingLists.map(list => list.mailingList);
     const alias = mailingList
-        .map(list => list.mailAliases.map(alias => alias.mailAlias))
+        .map(list => list.mailAliases.map(alias => ({
+            ...alias.mailAlias,
+            via: [{type: "mailingList" as MailListTypes, id: list.id, label: list.name}]
+        })))
         .flat();
     
     const user = results.memberships.map(m => m.user)
@@ -214,7 +275,7 @@ async function readGroupFlow(id: number): Promise<MailFlowObject> {
     return {
         mailaddressExternal: [],
         mailingList,
-        alias,
+        alias: removeDuplicates(alias),
         user,
         group: [group],
     }
@@ -267,16 +328,24 @@ async function readUserFlow(id: number): Promise<MailFlowObject> {
     const mailingList = results.mailingLists
         .map(list => list.mailingList)
         .concat(
-            results.memberships.map(m => m.group.mailingLists.map(l => l.mailingList))
-                .flat()
+            results.memberships.map(m => m.group.mailingLists.map(l => ({
+                ...l.mailingList,
+                via: [{type: "group" as MailListTypes, id: m.groupId, label: m.groupId.toString()}]
+            }))).flat()
         )
 
     const alias = results.mailingLists
-        .map(l => l.mailingList.mailAliases.map(a => a.mailAlias))
+        .map(l => l.mailingList.mailAliases.map(a => ({
+            ...a.mailAlias,
+            via: [{type: "mailingList" as MailListTypes, id: l.mailingListId, label: l.mailingList.name}]
+        })))
         .concat(
             results.memberships
                 .map(m => m.group.mailingLists
-                    .map(l => l.mailingList.mailAliases.map(a => a.mailAlias)).flat()
+                    .map(l => l.mailingList.mailAliases.map(a => ({
+                        ...a.mailAlias,
+                        via: [{type: "mailingList" as MailListTypes, id: l.mailingListId, label: l.mailingList.name}]
+                    }))).flat()
                 )
         ).flat()
     
@@ -284,8 +353,8 @@ async function readUserFlow(id: number): Promise<MailFlowObject> {
 
     return {
         mailaddressExternal: [],
-        mailingList,
-        alias,
+        mailingList: removeDuplicates(mailingList),
+        alias: removeDuplicates(alias),
         user: [user],
         group,
     }

@@ -1,5 +1,5 @@
 
-import { MailListTypes } from "@/server/mail/Types";
+import { MailListTypes, ViaType } from "@/server/mail/Types";
 import MailListItem from "./mailListItem";
 import styles from "./mailList.module.scss"
 import { Group, MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
@@ -16,19 +16,19 @@ const typeDisplayName : Record<MailListTypes, string> = {
 
 type PropType = {
     type: 'alias',
-    items: MailAlias[],
+    items: (MailAlias & ViaType)[],
 } | {
     type: 'mailingList',
-    items: MailingList[],
+    items: (MailingList & ViaType)[],
 } | {
     type: 'group',
-    items: Group[],
+    items: (Group & ViaType)[],
 } | {
     type: 'user',
-    items: UserFiltered[],
+    items: (UserFiltered & ViaType)[],
 } | {
     type: 'mailaddressExternal',
-    items: MailAddressExternal[],
+    items: (MailAddressExternal & ViaType)[],
 }
 
 export default function MailList({

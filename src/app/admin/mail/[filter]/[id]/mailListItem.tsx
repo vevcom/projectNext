@@ -2,25 +2,25 @@
 import { Group, MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
 import { UserFiltered } from "@/server/users/Types";
 import Link from "next/link";
-import { MailListTypeArray } from "@/server/mail/Types";
+import { MailListTypeArray, ViaType } from "@/server/mail/Types";
 import { notFound } from "next/navigation";
 
-export type PropType = {
+type PropType = {
     type: 'alias',
-    item: MailAlias,
+    item: MailAlias & ViaType,
 } | {
     type: 'mailingList',
-    item: MailingList,
+    item: MailingList & ViaType,
 } | {
     type: 'group',
-    item: Group,
+    item: Group & ViaType,
 } | {
     type: 'user',
-    item: UserFiltered,
+    item: UserFiltered & ViaType,
 } | {
     type: 'mailaddressExternal',
-    item: MailAddressExternal,
-};
+    item: MailAddressExternal & ViaType,
+}
 
 export default function MailListItem({
     type,
@@ -49,5 +49,10 @@ export default function MailListItem({
         displayText = String(item.id);
     }
     
-    return <li><Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link></li>
+    return <li>
+        <Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link>
+        {item.via ? item.via.map(v => <span>
+            ({v.label})
+        </span>) : null}
+    </li>
 }

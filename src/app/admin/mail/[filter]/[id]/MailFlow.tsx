@@ -28,6 +28,8 @@ export default async function MailFlow({
     },
 }) {
 
+    console.log(data);
+
     return <>
         <div className={styles.editContainer}>
             {filter === "alias" ? <EditMailAlias
