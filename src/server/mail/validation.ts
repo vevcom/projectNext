@@ -7,14 +7,14 @@ const detailsIdTemplate = z.number().min(1)
 
 export const baseMailRelationValidation = new ValidationBase({
     type: {
-        aliasId: typeIdTemplate,
+        mailAliasId: typeIdTemplate,
         mailingListId: typeIdTemplate,
         mailAddressExternalId: typeIdTemplate,
         userId: typeIdTemplate,
         groupId: typeIdTemplate,
     },
     details: {
-        aliasId: detailsIdTemplate,
+        mailAliasId: detailsIdTemplate,
         mailingListId: detailsIdTemplate,
         mailAddressExternalId: detailsIdTemplate,
         userId: detailsIdTemplate,
@@ -24,11 +24,11 @@ export const baseMailRelationValidation = new ValidationBase({
 
 export const createAliasMailingListValidation = baseMailRelationValidation.createValidation({
     keys: [
-        'aliasId',
+        'mailAliasId',
         'mailingListId',
     ],
     transformer: data => ({
-        aliasId: Number(data.aliasId),
+        mailAliasId: Number(data.mailAliasId),
         mailingListId: Number(data.mailingListId),
     }),
 })
@@ -69,4 +69,3 @@ export const createMailingListGroupValidation = baseMailRelationValidation.creat
     }),
 })
 export type CreateMailingListGroupType = ValidationTypes<typeof createMailingListGroupValidation>
-

@@ -14,13 +14,11 @@ export default function EditMailingList({
     data,
     mailaliases,
     mailAddressExternal,
-    users,
 }: {
     id: number,
     data: MailFlowObject,
     mailaliases: MailAlias[],
     mailAddressExternal: MailAddressExternal[],
-    users: UserFiltered[],
 }) {
 
     const focusedMailingList = data.mailingList[0]
@@ -43,7 +41,7 @@ export default function EditMailingList({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
-                <Select options={mailaliases.map(a => ({value: a.id, label: a.address}))} name="aliasId" label="Mailalias" />
+                <Select options={mailaliases.map(a => ({value: a.id, label: a.address}))} name="mailAliasId" label="Mailalias" />
             </Form>
         </div>
         <div>

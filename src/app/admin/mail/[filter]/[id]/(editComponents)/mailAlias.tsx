@@ -40,7 +40,7 @@ export default function EditMailAlias({
                 submitText="Legg til"
                 action={createAliasMailingListRelationAction}
             >
-                <input type="hidden" name="aliasId" value={focusedAlias.id} />
+                <input type="hidden" name="mailAliasId" value={focusedAlias.id} />
                 <Select options={mailingLists.map(list => ({value: list.id, label: list.name}))} name="mailingListId" label="Mailliste"/>
             </Form>
         </div>

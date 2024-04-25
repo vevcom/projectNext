@@ -4,7 +4,7 @@ import { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal,
 import { ActionReturn } from "../Types"
 import { getUser } from "@/auth/getUser"
 import { createActionError, createZodActionError } from "../error"
-import { CreateMailingListUserType, createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from "@/server/mail/validation"
+import { createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from "@/server/mail/validation"
 import { safeServerCall } from "../safeServerCall"
 import { createAliasMailingListRelation, createMailingListExternalRelation, createMailingListGroupRelation, createMailingListUserRelation } from "@/server/mail/create"
 

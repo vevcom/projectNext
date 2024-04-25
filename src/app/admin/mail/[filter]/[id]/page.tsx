@@ -5,7 +5,12 @@ import MailFlow from "./MailFlow";
 import { MailListTypeArray, MailListTypes } from "@/server/mail/Types";
 import { notFound } from "next/navigation";
 import { readAllMailOptions, readMailFlowAction } from "@/actions/mail/read";
-
+import styles from "./page.module.scss"
+import EditMailAlias from "./(editComponents)/mailAlias";
+import EditMailingList from "./(editComponents)/mailingList";
+import EditMailAddressExternal from "./(editComponents)/mailAddressExternal";
+import EditUser from "./(editComponents)/user";
+import EditGroup from "./(editComponents)/group";
 
 export default async function MailFlowPage({
     params
@@ -39,6 +44,34 @@ export default async function MailFlowPage({
     return <PageWrapper
         title="Innkommende elektronisk post"
     >
-        <MailFlow filter={filter} id={id} data={results.data} mailOptions={mailOptions} />
+        <div className={styles.editContainer}>
+            {filter === "mailingList" ? <EditMailingList
+                id={id}
+                data={results.data}
+                mailaliases={mailOptions.alias}
+                mailAddressExternal={mailOptions.mailaddressExternal}
+            /> : null}
+            {filter === "alias" ? <EditMailAlias
+                id={id}
+                data={results.data}
+                mailingLists={mailOptions.mailingList}
+            /> : null}
+            {filter === "mailaddressExternal" ? <EditMailAddressExternal
+                id={id}
+                data={results.data}
+                mailingLists={mailOptions.mailingList}
+            /> : null}
+            {filter === "user" ? <EditUser
+                id={id}
+                data={results.data}
+                mailingLists={mailOptions.mailingList}
+            /> : null}
+            {filter === "group" ? <EditGroup
+                id={id}
+                data={results.data}
+                mailingLists={mailOptions.mailingList}
+            /> : null}
+        </div>
+        <MailFlow filter={filter} id={id} data={results.data} />
     </PageWrapper>
 }

@@ -15,7 +15,7 @@ export async function createAliasMailingListRelation(
         data: {
             mailAlias: {
                 connect: {
-                    id: parse.aliasId,
+                    id: parse.mailAliasId,
                 },
             },
             mailingList: {
