@@ -3,7 +3,7 @@
 import MailList from "./mailList";
 import styles from "./MailFlow.module.scss"
 import { MailFlowObject, MailListTypes } from "@/server/mail/Types";
-import { destroyAliasMailingListRelationAction } from "@/actions/mail/destroy";
+import { destroyAliasMailingListRelationAction, destroyMailingListExternalRelationAction, destroyMailingListGroupRelationAction, destroyMailingListUserRelationAction } from "@/actions/mail/destroy";
 
 type DestroyFunction = null | ((id: number) => any)
 
@@ -25,22 +25,57 @@ export default async function MailFlow({
 
     if (filter === "mailingList") {
 
-        aliasDestroy = (aliasId: number) => destroyAliasMailingListRelationAction({
-            mailAliasId: aliasId,
+        aliasDestroy = (mailAliasId: number) => destroyAliasMailingListRelationAction({
             mailingListId: id,
+            mailAliasId,
         });
+
+        addressExternalDestroy = (mailAddressExternalId: number) => destroyMailingListExternalRelationAction({
+            mailingListId: id,
+            mailAddressExternalId,
+        })
+
+        userDestroy = (userId: number) => destroyMailingListUserRelationAction({
+            mailingListId: id,
+            userId,
+        })
+
+        groupDestroy = (groupId: number) => destroyMailingListGroupRelationAction({
+            mailingListId: id,
+            groupId,
+        })
     }
 
     if (filter === "alias") {
+
+        mailingListDestroy = (mailingListId: number) => destroyAliasMailingListRelationAction({
+            mailAliasId: id,
+            mailingListId,
+        })
     }
 
     if (filter === "mailaddressExternal") {
+
+        mailingListDestroy = (mailingListId: number) => destroyMailingListExternalRelationAction({
+            mailAddressExternalId: id,
+            mailingListId,
+        })
     }
 
     if (filter === "user") {
+
+        mailingListDestroy = (mailingListId: number) => destroyMailingListUserRelationAction({
+            userId: id,
+            mailingListId,
+        })
     }
 
     if (filter === "group") {
+
+        mailingListDestroy = (mailingListId: number) => destroyMailingListGroupRelationAction({
+            groupId: id,
+            mailingListId,
+        })
     }
 
     return <>

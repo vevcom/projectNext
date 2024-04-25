@@ -54,9 +54,11 @@ export default function MailListItem({
     if (type === "group") {
         displayText = String(item.id);
     }
+
+    const editable = (destroyFunction && !item.via)
     
-    return <li className={`${styles.mailListItem} ${destroyFunction ? styles.editable : ""}`}>
-        {destroyFunction ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, item.id)} /> : null}
+    return <li className={`${styles.mailListItem} ${editable ? styles.editable : ""}`}>
+        {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, item.id)} /> : null}
         <Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link>
         {item.via ? item.via.map(v => <span>
             ({v.label})
