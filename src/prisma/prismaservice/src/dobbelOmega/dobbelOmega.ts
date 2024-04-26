@@ -6,6 +6,7 @@ import migrateOmegaquotes from './migrateOmegaquotes'
 import migrateArticles from './migateArticles'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import migrateMailAliases from './migrateMailAlias'
 
 /**
  * !DobbelOmega!
@@ -24,6 +25,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap, limits)
     await migrateOmegaquotes(pnPrisma, vevenPrisma, limits)
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
+    await migrateMailAliases(pnPrisma, vevenPrisma, limits)
 
     vevenPrisma.$disconnect()
     console.log('=======Dobbel Omega ferdig, dagen derpå=======')
