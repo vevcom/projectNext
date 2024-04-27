@@ -1,8 +1,8 @@
-import { readNotificaitonChannels } from "@/actions/notifications/read"
+
 import { notFound } from "next/navigation"
 import { getUser } from "@/auth/getUser"
 import ChannelSettings from "./channelSettings"
-import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
+import { readAllNotificationChannelsAction } from "@/actions/notifications/channel/read"
 
 
 export default async function Channels({ params } : {
@@ -11,13 +11,7 @@ export default async function Channels({ params } : {
     }
 }) {
 
-    await getUser({
-        requiredPermissions: [[ 'NOTIFICATION_CHANNEL_READ' ]],
-        userRequired: true,
-        shouldRedirect: true,
-    });
-
-    const channels = await readNotificaitonChannels();
+    const channels = await readAllNotificationChannelsAction();
 
     if (!channels.success) {
         // TODO: Handle error
@@ -30,7 +24,6 @@ export default async function Channels({ params } : {
     if (!selected) {
         notFound();
     }
-
 
     return <ChannelSettings channels={channels.data} currentChannel={selected}/>
 }

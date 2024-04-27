@@ -1,44 +1,27 @@
 "use client"
 
-import type { NotificationChannelWithMethods } from "@/server/notifications/Types"
 import styles from "./channelSettings.module.scss"
 import NotificationMethodSelector from "@/components/NotificaionMethodSelector/NotificaionMethodSelector"
 import TextInput from "@/app/components/UI/TextInput"
 import Select from "@/app/components/UI/Select"
 import { useState } from "react"
 import Form from "@/app/components/Form/Form"
-import { updateNotificationChannelAction } from "@/actions/notifications/update"
-import { NotificationMethodsAllOff, NotificationMethodsAllOn } from "@/server/notifications/ConfigVars"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
+import { NotificationChannel } from "@/server/notifications/Types"
+import { findValidParents } from "@/server/notifications/channel/validation"
+import { updateNotificationChannelAction } from "@/actions/notifications/channel/update"
 
 export default function ChannelSettings({
     currentChannel,
     channels,
 }: {
-    currentChannel: NotificationChannelWithMethods,
-    channels: NotificationChannelWithMethods[],
+    currentChannel: NotificationChannel,
+    channels: NotificationChannel[],
 }) {
     
-    const [ currentChannelState, setCurrentChannel ] = useState({
-        ...currentChannel,
-        defaultMethods: currentChannel?.defaultMethods ?? NotificationMethodsAllOff
-    })
+    const [ currentChannelState, setCurrentChannel ] = useState(currentChannel)
 
-    let selectOptions = channels.filter(c => c.id != currentChannelState.id)
-    // Remove chrildren of the current channel
-    let channelIDS = new Set(selectOptions.map(c => c.id))
-    while (true) {
-        const lengthBeforeReduction = channelIDS.size
-        for (let i = selectOptions.length - 1; i >= 0; i--) {
-            if (!channelIDS.has(selectOptions[i].parentId)) {
-                channelIDS.delete(selectOptions[i].id)
-                selectOptions.splice(i, 1)
-            }
-        }
-        if (lengthBeforeReduction === channelIDS.size) {
-            break;
-        }
-    }
+    const selectOptions = findValidParents(currentChannel.id, channels) 
 
     return <PageWrapper
         title={currentChannelState.name}
@@ -85,7 +68,7 @@ export default function ChannelSettings({
                     <NotificationMethodSelector
                         formPrefix="availableMethods"
                         title="Tilgjengelige metoder"
-                        methods={currentChannelState.availableMethods ?? NotificationMethodsAllOff}
+                        methods={currentChannelState.availableMethods}
                         onChange={(data) => {
                             setCurrentChannel({
                                 ...currentChannelState,
@@ -96,8 +79,8 @@ export default function ChannelSettings({
                     <NotificationMethodSelector
                         formPrefix="defaultMethods"
                         title="Standard metoder"
-                        methods={currentChannelState.defaultMethods ?? NotificationMethodsAllOff}
-                        editable={currentChannelState.availableMethods ?? NotificationMethodsAllOn}
+                        methods={currentChannelState.defaultMethods}
+                        editable={currentChannelState.availableMethods}
                         onChange={(data) => {
                             setCurrentChannel({
                                 ...currentChannelState,
