@@ -7,6 +7,7 @@ import { createOmegaquotesValidation } from '@/server/omegaquotes/validation'
 import type { CreateOmegaguotesTypes } from '@/server/omegaquotes/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
+import { dispatchSpecialNotification } from '@/server/notifications/create'
 
 export async function createQuoteAction(
     rawdata: FormData | CreateOmegaguotesTypes['Type']
@@ -21,5 +22,11 @@ export async function createQuoteAction(
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await safeServerCall(() => createQuote(user.id, data))
+    const results = await safeServerCall(() => createQuote(user.id, data))
+
+    if(results.success) {
+        dispatchSpecialNotification("NEW_OMEGAQUOTE", "Ny Omegaquote♪", `${results.data.quote}\n - ${results.data.author}`)
+    }
+
+    return results
 }

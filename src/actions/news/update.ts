@@ -6,6 +6,7 @@ import { updateNewsArticleValidation } from '@/server/news/validation'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateNewsArticleTypes } from '@/server/news/validation'
+import { dispatchSpecialNotification } from '@/server/notifications/create'
 
 export async function updateNewsAction(
     id: number,
@@ -26,6 +27,8 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
+    dispatchSpecialNotification("NEW_NEWS_ARTICLE", "Nyhet🗞️: <En tittel her kanskje?>", "Starten av artikkelen her kanskje?")
+
     return createActionError('UNKNOWN ERROR', 'Not implemented')
 }
 

@@ -6,6 +6,7 @@ import TextInput from "@/app/components/UI/TextInput";
 import Textarea from "@/app/components/UI/Textarea";
 import styles from "./notificaionForm.module.scss"
 import { dispatchNotificationAction } from "@/actions/notifications/create";
+import { useState } from "react";
 
 
 export default function NotificaionForm({
@@ -14,27 +15,32 @@ export default function NotificaionForm({
     channels: NotificationChannelWithMethods[]
 }) {
 
-    return <Form
-        submitText="Send varsel"
-        className={styles.notificaionForm}
-        action={dispatchNotificationAction}
-        successCallback={data => {
-            if (data) {
-                console.log(data)
-            }
-        }}
-    >
-        <Select
-            name="channelId"
-            options={channels.map(c => ({
-                value: c.id,
-                label: c.name,
-            }))}
-            className={styles.select}
-            label="Varlisngskanal"
-        />
+    const [ successMessage, setSuccessMessage] = useState<string | null>(null);
 
-        <TextInput name="title" label="Tittel" />
-        <Textarea name="message" label="Melding" className={styles.textArea} />
-    </Form>
+    return <>
+        <Form
+            submitText="Send varsel"
+            className={styles.notificaionForm}
+            action={dispatchNotificationAction}
+            successCallback={data => {
+                if (data) {
+                    setSuccessMessage(`Varsling lagt til i køen til ${data.recipients} mottakere. Det kan ta ganske lang tid før alle får varselet`)
+                }
+            }}
+        >
+            <Select
+                name="channelId"
+                options={channels.map(c => ({
+                    value: c.id,
+                    label: c.name,
+                }))}
+                className={styles.select}
+                label="Varlisngskanal"
+            />
+
+            <TextInput name="title" label="Tittel" />
+            <Textarea name="message" label="Melding" className={styles.textArea} />
+        </Form>
+        { successMessage && <p>{successMessage}</p>}
+    </>
 }
