@@ -1,16 +1,14 @@
 import { Prisma } from '@prisma/client';
 import type { NotificationMethod } from '@prisma/client';
-import type { NotificationChannel, SpecialNotificationChannel } from '@prisma/client';
-import type { NotificationChannelWithMethods } from './Types';
+import type { NotificationChannel } from '@prisma/client';
+import type { NotificationChannelWithMethods, NotificationMethodType } from './Types';
 
 export const NotificationMethods = Object
     .keys(Prisma.NotificationMethodScalarFieldEnum)
     .filter(v => v != 'id') as (keyof Omit<NotificationMethod, 'id'>)[];
 
-export const NotificationMethodTypes = ['availableMethods', 'defaultMethods'] as const;
-
 export function convertFromPrismaMethods(
-    channel : Omit<NotificationChannel, "availableMethods" | "defaultMethods"> & {
+    channel : Omit<NotificationChannel, NotificationMethodType> & {
         availableMethods: NotificationMethod | null,
         defaultMethods: NotificationMethod | null,
     }): NotificationChannelWithMethods {
@@ -43,4 +41,13 @@ export function NotificationMethodDisplayName(key: keyof(Omit<NotificationMethod
     } as Record<keyof(NotificationMethod), string>
 
     return mapping[key] ?? key
+}
+
+export function findMethodsFromFlatObject(prefix: NotificationMethodType, fields: Record<string, any>) {
+    return Object
+        .entries(fields)
+        .filter(([k, v]) => k.startsWith(prefix + "_"))
+        .map(([k, v]) => ({
+            [k.slice(prefix.length + 1)]: v
+        }))
 }

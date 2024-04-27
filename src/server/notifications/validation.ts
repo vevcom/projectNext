@@ -18,7 +18,7 @@ function createMethodFieldString(prefix?: NotificationMethodType) {
     return NotificationMethods.map(field => prefix ? `${prefix}_${field}` : field)
 }
 
-const baseNotificationValidation = new ValidationBase({
+const baseNotificationChannelValidation = new ValidationBase({
     type: {
         id: z.string(),
         name: z.string(),
@@ -50,7 +50,7 @@ export function transformer(data: Record<string, z.ZodType>) : Record<string, an
     return ret;
 }
 
-export const createNotificationValidation = baseNotificationValidation.createValidation({
+export const createNotificationChannelValidation = baseNotificationChannelValidation.createValidation({
     keys: [
         "name",
         "description",
@@ -58,10 +58,12 @@ export const createNotificationValidation = baseNotificationValidation.createVal
     ]
     .concat(createMethodFieldString('availableMethods'))
     .concat(createMethodFieldString('defaultMethods')),
-    transformer: data => data,
+    transformer: transformer,
 })
+export type CreateNotificaitonChannelValiadtion = ValidationTypes<typeof createNotificationChannelValidation>
 
-export const updateNotificationValidation = baseNotificationValidation.createValidation({
+
+export const updateNotificationValidation = baseNotificationChannelValidation.createValidation({
     keys: [
         "id",
         "name",
@@ -72,7 +74,6 @@ export const updateNotificationValidation = baseNotificationValidation.createVal
     .concat(createMethodFieldString('defaultMethods')),
     transformer: transformer,
 })
-
 export type UpdateNotificationTypes = ValidationTypes<typeof updateNotificationValidation>
 
 const baseSubscriptionValidation = new ValidationBase({
