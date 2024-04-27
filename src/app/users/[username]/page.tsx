@@ -3,6 +3,7 @@ import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
+import { NotificationSettings } from './notificationSettings/notificationsSettings'
 
 type PropTypes = {
     params: {
@@ -45,6 +46,8 @@ export default async function User({ params }: PropTypes) {
                 {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
+
+            <NotificationSettings />
 
         </div>
     )

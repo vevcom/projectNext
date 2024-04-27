@@ -1,5 +1,8 @@
-import { NotificationChannelSubscription } from "@/server/notifications/Types";
+import { NotificationChannel } from "@/server/notifications/Types";
+import { Subscription } from "@/server/notifications/subscription/Types";
 
-export type SubscriptionThreeObject = NotificationChannelSubscription & {
-    children: SubscriptionThreeObject[]
+
+export type NotificationBranch = NotificationChannel & {
+    children: NotificationBranch[],
+    subscription?: Subscription,
 }

@@ -6,9 +6,8 @@ import { SpecialNotificationChannel } from '@prisma/client'
 import { notificationMethods } from '../Types'
 import type { NotificationChannel, NotificationMethod, NotificationMethodTypes } from '../Types'
 
-export function parseMethods(data: FormData , prefix: undefined | NotificationMethodTypes) {
-    console.log(data)
-
+export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
+    
     return Object.fromEntries(notificationMethods.map(m => {
         const compare = prefix ? `${prefix}_${m}` : m
         const value = data.get(compare)

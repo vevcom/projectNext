@@ -4,7 +4,6 @@ import { prismaCall } from '@/server/prismaCall';
 import prisma from '@/prisma';
 
 
-
 export async function readAllNotificationChannels(): Promise<NotificationChannel[]> {
     return await prismaCall(() => prisma.notificationChannel.findMany({
         include: {
@@ -17,5 +16,3 @@ export async function readAllNotificationChannels(): Promise<NotificationChannel
         },
     }));
 }
-
-
