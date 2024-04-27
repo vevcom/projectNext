@@ -1,3 +1,4 @@
+import { HTMLAttributes } from 'react'
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
 
@@ -8,6 +9,7 @@ export default function Select<V extends number | string>({
     value,
     options,
     onChange,
+    className,
 } : {
     name: string,
     label?: string,
@@ -18,7 +20,7 @@ export default function Select<V extends number | string>({
         label?: string,
     }[],
     onChange?: (value: V) => void,
-}) {
+} & Omit<HTMLAttributes<HTMLElement>, 'onChange'> ) {
     const id = uuid()
 
     const optionElements = options.map(
@@ -30,7 +32,7 @@ export default function Select<V extends number | string>({
         </option>
     )
 
-    return <div className={styles.Select}>
+    return <div className={`${styles.Select} ${className}`}>
         <label htmlFor={id}>{label ?? name}</label>
         <select
             id={id}

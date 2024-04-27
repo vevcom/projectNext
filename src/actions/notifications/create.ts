@@ -19,7 +19,17 @@ export async function createNotificaitonChannel(): Promise<ActionReturn<void>> {
     });
 }
 
-export async function createNotificationAction(): Promise<ActionReturn<void>> {
+export async function createNotificationAction(formdata: FormData): Promise<ActionReturn<void>> {
+
+    const { authorized, status } = await getUser({
+        requiredPermissions: [[ 'NOTIFICATION_CREATE' ]],
+        userRequired: true,
+    })
+
+    if (!authorized) return createActionError(status);
+
+    
+
     return await safeServerCall(async () => {
         await createNotification(4, "Hei", "Dette skal være en ny hendelse");
     })

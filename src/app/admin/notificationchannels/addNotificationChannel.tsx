@@ -17,7 +17,8 @@ export default function AddNotificationChannel({
     const [ availableMethods, setAvailableMethods ] = useState(NotificationMethodsAllOn)
     const [ selectedParentId, setSelectedParentId ] = useState(channels.find(c => c.special === "ROOT")?.id)
     const [ editableMethods, setEditableMethods ] = useState(
-        channels.find(c => c.id === selectedParentId)?.availableMethods ?? NotificationMethodsAllOn)
+        channels.find(c => c.id === selectedParentId)?.availableMethods ?? NotificationMethodsAllOn
+    )
 
     function handleNewParent(id: number) {
         setSelectedParentId(id)

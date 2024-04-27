@@ -26,8 +26,10 @@ export default function Admin() {
             <Link href="admin/default-permissions">Standard tillganger</Link>
 
             <h3><FontAwesomeIcon icon={faPaperPlane} />Varslinger</h3>
-            <Link href="admin/notifications">Varslinger</Link>
+            <Link href="admin/sendnotification">Send varsel</Link>
+            <Link href="admin/notificationchannels">Varslingkanaler</Link>
             <Link href="admin/mail">Mailing lister</Link>
+            <Link href="admin/sendmail">Send epost</Link>
             
         </div>
     )

@@ -73,6 +73,9 @@ export async function createNotification(
     title: string,
     message: string
 ): Promise<Notification> {
+
+    
+
     const results = await prismaCall(() => prisma.notification.create({
         data: {
             title,
@@ -90,11 +93,7 @@ export async function createNotification(
     return results
 }
 
-/**
- * A function to create a notification channel
- * @param info - The info to create the notification channel 
- * @returns - The createde notification channel
- */
+
 export async function createNotificationChannel({
     name,
     description,

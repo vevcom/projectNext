@@ -1,14 +1,14 @@
 import { readNotificaitonChannels } from "@/actions/notifications/read"
-import ChannelView from "./channelView"
 import { notFound } from "next/navigation"
 import { getUser } from "@/auth/getUser"
+import ChannelSettings from "./channelSettings"
+import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 
 
 export default async function Channels({ params } : {
     params: {
         currentId: string
     }
-
 }) {
 
     await getUser({
@@ -24,7 +24,13 @@ export default async function Channels({ params } : {
         notFound();
     }
 
-    return (
-        <ChannelView channels={channels.data} currentId={Number(params.currentId)}/>
-    )
+    const currentId = Number(params.currentId)
+    const selected = channels.data.find(c => c.id === currentId);
+
+    if (!selected) {
+        notFound();
+    }
+
+
+    return <ChannelSettings channels={channels.data} currentChannel={selected}/>
 }
