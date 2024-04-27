@@ -1,21 +1,24 @@
-import type { NotificationChannel, NotificationMethod, NotificationSubscription } from "@prisma/client";
+import type { NotificationChannel as prismaNC, NotificationMethod as prismaNM } from "@prisma/client";
 
-export const NotificationMethodTypes = ['availableMethods', 'defaultMethods'] as const;
-export type NotificationMethodType = typeof NotificationMethodTypes[number];
 
-export type NotificationChannelWithMethods = Omit<NotificationChannel, NotificationMethodType> & {
-    availableMethods: Omit<NotificationMethod, 'id'> & {
-        [key: string]: boolean;
-    };
-    defaultMethods?: Omit<NotificationMethod, 'id'> & {
-        [key: string]: boolean;
-    };
-};
+export const notificaionMethodTypes = ["avaiblebleMethods", "defaultMethods"] as const;
+export type NotificationMethodTypes = typeof notificaionMethodTypes[number]
 
-export type NotificationSubscriptionWithMethods = NotificationSubscription & {
-    methods: Omit<NotificationMethod, 'id'>
+export type NotificationMethod = Omit<prismaNM, 'id'>
+
+export type NotificationChannel = prismaNC & {
+    availebleMethods: NotificationMethod
+    defaultMethods: NotificationMethod
 }
 
-export type NotificationChannelSubscription = NotificationChannelWithMethods & {
-    subscription?: NotificationSubscriptionWithMethods
-}
+export const allMethodsOn = {
+    email: true,
+    emailWeekly: true,
+    push: true,
+} as const;
+
+export const allMethodsOff = {
+    email: false,
+    emailWeekly: false,
+    push: false,
+} as const;

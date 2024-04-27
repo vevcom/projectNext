@@ -558,21 +558,22 @@ enum SpecialNotificationChannel {
   NEW_EVENT
   NEW_OMBUL
   NEW_ARTICLE
+  NEW_JOBAD
 }
 
 model NotificationChannel {
   id          Int                         @id @default(autoincrement())
   name        String                      @unique
-  description String?
+  description String                      @default("")
   special     SpecialNotificationChannel? @unique
   parentId    Int // Root is pointing to itself
   parent      NotificationChannel         @relation(name: "parent", fields: [parentId], references: [id])
   children    NotificationChannel[]       @relation(name: "parent")
 
-  defaultMethodsId   Int?
-  defaultMethods     NotificationMethod? @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id], onDelete: SetNull)
+  defaultMethodsId   Int
+  defaultMethods     NotificationMethod @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
   availableMethodsId Int
-  availableMethods   NotificationMethod  @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
+  availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
 
   subscriptions NotificationSubscription[]
   notifications Notification[]

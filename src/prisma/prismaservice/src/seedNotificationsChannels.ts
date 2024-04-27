@@ -1,196 +1,139 @@
 import { SpecialNotificationChannel } from '@/generated/pn'
-import type { NotificationChannel, PrismaClient } from '@/generated/pn'
+import type { NotificationChannel, NotificationMethod, PrismaClient } from '@/generated/pn'
 import { Prisma } from '@/generated/pn';
 
 type ChannelInfo = {
+    special?: SpecialNotificationChannel
     name: string
     description: string
-    defaultMethods?: {
-        email: boolean
-        push: boolean
-        emailWeekly: boolean
-    }
-    availableMethods: {
-        email: boolean
-        push: boolean
-        emailWeekly: boolean
-    }
+    defaultMethods: Omit<NotificationMethod, 'id'>
+    availableMethods: Omit<NotificationMethod, 'id'>
 }
 
 function createChanneInfo(obj : ChannelInfo) : ChannelInfo {
     return obj;
 }
 
+const allMethodsOn = {
+    email: true,
+    emailWeekly: true,
+    push: true,
+} as const;
+
+const allMethodsOff = {
+    email: false,
+    emailWeekly: false,
+    push: false,
+} as const;
 
 export default async function seedNotificationChannels(prisma: PrismaClient) {
     const keys = Object.keys(SpecialNotificationChannel) as SpecialNotificationChannel[]
 
-    const channelInfo = {
-        ROOT: createChanneInfo({
+    const channels: ChannelInfo[] = [
+        {
+            special: "ROOT",
             name: "Alle varslinger",
             description: "Denne kanalen styrer alle varslinger",
-            defaultMethods: {
-                email: false,
-                push: false,
-                emailWeekly: false,
-            },
-            availableMethods: {
-                email: true,
-                push: true,
-                emailWeekly: true,
-            },
-        }),
-        NEW_EVENT: createChanneInfo({
+            defaultMethods: allMethodsOff,
+            availableMethods: allMethodsOn,
+        },
+        {
+            special: "NEW_EVENT",
             name: "Ny hendelse",
             description: "Varslinger om nye hendelser",
-            defaultMethods: {
-                email: true,
-                push: false,
-                emailWeekly: false,
-            },
-            availableMethods: {
-                email: true,
-                push: true,
-                emailWeekly: true,
-            },
-        }),
-        NEW_OMBUL: createChanneInfo({
+            defaultMethods: allMethodsOn,
+            availableMethods: allMethodsOn,
+        },
+        {
+            special: "NEW_OMBUL",
             name: "Ny ombul",
             description: "Varsling når det kommer ny ombul",
-            availableMethods: {
-                email: true,
-                push: true,
-                emailWeekly: true,
-            },
-        }),
-        NEW_ARTICLE: createChanneInfo({
+            defaultMethods: allMethodsOff,
+            availableMethods: allMethodsOn,
+        },
+        {
+            special: "NEW_ARTICLE",
             name: "Ny artikkel",
             description: "Varslinger om nye artikler",
+            defaultMethods: allMethodsOff,
+            availableMethods: allMethodsOn,
+        },
+        {
+            special: "NEW_JOBAD",
+            name: "Ny jobbannonse",
+            description: "Varslinger at en ny jobbanonse er ute",
+            defaultMethods: allMethodsOff,
+            availableMethods: allMethodsOn,
+        },
+        {
+            name: "Informasjon fra HS",
+            description: "Varsling når Hovedstyret vil gi ut informasjon",
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: false
+            },
             availableMethods: {
                 email: true,
-                push: true,
-                emailWeekly: true,
-            },
-        }),
+                emailWeekly: false,
+                push: false
+            }, 
+        },
+        {
+            name: "Informasjon fra Blæstcom",
+            description: "Her kommer det varslinger om Omega Merch",
+            defaultMethods: allMethodsOn,
+            availableMethods: allMethodsOn,
+        },
+    ];
+
+    const rChan = channels.find(c => c.special === "ROOT")
+
+    if (!rChan) {
+        throw new Error("No ROOT channel found")
     }
 
-    if (Object.keys(channelInfo).toString() !== keys.toString()) {
-        throw new Error("Not all special channels are handled")
-    }
-
-    async function upsertToPrisma(special : SpecialNotificationChannel) {
-        return prisma.notificationChannel.upsert({
-            where: {
-                special
-            },
-            update: {
-                name: channelInfo[special].name,
-                description: channelInfo[special].description,
-                availableMethods: {
-                    update: channelInfo[special].availableMethods,
-                },
-                ...(channelInfo[special].defaultMethods ? {
-                    defaultMethods: {
-                        update: channelInfo[special].defaultMethods,
-                    },
-                } : {}),
-                parent: {
-                    connect: {
-                        special: "ROOT"
-                    }
-                },
-            },
-            create: {
-                name: channelInfo[special].name,
-                description: channelInfo[special].description,
-                special,
-                availableMethods: {
-                    create: channelInfo[special].availableMethods,
-                },
-                ...(channelInfo[special].defaultMethods ? {
-                    defaultMethods: {
-                        create: channelInfo[special].defaultMethods,
-                    },
-                } : {}),
-                parent: {
-                    connect: {
-                        special: "ROOT"
-                    }
-                },
+    const seedSpecialChannels = new Set<SpecialNotificationChannel>()
+    const specialEnums = Object.keys(SpecialNotificationChannel)
+    for (const c of channels) {
+        if (c.special) {
+            if (!specialEnums.includes(c.special)) {
+                throw new Error(`Invalid special channel type ${c.special}`)
             }
-        })
+            seedSpecialChannels.add(c.special)
+        }
     }
 
-    const rChan = channelInfo.ROOT
+    if (seedSpecialChannels.size != specialEnums.length) {
+        throw new Error("Missing a least one special notification channel")
+    }
 
     const rootAvailable = (await prisma.notificationMethod.create({
         data: rChan.availableMethods
     })).id
 
-    
-    if (rChan.defaultMethods) {
+    const rootDefault = (await prisma.notificationMethod.create({
+        data: rChan.defaultMethods
+    })).id
 
-        let rootDefault = (await prisma.notificationMethod.create({
-            data: rChan.defaultMethods
-        })).id
+    await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable});`
 
-        await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable});`
-    } else {
-        await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootAvailable});`
-    }
-
-
-    await Promise.all(keys.filter(special => special !== "ROOT").map((special) => upsertToPrisma(special)))
-
-    await prisma.notificationChannel.create({
+    await Promise.all(channels.filter(c => c.special != "ROOT").map(c => prisma.notificationChannel.create({
         data: {
-            name: "Info fra HS",
-            description: "Elektronisk postutsendelse fra Hoved styret",
+            name: c.name,
+            description: c.description,
+            availableMethods: {
+                create: c.availableMethods,
+            },
+            defaultMethods: {
+                create: c.defaultMethods,
+            },
+            special: c.special,
             parent: {
                 connect: {
                     special: "ROOT",
                 }
-            },
-            defaultMethods: {
-                create: {
-                    email: true,
-                    push: false,
-                    emailWeekly: false,
-                }
-            },
-            availableMethods: {
-                create: {
-                    email: true,
-                    push: false,
-                    emailWeekly: false,
-                }
             }
         }
-    })
-
-    await prisma.notificationChannel.create({
-        data: {
-            name: "Informasjon on merch",
-            description: "Informasjon om ny merch fra blæstcom",
-            parent: {
-                connect: {
-                    special: "ROOT",
-                }
-            },
-            defaultMethods: {
-                create: {
-                    email: true,
-                    push: false,
-                    emailWeekly: false,
-                }
-            },
-            availableMethods: {
-                create: {
-                    email: true,
-                    push: true,
-                    emailWeekly: true,
-                }
-            }
-        }
-    })
+    })))
 }
