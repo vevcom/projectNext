@@ -106,4 +106,14 @@ export const updateNotificaionChannelValidation = baseNotificaionChannelValidati
 })
 export type UpdateNotificationChannelType = ValidationTypes<typeof updateNotificaionChannelValidation>
 
+export const destroyNotificaionChannelValidation = baseNotificaionChannelValidation.createValidation({
+    keys: [
+        'id',
+    ],
+    transformer: data => ({
+        id: Number(data.id),
+    }),
+})
+export type DestroyNotificationChannelType = ValidationTypes<typeof destroyNotificaionChannelValidation>
+
 
