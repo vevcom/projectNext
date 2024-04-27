@@ -5,6 +5,7 @@ import { NotificationChannelWithMethods } from "@/server/notifications/Types";
 import TextInput from "@/app/components/UI/TextInput";
 import Textarea from "@/app/components/UI/Textarea";
 import styles from "./notificaionForm.module.scss"
+import { dispatchNotificationAction } from "@/actions/notifications/create";
 
 
 export default function NotificaionForm({
@@ -16,6 +17,12 @@ export default function NotificaionForm({
     return <Form
         submitText="Send varsel"
         className={styles.notificaionForm}
+        action={dispatchNotificationAction}
+        successCallback={data => {
+            if (data) {
+                console.log(data)
+            }
+        }}
     >
         <Select
             name="channelId"

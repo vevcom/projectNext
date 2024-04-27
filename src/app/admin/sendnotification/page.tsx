@@ -1,15 +1,15 @@
 "use server"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
 import NotificaionForm from "./notificationForm";
-import { readNotificaitonChannels } from "@/actions/notifications/read";
 import { ServerError } from "@/server/error";
+import { readAllNotificationChannelsAction } from "@/actions/notifications/channel/read";
 
 
 
 
 export default async function SendNotification() {
 
-    const channels = await readNotificaitonChannels();
+    const channels = await readAllNotificationChannelsAction();
 
     if (!channels.success) {
         console.error(channels)
