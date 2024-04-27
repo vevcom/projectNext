@@ -1,11 +1,10 @@
 "use client"
 
-import type { NotificationMethod } from "@prisma/client"
 import Checkbox from "@/app/components/UI/Checkbox"
 import styles from "./NotificaionMethodSelector.module.scss"
 import { v4 as uuid } from "uuid"
-import type { NotificationMethodType } from "src/server/notifications/Types"
-import { NotificationMethodDisplayName } from "@/server/notifications/ConfigVars"
+import type { NotificationMethodTypes, NotificationMethod, NotificationMethods } from "@/server/notifications/Types"
+import { notificationMethodsDisplayMap } from "@/server/notifications/configVars"
 
 export default function NotificationMethodSelector({
     title,
@@ -15,15 +14,15 @@ export default function NotificationMethodSelector({
     onChange,
 } : {
     title?: string,
-    formPrefix?: NotificationMethodType,
-    methods: Omit<NotificationMethod, "id">
-    editable?: Omit<NotificationMethod, "id"> & {[key: string]: boolean},
-    onChange?: (methods: Omit<NotificationMethod, "id">) => any
+    formPrefix?: NotificationMethodTypes,
+    methods: NotificationMethod
+    editable?: NotificationMethod,
+    onChange?: (methods: NotificationMethod) => any
 }) {
 
     let state = methods
 
-    function handleChange(this: keyof(Omit<NotificationMethod, "id">), event: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(this: keyof(NotificationMethod), event: React.ChangeEvent<HTMLInputElement>) {
         const newState = {...methods}
         newState[this] = event.target.checked
         if (onChange) onChange(newState)
@@ -36,15 +35,15 @@ export default function NotificationMethodSelector({
         }
 
         {Object.entries(state).map(([key, value]) => {
-            const canEdit = !editable || editable[key];
+            const canEdit = !editable || editable[key as NotificationMethods];
 
             return <Checkbox
                 key={uuid()}
-                label={NotificationMethodDisplayName(key as keyof(Omit<NotificationMethod, "id">))}
+                label={notificationMethodsDisplayMap[key as keyof NotificationMethod] ?? key}
                 name={formPrefix ? `${formPrefix}_${key}` : key}
                 {...(onChange ? {checked: canEdit && value} : {defaultChecked: value})}
                 disabled={!canEdit}
-                onChange={handleChange.bind(key as keyof(Omit<NotificationMethod, "id">))}
+                onChange={handleChange.bind(key as keyof NotificationMethod)}
             />
         })}
     </div>

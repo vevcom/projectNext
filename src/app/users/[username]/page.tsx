@@ -3,7 +3,6 @@ import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import NotificationSettings from './notificationSettings/notificationSettings'
 
 type PropTypes = {
     params: {
@@ -47,7 +46,6 @@ export default async function User({ params }: PropTypes) {
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
 
-            <NotificationSettings/>
         </div>
     )
 }

@@ -3,14 +3,14 @@
 import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
 import AddNotificationChannel from "./addNotificationChannel";
-import { readNotificaitonChannels } from "@/actions/notifications/read";
+import { readAllNotificationChannelsAction } from "@/actions/notifications/channel/read";
 import { ServerError } from "@/server/error";
 import Link from "next/link";
 import {v4 as uuid} from "uuid";
 
 export default async function() {
 
-    const channels = await readNotificaitonChannels();
+    const channels = await readAllNotificationChannelsAction();
 
     if (!channels.success) {
         console.error(channels)
