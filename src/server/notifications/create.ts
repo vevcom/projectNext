@@ -2,8 +2,9 @@ import 'server-only'
 import { CreateNotificationType, createNotificaionValidation } from './validation';
 import { prismaCall } from '../prismaCall';
 import { SpecialNotificationChannel } from '@prisma/client';
-import { allMethodsOn } from './Types';
+import { NotificationChannel, allMethodsOn, notificationMethods } from './Types';
 import { userFilterSelection } from '../users/ConfigVars';
+import { dispathMethod } from './dispatch';
 
 
 
@@ -41,11 +42,11 @@ export async function dispatchSpecialNotification(special: SpecialNotificationCh
 export async function dispatchNotification(data: CreateNotificationType['Detailed']) {
     const notification = await createNotification(data);
 
-    const recipients = await prismaCall(() => prisma.notificationChannel.findMany({
+    const results = await prismaCall(() => prisma.notificationChannel.findUniqueOrThrow({
         where: {
             id: notification.channelId,
         },
-        select: {
+        include: {
             subscriptions: {
                 select: {
                     methods: {
@@ -56,13 +57,30 @@ export async function dispatchNotification(data: CreateNotificationType['Detaile
                     },
                 },
             },
+            availableMethods: {
+                select: allMethodsOn,
+            },
+            defaultMethods: {
+                select: allMethodsOn,
+            }
         },
     }))
 
-    console.log(recipients)
+    notificationMethods.forEach(method => {
+        if (!results.availableMethods[method]) {
+            return;
+        }
+
+        const userFiltered = results.subscriptions.filter(s => s.methods[method]).map(s => s.user)
+
+        dispathMethod[method]({
+            ...results,
+            subscriptions: undefined,
+        } as NotificationChannel, notification, userFiltered);
+    })
 
     return {
         notification,
-        recipients: recipients.length
+        recipients: results.subscriptions.length
     }
 }
