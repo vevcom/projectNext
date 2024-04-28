@@ -12,7 +12,7 @@ export const baseMailingListValidation = new ValidationBase({
     details: {
         id: z.number().min(1),
         name: z.string().min(2).max(50),
-        description: z.string().max(200).optional(),
+        description: z.string().max(200),
     }
 })
 

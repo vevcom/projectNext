@@ -7,6 +7,7 @@ import Select from "@/app/components/UI/Select";
 import { MailingList } from "@prisma/client";
 import { createAliasMailingListRelationAction } from "@/actions/mail/create";
 import { useUser } from "@/auth/useUser";
+import { updateMailAliasAction } from "@/actions/mail/alias/update";
 
 
 
@@ -33,7 +34,9 @@ export default function EditMailAlias({
             <Form
                 title="Alias"
                 submitText="Oppdater"
+                action={updateMailAliasAction}
             >
+                <input type="hidden" name="id" value={focusedAlias.id} />
                 <TextInput name="address" label="Epost" defaultValue={focusedAlias.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>

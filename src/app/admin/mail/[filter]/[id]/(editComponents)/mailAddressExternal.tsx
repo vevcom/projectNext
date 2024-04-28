@@ -7,6 +7,7 @@ import Select from "@/app/components/UI/Select";
 import { MailingList } from "@prisma/client";
 import { createMailingListExternalRelationAction } from "@/actions/mail/create";
 import { useUser } from "@/auth/useUser";
+import { updateMailAddressExternalAction } from "@/actions/mail/mailAddressExternal/update";
 
 
 
@@ -34,7 +35,9 @@ export default function EditMailAddressExternal({
             <Form
                 title="Ekstern mailaddresse"
                 submitText="Oppdater"
+                action={updateMailAddressExternalAction}
             >
+                <input type="hidden" name="id" value={focusedAddress.id} />
                 <TextInput name="address" label="Epost" defaultValue={focusedAddress.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAddress.description} />
             </Form>

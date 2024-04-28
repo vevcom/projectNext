@@ -8,6 +8,7 @@ import Select from "@/app/components/UI/Select"
 import { createAliasMailingListRelationAction, createMailingListExternalRelationAction, createMailingListGroupRelationAction, createMailingListUserRelationAction } from "@/actions/mail/create"
 import { UserFiltered } from "@/server/users/Types"
 import { useUser } from "@/auth/useUser"
+import { updateMailingListAction } from "@/actions/mail/list/update"
 
 
 export default function EditMailingList({
@@ -33,7 +34,9 @@ export default function EditMailingList({
             <Form
                 title="Mailliste"
                 submitText="Oppdater"
+                action={updateMailingListAction}
             >
+                <input type="hidden" name="id" value={focusedMailingList.id} />
                 <TextInput name="name" label="Navn" defaultValue={focusedMailingList.name} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedMailingList.description} />
 
