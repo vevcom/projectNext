@@ -11,6 +11,7 @@ import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
 import { PrismaClient } from '@/generated/pn'
+import seedMail from './seedMail'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -20,6 +21,7 @@ async function seed() {
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
+    await seedMail(prisma)
     await seedNotificationChannels(prisma)
     console.log('seed standard done')
 
