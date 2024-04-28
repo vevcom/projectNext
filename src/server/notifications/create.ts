@@ -89,6 +89,8 @@ export async function dispatchNotification(data: CreateNotificationType['Detaile
         },
     }))
 
+    // TODO: Filter the users by visibility
+
     notificationMethods.forEach(method => {
         if (!results.availableMethods[method]) {
             return;
