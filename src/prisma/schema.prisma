@@ -575,6 +575,9 @@ model NotificationChannel {
   availableMethodsId Int
   availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
 
+  mailAliasId Int?
+  mailAlias   MailAlias? @relation(fields: [mailAliasId], references: [id])
+
   subscriptions NotificationSubscription[]
   notifications Notification[]
 }
@@ -627,7 +630,8 @@ model MailAlias {
   address     String   @unique
   description String   @default("")
 
-  mailingLists MailAliasMailingList[]
+  mailingLists        MailAliasMailingList[]
+  notificationChannel NotificationChannel[]
 }
 
 model MailAliasMailingList {
