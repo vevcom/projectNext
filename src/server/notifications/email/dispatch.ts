@@ -1,7 +1,7 @@
 import { UserFiltered } from "@/server/users/Types";
 import { NotificationChannel } from "../Types";
 import { Notification } from "@prisma/client";
-import { sendMail } from "./send";
+import { sendBulkMail, sendMail } from "./send";
 
 
 export async function dispatchEmailNotifications(channel: NotificationChannel, notificaion: Notification, users: UserFiltered[]) {
@@ -13,12 +13,12 @@ export async function dispatchEmailNotifications(channel: NotificationChannel, n
 
     console.log(users)
 
-    await Promise.all(users.map(async u => {
-        await sendMail({
-            sender: "noreply@omega.ntnu.no",
-            recipient: u.email,
-            subject: notificaion.title,
-            text: notificaion.message,
-        });
+    const mails = users.map(u => ({
+        from: "noreply@omega.ntnu.no",
+        to: u.email,
+        subject: notificaion.title,
+        text: notificaion.message,
     }))
+
+    sendBulkMail(mails);
 }

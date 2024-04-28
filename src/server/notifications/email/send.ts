@@ -5,6 +5,10 @@ import { ombulBroadcast } from './ombulBroadcast';
 
 export async function sendMail(rawdata: SendEmailValidation['Detailed']) {
 
-    ombulBroadcast.sendSingleMail(rawdata);
+    await ombulBroadcast.sendSingleMail(rawdata);
 }
 
+export async function sendBulkMail(rawdata: SendEmailValidation['Detailed'][]) {
+
+    await ombulBroadcast.sendBulkMail(rawdata);
+}

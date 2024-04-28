@@ -4,6 +4,7 @@ import SMTPPool from 'nodemailer/lib/smtp-pool';
 import { TRANSPORT_OPTIONS } from './ConfigVars';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { SendEmailValidation, sendEmailValidation } from './validation';
+import Mail from 'nodemailer/lib/mailer';
 
 const PROD = process.env.NODE_ENV === "production"
 
@@ -16,16 +17,39 @@ class OmbulBroadcast {
     waitForSetup = new Promise((resolve) => this.resolveSetup = resolve)
     testAccount: nodemailer.TestAccount | null = null;
 
+    queue = [] as Mail.Options[]
+
     constructor() {
         this.setup();
     }
 
+    async getTransporter(): Promise<Transporter> {
+        if (this.transporter) {
+            return this.transporter
+        }
+
+        await this.waitForSetup
+        if (!this.transporter) {
+            throw new Error("Transporter is not set after setup, this should never happen.")
+        }
+
+        return this.transporter
+    }
+
     async setup() {
+        await this.setupTransporter()
+        
+        const transporter = await this.getTransporter();
+
+        transporter.on("idle", this.handleNewMail)
+    }
+
+    async setupTransporter() {
         if (PROD) {
             this.transporter = nodemailer.createTransport(TRANSPORT_OPTIONS)
             this.resolveSetup();
             console.log("Email setup in production")
-            return;
+            return
         }
 
         this.testAccount = await nodemailer.createTestAccount();
@@ -46,19 +70,6 @@ class OmbulBroadcast {
         console.log(this.testAccount)
     }
 
-    async getTransporter(): Promise<Transporter> {
-        if (this.transporter) {
-            return this.transporter
-        }
-
-        await this.waitForSetup
-        if (!this.transporter) {
-            throw new Error("Transporter is not set after setup, this should never happen.")
-        }
-
-        return this.transporter
-    }
-
     async getTestAccount(): Promise<nodemailer.TestAccount> {
         if (PROD) {
             throw new Error("TestAccount should only be used in development")
@@ -77,26 +88,47 @@ class OmbulBroadcast {
         return this.testAccount
     }
 
-    async sendSingleMail(data: SendEmailValidation['Detailed']) {
-        const parse = sendEmailValidation.detailedValidate(data);
-
+    async handleNewMail() {
         const transporter = await this.getTransporter();
-    
-        const sender = PROD ? parse.sender : (await this.getTestAccount()).user;
 
-        const info = await transporter.sendMail({
-            from: sender,
-            to: parse.recipient,
-            subject: parse.subject,
-            text: parse.text,
-        });
-        
-        console.log(`MAIL SENT: ${parse.sender}${PROD ? "" : "(" + sender + ")"} -> ${parse.recipient}`)
-        console.log(info.response)
-        
-        if (!PROD) {
-            console.log(`EMAIL SENT, preview: ${nodemailer.getTestMessageUrl(info)}`)
+        const responsePromises = []
+
+        while (transporter.isIdle() && this.queue.length) {
+            const nextMail = this.queue.shift()
+            if (nextMail) {
+                responsePromises.push(transporter.sendMail(nextMail))
+            }
         }
+
+        const responses = await Promise.all(responsePromises)
+
+        responses.forEach(r => {
+            console.log(`MAIL SENT: ${r.envelope.from} -> (${r.envelope.to.join(" ")})`)
+            console.log(r.response)
+
+            if (!PROD) {
+                console.log(`Preview: ${nodemailer.getTestMessageUrl(r)}`)
+            }
+        })
+    }
+
+    async sendSingleMail(data: SendEmailValidation['Detailed']) {
+        await this.sendBulkMail([data])
+    }
+
+    async sendBulkMail(data: SendEmailValidation['Detailed'][]) {
+        const testSender = PROD ? null : (await this.getTestAccount()).user
+        
+        const queue = data
+            .map(d => sendEmailValidation.detailedValidate(d))
+            .map(d => ({
+                ...d,
+                from: testSender ?? d.from,
+            }))
+
+        this.queue.push(...queue)
+
+        this.handleNewMail()
     }
 }
 

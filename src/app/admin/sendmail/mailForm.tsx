@@ -15,8 +15,8 @@ export default function MailForm() {
         className={styles.mailForm}
         buttonClassName={styles.mailButton}
     >
-        <TextInput name="sender" label="Avsender"/>
-        <TextInput name="recipient" label="Mottaker"/>
+        <TextInput name="from" label="Avsender"/>
+        <TextInput name="to" label="Mottaker"/>
         <TextInput name="subject" label="Emne"/>
 
         <Textarea name="text" label="Melding" className={styles.textArea}/>
