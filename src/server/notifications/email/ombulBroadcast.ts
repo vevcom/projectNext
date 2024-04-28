@@ -112,15 +112,14 @@ class OmbulBroadcast {
         })
     }
 
-    async sendSingleMail(data: SendEmailValidation['Detailed']) {
+    async sendSingleMail(data: Mail.Options) {
         await this.sendBulkMail([data])
     }
 
-    async sendBulkMail(data: SendEmailValidation['Detailed'][]) {
+    async sendBulkMail(data: Mail.Options[]) {
         const testSender = PROD ? null : (await this.getTestAccount()).user
         
         const queue = data
-            .map(d => sendEmailValidation.detailedValidate(d))
             .map(d => ({
                 ...d,
                 from: testSender ?? d.from,
