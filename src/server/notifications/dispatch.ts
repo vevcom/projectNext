@@ -13,3 +13,10 @@ export const dispathMethod = {
     typeof notificationMethods[number],
     ((channel: NotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<any>)
 >
+
+export function repalceSpecialSymbols(text: string, user: UserFiltered) {
+    return text
+        .replaceAll("%u", user.username)
+        .replaceAll("%n", user.firstname)
+        .replaceAll("%N", `${user.firstname} ${user.lastname}`)
+}

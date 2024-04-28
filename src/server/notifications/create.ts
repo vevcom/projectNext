@@ -5,6 +5,7 @@ import { Notification, SpecialNotificationChannel } from '@prisma/client';
 import { NotificationChannel, allMethodsOn, notificationMethods } from './Types';
 import { userFilterSelection } from '../users/ConfigVars';
 import { dispathMethod } from './dispatch';
+import { UserFiltered } from '../users/Types';
 
 /**
  * Creates a notification.

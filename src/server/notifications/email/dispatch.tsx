@@ -7,6 +7,7 @@ import { DEFAULT_NOTIFICATION_ALIAS } from "./ConfigVars";
 import { sendEmailValidation } from "./validation";
 import { render } from '@react-email/render';
 import { DefaultEmailTemplate } from "./mailTemplates";
+import { repalceSpecialSymbols } from "../dispatch";
 
 
 export async function dispatchEmailNotifications(channel: NotificationChannel, notificaion: Notification, users: UserFiltered[]) {
@@ -33,8 +34,8 @@ export async function dispatchEmailNotifications(channel: NotificationChannel, n
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
             to: u.email,
-            subject: notificaion.title,
-            text: notificaion.message,
+            subject: repalceSpecialSymbols(notificaion.title, u),
+            text: repalceSpecialSymbols(notificaion.message, u),
         })
 
         return {

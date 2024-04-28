@@ -40,6 +40,26 @@ export default function NotificaionForm({
 
             <TextInput name="title" label="Tittel" />
             <Textarea name="message" label="Melding" className={styles.textArea} />
+
+            <p>
+                Dersom du ønser å gjøre varselet mer personlig kan man bruke brukerinformasjon i varselet.
+                Under er en liste med kommandoer. Dersom det kun er epost varslingere så kan du skrive i markdwon.
+            </p>
+            <table>
+                <tr>
+                    <th>%n</th>
+                    <td>Fornavn</td>
+                </tr>
+                <tr>
+                    <th>%N</th>
+                    <td>Fult navn</td>
+                </tr>
+                <tr>
+                    <th>%u</th>
+                    <td>Brukernavn</td>
+                </tr>
+            </table>
+
         </Form>
         { successMessage && <p>{successMessage}</p>}
     </>
