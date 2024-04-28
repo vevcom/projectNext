@@ -11,6 +11,7 @@ export async function updateNotificationChannel({
     name,
     description,
     parentId,
+    mailAliasId,
     defaultMethods,
     availableMethods,
 }: UpdateNotificationChannelType['Detailed'] & {
@@ -23,6 +24,7 @@ export async function updateNotificationChannel({
         name,
         description,
         parentId,
+        mailAliasId,
     })
 
     if (!validateMethods(availableMethods, defaultMethods)) {
@@ -92,7 +94,12 @@ export async function updateNotificationChannel({
             data: {
                 name: parse.name,
                 description: parse.description,
-                ...(updateParentId ? {parentId: parse.parentId} : {}),
+                ...(updateParentId ? {parent: {connect: {id: parse.parentId}}} : {}),
+                mailAlias: {
+                    connect: {
+                        id: parse.mailAliasId,
+                    }
+                }
             },
             include: {
                 defaultMethods: {

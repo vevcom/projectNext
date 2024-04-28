@@ -67,6 +67,7 @@ export const baseNotificaionChannelValidation = new ValidationBase({
         description: z.string(),
         special: z.nativeEnum(SpecialNotificationChannel),
         parentId: z.string().or(z.number()),
+        mailAliasId: z.string().or(z.number()),
     },
     details: {
         id: z.number(),
@@ -74,6 +75,7 @@ export const baseNotificaionChannelValidation = new ValidationBase({
         description: z.string(),
         special: z.nativeEnum(SpecialNotificationChannel),
         parentId: z.number().min(1),
+        mailAliasId: z.number().min(1),
     }
 })
 
@@ -96,11 +98,13 @@ export const updateNotificaionChannelValidation = baseNotificaionChannelValidati
         'name',
         'description',
         'parentId',
+        'mailAliasId',
     ],
     transformer: data => ({
         ...data,
         id: Number(data.id),
         parentId: Number(data.parentId),
+        mailAliasId: Number(data.mailAliasId),
     }),
 })
 export type UpdateNotificationChannelType = ValidationTypes<typeof updateNotificaionChannelValidation>

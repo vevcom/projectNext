@@ -10,13 +10,16 @@ import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 import { NotificationChannel } from "@/server/notifications/Types"
 import { findValidParents } from "@/server/notifications/channel/validation"
 import { updateNotificationChannelAction } from "@/actions/notifications/channel/update"
+import { MailAlias } from "@prisma/client"
 
 export default function ChannelSettings({
     currentChannel,
     channels,
+    mailAliases,
 }: {
     currentChannel: NotificationChannel,
     channels: NotificationChannel[],
+    mailAliases: MailAlias[],
 }) {
     
     const [ currentChannelState, setCurrentChannel ] = useState(currentChannel)
@@ -61,6 +64,15 @@ export default function ChannelSettings({
                     :
                         <input type="hidden" name="parentId" value={currentChannelState.parentId} />
                     }
+                </div>
+
+                <div className={styles.widerDiv}>
+                    <Select
+                        label="Alias"
+                        name="mailAliasId"
+                        options={mailAliases.map(a => ({ value: a.id, label: a.address }))}
+                        defaultValue={currentChannelState.mailAliasId}
+                    />
                 </div>
 
                 <div className={styles.methodContainer}>

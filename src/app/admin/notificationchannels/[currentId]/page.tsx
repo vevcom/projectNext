@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { getUser } from "@/auth/getUser"
 import ChannelSettings from "./channelSettings"
 import { readAllNotificationChannelsAction } from "@/actions/notifications/channel/read"
+import { readAllMailAliasesAction } from "@/actions/mail/alias/read"
 
 
 export default async function Channels({ params } : {
@@ -11,9 +12,12 @@ export default async function Channels({ params } : {
     }
 }) {
 
-    const channels = await readAllNotificationChannelsAction();
+    const [channels, mailAliases] = await Promise.all([
+        readAllNotificationChannelsAction(),
+        readAllMailAliasesAction(),
+    ])
 
-    if (!channels.success) {
+    if (!channels.success || !mailAliases.success) {
         // TODO: Handle error
         notFound();
     }
@@ -25,5 +29,5 @@ export default async function Channels({ params } : {
         notFound();
     }
 
-    return <ChannelSettings channels={channels.data} currentChannel={selected}/>
+    return <ChannelSettings channels={channels.data} currentChannel={selected} mailAliases={mailAliases.data} />
 }

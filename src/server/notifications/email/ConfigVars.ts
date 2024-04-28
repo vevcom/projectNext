@@ -3,7 +3,7 @@ import 'server-only'
 import SMTPPool from "nodemailer/lib/smtp-pool"
 
 
-export const DEFAULT_SENDER_ALIAS = "noreply" + process.env.DOMAIN
+export const DEFAULT_NOTIFICATION_ALIAS = "noreply@" + process.env.DOMAIN
 
 // This configurastion is only used the production. Othervise ethereal is used
 export const TRANSPORT_OPTIONS: SMTPPool.Options = {

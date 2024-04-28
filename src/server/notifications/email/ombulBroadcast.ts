@@ -41,7 +41,7 @@ class OmbulBroadcast {
         
         const transporter = await this.getTransporter();
 
-        transporter.on("idle", this.handleNewMail)
+        transporter.on("idle", async () => await this.handleNewMail())
     }
 
     async setupTransporter() {
@@ -128,7 +128,7 @@ class OmbulBroadcast {
 
         this.queue.push(...queue)
 
-        this.handleNewMail()
+        await this.handleNewMail()
     }
 }
 

@@ -94,6 +94,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         },
     ];
 
+    const DEFAULT_NOTIFCIATION_ALIAS = "noreply@omega.ntnu.no"
+
     const rChan = channels.find(c => c.special === "ROOT")
 
     if (!rChan) {
@@ -123,7 +125,13 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         data: rChan.defaultMethods
     })).id
 
-    await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable});`
+    const rootMailAlias = (await prisma.mailAlias.findUniqueOrThrow({
+        where: {
+            address: DEFAULT_NOTIFCIATION_ALIAS,
+        }
+    })).id
+
+    await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId", "mailAliasId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable}, ${rootMailAlias});`
 
     await Promise.all(channels.filter(c => c.special != "ROOT").map(c => prisma.notificationChannel.create({
         data: {
@@ -139,6 +147,11 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             parent: {
                 connect: {
                     special: "ROOT",
+                }
+            },
+            mailAlias: {
+                connect: {
+                    address: DEFAULT_NOTIFCIATION_ALIAS,
                 }
             }
         }

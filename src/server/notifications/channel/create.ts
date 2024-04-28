@@ -4,6 +4,7 @@ import { CreateNotificationChannelType, createNotificaionChannelValidation, pars
 import { prismaCall } from '@/server/prismaCall';
 import { connect } from 'http2';
 import { ServerError } from '@/server/error';
+import { DEFAULT_NOTIFICATION_ALIAS } from '../email/ConfigVars';
 
 
 
@@ -42,6 +43,11 @@ export async function createNotificationChannel({
             },
             defaultMethods: {
                 create: defaultMethods,
+            },
+            mailAlias: {
+                connect: {
+                    address: DEFAULT_NOTIFICATION_ALIAS,
+                },
             },
         },
         include: {
