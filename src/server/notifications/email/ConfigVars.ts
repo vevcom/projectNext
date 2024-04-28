@@ -11,7 +11,5 @@ export const TRANSPORT_OPTIONS: SMTPPool.Options = {
     maxConnections: 20, // default is 5, I think sanctus is very fast to maybe this will work :))
     host: process.env.MAIL_SERVER,
     port: 25,
-    tls: {
-        rejectUnauthorized: false,
-    },
+    secure: false,
 }
