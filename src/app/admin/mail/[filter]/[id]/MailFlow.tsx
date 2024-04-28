@@ -4,6 +4,7 @@ import MailList from "./mailList";
 import styles from "./MailFlow.module.scss"
 import { MailFlowObject, MailListTypes } from "@/server/mail/Types";
 import { destroyAliasMailingListRelationAction, destroyMailingListExternalRelationAction, destroyMailingListGroupRelationAction, destroyMailingListUserRelationAction } from "@/actions/mail/destroy";
+import { useUser } from "@/auth/useUser";
 
 type DestroyFunction = null | ((id: number) => any)
 
@@ -23,30 +24,41 @@ export default async function MailFlow({
     let userDestroy: DestroyFunction = null;
     let addressExternalDestroy: DestroyFunction = null;
 
+    const uResults = useUser();
+    const permissions = uResults.permissions ?? [];
+
     if (filter === "mailingList") {
 
-        aliasDestroy = (mailAliasId: number) => destroyAliasMailingListRelationAction({
-            mailingListId: id,
-            mailAliasId,
-        });
+        if (permissions.includes("MAILINGLIST_ALIAS_DESTROY")) {
+            aliasDestroy = (mailAliasId: number) => destroyAliasMailingListRelationAction({
+                mailingListId: id,
+                mailAliasId,
+            });
+        }
 
-        addressExternalDestroy = (mailAddressExternalId: number) => destroyMailingListExternalRelationAction({
-            mailingListId: id,
-            mailAddressExternalId,
-        })
+        if (permissions.includes("MAILINGLIST_EXTERNAL_ADDRESS_DESTROY")) {
+            addressExternalDestroy = (mailAddressExternalId: number) => destroyMailingListExternalRelationAction({
+                mailingListId: id,
+                mailAddressExternalId,
+            })
+        }
 
-        userDestroy = (userId: number) => destroyMailingListUserRelationAction({
-            mailingListId: id,
-            userId,
-        })
+        if (permissions.includes("MAILINGLIST_USER_DESTROY")) {    
+            userDestroy = (userId: number) => destroyMailingListUserRelationAction({
+                mailingListId: id,
+                userId,
+            })
+        }
 
-        groupDestroy = (groupId: number) => destroyMailingListGroupRelationAction({
-            mailingListId: id,
-            groupId,
-        })
+        if (permissions.includes("MAILINGLIST_GROUP_DESTROY")) {    
+            groupDestroy = (groupId: number) => destroyMailingListGroupRelationAction({
+                mailingListId: id,
+                groupId,
+            })
+        }
     }
 
-    if (filter === "alias") {
+    if (filter === "alias" && permissions.includes("MAILINGLIST_ALIAS_DESTROY")) {
 
         mailingListDestroy = (mailingListId: number) => destroyAliasMailingListRelationAction({
             mailAliasId: id,
@@ -54,7 +66,7 @@ export default async function MailFlow({
         })
     }
 
-    if (filter === "mailaddressExternal") {
+    if (filter === "mailaddressExternal" && permissions.includes("MAILINGLIST_EXTERNAL_ADDRESS_DESTROY")) {
 
         mailingListDestroy = (mailingListId: number) => destroyMailingListExternalRelationAction({
             mailAddressExternalId: id,
@@ -62,7 +74,7 @@ export default async function MailFlow({
         })
     }
 
-    if (filter === "user") {
+    if (filter === "user" && permissions.includes("MAILINGLIST_USER_DESTROY")) {
 
         mailingListDestroy = (mailingListId: number) => destroyMailingListUserRelationAction({
             userId: id,
@@ -70,7 +82,7 @@ export default async function MailFlow({
         })
     }
 
-    if (filter === "group") {
+    if (filter === "group" && permissions.includes("MAILINGLIST_GROUP_DESTROY")) {
 
         mailingListDestroy = (mailingListId: number) => destroyMailingListGroupRelationAction({
             groupId: id,

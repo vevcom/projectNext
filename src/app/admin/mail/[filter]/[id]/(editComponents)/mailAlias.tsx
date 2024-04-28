@@ -6,6 +6,7 @@ import { MailFlowObject } from "@/server/mail/Types";
 import Select from "@/app/components/UI/Select";
 import { MailingList } from "@prisma/client";
 import { createAliasMailingListRelationAction } from "@/actions/mail/create";
+import { useUser } from "@/auth/useUser";
 
 
 
@@ -24,8 +25,11 @@ export default function EditMailAlias({
         throw Error("Could not find alias");
     }
 
+    const uResults = useUser();
+    const permissions = uResults.permissions ?? [];
+
     return <>
-        <div>
+        { permissions.includes("MAILALIAS_UPDATE") && <div>
             <Form
                 title="Alias"
                 submitText="Oppdater"
@@ -33,8 +37,8 @@ export default function EditMailAlias({
                 <TextInput name="address" label="Epost" defaultValue={focusedAlias.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
-        </div>
-        <div>
+        </div>}
+        { permissions.includes("MAILINGLIST_ALIAS_CREATE") && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"
@@ -43,6 +47,6 @@ export default function EditMailAlias({
                 <input type="hidden" name="mailAliasId" value={focusedAlias.id} />
                 <Select options={mailingLists.map(list => ({value: list.id, label: list.name}))} name="mailingListId" label="Mailliste"/>
             </Form>
-        </div>
+        </div>}
     </>
 }

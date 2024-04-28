@@ -37,7 +37,7 @@ export default async function MailFlowPage({
         readAllMailOptions(),
     ]);
 
-    if (!results.success) {
+    if (!results.success || !mailOptions.success) {
         throw new Error("Could not fecth mail flow")
     }
 
@@ -48,28 +48,28 @@ export default async function MailFlowPage({
             {filter === "mailingList" ? <EditMailingList
                 id={id}
                 data={results.data}
-                mailaliases={mailOptions.alias}
-                mailAddressExternal={mailOptions.mailaddressExternal}
+                mailaliases={mailOptions.data.alias}
+                mailAddressExternal={mailOptions.data.mailaddressExternal}
             /> : null}
             {filter === "alias" ? <EditMailAlias
                 id={id}
                 data={results.data}
-                mailingLists={mailOptions.mailingList}
+                mailingLists={mailOptions.data.mailingList}
             /> : null}
             {filter === "mailaddressExternal" ? <EditMailAddressExternal
                 id={id}
                 data={results.data}
-                mailingLists={mailOptions.mailingList}
+                mailingLists={mailOptions.data.mailingList}
             /> : null}
             {filter === "user" ? <EditUser
                 id={id}
                 data={results.data}
-                mailingLists={mailOptions.mailingList}
+                mailingLists={mailOptions.data.mailingList}
             /> : null}
             {filter === "group" ? <EditGroup
                 id={id}
                 data={results.data}
-                mailingLists={mailOptions.mailingList}
+                mailingLists={mailOptions.data.mailingList}
             /> : null}
         </div>
         <MailFlow filter={filter} id={id} data={results.data} />

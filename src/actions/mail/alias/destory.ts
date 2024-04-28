@@ -1,5 +1,5 @@
 "use server"
-import { ForwardMailAlias, MailAlias, RawAddressMailAlias } from "@prisma/client";
+/*import { ForwardMailAlias, MailAlias, RawAddressMailAlias } from "@prisma/client";
 import { ActionReturn } from "@/actions/Types";
 import { getUser } from "@/auth/getUser";
 import { createActionError, createZodActionError } from "../../error";
@@ -48,4 +48,4 @@ export async function destroyMailAliasForwardAction(
     return safeServerCall(() => destroyMailAliasForward(parse.data))
 
 
-}
+}*/

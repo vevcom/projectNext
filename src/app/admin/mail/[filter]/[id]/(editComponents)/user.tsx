@@ -5,6 +5,7 @@ import { MailFlowObject } from "@/server/mail/Types";
 import Select from "@/app/components/UI/Select";
 import { MailingList } from "@prisma/client";
 import { createMailingListUserRelationAction } from "@/actions/mail/create";
+import { useUser } from "@/auth/useUser";
 
 export default function EditUser({
     id,
@@ -21,14 +22,18 @@ export default function EditUser({
         throw Error("Could not find user");
     }
 
+    const uResults = useUser();
+    const permissions = uResults.permissions ?? [];
+
     return <div>
-        <Form
+        <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
+        { permissions.includes("MAILINGLIST_USER_CREATE") && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListUserRelationAction}
         >
             <input type="hidden" name="userId" value={focusedUser.id} />
             <Select options={mailingLists.map(list => ({value: list.id, label: list.name}))} name="mailingListId" label="Mailliste"/>
-        </Form>
+        </Form>}
     </div>
 }

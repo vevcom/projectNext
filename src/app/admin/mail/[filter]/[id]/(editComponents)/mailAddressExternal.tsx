@@ -6,6 +6,7 @@ import { MailFlowObject } from "@/server/mail/Types";
 import Select from "@/app/components/UI/Select";
 import { MailingList } from "@prisma/client";
 import { createMailingListExternalRelationAction } from "@/actions/mail/create";
+import { useUser } from "@/auth/useUser";
 
 
 
@@ -24,8 +25,12 @@ export default function EditMailAddressExternal({
         throw Error("Could not find alias");
     }
 
+    const uResults = useUser();
+    const permissions = uResults.permissions ?? [];
+
     return <>
-        <div>
+        <h2>{focusedAddress.address}</h2>
+        { permissions.includes("MAILADDRESS_EXTERNAL_UPDATE") && <div>
             <Form
                 title="Ekstern mailaddresse"
                 submitText="Oppdater"
@@ -33,8 +38,8 @@ export default function EditMailAddressExternal({
                 <TextInput name="address" label="Epost" defaultValue={focusedAddress.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAddress.description} />
             </Form>
-        </div>
-        <div>
+        </div>}
+        { permissions.includes("MAILINGLIST_EXTERNAL_ADDRESS_CREATE") && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"
@@ -43,6 +48,6 @@ export default function EditMailAddressExternal({
                 <input type="hidden" name="mailAddressExternalId" value={focusedAddress.id} />
                 <Select options={mailingLists.map(list => ({value: list.id, label: list.name}))} name="mailingListId" label="Mailliste"/>
             </Form>
-        </div>
+        </div>}
     </>
 }

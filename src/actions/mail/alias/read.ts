@@ -1,5 +1,5 @@
 "use server"
-
+/*
 import { getUser } from "@/auth/getUser"
 import { createActionError } from "../../error"
 import { safeServerCall } from "../../safeServerCall"
@@ -37,4 +37,4 @@ export async function readAllMailAliasesAction(): Promise<ActionReturn<MailAlias
     if (!authorized) return createActionError(status)
 
     return safeServerCall(() => readAllMailAliases())
-}
+}*/

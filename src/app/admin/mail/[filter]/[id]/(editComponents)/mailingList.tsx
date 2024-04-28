@@ -7,6 +7,7 @@ import Form from "@/app/components/Form/Form"
 import Select from "@/app/components/UI/Select"
 import { createAliasMailingListRelationAction, createMailingListExternalRelationAction, createMailingListGroupRelationAction, createMailingListUserRelationAction } from "@/actions/mail/create"
 import { UserFiltered } from "@/server/users/Types"
+import { useUser } from "@/auth/useUser"
 
 
 export default function EditMailingList({
@@ -23,8 +24,12 @@ export default function EditMailingList({
 
     const focusedMailingList = data.mailingList[0]
 
+    const uResults = useUser();
+    const permissions = uResults.permissions ?? [];
+
     return <>
-        <div>
+        <h2>{focusedMailingList.name}</h2>
+        { permissions.includes("MAILINGLIST_UPDATE") && <div>
             <Form
                 title="Mailliste"
                 submitText="Oppdater"
@@ -33,8 +38,8 @@ export default function EditMailingList({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedMailingList.description} />
 
             </Form>
-        </div>
-        <div>
+        </div>}
+        { permissions.includes("MAILINGLIST_ALIAS_CREATE") && <div>
             <Form
                 title="Legg til mailalias"
                 submitText="Legg til"
@@ -43,8 +48,8 @@ export default function EditMailingList({
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
                 <Select options={mailaliases.map(a => ({value: a.id, label: a.address}))} name="mailAliasId" label="Mailalias" />
             </Form>
-        </div>
-        <div>
+        </div>}
+        { permissions.includes("MAILINGLIST_GROUP_CREATE") && <div>
             <Form
                 title="Grupper"
                 submitText="Legg til"
@@ -53,8 +58,8 @@ export default function EditMailingList({
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <TextInput type="text" name="groupId" label="Gruppe id" />
             </Form>
-        </div>
-        <div>
+        </div>}
+        { permissions.includes("MAILINGLIST_USER_CREATE") && <div>
             <Form
                 title="Brukere"
                 submitText="Legg til"
@@ -63,8 +68,8 @@ export default function EditMailingList({
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <TextInput type="text" name="userId" label="Bruker id" />
             </Form>
-        </div>
-        <div>
+        </div>} 
+        { permissions.includes("MAILADDRESS_EXTERNAL_CREATE") && <div>
             <Form
                 title="Ekstern mailadresse"
                 submitText="Legg til"
@@ -73,6 +78,6 @@ export default function EditMailingList({
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <Select options={mailAddressExternal.map(a => ({value: a.id, label: a.address}))} name="mailAddressExternalId" label="Ekstern mail adresse" />
             </Form>
-        </div>
+        </div>}
     </>
 }
