@@ -37,7 +37,9 @@ export default async function MailFlowPage({
         readAllMailOptions(),
     ]);
 
-    if (!results.success || !mailOptions.success) {
+    if (!results.success && results.errorCode === "NOT FOUND") {
+        notFound()
+    } else if (!results.success || !mailOptions.success) {
         throw new Error("Could not fecth mail flow")
     }
 

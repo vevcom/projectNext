@@ -7,6 +7,10 @@ import CreateMailAlias from "./createMailAliasForm";
 import CreateMailingList from "./createMailingListForm";
 import CreateMailaddressExternal from "./createMailaddressExternalForm";
 import { getUser } from "@/auth/getUser";
+import MailListView from "./mailListView";
+import { readAllMailAliases } from "@/server/mail/alias/read";
+import { readAllMailingLists } from "@/server/mail/list/read";
+import { readAllMailAddressExternal } from "@/server/mail/mailAddressExternal/read";
 
 export default async function mailAliases() {
 
@@ -21,14 +25,21 @@ export default async function mailAliases() {
 
     const showAdminPanel = createMailAlias || createMailingList || createMailaddressExternal
 
+    const [
+        mailAliases,
+        mailingLists,
+        mailAddressesExternal,
+    ] = await Promise.all([
+        readAllMailAliases(),
+        readAllMailingLists(),
+        readAllMailAddressExternal(),
+    ])
+
     return (
         <PageWrapper
             title="Innkommende elektronisk post"
         >
-            <Link href="./mail/alias/1">Trykk på meg!</Link><br/>
-
-
-            {showAdminPanel ? <div className={styles.adminContainer}>
+            {showAdminPanel && <div className={styles.adminContainer}>
                 {createMailAlias ? <div>
                     <CreateMailAlias />
                 </div> : null }
@@ -38,7 +49,14 @@ export default async function mailAliases() {
                 { createMailaddressExternal ? <div>
                     <CreateMailaddressExternal />
                 </div> : null }
-            </div> : null}
+            </div>}
+
+
+            <MailListView
+                mailAliases={mailAliases}
+                mailingLists={mailingLists}
+                mailAddressesExternal={mailAddressesExternal}
+            /> 
         </PageWrapper>
     )
 }
