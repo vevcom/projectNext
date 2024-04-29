@@ -9,6 +9,8 @@ import { createAliasMailingListRelationAction, createMailingListExternalRelation
 import { UserFiltered } from "@/server/users/Types"
 import { useUser } from "@/auth/useUser"
 import { updateMailingListAction } from "@/actions/mail/list/update"
+import { destroyMailingListAction } from "@/actions/mail/list/destory"
+import { useRouter } from "next/navigation"
 
 
 export default function EditMailingList({
@@ -22,6 +24,8 @@ export default function EditMailingList({
     mailaliases: MailAlias[],
     mailAddressExternal: MailAddressExternal[],
 }) {
+
+    const { push } = useRouter()
 
     const focusedMailingList = data.mailingList[0]
 
@@ -42,6 +46,18 @@ export default function EditMailingList({
 
             </Form>
         </div>}
+        { permissions.includes("MAILINGLIST_DESTROY") && <div>
+            <Form
+                action={destroyMailingListAction.bind(null, focusedMailingList.id)}
+                successCallback={() => push("/admin/mail")}
+                submitText="Slett"
+                submitColor="red"
+                confirmation={{
+                    confirm: true,
+                    text: 'Sikker på at du vil slette denne epost listen? Dette kan ikke angres.',
+                }}
+            />
+        </div> }
         { permissions.includes("MAILINGLIST_ALIAS_CREATE") && <div>
             <Form
                 title="Legg til mailalias"

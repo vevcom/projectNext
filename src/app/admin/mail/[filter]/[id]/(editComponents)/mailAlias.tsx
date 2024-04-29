@@ -8,6 +8,8 @@ import { MailingList } from "@prisma/client";
 import { createAliasMailingListRelationAction } from "@/actions/mail/create";
 import { useUser } from "@/auth/useUser";
 import { updateMailAliasAction } from "@/actions/mail/alias/update";
+import { useRouter } from "next/navigation";
+import { destroyMailAliasAction } from "@/actions/mail/alias/destory";
 
 
 
@@ -21,6 +23,8 @@ export default function EditMailAlias({
     mailingLists: MailingList[]
 }) {
 
+    const { push } = useRouter()
+
     const focusedAlias = data.alias[0];
     if (!focusedAlias) {
         throw Error("Could not find alias");
@@ -30,6 +34,7 @@ export default function EditMailAlias({
     const permissions = uResults.permissions ?? [];
 
     return <>
+        <h2>{focusedAlias.address}</h2>
         { permissions.includes("MAILALIAS_UPDATE") && <div>
             <Form
                 title="Alias"
@@ -41,6 +46,18 @@ export default function EditMailAlias({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}
+        { permissions.includes("MAILALIAS_DESTORY") && <div>
+            <Form
+                action={destroyMailAliasAction.bind(null, focusedAlias.id)}
+                successCallback={() => push("/admin/mail")}
+                submitText="Slett"
+                submitColor="red"
+                confirmation={{
+                    confirm: true,
+                    text: 'Sikker på at du vil slette dette mailaliaset? Dette kan ikke angres.',
+                }}
+            />
+        </div> }
         { permissions.includes("MAILINGLIST_ALIAS_CREATE") && <div>
             <Form
                 title="Legg til mailliste"

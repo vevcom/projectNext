@@ -6,7 +6,7 @@ import { destoryMailAliasValidation } from './validation';
 import { ServerError } from '@/server/error';
 
 
-export async function destroyMailAliasById(id: number): Promise<MailAlias> {
+export async function destroyMailAlias(id: number): Promise<MailAlias> {
     const parse = destoryMailAliasValidation.detailedValidate({ id })
 
     const connectedToNotificationChannel = await prismaCall(() => prisma.mailAlias.findUniqueOrThrow({
