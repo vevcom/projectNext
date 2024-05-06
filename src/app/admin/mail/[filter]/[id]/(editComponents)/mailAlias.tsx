@@ -13,7 +13,6 @@ import type { MailingList } from '@prisma/client'
 
 
 export default function EditMailAlias({
-    id,
     data,
     mailingLists
 }: {
@@ -63,7 +62,11 @@ export default function EditMailAlias({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" name="mailAliasId" value={focusedAlias.id} />
-                <Select options={mailingLists.map(list => ({ value: list.id, label: list.name }))} name="mailingListId" label="Mailliste"/>
+                <Select
+                    options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
+                    name="mailingListId"
+                    label="Mailliste"
+                />
             </Form>
         </div>}
     </>

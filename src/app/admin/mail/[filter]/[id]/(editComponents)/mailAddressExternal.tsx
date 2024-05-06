@@ -13,7 +13,6 @@ import type { MailFlowObject } from '@/server/mail/Types'
 
 
 export default function EditMailAddressExternal({
-    id,
     data,
     mailingLists
 }: {
@@ -63,7 +62,11 @@ export default function EditMailAddressExternal({
                 action={createMailingListExternalRelationAction}
             >
                 <input type="hidden" name="mailAddressExternalId" value={focusedAddress.id} />
-                <Select options={mailingLists.map(list => ({ value: list.id, label: list.name }))} name="mailingListId" label="Mailliste"/>
+                <Select
+                    options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
+                    name="mailingListId"
+                    label="Mailliste"
+                />
             </Form>
         </div>}
     </>

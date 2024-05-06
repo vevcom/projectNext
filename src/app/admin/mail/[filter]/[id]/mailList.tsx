@@ -32,7 +32,7 @@ type PropType = ({
     type: 'mailaddressExternal',
     items: (MailAddressExternal & ViaType)[],
 }) & {
-    destroyFunction?: null | ((id: number) => any),
+    destroyFunction?: null | ((id: number) => void),
 }
 
 export default function MailList({
@@ -53,7 +53,7 @@ export default function MailList({
                     return
                 }
 
-                setItemsState(itemsState.filter(i => i.id != id))
+                setItemsState(itemsState.filter(i => i.id !== id))
             }
         }
     }

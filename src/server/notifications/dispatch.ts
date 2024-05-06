@@ -11,7 +11,7 @@ export const dispathMethod = {
     push: dispatchPushNotifications,
 } satisfies Record<
     typeof notificationMethods[number],
-    ((channel: NotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<any>)
+    ((channel: NotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<void>)
 >
 
 export function repalceSpecialSymbols(text: string, user: UserFiltered) {

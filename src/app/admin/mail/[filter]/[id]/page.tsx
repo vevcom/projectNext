@@ -21,7 +21,7 @@ export default async function MailFlowPage({
         id: string,
     }
 }) {
-    if (!MailListTypeArray.includes(params.filter as MailListTypes /* This is bad practice, but typescript is stupid here */)) {
+    if (!MailListTypeArray.includes(params.filter as MailListTypes)) {
         notFound()
     }
 

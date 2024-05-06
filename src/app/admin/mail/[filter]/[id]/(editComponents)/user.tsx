@@ -8,7 +8,6 @@ import type { MailFlowObject } from '@/server/mail/Types'
 import type { MailingList } from '@prisma/client'
 
 export default function EditUser({
-    id,
     data,
     mailingLists
 }: {
@@ -32,7 +31,11 @@ export default function EditUser({
             action={createMailingListUserRelationAction}
         >
             <input type="hidden" name="userId" value={focusedUser.id} />
-            <Select options={mailingLists.map(list => ({ value: list.id, label: list.name }))} name="mailingListId" label="Mailliste"/>
+            <Select
+                options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
+                name="mailingListId"
+                label="Mailliste"
+            />
         </Form>}
     </div>
 }

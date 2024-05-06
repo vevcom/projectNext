@@ -40,7 +40,7 @@ export function validateNewParent(channelId: number, newParentId: number, channe
 }
 
 export function findValidParents(channelId: number, channels: NotificationChannel[]): NotificationChannel[] {
-    const validParents = channels.filter(c => c.id != channelId)
+    const validParents = channels.filter(c => c.id !== channelId)
     // Remove chrildren of the current channel
     const channelIDS = new Set(validParents.map(c => c.id))
     while (true) {

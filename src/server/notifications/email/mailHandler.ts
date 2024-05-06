@@ -1,6 +1,5 @@
 import 'server-only'
 import { TRANSPORT_OPTIONS } from './ConfigVars'
-import { SendEmailValidation, sendEmailValidation } from './validation'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
@@ -10,10 +9,10 @@ const PROD = process.env.NODE_ENV === 'production'
 
 type Transporter = nodemailer.Transporter<SMTPPool.SentMessageInfo | SMTPTransport.SentMessageInfo>
 
-class OmbulBroadcast {
+class MailHandler {
     transporter: Transporter | null = null
     resolveSetup: (value?: unknown) => void = () => {}
-    waitForSetup = new Promise((resolve) => this.resolveSetup = resolve)
+    waitForSetup = new Promise((resolve) => { this.resolveSetup = resolve })
     testAccount: nodemailer.TestAccount | null = null
 
     queue = [] as Mail.Options[]
@@ -130,4 +129,4 @@ class OmbulBroadcast {
     }
 }
 
-export const ombulBroadcast = new OmbulBroadcast()
+export const mailHandler = new MailHandler()

@@ -14,8 +14,8 @@ export async function updateMailAliasAction(rawdata: FormData): Promise<ActionRe
     })
     if (!authorized) return createActionError(status)
 
-    const parsed_data = updateMailAliasValidation.typeValidate(rawdata)
-    if (!parsed_data.success) return createZodActionError(parsed_data)
+    const parsed = updateMailAliasValidation.typeValidate(rawdata)
+    if (!parsed.success) return createZodActionError(parsed)
 
-    return await safeServerCall(() => updateMailAlias(parsed_data.data))
+    return await safeServerCall(() => updateMailAlias(parsed.data))
 }

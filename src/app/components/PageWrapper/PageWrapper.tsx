@@ -1,12 +1,6 @@
 import styles from './PageWrapper.module.scss'
 import React from 'react'
 
-type PropTypes = {
-    children: React.ReactNode,
-    title: string,
-    headerItem?: React.ReactNode
-}
-
 export default function PageWrapper({
     title,
     children,

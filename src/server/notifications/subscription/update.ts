@@ -43,7 +43,7 @@ export async function updateSubscription({
 
         // Delete the realtion
         return prismaCall(async () => prisma.$transaction(async () => {
-            const subscription = await prisma.notificationSubscription.delete({
+            const sub = await prisma.notificationSubscription.delete({
                 where: whereFilter,
                 include: {
                     methods: {
@@ -54,11 +54,11 @@ export async function updateSubscription({
 
             await prisma.notificationMethod.delete({
                 where: {
-                    id: subscription.methodsId
+                    id: sub.methodsId
                 }
             })
 
-            return subscription
+            return sub
         }))
     }
 

@@ -3,10 +3,25 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from '@/server/mail/validation'
-import { createAliasMailingListRelation, createMailingListExternalRelation, createMailingListGroupRelation, createMailingListUserRelation } from '@/server/mail/create'
+import {
+    createAliasMailingListValidation,
+    createMailingListExternalValidation,
+    createMailingListGroupValidation,
+    createMailingListUserValidation
+} from '@/server/mail/validation'
+import {
+    createAliasMailingListRelation,
+    createMailingListExternalRelation,
+    createMailingListGroupRelation,
+    createMailingListUserRelation
+} from '@/server/mail/create'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client'
+import type {
+    MailAliasMailingList,
+    MailingListGroup,
+    MailingListMailAddressExternal,
+    MailingListUser
+} from '@prisma/client'
 
 export async function createAliasMailingListRelationAction(formdata: FormData):
     Promise<ActionReturn<MailAliasMailingList>> {

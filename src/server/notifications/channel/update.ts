@@ -4,6 +4,7 @@ import { readAllNotificationChannels } from './read'
 import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import prisma from '@/prisma'
 import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
 import type { UpdateNotificationChannelType } from './validation'
 
@@ -59,7 +60,7 @@ export async function updateNotificationChannel({
 
     function methodsAreEqual(lhs: NotificationMethod, rhs: NotificationMethod) {
         for (let i = 0; i < notificationMethods.length; i++) {
-            if (lhs[notificationMethods[i]] != rhs[notificationMethods[i]]) {
+            if (lhs[notificationMethods[i]] !== rhs[notificationMethods[i]]) {
                 return false
             }
         }

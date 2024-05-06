@@ -10,9 +10,8 @@ import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { readAllMailAliases } from '@/server/mail/alias/read'
 import { readAllMailingLists } from '@/server/mail/list/read'
 import { readAllMailAddressExternal } from '@/server/mail/mailAddressExternal/read'
-import Link from 'next/link'
 
-export default async function mailAliases() {
+export default async function MailSettings() {
     const { permissions } = await getUser({
         userRequired: true,
         shouldRedirect: true,

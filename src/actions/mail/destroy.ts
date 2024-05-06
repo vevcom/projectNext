@@ -3,11 +3,31 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from '@/server/mail/validation'
-import { destroyAliasMailingListRelation, destroyMailingListExternalRelation, destroyMailingListGroupRelation, destroyMailingListUserRelation } from '@/server/mail/destroy'
-import type { CreateAliasMailingListType, CreateMailingListExternalType, CreateMailingListGroupType, CreateMailingListUserType } from '@/server/mail/validation'
+import {
+    createAliasMailingListValidation,
+    createMailingListExternalValidation,
+    createMailingListGroupValidation,
+    createMailingListUserValidation
+} from '@/server/mail/validation'
+import {
+    destroyAliasMailingListRelation,
+    destroyMailingListExternalRelation,
+    destroyMailingListGroupRelation,
+    destroyMailingListUserRelation
+} from '@/server/mail/destroy'
+import type {
+    CreateAliasMailingListType,
+    CreateMailingListExternalType,
+    CreateMailingListGroupType,
+    CreateMailingListUserType
+} from '@/server/mail/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client'
+import type {
+    MailAliasMailingList,
+    MailingListGroup,
+    MailingListMailAddressExternal,
+    MailingListUser
+} from '@prisma/client'
 
 
 export async function destroyAliasMailingListRelationAction(formdata: FormData | CreateAliasMailingListType['Type']):

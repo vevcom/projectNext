@@ -53,7 +53,7 @@ export default function ChannelSettings({
                 </div>
 
                 <div className={styles.widerDiv}>
-                    {currentChannelState.special != 'ROOT' ?
+                    {currentChannelState.special !== 'ROOT' ?
                         <Select
                             label="Forelder"
                             name="parentId"

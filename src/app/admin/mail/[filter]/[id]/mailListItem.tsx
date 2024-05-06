@@ -8,6 +8,7 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { ViaType } from '@/server/mail/Types'
 import type { UserFiltered } from '@/server/users/Types'
+import { v4 as uuid } from 'uuid'
 
 type PropType = ({
     type: 'alias',
@@ -25,7 +26,7 @@ type PropType = ({
     type: 'mailaddressExternal',
     item: MailAddressExternal & ViaType,
 }) & {
-    destroyFunction?: null | ((id: number) => any),
+    destroyFunction?: null | ((id: number) => void),
 }
 
 export default function MailListItem({
@@ -39,11 +40,11 @@ export default function MailListItem({
         notFound()
     }
 
-    if (type == 'alias' || type == 'mailaddressExternal') {
+    if (type === 'alias' || type === 'mailaddressExternal') {
         displayText = item.address
     }
 
-    if (type == 'mailingList') {
+    if (type === 'mailingList') {
         displayText = item.name
     }
 
@@ -60,7 +61,7 @@ export default function MailListItem({
     return <li className={`${styles.mailListItem} ${editable ? styles.editable : ''}`}>
         {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, item.id)} /> : null}
         <Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link>
-        {item.via ? item.via.map(v => <span>
+        {item.via ? item.via.map(v => <span key={uuid()}>
             ({v.label})
         </span>) : null}
     </li>

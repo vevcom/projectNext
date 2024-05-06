@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import type { NotificationChannel as prismaNC, NotificationMethod as prismaNM } from '@prisma/client'
 
 export const notificationMethodTypes = ['availableMethods', 'defaultMethods'] as const

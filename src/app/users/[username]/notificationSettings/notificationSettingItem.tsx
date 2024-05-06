@@ -13,14 +13,14 @@ export function NotificationSettingItem({
     const methods = channel.subscription?.methods ?? allMethodsOff
 
 
-    return <div key={uuid()}>
+    return <div>
         <h4>{channel.name}</h4>
         <p>{channel.description}</p>
 
         <UpdateSubscriptionForm channel={channel} methods={methods}/>
 
         <div style={{ paddingLeft: '2rem' }}>
-            {channel.children.map(c => <NotificationSettingItem channel={c} />)}
+            {channel.children.map(c => <NotificationSettingItem channel={c} key={uuid()}/>)}
         </div>
     </div>
 }

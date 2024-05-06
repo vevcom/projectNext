@@ -1,5 +1,5 @@
-import { SpecialNotificationChannel, Prisma } from '@/generated/pn'
-import type { NotificationChannel, NotificationMethod, PrismaClient } from '@/generated/pn'
+import { SpecialNotificationChannel } from '@/generated/pn'
+import type { NotificationMethod, PrismaClient } from '@/generated/pn'
 
 type ChannelInfo = {
     special?: SpecialNotificationChannel
@@ -7,10 +7,6 @@ type ChannelInfo = {
     description: string
     defaultMethods: Omit<NotificationMethod, 'id'>
     availableMethods: Omit<NotificationMethod, 'id'>
-}
-
-function createChanneInfo(obj: ChannelInfo): ChannelInfo {
-    return obj
 }
 
 const allMethodsOn = {
@@ -26,7 +22,7 @@ const allMethodsOff = {
 } as const
 
 export default async function seedNotificationChannels(prisma: PrismaClient) {
-    const keys = Object.keys(SpecialNotificationChannel) as SpecialNotificationChannel[]
+    const specialKeys = new Set(Object.keys(SpecialNotificationChannel) as SpecialNotificationChannel[])
 
     const channels: ChannelInfo[] = [
         {
@@ -93,6 +89,19 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         },
     ]
 
+    channels.forEach(c => {
+        if (c.special) {
+            if (!specialKeys.has(c.special)) {
+                throw new Error(`The seeding data is not valid. The special key: ${c.special} is duplicate or not valid.`)
+            }
+            specialKeys.delete(c.special)
+        }
+    })
+
+    if (specialKeys.size) {
+        throw new Error(`Not all special keys are present in the seeding data. Missing: ${specialKeys}`)
+    }
+
     const DEFAULT_NOTIFCIATION_ALIAS = 'noreply@omega.ntnu.no'
 
     const rChan = channels.find(c => c.special === 'ROOT')
@@ -112,7 +121,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         }
     }
 
-    if (seedSpecialChannels.size != specialEnums.length) {
+    if (seedSpecialChannels.size !== specialEnums.length) {
         throw new Error('Missing a least one special notification channel')
     }
 
@@ -130,9 +139,28 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         }
     })).id
 
-    await prisma.$queryRaw`INSERT INTO "NotificationChannel" (id, "parentId", name, description, special, "defaultMethodsId", "availableMethodsId", "mailAliasId") values(default, lastval(), ${rChan.name}, ${rChan.description}, 'ROOT', ${rootDefault}, ${rootAvailable}, ${rootMailAlias});`
+    await prisma.$queryRaw`INSERT INTO
+        "NotificationChannel" (
+            id,
+            "parentId",
+            name,
+            description,
+            special,
+            "defaultMethodsId",
+            "availableMethodsId",
+            "mailAliasId"
+        ) values (
+            default,
+            lastval(),
+            ${rChan.name},
+            ${rChan.description},
+            'ROOT',
+            ${rootDefault},
+            ${rootAvailable},
+            ${rootMailAlias}
+        );`
 
-    await Promise.all(channels.filter(c => c.special != 'ROOT').map(c => prisma.notificationChannel.create({
+    await Promise.all(channels.filter(c => c.special !== 'ROOT').map(c => prisma.notificationChannel.create({
         data: {
             name: c.name,
             description: c.description,

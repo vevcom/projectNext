@@ -4,7 +4,6 @@ import { Html, Markdown } from '@react-email/components'
 import type { UserFiltered } from '@/server/users/Types'
 
 export function DefaultEmailTemplate({
-    user,
     text,
 }: {
     user: UserFiltered,

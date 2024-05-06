@@ -1,4 +1,3 @@
-import { connect } from 'http2'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
@@ -107,15 +106,15 @@ export default async function migrateMailAliases(
         })
 
         alias.ExtraAliasMembers.forEach(a => {
-            const alias = aliases.find(b => b.address == a.address)
-            if (alias) {
-                searchRecusive(address, alias)
+            const sAlias = aliases.find(b => b.address === a.address)
+            if (sAlias) {
+                searchRecusive(address, sAlias)
             }
         })
     }
 
     externalAdrs.filter(omegaFilter).forEach(a => {
-        const alias = aliases.find(b => b.address == a.address)
+        const alias = aliases.find(b => b.address === a.address)
         if (alias) {
             searchRecusive(a.address, alias)
         }

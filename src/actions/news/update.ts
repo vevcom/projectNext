@@ -27,7 +27,11 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    dispatchSpecialNotification('NEW_NEWS_ARTICLE', 'Nyhet🗞️: <En tittel her kanskje?>', 'Starten av artikkelen her kanskje?')
+    dispatchSpecialNotification(
+        'NEW_NEWS_ARTICLE',
+        'Nyhet🗞️: <En tittel her kanskje?>',
+        'Starten av artikkelen her kanskje?'
+    )
 
     return createActionError('UNKNOWN ERROR', 'Not implemented')
 }

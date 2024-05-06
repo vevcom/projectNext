@@ -9,7 +9,6 @@ import type { MailingList } from '@prisma/client'
 
 
 export default function EditGroup({
-    id,
     data,
     mailingLists
 }: {
@@ -33,7 +32,11 @@ export default function EditGroup({
             action={createMailingListGroupRelationAction}
         >
             <input type="hidden" name="groupId" value={focusedGroup.id} />
-            <Select options={mailingLists.map(list => ({ value: list.id, label: list.name }))} name="mailingListId" label="Mailliste"/>
+            <Select
+                options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
+                name="mailingListId"
+                label="Mailliste"
+            />
         </Form>}
     </div>
 }

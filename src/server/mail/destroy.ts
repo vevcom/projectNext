@@ -1,9 +1,24 @@
 import 'server-only'
-import { createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from './validation'
+import {
+    createAliasMailingListValidation,
+    createMailingListExternalValidation,
+    createMailingListGroupValidation,
+    createMailingListUserValidation
+} from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client'
-import type { CreateAliasMailingListType, CreateMailingListExternalType, CreateMailingListGroupType, CreateMailingListUserType } from './validation'
+import type {
+    MailAliasMailingList,
+    MailingListGroup,
+    MailingListMailAddressExternal,
+    MailingListUser
+} from '@prisma/client'
+import type {
+    CreateAliasMailingListType,
+    CreateMailingListExternalType,
+    CreateMailingListGroupType,
+    CreateMailingListUserType
+} from './validation'
 
 
 export async function destroyAliasMailingListRelation(

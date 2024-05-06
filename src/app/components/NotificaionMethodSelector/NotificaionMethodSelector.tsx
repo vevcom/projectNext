@@ -2,9 +2,10 @@
 
 import styles from './NotificaionMethodSelector.module.scss'
 import Checkbox from '@/app/components/UI/Checkbox'
-import { notificationMethodsDisplayMap } from '@/server/notifications/configVars'
+import { notificationMethodsDisplayMap } from '@/server/notifications/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import type { NotificationMethodTypes, NotificationMethod, NotificationMethods } from '@/server/notifications/Types'
+import React from 'react'
 
 export default function NotificationMethodSelector({
     title,
@@ -17,7 +18,7 @@ export default function NotificationMethodSelector({
     formPrefix?: NotificationMethodTypes,
     methods: NotificationMethod
     editable?: NotificationMethod,
-    onChange?: (methods: NotificationMethod) => any
+    onChange?: (method: NotificationMethod) => void
 }) {
     let state = methods
 

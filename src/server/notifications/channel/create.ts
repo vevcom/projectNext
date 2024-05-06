@@ -1,12 +1,11 @@
 import 'server-only'
-import { createNotificaionChannelValidation, parseMethods, validateMethods } from './validation'
+import { createNotificaionChannelValidation, validateMethods } from './validation'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/server/notifications/email/ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import { connect } from 'http2'
+import prisma from '@/prisma'
 import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
 import type { CreateNotificationChannelType } from './validation'
-
 
 export async function createNotificationChannel({
     name,

@@ -23,7 +23,10 @@ export default function NotificaionForm({
             action={dispatchNotificationAction}
             successCallback={data => {
                 if (data) {
-                    setSuccessMessage(`Varsling lagt til i køen til ${data.recipients} mottakere. Det kan ta ganske lang tid før alle får varselet`)
+                    setSuccessMessage(`
+                        Varsling lagt til i køen til ${data.recipients} mottakere.
+                        Det kan ta ganske lang tid før alle får varselet
+                    `)
                 }
             }}
         >

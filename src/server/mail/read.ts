@@ -17,7 +17,7 @@ function removeDuplicates<T extends {
             if (exisingObj && exisingObj.via && obj.via && obj.via instanceof Array) {
                 const via = obj.via[0]
 
-                const alredyAdded = exisingObj.via.find(item => (item.type == via.type && item.id == via.id))
+                const alredyAdded = exisingObj.via.find(item => (item.type === via.type && item.id === via.id))
                 if (!alredyAdded) {
                     exisingObj.via.push(via)
                 }
@@ -103,18 +103,18 @@ async function readAliasFlow(id: number): Promise<MailFlowObject> {
         }))).flat()
 
 
-    delete mailAlias.mailingLists
+    Reflect.deleteProperty(mailAlias, 'mailingLists')
 
     return {
         alias: [mailAlias],
         mailingList: mailingList.map(list => {
-            delete list.users
-            delete list.groups
-            delete list.mailAddressExternal
+            Reflect.deleteProperty(list, 'users')
+            Reflect.deleteProperty(list, 'groups')
+            Reflect.deleteProperty(list, 'mailAddressExternal')
             return list
         }),
         group: removeDuplicates(group.map(g => {
-            delete g.memberships
+            Reflect.deleteProperty(g, 'memberships')
             return g
         })),
         user: removeDuplicates(user),
@@ -167,10 +167,10 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
     }))
 
     const mailingList = results
-    const alias = mailingList.mailAliases.map(alias => alias.mailAlias)
-    const group = mailingList.groups.map(group => group.group)
+    const alias = mailingList.mailAliases.map(a => a.mailAlias)
+    const group = mailingList.groups.map(g => g.group)
     const user = mailingList.users
-        .map(user => user.user)
+        .map(u => u.user)
         .concat(
             mailingList.groups
                 .map(g => g.group.memberships.map(m => ({
@@ -181,6 +181,7 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
         )
     const mailaddressExternal = mailingList.mailAddressExternal.map(address => address.mailAddressExternal)
 
+    // TODO: Delete unnessasary fields
     return {
         mailingList: [mailingList],
         alias,
@@ -262,8 +263,8 @@ async function readGroupFlow(id: number): Promise<MailFlowObject> {
     const group = results
     const mailingList = results.mailingLists.map(list => list.mailingList)
     const alias = mailingList
-        .map(list => list.mailAliases.map(alias => ({
-            ...alias.mailAlias,
+        .map(list => list.mailAliases.map(a => ({
+            ...a.mailAlias,
             via: [{ type: 'mailingList' as MailListTypes, id: list.id, label: list.name }]
         })))
         .flat()

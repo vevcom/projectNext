@@ -3,8 +3,12 @@
 import TextInput from '@/app/components/UI/TextInput'
 import Form from '@/app/components/Form/Form'
 import Select from '@/app/components/UI/Select'
-import { createAliasMailingListRelationAction, createMailingListExternalRelationAction, createMailingListGroupRelationAction, createMailingListUserRelationAction } from '@/actions/mail/create'
-import { UserFiltered } from '@/server/users/Types'
+import {
+    createAliasMailingListRelationAction,
+    createMailingListExternalRelationAction,
+    createMailingListGroupRelationAction,
+    createMailingListUserRelationAction
+} from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import { updateMailingListAction } from '@/actions/mail/list/update'
 import { destroyMailingListAction } from '@/actions/mail/list/destory'
@@ -14,7 +18,6 @@ import type { MailFlowObject } from '@/server/mail/Types'
 
 
 export default function EditMailingList({
-    id,
     data,
     mailaliases,
     mailAddressExternal,
@@ -64,7 +67,11 @@ export default function EditMailingList({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
-                <Select options={mailaliases.map(a => ({ value: a.id, label: a.address }))} name="mailAliasId" label="Mailalias" />
+                <Select
+                    options={mailaliases.map(a => ({ value: a.id, label: a.address }))}
+                    name="mailAliasId"
+                    label="Mailalias"
+                />
             </Form>
         </div>}
         { permissions.includes('MAILINGLIST_GROUP_CREATE') && <div>
@@ -94,7 +101,11 @@ export default function EditMailingList({
                 action={createMailingListExternalRelationAction}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
-                <Select options={mailAddressExternal.map(a => ({ value: a.id, label: a.address }))} name="mailAddressExternalId" label="Ekstern mail adresse" />
+                <Select
+                    options={mailAddressExternal.map(a => ({ value: a.id, label: a.address }))}
+                    name="mailAddressExternalId"
+                    label="Ekstern mail adresse"
+                />
             </Form>
         </div>}
     </>

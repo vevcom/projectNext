@@ -19,7 +19,7 @@ export default function Select<V extends number | string>({
         value: V,
         label?: string,
     }[],
-    onChange?: (value: V) => void,
+    onChange?: (valu: V) => void,
 } & Omit<HTMLAttributes<HTMLElement>, 'onChange'>) {
     const id = uuid()
 
@@ -42,8 +42,8 @@ export default function Select<V extends number | string>({
             }
             onChange={(event) => {
                 if (onChange && options.length > 0) {
-                    const value = event.target.value
-                    onChange((typeof (options[0].value) === 'number' ? Number(value) : value) as V)
+                    const v = event.target.value
+                    onChange((typeof (options[0].value) === 'number' ? Number(v) : v) as V)
                 }
             }
             }>

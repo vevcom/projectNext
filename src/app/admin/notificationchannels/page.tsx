@@ -25,7 +25,11 @@ export default async function () {
         }
     >
         <ul>
-            {channels.data.map(c => <li key={uuid()}><Link href={`/admin/notificationchannels/${c.id}`}>{c.name}</Link></li>)}
+            {channels.data.map(c =>
+                <li key={uuid()}>
+                    <Link href={`/admin/notificationchannels/${c.id}`}>{c.name}</Link>
+                </li>
+            )}
         </ul>
     </PageWrapper>
 }
