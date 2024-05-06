@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client"
-import { allMethodsOn } from "../Types"
+import type { allMethodsOn } from '@/server/notifications/Types'
+import type { Prisma } from '@prisma/client'
 
 
 export type Subscription = Prisma.NotificationSubscriptionGetPayload<{

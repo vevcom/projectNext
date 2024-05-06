@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import styles from './LargeRadio.module.scss'
 import { useState } from 'react'
@@ -22,7 +22,6 @@ export default function LargeRadio<Type extends Listitem>({
     name?: string,
     className?: string,
 }) {
-
     const [list, setList] = useState<Type[]>(initalList)
     const [selectedItem, setSelectedItem] = useState<Type | undefined>(defaultSelection)
 
@@ -35,14 +34,14 @@ export default function LargeRadio<Type extends Listitem>({
     }
 
     return (
-        <ul className={`${styles.container} ${className ?? ""}`}>
+        <ul className={`${styles.container} ${className ?? ''}`}>
             {list.map((item, i) =>
                 <li key={uuid()}>
                     <input
                         type="radio"
                         value={item.id}
                         id={`item_${item.id}`}
-                        name={name ?? ""}
+                        name={name ?? ''}
                         checked={item.id === selectedItem?.id}
                         onChange={onItemSelectChange}
                     />

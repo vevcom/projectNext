@@ -1,10 +1,9 @@
 import 'server-only'
-import { MailAlias } from '@prisma/client';
-import { prismaCall } from '../../prismaCall';
-import prisma from '@/prisma';
-
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { MailAlias } from '@prisma/client'
 
 
 export async function readAllMailAliases(): Promise<MailAlias[]> {
-    return await prismaCall(() => prisma.mailAlias.findMany());
+    return await prismaCall(() => prisma.mailAlias.findMany())
 }

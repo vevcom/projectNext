@@ -1,9 +1,8 @@
 import 'server-only'
-import { allMethodsOn } from '../Types';
-import { prismaCall } from '@/server/prismaCall';
-import prisma from '@/prisma';
-import { Subscription } from '../subscription/Types';
-
+import { allMethodsOn } from '@/server/notifications/Types'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { Subscription } from '@/server/notifications/subscription/Types'
 
 
 export async function readUserSubscriptions(userId: number): Promise<Subscription[]> {

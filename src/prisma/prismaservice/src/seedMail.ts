@@ -1,40 +1,37 @@
-import { PrismaClient } from "@/generated/pn"
-
-
+import type { PrismaClient } from '@/generated/pn'
 
 
 export default async function seedMail(prisma: PrismaClient) {
-
-    const DOMAIN = "@omega.ntnu.no"
+    const DOMAIN = '@omega.ntnu.no'
 
     const otherAliases = [
-        "noreply",
+        'noreply',
     ]
 
     const mailingLists = [
         {
-            name: "Vevcom",
+            name: 'Vevcom',
             aliases: [
-                "vevcom",
-                "stripe",
+                'vevcom',
+                'stripe',
             ],
         },
         {
-            name: "Hovedstyret",
+            name: 'Hovedstyret',
             aliases: [
-                "hs"
+                'hs'
             ],
         },
         {
-            name: "Ombul",
+            name: 'Ombul',
             aliases: [
-                "ombul",
+                'ombul',
             ],
         },
         {
-            name: "Bleast",
+            name: 'Bleast',
             aliases: [
-                "bleast",
+                'bleast',
             ]
         }
     ]
@@ -42,7 +39,7 @@ export default async function seedMail(prisma: PrismaClient) {
     const allAliases = mailingLists.map(m => m.aliases).flat().concat(otherAliases)
     const aliasSet = new Set(allAliases)
 
-    const aliasIdMap = new Map<string, number>();
+    const aliasIdMap = new Map<string, number>()
 
     await Promise.all(Array.from(aliasSet).map(async (a) => {
         const results = await prisma.mailAlias.create({

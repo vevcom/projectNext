@@ -1,14 +1,13 @@
-"use server"
+'use server'
 
-import { sendMail as transportSendMail } from "@/server/notifications/email/send";
-import { ActionReturn } from "@/actions/Types";
-import { getUser } from "@/auth/getUser";
-import { createActionError } from "@/actions/error";
-import { sendEmailValidation } from "@/server/notifications/email/validation";
-import { createZodActionError } from "@/actions/error";
-import { safeServerCall } from "../safeServerCall";
+import { safeServerCall } from '@/actions/safeServerCall'
+import { sendMail as transportSendMail } from '@/server/notifications/email/send'
+import { getUser } from '@/auth/getUser'
+import { createActionError, createZodActionError } from '@/actions/error'
+import { sendEmailValidation } from '@/server/notifications/email/validation'
+import type { ActionReturn } from '@/actions/Types'
 
-export default async function sendMail(rawdata: FormData) : Promise<ActionReturn<void>> {
+export default async function sendMail(rawdata: FormData): Promise<ActionReturn<void>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['MAIL_SEND']],
     })

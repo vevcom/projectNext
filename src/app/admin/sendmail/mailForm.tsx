@@ -1,14 +1,12 @@
-"use client"
-import sendMail from "@/actions/sendmail/send"
-import Form from "@/app/components/Form/Form"
+'use client'
 import styles from './mailForm.module.scss'
-import TextInput from "@/app/components/UI/TextInput"
-import Textarea from "@/app/components/UI/Textarea"
+import sendMail from '@/actions/sendmail/send'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import Textarea from '@/app/components/UI/Textarea'
 
 
 export default function MailForm() {
-
-
     return <Form
         action={sendMail}
         submitText="Send elektronisk post"

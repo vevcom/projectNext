@@ -1,9 +1,10 @@
 import 'server-only'
-import { CreateAliasMailingListType, CreateMailingListExternalType, CreateMailingListGroupType, CreateMailingListUserType, createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from './validation';
-import { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client';
-import { prismaCall } from '../prismaCall';
-import prisma from '@/prisma';
-import { connect } from 'http2';
+import { createAliasMailingListValidation, createMailingListExternalValidation, createMailingListGroupValidation, createMailingListUserValidation } from './validation'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import { connect } from 'http2'
+import type { MailAliasMailingList, MailingListGroup, MailingListMailAddressExternal, MailingListUser } from '@prisma/client'
+import type { CreateAliasMailingListType, CreateMailingListExternalType, CreateMailingListGroupType, CreateMailingListUserType } from './validation'
 
 
 export async function createAliasMailingListRelation(
@@ -46,7 +47,6 @@ export async function createMailingListExternalRelation(
             },
         }
     }))
-
 }
 
 export async function createMailingListUserRelation(
@@ -68,7 +68,6 @@ export async function createMailingListUserRelation(
             },
         }
     }))
-
 }
 
 export async function createMailingListGroupRelation(
@@ -90,5 +89,4 @@ export async function createMailingListGroupRelation(
             },
         }
     }))
-
 }

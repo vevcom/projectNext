@@ -1,10 +1,12 @@
 import 'server-only'
-import { UpdateSubscriptionType, updateSubscriptionValidation, validateMethods } from './validation';
-import { NotificationMethod, allMethodsOff, allMethodsOn } from '../Types';
-import { Subscription } from './Types';
-import { prismaCall } from '@/server/prismaCall';
-import prisma from '@/prisma';
-import { ServerError } from '@/server/error';
+import { updateSubscriptionValidation, validateMethods } from './validation'
+import { allMethodsOff, allMethodsOn } from '@/server/notifications/Types'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import { ServerError } from '@/server/error'
+import type { Subscription } from './Types'
+import type { NotificationMethod } from '@/server/notifications/Types'
+import type { UpdateSubscriptionType } from './validation'
 
 
 export async function updateSubscription({
@@ -14,12 +16,11 @@ export async function updateSubscription({
 }: UpdateSubscriptionType['Detailed'] & {
     methods: NotificationMethod,
 }): Promise<Subscription | null> {
-
     const parse = updateSubscriptionValidation.detailedValidate({
         channelId,
         userId,
     })
-    
+
     const whereFilter = {
         userId_channelId: {
             userId: parse.userId,
@@ -31,18 +32,17 @@ export async function updateSubscription({
         where: whereFilter
     }))
 
-    const subscriptionExists = subscription !== null;
+    const subscriptionExists = subscription !== null
 
     // If all methods are off, we delete the relation
     if (validateMethods(allMethodsOff, methods)) {
-
         // No change, do nothing
         if (!subscriptionExists) {
             return null
         }
 
         // Delete the realtion
-        return prismaCall(async() => prisma.$transaction(async () => {
+        return prismaCall(async () => prisma.$transaction(async () => {
             const subscription = await prisma.notificationSubscription.delete({
                 where: whereFilter,
                 include: {
@@ -76,7 +76,7 @@ export async function updateSubscription({
     }))
 
     if (!validateMethods(notificaionChannel.availableMethods, methods)) {
-        throw new ServerError("BAD PARAMETERS", "The mtethods must a subset of the availeble methods")
+        throw new ServerError('BAD PARAMETERS', 'The mtethods must a subset of the availeble methods')
     }
 
     // Update the relation
@@ -110,7 +110,7 @@ export async function updateSubscription({
                 },
             },
             methods: {
-                create: methods, 
+                create: methods,
             },
         },
         include: {

@@ -1,13 +1,12 @@
 
+import { notificationMethods } from '@/server/notifications/Types'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
 import { SpecialNotificationChannel } from '@prisma/client'
-import { notificationMethods } from '../Types'
-import type { NotificationChannel, NotificationMethod, NotificationMethodTypes } from '../Types'
+import type { ValidationTypes } from '@/server/Validation'
+import type { NotificationChannel, NotificationMethod, NotificationMethodTypes } from '@/server/notifications/Types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
-    
     return Object.fromEntries(notificationMethods.map(m => {
         const compare = prefix ? `${prefix}_${m}` : m
         const value = data.get(compare)
@@ -15,7 +14,7 @@ export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
             return [m, false]
         }
 
-        return [m, value === "on"]
+        return [m, value === 'on']
     })) as NotificationMethod
 }
 
@@ -30,10 +29,10 @@ export function validateMethods(availableMethods: NotificationMethod, defaultMet
         const a = availableMethods[notificationMethods[i]]
         const d = defaultMethods[notificationMethods[i]]
 
-        if (d && !a) return false;
+        if (d && !a) return false
     }
 
-    return true;
+    return true
 }
 
 export function validateNewParent(channelId: number, newParentId: number, channels: NotificationChannel[]): boolean {
@@ -43,7 +42,7 @@ export function validateNewParent(channelId: number, newParentId: number, channe
 export function findValidParents(channelId: number, channels: NotificationChannel[]): NotificationChannel[] {
     const validParents = channels.filter(c => c.id != channelId)
     // Remove chrildren of the current channel
-    let channelIDS = new Set(validParents.map(c => c.id))
+    const channelIDS = new Set(validParents.map(c => c.id))
     while (true) {
         const lengthBeforeReduction = channelIDS.size
         for (let i = validParents.length - 1; i >= 0; i--) {
@@ -53,11 +52,11 @@ export function findValidParents(channelId: number, channels: NotificationChanne
             }
         }
         if (lengthBeforeReduction === channelIDS.size) {
-            break;
+            break
         }
     }
 
-    return validParents;
+    return validParents
 }
 
 export const baseNotificaionChannelValidation = new ValidationBase({
@@ -118,5 +117,4 @@ export const destroyNotificaionChannelValidation = baseNotificaionChannelValidat
     }),
 })
 export type DestroyNotificationChannelType = ValidationTypes<typeof destroyNotificaionChannelValidation>
-
 

@@ -1,12 +1,11 @@
 import 'server-only'
 import { updateMailAliasValidation, type UpdateMailAliasTypes } from './validation'
-import { MailAlias } from '@prisma/client'
-import { prismaCall } from '../../prismaCall'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { MailAlias } from '@prisma/client'
 
 export async function updateMailAlias(rawdata: UpdateMailAliasTypes['Detailed']): Promise<MailAlias> {
-
-    const parse = updateMailAliasValidation.detailedValidate(rawdata);
+    const parse = updateMailAliasValidation.detailedValidate(rawdata)
 
     return await prismaCall(() => prisma.mailAlias.update({
         where: {

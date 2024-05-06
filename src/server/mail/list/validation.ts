@@ -31,7 +31,7 @@ export const updateMailingListValidation = baseMailingListValidation.createValid
         'name',
         'description',
     ],
-    transformer: data => ({...data, id: Number(data.id)})
+    transformer: data => ({ ...data, id: Number(data.id) })
 })
 export type UpdateMailingListTypes = ValidationTypes<typeof updateMailingListValidation>
 

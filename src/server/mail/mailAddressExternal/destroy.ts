@@ -1,8 +1,8 @@
 import 'server-only'
-import { MailAddressExternal } from '@prisma/client';
-import { prismaCall } from '@/server/prismaCall';
-import prisma from '@/prisma';
-import { readMailAddressExternalValidation } from './validation';
+import { readMailAddressExternalValidation } from './validation'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { MailAddressExternal } from '@prisma/client'
 
 
 export async function destroyMailAddressExternal(id: number): Promise<MailAddressExternal> {

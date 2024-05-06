@@ -1,17 +1,17 @@
-import { UserFiltered } from "@/server/users/Types";
-import { NotificationChannel } from "../Types";
-import { Notification } from "@prisma/client";
-import { sendBulkMail } from "./send";
-import { prismaCall } from "@/server/prismaCall";
-import { DEFAULT_NOTIFICATION_ALIAS } from "./ConfigVars";
-import { sendEmailValidation } from "./validation";
-import { render } from '@react-email/render';
-import { DefaultEmailTemplate } from "./mailTemplates";
-import { repalceSpecialSymbols } from "../dispatch";
+import { sendBulkMail } from './send'
+import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
+import { sendEmailValidation } from './validation'
+import { DefaultEmailTemplate } from './mailTemplates'
+import { repalceSpecialSymbols } from '@/server/notifications/dispatch'
+import { prismaCall } from '@/server/prismaCall'
+import { render } from '@react-email/render'
+import type { NotificationChannel } from '@/server/notifications/Types'
+import type { Notification } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
 
 
 export async function dispatchEmailNotifications(channel: NotificationChannel, notificaion: Notification, users: UserFiltered[]) {
-    console.log("Email")
+    console.log('Email')
 
     console.log(channel)
 
@@ -54,7 +54,7 @@ export async function dispatchEmailNotifications(channel: NotificationChannel, n
 
     console.log(mails)
 
-    await sendBulkMail(mails);
+    await sendBulkMail(mails)
 }
 
 function wrapInHTML(user: UserFiltered, text: string): string {

@@ -1,8 +1,7 @@
 
-import { MailAddressExternal, MailAlias, MailingList } from "@prisma/client"
-import styles from "./mailListView.module.scss"
-import MailList from "./mailList"
-
+import styles from './mailListView.module.scss'
+import MailList from './mailList'
+import type { MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 
 
 export default function MailListView({
@@ -14,7 +13,6 @@ export default function MailListView({
     mailingLists: MailingList[],
     mailAddressesExternal: MailAddressExternal[]
 }) {
-
     return <div className={styles.listView}>
         <div>
             <MailList items={mailAliases.map(a => ({

@@ -1,8 +1,8 @@
 import 'server-only'
-import { MailingList } from '@prisma/client';
-import { prismaCall } from '../../prismaCall';
-import prisma from '@/prisma';
-import { readMailingListValidation } from './validation';
+import { readMailingListValidation } from './validation'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { MailingList } from '@prisma/client'
 
 
 export async function destroyMailingList(id: number): Promise<MailingList> {

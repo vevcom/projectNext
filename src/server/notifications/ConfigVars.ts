@@ -1,9 +1,8 @@
-import { NotificationMethod } from "./Types";
-
+import type { NotificationMethod } from './Types'
 
 
 export const notificationMethodsDisplayMap = {
-    email: "Epost",
-    emailWeekly: "Ukentlig epost",
-    push: "Push varslinger"
-} satisfies Record<keyof NotificationMethod, string>;
+    email: 'Epost',
+    emailWeekly: 'Ukentlig epost',
+    push: 'Push varslinger'
+} satisfies Record<keyof NotificationMethod, string>

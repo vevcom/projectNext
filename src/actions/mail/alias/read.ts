@@ -1,15 +1,15 @@
-"use server"
+'use server'
 
-import { getUser } from "@/auth/getUser"
-import { createActionError } from "../../error"
-import { safeServerCall } from "../../safeServerCall"
-import { readAllMailAliases } from "@/server/mail/alias/read"
-import { ActionReturn } from "../../Types"
-import { MailAlias } from "@prisma/client"
+import { createActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { readAllMailAliases } from '@/server/mail/alias/read'
+import { getUser } from '@/auth/getUser'
+import type { ActionReturn } from '@/actions/Types'
+import type { MailAlias } from '@prisma/client'
 
 export async function readAllMailAliasesAction(): Promise<ActionReturn<MailAlias[]>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: [[ 'MAILALIAS_READ' ]]
+        requiredPermissions: [['MAILALIAS_READ']]
     })
     if (!authorized) return createActionError(status)
 

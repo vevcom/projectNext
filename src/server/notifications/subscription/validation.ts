@@ -1,8 +1,9 @@
 
-import { parseMethods as ParseMethods, validateMethods as ValidateMethods } from "../channel/validation";
+import { parseMethods as ParseMethods, validateMethods as ValidateMethods } from '@/server/notifications/channel/validation'
 
-import { ValidationBase, ValidationTypes } from '@/server/Validation'
+import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
+import type { ValidationTypes } from '@/server/Validation'
 
 export const parseMethods = ParseMethods
 export const validateMethods = ValidateMethods

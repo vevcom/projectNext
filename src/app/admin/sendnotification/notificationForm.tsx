@@ -1,12 +1,12 @@
-"use client"
-import Select from "@/app/components/UI/Select";
-import Form from "@/app/components/Form/Form";
-import { NotificationChannel } from "@/server/notifications/Types";
-import TextInput from "@/app/components/UI/TextInput";
-import Textarea from "@/app/components/UI/Textarea";
-import styles from "./notificaionForm.module.scss"
-import { dispatchNotificationAction } from "@/actions/notifications/create";
-import { useState } from "react";
+'use client'
+import styles from './notificaionForm.module.scss'
+import Select from '@/app/components/UI/Select'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import Textarea from '@/app/components/UI/Textarea'
+import { dispatchNotificationAction } from '@/actions/notifications/create'
+import { useState } from 'react'
+import type { NotificationChannel } from '@/server/notifications/Types'
 
 
 export default function NotificaionForm({
@@ -14,8 +14,7 @@ export default function NotificaionForm({
 }: {
     channels: NotificationChannel[]
 }) {
-
-    const [ successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
     return <>
         <Form

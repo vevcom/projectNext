@@ -1,7 +1,8 @@
 
 
-import { ValidationBase, ValidationTypes } from '@/server/Validation'
+import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
+import type { ValidationTypes } from '@/server/Validation'
 
 export const baseNotificaionValidation = new ValidationBase({
     type: {

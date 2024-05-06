@@ -1,8 +1,9 @@
 import 'server-only'
-import { UpdatemailAddressExternalTypes, updateMailAddressExternalValidation } from './validation';
-import { MailAddressExternal } from '@prisma/client';
-import { prismaCall } from '@/server/prismaCall';
-import prisma from '@/prisma';
+import { updateMailAddressExternalValidation } from './validation'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { MailAddressExternal } from '@prisma/client'
+import type { UpdatemailAddressExternalTypes } from './validation'
 
 
 export async function updateMailAddressExternal(data: UpdatemailAddressExternalTypes['Detailed']):

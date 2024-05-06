@@ -1,11 +1,13 @@
 import 'server-only'
-import { DestroyNotificationChannelType, destroyNotificaionChannelValidation } from './validation';
-import { NotificationChannel, allMethodsOn } from '../Types';
-import { prismaCall } from '@/server/prismaCall';
-import prisma from '@/prisma';
+import { destroyNotificaionChannelValidation } from './validation'
+import { allMethodsOn } from '@/server/notifications/Types'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import type { NotificationChannel } from '@/server/notifications/Types'
+import type { DestroyNotificationChannelType } from './validation'
 
 
-export async function destroyNotificationChannel(data: DestroyNotificationChannelType["Detailed"]):
+export async function destroyNotificationChannel(data: DestroyNotificationChannelType['Detailed']):
 Promise<NotificationChannel> {
     const { id } = destroyNotificaionChannelValidation.detailedValidate(data)
 
@@ -29,8 +31,8 @@ Promise<NotificationChannel> {
         await prisma.notificationMethod.deleteMany({
             where: {
                 OR: [
-                    {id: results.availableMethodsId},
-                    {id: results.defaultMethodsId},
+                    { id: results.availableMethodsId },
+                    { id: results.defaultMethodsId },
                 ]
             }
         })

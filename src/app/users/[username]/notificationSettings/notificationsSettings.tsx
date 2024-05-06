@@ -1,14 +1,14 @@
-import { readAllNotificationChannelsAction } from "@/actions/notifications/channel/read"
-import { NotificationChannel } from "@/server/notifications/Types";
-import { NotificationSettingItem } from "./notificationSettingItem";
-import { Subscription } from "@/server/notifications/subscription/Types";
-import { NotificationBranch } from "./Types";
-import { readMySubscriptionsAction } from "@/actions/notifications/subscription/read";
+import { NotificationSettingItem } from './notificationSettingItem'
+import { readAllNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readMySubscriptionsAction } from '@/actions/notifications/subscription/read'
+import type { NotificationChannel } from '@/server/notifications/Types'
+import type { Subscription } from '@/server/notifications/subscription/Types'
+import type { NotificationBranch } from './Types'
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
-    const rootChannel = channels.find(c => c.special === "ROOT")
+    const rootChannel = channels.find(c => c.special === 'ROOT')
     if (!rootChannel) {
-        throw Error("Ingen ROOT varslings kanal")
+        throw Error('Ingen ROOT varslings kanal')
     }
 
     function extendChannel(channel: NotificationChannel): NotificationBranch {
@@ -24,7 +24,7 @@ function generateChannelTree(channels: NotificationChannel[], subscriptions: Sub
 
     function searchTree(currentBranch: NotificationBranch) {
         for (let i = 0; i < channels.length; i++) {
-            if (channels[i].parentId === currentBranch.id && channels[i].special !== "ROOT") {
+            if (channels[i].parentId === currentBranch.id && channels[i].special !== 'ROOT') {
                 const obj = extendChannel(channels[i])
                 currentBranch.children.push(obj)
                 searchTree(obj)
@@ -38,8 +38,7 @@ function generateChannelTree(channels: NotificationChannel[], subscriptions: Sub
 }
 
 export async function NotificationSettings() {
-
-    const [ channels, subscriptions ] = await Promise.all([
+    const [channels, subscriptions] = await Promise.all([
         readAllNotificationChannelsAction(),
         readMySubscriptionsAction(),
     ])

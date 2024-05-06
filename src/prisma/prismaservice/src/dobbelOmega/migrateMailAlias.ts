@@ -1,7 +1,7 @@
+import { connect } from 'http2'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
-import { connect } from 'http2';
 
 
 export default async function migrateMailAliases(
@@ -16,9 +16,9 @@ export default async function migrateMailAliases(
         }
     })
 
-    await pnPrisma.mailAlias.deleteMany();
-    await pnPrisma.mailingList.deleteMany();
-    await pnPrisma.mailAddressExternal.deleteMany();
+    await pnPrisma.mailAlias.deleteMany()
+    await pnPrisma.mailingList.deleteMany()
+    await pnPrisma.mailAddressExternal.deleteMany()
 
     await pnPrisma.mailAlias.createMany({
         data: aliases.map(a => ({
@@ -29,7 +29,7 @@ export default async function migrateMailAliases(
         }))
     })
 
-    
+
     await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
         data: {
             name: a.name,
@@ -47,21 +47,21 @@ export default async function migrateMailAliases(
             }
         }
     })))
-    
-    const omegaFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith("@omega.ntnu.no")
-    const studNtnuFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith("@stud.ntnu.no") 
-    
+
+    const omegaFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@omega.ntnu.no')
+    const studNtnuFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@stud.ntnu.no')
+
     const externalAdrs = aliases.map(a => a.ExtraAliasMembers.map(e => ({
         address: e.address,
         id: a.id,
     }))).flat()
 
-    const alredyAdded = new Set<string>();
+    const alredyAdded = new Set<string>()
 
     for (let i = 0; i < externalAdrs.length; i++) {
         const a = externalAdrs[i]
         if (omegaFilter(a) || studNtnuFilter(a)) {
-            continue;
+            continue
         }
 
         if (!alredyAdded.has(a.address)) {
@@ -79,7 +79,7 @@ export default async function migrateMailAliases(
                     }
                 }
             })
-            alredyAdded.add(a.address);
+            alredyAdded.add(a.address)
         } else {
             await pnPrisma.mailingListMailAddressExternal.create({
                 data: {
@@ -98,7 +98,7 @@ export default async function migrateMailAliases(
         }
     }
 
-    const omegaForward: {address: string, id: number}[] = [];
+    const omegaForward: {address: string, id: number}[] = []
 
     const searchRecusive = (address: string, alias: typeof aliases[number]) => {
         omegaForward.push({
@@ -121,11 +121,11 @@ export default async function migrateMailAliases(
         }
     })
 
-    console.log(omegaForward);
-    let errors = 0;
+    console.log(omegaForward)
+    let errors = 0
 
     for (let i = 0; i < omegaForward.length; i++) {
-        const a = omegaForward[i];
+        const a = omegaForward[i]
 
         try {
             await pnPrisma.mailAliasMailingList.create({
@@ -142,11 +142,10 @@ export default async function migrateMailAliases(
                     }
                 }
             })
-        } catch(e) {
-            console.error(e);
-            errors++;
+        } catch (e) {
+            console.error(e)
+            errors++
         }
     }
-    console.log("Errors:", errors)
-
+    console.log('Errors:', errors)
 }

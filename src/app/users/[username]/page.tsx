@@ -1,9 +1,9 @@
+import { NotificationSettings } from './notificationSettings/notificationsSettings'
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import { NotificationSettings } from './notificationSettings/notificationsSettings'
 
 type PropTypes = {
     params: {
@@ -33,7 +33,7 @@ export default async function User({ params }: PropTypes) {
     }
 
     return (
-        <div style={{marginLeft: "2rem"}}>
+        <div style={{ marginLeft: '2rem' }}>
             <h1>{`${user.firstname} ${user.lastname}`}</h1>
             <p>{`E-post: '${user.email}'`}</p>
             <p>{`Bruker-ID: ${user.id}`}</p>

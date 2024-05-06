@@ -1,9 +1,11 @@
 import 'server-only'
-import { UpdateNotificationChannelType, updateNotificaionChannelValidation, validateMethods, validateNewParent } from './validation';
-import { NotificationChannel, NotificationMethod, allMethodsOn, notificationMethods } from '../Types';
-import { prismaCall } from '@/server/prismaCall';
-import { ServerError } from '@/server/error';
-import { readAllNotificationChannels } from './read';
+import { updateNotificaionChannelValidation, validateMethods, validateNewParent } from './validation'
+import { readAllNotificationChannels } from './read'
+import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
+import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
+import type { UpdateNotificationChannelType } from './validation'
 
 
 export async function updateNotificationChannel({
@@ -18,7 +20,6 @@ export async function updateNotificationChannel({
     defaultMethods: NotificationMethod,
     availableMethods: NotificationMethod,
 }): Promise<NotificationChannel> {
-
     const parse = updateNotificaionChannelValidation.detailedValidate({
         id,
         name,
@@ -28,7 +29,7 @@ export async function updateNotificationChannel({
     })
 
     if (!validateMethods(availableMethods, defaultMethods)) {
-        throw new ServerError("BAD PARAMETERS", "Default methods cannot exceed available methods.")
+        throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
     }
 
     // Check if the channel is special
@@ -43,15 +44,14 @@ export async function updateNotificationChannel({
         }
     }))
 
-    let updateParentId = false;
+    let updateParentId = false
 
     // Not allowed to change the parent of ROOT
-    if (channel.special !== "ROOT") {
-
-        const allChannels = await readAllNotificationChannels();
+    if (channel.special !== 'ROOT') {
+        const allChannels = await readAllNotificationChannels()
 
         if (!validateNewParent(parse.id, parse.parentId, allChannels)) {
-            throw new ServerError("BAD PARAMETERS", "Cannot set parentId in a loop")
+            throw new ServerError('BAD PARAMETERS', 'Cannot set parentId in a loop')
         }
 
         updateParentId = true
@@ -67,7 +67,6 @@ export async function updateNotificationChannel({
     }
 
     return await prismaCall(async () => prisma.$transaction(async () => {
-
         if (!methodsAreEqual(availableMethods, channel.availableMethods)) {
             await prisma.notificationMethod.update({
                 where: {
@@ -94,7 +93,7 @@ export async function updateNotificationChannel({
             data: {
                 name: parse.name,
                 description: parse.description,
-                ...(updateParentId ? {parent: {connect: {id: parse.parentId}}} : {}),
+                ...(updateParentId ? { parent: { connect: { id: parse.parentId } } } : {}),
                 mailAlias: {
                     connect: {
                         id: parse.mailAliasId,

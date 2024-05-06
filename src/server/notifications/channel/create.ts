@@ -1,11 +1,11 @@
-import 'server-only';
-import { NotificationChannel, NotificationMethod } from '../Types';
-import { CreateNotificationChannelType, createNotificaionChannelValidation, parseMethods, validateMethods } from './validation';
-import { prismaCall } from '@/server/prismaCall';
-import { connect } from 'http2';
-import { ServerError } from '@/server/error';
-import { DEFAULT_NOTIFICATION_ALIAS } from '../email/ConfigVars';
-
+import 'server-only'
+import { createNotificaionChannelValidation, parseMethods, validateMethods } from './validation'
+import { DEFAULT_NOTIFICATION_ALIAS } from '@/server/notifications/email/ConfigVars'
+import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/server/error'
+import { connect } from 'http2'
+import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
+import type { CreateNotificationChannelType } from './validation'
 
 
 export async function createNotificationChannel({
@@ -18,7 +18,6 @@ export async function createNotificationChannel({
     availableMethods: NotificationMethod
     defaultMethods: NotificationMethod
 }): Promise<NotificationChannel> {
-
     const parse = createNotificaionChannelValidation.detailedValidate({
         name,
         description,
@@ -26,7 +25,7 @@ export async function createNotificationChannel({
     })
 
     if (!validateMethods(availableMethods, defaultMethods)) {
-        throw new ServerError("BAD PARAMETERS", "Default methods cannot exceed available methods.")
+        throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
     }
 
     return await prismaCall(() => prisma.notificationChannel.create({
@@ -55,6 +54,4 @@ export async function createNotificationChannel({
             defaultMethods: true,
         }
     }))
-
-
 }

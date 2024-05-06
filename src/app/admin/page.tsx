@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBeer, faChild, faKey, faNewspaper, faUser, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
 export default function Admin() {
-
     return (
         <div className={styles.wrapper}>
             <h2>Administrasjon</h2>
@@ -30,7 +29,7 @@ export default function Admin() {
             <Link href="admin/notificationchannels">Varslingkanaler</Link>
             <Link href="admin/mail">Mailing lister</Link>
             <Link href="admin/sendmail">Send epost</Link>
-            
+
         </div>
     )
 }

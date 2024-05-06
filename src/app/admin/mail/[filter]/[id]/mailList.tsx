@@ -1,19 +1,19 @@
-"use client"
+'use client'
 
-import { MailListTypes, ViaType } from "@/server/mail/Types";
-import MailListItem from "./mailListItem";
-import styles from "./mailList.module.scss"
-import { Group, MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
-import { UserFiltered } from "@/server/users/Types";
-import { v4 as uuid } from 'uuid';
-import { useState } from "react";
+import MailListItem from './mailListItem'
+import styles from './mailList.module.scss'
+import { v4 as uuid } from 'uuid'
+import { useState } from 'react'
+import type { MailListTypes, ViaType } from '@/server/mail/Types'
+import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
 
-const typeDisplayName : Record<MailListTypes, string> = {
-    "alias": "Alias",
-    "mailingList": "Mail lister",
-    "group": "Grupper",
-    "user": "Brukere",
-    "mailaddressExternal": "Eksterne adresser",
+const typeDisplayName: Record<MailListTypes, string> = {
+    alias: 'Alias',
+    mailingList: 'Mail lister',
+    group: 'Grupper',
+    user: 'Brukere',
+    mailaddressExternal: 'Eksterne adresser',
 }
 
 type PropType = ({
@@ -40,18 +40,17 @@ export default function MailList({
     items,
     destroyFunction
 }: PropType) {
+    const [itemsState, setItemsState] = useState<typeof items[number][]>(items)
 
-    const [itemsState, setItemsState] = useState<typeof items[number][]>(items);
-
-    let destroyFunc = destroyFunction;
+    let destroyFunc = destroyFunction
 
     if (destroyFunc) {
         destroyFunc = async (id: number) => {
             if (destroyFunction) {
                 const results = await destroyFunction(id)
                 if (!results.success) {
-                    alert("Kunne ikke fjerne relasjonen")
-                    return;
+                    alert('Kunne ikke fjerne relasjonen')
+                    return
                 }
 
                 setItemsState(itemsState.filter(i => i.id != id))

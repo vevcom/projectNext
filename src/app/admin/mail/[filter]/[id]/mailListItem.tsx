@@ -1,12 +1,13 @@
-"use client"
-import { Group, MailAddressExternal, MailAlias, MailingList } from "@prisma/client";
-import { UserFiltered } from "@/server/users/Types";
-import Link from "next/link";
-import { MailListTypeArray, ViaType } from "@/server/mail/Types";
-import { notFound } from "next/navigation";
-import styles from "./mailListItem.module.scss"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+'use client'
+import styles from './mailListItem.module.scss'
+import { MailListTypeArray } from '@/server/mail/Types'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { ViaType } from '@/server/mail/Types'
+import type { UserFiltered } from '@/server/users/Types'
 
 type PropType = ({
     type: 'alias',
@@ -32,32 +33,31 @@ export default function MailListItem({
     item,
     destroyFunction,
 }: PropType) {
-
-    let displayText = ""
+    let displayText = ''
 
     if (!MailListTypeArray.includes(type)) {
         notFound()
     }
 
-    if (type == "alias" || type == "mailaddressExternal") {
-        displayText = item.address;
+    if (type == 'alias' || type == 'mailaddressExternal') {
+        displayText = item.address
     }
 
-    if (type == "mailingList") {
-        displayText = item.name;
+    if (type == 'mailingList') {
+        displayText = item.name
     }
 
-    if (type === "user") {
+    if (type === 'user') {
         displayText = `${item.firstname} ${item.lastname}`
     }
 
-    if (type === "group") {
-        displayText = String(item.id);
+    if (type === 'group') {
+        displayText = String(item.id)
     }
 
     const editable = (destroyFunction && !item.via)
-    
-    return <li className={`${styles.mailListItem} ${editable ? styles.editable : ""}`}>
+
+    return <li className={`${styles.mailListItem} ${editable ? styles.editable : ''}`}>
         {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, item.id)} /> : null}
         <Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link>
         {item.via ? item.via.map(v => <span>

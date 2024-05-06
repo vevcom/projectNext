@@ -1,21 +1,20 @@
-"use client"
+'use client'
 
-import { createMailAliasAction } from "@/actions/mail/alias/create";
-import Form from "@/app/components/Form/Form";
-import TextInput from "@/app/components/UI/TextInput";
-import { useRouter } from "next/navigation";
+import { createMailAliasAction } from '@/actions/mail/alias/create'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import { useRouter } from 'next/navigation'
 
 
 export default function CreateMailAlias() {
-
-    const { push } = useRouter();
+    const { push } = useRouter()
 
     return <Form
         title="Opprett nytt alias"
         submitText="Opprett"
         action={createMailAliasAction}
         successCallback={(data) => {
-            if (!data) return;
+            if (!data) return
             push(`./mail/alias/${data.id}`)
         }}
     >

@@ -1,6 +1,6 @@
-import { HTMLAttributes } from 'react'
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
+import type { HTMLAttributes } from 'react'
 
 export default function Select<V extends number | string>({
     name,
@@ -10,7 +10,7 @@ export default function Select<V extends number | string>({
     options,
     onChange,
     className,
-} : {
+}: {
     name: string,
     label?: string,
     value?: V,
@@ -20,7 +20,7 @@ export default function Select<V extends number | string>({
         label?: string,
     }[],
     onChange?: (value: V) => void,
-} & Omit<HTMLAttributes<HTMLElement>, 'onChange'> ) {
+} & Omit<HTMLAttributes<HTMLElement>, 'onChange'>) {
     const id = uuid()
 
     const optionElements = options.map(
@@ -43,10 +43,10 @@ export default function Select<V extends number | string>({
             onChange={(event) => {
                 if (onChange && options.length > 0) {
                     const value = event.target.value
-                    onChange((typeof(options[0].value) === 'number' ? Number(value) : value) as V)
+                    onChange((typeof (options[0].value) === 'number' ? Number(value) : value) as V)
                 }
             }
-        }>
+            }>
             {optionElements}
         </select>
     </div>

@@ -1,9 +1,9 @@
 import 'server-only'
-import { MailAlias } from '@prisma/client';
-import { prismaCall } from '../../prismaCall';
-import prisma from '@/prisma';
-import { destoryMailAliasValidation } from './validation';
-import { ServerError } from '@/server/error';
+import { destoryMailAliasValidation } from './validation'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
+import { ServerError } from '@/server/error'
+import type { MailAlias } from '@prisma/client'
 
 
 export async function destroyMailAlias(id: number): Promise<MailAlias> {
@@ -19,7 +19,7 @@ export async function destroyMailAlias(id: number): Promise<MailAlias> {
     }))
 
     if (connectedToNotificationChannel.notificationChannel.length) {
-        throw new ServerError("BAD PARAMETERS", "Cannot delete a mailAlias that is connected to a notification channel.")
+        throw new ServerError('BAD PARAMETERS', 'Cannot delete a mailAlias that is connected to a notification channel.')
     }
 
 

@@ -1,8 +1,7 @@
 
-import { MailListTypes } from "@/server/mail/Types"
-import Link from "next/link"
-import { v4 as uuid } from "uuid"
-
+import Link from 'next/link'
+import { v4 as uuid } from 'uuid'
+import type { MailListTypes } from '@/server/mail/Types'
 
 
 export default function MailList({
@@ -15,8 +14,6 @@ export default function MailList({
     }[],
     type: MailListTypes,
 }) {
-
-
     return <ul>
         {items.map(item => <li key={uuid()}><Link href={`mail/${type}/${item.id}`}>{ item.label }</Link></li>)}
     </ul>

@@ -1,16 +1,16 @@
-"use client"
+'use client'
 
-import styles from "./channelSettings.module.scss"
-import NotificationMethodSelector from "@/components/NotificaionMethodSelector/NotificaionMethodSelector"
-import TextInput from "@/app/components/UI/TextInput"
-import Select from "@/app/components/UI/Select"
-import { useState } from "react"
-import Form from "@/app/components/Form/Form"
-import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
-import { NotificationChannel } from "@/server/notifications/Types"
-import { findValidParents } from "@/server/notifications/channel/validation"
-import { updateNotificationChannelAction } from "@/actions/notifications/channel/update"
-import { MailAlias } from "@prisma/client"
+import styles from './channelSettings.module.scss'
+import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
+import TextInput from '@/app/components/UI/TextInput'
+import Select from '@/app/components/UI/Select'
+import Form from '@/app/components/Form/Form'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { findValidParents } from '@/server/notifications/channel/validation'
+import { updateNotificationChannelAction } from '@/actions/notifications/channel/update'
+import { useState } from 'react'
+import type { NotificationChannel } from '@/server/notifications/Types'
+import type { MailAlias } from '@prisma/client'
 
 export default function ChannelSettings({
     currentChannel,
@@ -21,10 +21,9 @@ export default function ChannelSettings({
     channels: NotificationChannel[],
     mailAliases: MailAlias[],
 }) {
-    
-    const [ currentChannelState, setCurrentChannel ] = useState(currentChannel)
+    const [currentChannelState, setCurrentChannel] = useState(currentChannel)
 
-    const selectOptions = findValidParents(currentChannel.id, channels) 
+    const selectOptions = findValidParents(currentChannel.id, channels)
 
     return <PageWrapper
         title={currentChannelState.name}
@@ -36,7 +35,7 @@ export default function ChannelSettings({
                 submitText="Lagre"
             >
                 <input type="hidden" name="id" value={currentChannelState.id} />
-                
+
                 <TextInput label="Navn" name="name" defaultValue={currentChannelState.name} onChange={(e) => {
                     const value = e.target.value
                     setCurrentChannel({
@@ -48,20 +47,20 @@ export default function ChannelSettings({
                     <TextInput
                         label="Beskrivelse"
                         name="description"
-                        defaultValue={currentChannelState.description ?? ""}
+                        defaultValue={currentChannelState.description ?? ''}
                         className={styles.descriptionInput}
                     />
                 </div>
 
                 <div className={styles.widerDiv}>
-                    {currentChannelState.special != "ROOT" ?
+                    {currentChannelState.special != 'ROOT' ?
                         <Select
                             label="Forelder"
                             name="parentId"
                             options={selectOptions.map(c => ({ value: c.id, label: c.name }))}
                             defaultValue={currentChannelState.parentId}
                         />
-                    :
+                        :
                         <input type="hidden" name="parentId" value={currentChannelState.parentId} />
                     }
                 </div>
@@ -87,7 +86,7 @@ export default function ChannelSettings({
                                 availableMethods: data,
                             })
                         }}
-                        />
+                    />
                     <NotificationMethodSelector
                         formPrefix="defaultMethods"
                         title="Standard metoder"
@@ -107,5 +106,4 @@ export default function ChannelSettings({
             </Form>
         </div>
     </PageWrapper>
-    
 }

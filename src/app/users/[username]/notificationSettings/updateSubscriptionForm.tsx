@@ -1,10 +1,8 @@
-"use client"
-import { updateSubscriptionAction } from "@/actions/notifications/subscription/update"
-import Form from "@/app/components/Form/Form"
-import NotificationMethodSelector from "@/app/components/NotificaionMethodSelector/NotificaionMethodSelector"
-import { NotificationChannel, NotificationMethod } from "@/server/notifications/Types"
-
-
+'use client'
+import { updateSubscriptionAction } from '@/actions/notifications/subscription/update'
+import Form from '@/app/components/Form/Form'
+import NotificationMethodSelector from '@/app/components/NotificaionMethodSelector/NotificaionMethodSelector'
+import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
 
 
 export default function UpdateSubscriptionForm({
@@ -14,8 +12,6 @@ export default function UpdateSubscriptionForm({
     channel: NotificationChannel,
     methods: NotificationMethod,
 }) {
-
-
     return <Form
         submitText="Lagre"
         action={updateSubscriptionAction}

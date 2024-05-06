@@ -1,8 +1,8 @@
-import { UserFiltered } from "@/server/users/Types"
-import { NotificationChannel, notificationMethods } from "./Types"
-import { dispatchEmailNotifications } from "./email/dispatch"
-import { Notification } from "@prisma/client"
-import { dispatchPushNotifications } from "./push/dispath"
+import { dispatchEmailNotifications } from './email/dispatch'
+import { dispatchPushNotifications } from './push/dispath'
+import type { UserFiltered } from '@/server/users/Types'
+import type { Notification } from '@prisma/client'
+import type { NotificationChannel, notificationMethods } from './Types'
 
 
 export const dispathMethod = {
@@ -16,7 +16,7 @@ export const dispathMethod = {
 
 export function repalceSpecialSymbols(text: string, user: UserFiltered) {
     return text
-        .replaceAll("%u", user.username)
-        .replaceAll("%n", user.firstname)
-        .replaceAll("%N", `${user.firstname} ${user.lastname}`)
+        .replaceAll('%u', user.username)
+        .replaceAll('%n', user.firstname)
+        .replaceAll('%N', `${user.firstname} ${user.lastname}`)
 }
