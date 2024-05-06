@@ -5,10 +5,11 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { v4 as uuid } from 'uuid'
+import type { ActionReturn } from '@/actions/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { ViaType } from '@/server/mail/Types'
 import type { UserFiltered } from '@/server/users/Types'
-import { v4 as uuid } from 'uuid'
 
 type PropType = ({
     type: 'alias',
@@ -26,7 +27,7 @@ type PropType = ({
     type: 'mailaddressExternal',
     item: MailAddressExternal & ViaType,
 }) & {
-    destroyFunction?: null | ((id: number) => void),
+    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
 }
 
 export default function MailListItem({

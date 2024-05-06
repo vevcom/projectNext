@@ -4,8 +4,8 @@ import styles from './NotificaionMethodSelector.module.scss'
 import Checkbox from '@/app/components/UI/Checkbox'
 import { notificationMethodsDisplayMap } from '@/server/notifications/ConfigVars'
 import { v4 as uuid } from 'uuid'
-import type { NotificationMethodTypes, NotificationMethod, NotificationMethods } from '@/server/notifications/Types'
 import React from 'react'
+import type { NotificationMethodTypes, NotificationMethod, NotificationMethods } from '@/server/notifications/Types'
 
 export default function NotificationMethodSelector({
     title,

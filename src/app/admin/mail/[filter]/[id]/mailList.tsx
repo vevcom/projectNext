@@ -4,6 +4,7 @@ import MailListItem from './mailListItem'
 import styles from './mailList.module.scss'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
+import type { ActionReturn } from '@/actions/Types'
 import type { MailListTypes, ViaType } from '@/server/mail/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
@@ -32,7 +33,7 @@ type PropType = ({
     type: 'mailaddressExternal',
     items: (MailAddressExternal & ViaType)[],
 }) & {
-    destroyFunction?: null | ((id: number) => void),
+    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
 }
 
 export default function MailList({
@@ -50,10 +51,15 @@ export default function MailList({
                 const results = await destroyFunction(id)
                 if (!results.success) {
                     alert('Kunne ikke fjerne relasjonen')
-                    return
+                    return results
                 }
 
                 setItemsState(itemsState.filter(i => i.id !== id))
+            }
+            return {
+                success: false,
+                errorCode: 'BAD PARAMETERS',
+                error: [{ message: 'Destory function is not set' }],
             }
         }
     }
