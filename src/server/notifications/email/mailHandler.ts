@@ -105,7 +105,7 @@ class MailHandler {
             console.log(r.response)
 
             if (!PROD) {
-                console.log(`Preview: ${nodemailer.getTestMessageUrl(r)}`)
+                console.log(`Preview: ${nodemailer.getTestMessageUrl(r as SMTPTransport.SentMessageInfo)}`)
             }
         })
     }
