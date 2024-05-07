@@ -17,31 +17,24 @@ const typeDisplayName: Record<MailListTypes, string> = {
     mailaddressExternal: 'Eksterne adresser',
 }
 
-type PropType = ({
-    type: 'alias',
-    items: (MailAlias & ViaType)[],
-} | {
-    type: 'mailingList',
-    items: (MailingList & ViaType)[],
-} | {
-    type: 'group',
-    items: (Group & ViaType)[],
-} | {
-    type: 'user',
-    items: (UserFiltered & ViaType)[],
-} | {
-    type: 'mailaddressExternal',
-    items: (MailAddressExternal & ViaType)[],
-}) & {
-    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
+type TypeConversion = {
+    alias: (MailAlias & ViaType),
+    mailingList: (MailingList & ViaType),
+    group: (Group & ViaType),
+    user: (UserFiltered & ViaType),
+    mailaddressExternal: (MailAddressExternal & ViaType),
 }
 
-export default function MailList({
+export default function MailList<T extends MailListTypes>({
     type,
     items,
     destroyFunction
-}: PropType) {
-    const [itemsState, setItemsState] = useState<typeof items[number][]>(items)
+}: {
+    type: T,
+    items: TypeConversion[T][],
+    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
+}) {
+    const [itemsState, setItemsState] = useState<TypeConversion[T][]>(items)
 
     let destroyFunc = destroyFunction
 
@@ -64,12 +57,39 @@ export default function MailList({
         }
     }
 
+    function getDisplayText(item: TypeConversion[T]): string {
+        if ((type === 'alias' || type === 'mailaddressExternal') && 'address' in item) {
+            return item.address
+        }
+
+        if (type === 'mailingList' && 'name' in item) {
+            return item.name
+        }
+
+        if (type === 'user' && 'firstname' in item && 'lastname' in item) {
+            return `${item.firstname} ${item.lastname}`
+        }
+
+        if (type === 'group') {
+            return String(item.id)
+        }
+
+        console.warn('This code should never run. This mens that the argument passed to MailList is invalid.')
+
+        return ''
+    }
 
     return <div className={styles.mailList}>
         <h3>{typeDisplayName[type]}</h3>
 
         <ul>
-            { itemsState.map(i => <MailListItem type={type} item={i} key={uuid()} destroyFunction={destroyFunc}/>) }
+            { itemsState.map(i => <MailListItem
+                type={type}
+                displayText={getDisplayText(i)}
+                via={i.via}
+                id={i.id}
+                key={uuid()}
+                destroyFunction={destroyFunc}/>) }
         </ul>
     </div>
 }

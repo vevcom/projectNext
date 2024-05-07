@@ -7,62 +7,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuid } from 'uuid'
 import type { ActionReturn } from '@/actions/Types'
-import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
-import type { ViaType } from '@/server/mail/Types'
-import type { UserFiltered } from '@/server/users/Types'
-
-type PropType = ({
-    type: 'alias',
-    item: MailAlias & ViaType,
-} | {
-    type: 'mailingList',
-    item: MailingList & ViaType,
-} | {
-    type: 'group',
-    item: Group & ViaType,
-} | {
-    type: 'user',
-    item: UserFiltered & ViaType,
-} | {
-    type: 'mailaddressExternal',
-    item: MailAddressExternal & ViaType,
-}) & {
-    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
-}
+import type { MailListTypes, ViaType } from '@/server/mail/Types'
 
 export default function MailListItem({
     type,
-    item,
+    id,
+    displayText,
     destroyFunction,
-}: PropType) {
-    let displayText = ''
-
+    via,
+}: {
+    type: MailListTypes,
+    id: number,
+    displayText: string,
+    destroyFunction?: null | ((identity: number) => Promise<ActionReturn<null>>),
+} & ViaType) {
     if (!MailListTypeArray.includes(type)) {
         notFound()
     }
 
-    if (type === 'alias' || type === 'mailaddressExternal') {
-        displayText = item.address
-    }
-
-    if (type === 'mailingList') {
-        displayText = item.name
-    }
-
-    if (type === 'user') {
-        displayText = `${item.firstname} ${item.lastname}`
-    }
-
-    if (type === 'group') {
-        displayText = String(item.id)
-    }
-
-    const editable = (destroyFunction && !item.via)
+    const editable = (destroyFunction && via)
 
     return <li className={`${styles.mailListItem} ${editable ? styles.editable : ''}`}>
-        {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, item.id)} /> : null}
-        <Link href={`/admin/mail/${type}/${item.id}`}>{displayText}</Link>
-        {item.via ? item.via.map(v => <span key={uuid()}>
+        {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, id)} /> : null}
+        <Link href={`/admin/mail/${type}/${id}`}>{displayText}</Link>
+        {via ? via.map(v => <span key={uuid()}>
             ({v.label})
         </span>) : null}
     </li>
