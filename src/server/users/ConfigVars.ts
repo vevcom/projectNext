@@ -7,6 +7,8 @@ export const userFieldsToExpose = [
     'firstname',
     'lastname',
     'email',
+    'emailVerified',
+    'mobile',
     'createdAt',
     'updatedAt',
     'acceptedTerms',

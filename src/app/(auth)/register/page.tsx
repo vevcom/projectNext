@@ -45,6 +45,8 @@ export default async function Register() {
     >
         <TextInput label="Brukernavn" name="username" disabled={true} value={userAuth.user?.username}/>
         <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
+        <TextInput label="Telefonnummer" name="mobile" />
+        <TextInput label="Allergier / diett" name="allergies" />
         <TextInput label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
         <TextInput label="Gjenta passord" name="confirmPassword" />
         <Select label="Kjønn" name="sex" options={sexOptions}/>

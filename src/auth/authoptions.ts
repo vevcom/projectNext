@@ -1,17 +1,15 @@
 import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
-import { fetchStudyProgrammesFromFeide } from './feide/api'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/read'
 import { readUser } from '@/server/users/read'
-import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import { updateUserStudyProgrammes } from './feide/userRoutines'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -118,33 +116,10 @@ export const authOptions: AuthOptions = {
 
                         if (profile?.email) await updateEmailForFeideAccount(account.providerAccountId, profile.email)
 
-                        const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(account.access_token)
-                        const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
-
-                        // Everything from here...
-                        const order = (await readCurrenOmegaOrder()).order
-
-                        await prisma.membership.deleteMany({
-                            where: {
-                                OR: studyProgrammes.map(({ groupId }) => ({
-                                    groupId,
-                                    order,
-                                }))
-                            }
-                        })
-
                         const userId = user ? Number(user.id) : token.user.id
 
-                        await prisma.membership.createMany({
-                            data: studyProgrammes.map(({ groupId }) => ({
-                                groupId,
-                                order,
-                                admin: false,
-                                userId,
-                            }))
-                        })
+                        await updateUserStudyProgrammes(userId, account.access_token)
                     }
-                    // ...to here should be a function.
 
                     break
                 }

@@ -1,6 +1,6 @@
 import { ValidationBase } from '@/server/Validation'
 import { SEX } from '@prisma/client'
-import { z } from 'zod'
+import { optional, z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
 
 const baseUserValidation = new ValidationBase({
@@ -8,8 +8,11 @@ const baseUserValidation = new ValidationBase({
         username: z.string(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string(),
+        emailVerified: z.string().optional().nullable(),
+        mobile: z.string(),
         firstname: z.string(),
         lastname: z.string(),
+        allergies: z.string().optional().nullable(),
         password: z.string().optional(),
         confirmPassword: z.string().optional(),
         acceptedTerms: z.literal('on', {
@@ -20,8 +23,11 @@ const baseUserValidation = new ValidationBase({
         username: z.string().max(50).min(2),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),
+        emailVerified: z.string().datetime({}).optional().nullable(),
+        mobile: z.string().regex(/^\+?\d{4,20}$/, { message: "Skriv kun tall, uten mellomrom." }),
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
+        allergies: z.string().max(150).optional().nullable(),
         password: z.string().max(50).min(2).optional(),
         confirmPassword: z.string().max(50).min(2).optional(),
         acceptedTerms: z.literal('on', {
@@ -39,6 +45,7 @@ export const createUserValidation = baseUserValidation.createValidation({
     keys: [
         'confirmPassword',
         'email',
+        'emailVerified',
         'firstname',
         'sex',
         'username',
@@ -65,9 +72,12 @@ export type UpdateUserTypes = ValidationTypes<typeof updateUserValidation>
 export const registerUserValidation = baseUserValidation.createValidation({
     keys: [
         'email',
+        'mobile',
+        'allergies',
         'password',
         'confirmPassword',
         'sex',
+        'acceptedTerms',
     ],
     transformer: data => data,
     refiner,

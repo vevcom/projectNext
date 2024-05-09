@@ -26,20 +26,34 @@ export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed'
  * @returns null
  */
 export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
-    const { email, sex, password } = registerUserValidation.detailedValidate(rawdata)
+    const { email, sex, password, mobile, allergies } = registerUserValidation.detailedValidate(rawdata)
 
     if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
 
-    const alredyRegistered = await prismaCall(() => prisma.user.count({
+    const storedUser = await prismaCall(() => prisma.user.findUnique({
         where: {
             id,
-            NOT: {
-                acceptedTerms: null,
+        },
+        select: {
+            acceptedTerms: true,
+            email: true,
+            feideAccount: {
+                select: {
+                    email: true,
+                },
             },
+            emailVerified: true,
         },
     }))
 
-    if (alredyRegistered) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
+    if (!storedUser) throw new ServerError("NOT FOUND", "Could not find the user with the specified id.")
+
+    if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
+
+    const emailVerified = (
+        email === storedUser.feideAccount?.email ||
+        email === storedUser.email
+    ) ? storedUser.emailVerified : null
 
     await prismaCall(() => prisma.$transaction([
         prisma.user.update({
@@ -50,16 +64,25 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
                 acceptedTerms: new Date(),
                 email,
                 sex,
+                mobile,
+                allergies,
+                emailVerified,
             }
         }),
-        prisma.credentials.create({
-            data: {
+        prisma.credentials.upsert({
+            where: {
+                userId: id,
+            },
+            create: {
                 passwordHash: password,
                 user: {
                     connect: {
                         id,
                     },
                 },
+            },
+            update: {
+                passwordHash: password,
             },
         })
     ]))
