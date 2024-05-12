@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import { readJWTPayload } from '@/utils/jwt'
+import { readJWTPayload } from '@/auth/jwt'
 import { ServerError } from '@/server/error'
 import type { Account } from 'next-auth'
 
