@@ -20,3 +20,10 @@ export function readJWTPayload<T = Record<string, unknown>>(jwt: string): JWT<T>
     const payload = Buffer.from(parts[1], 'base64').toString('utf-8')
     return JSON.parse(payload)
 }
+
+export function generateJWT(payload: JSON, options: Date): string {
+
+
+
+    return ""
+}
