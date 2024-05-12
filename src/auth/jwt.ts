@@ -34,9 +34,9 @@ const JWT_ISSUER = "omegaveven";
  * @param expiresIn - The expiration time of the JWT in seconds.
  * @returns The generated JWT.
  */
-export function generateJWT<T>(sub: string, payload: T, expiresIn: number): string {
+export function generateJWT<T>(aud: string, payload: T, expiresIn: number): string {
     return jwt.sign({
-        sub,
+        aud,
         ait: Math.floor(Date.now() / 1000),
         ...payload
     }, process.env.NEXTAUTH_SECRET ?? "THIS VALUE MUST CHANGE", {
@@ -51,12 +51,22 @@ export function generateJWT<T>(sub: string, payload: T, expiresIn: number): stri
  * @returns The decoded payload of the JWT if it is valid.
  * @throws {ServerError} If the JWT is expired or invalid.
  */
-export function verifyJWT(token: string) {
+export function verifyJWT(token: string, aud?: string): (jwt.JwtPayload & Record<string, any>) {
     try {
-        return jwt.verify(token, process.env.NEXTAUTH_SECRET ?? "THIS VALUE MUST ALSO CHANGE",{
+        const payload = jwt.verify(token, process.env.NEXTAUTH_SECRET ?? "THIS VALUE MUST ALSO CHANGE",{
             issuer: JWT_ISSUER,
             ignoreExpiration: false,
         })
+
+        if (typeof payload === 'string') {
+            throw new ServerError('JWT INVALID', 'The payload cannot be a string')
+        }
+
+        if (aud && typeof payload !== 'string' && payload.aud !== aud) {
+            throw new ServerError('JWT INVALID', 'The audience in the jwt does not match!')
+        }
+
+        return payload
 
     } catch(err) {
 

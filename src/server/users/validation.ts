@@ -84,3 +84,14 @@ export const registerUserValidation = baseUserValidation.createValidation({
 })
 
 export type RegisterUserTypes = ValidationTypes<typeof registerUserValidation>
+
+export const updateUserPasswordValidation = baseUserValidation.createValidation({
+    keys: [
+        'password',
+        'confirmPassword',
+    ],
+    transformer: data => data,
+    refiner,
+})
+
+export type UpdateUserPasswordTypes = ValidationTypes<typeof updateUserPasswordValidation>

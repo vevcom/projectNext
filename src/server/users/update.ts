@@ -1,9 +1,9 @@
 import 'server-only'
-import { registerUserValidation, updateUserValidation } from './validation'
+import { registerUserValidation, updateUserPasswordValidation, updateUserValidation } from './validation'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { RegisterUserTypes, UpdateUserTypes } from './validation'
+import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
@@ -86,5 +86,30 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
             },
         })
     ]))
+    return null
+}
+
+export async function updateUserPassword(id: number, data: UpdateUserPasswordTypes['Detailed']): Promise<null> {
+    const parse = updateUserPasswordValidation.detailedValidate(data)
+
+    await prismaCall(() => prisma.$transaction([
+        prisma.credentials.update({
+            where: {
+                userId: id,
+            },
+            data: {
+                passwordHash: parse.password,
+            }
+        }),
+        prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                updatedAt: new Date(),
+            }
+        })
+    ]))
+
     return null
 }

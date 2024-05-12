@@ -1,12 +1,14 @@
 import 'server-only'
 import { UserFiltered } from '@/server/users/Types';
-import { generateJWT } from '@/auth/jwt';
+import { generateJWT, verifyJWT } from '@/auth/jwt';
 import { render } from '@react-email/render';
 import { ResetPasswordTemplate } from '@/server/notifications/email/templates/resetPassword';
 import { sendSystemMail } from '@/server/notifications/email/send';
 import { resetPasswordValidation } from './validation';
 import { readUser } from '@/server/users/read';
 import { ServerError } from '../error';
+import { safeServerCall } from '@/actions/safeServerCall';
+import { ActionReturn } from '@/actions/Types';
 
 export async function resetPasswordByEmail(email: string): Promise<string> {
     const parse = resetPasswordValidation.detailedValidate({ email })
@@ -30,13 +32,39 @@ export async function resetPasswordByEmail(email: string): Promise<string> {
 export async function resetPassword(user: UserFiltered) {
 
     const jwt = generateJWT("forgotpassword", {
-        userId: user.id,
-        lastUserUpdate: user.updatedAt,
+        sub: user.id,
+        lastUpdate: user.updatedAt,
     }, 60 * 60);
 
-    const link = `https://${process.env.DOMAIN}/auth/resetpassword?token=${jwt}`
+    const link = process.env.NODE_ENV === 'development'
+        ? `http://localhost/auth/resetpassword?token=${jwt}`
+        : `https://${process.env.DOMAIN}/auth/resetpassword?token=${jwt}`
 
     const mailBody = render(<ResetPasswordTemplate user={user} link={link} />)
 
     await sendSystemMail(user.email, "Glemt passord", mailBody)
+}
+
+export async function verifyResetPasswordToken(token: string): Promise<{
+    userId: number
+}> {
+    const payload = verifyJWT(token, "forgotpassword")
+    
+    if (payload.sub && payload.lastUpdate) {
+        const userId = Number(payload.sub)
+
+        const user = await readUser({
+            id: userId,
+        })
+
+        if (user.updatedAt <= new Date(payload.lastUpdate)) {
+            return {
+                userId,
+            }
+        }
+
+        throw new ServerError('JWT INVALID', 'The password has already been changed')
+    }
+
+    throw new ServerError('JWT INVALID', 'The forgot password JWT is not valid')
 }

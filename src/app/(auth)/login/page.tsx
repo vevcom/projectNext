@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import type { FormEvent } from 'react'
 import Link from 'next/link'
+import styles from './page.module.scss'
 
 export default function LogIn() {
     const searchParams = useSearchParams()
@@ -35,6 +36,6 @@ export default function LogIn() {
             redirect: true,
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
         })}>Logg inn med Feide</BorderButton>
-        <Link href="/resetpassword">Glemt passord?</Link>
+        <Link href="/resetpassword" className={styles.resetPasswordLink}>Glemt passord?</Link>
     </>
 }
