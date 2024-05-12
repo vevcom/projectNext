@@ -1,0 +1,95 @@
+'use client'
+
+import MailListItem from './mailListItem'
+import styles from './mailList.module.scss'
+import { v4 as uuid } from 'uuid'
+import { useState } from 'react'
+import type { ActionReturn } from '@/actions/Types'
+import type { MailListTypes, ViaType } from '@/server/mail/Types'
+import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { UserFiltered } from '@/server/users/Types'
+
+const typeDisplayName: Record<MailListTypes, string> = {
+    alias: 'Alias',
+    mailingList: 'Mail lister',
+    group: 'Grupper',
+    user: 'Brukere',
+    mailaddressExternal: 'Eksterne adresser',
+}
+
+type TypeConversion = {
+    alias: (MailAlias & ViaType),
+    mailingList: (MailingList & ViaType),
+    group: (Group & ViaType),
+    user: (UserFiltered & ViaType),
+    mailaddressExternal: (MailAddressExternal & ViaType),
+}
+
+export default function MailList<T extends MailListTypes>({
+    type,
+    items,
+    destroyFunction
+}: {
+    type: T,
+    items: TypeConversion[T][],
+    destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
+}) {
+    const [itemsState, setItemsState] = useState<TypeConversion[T][]>(items)
+
+    let destroyFunc = destroyFunction
+
+    if (destroyFunc) {
+        destroyFunc = async (id: number) => {
+            if (destroyFunction) {
+                const results = await destroyFunction(id)
+                if (!results.success) {
+                    alert('Kunne ikke fjerne relasjonen')
+                    return results
+                }
+
+                setItemsState(itemsState.filter(i => i.id !== id))
+            }
+            return {
+                success: false,
+                errorCode: 'BAD PARAMETERS',
+                error: [{ message: 'Destory function is not set' }],
+            }
+        }
+    }
+
+    function getDisplayText(item: TypeConversion[T]): string {
+        if ((type === 'alias' || type === 'mailaddressExternal') && 'address' in item) {
+            return item.address
+        }
+
+        if (type === 'mailingList' && 'name' in item) {
+            return item.name
+        }
+
+        if (type === 'user' && 'firstname' in item && 'lastname' in item) {
+            return `${item.firstname} ${item.lastname}`
+        }
+
+        if (type === 'group') {
+            return String(item.id)
+        }
+
+        console.warn('This code should never run. This mens that the argument passed to MailList is invalid.')
+
+        return ''
+    }
+
+    return <div className={styles.mailList}>
+        <h3>{typeDisplayName[type]}</h3>
+
+        <ul>
+            { itemsState.map(i => <MailListItem
+                type={type}
+                displayText={getDisplayText(i)}
+                via={i.via}
+                id={i.id}
+                key={uuid()}
+                destroyFunction={destroyFunc}/>) }
+        </ul>
+    </div>
+}

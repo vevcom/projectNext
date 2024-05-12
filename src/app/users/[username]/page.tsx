@@ -1,3 +1,4 @@
+import { NotificationSettings } from './notificationSettings/notificationsSettings'
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
@@ -32,7 +33,7 @@ export default async function User({ params }: PropTypes) {
     }
 
     return (
-        <>
+        <div style={{ marginLeft: '2rem' }}>
             <h1>{`${user.firstname} ${user.lastname}`}</h1>
             <p>{`E-post: '${user.email}'`}</p>
             <p>{`Bruker-ID: ${user.id}`}</p>
@@ -45,6 +46,9 @@ export default async function User({ params }: PropTypes) {
                 {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
-        </>
+
+            <NotificationSettings />
+
+        </div>
     )
 }

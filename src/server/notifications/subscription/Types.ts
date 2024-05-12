@@ -1,0 +1,11 @@
+import type { allMethodsOn } from '@/server/notifications/Types'
+import type { Prisma } from '@prisma/client'
+
+
+export type Subscription = Prisma.NotificationSubscriptionGetPayload<{
+    include: {
+        methods: {
+            select: typeof allMethodsOn
+        },
+    }
+}>
