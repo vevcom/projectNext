@@ -34,8 +34,9 @@ const JWT_ISSUER = "omegaveven";
  * @param expiresIn - The expiration time of the JWT in seconds.
  * @returns The generated JWT.
  */
-export function generateJWT(payload: JSON, expiresIn: number): string {
+export function generateJWT<T>(sub: string, payload: T, expiresIn: number): string {
     return jwt.sign({
+        sub,
         ait: Math.floor(Date.now() / 1000),
         ...payload
     }, process.env.NEXTAUTH_SECRET ?? "THIS VALUE MUST CHANGE", {

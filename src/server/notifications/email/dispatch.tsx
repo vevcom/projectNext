@@ -1,7 +1,7 @@
 import { sendBulkMail } from './send'
 import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
 import { sendEmailValidation } from './validation'
-import { DefaultEmailTemplate } from './mailTemplates'
+import { DefaultEmailTemplate } from './templates/default'
 import { repalceSpecialSymbols } from '@/server/notifications/dispatch'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
