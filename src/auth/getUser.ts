@@ -92,6 +92,13 @@ export async function getUser({
         memberships = [],
     } = await getServerSession(authOptions) ?? {}
 
+    if (shouldRedirect && user && !user.acceptedTerms) {
+        if (returnUrl) {
+            redirect(`/register?callbackUrl=${returnUrl}`)
+        }
+        redirect(`/register`)
+    }
+
     if ((user || !userRequired) && checkMatrix(permissions, requiredPermissions)) {
         // Cannot have ternary expression for just status because then ts gets confused.
         return user
