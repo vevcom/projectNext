@@ -15,9 +15,6 @@ export function generateOmegaId(data: OmegaId): string {
         throw new ServerError('INVALID CONFIGURATION', 'The environvariable OMEGAID_PRIVATE_KEY must be set')
     }
 
-    console.log("MARK")
-    console.log(privKey)
-
     const token = jwt.sign({
         sub: data.id,
         usrnm: data.username,

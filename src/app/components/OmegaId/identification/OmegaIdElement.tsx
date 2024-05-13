@@ -18,12 +18,11 @@ export default function OmegaIdElement({
     const firstname = JWTPyaload.gn ?? ""
     const lastname = JWTPyaload.sn ?? ""
 
-
     return <div>
         <SVG
             text={token}
         />
-        
+
         <p>{firstname} {lastname}</p>
     </div>
 }
