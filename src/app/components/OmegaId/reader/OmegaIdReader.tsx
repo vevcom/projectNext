@@ -94,7 +94,7 @@ export default function OmegaIdReader({
     return <div className={styles.OmegaIdReader}>
         <div id={qrcodeRegionId} />
 
-        <div className={`${styles.feedbackBox} ${feedback.success ? styles.success : ""} ${feedback.error ? styles.error : ""}`} >
+        <div className={`${styles.feedbackBox} ${(feedback.success && !singleRead) ? styles.success : ""} ${feedback.error ? styles.error : ""}`} >
             <span>{feedback.text}</span>
         </div>
     </div>

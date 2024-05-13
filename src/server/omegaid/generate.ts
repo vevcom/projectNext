@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { ServerError } from '../error';
 import { OmegaJWTAudience } from '@/auth/Types';
 import { JWT_ISSUER } from '@/auth/ConfigVars';
+import { OmegaIdExpiryTime } from './ConfigVars';
 
 
 
@@ -26,7 +27,7 @@ export function generateOmegaId(data: OmegaId): string {
         algorithm: 'ES256',
         audience: 'omegaid' satisfies OmegaJWTAudience,
         issuer: JWT_ISSUER,
-        expiresIn: 60 * 10, // 10 minutes
+        expiresIn: OmegaIdExpiryTime,
     })
 
     return token
