@@ -6,6 +6,7 @@ export type ServerErrorCode =
     | 'JWT EXPIRED'
     | 'JWT INVALID'
     | 'SERVER ERROR'
+    | 'INVALID CONFIGURATION'
 
 export type ErrorMessage = {
     path?: (number | string)[],
