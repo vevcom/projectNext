@@ -9,7 +9,8 @@ import { JWT_ISSUER } from '@/auth/ConfigVars';
 import { OmegaJWTAudience } from '@/auth/Types';
 import { ActionReturn } from '@/actions/Types';
 
-async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<OmegaId>> {
+async function parseJWT(token: string, publicKey: string, timeOffset: number, payment: boolean): Promise<ActionReturn<OmegaId>> {
+    // TODO: This only works in safari :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {
         return {
@@ -21,7 +22,10 @@ async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<
         }
     }
 
-    // TODO: This only works in safari :///
+    if (timeOffset < 0) {
+        throw new Error("The timeOffset cannot be below 0")
+    }
+
 
     const tokenS = token.split('.')
     if (tokenS.length !== 3) {
@@ -44,8 +48,6 @@ async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<
         true,
         [ "verify" ]
     )
-
-    console.log(key)
 
     const signValid = await crypto.subtle.verify(
         {
@@ -78,7 +80,7 @@ async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<
         return invalidJWT("Missing mandatory fields");
     }
 
-    if (new Date(payload.exp * 1000) < new Date()) {
+    if (new Date(payload.exp * 1000 + timeOffset) < new Date()) {
         return invalidJWT("Token expired")
     }
 
@@ -88,6 +90,10 @@ async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<
 
     if (payload.aud !== 'omegaid' satisfies OmegaJWTAudience) {
         return invalidJWT("Invalid audience")
+    }
+
+    if (payment && !payload.pm) {
+        return invalidJWT("The JWT is not valid for payments")
     }
 
     return {
@@ -105,9 +111,15 @@ async function parseJWT(token: string, publicKey: string): Promise<ActionReturn<
 export default function OmegaIdReader({
     successCallback,
     publicKey,
+    expiryOffset,
+    payment,
+    debounceThreshold,
 }: {
-    successCallback: () => {},
+    successCallback: (user: OmegaId, token: string) => unknown,
     publicKey: string,
+    expiryOffset?: number,
+    payment?: boolean,
+    debounceThreshold?: number,
 }) {
 
     const qrcodeRegionId = uuid();
@@ -116,15 +128,26 @@ export default function OmegaIdReader({
 
         const html5QrcodeScanner = new Html5QrcodeScanner(qrcodeRegionId, QRCodeReaderConfig, false);
 
-        html5QrcodeScanner.render(async (data) => {
-            const parse = await parseJWT(data, publicKey)
+        let lastReadTime = 0;
+        let lastReadToken = "";
+
+        html5QrcodeScanner.render(async (token) => {
+            const parse = await parseJWT(token, publicKey, expiryOffset ?? 1, payment ?? false)
             if (!parse.success) {
                 console.log(parse)
                 return;
             }
 
-            console.log(parse.data)
-            
+            if (token === lastReadToken && Date.now() - lastReadTime < (debounceThreshold ?? 5000)) {
+                lastReadTime = Date.now()
+                console.log("Duplicate read")
+                return;
+            }
+
+            successCallback(parse.data, token)
+
+            lastReadToken = token
+            lastReadTime = Date.now()
         }, (e) => {});
 
         // cleanup function when component will unmount

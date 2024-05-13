@@ -11,8 +11,8 @@ export default function OmegaIdContainer({
 
     return <OmegaIdReader
         publicKey={publicKey}
-        successCallback={(data) => {
-            console.log(data)
+        successCallback={(omegaId) => {
+            console.log(omegaId)
         }}
     />
 }
