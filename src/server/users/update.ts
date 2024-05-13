@@ -5,6 +5,7 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
+import { createDefaultSubscriptions } from '../notifications/subscription/create'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -86,6 +87,9 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
             },
         })
     ]))
+
+    await createDefaultSubscriptions(id)
+
     return null
 }
 
