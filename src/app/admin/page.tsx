@@ -10,6 +10,7 @@ export default function Admin() {
 
             <h3><FontAwesomeIcon icon={faUser} />Brukere</h3>
             <Link href="admin/users">Brukere</Link>
+            <Link href="admin/omegaid" >Omega ID sjekk</Link>
 
             <h3><FontAwesomeIcon icon={faNewspaper} />CMS</h3>
             <Link href="admin/cms">Rediger cms</Link>

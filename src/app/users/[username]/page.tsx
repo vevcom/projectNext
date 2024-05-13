@@ -4,7 +4,7 @@ import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import OmegaId from '@/app/components/OmegaId/OmegaId'
+import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
 
 type PropTypes = {
     params: {

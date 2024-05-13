@@ -3,7 +3,7 @@
 import { ServerError } from "@/server/error"
 
 
-export async function getOmegaIdPublicKey(): Promise<string> {
+export async function readOmegaIdPublicKey(): Promise<string> {
     const key = process.env.OMEGAID_PUBLIC_KEY
 
     if (!key) {
