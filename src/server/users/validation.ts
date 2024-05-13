@@ -1,6 +1,6 @@
 import { ValidationBase } from '@/server/Validation'
 import { SEX } from '@prisma/client'
-import { optional, z } from 'zod'
+import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
 
 const baseUserValidation = new ValidationBase({
@@ -24,7 +24,7 @@ const baseUserValidation = new ValidationBase({
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),
         emailVerified: z.string().datetime({}).optional().nullable(),
-        mobile: z.string().regex(/^\+?\d{4,20}$/, { message: "Skriv kun tall, uten mellomrom." }),
+        mobile: z.string().regex(/^\+?\d{4,20}$/, { message: 'Skriv kun tall, uten mellomrom.' }),
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         allergies: z.string().max(150).optional().nullable(),

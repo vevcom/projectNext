@@ -1,6 +1,6 @@
-"use server"
+'use server'
 
-import { ServerError } from "@/server/error"
+import { ServerError } from '@/server/error'
 
 
 export async function readOmegaIdPublicKey(): Promise<string> {

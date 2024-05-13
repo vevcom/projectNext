@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { OmegaId, OmegaIdJWT } from '@/server/omegaid/Types';
-import { JWT } from '@/utils/jwt';
-import { JWT_ISSUER } from '@/auth/ConfigVars';
-import { OmegaJWTAudience } from '@/auth/Types';
-import { ActionReturn } from '@/actions/Types';
+import { JWT_ISSUER } from '@/auth/ConfigVars'
+import type { JWT } from '@/utils/jwt'
+import type { OmegaJWTAudience } from '@/auth/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { OmegaId, OmegaIdJWT } from '@/server/omegaid/Types'
 
 export async function parseJWT(token: string, publicKey: string, timeOffset: number): Promise<ActionReturn<OmegaId>> {
     // TODO: This only works in safari :///
@@ -14,19 +14,19 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
             success: false,
             errorCode: 'JWT INVALID',
             error: message ? [{
-                message: message
+                message
             }] : []
         }
     }
 
     if (timeOffset < 0) {
-        throw new Error("The timeOffset cannot be below 0")
+        throw new Error('The timeOffset cannot be below 0')
     }
 
 
     const tokenS = token.split('.')
     if (tokenS.length !== 3) {
-        return invalidJWT("Ugyldig QR kode type")
+        return invalidJWT('Ugyldig QR kode type')
     }
 
     const keyStripped = publicKey
@@ -36,14 +36,14 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
         .trim()
 
     const key = await crypto.subtle.importKey(
-        "spki", // Subject Public Key Info
+        'spki', // Subject Public Key Info
         Buffer.from(keyStripped, 'base64'),
         {
             name: 'ECDSA',
             namedCurve: 'P-256',
         },
         true,
-        [ "verify" ]
+        ['verify']
     )
 
     const signValid = await crypto.subtle.verify(
@@ -53,12 +53,12 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
         },
         key,
         Buffer.from(tokenS[2], 'base64'),
-        Buffer.from(tokenS[0] + '.' + tokenS[1]),
+        Buffer.from(`${tokenS[0]}.${tokenS[1]}`),
     )
 
 
     if (!signValid) {
-        return invalidJWT("Invalid JWT signature");
+        return invalidJWT('Invalid JWT signature')
     }
 
     const payload = JSON.parse(
@@ -74,19 +74,19 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
         !payload.sn ||
         !payload.gn
     ) {
-        return invalidJWT("Missing mandatory fields");
+        return invalidJWT('Missing mandatory fields')
     }
 
     if (new Date(payload.exp * 1000 + timeOffset) < new Date()) {
-        return invalidJWT("QR koden er utløpt")
+        return invalidJWT('QR koden er utløpt')
     }
 
     if (payload.iss !== JWT_ISSUER) {
-        return invalidJWT("Invalid issuer")
+        return invalidJWT('Invalid issuer')
     }
 
     if (payload.aud !== 'omegaid' satisfies OmegaJWTAudience) {
-        return invalidJWT("Invalid audience")
+        return invalidJWT('Invalid audience')
     }
 
     return {

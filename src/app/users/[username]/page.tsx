@@ -1,10 +1,10 @@
 import { NotificationSettings } from './notificationSettings/notificationsSettings'
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
+import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
 
 type PropTypes = {
     params: {

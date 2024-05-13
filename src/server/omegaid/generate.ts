@@ -1,11 +1,10 @@
 import 'server-only'
-import { OmegaId, OmegaIdJWT } from './Types';
-import jwt from 'jsonwebtoken';
-import { ServerError } from '../error';
-import { OmegaJWTAudience } from '@/auth/Types';
-import { JWT_ISSUER } from '@/auth/ConfigVars';
-import { OmegaIdExpiryTime } from './ConfigVars';
-
+import { OmegaIdExpiryTime } from './ConfigVars'
+import { ServerError } from '@/server/error'
+import { JWT_ISSUER } from '@/auth/ConfigVars'
+import jwt from 'jsonwebtoken'
+import type { OmegaId, OmegaIdJWT } from './Types'
+import type { OmegaJWTAudience } from '@/auth/Types'
 
 
 export function generateOmegaId(data: OmegaId): string {

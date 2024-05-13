@@ -1,7 +1,7 @@
 import 'server-only'
 import { fetchExtendedUserInfoFromFeide } from './api'
-import type { OAuthConfig, OAuthUserConfig } from 'next-auth/providers/index'
 import { feideScope } from './ConfigVars'
+import type { OAuthConfig, OAuthUserConfig } from 'next-auth/providers/index'
 
 /**
  * The basic attributes contained in the id token returned by feide.

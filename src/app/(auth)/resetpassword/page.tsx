@@ -1,15 +1,13 @@
-"use client"
+'use client'
 
-import { resetPasswordAction } from "@/actions/auth/resetPassword";
-import Form from "@/app/components/Form/Form";
-import TextInput from "@/app/components/UI/TextInput";
-import { useState } from "react";
-
+import { resetPasswordAction } from '@/actions/auth/resetPassword'
+import Form from '@/app/components/Form/Form'
+import TextInput from '@/app/components/UI/TextInput'
+import { useState } from 'react'
 
 
 export default function ResetPassword() {
-
-    const [ feedback, setFeedback ] = useState("")
+    const [feedback, setFeedback] = useState('')
 
     return <>
         <Form

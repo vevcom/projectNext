@@ -1,11 +1,11 @@
 import 'server-only'
 import { registerUserValidation, updateUserPasswordValidation, updateUserValidation } from './validation'
+import { createDefaultSubscriptions } from '@/server/notifications/subscription/create'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
-import { createDefaultSubscriptions } from '../notifications/subscription/create'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -47,7 +47,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
         },
     }))
 
-    if (!storedUser) throw new ServerError("NOT FOUND", "Could not find the user with the specified id.")
+    if (!storedUser) throw new ServerError('NOT FOUND', 'Could not find the user with the specified id.')
 
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 

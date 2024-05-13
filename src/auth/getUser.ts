@@ -96,7 +96,7 @@ export async function getUser({
         if (returnUrl) {
             redirect(`/register?callbackUrl=${returnUrl}`)
         }
-        redirect(`/register`)
+        redirect('/register')
     }
 
     if ((user || !userRequired) && checkMatrix(permissions, requiredPermissions)) {

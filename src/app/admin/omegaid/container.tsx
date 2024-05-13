@@ -1,6 +1,5 @@
-"use client"
-import OmegaIdReader from "@/app/components/OmegaId/reader/OmegaIdReader"
-
+'use client'
+import OmegaIdReader from '@/app/components/OmegaId/reader/OmegaIdReader'
 
 
 export default function OmegaIdContainer({
@@ -8,7 +7,6 @@ export default function OmegaIdContainer({
 }: {
     publicKey: string,
 }) {
-
     return <OmegaIdReader
         publicKey={publicKey}
         successCallback={(omegaId) => {

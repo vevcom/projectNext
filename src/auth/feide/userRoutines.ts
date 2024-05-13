@@ -1,12 +1,11 @@
 import 'server-only'
+import { fetchStudyProgrammesFromFeide } from './api'
 import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import { fetchStudyProgrammesFromFeide } from './api'
 import prisma from '@/prisma'
 
-export async function updateUserStudyProgrammes(userId: number, access_token: string) {
-
-    const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(access_token)
+export async function updateUserStudyProgrammes(userId: number, accessToken: string) {
+    const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(accessToken)
     const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
 
     const order = (await readCurrenOmegaOrder()).order
@@ -16,7 +15,7 @@ export async function updateUserStudyProgrammes(userId: number, access_token: st
         where: {
             userId,
             group: {
-                groupType: "STUDY_PROGRAMME",
+                groupType: 'STUDY_PROGRAMME',
             },
         },
         include: {
@@ -34,18 +33,18 @@ export async function updateUserStudyProgrammes(userId: number, access_token: st
     )
 
     const addStudyProgrammes = studyProgrammes.filter(s => !userStudyProgramCodes.has(s.code))
-    
+
     const feideStudyProgrammesCodes = new Set(feideStudyProgrammes.map(f => f.code))
 
     const removeStudyProgrammes = memberships.filter(m =>
-        m.group.studyProgramme?.insititueCode && 
+        m.group.studyProgramme?.insititueCode &&
         !feideStudyProgrammesCodes.has(m.group.studyProgramme?.insititueCode)
     )
 
-    const updateStudyProgrammes = memberships.filter(m => 
-        m.group.studyProgramme?.insititueCode && 
+    const updateStudyProgrammes = memberships.filter(m =>
+        m.group.studyProgramme?.insititueCode &&
         feideStudyProgrammesCodes.has(m.group.studyProgramme?.insititueCode)
-    ).filter(m => m.order != order)
+    ).filter(m => m.order !== order)
 
 
     // This prisma call will probably break a lot of things

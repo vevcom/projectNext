@@ -14,7 +14,7 @@ export async function sendBulkMail(rawdata: Mail.Options[]) {
 /**
  * Sends a system email. Must not be used as a notification.
  * This sends an email to one user, due to some system event, such as forgot password.
- * 
+ *
  * @param to - The recipient's email address.
  * @param subject - The subject of the email.
  * @param body - The body of the email.

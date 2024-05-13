@@ -1,14 +1,13 @@
 import 'server-only'
-import { readDefaultNotificationChannels } from '../channel/read'
+import { readDefaultNotificationChannels } from '@/server/notifications/channel/read'
 import { prismaCall } from '@/server/prismaCall'
-
+import prisma from '@/prisma'
 
 
 export async function createDefaultSubscriptions(userId: number): Promise<void> {
-
     const channels = await readDefaultNotificationChannels()
 
-    await prismaCall(() => prisma.$transaction(channels.map(c => 
+    await prismaCall(() => prisma.$transaction(channels.map(c =>
         prisma.notificationSubscription.create({
             data: {
                 user: {
@@ -27,5 +26,4 @@ export async function createDefaultSubscriptions(userId: number): Promise<void> 
             }
         })
     )))
-
 }

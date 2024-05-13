@@ -1,7 +1,6 @@
 
 
-
-export const JWT_ISSUER = "omegaveven"
+export const JWT_ISSUER = 'omegaveven'
 
 export const OmegaJWTAudienceFields = [
     'resetpassword',

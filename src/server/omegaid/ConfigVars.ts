@@ -1,4 +1,4 @@
-import { UserFiltered } from "../users/Types";
+import type { UserFiltered } from '@/server/users/Types'
 
 
 export const omegaIdFields = [

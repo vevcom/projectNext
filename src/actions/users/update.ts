@@ -4,11 +4,11 @@ import { createZodActionError, createActionError } from '@/actions/error'
 import { updateUser, registerUser, updateUserPassword } from '@/server/users/update'
 import { getUser } from '@/auth/getUser'
 import { updateUserValidation, registerUserValidation, updateUserPasswordValidation } from '@/server/users/validation'
+import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
+import { ServerError } from '@/server/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
-import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
-import { ServerError } from '@/server/error'
 
 export async function updateUserAction(
     id: number,
@@ -38,7 +38,6 @@ export async function registerOwnUser(
 }
 
 export async function resetPasswordAction(token: string, rawdata: FormData): Promise<ActionReturn<null>> {
-
     console.log(token)
     console.log(rawdata)
 
@@ -46,7 +45,6 @@ export async function resetPasswordAction(token: string, rawdata: FormData): Pro
     if (!parse.success) return createZodActionError(parse)
 
     return await safeServerCall(async () => {
-
         if (typeof token !== 'string') {
             throw new ServerError('BAD PARAMETERS', 'The token must be a string.')
         }
@@ -56,6 +54,5 @@ export async function resetPasswordAction(token: string, rawdata: FormData): Pro
         await updateUserPassword(userId, parse.data)
 
         return null
-
     })
 }

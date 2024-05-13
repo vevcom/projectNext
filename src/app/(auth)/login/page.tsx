@@ -1,11 +1,11 @@
 'use client'
+import styles from './page.module.scss'
 import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
-import type { FormEvent } from 'react'
 import Link from 'next/link'
-import styles from './page.module.scss'
+import type { FormEvent } from 'react'
 
 export default function LogIn() {
     const searchParams = useSearchParams()

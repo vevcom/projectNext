@@ -1,19 +1,18 @@
-"use client"
-import { generateOmegaIdAction } from '@/actions/omegaid/generate';
-import { readJWTPayload } from '@/utils/jwt';
-import { useQRCode } from 'next-qrcode';
-import { useEffect, useState } from 'react';
+'use client'
 import styles from './OmegaIdElement.module.scss'
+import { generateOmegaIdAction } from '@/actions/omegaid/generate'
+import { readJWTPayload } from '@/utils/jwt'
+import { useQRCode } from 'next-qrcode'
+import { useEffect, useState } from 'react'
 
-const EXPIRY_THRESHOLD = 90;
+const EXPIRY_THRESHOLD = 90
 
 export default function OmegaIdElement({
     token,
 }: {
     token: string,
 }) {
-
-    const [ tokenState, setTokenState ] = useState(token);
+    const [tokenState, setTokenState] = useState(token)
 
     const { SVG } = useQRCode()
 
@@ -22,8 +21,8 @@ export default function OmegaIdElement({
         sn?: string,
     }>(token)
 
-    const firstname = JWTPayload.gn ?? ""
-    const lastname = JWTPayload.sn ?? ""
+    const firstname = JWTPayload.gn ?? ''
+    const lastname = JWTPayload.sn ?? ''
 
     let expiryTime = new Date((JWTPayload.exp - EXPIRY_THRESHOLD) * 1000)
 
@@ -31,16 +30,15 @@ export default function OmegaIdElement({
         const interval = setInterval(async () => {
             if (expiryTime < new Date()) {
                 const results = await generateOmegaIdAction()
-                if(!results.success) {
+                if (!results.success) {
                     console.error(results)
-                    throw new Error("Failed to reload the qr code")
+                    throw new Error('Failed to reload the qr code')
                 }
 
                 setTokenState(results.data)
 
                 const pld = readJWTPayload(results.data)
-                expiryTime = new Date((pld.exp - EXPIRY_THRESHOLD) * 1000) 
-
+                expiryTime = new Date((pld.exp - EXPIRY_THRESHOLD) * 1000)
             }
         }, 15 * 1000)
 
