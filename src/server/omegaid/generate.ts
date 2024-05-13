@@ -7,7 +7,7 @@ import { JWT_ISSUER } from '@/auth/ConfigVars';
 
 
 
-export function generateOmegaId(data: OmegaId, payment = false): string {
+export function generateOmegaId(data: OmegaId): string {
     // TODO: validate data
 
     const privKey = process.env.OMEGAID_PRIVATE_KEY
@@ -20,14 +20,13 @@ export function generateOmegaId(data: OmegaId, payment = false): string {
         usrnm: data.username,
         gn: data.firstname,
         sn: data.lastname,
-        pm: payment,
     }
 
     const token = jwt.sign(payload, privKey, {
         algorithm: 'ES256',
         audience: 'omegaid' satisfies OmegaJWTAudience,
         issuer: JWT_ISSUER,
-        expiresIn: 60 * (payment ? 5 : 15), // 5 minutes if payment else 15 minutes
+        expiresIn: 60 * 10, // 10 minutes
     })
 
     return token

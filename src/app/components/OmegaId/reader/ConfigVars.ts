@@ -4,7 +4,8 @@ export const QRCodeReaderConfig: Html5QrcodeScannerConfig = {
     fps: 4,
     disableFlip: true,
     qrbox: {
-        width: 400,
-        height: 400,
+        width: 200,
+        height: 200,
     },
+    aspectRatio: 1,
 }

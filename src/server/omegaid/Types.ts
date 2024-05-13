@@ -8,5 +8,4 @@ export type OmegaIdJWT = {
     usrnm: UserFiltered['username'],
     gn: UserFiltered['firstname'],
     sn: UserFiltered['lastname'],
-    pm: boolean,
 }
