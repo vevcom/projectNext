@@ -1,5 +1,5 @@
 import 'server-only'
-import { OmegaId } from './Types';
+import { OmegaId, OmegaIdJWT } from './Types';
 import jwt from 'jsonwebtoken';
 import { ServerError } from '../error';
 import { OmegaJWTAudience } from '@/auth/Types';
@@ -15,12 +15,14 @@ export function generateOmegaId(data: OmegaId): string {
         throw new ServerError('INVALID CONFIGURATION', 'The environvariable OMEGAID_PRIVATE_KEY must be set')
     }
 
-    const token = jwt.sign({
+    const payload: OmegaIdJWT = {
         sub: data.id,
         usrnm: data.username,
         gn: data.firstname,
         sn: data.lastname,
-    }, privKey, {
+    }
+
+    const token = jwt.sign(payload, privKey, {
         algorithm: 'ES256',
         audience: 'omegaid' satisfies OmegaJWTAudience,
         issuer: JWT_ISSUER,
