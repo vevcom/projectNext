@@ -9,7 +9,6 @@ import { ResetPasswordTemplate } from '../templates/resetPassword'
 export async function sendResetPasswordMail(user: UserFiltered) {
     const jwt = generateJWT('resetpassword', {
         sub: user.id,
-        lastUpdate: user.updatedAt,
     }, 60 * 60)
 
     const link = process.env.NODE_ENV === 'development'

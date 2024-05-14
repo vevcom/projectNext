@@ -1,5 +1,5 @@
 import 'server-only'
-import { registerUserValidation, updateUserPasswordValidation, updateUserValidation } from './validation'
+import { registerUserValidation, updateUserPasswordValidation, updateUserValidation, verifyUserEmailValidation } from './validation'
 import { createDefaultSubscriptions } from '@/server/notifications/subscription/create'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
@@ -8,7 +8,8 @@ import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from
 import type { User } from '@prisma/client'
 import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
 import { userFilterSelection } from './ConfigVars'
-import { ntnuEmailDomain } from '../mail/mailAddressExternal/configVars'
+import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
+import { UserFiltered } from './Types'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -134,4 +135,19 @@ export async function updateUserPassword(id: number, data: UpdateUserPasswordTyp
     ]))
 
     return null
+}
+
+export async function verifyUserEmail(id: number, email: string): Promise<UserFiltered> {
+    const parse = verifyUserEmailValidation.detailedValidate({ email })
+
+    return await prismaCall(() => prisma.user.update({
+        where: {
+            id,
+        },
+        data: {
+            ...parse,
+            emailVerified: new Date(),
+        },
+        select: userFilterSelection
+    }))
 }

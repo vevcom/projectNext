@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateUser, registerUser, updateUserPassword } from '@/server/users/update'
+import { updateUser, registerUser, updateUserPassword, verifyUserEmail } from '@/server/users/update'
 import { getUser } from '@/auth/getUser'
 import { updateUserValidation, registerUserValidation, updateUserPasswordValidation } from '@/server/users/validation'
 import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
@@ -9,6 +9,8 @@ import { ServerError } from '@/server/error'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
+import { UserFiltered } from '@/server/users/Types'
+import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
 
 export async function updateUserAction(
     id: number,
@@ -38,8 +40,6 @@ export async function registerOwnUser(
 }
 
 export async function resetPasswordAction(token: string, rawdata: FormData): Promise<ActionReturn<null>> {
-    console.log(token)
-    console.log(rawdata)
 
     const parse = updateUserPasswordValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
@@ -54,5 +54,20 @@ export async function resetPasswordAction(token: string, rawdata: FormData): Pro
         await updateUserPassword(userId, parse.data)
 
         return null
+    })
+}
+
+export async function verifyUserEmailAction(token: string): Promise<ActionReturn<UserFiltered>> {
+    return await safeServerCall(async () => {
+        if (typeof token !== 'string') {
+            throw new ServerError('BAD PARAMETERS', "The token must be a string.")
+        }
+
+        const {
+            userId,
+            email
+        } = await verifyVerifyEmailToken(token)
+
+        return await verifyUserEmail(userId, email)
     })
 }

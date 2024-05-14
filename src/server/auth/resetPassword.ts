@@ -29,14 +29,14 @@ export async function verifyResetPasswordToken(token: string): Promise<{
 }> {
     const payload = verifyJWT(token, 'resetpassword')
 
-    if (payload.sub && payload.lastUpdate) {
+    if (payload.sub && payload.iat) {
         const userId = Number(payload.sub)
 
         const user = await readUser({
             id: userId,
         })
 
-        if (user.updatedAt <= new Date(payload.lastUpdate)) {
+        if (user.updatedAt <= new Date(payload.iat * 1000)) {
             return {
                 userId,
             }
