@@ -4,5 +4,6 @@ export const JWT_ISSUER = 'omegaveven'
 
 export const OmegaJWTAudienceFields = [
     'resetpassword',
-    'omegaid'
+    'omegaid',
+    'verifyemail',
 ] as const

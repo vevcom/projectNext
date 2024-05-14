@@ -6,6 +6,8 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
+import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
+import { userFilterSelection } from './ConfigVars'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -52,11 +54,10 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
     const emailVerified = (
-        email === storedUser.feideAccount?.email ||
         email === storedUser.email
     ) ? storedUser.emailVerified : null
 
-    await prismaCall(() => prisma.$transaction([
+    const [ user ] = await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
                 id
@@ -68,7 +69,8 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
                 mobile,
                 allergies,
                 emailVerified,
-            }
+            },
+            select: userFilterSelection
         }),
         prisma.credentials.upsert({
             where: {
@@ -88,7 +90,13 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
         })
     ]))
 
-    await createDefaultSubscriptions(id)
+    const promises = [createDefaultSubscriptions(id)]
+
+    if (!emailVerified) {
+        promises.push(sendVerifyEmail(user))
+    }
+
+    await Promise.all(promises)
 
     return null
 }
