@@ -1,14 +1,12 @@
-import { verifyJWT } from '@/auth/jwt'
 import 'server-only'
-import { verifyUserEmail } from '../users/update'
-import { ServerError } from '../error'
+import { verifyJWT } from '@/auth/jwt'
+import { ServerError } from '@/server/error'
 
 
 export async function verifyVerifyEmailToken(token: string): Promise<{
     userId: number,
     email: string,
 }> {
-
     const payload = verifyJWT(token, 'verifyemail')
 
     if (payload.sub && payload.email) {

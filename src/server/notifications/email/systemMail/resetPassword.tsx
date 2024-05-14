@@ -1,9 +1,9 @@
 import 'server-only'
+import { sendSystemMail } from '@/server/notifications/email/send'
+import { ResetPasswordTemplate } from '@/server/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/auth/jwt'
 import { render } from '@react-email/render'
-import { sendSystemMail } from '../send'
-import { UserFiltered } from '@/server/users/Types'
-import { ResetPasswordTemplate } from '../templates/resetPassword'
+import type { UserFiltered } from '@/server/users/Types'
 
 
 export async function sendResetPasswordMail(user: UserFiltered) {

@@ -1,4 +1,4 @@
 
 
-export const ntnuEmailDomain = "stud.ntnu.no"
+export const ntnuEmailDomain = 'stud.ntnu.no'
 

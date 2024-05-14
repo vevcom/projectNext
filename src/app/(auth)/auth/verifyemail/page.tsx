@@ -1,10 +1,8 @@
-"use server"
+'use server'
 
-import { safeServerCall } from "@/actions/safeServerCall"
-import { verifyUserEmailAction } from "@/actions/users/update"
-import Button from "@/app/components/UI/Button"
-import { ServerError } from "@/server/error"
-import Link from "next/link"
+import { verifyUserEmailAction } from '@/actions/users/update'
+import Button from '@/app/components/UI/Button'
+import Link from 'next/link'
 
 
 export default async function VerifyEmail({

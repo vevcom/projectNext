@@ -1,15 +1,20 @@
 import 'server-only'
-import { registerUserValidation, updateUserPasswordValidation, updateUserValidation, verifyUserEmailValidation } from './validation'
+import {
+    registerUserValidation,
+    updateUserPasswordValidation,
+    updateUserValidation,
+    verifyUserEmailValidation
+} from './validation'
+import { userFilterSelection } from './ConfigVars'
+import { sendVerifyEmail } from '@/server/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/server/notifications/subscription/create'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
-import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
-import { userFilterSelection } from './ConfigVars'
-import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
-import { UserFiltered } from './Types'
+import type { UserFiltered } from './Types'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -56,7 +61,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
     if (storedUser.feideAccount?.email !== email) {
-        if (email.endsWith("@" + ntnuEmailDomain)) {
+        if (email.endsWith(`@${ntnuEmailDomain}`)) {
             throw new ServerError(
                 'BAD PARAMETERS',
                 `Den nye eposten må være din ${ntnuEmailDomain}-epost, eller en personlig epost.`
@@ -68,7 +73,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
         email === storedUser.email
     ) ? storedUser.emailVerified : null
 
-    const [ user ] = await prismaCall(() => prisma.$transaction([
+    const [user] = await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
                 id

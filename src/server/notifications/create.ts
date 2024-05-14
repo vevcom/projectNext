@@ -10,7 +10,7 @@ import type { Notification, SpecialNotificationChannel } from '@prisma/client'
 import type { CreateNotificationType } from './validation'
 
 /**
- * Creates a notification.
+ * Creates a notification. To dispatch and create a notification, use dispatchNotification()
  *
  * @param data - The data for creating the notification.
  * @returns A promise that resolves with the created notification.

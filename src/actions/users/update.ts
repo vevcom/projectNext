@@ -6,11 +6,11 @@ import { getUser } from '@/auth/getUser'
 import { updateUserValidation, registerUserValidation, updateUserPasswordValidation } from '@/server/users/validation'
 import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
 import { ServerError } from '@/server/error'
+import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
+import type { UserFiltered } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
-import { UserFiltered } from '@/server/users/Types'
-import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
 
 export async function updateUserAction(
     id: number,
@@ -40,7 +40,6 @@ export async function registerOwnUser(
 }
 
 export async function resetPasswordAction(token: string, rawdata: FormData): Promise<ActionReturn<null>> {
-
     const parse = updateUserPasswordValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
 
@@ -60,7 +59,7 @@ export async function resetPasswordAction(token: string, rawdata: FormData): Pro
 export async function verifyUserEmailAction(token: string): Promise<ActionReturn<UserFiltered>> {
     return await safeServerCall(async () => {
         if (typeof token !== 'string') {
-            throw new ServerError('BAD PARAMETERS', "The token must be a string.")
+            throw new ServerError('BAD PARAMETERS', 'The token must be a string.')
         }
 
         const {
