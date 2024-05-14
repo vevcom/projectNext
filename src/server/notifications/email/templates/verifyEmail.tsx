@@ -12,12 +12,10 @@ export function VerifyEmailTemplate({
 }) {
     return (
         <Html>
-            <h1>Bekreft epost</h1>
-
             <p>Hei {user.firstname},</p>
 
             <p>
-                Du får denne espoten siden du nettopp registrerte deg hos {process.env.DOMAIN}.
+                Du får denne eposten siden du nettopp registrerte deg hos {process.env.DOMAIN}.
                 Vennligst bekreft eposten din ved å trykke på <a href={link}>linken</a>.
             </p>
 

@@ -25,7 +25,6 @@ export type JWT<T = Record<string, unknown>> = T & {
 export function generateJWT<T>(aud: OmegaJWTAudience, payload: T, expiresIn: number): string {
     return jwt.sign({
         aud,
-        ait: Math.floor(Date.now() / 1000),
         ...payload
     }, process.env.NEXTAUTH_SECRET ?? 'THIS VALUE MUST CHANGE', {
         issuer: JWT_ISSUER,

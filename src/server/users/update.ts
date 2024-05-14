@@ -8,6 +8,7 @@ import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from
 import type { User } from '@prisma/client'
 import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
 import { userFilterSelection } from './ConfigVars'
+import { ntnuEmailDomain } from '../mail/mailAddressExternal/configVars'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -52,6 +53,15 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
     if (!storedUser) throw new ServerError('NOT FOUND', 'Could not find the user with the specified id.')
 
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
+
+    if (storedUser.feideAccount?.email !== email) {
+        if (email.endsWith("@" + ntnuEmailDomain)) {
+            throw new ServerError(
+                'BAD PARAMETERS',
+                `Den nye eposten må være din ${ntnuEmailDomain}-epost, eller en personlig epost.`
+            )
+        }
+    }
 
     const emailVerified = (
         email === storedUser.email

@@ -1,6 +1,7 @@
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
+import { ntnuEmailDomain } from './configVars'
 
 
 export const basemailAddressExternalValidation = new ValidationBase({
@@ -17,8 +18,8 @@ export const basemailAddressExternalValidation = new ValidationBase({
                 `The address cannot contain the domain: ${process.env.DOMAIN}`,
             )
             .refine(
-                address => !address.trim().endsWith('@stud.ntnu.no'),
-                'The address cannot be a stud.ntnu.no address. The person must a regsitered user to recieve mail',
+                address => !address.trim().endsWith('@' + ntnuEmailDomain),
+                `The address cannot be a ${ntnuEmailDomain} address. The person must a regsitered user to recieve mail`,
             ),
         description: z.string().max(200).optional(),
     }
