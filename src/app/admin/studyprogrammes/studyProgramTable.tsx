@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './studyProgramTable.module.scss'
-import UpdateStudyProgrammeForm from './updateStaudyProgrammeForm'
+import UpdateStudyProgramForm from './updateStudyProgramForm'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,7 +24,7 @@ export default function StudyProgramTableBody({
                     showButtonClass={styles.editButton}
                     PopUpKey={uuid()}
                 >
-                    <UpdateStudyProgrammeForm studyProgram={s} />
+                    <UpdateStudyProgramForm studyProgram={s} />
                 </PopUp>}
                 <th>{s.name}</th>
                 <td>{s.code}</td>

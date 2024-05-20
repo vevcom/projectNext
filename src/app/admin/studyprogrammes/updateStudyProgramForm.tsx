@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import type { StudyProgramme } from '@prisma/client'
 
 
-export default function UpdateStudyProgrammeForm({
+export default function UpdateStudyProgramForm({
     studyProgram,
 }: {
     studyProgram?: StudyProgramme

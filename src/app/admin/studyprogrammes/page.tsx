@@ -1,6 +1,6 @@
 'use server'
 
-import UpdateStudyProgrammeForm from './updateStaudyProgrammeForm'
+import UpdateStudyProgramForm from './updateStudyProgramForm'
 import StudyProgramTableBody from './studyProgramTable'
 import { readAllStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
 import AddHeaderItemPopUp from '@/app/components/AddHeaderItem/AddHeaderItemPopUp'
@@ -30,7 +30,7 @@ export default async function StudyProgrammes() {
         headerItem={
             showCreateButton && (
                 <AddHeaderItemPopUp PopUpKey="create ombul">
-                    <UpdateStudyProgrammeForm />
+                    <UpdateStudyProgramForm />
                 </AddHeaderItemPopUp>
             )
         }
