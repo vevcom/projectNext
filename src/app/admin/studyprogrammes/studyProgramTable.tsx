@@ -20,7 +20,7 @@ export default function StudyProgramTableBody({
 
     return <tbody>
         {studyprogrammes.map(s => 
-            <tr>
+            <tr key={uuid()}>
                 {canEdit && <PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
                     showButtonClass={styles.editButton}

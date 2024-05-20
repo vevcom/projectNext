@@ -1,9 +1,12 @@
 "use client"
 
+import { createStudyProgramAction } from "@/actions/groups/studyProgrammes/create";
+import { updateStudyProgramAction } from "@/actions/groups/studyProgrammes/update";
 import Form from "@/app/components/Form/Form";
 import Select from "@/app/components/UI/Select";
 import TextInput from "@/app/components/UI/TextInput";
 import { StudyProgramme } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 
 
@@ -13,11 +16,15 @@ export default function UpdateStudyProgrammeForm({
     studyProgram?: StudyProgramme
 }) {
 
+    const { refresh } = useRouter()
+
     const create = studyProgram === undefined
 
     return <Form
         title={`${create ? "Legg til" : "Oppdater"} studieprogram`}
         submitText={create ? "Legg til" : "Oppdater"}
+        action={create ? createStudyProgramAction : updateStudyProgramAction.bind(null, studyProgram.id)}
+        successCallback={true ? () => {} : refresh}
     >
         <TextInput name="name" label="Navn" defaultValue={studyProgram?.name ?? ""}/>
         <TextInput name="code" label="Kode" defaultValue={studyProgram?.code ?? ""} />
