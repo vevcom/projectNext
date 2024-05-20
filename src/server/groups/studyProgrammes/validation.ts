@@ -8,16 +8,16 @@ const baseStudyProgramValidation = new ValidationBase({
         name: z.string(),
         code: z.string(),
         instituteCode: z.string().optional().nullable(),
-        startYear: z.string(),
-        yearsLength: z.string(),
+        startYear: z.string().optional().nullable(),
+        yearsLength: z.string().optional().nullable(),
     },
     details: {
         id: z.number(),
         name: z.string(),
         code: z.string(),
         instituteCode: z.string().optional().nullable(),
-        startYear: z.number().min(1).max(5),
-        yearsLength: z.number().min(1).max(5),
+        startYear: z.number().optional().nullable(),
+        yearsLength: z.number().optional().nullable(),
     }
 })
 
