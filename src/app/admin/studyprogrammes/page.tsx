@@ -4,7 +4,8 @@ import { readAllStudyProgrammesAction } from "@/actions/groups/studyProgrammes/r
 import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 import { getUser } from "@/auth/getUser"
-import UpdateStudyProgrammeForm from "./UpdateStaudyProgrammeForm"
+import UpdateStudyProgrammeForm from "./updateStaudyProgrammeForm"
+import StudyProgramTableBody from "./studyProgramTable"
 
 
 
@@ -23,6 +24,7 @@ export default async function StudyProgrammes() {
     }
 
     const showCreateButton = permissions.includes('STUDY_PROGRAMME_CREATE')
+    const canEdit = permissions.includes('STUDY_PROGRAMME_UPDATE')
 
 
     return <PageWrapper
@@ -37,6 +39,7 @@ export default async function StudyProgrammes() {
     >
         <table>
             <thead>
+                {canEdit && <th>Rediger</th>}
                 <th>Navn</th>
                 <th>Kode</th>
                 <th>Institutt kode</th>
@@ -44,18 +47,7 @@ export default async function StudyProgrammes() {
                 <th>Lengde på studiet</th>
                 <th>Del av Omega</th>
             </thead>
-            <tbody>
-                {studyprogrammes.data.map(s => 
-                    <tr>
-                        <th>{s.name}</th>
-                        <td>{s.code}</td>
-                        <td>{s.insititueCode ?? ""}</td>
-                        <td>{s.startYear ?? ""}</td>
-                        <td>{s.yearsLength ?? ""}</td>
-                        <td>{s.partOfOmega ? "Ja" : "Nei"}</td>
-                    </tr>
-                )}
-            </tbody>
+            <StudyProgramTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
         </table>
     </PageWrapper>
 }
