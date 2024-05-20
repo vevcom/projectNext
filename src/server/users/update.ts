@@ -6,6 +6,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
+import { updateUserOmegaMembershipGroup } from '@/server/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/server/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/server/notifications/subscription/create'
 import { ServerError } from '@/server/error'
@@ -15,7 +16,6 @@ import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
 import type { UserFiltered } from './Types'
-import { updateUserOmegaMembershipGroup } from '../groups/omegaMembershipGroups/update'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -125,11 +125,10 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
     ]
 
     promises.push((async () => {
-        const partOfOmega = storedUser.memberships.reduce((acc, val) => {
-            if (acc) return acc;
-
-            return val.group.studyProgramme?.partOfOmega === true
-        }, false)
+        const partOfOmega = storedUser.memberships.reduce(
+            (acc, val) => acc || (val.group.studyProgramme?.partOfOmega === true),
+            false
+        )
 
         await updateUserOmegaMembershipGroup(id, partOfOmega ? 'SOELLE' : 'EXTERNAL', true)
     })())

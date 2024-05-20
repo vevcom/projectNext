@@ -11,9 +11,9 @@ import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
 import seedMail from './seedMail'
-import { PrismaClient } from '@/generated/pn'
 import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
+import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
     const prisma = new PrismaClient()

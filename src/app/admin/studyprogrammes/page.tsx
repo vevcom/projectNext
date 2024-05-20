@@ -1,18 +1,16 @@
-"use server"
+'use server'
 
-import { readAllStudyProgrammesAction } from "@/actions/groups/studyProgrammes/read"
-import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp"
-import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
-import { getUser } from "@/auth/getUser"
-import UpdateStudyProgrammeForm from "./updateStaudyProgrammeForm"
-import StudyProgramTableBody from "./studyProgramTable"
-
+import UpdateStudyProgrammeForm from './updateStaudyProgrammeForm'
+import StudyProgramTableBody from './studyProgramTable'
+import { readAllStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
+import AddHeaderItemPopUp from '@/app/components/AddHeaderItem/AddHeaderItemPopUp'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { getUser } from '@/auth/getUser'
 
 
 export default async function StudyProgrammes() {
-
     const { permissions } = await getUser({
-        requiredPermissions: [[ 'STUDY_PROGRAMME_READ' ]],
+        requiredPermissions: [['STUDY_PROGRAMME_READ']],
         shouldRedirect: true,
     })
 

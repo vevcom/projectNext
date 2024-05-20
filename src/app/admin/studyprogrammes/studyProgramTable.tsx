@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import PopUp from "@/app/components/PopUp/PopUp"
-import { faPencil } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { StudyProgramme } from "@prisma/client"
-import { v4 as uuid } from "uuid"
-import styles from "./studyProgramTable.module.scss"
-import UpdateStudyProgrammeForm from "./updateStaudyProgrammeForm"
+import styles from './studyProgramTable.module.scss'
+import UpdateStudyProgrammeForm from './updateStaudyProgrammeForm'
+import PopUp from '@/app/components/PopUp/PopUp'
+import { faPencil } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { v4 as uuid } from 'uuid'
+import type { StudyProgramme } from '@prisma/client'
 
 
 export default function StudyProgramTableBody({
@@ -16,10 +16,8 @@ export default function StudyProgramTableBody({
     studyprogrammes: StudyProgramme[],
     canEdit: boolean,
 }) {
-
-
     return <tbody>
-        {studyprogrammes.map(s => 
+        {studyprogrammes.map(s =>
             <tr key={uuid()}>
                 {canEdit && <PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
@@ -30,10 +28,10 @@ export default function StudyProgramTableBody({
                 </PopUp>}
                 <th>{s.name}</th>
                 <td>{s.code}</td>
-                <td>{s.insititueCode ?? ""}</td>
-                <td>{s.startYear ?? ""}</td>
-                <td>{s.yearsLength ?? ""}</td>
-                <td>{s.partOfOmega ? "Ja" : "Nei"}</td>
+                <td>{s.insititueCode ?? ''}</td>
+                <td>{s.startYear ?? ''}</td>
+                <td>{s.yearsLength ?? ''}</td>
+                <td>{s.partOfOmega ? 'Ja' : 'Nei'}</td>
             </tr>
         )}
     </tbody>

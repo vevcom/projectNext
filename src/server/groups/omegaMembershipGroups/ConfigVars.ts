@@ -1,4 +1,4 @@
-import { OmegaMembershipLevel } from '@prisma/client'
+import type { OmegaMembershipLevel } from '@prisma/client'
 import 'server-only'
 
 

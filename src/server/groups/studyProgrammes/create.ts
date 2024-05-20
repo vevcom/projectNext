@@ -1,10 +1,10 @@
+import { createStudyProgramValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { CreateStudyProgramTypes } from './validation'
 import type { ExpandedStudyProgramme } from './Types'
-import { CreateStudyProgramTypes, createStudyProgramValidation } from './validation'
 
 export async function createStudyProgramme(data: CreateStudyProgramTypes['Detailed']): Promise<ExpandedStudyProgramme> {
-
     const parse = createStudyProgramValidation.detailedValidate(data)
 
     return await prismaCall(() => prisma.studyProgramme.create({
@@ -20,7 +20,9 @@ export async function createStudyProgramme(data: CreateStudyProgramTypes['Detail
     }))
 }
 
-export async function upsertStudyProgrammes(programmes: CreateStudyProgramTypes['Detailed'][]): Promise<ExpandedStudyProgramme[]> {
+export async function upsertStudyProgrammes(
+    programmes: CreateStudyProgramTypes['Detailed'][]
+): Promise<ExpandedStudyProgramme[]> {
     if (programmes.length === 0) return []
 
     const existingStudyProgrammes = await prismaCall(() => prisma.studyProgramme.findMany({

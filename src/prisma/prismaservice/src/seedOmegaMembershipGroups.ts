@@ -1,8 +1,6 @@
 import { OmegaMembershipLevel, type PrismaClient } from '@/generated/pn'
-import { Prisma } from '@/generated/pn'
 
 export default async function seedOmegaMembershipGroups(prisma: PrismaClient) {
-
     const levels = Object.values(OmegaMembershipLevel)
 
     await Promise.all(levels.map(l => prisma.omegaMembershipGroup.create({

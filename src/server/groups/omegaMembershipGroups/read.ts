@@ -1,15 +1,14 @@
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { ExpandedOmegaMembershipGroup } from './Types'
-import { OmegaMembershipLevel } from '@prisma/client'
 import { ServerError } from '@/server/error'
+import type { OmegaMembershipLevel } from '@prisma/client'
+import type { ExpandedOmegaMembershipGroup } from './Types'
 
 export async function readOmegaMembershipGroups(): Promise<ExpandedOmegaMembershipGroup[]> {
     return await prismaCall(() => prisma.omegaMembershipGroup.findMany())
 }
 
 export async function readOmegaMembershipGroup(id: number | OmegaMembershipLevel): Promise<ExpandedOmegaMembershipGroup> {
-
     if (typeof id === 'number') {
         return await prismaCall(() => prisma.omegaMembershipGroup.findUniqueOrThrow({
             where: {
@@ -55,5 +54,5 @@ export async function readUserOmegaMembershipLevel(userId: number): Promise<Omeg
         }
     }
 
-    throw new ServerError("INVALID CONFIGURATION", `The user with id ${userId} don't have any omega membership relation`)
+    throw new ServerError('INVALID CONFIGURATION', `The user with id ${userId} don't have any omega membership relation`)
 }

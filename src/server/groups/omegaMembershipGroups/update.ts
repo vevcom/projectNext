@@ -1,28 +1,28 @@
 import 'server-only'
-import prisma from '@/prisma'
-import { OmegaMembershipLevel } from '@prisma/client'
 import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from './ConfigVars'
+import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import { connect } from 'http2'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import type { OmegaMembershipLevel } from '@prisma/client'
 
 function omegaMembershipGTEQ(lhs: OmegaMembershipLevel, rhs: OmegaMembershipLevel) {
     return OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(lhs) >= OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(rhs)
 }
 
-export async function updateUserOmegaMembershipGroup(userId: number, omegaMembershipLevel: OmegaMembershipLevel, onlyUpgrade = false) {
-
-    // Ensure the user is only in one omega memebrship group
-
+export async function updateUserOmegaMembershipGroup(
+    userId: number,
+    omegaMembershipLevel: OmegaMembershipLevel,
+    onlyUpgrade = false
+) {
     const group = await readOmegaMembershipGroup(omegaMembershipLevel)
 
-    
+
     if (onlyUpgrade) {
         const currentMembership = await readUserOmegaMembershipLevel(userId)
 
         if (omegaMembershipGTEQ(currentMembership, omegaMembershipLevel)) {
-            return;
+            return
         }
     }
 
@@ -58,5 +58,4 @@ export async function updateUserOmegaMembershipGroup(userId: number, omegaMember
             }
         })
     ]))
-
 }
