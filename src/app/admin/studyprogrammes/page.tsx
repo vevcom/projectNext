@@ -1,0 +1,61 @@
+"use server"
+
+import { readAllStudyProgrammesAction } from "@/actions/groups/studyProgrammes/read"
+import AddHeaderItemPopUp from "@/app/components/AddHeaderItem/AddHeaderItemPopUp"
+import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
+import { getUser } from "@/auth/getUser"
+import UpdateStudyProgrammeForm from "./UpdateStaudyProgrammeForm"
+
+
+
+export default async function StudyProgrammes() {
+
+    const { permissions } = await getUser({
+        requiredPermissions: [[ 'STUDY_PROGRAMME_READ' ]],
+        shouldRedirect: true,
+    })
+
+    const studyprogrammes = await readAllStudyProgrammesAction()
+
+    if (!studyprogrammes.success) {
+        console.log(studyprogrammes)
+        return <div>Ups, an error occured</div>
+    }
+
+    const showCreateButton = permissions.includes('STUDY_PROGRAMME_CREATE')
+
+
+    return <PageWrapper
+        title="Studieprogrammer"
+        headerItem={
+            showCreateButton && (
+                <AddHeaderItemPopUp PopUpKey="create ombul">
+                    <UpdateStudyProgrammeForm />
+                </AddHeaderItemPopUp>
+            )
+        }
+    >
+        <table>
+            <thead>
+                <th>Navn</th>
+                <th>Kode</th>
+                <th>Institutt kode</th>
+                <th>Start år</th>
+                <th>Lengde på studiet</th>
+                <th>Del av Omega</th>
+            </thead>
+            <tbody>
+                {studyprogrammes.data.map(s => 
+                    <tr>
+                        <th>{s.name}</th>
+                        <td>{s.code}</td>
+                        <td>{s.insititueCode ?? ""}</td>
+                        <td>{s.startYear ?? ""}</td>
+                        <td>{s.yearsLength ?? ""}</td>
+                        <td>{s.partOfOmega ? "Ja" : "Nei"}</td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+    </PageWrapper>
+}

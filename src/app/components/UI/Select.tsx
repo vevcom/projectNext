@@ -2,7 +2,7 @@ import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
 import type { HTMLAttributes } from 'react'
 
-export default function Select<V extends number | string>({
+export default function Select<V extends number | string | boolean>({
     name,
     label,
     defaultValue,

@@ -9,7 +9,7 @@ export default async function seedStudyProgramme(prisma: PrismaClient) {
             code: "MTTK",
             yearsLength: 5,
             startYear: 1,
-            partOfOmega: false,
+            partOfOmega: true,
             group: {
                 create: {
                     groupType: "STUDY_PROGRAMME",
