@@ -4,6 +4,8 @@ import prisma from '@/prisma'
 import { createUserValidation } from '@/server/users/validation'
 import type { User } from '@prisma/client'
 import type { CreateUserTypes } from '@/server/users/validation'
+import { readOmegaMembershipGroup } from '../groups/omegaMembershipGroups/read'
+import { readCurrenOmegaOrder } from '../omegaOrder/read'
 
 /**
  * A action that creates a user by the given data. It will also hash the password
@@ -13,6 +15,10 @@ import type { CreateUserTypes } from '@/server/users/validation'
 export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<User> {
     const data = createUserValidation.detailedValidate(rawdata)
     const passwordHash = data.password //TODO: hash password
+
+    const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
+    const omegaOrder = await readCurrenOmegaOrder()
+
     const user = await prismaCall(() => prisma.user.create({
         data: {
             ...data,
@@ -21,6 +27,13 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
                     passwordHash
                 },
             } : undefined,
+            memberships: {
+                create: [{
+                    groupId: omegaMembership.groupId,
+                    order: omegaOrder.order,
+                    admin: false,
+                }]
+            }
         },
     }))
     return user

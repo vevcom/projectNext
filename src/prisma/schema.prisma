@@ -190,6 +190,7 @@ model StudyProgramme {
   insititueCode String?
   yearsLength   Int?
   startYear     Int?
+  partOfOmega   Boolean @default(false)
 }
 
 /////////////////
