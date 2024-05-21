@@ -141,7 +141,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         },
         {
             name: 'Mat på Gløshaugen',
-            description: 'Her kommer informasjon om når det er vafler på Lophtet eller noe annen mat i området rundt El-bygget',
+            description: `Her kommer informasjon om når det er vafler på Lophtet eller 
+                          noe annen mat i området rundt El-bygget`,
             defaultMethods: {
                 email: true,
                 emailWeekly: false,

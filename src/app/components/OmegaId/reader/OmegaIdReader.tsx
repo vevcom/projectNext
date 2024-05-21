@@ -12,7 +12,8 @@ import type { OmegaId } from '@/server/omegaid/Types'
  *
  * @param successCallback - A callback function that will be called when a valid QR code is scanned.
  *                          It receives the user data and the token as parameters.
- * @param publicKey - The public key used for verifying the QR code token. Use the action readOmegaIdPublicKey() to read the public key
+ * @param publicKey - The public key used for verifying the QR code token.
+ *                    Use the action readOmegaIdPublicKey() to read the public key
  * @param expiryOffset - An optional offset (in seconds) to adjust the expiry time of the QR code token.
  * @param debounceThreshold - An optional threshold (in milliseconds) to prevent duplicate reads.
  * @param singleRead - An optional flag indicating whether only a single QR code should be read.
@@ -84,7 +85,7 @@ export default function OmegaIdReader({
                     success: false,
                     error: false,
                     text: '',
-                }) 
+                })
             }
 
             lastReadToken = token

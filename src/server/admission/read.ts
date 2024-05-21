@@ -1,7 +1,7 @@
 import 'server-only'
-import { prismaCall } from '../prismaCall'
-import { Admissions } from '@prisma/client'
+import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { Admissions } from '@prisma/client'
 
 
 export async function readAdmissions(query?: {

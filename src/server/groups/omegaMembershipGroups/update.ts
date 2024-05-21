@@ -4,8 +4,8 @@ import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from './ConfigVars'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import type { OmegaMembershipLevel } from '@prisma/client'
 import { ServerError } from '@/server/error'
+import type { OmegaMembershipLevel } from '@prisma/client'
 
 function omegaMembershipGTEQ(lhs: OmegaMembershipLevel, rhs: OmegaMembershipLevel) {
     return OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(lhs) >= OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(rhs)
@@ -22,13 +22,13 @@ export async function updateUserOmegaMembershipGroup(
     if (onlyUpgrade) {
         try {
             const currentMembership = await readUserOmegaMembershipLevel(userId)
-    
+
             if (omegaMembershipGTEQ(currentMembership, omegaMembershipLevel)) {
                 return
             }
         } catch (e) {
             if (!(e instanceof ServerError && e.errorCode === 'INVALID CONFIGURATION')) {
-                throw e;
+                throw e
             }
         }
     }

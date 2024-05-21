@@ -1,4 +1,5 @@
-import { NotificationMethod, NotificationMethods, notificationMethods } from './Types';
+import { notificationMethods } from './Types'
+import type { NotificationMethod } from './Types'
 
 
 export function booleanOperationOnMethods(
@@ -6,19 +7,18 @@ export function booleanOperationOnMethods(
     rhs: NotificationMethod,
     operation: 'AND' | 'OR'
 ): NotificationMethod {
-
     const ret = Object.assign({}, lhs)
 
-    for (let key of notificationMethods) {
+    for (const key of notificationMethods) {
         switch (operation) {
             case 'AND':
                 ret[key] &&= rhs[key]
-                break;
+                break
             case 'OR':
                 ret[key] ||= rhs[key]
-                break;
+                break
             default:
-                throw new Error("The operation is not supported to do at NotificationMethods")
+                throw new Error('The operation is not supported to do at NotificationMethods')
         }
     }
 

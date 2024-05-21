@@ -59,7 +59,7 @@ export default function ChannelSettings({
                             name="parentId"
                             options={selectOptions.map(c => ({ value: c.id, label: c.name }))}
                             value={currentChannelState.parentId}
-                            onChange={(v) => setCurrentChannel({...currentChannelState, parentId: v})}
+                            onChange={(v) => setCurrentChannel({ ...currentChannelState, parentId: v })}
                         />
                         :
                         <input type="hidden" name="parentId" value={currentChannelState.parentId} />
@@ -72,7 +72,7 @@ export default function ChannelSettings({
                         name="mailAliasId"
                         options={mailAliases.map(a => ({ value: a.id, label: a.address }))}
                         value={currentChannelState.mailAliasId}
-                        onChange={(v) => setCurrentChannel({...currentChannelState, mailAliasId: v})}
+                        onChange={(v) => setCurrentChannel({ ...currentChannelState, mailAliasId: v })}
                     />
                 </div>
 

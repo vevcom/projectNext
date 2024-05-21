@@ -1,11 +1,11 @@
 'use client'
 
 import UpdateSubscriptionForm from './updateSubscriptionForm'
+import styles from './notificationSettingItem.module.scss'
 import { allMethodsOff } from '@/server/notifications/Types'
 import { v4 as uuid } from 'uuid'
-import type { NotificationBranch } from './Types'
-import styles from "./notificationSettingItem.module.scss"
 import { useState } from 'react'
+import type { NotificationBranch } from './Types'
 
 export function NotificationSettingItem({
     channel
@@ -14,11 +14,9 @@ export function NotificationSettingItem({
 }) {
     const methods = channel.subscription?.methods ?? allMethodsOff
 
-    const [ collapsed, setCollaped ] = useState(true)
+    const [collapsed, setCollaped] = useState(true)
 
-    const subSubscriptions = channel.children.reduce((acc, c) => {
-        return acc + (c.subscription ? 1 : 0)
-    }, 0)
+    const subSubscriptions = channel.children.reduce((acc, c) => acc + (c.subscription ? 1 : 0), 0)
 
 
     return <div className={styles.notificationSettingItem}>
@@ -31,7 +29,7 @@ export function NotificationSettingItem({
             <hr className={styles.hrLine}/>
             <h4
                 className={styles.subChannelHeader}
-                onClick={(e) => setCollaped(!collapsed)}
+                onClick={() => setCollaped(!collapsed)}
             >Underkanaler {subSubscriptions > 0 && `(${subSubscriptions} aktive)`}</h4>
 
             <div className={`${styles.childrenContainer} ${collapsed ? styles.collapsed : ''}`}>
