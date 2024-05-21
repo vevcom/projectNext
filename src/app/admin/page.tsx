@@ -21,6 +21,7 @@ export default function Admin() {
 
             <h3><FontAwesomeIcon icon={faChild} />Opptak</h3>
             <Link href="admin/phaestum">Phaestum</Link>
+            <Link href="admin/admissiontrials">Registrer opptak</Link>
 
             <h3><FontAwesomeIcon icon={faKey} />Tillgangsstyring</h3>
             <Link href="admin/permission-roles">Tillgangsroller</Link>

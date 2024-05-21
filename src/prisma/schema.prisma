@@ -35,7 +35,7 @@ model User {
   acceptedTerms DateTime?
   sex           SEX?
   allergies     String?
-  mobile   String?
+  mobile        String?
   emailVerified DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt // is also updated manually
@@ -46,6 +46,8 @@ model User {
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
+  admissionTrials           AdmissionTrial[]           @relation(name: "user")
+  registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
 
   // We need to explicitly mark the combination of 'id' and 'username' as
   // unique to make the relation to 'Credentials' work.
@@ -284,6 +286,14 @@ enum Permission {
   STUDY_PROGRAMME_READ
   STUDY_PROGRAMME_UPDATE
   STUDY_PROGRAMME_DESTROY
+
+  // Admisstion
+  ADMISSION_CREATE
+  ADMISSION_READ
+  ADMISSION_UPDATE
+  ADMISSION_DESTROY
+
+  ADMISSION_TRIAL_CREATE
 }
 
 model Role {
@@ -698,4 +708,29 @@ model MailingListMailAddressExternal {
   mailAddressExternal   MailAddressExternal @relation(fields: [mailAddressExternalId], references: [id], onDelete: Cascade)
 
   @@unique([mailingListId, mailAddressExternalId])
+}
+
+///////////////////////////
+// Admissions /////////////
+///////////////////////////
+
+model Admissions {
+  id          Int      @id @default(autoincrement())
+  name        String
+  cratedAt    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  trials AdmissionTrial[]
+}
+
+model AdmissionTrial {
+  datetime       DateTime   @default(now())
+  userId         Int
+  user           User       @relation(name: "user", fields: [userId], references: [id], onDelete: Cascade)
+  registeredById Int?
+  registeredBy   User?      @relation(name: "registeredBy", fields: [registeredById], references: [id], onDelete: SetNull)
+  adminsstionId  Int
+  admission      Admissions @relation(fields: [adminsstionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, adminsstionId])
 }

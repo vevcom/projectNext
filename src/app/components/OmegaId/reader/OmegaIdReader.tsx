@@ -12,7 +12,7 @@ import type { OmegaId } from '@/server/omegaid/Types'
  *
  * @param successCallback - A callback function that will be called when a valid QR code is scanned.
  *                          It receives the user data and the token as parameters.
- * @param publicKey - The public key used for verifying the QR code token.
+ * @param publicKey - The public key used for verifying the QR code token. Use the action readOmegaIdPublicKey() to read the public key
  * @param expiryOffset - An optional offset (in seconds) to adjust the expiry time of the QR code token.
  * @param debounceThreshold - An optional threshold (in milliseconds) to prevent duplicate reads.
  * @param singleRead - An optional flag indicating whether only a single QR code should be read.
@@ -23,13 +23,15 @@ export default function OmegaIdReader({
     publicKey,
     expiryOffset,
     debounceThreshold,
-    singleRead
+    singleRead,
+    showSuccessFeedback,
 }: {
     successCallback: (user: OmegaId, token: string) => unknown,
     publicKey: string,
     expiryOffset?: number,
     debounceThreshold?: number,
-    singleRead?: boolean
+    singleRead?: boolean,
+    showSuccessFeedback?: boolean
 }) {
     const [feedback, setFeedBack] = useState({
         success: false,
@@ -71,11 +73,19 @@ export default function OmegaIdReader({
 
             successCallback(parse.data, token)
 
-            setFeedBack({
-                success: true,
-                error: false,
-                text: `${parse.data.firstname} ${parse.data.lastname}`,
-            })
+            if (showSuccessFeedback) {
+                setFeedBack({
+                    success: true,
+                    error: false,
+                    text: `${parse.data.firstname} ${parse.data.lastname}`,
+                })
+            } else {
+                setFeedBack({
+                    success: false,
+                    error: false,
+                    text: '',
+                }) 
+            }
 
             lastReadToken = token
             lastReadTime = Date.now()
