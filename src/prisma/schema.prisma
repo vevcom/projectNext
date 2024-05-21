@@ -719,6 +719,7 @@ model Admissions {
   name        String
   cratedAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  archived    Boolean  @default(false)
 
   trials AdmissionTrial[]
 }

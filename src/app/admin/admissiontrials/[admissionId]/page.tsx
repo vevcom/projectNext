@@ -1,6 +1,6 @@
 "use server"
 
-import { readAdmissionAction, readAllAdmissionsAction } from "@/actions/admission/read"
+import { readAdmissionAction, readAllActiveAdmissionsAction } from "@/actions/admission/read"
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper"
 import RegisterAdmissiontrial from "./registration"
 import { readOmegaIdPublicKey } from "@/actions/omegaid/read"
