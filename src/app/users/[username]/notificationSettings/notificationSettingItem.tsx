@@ -32,7 +32,7 @@ export function NotificationSettingItem({
             <h4
                 className={styles.subChannelHeader}
                 onClick={(e) => setCollaped(!collapsed)}
-            >Underkanaler {subSubscriptions > 0 && `(${subSubscriptions}) aktive`}</h4>
+            >Underkanaler {subSubscriptions > 0 && `(${subSubscriptions} aktive)`}</h4>
 
             <div className={`${styles.childrenContainer} ${collapsed ? styles.collapsed : ''}`}>
                 {channel.children.map(c => <NotificationSettingItem channel={c} key={uuid()}/>)}

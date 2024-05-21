@@ -5,7 +5,7 @@ import { readJWTPayload } from '@/utils/jwt'
 import { useQRCode } from 'next-qrcode'
 import { useEffect, useState } from 'react'
 
-const EXPIRY_THRESHOLD = 90
+const EXPIRY_THRESHOLD = 60
 
 export default function OmegaIdElement({
     token,
@@ -24,7 +24,7 @@ export default function OmegaIdElement({
     const firstname = JWTPayload.gn ?? ''
     const lastname = JWTPayload.sn ?? ''
 
-    let expiryTime = new Date((JWTPayload.exp - EXPIRY_THRESHOLD) * 1000)
+    const [expiryTime, setExpiryTime] = useState(new Date((JWTPayload.exp - EXPIRY_THRESHOLD) * 1000))
 
     useEffect(() => {
         const interval = setInterval(async () => {
@@ -38,7 +38,8 @@ export default function OmegaIdElement({
                 setTokenState(results.data)
 
                 const pld = readJWTPayload(results.data)
-                expiryTime = new Date((pld.exp - EXPIRY_THRESHOLD) * 1000)
+
+                setExpiryTime(new Date((pld.exp - EXPIRY_THRESHOLD) * 1000))
             }
         }, 15 * 1000)
 

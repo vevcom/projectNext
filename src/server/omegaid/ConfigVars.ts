@@ -8,4 +8,4 @@ export const omegaIdFields = [
     'username',
 ] as const satisfies (keyof UserFiltered)[]
 
-export const OmegaIdExpiryTime = 60 * 5 // 10 minutes
+export const OmegaIdExpiryTime = 60 * 5 // 5 minutes
