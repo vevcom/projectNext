@@ -58,7 +58,8 @@ export default function ChannelSettings({
                             label="Forelder"
                             name="parentId"
                             options={selectOptions.map(c => ({ value: c.id, label: c.name }))}
-                            defaultValue={currentChannelState.parentId}
+                            value={currentChannelState.parentId}
+                            onChange={(v) => setCurrentChannel({...currentChannelState, parentId: v})}
                         />
                         :
                         <input type="hidden" name="parentId" value={currentChannelState.parentId} />
@@ -70,7 +71,8 @@ export default function ChannelSettings({
                         label="Alias"
                         name="mailAliasId"
                         options={mailAliases.map(a => ({ value: a.id, label: a.address }))}
-                        defaultValue={currentChannelState.mailAliasId}
+                        value={currentChannelState.mailAliasId}
+                        onChange={(v) => setCurrentChannel({...currentChannelState, mailAliasId: v})}
                     />
                 </div>
 

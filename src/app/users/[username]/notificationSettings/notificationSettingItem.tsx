@@ -28,6 +28,7 @@ export function NotificationSettingItem({
         <UpdateSubscriptionForm channel={channel} methods={methods}/>
 
         { (channel.children.length > 0) && <>
+            <hr className={styles.hrLine}/>
             <h4
                 className={styles.subChannelHeader}
                 onClick={(e) => setCollaped(!collapsed)}
