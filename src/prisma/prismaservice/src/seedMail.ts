@@ -33,6 +33,12 @@ export default async function seedMail(prisma: PrismaClient) {
             aliases: [
                 'bleast',
             ]
+        },
+        {
+            name: 'Contactor',
+            aliases: [
+                'contactor',
+            ]
         }
     ]
 

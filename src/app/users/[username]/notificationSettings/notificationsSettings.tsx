@@ -1,9 +1,11 @@
+"use server"
 import { NotificationSettingItem } from './notificationSettingItem'
 import { readAllNotificationChannelsAction } from '@/actions/notifications/channel/read'
 import { readMySubscriptionsAction } from '@/actions/notifications/subscription/read'
 import type { NotificationChannel } from '@/server/notifications/Types'
 import type { Subscription } from '@/server/notifications/subscription/Types'
 import type { NotificationBranch } from './Types'
+import styles from "./notificationsSettings.module.scss"
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -49,8 +51,17 @@ export async function NotificationSettings() {
 
     const channelTree = generateChannelTree(channels.data, subscriptions.data)
 
-    return <div>
+    return <div className={styles.notificationsSettings}>
         <h3>Varslinger</h3>
+        <p className={styles.lightParagraph}>
+            Her kan du endrer hvordan du får varslinger.
+            Varslingene blir sendt ut i kanaler som du kan abonnere på.
+            For å få varslingen slik du selv ønsker, velger du selv hvilken metode varslet skal bruke (epost, push osv.)
+            Kanalene er oragnisert slik at en kanal kan ha underkanaler, videre kalt barn.
+            Det er disse du kan se når du åpner en kanal.
+            Dersom det blir lagt til nye kanaler vil du da abbonere med metodene som er aktive i både
+            foreldrekanalen du abbonerer på og de standarde metodene til den nye kanalen.
+        </p>
         <NotificationSettingItem channel={channelTree} />
     </div>
 }

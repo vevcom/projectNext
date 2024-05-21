@@ -7,6 +7,7 @@ type ChannelInfo = {
     description: string
     defaultMethods: Omit<NotificationMethod, 'id'>
     availableMethods: Omit<NotificationMethod, 'id'>
+    alias?: string
 }
 
 const allMethodsOn = {
@@ -29,21 +30,29 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'ROOT',
             name: 'Alle varslinger',
             description: 'Denne kanalen styrer alle varslinger',
-            defaultMethods: allMethodsOff,
+            defaultMethods: allMethodsOn,
             availableMethods: allMethodsOn,
         },
         {
             special: 'NEW_EVENT',
-            name: 'Ny hendelse',
-            description: 'Varslinger om nye hendelser',
-            defaultMethods: allMethodsOn,
+            name: 'Nytt arrangement',
+            description: 'Varslinger om nye arrangementer',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: true,
+            },
             availableMethods: allMethodsOn,
         },
         {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: allMethodsOff,
+            defaultMethods: {
+                email: false,
+                emailWeekly: true,
+                push: false,
+            },
             availableMethods: allMethodsOn,
         },
         {
@@ -57,7 +66,11 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: allMethodsOff,
+            defaultMethods: {
+                email: false,
+                emailWeekly: true,
+                push: false,
+            },
             availableMethods: allMethodsOn,
         },
         {
@@ -68,6 +81,21 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             availableMethods: allMethodsOn,
         },
         {
+            special: 'EVENT_PARTICIPANT',
+            name: 'Arrangements varsel',
+            description: 'Varslinger sendt ut til deltakere i et arrangement du er påmeldt på',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: true,
+            },
+            availableMethods: {
+                email: true,
+                emailWeekly: false,
+                push: true,
+            },
+        },
+        {
             name: 'Informasjon fra HS',
             description: 'Varsling når Hovedstyret vil gi ut informasjon',
             defaultMethods: {
@@ -75,15 +103,59 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 emailWeekly: false,
                 push: false
             },
+            availableMethods: allMethodsOn,
+            alias: 'hs',
+        },
+        {
+            name: 'Merch',
+            description: 'Her kommer det varslinger om Omega Merch fra Blaest-Com',
+            defaultMethods: {
+                email: false,
+                emailWeekly: true,
+                push: false,
+            },
+            availableMethods: allMethodsOn,
+            alias: 'bleast',
+        },
+        {
+            name: 'Driftsstatus',
+            description: 'Her kommer det varslinger dersom noe på veven ikke funnker, eller ved planlagt vedlikehld',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: false,
+            },
+            availableMethods: allMethodsOn,
+            alias: 'vevcom',
+        },
+        {
+            name: 'Contactor',
+            description: 'Her kommer det diverse informasjon fra contactor',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: false,
+            },
+            availableMethods: allMethodsOn,
+            alias: 'contactor',
+        },
+        {
+            name: 'Mat på Gløshaugen',
+            description: 'Her kommer informasjon om når det er vafler på Lophtet eller noe annen mat i området rundt El-bygget',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+                push: true,
+            },
             availableMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false
+                push: true,
             },
         },
         {
-            name: 'Informasjon fra Blæstcom',
-            description: 'Her kommer det varslinger om Omega Merch',
+            name: 'Diverse',
+            description: 'Her kommer informasjon som ellers ikke passer inn i kategoriene',
             defaultMethods: allMethodsOn,
             availableMethods: allMethodsOn,
         },
@@ -178,7 +250,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             },
             mailAlias: {
                 connect: {
-                    address: DEFAULT_NOTIFCIATION_ALIAS,
+                    address: c.alias ? `${c.alias}@omega.ntnu.no` : DEFAULT_NOTIFCIATION_ALIAS,
                 }
             }
         }

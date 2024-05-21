@@ -1,0 +1,19 @@
+@use '@/styles/ohma';
+
+.notificationSettingItem {
+
+    > .childrenContainer {
+        padding-left: 2rem;
+        transition: all 300ms;
+        max-height: 300rem;
+        overflow-y: hidden;
+
+        &.collapsed {
+            max-height: 0;
+        }
+    }
+
+    > .subChannelHeader {
+        margin-bottom: 1rem;
+    }
+}
