@@ -7,7 +7,7 @@ import type { ValidationTypes } from '@/server/Validation'
 import type { NotificationChannel, NotificationMethod, NotificationMethodTypes } from '@/server/notifications/Types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
-    return Object.fromEntries(notificationMethods.map(m => {
+    return Object.fromEntries(notificationMethods.filter(m => notificationMethods.includes(m)).map(m => {
         const compare = prefix ? `${prefix}_${m}` : m
         const value = data.get(compare)
         if (!value) {

@@ -4,8 +4,9 @@ import { DEFAULT_NOTIFICATION_ALIAS } from '@/server/notifications/email/ConfigV
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
+import { allMethodsOff, allMethodsOn, type NotificationChannel, type NotificationMethod } from '@/server/notifications/Types'
 import type { CreateNotificationChannelType } from './validation'
+import { booleanOperationOnMethods } from '../utils'
 
 export async function createNotificationChannel({
     name,
@@ -27,7 +28,7 @@ export async function createNotificationChannel({
         throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
     }
 
-    return await prismaCall(() => prisma.notificationChannel.create({
+    const channel = await prismaCall(() => prisma.notificationChannel.create({
         data: {
             name: parse.name,
             description: parse.description,
@@ -49,8 +50,58 @@ export async function createNotificationChannel({
             },
         },
         include: {
-            availableMethods: true,
-            defaultMethods: true,
+            availableMethods: {
+                select: allMethodsOn,
+            },
+            defaultMethods: {
+                select: allMethodsOn,
+            },
         }
     }))
+
+    // Return if all default methods are set to off
+    if (validateMethods(allMethodsOff, defaultMethods)) {
+        return channel
+    }
+
+    await prismaCall(() => prisma.$transaction(async () => {
+        const parentSubscriptions = await prisma.notificationSubscription.findMany({
+            where: {
+                channelId: parse.parentId
+            },
+            include: {
+                methods: {
+                    select: allMethodsOn,
+                }
+            }
+        })
+
+        await Promise.all(parentSubscriptions
+            .map(s => ({
+                ...s,
+                subscriptionMethods: booleanOperationOnMethods(s.methods, channel.defaultMethods, 'AND')
+            }))
+            .filter(s => !validateMethods(allMethodsOff, s.subscriptionMethods))
+            .map(s => prisma.notificationSubscription.create({
+                data: {
+                    user: {
+                        connect: {
+                            id: s.userId,
+                        },
+                    },
+                    channel: {
+                        connect: {
+                            id: channel.id,
+                        },
+                    },
+                    methods: {
+                        create: s.subscriptionMethods
+                    }
+                }
+            }))
+        )
+    }))
+
+
+    return channel
 }

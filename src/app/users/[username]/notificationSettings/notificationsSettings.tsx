@@ -61,6 +61,7 @@ export async function NotificationSettings() {
             Det er disse du kan se når du åpner en kanal.
             Dersom det blir lagt til nye kanaler vil du da abbonere med metodene som er aktive i både
             foreldrekanalen du abbonerer på og de standarde metodene til den nye kanalen.
+            Det er også verdt å legge merke til at du kan abbonere på barna til en kanal, uten å abbonere på foreldre-kanalen.
         </p>
         <NotificationSettingItem channel={channelTree} />
     </div>

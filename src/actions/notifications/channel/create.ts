@@ -23,11 +23,12 @@ Promise<ActionReturn<NotificationChannel>> {
 
     return safeServerCall(() => {
         const availableParsed = parseMethods(rawdata, 'availableMethods')
+        const defaultParsed = parseMethods(rawdata, 'defaultMethods')
 
         return createNotificationChannel({
             ...typeParsed.data,
             availableMethods: availableParsed,
-            defaultMethods: allMethodsOff,
+            defaultMethods: defaultParsed,
         })
     })
 }

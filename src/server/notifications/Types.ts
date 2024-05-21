@@ -17,10 +17,10 @@ export const allMethodsOn = {
     email: true,
     emailWeekly: true,
     push: true,
-}
+} satisfies Record<NotificationMethods, Boolean>
 
 export const allMethodsOff = {
     email: false,
     emailWeekly: false,
     push: false,
-}
+} satisfies Record<NotificationMethods, Boolean>
