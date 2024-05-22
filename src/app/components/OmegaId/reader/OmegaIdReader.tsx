@@ -25,18 +25,21 @@ export default function OmegaIdReader({
     expiryOffset,
     debounceThreshold,
     singleRead,
-    showSuccessFeedback,
 }: {
-    successCallback: (user: OmegaId, token: string) => unknown,
+    successCallback: (user: OmegaId, token: string) => Promise<{
+        success: boolean,
+        text: string,
+    }>,
     publicKey: string,
     expiryOffset?: number,
     debounceThreshold?: number,
     singleRead?: boolean,
-    showSuccessFeedback?: boolean
 }) {
-    const [feedback, setFeedBack] = useState({
-        success: false,
-        error: false,
+    const [feedback, setFeedBack] = useState<{
+        status: 'EMPTY' | 'ERROR' | 'SUCCESS' | 'WAITING',
+        text: string,
+    }>({
+        status: 'EMPTY',
         text: '',
     })
 
@@ -56,8 +59,7 @@ export default function OmegaIdReader({
                 const msg = parse.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
 
                 setFeedBack({
-                    success: false,
-                    error: true,
+                    status: 'ERROR',
                     text: msg,
                 })
                 return
@@ -72,21 +74,17 @@ export default function OmegaIdReader({
                 html5QrcodeScanner.clear()
             }
 
-            successCallback(parse.data, token)
+            setFeedBack({
+                status: 'WAITING',
+                text: '...',
+            })
 
-            if (showSuccessFeedback) {
-                setFeedBack({
-                    success: true,
-                    error: false,
-                    text: `${parse.data.firstname} ${parse.data.lastname}`,
-                })
-            } else {
-                setFeedBack({
-                    success: false,
-                    error: false,
-                    text: '',
-                })
-            }
+            const results = await successCallback(parse.data, token)
+
+            setFeedBack({
+                status: results.success ? 'SUCCESS' : 'ERROR',
+                text: results.text,
+            })
 
             lastReadToken = token
             lastReadTime = Date.now()
@@ -105,8 +103,9 @@ export default function OmegaIdReader({
 
         <div className={`
             ${styles.feedbackBox}
-            ${(feedback.success && !singleRead) ? styles.success : ''}
-            ${feedback.error ? styles.error : ''}
+            ${(feedback.status === 'SUCCESS' && !singleRead) ? styles.success : ''}
+            ${feedback.status === 'ERROR' ? styles.error : ''}
+            ${feedback.status === 'WAITING' ? styles.waiting : ''}
         `} >
             <span>{feedback.text}</span>
         </div>
