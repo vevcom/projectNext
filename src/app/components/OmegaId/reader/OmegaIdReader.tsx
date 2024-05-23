@@ -49,10 +49,10 @@ export default function OmegaIdReader({
         const html5QrcodeScanner = new Html5QrcodeScanner(qrcodeRegionId, QRCodeReaderConfig, false)
 
         let lastReadTime = 0
-        let lastReadToken = ''
+        let lastReadUserId = -1
 
         html5QrcodeScanner.render(async (token) => {
-            const parse = await parseJWT(token, publicKey, expiryOffset ?? 1)
+            const parse = await parseJWT(token, publicKey, expiryOffset ?? 100)
             if (!parse.success) {
                 console.log(parse)
 
@@ -65,13 +65,11 @@ export default function OmegaIdReader({
                 return
             }
 
-            if (token === lastReadToken && Date.now() - lastReadTime < (debounceThreshold ?? 5000)) {
+            const userId = parse.data.id
+
+            if (userId === lastReadUserId && Date.now() - lastReadTime < (debounceThreshold ?? 5000)) {
                 lastReadTime = Date.now()
                 return
-            }
-
-            if (singleRead ?? false) {
-                html5QrcodeScanner.clear()
             }
 
             setFeedBack({
@@ -81,12 +79,16 @@ export default function OmegaIdReader({
 
             const results = await successCallback(parse.data, token)
 
+            if (results.success && (singleRead ?? false)) {
+                html5QrcodeScanner.clear()
+            }
+
             setFeedBack({
                 status: results.success ? 'SUCCESS' : 'ERROR',
                 text: results.text,
             })
 
-            lastReadToken = token
+            lastReadUserId = userId
             lastReadTime = Date.now()
         }, () => {})
 
