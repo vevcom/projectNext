@@ -1,55 +1,52 @@
-'use client'
-import { registerOwnUser } from '@/actions/users/update'
-import Form from '@/app/components/Form/Form'
-import Checkbox from '@/app/components/UI/Checkbox'
-import Select from '@/app/components/UI/Select'
-import TextInput from '@/app/components/UI/TextInput'
-import { useUser } from '@/auth/useUser'
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+'use server'
+import { getUser } from '@/auth/getUser'
+import RegistrationForm from './RegistrationForm'
+import { notFound, redirect } from 'next/navigation'
+import { verifyUserEmailAction } from '@/actions/users/update'
+import { readUser } from '@/server/users/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 
-export default async function Register() {
-    const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
+export default async function Register({
+    searchParams,
+}: {
+    searchParams: {
+        token?: string,
+        callbackUrl?: string,
+    }
+}) {
 
-    const { push } = useRouter()
-
-    const userAuth = useUser({
-        userRequired: true,
-        shouldRedirect: true,
+    const { user, authorized } = await getUser({
+        userRequired: false,
+        shouldRedirect: false,
     })
 
-    if (userAuth.user?.acceptedTerms) {
-        push('/users/me')
+    if (typeof searchParams.token === 'string') {
+        const verify = await verifyUserEmailAction(searchParams.token)
+        if (!verify.success) {
+            return <p>Token er ugyldig</p>
+        }
+
+        if (!authorized || !user) {
+            return <p>Tusen takk! Eposten er verifisert.</p>
+        }
     }
 
-    const sexOptions = [
-        { value: 'FEMALE', label: 'Kvinne' },
-        { value: 'MALE', label: 'Mann' },
-        { value: 'OTHER', label: 'Annet' },
-    ]
+    if (!authorized || !user) {
+        return notFound()
+    }
 
-    const lastUsername = userAuth.user?.username
-    let lastPassword: string = ''
+    const updatedUser = await safeServerCall(() => readUser({ id: user.id}))
+    if (!updatedUser.success) {
+        return notFound()
+    }
 
-    return <Form
-        title="Registrer bruker"
-        submitText="Registrer bruker"
-        action={registerOwnUser}
-        successCallback={() => signIn('credentials', {
-            username: lastUsername,
-            password: lastPassword,
-            redirect: true,
-            callbackUrl
-        })}
-    >
-        <TextInput label="Brukernavn" name="username" disabled={true} value={userAuth.user?.username}/>
-        <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
-        <TextInput label="Telefonnummer" name="mobile" />
-        <TextInput label="Allergier / diett" name="allergies" />
-        <TextInput label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
-        <TextInput label="Gjenta passord" name="confirmPassword" />
-        <Select label="Kjønn" name="sex" options={sexOptions}/>
-        <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
-    </Form>
+    if (updatedUser.data.acceptedTerms) {
+        redirect(searchParams.callbackUrl ?? 'users/me')
+    }
+
+    if (!updatedUser.data.emailVerified) {
+        redirect('/registeremail')
+    }
+
+    return <RegistrationForm />
 }

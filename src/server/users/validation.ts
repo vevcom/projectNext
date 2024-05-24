@@ -66,12 +66,18 @@ export const updateUserValidation = baseUserValidation.createValidationPartial({
     ],
     transformer: data => data,
 })
-
 export type UpdateUserTypes = ValidationTypes<typeof updateUserValidation>
+
+export const verifyEmailValidation = baseUserValidation.createValidation({
+    keys: [
+        'email',
+    ],
+    transformer: data => data
+})
+export type VerifyEmailType = ValidationTypes<typeof verifyEmailValidation>
 
 export const registerUserValidation = baseUserValidation.createValidation({
     keys: [
-        'email',
         'mobile',
         'allergies',
         'password',
@@ -82,7 +88,6 @@ export const registerUserValidation = baseUserValidation.createValidation({
     transformer: data => data,
     refiner,
 })
-
 export type RegisterUserTypes = ValidationTypes<typeof registerUserValidation>
 
 export const updateUserPasswordValidation = baseUserValidation.createValidation({

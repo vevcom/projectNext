@@ -3,6 +3,7 @@ import {
     registerUserValidation,
     updateUserPasswordValidation,
     updateUserValidation,
+    verifyEmailValidation,
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
@@ -13,9 +14,9 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
-import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes } from './validation'
+import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
 import type { User } from '@prisma/client'
-import type { UserFiltered } from './Types'
+import type { RegisterNewEmailType, UserFiltered } from './Types'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -28,6 +29,60 @@ export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed'
     }))
 }
 
+export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Detailed']): Promise<RegisterNewEmailType> {
+    const { email } = verifyEmailValidation.detailedValidate(rawdata)
+
+    const storedUser = await prismaCall(() => prisma.user.findUniqueOrThrow({
+        where: {
+            id,
+        },
+        select: {
+            ...userFilterSelection,
+            feideAccount: {
+                select: {
+                    email: true,
+                }
+            }
+        }
+    }))
+
+    // This test may not be needed if we let users change their email later. Maybe just remove this check
+    if (storedUser.emailVerified) throw new ServerError('BAD PARAMETERS', 'Brukeren er allerede verifisert')
+
+    if (email === storedUser.feideAccount?.email) {
+
+        await prismaCall(() => prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                emailVerified: (new Date()).toISOString()
+            }
+        }))
+
+        return {
+            verified: true,
+            email,
+        }
+    }
+
+    if (storedUser.feideAccount?.email !== email) {
+        if (email.endsWith(`@${ntnuEmailDomain}`)) {
+            throw new ServerError(
+                'BAD PARAMETERS',
+                `Den nye eposten må være din ${ntnuEmailDomain}-epost, eller en personlig epost.`
+            )
+        }
+    }
+
+    await sendVerifyEmail(storedUser, email)
+
+    return {
+        verified: false,
+        email,
+    }
+}
+
 /**
  * This function completes the last step of user creation: registration.
  * This can only be done once per user.
@@ -37,7 +92,7 @@ export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed'
  * @returns null
  */
 export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
-    const { email, sex, password, mobile, allergies } = registerUserValidation.detailedValidate(rawdata)
+    const { sex, password, mobile, allergies } = registerUserValidation.detailedValidate(rawdata)
 
     if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
 
@@ -74,19 +129,6 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
-    if (storedUser.feideAccount?.email !== email) {
-        if (email.endsWith(`@${ntnuEmailDomain}`)) {
-            throw new ServerError(
-                'BAD PARAMETERS',
-                `Den nye eposten må være din ${ntnuEmailDomain}-epost, eller en personlig epost.`
-            )
-        }
-    }
-
-    const emailVerified = (
-        email === storedUser.email
-    ) ? storedUser.emailVerified : null
-
     const [user] = await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
@@ -94,11 +136,9 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
             },
             data: {
                 acceptedTerms: new Date(),
-                email,
                 sex,
                 mobile,
                 allergies,
-                emailVerified,
             },
             select: userFilterSelection
         }),
@@ -132,10 +172,6 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
         await updateUserOmegaMembershipGroup(id, partOfOmega ? 'SOELLE' : 'EXTERNAL', true)
     })())
-
-    if (!emailVerified) {
-        promises.push(sendVerifyEmail(user))
-    }
 
     await Promise.all(promises)
 

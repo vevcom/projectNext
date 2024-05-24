@@ -1,5 +1,5 @@
 import { createSelection } from '@/server/createSelection'
-import type { User } from '@prisma/client'
+import type { SEX, User } from '@prisma/client'
 
 export const userFieldsToExpose = [
     'id',
@@ -15,3 +15,12 @@ export const userFieldsToExpose = [
     'sex',
 ] as const satisfies (keyof User)[]
 export const userFilterSelection = createSelection([...userFieldsToExpose])
+
+export const sexOptions = [
+    { value: 'FEMALE', label: 'Kvinne' },
+    { value: 'MALE', label: 'Mann' },
+    { value: 'OTHER', label: 'Annet' },
+] satisfies {
+    value: SEX,
+    label: string,
+}[]
