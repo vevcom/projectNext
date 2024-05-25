@@ -1,57 +1,30 @@
-'use client'
-import { registerNewEmailAction } from '@/actions/users/update'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
-import { useUser } from '@/auth/useUser'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+'use server'
+import { notFound, redirect } from 'next/navigation'
+import EmailRegistrationForm from './EmailregistrationForm'
+import { getUser } from '@/auth/getUser'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { readUser } from '@/server/users/read'
 
-export default async function Register() {
-    const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
+export default async function Registeremail() {
 
-    const [ feedback, setFeedback ] = useState<string | null>(null)
-
-    const { push } = useRouter()
-
-    const userAuth = useUser({
+    const {authorized, user} = await getUser({
         userRequired: true,
-        shouldRedirect: true,
     })
 
-    if (userAuth.user?.acceptedTerms) {
-        push(callbackUrl)
+    if (!authorized) notFound()
+
+    const updatedUser = await safeServerCall(() => readUser({ id: user.id}))
+    if (!updatedUser.success) {
+        return notFound()
     }
 
-    if (userAuth.user?.emailVerified) {
-        push(`/register?callbackUrl=${callbackUrl}`)
+    if (updatedUser.data.acceptedTerms) {
+        redirect('/users/me')
     }
 
-    return <>
-        <Form
-            title="Sett eposten din"
-            submitText="Verifiser epost"
-            action={registerNewEmailAction}
-            successCallback={(data) => {
-                if (data) {
-                    if (data.verified) {
-                        push(`/register?callbackUrl=${callbackUrl}`)
-                    } else {
-                        setFeedback(`
-                            For å bekrefte at dette er din epost har vi sendt en epost til ${data.email}.
-                            Følge instruksjonene i eposten for å fullføre registreringen.
-                        `)
-                    }
-                }
-            }}
-        >
-            <p>
-                Velkommen til Veven! Vennligst skriv inn eposten din.
-                Du kan bruke ntnu-eposten din, men vær oppmerksom på at du mister tilgang til denne når du er ferdig å studere.
-            </p>
-            <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
-        </Form>
+    if (updatedUser.data.emailVerified) {
+        redirect(`/register`)
+    }
 
-        { feedback && <p>{ feedback }</p> }
-    </>
+    return <EmailRegistrationForm />
 }

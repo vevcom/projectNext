@@ -12,7 +12,8 @@
         margin-top: 4*ohma.$gap;
         margin-bottom: 4*ohma.$gap;
         padding: 4*ohma.$gap;
-        background-color: ohma.$colors-secondary;
+        background-color: ohma.$colors-white;
+        box-shadow: 0 0 1rem ohma.$colors-gray-500;
 
         @include ohma.screenLg {
             @include ohma.pagePadding(650px);

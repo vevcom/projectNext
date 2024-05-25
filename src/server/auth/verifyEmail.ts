@@ -1,6 +1,7 @@
 import 'server-only'
 import { verifyJWT } from '@/auth/jwt'
 import { ServerError } from '@/server/error'
+import { readUser } from '../users/read'
 
 
 export async function verifyVerifyEmailToken(token: string): Promise<{
@@ -9,9 +10,19 @@ export async function verifyVerifyEmailToken(token: string): Promise<{
 }> {
     const payload = verifyJWT(token, 'verifyemail')
 
-    if (payload.sub && payload.email) {
+    if (payload.sub && payload.email && payload.iat) {
         const userId = Number(payload.sub)
         const email = String(payload.email)
+
+        const iat = new Date(payload.iat * 1000)
+        
+        const user = await readUser({
+            id: userId,
+        })
+
+        if (iat < user.updatedAt) {
+            throw new ServerError('JWT INVALID', 'The user has changed since the token was generated.')
+        }
 
         return {
             userId,

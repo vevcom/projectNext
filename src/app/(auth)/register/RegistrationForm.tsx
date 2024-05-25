@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 export default async function RegistrationForm() {
     const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
+    const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
     const userAuth = useUser({
         userRequired: true,
