@@ -73,7 +73,7 @@ services:
 
     nginx:
         image: nginx:1.21.3-alpine
-        restart: no
+        restart: always
         ports:
             - 80:80
             - 443:443
@@ -95,7 +95,7 @@ services:
     certbot:
         image: certbot/certbot:latest
         volumes:
-            - ./certs/www:/var/www/certbot:rw
+            - ./certs/www:/var/www:rw
             - ./certs/conf:/etc/letsencrypt:rw
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 14d & wait $${!}; done;'"
         restart: always
