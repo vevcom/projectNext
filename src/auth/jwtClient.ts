@@ -1,4 +1,4 @@
-import type { JWT } from "./jwt"
+import type { JWT } from './jwt'
 
 /** Function for parsing a jwt.
  *
