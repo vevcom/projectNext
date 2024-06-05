@@ -1,89 +1,57 @@
 import 'server-only'
-import { readJWTPayload } from '@/auth/jwt'
-import type { Awaitable } from 'next-auth'
-import type { Provider } from 'next-auth/providers/index'
-import type { FeideGroup, ExtendedFeideUser, AdapterUserCustom } from './Types'
+import { fetchExtendedUserInfoFromFeide } from './api'
+import type { OAuthConfig, OAuthUserConfig } from 'next-auth/providers/index'
 
-export default function FeideProvider({
-    clientId,
-    clientSecret
-}: {
-    clientId: string,
-    clientSecret: string,
-}): Provider {
+/**
+ * The basic attributes contained in the id token returned by feide.
+ * The attributes on the id token are documented [here](https://docs.feide.no/reference/tokens.html#ref-id-token).
+ * Only the attributes we use should be listen in the type.
+ */
+interface FeideProfile extends Record<string, unknown> {
+    iss: 'https://auth.dataporten.no',
+    jti: string,
+    aud: string,
+    sub: string,
+    iat: number,
+    exp: number,
+    auth_time: number,
+    email?: string,
+    name?: string,
+}
+
+export default function FeideProvider<P extends FeideProfile>(
+    options: OAuthUserConfig<P>
+): OAuthConfig<P> {
     return {
         id: 'feide',
         name: 'Feide',
         type: 'oauth',
         wellKnown: 'https://auth.dataporten.no/.well-known/openid-configuration',
-        authorization: { params: {
-            grant_type: 'authorization_code',
-            scope: 'email groups-edu groups-org openid userid userinfo-mobile userinfo-name longterm'
-        } },
-        idToken: true,
-        checks: ['pkce', 'state'],
-        userinfo: {
-            url: 'https://auth.dataporten.no/openid/userinfo',
-            async request(context): Promise<ExtendedFeideUser> {
-                const { tokens } = context
-
-                const userinfoBasicRequest = fetch('https://auth.dataporten.no/openid/userinfo', {
-                    headers: {
-                        Authorization: `Bearer ${tokens.access_token}`,
-                    }
-                })
-
-                const userinfoExtendedRequest = fetch('https://api.dataporten.no/userinfo/v1/userinfo', {
-                    headers: {
-                        Authorization: `Bearer ${tokens.access_token}`,
-                    }
-                })
-
-                // This should maybe not run at every sign in
-                const userinfoGroupsRequest = fetch('https://groups-api.dataporten.no/groups/me/groups', {
-                    headers: {
-                        Authorization: `Bearer ${tokens.access_token}`,
-                    }
-                })
-
-                if (!tokens.id_token) {
-                    throw new Error('No id_token provided')
-                }
-
-                const clientIdData = readJWTPayload(tokens.id_token)
-
-                if (clientIdData.aud !== process.env.FEIDE_CLIENT_ID) {
-                    throw new Error('The audience for the response from Feide is incorrect')
-                }
-
-                const [userinfoBasic,
-                    userinfoExtended,
-                    userinfoGroups
-                ] = await Promise.all([userinfoBasicRequest, userinfoExtendedRequest, userinfoGroupsRequest])
-
-                if (!userinfoBasic.ok || !userinfoExtended.ok || !userinfoGroups.ok) {
-                    throw new Error('Failed to fetch user information')
-                }
-
-                const profile = await userinfoBasic.json()
-
-                const profileExtended = await userinfoExtended.json()
-
-                const groups: FeideGroup[] = await userinfoGroups.json()
-
-                return { ...profile, extended: profileExtended, groups, tokens }
-            }
+        authorization: {
+            params: {
+                scope: 'openid email groups-edu groups-org userid userinfo-mobile userinfo-name longterm',
+            },
         },
-        profile(profile: ExtendedFeideUser): Awaitable<AdapterUserCustom> {
+        checks: ['pkce', 'state'],
+        async profile(profile, tokens) {
+            if (!tokens.access_token) {
+                // This should never happen.
+                throw new Error('No access token.')
+            }
+
+            // The id token doesn't have the firstnames or lastnames of the user,
+            // so we have to fetch it from the extended user info Feide API endpoint.
+            const extendedUserInfo = await fetchExtendedUserInfoFromFeide(tokens.access_token)
+
             return {
                 id: profile.sub,
+                username: profile.email?.split('@')[0],
                 email: profile.email,
-                firstname: profile.extended.givenName.join(' '),
-                lastname: profile.extended.sn.join(' '),
-                username: profile.email.split('@')[0],
+                name: profile.name,
+                firstname: extendedUserInfo.givenName?.join(' '),
+                lastname: extendedUserInfo.sn?.join(' '),
             }
         },
-        clientId,
-        clientSecret,
+        options,
     }
 }

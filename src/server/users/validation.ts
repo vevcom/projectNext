@@ -6,24 +6,24 @@ import type { ValidationTypes } from '@/server/Validation'
 const baseUserValidation = new ValidationBase({
     type: {
         username: z.string(),
-        password: z.string(),
-        sex: z.nativeEnum(SEX),
+        sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string(),
         firstname: z.string(),
         lastname: z.string(),
-        confirmPassword: z.string(),
+        password: z.string().optional(),
+        confirmPassword: z.string().optional(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
     },
     details: {
         username: z.string().max(50).min(2),
-        password: z.string().max(50).min(2),
-        sex: z.nativeEnum(SEX),
+        sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
-        confirmPassword: z.string().max(50).min(2),
+        password: z.string().max(50).min(2).optional(),
+        confirmPassword: z.string().max(50).min(2).optional(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
@@ -31,7 +31,7 @@ const baseUserValidation = new ValidationBase({
 })
 
 const refiner = {
-    fcn: (data: { password: string, confirmPassword: string }) => data.password === data.confirmPassword,
+    fcn: (data: { password?: string, confirmPassword?: string }) => data.password === data.confirmPassword,
     message: 'Passordene må være like'
 }
 
@@ -50,7 +50,7 @@ export const createUserValidation = baseUserValidation.createValidation({
 })
 export type CreateUserTypes = ValidationTypes<typeof createUserValidation>
 
-export const updateUserValidation = baseUserValidation.createValidation({
+export const updateUserValidation = baseUserValidation.createValidationPartial({
     keys: [
         'email',
         'username',
@@ -59,6 +59,7 @@ export const updateUserValidation = baseUserValidation.createValidation({
     ],
     transformer: data => data,
 })
+
 export type UpdateUserTypes = ValidationTypes<typeof updateUserValidation>
 
 export const registerUserValidation = baseUserValidation.createValidation({
