@@ -1,7 +1,7 @@
 'use client'
 import styles from './OmegaIdElement.module.scss'
 import { generateOmegaIdAction } from '@/actions/omegaid/generate'
-import { readJWTPayload } from '@/utils/jwt'
+import { readJWTPayload } from '@/auth/jwt'
 import { useQRCode } from 'next-qrcode'
 import { useEffect, useState } from 'react'
 

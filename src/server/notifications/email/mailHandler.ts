@@ -15,7 +15,7 @@ class MailHandler {
     waitForSetup = new Promise((resolve) => { this.resolveSetup = resolve })
     testAccount: nodemailer.TestAccount | null = null
 
-    queue = [] as Mail.Options[]
+    queue: Mail.Options[] = []
 
     constructor() {
         this.setup()
