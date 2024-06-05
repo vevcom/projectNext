@@ -26,6 +26,8 @@ services:
                 condition: service_completed_successfully
         links:
             - db
+        deploy:
+            replicas: 8
 
     db:
         image: postgres:16.0-alpine
@@ -75,15 +77,17 @@ services:
         restart: always
         ports:
             - 80:80
+            - 443:443
         volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
-            - store:/usr/store
+            - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
+            - store:/usr/store:ro
+            - ./certs/conf:/etc/letsencrypt:ro
         depends_on:
             - projectnext
         links:
             - projectnext
 
-    ow-certbot:
+    certbot:
         image: certbot/certbot:latest
         volumes:
             - ./certs/www:/var/www/certbot:rw
@@ -91,7 +95,7 @@ services:
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 14d & wait $${!}; done;'"
         restart: always
 
-    ow-postfix:
+    postfix:
         build: ./postfix/
         ports:
             - '587:587'
@@ -107,7 +111,7 @@ services:
         depends_on:
             - db
         volumes:
-            - ./certs/conf:/etc/letsencrypt:r
+            - ./certs/conf:/etc/letsencrypt:ro
         links:
             - db
         restart: always
