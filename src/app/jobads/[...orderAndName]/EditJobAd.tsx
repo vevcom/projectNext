@@ -17,7 +17,9 @@ type PropTypes = {
 
 /**
  * This component renders children if editmode is off and news admin tools if editmode is on
- * pass it not: id of article to make sure not to display that article
+ * pass it not: id of jobad to make sure not to display that jobad
+ * @param jobAd - the jobad to edit
+ * @param children - children to render if editmode is off
  */
 export default function EditJobAd({ jobAd, children }: PropTypes) {
     const { push } = useRouter()
