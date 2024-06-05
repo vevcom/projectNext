@@ -190,6 +190,12 @@ model StudyProgramme {
 /////////////////
 
 enum Permission {
+  // Job ads
+  JOBAD_CREATE
+  JOBAD_READ
+  JOBAD_UPDATE
+  JOBAD_DESTROY
+
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
