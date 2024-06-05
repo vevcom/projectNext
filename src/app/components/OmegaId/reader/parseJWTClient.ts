@@ -1,7 +1,7 @@
 'use client'
 
 import { JWT_ISSUER } from '@/auth/ConfigVars'
-import type { JWT } from '@/utils/jwt'
+import type { JWT } from '@/auth/jwt'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaId, OmegaIdJWT } from '@/server/omegaid/Types'
