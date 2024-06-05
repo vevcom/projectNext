@@ -3,11 +3,15 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/server/users/update'
 import { getUser } from '@/auth/getUser'
-import { updateUserValidation, registerUserValidation, updateUserPasswordValidation, verifyEmailValidation } from '@/server/users/validation'
+import {
+    updateUserValidation,
+    registerUserValidation,
+    updateUserPasswordValidation,
+    verifyEmailValidation
+} from '@/server/users/validation'
 import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
 import { ServerError } from '@/server/error'
 import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
-import { sendVerifyEmail } from '@/server/notifications/email/systemMail/verifyEmail'
 import type { RegisterNewEmailType, UserFiltered } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'

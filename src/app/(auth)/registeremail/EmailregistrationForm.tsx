@@ -47,7 +47,8 @@ export default async function EmailRegistrationForm() {
         >
             <p>
                 Velkommen til Veven! Vennligst skriv inn eposten din.
-                Du kan bruke ntnu-eposten din, men vær oppmerksom på at du mister tilgang til denne når du er ferdig å studere.
+                Du kan bruke ntnu-eposten din,
+                men vær oppmerksom på at du mister tilgang til denne når du er ferdig å studere.
             </p>
             <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
         </Form>

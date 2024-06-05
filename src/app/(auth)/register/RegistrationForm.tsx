@@ -7,7 +7,7 @@ import TextInput from '@/app/components/UI/TextInput'
 import { useUser } from '@/auth/useUser'
 import { sexOptions } from '@/server/users/ConfigVars'
 import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 export default async function RegistrationForm() {
     const searchParams = useSearchParams()

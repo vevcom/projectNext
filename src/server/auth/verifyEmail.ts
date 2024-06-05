@@ -1,5 +1,5 @@
 import 'server-only'
-import { readUser } from '../users/read'
+import { readUser } from '@/server/users/read'
 import { verifyJWT } from '@/auth/jwt'
 import { ServerError } from '@/server/error'
 

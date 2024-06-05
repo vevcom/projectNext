@@ -128,7 +128,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
-    const [user] = await prismaCall(() => prisma.$transaction([
+    await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
                 id
