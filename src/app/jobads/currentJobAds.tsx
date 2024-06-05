@@ -8,14 +8,14 @@ type PropTypes = {
 }
 
 /**
- * pass it not: a id of a article to exclude from the list
+ * @param not - pass it not: a id of a jobad to exclude from the list
  */
 export default async function CurrentJobAds({ not }: PropTypes) {
     const res = await readJobAdsCurrentAction()
     if (!res.success) {
         throw res.error ?
             new Error(res.error[0].message) :
-            new Error('unknown error reading news')
+            new Error('unknown error reading jobad')
     }
 
     const jobAds = res.data.filter(n => n.id !== not)
