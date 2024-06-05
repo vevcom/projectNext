@@ -1,28 +1,29 @@
 @use "@/styles/ohma";
 
-$padding: 1.5em;
-$imageHeight: 170px;
-$contentHeight: 230px;
+$padding: 0em;
+$imageHeight: 200px;
+$contentHeight: 200px;
 $height: $imageHeight + $contentHeight;
 
-$background: lighten(ohma.$colors-secondary, 15%);
+$background: lighten(ohma.$colors-secondary, 20%);
 
 $textBoxTransparency: 60%;
-$textColor: ohma.$colors-gray-900;
+$textColor: ohma.$colors-gray-800;
 $textUnderlineColor: ohma.$colors-secondary;
 $textBoxBackgroundColor: ohma.$colors-white;
 
 .ImageCard {
+    @include ohma.card;
     min-width: 200px; 
     max-width: 300px;
-    border-radius: ohma.$cardRounding;
+    /*border-radius: ohma.$cardRounding;*/
     padding: $padding;
     position: relative;
     color: inherit;
     text-decoration: none;
     display: block;
     height: $height;
-    background-color: $background;
+    /*background-color: $background;*/
     isolation: isolate;
     overflow: hidden;
     &:hover {
@@ -30,7 +31,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
             scale: 1.1;
         }
         > .content {
-            background-color: rgba($textBoxBackgroundColor, 90%);
+            background-color: darken($background, 5%);
         }
     }
     > .image {
@@ -58,7 +59,8 @@ $textBoxBackgroundColor: ohma.$colors-white;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center top, transparent 40%, $background 70%, $background 100%);
+            /*background: radial-gradient(ellipse at center top, transparent 40%, $background 70%, $background 100%);*/
+            background: linear-gradient(to top, $background, transparent 40%);
             scale: 1.5 1;
             z-index: 0;
         }
@@ -66,13 +68,13 @@ $textBoxBackgroundColor: ohma.$colors-white;
     > .content {
         z-index: 2;
         position: absolute;
-        border-radius: calc(ohma.$cardRounding - $padding);
-        background-color: rgba($textBoxBackgroundColor, $textBoxTransparency);
+        
+        background-color: $background; /*rgba($textBoxBackgroundColor, $textBoxTransparency);*/
         width: calc(100% - #{$padding} * 2);
-        padding: $padding;
+        padding: 1rem;
         top: calc($imageHeight - $padding);
         height: $contentHeight;
-        box-shadow: ohma.$colors-secondary 0 0 40px;
+        /*box-shadow: ohma.$colors-secondary 0 0 40px;*/
         color: $textColor;
         transition: 0.3s;
         overflow: hidden;
@@ -86,5 +88,5 @@ $textBoxBackgroundColor: ohma.$colors-white;
         }
     }
 
-    box-shadow: ohma.$colors-gray-800 0 0 10px;
+    /*box-shadow: ohma.$colors-gray-800 0 0 10px;*/
 }

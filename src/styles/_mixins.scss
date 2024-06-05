@@ -11,6 +11,8 @@
 @mixin card {
     border-radius: variables.$cardRounding;
     padding: 5*variables.$rounding;
+    background-color: colors.$white;
+    box-shadow: 0 0 1rem colors.$gray-500;
 }
 
 @mixin btn($color: colors.$white) {
@@ -109,6 +111,18 @@
         > * {
             width: 100%;
         }
+    }
+}
+
+@mixin screenMobile {
+    @media (max-width: variables.$mobileBreakpoint) {
+        @content;
+    }
+}
+
+@mixin screenLg {
+    @media (min-width: calc(variables.$mobileBreakpoint + 1px)) {
+        @content;
     }
 }
 
