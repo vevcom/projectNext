@@ -64,3 +64,14 @@ export function verifyJWT(token: string, aud?: OmegaJWTAudience): (jwt.JwtPayloa
         }
     }
 }
+
+/** Function for parsing a jwt.
+ *
+ * @param jwt - The raw jwt.
+ * @returns An object containing the jwt payload.
+ */
+export function readJWTPayload<T = Record<string, unknown>>(jwt: string): JWT<T> {
+    const parts = jwt.split('.')
+    const payload = Buffer.from(parts[1], 'base64').toString('utf-8')
+    return JSON.parse(payload)
+}
