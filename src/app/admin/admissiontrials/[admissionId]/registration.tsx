@@ -22,10 +22,10 @@ export default function RegisterAdmissiontrial({
             successCallback={async (user) => {
                 const results = await createAdmissionTrialAction(admission.id, user.id)
 
-                let msg = results.success ? 
+                let msg = results.success ?
                     `${user.firstname} er registrert` :
-                    'Kunne ikke regisrere bruker grunnet en ukjent feil.' 
-                
+                    'Kunne ikke regisrere bruker grunnet en ukjent feil.'
+
                 if (!results.success && results.error) {
                     msg = `${user.firstname}: ${
                         results.error
@@ -33,7 +33,7 @@ export default function RegisterAdmissiontrial({
                             .reduce((acc, val) => `${acc}\n${val}`, '')
                     }`
                 }
-                
+
                 return {
                     success: results.success,
                     text: msg,

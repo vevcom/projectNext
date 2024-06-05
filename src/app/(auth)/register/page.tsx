@@ -1,10 +1,10 @@
 'use server'
-import { getUser } from '@/auth/getUser'
 import RegistrationForm from './RegistrationForm'
-import { notFound, redirect } from 'next/navigation'
+import { getUser } from '@/auth/getUser'
 import { verifyUserEmailAction } from '@/actions/users/update'
 import { readUser } from '@/server/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { notFound, redirect } from 'next/navigation'
 
 export default async function Register({
     searchParams,
@@ -14,7 +14,6 @@ export default async function Register({
         callbackUrl?: string,
     }
 }) {
-
     const { user, authorized } = await getUser({
         userRequired: false,
         shouldRedirect: false,
@@ -35,7 +34,7 @@ export default async function Register({
         return notFound()
     }
 
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id}))
+    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
     if (!updatedUser.success) {
         return notFound()
     }

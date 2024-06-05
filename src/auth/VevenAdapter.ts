@@ -91,7 +91,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 username,
-                emailVerified: null,//(new Date()).toISOString(),
+                emailVerified: null, //(new Date()).toISOString(),
             })
 
             return convertToAdapterUser(createdUser)

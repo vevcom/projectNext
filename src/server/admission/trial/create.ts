@@ -4,9 +4,9 @@ import { readUserAdmissionTrials } from './read'
 import { prismaCall } from '@/server/prismaCall'
 import { readAdmissions } from '@/server/admission/read'
 import { updateUserOmegaMembershipGroup } from '@/server/groups/omegaMembershipGroups/update'
+import prisma from '@/prisma'
 import type { AdmissionTrial } from '@prisma/client'
 import type { CreateAdmissionTrialType } from './validation'
-import prisma from '@/prisma'
 
 export async function createAdmissionTrial(
     data: CreateAdmissionTrialType['Detailed']

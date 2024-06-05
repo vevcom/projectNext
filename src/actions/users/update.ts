@@ -7,11 +7,11 @@ import { updateUserValidation, registerUserValidation, updateUserPasswordValidat
 import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
 import { ServerError } from '@/server/error'
 import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
+import { sendVerifyEmail } from '@/server/notifications/email/systemMail/verifyEmail'
 import type { RegisterNewEmailType, UserFiltered } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
 import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
-import { sendVerifyEmail } from '@/server/notifications/email/systemMail/verifyEmail'
 
 export async function updateUserAction(
     id: number,

@@ -1,7 +1,7 @@
 import 'server-only'
 import { prismaCall } from '@/server/prismaCall'
-import type { AdmissionTrial } from '@prisma/client'
 import prisma from '@/prisma'
+import type { AdmissionTrial } from '@prisma/client'
 
 
 export async function readUserAdmissionTrials(userId: number): Promise<AdmissionTrial[]> {

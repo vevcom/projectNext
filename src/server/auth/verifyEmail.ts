@@ -1,7 +1,7 @@
 import 'server-only'
+import { readUser } from '../users/read'
 import { verifyJWT } from '@/auth/jwt'
 import { ServerError } from '@/server/error'
-import { readUser } from '../users/read'
 
 
 export async function verifyVerifyEmailToken(token: string): Promise<{
@@ -15,7 +15,7 @@ export async function verifyVerifyEmailToken(token: string): Promise<{
         const email = String(payload.email)
 
         const iat = new Date(payload.iat * 1000)
-        
+
         const user = await readUser({
             id: userId,
         })

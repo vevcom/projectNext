@@ -2,13 +2,12 @@ import 'server-only'
 import { VerifyEmailTemplate } from '@/server/notifications/email/templates/verifyEmail'
 import { sendSystemMail } from '@/server/notifications/email/send'
 import { generateJWT } from '@/auth/jwt'
+import { verifyEmailValidation } from '@/server/users/validation'
 import { render } from '@react-email/render'
 import type { UserFiltered } from '@/server/users/Types'
-import { verifyEmailValidation } from '@/server/users/validation'
 
 
 export async function sendVerifyEmail(user: UserFiltered, email: string) {
-
     const parse = verifyEmailValidation.detailedValidate({ email })
 
     const jwt = generateJWT('verifyemail', {

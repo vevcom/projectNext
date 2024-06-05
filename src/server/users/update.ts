@@ -50,7 +50,6 @@ export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Det
     if (storedUser.emailVerified) throw new ServerError('BAD PARAMETERS', 'Brukeren er allerede verifisert')
 
     if (email === storedUser.feideAccount?.email) {
-
         await prismaCall(() => prisma.user.update({
             where: {
                 id,
