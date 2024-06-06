@@ -1,10 +1,10 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readJobAdByNameAndOrder, readJobAdsCurrent } from '@/server/jobAds/read'
-import type { ExpandedJobAd, SimpleJobAd } from '@/server/jobAds/Types'
-import type { ActionReturn } from '@/actions/Types'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
+import type { ExpandedJobAd, SimpleJobAd } from '@/server/jobAds/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 
 export async function readJobAdsCurrentAction(): Promise<ActionReturn<SimpleJobAd[]>> {

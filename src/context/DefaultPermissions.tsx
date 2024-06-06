@@ -1,9 +1,10 @@
 'use client'
-import type { Permission } from "@prisma/client"
-import { createContext } from "react"
+import { createContext } from 'react'
+import type { Permission } from '@prisma/client'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
-    children: React.ReactNode,
+    children: ReactNode,
     defaultPermissions: Permission[],
 }
 
@@ -19,7 +20,7 @@ export const DefaultPermissionsContext = createContext<{
  * A context that holds server fetched default permissions for use on the client
  * @param children - the children to render with access to the default permissions context
  * @param defaultPermissions - the default permissions to save in the context
- * @returns 
+ * @returns
  */
 export default function DefaultPermissionsProvider({ children, defaultPermissions }: PropTypes) {
     return (

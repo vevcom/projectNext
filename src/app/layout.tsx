@@ -6,14 +6,14 @@ import Footer from '@/components/Footer/Footer'
 import { authOptions } from '@/auth/authoptions'
 import EditModeProvider from '@/context/EditMode'
 import PopUpProvider from '@/context/PopUp'
+import DefaultPermissionsProvider from '@/context/DefaultPermissions'
+import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { Inter } from 'next/font/google'
 import React from 'react'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
-import DefaultPermissionsProvider from '@/context/DefaultPermissions'
-import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 
 config.autoAddCss = false
 

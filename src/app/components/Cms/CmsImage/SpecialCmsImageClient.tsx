@@ -1,9 +1,9 @@
 'use client'
 import CmsImageClient from './CmsImageClient'
 import { readSpecialCmsImageAction } from '@/actions/cms/images/read'
-import type { PropTypes } from './SpecialCmsImage'
 import useActionCall from '@/hooks/useActionCall'
 import { useCallback } from 'react'
+import type { PropTypes } from './SpecialCmsImage'
 
 /**
  * WARNING: This component is only meant for the client - use SpecialCmsImageClient for the server

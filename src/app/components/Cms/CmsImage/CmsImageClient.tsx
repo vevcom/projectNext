@@ -20,7 +20,7 @@ import type { Image as ImageT } from '@prisma/client'
 export default function CmsImageClient({ cmsImage, children, ...props }: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
     const [fallback, setFallback] = useState(false)
-    
+
     useEffect(() => {
         if (image) return
         readSpecialImageAction('DEFAULT_IMAGE').then(res => {
