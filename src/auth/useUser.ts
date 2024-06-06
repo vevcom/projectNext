@@ -1,6 +1,5 @@
 'use client'
 
-import { checkPermissionMatrix } from './checkPermissionMatrix'
 import { DefaultPermissionsContext } from '@/context/DefaultPermissions'
 import checkMatrix from '@/utils/checkMatrix'
 import { useSession } from 'next-auth/react'
