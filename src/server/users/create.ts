@@ -16,11 +16,11 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
     const user = await prismaCall(() => prisma.user.create({
         data: {
             ...data,
-            credentials: {
+            credentials: passwordHash ? {
                 create: {
                     passwordHash
                 },
-            },
+            } : undefined,
         },
     }))
     return user

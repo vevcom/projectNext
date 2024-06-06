@@ -2,12 +2,13 @@
 
 import { checkPermissionMatrix } from './checkPermissionMatrix'
 import { DefaultPermissionsContext } from '@/context/DefaultPermissions'
+import checkMatrix from '@/utils/checkMatrix'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
-import type { PermissionMatrix } from './checkPermissionMatrix'
+import type { Matrix } from '@/utils/checkMatrix'
 import type { BasicMembership } from '@/server/groups/Types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
@@ -15,7 +16,7 @@ import type { BasicMembership } from '@/server/groups/Types'
 export { SessionProvider } from 'next-auth/react'
 
 type UseUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
-    requiredPermissions?: PermissionMatrix,
+    requiredPermissions?: Matrix<Permission>,
     userRequired?: UserRequired,
     shouldRedirect?: ShouldRedirect,
     redirectUrl?: string,
@@ -120,7 +121,7 @@ export function useUser({
         // Authorized is true if both these conditions are true
         // 1. The user is logged inn or (the user is not logged inn and the user session is not required)
         // 2. The user has all the required permissions
-        if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
+        if ((user || !userRequired) && checkMatrix(permissions, requiredPermissions)) {
             setUseuserReturn(user
                 ? { user, authorized: true, status: 'AUTHORIZED', permissions, memberships }
                 : { user, authorized: true, status: 'AUTHORIZED_NO_USER', permissions, memberships }

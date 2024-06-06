@@ -41,22 +41,22 @@ model User {
   credentials   Credentials?
   feideAccount  FeideAccount?
 
-  // We need to explicitly mark the combination of 'id' and 'username' as
+  // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
-  @@unique([id, username])
+  @@unique([id, username, email])
 }
 
 model Credentials {
-  user                 User     @relation(fields: [userId, username], references: [id, username], onDelete: Cascade, onUpdate: Cascade)
+  user                 User     @relation(fields: [userId, username, email], references: [id, username, email], onDelete: Cascade, onUpdate: Cascade)
   userId               Int      @unique
   username             String   @unique
+  email                String   @unique
   passwordHash         String
   credentialsUpdatedAt DateTime @updatedAt
 
-  // We need to explicitly mark the combination of 'userId' and 'username' as
+  // We need to explicitly mark the combination of 'userId', 'username' and 'email' as
   // unique to make the relation to 'User' work.
-  @@unique([userId, username])
-  @@map("Authentication")
+  @@unique([userId, username, email])
 }
 
 model FeideAccount {
