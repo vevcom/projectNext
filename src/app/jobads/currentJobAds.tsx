@@ -1,8 +1,6 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
 import { readJobAdsCurrentAction } from '@/actions/jobAds/read'
 
-import React from 'react'
-
 type PropTypes = {
     not?: number
 }
@@ -30,7 +28,8 @@ export default async function CurrentJobAds({ not }: PropTypes) {
                     key={ad.id}
                 >
                     <p>{ad.description}</p>
-                </ImageCard>)
+                </ImageCard>
+            )
         ) : (
             <i>Det er for tiden ingen jobbannonser</i>
         )

@@ -61,16 +61,6 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                 >
                 </Form>
             </div>
-            <div className={styles.visibility}>
-                Her kommer visibility settings
-                <Form
-                    action={async () => ({ success: true })}
-                    submitText="oppdater synlighet"
-
-                >
-
-                </Form>
-            </div>
         </div>
     )
 }

@@ -9,11 +9,11 @@ export default function ErrorBoundary({ error, reset }: {error: Error, reset: ()
         <div className={styles.wrapper}>
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
-                    <SpecialCmsImageClient special="SERVER_ERROR" width={60} />
+                    <SpecialCmsImageClient width={70} special='SERVER_ERROR' />
                 </div>
                 <h3>500 - {error.message}</h3>
             </div>
-            <Button onClick={reset}>Try again</Button>
+            <Button onClick={reset}>Prøv igjen</Button>
         </div>
     )
 }

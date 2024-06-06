@@ -12,6 +12,8 @@ import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
+import DefaultPermissionsProvider from '@/context/DefaultPermissions'
+import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 
 config.autoAddCss = false
 
@@ -29,29 +31,33 @@ type PropTypes = {
 
 export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
+    const defaultPermissionsRes = await readDefaultPermissionsAction()
+    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
 
     return (
         <html lang="en">
             <body className={inter.className}>
                 <SessionProvider session={session}>
-                    <EditModeProvider>
-                        <PopUpProvider>
-                            <div className={styles.wrapper}>
-                                <div className={styles.navBar}>
-                                    <NavBar />
+                    <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
+                        <EditModeProvider>
+                            <PopUpProvider>
+                                <div className={styles.wrapper}>
+                                    <div className={styles.navBar}>
+                                        <NavBar />
+                                    </div>
+                                    <div className={styles.content}>
+                                        {children}
+                                    </div>
+                                    <div className={styles.footer}>
+                                        <Footer />
+                                    </div>
+                                    <div className={styles.mobileNavBar}>
+                                        <MobileNavBar />
+                                    </div>
                                 </div>
-                                <div className={styles.content}>
-                                    {children}
-                                </div>
-                                <div className={styles.footer}>
-                                    <Footer />
-                                </div>
-                                <div className={styles.mobileNavBar}>
-                                    <MobileNavBar />
-                                </div>
-                            </div>
-                        </PopUpProvider>
-                    </EditModeProvider>
+                            </PopUpProvider>
+                        </EditModeProvider>
+                    </DefaultPermissionsProvider>
                 </SessionProvider>
             </body>
         </html>
