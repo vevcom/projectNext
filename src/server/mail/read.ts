@@ -386,5 +386,5 @@ export async function readMailFlow({
         return await readUserFlow(id)
     }
 
-    throw new ServerError('UNKNOWN ERROR', 'Not implemented')
+    throw new ServerError('NOT IMPLEMENTED', 'Not implemented')
 }

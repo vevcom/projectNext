@@ -76,7 +76,7 @@ export async function updateSubscription({
     }))
 
     if (!validateMethods(notificaionChannel.availableMethods, methods)) {
-        throw new ServerError('BAD PARAMETERS', 'The mtethods must a subset of the availeble methods')
+        throw new ServerError('BAD PARAMETERS', 'The methods must a subset of the available methods')
     }
 
     // Update the relation
