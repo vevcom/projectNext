@@ -1,18 +1,18 @@
 'use client'
 
 import styles from './registration.module.scss'
-import { createAdmissionTrialAction } from '@/actions/admission/trial/create'
+import { createAdmissionTrialAction } from '@/actions/admission/create'
 import Form from '@/app/components/Form/Form'
 import OmegaIdReader from '@/app/components/OmegaId/reader/OmegaIdReader'
 import TextInput from '@/app/components/UI/TextInput'
-import type { Admissions } from '@prisma/client'
+import type { Admission } from '@prisma/client'
 
 
 export default function RegisterAdmissiontrial({
     admission,
     omegaIdPublicKey,
 }: {
-    admission: Admissions,
+    admission: Admission,
     omegaIdPublicKey: string,
 }) {
     return <div className={styles.registration}>
@@ -20,7 +20,7 @@ export default function RegisterAdmissiontrial({
         <OmegaIdReader
             publicKey={omegaIdPublicKey}
             successCallback={async (user) => {
-                const results = await createAdmissionTrialAction(admission.id, user.id)
+                const results = await createAdmissionTrialAction(admission, user.id)
 
                 let msg = results.success ?
                     `${user.firstname} er registrert` :
@@ -44,7 +44,7 @@ export default function RegisterAdmissiontrial({
         <h4>Registrer manuelt</h4>
         <Form
             submitText="Registrer"
-            action={createAdmissionTrialAction.bind(null, admission.id)}
+            action={createAdmissionTrialAction.bind(null, admission)}
         >
             <TextInput name="userId" label="userId" />
         </Form>

@@ -3,15 +3,16 @@ import 'server-only'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
+import { Admission } from '@prisma/client'
 
 export const baseAdmissionTrialValidation = new ValidationBase({
     type: {
-        admissionId: z.number(),
+        admission: z.nativeEnum(Admission),
         userId: z.number().or(z.string()),
         registeredBy: z.number()
     },
     details: {
-        admissionId: z.number(),
+        admission: z.nativeEnum(Admission),
         userId: z.number(),
         registeredBy: z.number(),
     }
@@ -19,7 +20,7 @@ export const baseAdmissionTrialValidation = new ValidationBase({
 
 export const createAdmissionTrialValidation = baseAdmissionTrialValidation.createValidation({
     keys: [
-        'admissionId',
+        'admission',
         'userId',
         'registeredBy',
     ],

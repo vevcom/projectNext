@@ -1,23 +1,21 @@
 'use server'
 
-import { readAllActiveAdmissionsAction } from '@/actions/admission/read'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { AdmissionDisplayNames } from '@/server/admission/ConfigVars'
+import { Admission, type Admission as AdmissionType } from '@prisma/client'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
 
 export default async function AdmissionTrials() {
-    const admissions = await readAllActiveAdmissionsAction()
-
-    if (!admissions.success) {
-        return <>Failed to load admissions</>
-    }
+    
+    const admissions = Object.keys(Admission) as AdmissionType[]
 
     return <PageWrapper
         title="Registrer opptak"
     >
         <ul>
-            {admissions.data.map(a => <li key={uuid()}><Link href={`admissiontrials/${a.id}`}>{a.name}</Link></li>)}
+            {admissions.map(a => <li key={uuid()}><Link href={`admissiontrials/${a}`}>{AdmissionDisplayNames[a]}</Link></li>)}
         </ul>
 
     </PageWrapper>

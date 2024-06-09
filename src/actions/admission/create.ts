@@ -3,14 +3,14 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createAdmissionTrial } from '@/server/admission/trial/create'
-import { createAdmissionTrialValidation } from '@/server/admission/trial/validation'
+import { createAdmissionTrial } from '@/server/admission/create'
+import { createAdmissionTrialValidation } from '@/server/admission/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { AdmissionTrial } from '@prisma/client'
+import type { Admission, AdmissionTrial } from '@prisma/client'
 
 
 export async function createAdmissionTrialAction(
-    admissionId: number,
+    admission: Admission,
     userId: FormData | number
 ): Promise<ActionReturn<AdmissionTrial>> {
     const { user, authorized, status } = await getUser({
@@ -21,15 +21,11 @@ export async function createAdmissionTrialAction(
 
     const parse = createAdmissionTrialValidation.typeValidate({
         userId: typeof userId === 'number' ? userId : Number(userId.get('userId')),
-        admissionId,
+        admission,
         registeredBy: user.id,
     })
 
     if (!parse.success) return createZodActionError(parse)
 
-    return await safeServerCall(() => createAdmissionTrial({
-        ...parse.data,
-        admissionId,
-        registeredBy: user.id,
-    }))
+    return await safeServerCall(() => createAdmissionTrial(parse.data))
 }

@@ -2,10 +2,9 @@ import 'server-only'
 import { createAdmissionTrialValidation } from './validation'
 import { readUserAdmissionTrials } from './read'
 import { prismaCall } from '@/server/prismaCall'
-import { readAdmissions } from '@/server/admission/read'
 import { updateUserOmegaMembershipGroup } from '@/server/groups/omegaMembershipGroups/update'
 import prisma from '@/prisma'
-import type { AdmissionTrial } from '@prisma/client'
+import { Admission, type AdmissionTrial } from '@prisma/client'
 import type { CreateAdmissionTrialType } from './validation'
 
 export async function createAdmissionTrial(
@@ -25,23 +24,14 @@ export async function createAdmissionTrial(
                     id: parse.registeredBy,
                 },
             },
-            admission: {
-                connect: {
-                    id: parse.admissionId,
-                },
-            },
+            admission: parse.admission,
         }
     }))
 
     // check if user has taken all admissions
-    const [admissions, userTrials] = await Promise.all([
-        readAdmissions({
-            archived: false
-        }),
-        readUserAdmissionTrials(parse.userId),
-    ])
+    const userTrials = await readUserAdmissionTrials(parse.userId)
 
-    if (admissions.length === userTrials.length) {
+    if (Object.keys(Admission).length === userTrials.length) {
         updateUserOmegaMembershipGroup(parse.userId, 'MEMBER', true)
     }
 
