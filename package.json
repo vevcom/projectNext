@@ -25,7 +25,6 @@
     "@types/nodemailer": "^6.4.14",
     "eslint": "8.57.0",
     "eslint-config-next": "^14.1.4",
-    "google-map-react": "^2.2.1",
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.2",
     "next": "^14.1.4",
