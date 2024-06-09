@@ -1,7 +1,7 @@
 'use server'
 
-import UpdateStudyProgramForm from './updateStudyProgramForm'
-import StudyProgramTableBody from './studyProgramTable'
+import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
+import StudyProgrammeTableBody from './studyProgrammeTable'
 import { readAllStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
 import AddHeaderItemPopUp from '@/app/components/AddHeaderItem/AddHeaderItemPopUp'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
@@ -30,7 +30,7 @@ export default async function StudyProgrammes() {
         headerItem={
             showCreateButton && (
                 <AddHeaderItemPopUp PopUpKey="create ombul">
-                    <UpdateStudyProgramForm />
+                    <UpdateStudyProgrammeForm />
                 </AddHeaderItemPopUp>
             )
         }
@@ -45,7 +45,7 @@ export default async function StudyProgrammes() {
                 <th>Lengde på studiet</th>
                 <th>Del av Omega</th>
             </thead>
-            <StudyProgramTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
+            <StudyProgrammeTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
         </table>
     </PageWrapper>
 }

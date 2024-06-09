@@ -27,12 +27,12 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
         },
     })
 
-    const userStudyProgramCodes = new Set(memberships
+    const userStudyProgrammeCodes = new Set(memberships
         .map(m => m.group.studyProgramme?.code)
         .filter(s => s) as string[]
     )
 
-    const addStudyProgrammes = studyProgrammes.filter(s => !userStudyProgramCodes.has(s.code))
+    const addStudyProgrammes = studyProgrammes.filter(s => !userStudyProgrammeCodes.has(s.code))
 
     const feideStudyProgrammesCodes = new Set(feideStudyProgrammes.map(f => f.code))
 

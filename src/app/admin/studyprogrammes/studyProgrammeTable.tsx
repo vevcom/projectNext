@@ -1,7 +1,7 @@
 'use client'
 
-import styles from './studyProgramTable.module.scss'
-import UpdateStudyProgramForm from './updateStudyProgramForm'
+import styles from './studyProgrammeTable.module.scss'
+import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
 import PopUp from '@/app/components/PopUp/PopUp'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid'
 import type { StudyProgramme } from '@prisma/client'
 
 
-export default function StudyProgramTableBody({
+export default function StudyProgrammeTableBody({
     studyprogrammes,
     canEdit
 }: {
@@ -24,7 +24,7 @@ export default function StudyProgramTableBody({
                     showButtonClass={styles.editButton}
                     PopUpKey={uuid()}
                 >
-                    <UpdateStudyProgramForm studyProgram={s} />
+                    <UpdateStudyProgrammeForm studyProgramme={s} />
                 </PopUp>}
                 <th>{s.name}</th>
                 <td>{s.code}</td>

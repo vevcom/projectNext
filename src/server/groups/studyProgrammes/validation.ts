@@ -2,7 +2,7 @@ import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
 
-const baseStudyProgramValidation = new ValidationBase({
+const baseStudyProgrammeValidation = new ValidationBase({
     type: {
         id: z.number(),
         name: z.string(),
@@ -21,7 +21,7 @@ const baseStudyProgramValidation = new ValidationBase({
     }
 })
 
-export const createStudyProgramValidation = baseStudyProgramValidation.createValidation({
+export const createStudyProgrammeValidation = baseStudyProgrammeValidation.createValidation({
     keys: [
         'name',
         'code',
@@ -35,9 +35,9 @@ export const createStudyProgramValidation = baseStudyProgramValidation.createVal
         yearsLength: Number(data.yearsLength),
     }),
 })
-export type CreateStudyProgramTypes = ValidationTypes<typeof createStudyProgramValidation>
+export type CreateStudyProgrammeTypes = ValidationTypes<typeof createStudyProgrammeValidation>
 
-export const updateStudyProgramValidation = baseStudyProgramValidation.createValidationPartial({
+export const updateStudyProgrammeValidation = baseStudyProgrammeValidation.createValidationPartial({
     keys: [
         'id',
         'name',
@@ -53,5 +53,5 @@ export const updateStudyProgramValidation = baseStudyProgramValidation.createVal
     }),
 })
 
-export type UpdateStudyProgramTypes = ValidationTypes<typeof updateStudyProgramValidation>
+export type UpdateStudyProgrammeTypes = ValidationTypes<typeof updateStudyProgrammeValidation>
 
