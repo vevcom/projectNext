@@ -11,16 +11,16 @@ export default function ResetPassword() {
 
     return <>
         <Form
-            submitText="Send epost"
+            submitText="Send e-post"
             title="Glemt passord"
             action={resetPasswordAction}
             successCallback={(email) => {
                 setFeedback(`
-                    Hvis eposten finnes i databasen, er en epost er sendt til ${email} med instruksjoner for
+                    Hvis e-posten finnes i databasen, er en e-post er sendt til ${email} med instruksjoner for
                     å nullstille passordet. Det kan ta noen minutter før den kommer fram`)
             }}
         >
-            <TextInput label="Epost" name="email" />
+            <TextInput label="E-post" name="email" />
         </Form>
         <p>{ feedback }</p>
     </>

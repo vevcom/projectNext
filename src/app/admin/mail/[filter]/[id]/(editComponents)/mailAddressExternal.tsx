@@ -39,7 +39,7 @@ export default function EditMailAddressExternal({
                 action={updateMailAddressExternalAction}
             >
                 <input type="hidden" name="id" value={focusedAddress.id} />
-                <TextInput name="address" label="Epost" defaultValue={focusedAddress.address} />
+                <TextInput name="address" label="E-post" defaultValue={focusedAddress.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAddress.description} />
             </Form>
         </div>}

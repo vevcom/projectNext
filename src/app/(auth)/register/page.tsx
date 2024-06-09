@@ -26,7 +26,7 @@ export default async function Register({
         }
 
         if (!authorized || !user) {
-            return <p>Tusen takk! Eposten er verifisert.</p>
+            return <p>Tusen takk! E-posten er verifisert.</p>
         }
     }
 

@@ -59,7 +59,7 @@ export async function destroyMailingListExternalRelationAction(formdata: FormDat
 export async function destroyMailingListUserRelationAction(formdata: FormData | CreateMailingListUserType['Type']):
     Promise<ActionReturn<MailingListUser>> {
     const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILINGLIST_USER_DESTROY']] // Fixed the typo in 'MAILINGLIST_USER_DESTORY'
+        requiredPermissions: [['MAILINGLIST_USER_DESTROY']],
     })
     if (!authorized) return createActionError(status)
 

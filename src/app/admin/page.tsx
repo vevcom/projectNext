@@ -31,7 +31,7 @@ export default function Admin() {
             <Link href="admin/sendnotification">Send varsel</Link>
             <Link href="admin/notificationchannels">Varslingkanaler</Link>
             <Link href="admin/mail">Mailing lister</Link>
-            <Link href="admin/sendmail">Send epost</Link>
+            <Link href="admin/sendmail">Send e-post</Link>
 
         </div>
     )

@@ -29,8 +29,8 @@ export default async function EmailRegistrationForm() {
 
     return <>
         <Form
-            title="Sett eposten din"
-            submitText="Verifiser epost"
+            title="Sett e-posten din"
+            submitText="Verifiser e-post"
             action={registerNewEmailAction}
             successCallback={(data) => {
                 if (data) {
@@ -38,19 +38,19 @@ export default async function EmailRegistrationForm() {
                         push(`/register?callbackUrl=${callbackUrl}`)
                     } else {
                         setFeedback(`
-                            For å bekrefte at dette er din epost har vi sendt en epost til ${data.email}.
-                            Følge instruksjonene i eposten for å fullføre registreringen.
+                            For å bekrefte at dette er din e-post har vi sendt en e-post til ${data.email}.
+                            Følg instruksjonene i e-posten for å fullføre registreringen.
                         `)
                     }
                 }
             }}
         >
             <p>
-                Velkommen til Veven! Vennligst skriv inn eposten din.
-                Du kan bruke ntnu-eposten din,
+                Velkommen til Veven! Vennligst skriv inn e-posten din.
+                Du kan bruke ntnu-e-posten din,
                 men vær oppmerksom på at du mister tilgang til denne når du er ferdig å studere.
             </p>
-            <TextInput label="Epost" name="email" defaultValue={userAuth.user?.email}/>
+            <TextInput label="E-post" name="email" defaultValue={userAuth.user?.email}/>
         </Form>
 
         { feedback && <p>{ feedback }</p> }

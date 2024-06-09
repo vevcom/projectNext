@@ -2,7 +2,7 @@
 
 import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
 import StudyProgrammeTableBody from './studyProgrammeTable'
-import { readAllStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
+import { readStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
 import AddHeaderItemPopUp from '@/app/components/AddHeaderItem/AddHeaderItemPopUp'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { getUser } from '@/auth/getUser'
@@ -14,7 +14,7 @@ export default async function StudyProgrammes() {
         shouldRedirect: true,
     })
 
-    const studyprogrammes = await readAllStudyProgrammesAction()
+    const studyprogrammes = await readStudyProgrammesAction()
 
     if (!studyprogrammes.success) {
         console.log(studyprogrammes)

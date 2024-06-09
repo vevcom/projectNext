@@ -14,7 +14,7 @@ export function DefaultEmailTemplate({
             <Markdown>{text}</Markdown>
 
             <p style={{ color: '#666' }}>
-                Du får denne eposten siden du står på mailinglistene til Sct. Omega broderskab.
+                Du får denne e-posten siden du står på mailinglistene til Sct. Omega broderskab.
                 Dersom du ønsker å avslutte abonommentet trykk <a href="https://www.youtube.com/watch?v=lYBUbBu4W08">her</a>.
             </p>
         </Html>

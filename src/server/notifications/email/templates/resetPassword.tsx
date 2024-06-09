@@ -22,7 +22,7 @@ export function ResetPasswordTemplate({
                 Lenken blir ugyldig etter 15 minutter.
             </p>
 
-            <p>Hvis du ikke har trykket på glemt passord knappen kan du bare se bort i fra denne eposten.</p>
+            <p>Hvis du ikke har trykket på glemt passord knappen kan du bare se bort i fra denne e-posten.</p>
 
             <p>
                 Med vennlig hilsen<br/>

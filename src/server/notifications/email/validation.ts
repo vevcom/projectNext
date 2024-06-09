@@ -10,8 +10,8 @@ const baseEmailValidation = new ValidationBase({
         text: z.string(),
     },
     details: {
-        from: z.string().email('Ikke en gyldig epost'),
-        to: z.string().email('Ikke en gyldig epost'),
+        from: z.string().email('Ikke en gyldig e-post'),
+        to: z.string().email('Ikke en gyldig e-post'),
         subject: z.string().min(2, 'Minimum 2 tegn').max(100, 'Maksimum 100 tegn'),
         text: z.string().min(2, 'Minimum 2 tegn'),
     }

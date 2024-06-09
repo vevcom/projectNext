@@ -8,7 +8,7 @@ import type { ActionReturn } from '@/actions/Types'
 import type { StudyProgramme } from '@prisma/client'
 
 
-export async function readAllStudyProgrammesAction(): Promise<ActionReturn<StudyProgramme[]>> {
+export async function readStudyProgrammesAction(): Promise<ActionReturn<StudyProgramme[]>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['STUDY_PROGRAMME_READ']]
     })

@@ -15,11 +15,11 @@ export function VerifyEmailTemplate({
             <p>Hei {user.firstname},</p>
 
             <p>
-                Du får denne eposten siden du nettopp registrerte deg hos {process.env.DOMAIN}.
-                Vennligst bekreft eposten din ved å trykke på <a href={link}>linken</a>.
+                Du får denne e-posten siden du nettopp registrerte deg hos {process.env.DOMAIN}.
+                Vennligst bekreft e-posten din ved å trykke på <a href={link}>linken</a>.
             </p>
 
-            <p>Hvis du ikke har registrert deg hos {process.env.DOMAIN} kan du bare se bort i fra denne eposten.</p>
+            <p>Hvis du ikke har registrert deg hos {process.env.DOMAIN} kan du bare se bort i fra denne e-posten.</p>
 
             <p>
                 Med vennlig hilsen<br/>

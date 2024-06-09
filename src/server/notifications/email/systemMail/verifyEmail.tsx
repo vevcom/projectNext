@@ -21,5 +21,5 @@ export async function sendVerifyEmail(user: UserFiltered, email: string) {
 
     const mailBody = render(<VerifyEmailTemplate user={user} link={link} />)
 
-    await sendSystemMail(user.email, 'Bekreft epost', mailBody)
+    await sendSystemMail(user.email, 'Bekreft e-post', mailBody)
 }

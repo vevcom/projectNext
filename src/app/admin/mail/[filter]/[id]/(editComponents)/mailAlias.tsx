@@ -39,7 +39,7 @@ export default function EditMailAlias({
                 action={updateMailAliasAction}
             >
                 <input type="hidden" name="id" value={focusedAlias.id} />
-                <TextInput name="address" label="Epost" defaultValue={focusedAlias.address} />
+                <TextInput name="address" label="E-post" defaultValue={focusedAlias.address} />
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}

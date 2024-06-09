@@ -69,7 +69,7 @@ export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Det
         if (email.endsWith(`@${ntnuEmailDomain}`)) {
             throw new ServerError(
                 'BAD PARAMETERS',
-                `Den nye eposten må være din ${ntnuEmailDomain}-epost, eller en personlig epost.`
+                `Den nye e-posten må være din ${ntnuEmailDomain}-e-post, eller en personlig e-post.`
             )
         }
     }

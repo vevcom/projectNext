@@ -56,7 +56,7 @@ export default function EditMailingList({
                 submitColor="red"
                 confirmation={{
                     confirm: true,
-                    text: 'Sikker på at du vil slette denne epost listen? Dette kan ikke angres.',
+                    text: 'Sikker på at du vil slette denne e-post listen? Dette kan ikke angres.',
                 }}
             />
         </div> }

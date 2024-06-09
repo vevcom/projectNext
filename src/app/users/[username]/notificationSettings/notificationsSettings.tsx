@@ -56,7 +56,7 @@ export async function NotificationSettings() {
         <p className={styles.lightParagraph}>
             Her kan du endrer hvordan du får varslinger.
             Varslingene blir sendt ut i kanaler som du kan abonnere på.
-            For å få varslingen slik du selv ønsker, velger du selv hvilken metode varslet skal bruke (epost, push osv.)
+            For å få varslingen slik du selv ønsker, velger du selv hvilken metode varslet skal bruke (e-post, push osv.)
             Kanalene er oragnisert slik at en kanal kan ha underkanaler, videre kalt barn.
             Det er disse du kan se når du åpner en kanal.
             Dersom det blir lagt til nye kanaler vil du da abbonere med metodene som er aktive i både
