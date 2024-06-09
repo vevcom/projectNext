@@ -2,7 +2,6 @@ import 'server-only'
 import { sendSystemMail } from '@/server/notifications/email/send'
 import { ResetPasswordTemplate } from '@/server/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/auth/jwt'
-import { render } from '@react-email/render'
 import type { UserFiltered } from '@/server/users/Types'
 
 
@@ -15,7 +14,5 @@ export async function sendResetPasswordMail(user: UserFiltered) {
         ? `http://localhost/auth/resetpassword?token=${jwt}`
         : `https://${process.env.DOMAIN}/auth/resetpassword?token=${jwt}`
 
-    const mailBody = render(<ResetPasswordTemplate user={user} link={link} />)
-
-    await sendSystemMail(user.email, 'Glemt passord', mailBody)
+    await sendSystemMail(user.email, 'Glemt passord', <ResetPasswordTemplate user={user} link={link} />)
 }

@@ -25,34 +25,32 @@ export async function readOmegaMembershipGroup(id: number | OmegaMembershipLevel
 }
 
 export async function readUserOmegaMembershipLevel(userId: number): Promise<OmegaMembershipLevel> {
-    const results = await prismaCall(() => prisma.user.findUniqueOrThrow({
-        where: {
-            id: userId,
-        },
+    const omegaMembershipGroups = await prismaCall(() => prisma.omegaMembershipGroup.findMany({
         select: {
-            memberships: {
-                select: {
-                    group: {
-                        select: {
-                            omegaMembershipGroup: {
-                                select: {
-                                    omegaMembershipLevel: true,
-                                }
-                            }
-                        }
-                    }
-                }
+            groupId: true,
+            omegaMembershipLevel: true,
+        }
+    }))
+
+    const memberships = await prismaCall(() => prisma.membership.findMany({
+        where: {
+            userId,
+            groupId: {
+                in: omegaMembershipGroups.map(g => g.groupId),
             }
         }
     }))
 
-    for (let i = 0; i < results.memberships.length; i++) {
-        const g = results.memberships[i]
-        const level = g.group.omegaMembershipGroup?.omegaMembershipLevel
-        if (level) {
-            return level
+    if (memberships.length !== 1) {
+        throw new ServerError('INVALID CONFIGURATION', `The user with id ${userId} don't have any omega membership relation`)
+    }
+
+    for (let i = 0; i < omegaMembershipGroups.length; i++) {
+        if (omegaMembershipGroups[i].groupId === memberships[0].groupId) {
+            return omegaMembershipGroups[i].omegaMembershipLevel
         }
     }
 
-    throw new ServerError('INVALID CONFIGURATION', `The user with id ${userId} don't have any omega membership relation`)
+    throw new ServerError('UNKNOWN ERROR', 'The user has a omega membership to a group that does not exist.')
+
 }

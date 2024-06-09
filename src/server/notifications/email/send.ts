@@ -1,6 +1,7 @@
 import 'server-only'
 import { mailHandler } from './mailHandler'
 import type Mail from 'nodemailer/lib/mailer'
+import { render } from '@react-email/render'
 
 export async function sendMail(rawdata: Mail.Options) {
     await mailHandler.sendSingleMail(rawdata)
@@ -22,12 +23,12 @@ export async function sendBulkMail(rawdata: Mail.Options[]) {
 export async function sendSystemMail(
     to: string,
     subject: string,
-    body: string,
+    body: JSX.Element,
 ) {
     await sendMail({
         to,
         subject,
         from: `noreply@${process.env.DOMAIN}`,
-        html: body,
+        html: render(body),
     })
 }
