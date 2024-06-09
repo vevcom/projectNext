@@ -5,6 +5,38 @@ import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { MailFlowObject, MailListTypes, ViaType } from './Types'
 
+
+/**
+ * This file reads how incomming mail is routed.
+ * Mail flows in one direction
+ * Mailalis -> Mailinglist  -> User
+ *                          -> Group -> User
+ *                          -> External address
+ * 
+ * To show how the mail traverses, each node in the network above can be used as a source to read the traversal in both directions.
+ * Each of the traversal functions is divieded in four parts
+ *  1. Fetch the data from the database
+ *  2. Parse the data into arrays with only one type of object
+ *       This step also adds a via object (next paragraph) if it is nessasary
+ *  3. Delete unnessesary fields
+ *  4. Combine duplicate nodes
+ * 
+ * 
+ * Since some nodes may have different paths to itself, a via property is used.
+ * For example a user can be directly connected to a mailinglist or via a group.
+ * We only want the user to appear once, but we want to return all the paths to the users (both via the group and direct).
+ * 
+ * 
+ * The end results should be an object that can be displayed to the user to show how mail is routed though a arbirtrary node in the network.
+*/
+
+/**
+ * Removes duplicates from an array of objects based on their `id` property.
+ * If multiple objects have the same `id`, the first object encountered is kept,
+ * and the `via` property of subsequent objects with the same `id` is merged into the first object's `via` array.
+ * @param objects An array of objects to remove duplicates from.
+ * @returns An array of objects with duplicates removed.
+ */
 function removeDuplicates<T extends {
     id: number,
 } & ViaType>(objects: T[]): T[] {
@@ -31,7 +63,12 @@ function removeDuplicates<T extends {
     return ret
 }
 
-async function readAliasFlow(id: number): Promise<MailFlowObject> {
+/**
+ * Reads the mail flow based on a mailalias with the provided ID.
+ * @param id - The ID of the mail alias.
+ * @returns A Promise that resolves to a MailFlowObject.
+ */
+async function readAliasTraversal(id: number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.mailAlias.findUniqueOrThrow({
         where: {
             id,
@@ -122,7 +159,12 @@ async function readAliasFlow(id: number): Promise<MailFlowObject> {
     }
 }
 
-async function readMailingListFlow(id: number): Promise<MailFlowObject> {
+/**
+ * Reads the mail flow based on a mailinglist with the provided ID. 
+ * @param id - The ID of the mailing list.
+ * @returns A Promise that resolves to a MailFlowObject.
+ */
+async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.mailingList.findUniqueOrThrow({
         where: {
             id,
@@ -181,17 +223,29 @@ async function readMailingListFlow(id: number): Promise<MailFlowObject> {
         )
     const mailaddressExternal = mailingList.mailAddressExternal.map(address => address.mailAddressExternal)
 
-    // TODO: Delete unnessasary fields
+    Reflect.deleteProperty(mailingList, 'mailAliases')
+    Reflect.deleteProperty(mailingList, 'groups')
+    Reflect.deleteProperty(mailingList, 'users')
+    Reflect.deleteProperty(mailingList, 'mailAddressExternal')
+
     return {
         mailingList: [mailingList],
         alias,
-        group,
+        group: group.map(g => {
+            Reflect.deleteProperty(g, 'memberships')
+            return g
+        }),
         user: removeDuplicates(user),
         mailaddressExternal,
     }
 }
 
-async function readMailaddressExternalFlow(id: number): Promise<MailFlowObject> {
+/**
+ * Reads the mail flow based on an external mail address with the provided ID.
+ * @param id - The ID of the external mail address.
+ * @returns A Promise that resolves to a MailFlowObject.
+ */
+async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.mailAddressExternal.findUniqueOrThrow({
         where: {
             id,
@@ -222,16 +276,26 @@ async function readMailaddressExternalFlow(id: number): Promise<MailFlowObject> 
         })),
     ).flat()
 
+    Reflect.deleteProperty(mailAddressExternal, 'mailingLists')
+
     return {
         mailaddressExternal: [mailAddressExternal],
-        mailingList,
+        mailingList: mailingList.map(l => {
+            Reflect.deleteProperty(mailingList, 'mailAliases')
+            return l 
+        }),
         alias: removeDuplicates(aliases),
         user: [],
         group: [],
     }
 }
 
-async function readGroupFlow(id: number): Promise<MailFlowObject> {
+/**
+ * Reads the mail flow based on a group with the provided ID.
+ * @param id - The ID of the group.
+ * @returns A Promise that resolves to a MailFlowObject.
+ */
+async function readGroupTraversal(id: number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.group.findUniqueOrThrow({
         where: {
             id,
@@ -271,16 +335,27 @@ async function readGroupFlow(id: number): Promise<MailFlowObject> {
 
     const user = results.memberships.map(m => m.user)
 
+    Reflect.deleteProperty(group, 'memberships')
+    Reflect.deleteProperty(group, 'mailingLists')
+
     return {
         mailaddressExternal: [],
-        mailingList,
+        mailingList: mailingList.map(l => {
+            Reflect.deleteProperty(l, 'mailAliases')
+            return l
+        }),
         alias: removeDuplicates(alias),
         user,
         group: [group],
     }
 }
 
-async function readUserFlow(id: number): Promise<MailFlowObject> {
+/**
+ * Reads the mail flow based on an user with the provided ID.
+ * @param id - The ID of the user.
+ * @returns A Promise that resolves to a MailFlowObject.
+ */
+async function readUserTraversal(id: number): Promise<MailFlowObject> {
     const results = await prismaCall(() => prisma.user.findUniqueOrThrow({
         where: {
             id,
@@ -350,16 +425,35 @@ async function readUserFlow(id: number): Promise<MailFlowObject> {
 
     const group = results.memberships.map(m => m.group)
 
+    Reflect.deleteProperty(user, 'mailingLists')
+    Reflect.deleteProperty(user, 'memberships')
+
     return {
         mailaddressExternal: [],
-        mailingList: removeDuplicates(mailingList),
+        mailingList: removeDuplicates(mailingList.map(l => {
+            Reflect.deleteProperty(l, 'mailAlases')
+            return l
+        })),
         alias: removeDuplicates(alias),
         user: [user],
-        group,
+        group: group.map(g => {
+            Reflect.deleteProperty(g, 'mailingLists')
+            return g
+        }),
     }
 }
 
-export async function readMailFlow({
+
+/**
+ * Reads the mail traversal based on a source node.
+ * 
+ * @param {Object} options - The options object.
+ * @param {MailListTypes} options.filter - The filter to apply.
+ * @param {number} options.id - The ID of the source object to propertate.
+ * @returns {Promise<MailFlowObject>} The mail flow object.
+ * @throws {ServerError} If the filter is invalid.
+ */
+export async function readMailTraversal({
     filter,
     id,
 }: {
@@ -367,24 +461,24 @@ export async function readMailFlow({
     id: number,
 }): Promise<MailFlowObject> {
     if (filter === 'alias') {
-        return await readAliasFlow(id)
+        return await readAliasTraversal(id)
     }
 
     if (filter === 'mailingList') {
-        return await readMailingListFlow(id)
+        return await readMailingListTraversal(id)
     }
 
     if (filter === 'mailaddressExternal') {
-        return await readMailaddressExternalFlow(id)
+        return await readMailaddressExternalTraversal(id)
     }
 
     if (filter === 'group') {
-        return await readGroupFlow(id)
+        return await readGroupTraversal(id)
     }
 
     if (filter === 'user') {
-        return await readUserFlow(id)
+        return await readUserTraversal(id)
     }
 
-    throw new ServerError('NOT IMPLEMENTED', 'Not implemented')
+    throw new ServerError('BAD PARAMETERS', `The filter ${filter} is not a valid MailListTypes`)
 }

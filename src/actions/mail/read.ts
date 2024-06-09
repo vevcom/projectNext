@@ -2,7 +2,7 @@
 
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import { readMailFlow } from '@/server/mail/read'
+import { readMailTraversal } from '@/server/mail/read'
 import { readAllMailAliases } from '@/server/mail/alias/read'
 import { readAllMailingLists } from '@/server/mail/list/read'
 import { readAllMailAddressExternal } from '@/server/mail/mailAddressExternal/read'
@@ -25,7 +25,7 @@ export async function readMailFlowAction(filter: MailListTypes, id: number) {
 
     if (!authorized) return createActionError(status)
 
-    return safeServerCall(() => readMailFlow({
+    return safeServerCall(() => readMailTraversal({
         filter,
         id,
     }))
