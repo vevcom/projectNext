@@ -10,9 +10,7 @@ export async function sendResetPasswordMail(user: UserFiltered) {
         sub: user.id,
     }, 60 * 60)
 
-    const link = process.env.NODE_ENV === 'development'
-        ? `http://localhost/auth/resetpassword?token=${jwt}`
-        : `https://${process.env.DOMAIN}/auth/resetpassword?token=${jwt}`
+    const link = `${process.env.NEXTAUTH_URL}/auth/resetpassword?token=${jwt}`
 
     await sendSystemMail(user.email, 'Glemt passord', <ResetPasswordTemplate user={user} link={link} />)
 }
