@@ -35,7 +35,7 @@ export default function CreateLockerForm({ locations }: PropTypes) {
             submitText="Opprett" 
             action={createLockerAction}
         >   
-
+ 
             <Select label="Bygning" name="building" onChange={handleBuildingChange} options={Array.from(buildingMap.keys()).map(building => ({value: building, label: building}))} />
             <Select label="Etasje" name="floor" options={buildingMap.get(building)?.sort().map(floor => ({value: floor.toString(), label: floor.toString()})) ?? []}/>
             <NumberInput label="Skapnummer" name="id" min="0"/>

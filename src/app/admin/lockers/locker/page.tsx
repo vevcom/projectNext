@@ -5,7 +5,6 @@ import CreateLockerForm from "./CreateLockerForm"
 
 export default async function Locker() {
     const locations = await readLockerLocations()
-    console.log(locations)
 
     return (
         <div className={styles.wrapper}>
