@@ -1,7 +1,9 @@
+import {  } from 'react'
 import styles from './Select.module.scss'
 import { v4 } from 'uuid'
+import { SelectHTMLAttributes } from 'react'
 
-export type Proptypes = {
+export type Proptypes = SelectHTMLAttributes<HTMLSelectElement> & {
     name: string,
     label?: string,
     options: {
