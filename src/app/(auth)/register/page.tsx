@@ -5,6 +5,7 @@ import { verifyUserEmailAction } from '@/actions/users/update'
 import { readUser } from '@/server/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { notFound, redirect } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 export default async function Register({
     searchParams,
@@ -22,15 +23,20 @@ export default async function Register({
     if (typeof searchParams.token === 'string') {
         const verify = await verifyUserEmailAction(searchParams.token)
         if (!verify.success) {
+            console.log(verify)
             return <p>Token er ugyldig</p>
         }
 
-        if (!authorized || !user) {
-            return <p>Tusen takk! E-posten er verifisert.</p>
+        if (user && verify.data.id !== user.id) {
+            // TODO: Logout
+            console.log("Should logout")
         }
-    }
 
-    if (!authorized || !user) {
+        console.log(verify)
+
+        //TODO: Login the correct user
+        // See https://github.com/nextauthjs/next-auth/discussions/5334
+    } else if (!authorized || !user) {
         return notFound()
     }
 

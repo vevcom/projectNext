@@ -14,7 +14,6 @@ import type { CreateUserTypes } from '@/server/users/validation'
  */
 export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<User> {
     const data = createUserValidation.detailedValidate(rawdata)
-    const passwordHash = data.password //TODO: hash password
 
     const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
     const omegaOrder = await readCurrenOmegaOrder()
@@ -22,11 +21,6 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
     const user = await prismaCall(() => prisma.user.create({
         data: {
             ...data,
-            credentials: passwordHash ? {
-                create: {
-                    passwordHash
-                },
-            } : undefined,
             memberships: {
                 create: [{
                     groupId: omegaMembership.groupId,

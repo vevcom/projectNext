@@ -43,17 +43,13 @@ const refiner = {
 
 export const createUserValidation = baseUserValidation.createValidation({
     keys: [
-        'confirmPassword',
         'email',
-        'emailVerified',
         'firstname',
-        'sex',
-        'username',
         'lastname',
-        'password',
+        'username',
+        'emailVerified',
     ],
     transformer: data => data,
-    refiner,
 })
 export type CreateUserTypes = ValidationTypes<typeof createUserValidation>
 
