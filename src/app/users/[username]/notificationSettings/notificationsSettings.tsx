@@ -2,7 +2,7 @@
 import { NotificationSettingItem } from './notificationSettingItem'
 import styles from './notificationsSettings.module.scss'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
-import { readMySubscriptionsAction } from '@/actions/notifications/subscription/read'
+import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
 import type { NotificationChannel } from '@/server/notifications/Types'
 import type { Subscription } from '@/server/notifications/subscription/Types'
 import type { NotificationBranch } from './Types'
@@ -42,7 +42,7 @@ function generateChannelTree(channels: NotificationChannel[], subscriptions: Sub
 export async function NotificationSettings() {
     const [channels, subscriptions] = await Promise.all([
         readNotificationChannelsAction(),
-        readMySubscriptionsAction(),
+        readSubscriptionsAction(),
     ])
 
     if (!channels.success || !subscriptions.success) {
