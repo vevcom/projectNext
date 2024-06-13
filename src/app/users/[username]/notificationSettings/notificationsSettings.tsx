@@ -1,7 +1,7 @@
 'use server'
 import { NotificationSettingItem } from './notificationSettingItem'
 import styles from './notificationsSettings.module.scss'
-import { readAllNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 import { readMySubscriptionsAction } from '@/actions/notifications/subscription/read'
 import type { NotificationChannel } from '@/server/notifications/Types'
 import type { Subscription } from '@/server/notifications/subscription/Types'
@@ -41,7 +41,7 @@ function generateChannelTree(channels: NotificationChannel[], subscriptions: Sub
 
 export async function NotificationSettings() {
     const [channels, subscriptions] = await Promise.all([
-        readAllNotificationChannelsAction(),
+        readNotificationChannelsAction(),
         readMySubscriptionsAction(),
     ])
 

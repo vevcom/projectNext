@@ -2,11 +2,11 @@
 import NotificaionForm from './notificationForm'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { ServerError } from '@/server/error'
-import { readAllNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 
 
 export default async function SendNotification() {
-    const channels = await readAllNotificationChannelsAction()
+    const channels = await readNotificationChannelsAction()
 
     if (!channels.success) {
         console.error(channels)

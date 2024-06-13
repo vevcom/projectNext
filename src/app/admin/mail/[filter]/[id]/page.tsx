@@ -7,7 +7,7 @@ import EditMailingList from './(editComponents)/mailingList'
 import EditMailAddressExternal from './(editComponents)/mailAddressExternal'
 import EditUser from './(editComponents)/user'
 import EditGroup from './(editComponents)/group'
-import { readAllMailOptions, readMailFlowAction } from '@/actions/mail/read'
+import { readMailOptions, readMailFlowAction } from '@/actions/mail/read'
 import { MailListTypeArray } from '@/server/mail/Types'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
@@ -34,7 +34,7 @@ export default async function MailFlowPage({
 
     const [results, mailOptions] = await Promise.all([
         readMailFlowAction(filter, id),
-        readAllMailOptions(),
+        readMailOptions(),
     ])
 
     if (!results.success && results.errorCode === 'NOT FOUND') {

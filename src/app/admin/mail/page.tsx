@@ -7,9 +7,9 @@ import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
 import { getUser } from '@/auth/getUser'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { readAllMailAliases } from '@/server/mail/alias/read'
-import { readAllMailingLists } from '@/server/mail/list/read'
-import { readAllMailAddressExternal } from '@/server/mail/mailAddressExternal/read'
+import { readMailAliases } from '@/server/mail/alias/read'
+import { readMailingLists } from '@/server/mail/list/read'
+import { readMailAddressExternal } from '@/server/mail/mailAddressExternal/read'
 
 export default async function MailSettings() {
     const { permissions } = await getUser({
@@ -28,9 +28,9 @@ export default async function MailSettings() {
         mailingLists,
         mailAddressesExternal,
     ] = await Promise.all([
-        readAllMailAliases(),
-        readAllMailingLists(),
-        readAllMailAddressExternal(),
+        readMailAliases(),
+        readMailingLists(),
+        readMailAddressExternal(),
     ])
 
     return (

@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateNotificaionChannelValidation, validateMethods, validateNewParent } from './validation'
-import { readAllNotificationChannels } from './read'
+import { readNotificationChannels } from './read'
 import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
@@ -49,7 +49,7 @@ export async function updateNotificationChannel({
 
     // Not allowed to change the parent of ROOT
     if (channel.special !== 'ROOT') {
-        const allChannels = await readAllNotificationChannels()
+        const allChannels = await readNotificationChannels()
 
         if (!validateNewParent(parse.id, parse.parentId, allChannels)) {
             throw new ServerError('BAD PARAMETERS', 'Cannot set parentId in a loop')

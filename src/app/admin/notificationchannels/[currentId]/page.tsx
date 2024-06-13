@@ -1,7 +1,7 @@
 
 import ChannelSettings from './channelSettings'
-import { readAllNotificationChannelsAction } from '@/actions/notifications/channel/read'
-import { readAllMailAliasesAction } from '@/actions/mail/alias/read'
+import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readMailAliasesAction } from '@/actions/mail/alias/read'
 import { notFound } from 'next/navigation'
 
 
@@ -11,8 +11,8 @@ export default async function Channels({ params }: {
     }
 }) {
     const [channels, mailAliases] = await Promise.all([
-        readAllNotificationChannelsAction(),
-        readAllMailAliasesAction(),
+        readNotificationChannelsAction(),
+        readMailAliasesAction(),
     ])
 
     if (!channels.success || !mailAliases.success) {
