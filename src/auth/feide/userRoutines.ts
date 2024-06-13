@@ -36,29 +36,10 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
 
     const feideStudyProgrammesCodes = new Set(feideStudyProgrammes.map(f => f.code))
 
-    const removeStudyProgrammes = memberships.filter(m =>
-        m.group.studyProgramme?.insititueCode &&
-        !feideStudyProgrammesCodes.has(m.group.studyProgramme?.insititueCode)
-    )
-
     const updateStudyProgrammes = memberships.filter(m =>
         m.group.studyProgramme?.insititueCode &&
         feideStudyProgrammesCodes.has(m.group.studyProgramme?.insititueCode)
     ).filter(m => m.order !== order)
-
-
-    // This prisma call will probably break a lot of things
-    // It will delete the memberships for all users
-    // I think we need to diguss this
-    // I thought that you can have many memberships in different orders to a group ????
-    await prisma.membership.deleteMany({
-        where: {
-            OR: removeStudyProgrammes.map(({ groupId }) => ({
-                groupId,
-                userId,
-            }))
-        }
-    })
 
     await prisma.membership.createMany({
         data: addStudyProgrammes.map(s => ({
