@@ -5,20 +5,25 @@ import type { ValidationTypes } from '@/server/Validation'
 
 export const baseLockerValidation = new ValidationBase({
     type: {
-        location: z.string()
+        building: z.string(),
+        floor: z.coerce.number(),
+        id: z.coerce.number()
     },
     details: {
-        location: z.string()
+        building: z.string(),
+        floor: z.coerce.number(),
+        id: z.coerce.number()
     }
 })
 
 
 export const createLockerValidation = baseLockerValidation.createValidation({
     keys: [
-        'location',
+        'building',
+        'floor',
+        'id'
         ],
     transformer: data => data
 })
 
 export type CreateLockerTypes = ValidationTypes<typeof createLockerValidation>
-

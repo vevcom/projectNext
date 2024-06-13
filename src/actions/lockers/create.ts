@@ -5,6 +5,7 @@ import { createLocker } from '@/server/lockers/create'
 import { CreateLockerTypes, createLockerValidation } from '@/server/lockers/validation'
 
 export async function createLockerAction(rawdata: FormData | CreateLockerTypes['Type']) {
+    console.log(rawdata)
     const parse = createLockerValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data

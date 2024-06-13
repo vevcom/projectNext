@@ -3,7 +3,7 @@
 
 .lockerList {
     background-color: ohma.$colors-gray-100;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    filter: drop-shadow(5px 15px 5px rgba(0, 0, 0, 0.3));
     border: 1px solid ohma.$colors-gray-300;
     border-radius: 10px;
 }

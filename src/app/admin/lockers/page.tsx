@@ -1,15 +1,12 @@
-import styles from "./page.module.scss"
-import { readLockerLocations } from "@/server/lockers/location/read"
-import CreateLockerForm from "./CreateLockerForm"
+import styles from './page.module.scss'
+import Link from 'next/link'
 
-
-export default async function Lockers() {
-    const locations = await readLockerLocations()
-    console.log(locations)
-
+export default function Locker() {
     return (
         <div className={styles.wrapper}>
-            <CreateLockerForm locations={locations}/>
+            <h3>Skapreservasjoner</h3>
+            <Link href={"/admin/lockers/location"}>Oppret ny skaplokasjon</Link>
+            <Link href={"/admin/lockers/locker"}>Opprett nytt skap</Link>
         </div>
     )
 }

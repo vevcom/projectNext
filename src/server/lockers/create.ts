@@ -7,8 +7,9 @@ export async function createLocker(rawdata: CreateLockerTypes['Detailed']) {
     const data = createLockerValidation.detailedValidate(rawdata)
     return prismaCall(() => prisma.locker.create({
         data: {
-            building: data.location,
-            floor: 1
+            building: data.building,
+            floor: data.floor,
+            id: data.id
         }
     }))
 }
