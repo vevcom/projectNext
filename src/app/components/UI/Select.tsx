@@ -10,7 +10,7 @@ export type Proptypes = {
     }[],
 }
 
-export default function Select({ name, label, options }: Proptypes) {
+export default function Select({ name, label, options, ...props }: Proptypes) {
     const id = v4()
 
     const optionElements = options.map(
@@ -21,7 +21,7 @@ export default function Select({ name, label, options }: Proptypes) {
 
     return <div className={styles.Select}>
         <label htmlFor={id}>{label ?? name}</label>
-        <select id={id} name={name}>
+        <select id={id} name={name} {...props}>
             {optionElements}
         </select>
     </div>
