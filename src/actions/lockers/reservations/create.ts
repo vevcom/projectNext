@@ -10,7 +10,7 @@ import type { LockerReservation } from '@prisma/client'
 import { readLockerAction } from '../read'
 
 /**
- * An action that creates a locker reservation based on the given data. Duplicate reservations will not be created
+ * An action that creates a locker reservation based on the given data. Duplicate reservation will not be created
  * @param lockerId - The id of the locker to be reserved
  * @param rawdata - The locker reservation to be created
  * @returns - A Promise that resolves to an ActionReturn containing the LockerReservation created

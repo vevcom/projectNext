@@ -14,7 +14,7 @@ export default function LockerRow({ locker }: PropTypes) {
             <p>{locker.building}</p>
             <p>{locker.floor}</p>
             <p className={styles.hideSecond}>{isReserved ? locker.LockerReservation[0].user.firstname + " " +  locker.LockerReservation[0].user.lastname : ""}</p>
-            <p className={styles.hideFirst}>{(isReserved && locker.LockerReservation[0].group) ? locker.LockerReservation[0].group.id : ""}</p>
+            <p className={styles.hideFirst}>{(isReserved && locker.LockerReservation[0].group) ? locker.LockerReservation[0].group.id : ""}</p> {/* TODO: need to find a good way to display group name */}
             <p>
                 {
                 locker.LockerReservation.length

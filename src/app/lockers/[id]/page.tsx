@@ -32,7 +32,7 @@ export default async function Locker({ params }: PropTypes) {
     const reserved = locker.data.LockerReservation.length > 0
 
     const groups = await readGroups()
-    const committeesFormData = groups.map(group => ({value: group.id.toString(), label: group.id.toString()}))
+    const groupsFormData = groups.map(group => ({value: group.id.toString(), label: group.id.toString()}))
 
     return (
         <PageWrapper title="Skapreservasjon">
@@ -47,7 +47,7 @@ export default async function Locker({ params }: PropTypes) {
                             {
                                 user.id == locker.data.LockerReservation[0].user.id
                                 ?
-                                <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id} committeesFormData={committeesFormData}/>
+                                <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id} groupsFormData={groupsFormData}/>
                                 :
                                 <></>
                             }
@@ -55,7 +55,7 @@ export default async function Locker({ params }: PropTypes) {
                     :   
                     <>
                             <p>Dette skapet er ledig</p>
-                            <CreateLockerReservationForm lockerId={lockerId} committeesFormData={committeesFormData}/>
+                            <CreateLockerReservationForm lockerId={lockerId} groupsFormData={groupsFormData}/>
                         </>
                 }
             </div>
