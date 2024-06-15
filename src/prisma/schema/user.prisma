@@ -9,7 +9,7 @@ model User {
   username      String        @unique
   email         String        @unique
   firstname     String        @default("[Fjernet]")
-  lastname      String        @default("[Fjernet]") @unique
+  lastname      String        @default("[Fjernet]")
   acceptedTerms DateTime?
   sex           SEX?
   createdAt     DateTime      @default(now())
