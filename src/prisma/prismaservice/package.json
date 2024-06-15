@@ -19,7 +19,7 @@
     "remark-rehype": "^11.1.0",
     "sharp": "^0.33.4",
     "unified": "^11.0.4",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "prisma": {
     "schema": "../schema.prisma"
