@@ -22,7 +22,7 @@
     "uuid": "^10.0.0"
   },
   "prisma": {
-    "schema": "../schema.prisma"
+    "schema": "../schema"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

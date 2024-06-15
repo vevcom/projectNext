@@ -12,7 +12,7 @@ services:
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
             - ./src:/usr/src/app/src
-            - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
+            - ./src/prisma/schema:/usr/src/app/src/prisma/schema
             - ./package.json:/usr/src/app/package.json
             - ./package-lock.json:/usr/src/app/package-lock.json
             - ./logs:/usr/src/app/logs
@@ -71,7 +71,7 @@ services:
             VEVEN_DB_URI: ${VEVEN_DB_URI}
             MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
         volumes:
-            - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
+            - ./src/prisma/schema:/usr/src/app/schema
             - devstore:/usr/src/app/prismaservice/store
         depends_on:
             db:

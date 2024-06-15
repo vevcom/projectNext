@@ -4,11 +4,13 @@
 
 generator projectnext {
   provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 generator prismaservice {
   provider = "prisma-client-js"
   output   = "./prismaservice/generated/pn"
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 datasource db {
@@ -31,7 +33,7 @@ model User {
   username      String        @unique
   email         String        @unique
   firstname     String        @default("[Fjernet]")
-  lastname      String        @default("[Fjernet]")
+  lastname      String        @default("[Fjernet]") @unique
   acceptedTerms DateTime?
   sex           SEX?
   createdAt     DateTime      @default(now())

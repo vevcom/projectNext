@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 WORKDIR /usr/src/app
-COPY ./schema.prisma ./schema.prisma
+COPY ./schema ./schema
 COPY ./schema.veven.prisma ./schema.veven.prisma
 
 # Remove the projectnext generator lines
