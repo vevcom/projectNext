@@ -12,12 +12,23 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import 'react-pdf/dist/esm/Page/TextLayer.css'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+// Polyfill for new promise methods not supported in all browsers
+import 'core-js/actual/promise/with-resolvers' 
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
 
 type PropTypes = {
     src: string
     className?: string
 }
+
+const options = {
+    cMapUrl: '/cmaps/',
+    standardFontDataUrl: '/standard_fonts/',
+};
 
 /**
  * A component that displays a PDF document in a book format
@@ -99,6 +110,7 @@ export default function PdfDocument({ src, className }: PropTypes) {
             <Document
                 file={src}
                 onLoadSuccess={onDocumentLoadSuccess}
+                options={options}
             >
                 <div className={styles.pages}>
                     <div className={styles.leftPage}>
