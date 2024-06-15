@@ -1,10 +1,11 @@
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import type { Prisma } from '@prisma/client'
 
 export const jobAdArticleRealtionsIncluder = {
     article: {
         include: articleRealtionsIncluder
     }
-} as const
+} as const satisfies Prisma.JobAdInclude
 
 export const simpleJobAdArticleRealtionsIncluder = {
     article: {
@@ -16,4 +17,4 @@ export const simpleJobAdArticleRealtionsIncluder = {
             }
         }
     }
-} as const
+} as const satisfies Prisma.JobAdInclude
