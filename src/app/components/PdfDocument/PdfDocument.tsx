@@ -13,12 +13,12 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import 'react-pdf/dist/esm/Page/TextLayer.css'
 
 // Polyfill for new promise methods not supported in all browsers
-import 'core-js/actual/promise/with-resolvers' 
+import 'core-js/actual/promise/with-resolvers'
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
     import.meta.url
-).toString();
+).toString()
 
 type PropTypes = {
     src: string
@@ -28,7 +28,7 @@ type PropTypes = {
 const options = {
     cMapUrl: '/cmaps/',
     standardFontDataUrl: '/standard_fonts/',
-};
+}
 
 /**
  * A component that displays a PDF document in a book format
