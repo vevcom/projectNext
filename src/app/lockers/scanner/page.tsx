@@ -1,5 +1,6 @@
 "use client"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import CameraFeed from "@/app/components/Camera/CameraFeed"
 import { CameraState } from "@/app/components/Camera/Types"
 import jsQR from "jsqr"
@@ -7,9 +8,12 @@ import jsQR from "jsqr"
 export default function Scanner() {
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const [cameraState, setCameraState] = useState<CameraState>(CameraState.Off)
+    const [hasAsked, setHasAsked] = useState<boolean>(false)
+    const router = useRouter()
 
     const width = 400
     const height = 400
+
 
     const constraints = {
         video: {
@@ -20,20 +24,33 @@ export default function Scanner() {
     }
 
     const callBackFunction = useCallback(() => {
+        // The video feed is drawn on a canvas to extract the imageData
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
         if (!videoRef.current || !ctx) {
-            throw new Error("videoRef.current or ctx are undefined")
+            throw new Error("videoRef.current or ctx is undefined")
         }
         canvas.width = videoRef.current.videoWidth
         canvas.height = videoRef.current.videoHeight
         ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
 
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
-        const code = jsQR(data, canvas.width, canvas.height)
-        console.log(code)
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const code = jsQR(imageData.data, canvas.width, canvas.height)
+        if (code) {
+            router.push(code.data)
+        }
+    }, [router])
+
+    useEffect(() => {
+        setCameraState(CameraState.Pending)
+        setHasAsked(true)
     }, [])
 
+    useEffect(() => {
+        if (hasAsked && cameraState == CameraState.Off) {
+            router.push("/lockers")
+        }
+    }, [cameraState, hasAsked])
 
     return (
         <div className="camera">
@@ -47,9 +64,8 @@ export default function Scanner() {
                 callbackFunction={callBackFunction}
             /> 
 
-            <button onClick={() => {setCameraState(CameraState.Pending)}}>start</button> 
-            <button onClick={() => {setCameraState(CameraState.Off)}}>stop</button> 
+            <button onClick={() => { setCameraState(CameraState.Pending) }}>Start</button> 
+            <button onClick={() => { setCameraState(CameraState.Off) }}>Stop</button> 
         </div>
-         
     )
 }

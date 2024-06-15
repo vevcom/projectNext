@@ -37,8 +37,9 @@ export default function CameraFeed(props: CameraFeedProps) {
             return
         }
         video.srcObject = streamRef.current
-        video.play().catch(() => {
+        video.play().catch((error: Error) => {
             props.setCameraState(CameraState.Off)
+            console.error(error)
             return
         })
         video.addEventListener("loadedmetadata", handleVideoPlay)
