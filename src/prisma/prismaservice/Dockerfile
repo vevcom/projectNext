@@ -6,7 +6,7 @@ COPY ./schema ./schema
 COPY ./schema.veven.prisma ./schema.veven.prisma
 
 # Remove the projectnext generator lines
-RUN sed -i '/generator projectnext {/,/}/d' ./schema.prisma
+RUN sed -i '/generator projectnext {/,/}/d' ./schema/schema.prisma
 
 WORKDIR /usr/src/app/prismaservice
 COPY /prismaservice/package*.json ./
