@@ -1,0 +1,15 @@
+model Ombul {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  fsLocation   String   @unique //location in /store/ombul/[fsLocation]
+  year         Int
+  issueNumber  Int
+  coverImage   CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId Int      @unique
+
+  @@unique([year, name])
+  @@unique([year, issueNumber])
+}
