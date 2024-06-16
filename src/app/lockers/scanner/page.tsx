@@ -1,8 +1,10 @@
 "use client"
+import styles from "./page.module.scss"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import CameraFeed from "@/app/components/Camera/CameraFeed"
 import { CameraState } from "@/app/components/Camera/Types"
+import Button from "@/app/components/UI/Button"
 import jsQR from "jsqr"
 
 export default function Scanner() {
@@ -53,19 +55,21 @@ export default function Scanner() {
     }, [cameraState, hasAsked])
 
     return (
-        <div className="camera">
-            <CameraFeed 
-                videoRef={videoRef} 
-                cameraState={cameraState}
-                setCameraState={setCameraState} 
-                constraints={constraints}
-                width={width}
-                height={height}
-                callbackFunction={callBackFunction}
-            /> 
-
-            <button onClick={() => { setCameraState(CameraState.Pending) }}>Start</button> 
-            <button onClick={() => { setCameraState(CameraState.Off) }}>Stop</button> 
-        </div>
+        <>
+            <h1 className={styles.title}>Scan QR Kode</h1>
+            <div className={styles.camera}>
+                <CameraFeed 
+                    videoRef={videoRef} 
+                    cameraState={cameraState}
+                    setCameraState={setCameraState} 
+                    constraints={constraints}
+                    width={width}
+                    height={height}
+                    callbackFunction={callBackFunction}
+                /> 
+     
+                <Button className={styles.button} onClick={() => { setCameraState(CameraState.Off) }}>Avbryt</Button> 
+            </div>
+        </>
     )
 }

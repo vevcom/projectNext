@@ -1,3 +1,4 @@
+import styles from "./page.module.scss"
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import LockerList from './LockerList'
 import LockerPagingProvider from '@/context/paging/LockerPaging'
@@ -13,7 +14,9 @@ export default async function Lockers() {
 
     return (
         <>
-            <QRButton />
+            <div className={ styles.QRButtonWrapper }>
+                <QRButton />
+            </div>
 
             <PageWrapper title="Skap">
                 <LockerPagingProvider
