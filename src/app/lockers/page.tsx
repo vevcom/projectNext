@@ -1,8 +1,8 @@
-import styles from "./page.module.scss"
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import LockerList from './LockerList'
 import LockerPagingProvider from '@/context/paging/LockerPaging'
 import { getUser } from '@/auth/getUser'
+import LockerIdForm from "./LockerIdForm"
 import QRButton from './QRButton'
 
 export default async function Lockers() {
@@ -13,24 +13,22 @@ export default async function Lockers() {
     })
 
     return (
-        <>
-            <div className={ styles.QRButtonWrapper }>
-                <QRButton />
-            </div>
-
-            <PageWrapper title="Skap">
-                <LockerPagingProvider
-                        startPage={{
-                            pageSize: 20,
-                            page: 0
-                        }}
-                        details={undefined}
-                        serverRenderedData={[]}
-                    >
-                        <LockerList />
-                </LockerPagingProvider>
-            </PageWrapper>
-        </>
-        
+        <PageWrapper title="Skap"> 
+            <LockerIdForm /> 
+            <br/> 
+            <QRButton />
+            
+            <h2>Skapliste</h2>
+            <LockerPagingProvider
+                    startPage={{
+                        pageSize: 20,
+                        page: 0
+                    }}
+                    details={undefined}
+                    serverRenderedData={[]}
+                >
+                    <LockerList />
+            </LockerPagingProvider>
+        </PageWrapper>
     )
 }
