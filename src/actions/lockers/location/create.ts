@@ -13,9 +13,8 @@ import type { LockerLocation } from '@prisma/client'
 export async function createLockerLocationAction(
     rawdata: FormData | CreateLockerLocationTypes['Type']
 ): Promise<ActionReturn<LockerLocation>> {
-    const { user, status, authorized } = await getUser({
-        requiredPermissions: [['LOCKER_READ']], // Should be changed to LOCKER_CREATE ########################################################################################
-        userRequired: true,
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['LOCKER_CREATE']], 
     })
     if (!authorized) return createActionError(status)
     const parse = createLockerLocationValidation.typeValidate(rawdata)
