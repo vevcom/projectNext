@@ -190,6 +190,12 @@ model StudyProgramme {
 /////////////////
 
 enum Permission {
+  // Job ads
+  JOBAD_CREATE
+  JOBAD_READ
+  JOBAD_UPDATE
+  JOBAD_DESTROY
+
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
@@ -431,6 +437,7 @@ model Article {
   articleCategoryName String?
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
+  JobAd               JobAd?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
@@ -485,6 +492,7 @@ model OmegaOrder {
 
   newsArticles NewsArticle[]
   membership   Membership[]
+  JobAd       JobAd[]
 }
 
 ///////////
@@ -506,3 +514,18 @@ model Ombul {
   @@unique([year, name])
   @@unique([year, issueNumber])
 }
+
+model JobAd {
+  id             Int        @id @default(autoincrement())
+  company        String
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
+  articleId      Int
+  articleName    String
+  description    String?
+  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order])
+  orderPublished Int
+
+  @@unique([articleId, articleName])
+  @@unique([articleName, orderPublished])
+}
+

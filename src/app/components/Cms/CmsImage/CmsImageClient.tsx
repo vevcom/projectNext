@@ -27,7 +27,7 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
             if (!res.success) return setFallback(true)
             return setCmsImage(res.data)
         })
-    }, [])
+    }, [readSpecialImageAction])
 
     return (
         <div className={styles.CmsImage}>
