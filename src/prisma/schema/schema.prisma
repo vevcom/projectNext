@@ -1,7 +1,3 @@
-///////////
-// Setup //
-///////////
-
 generator projectnext {
   provider = "prisma-client-js"
   previewFeatures = ["prismaSchemaFolder"]

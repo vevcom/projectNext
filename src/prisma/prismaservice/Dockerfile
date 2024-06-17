@@ -3,7 +3,7 @@ FROM node:20-alpine AS base
 
 WORKDIR /usr/src/app
 COPY ./schema ./schema
-COPY ./schema.veven.prisma ./schema.veven.prisma
+COPY ./vevenSchema ./vevenSchema
 
 # Remove the projectnext generator lines
 RUN sed -i '/generator projectnext {/,/}/d' ./schema/schema.prisma
