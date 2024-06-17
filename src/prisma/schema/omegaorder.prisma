@@ -5,4 +5,5 @@ model OmegaOrder {
 
   newsArticles NewsArticle[]
   membership   Membership[]
+  JobAd        JobAd[]
 }

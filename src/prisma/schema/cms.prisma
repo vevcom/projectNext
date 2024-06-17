@@ -102,6 +102,7 @@ model Article {
   articleCategoryName String?
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
+  JobAd               JobAd?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])

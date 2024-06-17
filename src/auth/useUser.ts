@@ -1,10 +1,10 @@
 'use client'
 
+import { DefaultPermissionsContext } from '@/context/DefaultPermissions'
 import checkMatrix from '@/utils/checkMatrix'
-import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
 import type { Matrix } from '@/utils/checkMatrix'
@@ -94,7 +94,8 @@ export function useUser({
 }: UseUserArgsType<boolean, boolean> = {}): UseUserReturnType<boolean> {
     const { push } = useRouter()
     const pathName = usePathname()
-    const [defaultPermissions, setDefaultPermissions] = useState<Permission[]>()
+    const defaultPermissionsCtx = useContext(DefaultPermissionsContext)
+    const defaultPermissions = defaultPermissionsCtx ? defaultPermissionsCtx.defaultPermissions : []
     const [useUserReturn, setUseuserReturn] = useState<UseUserReturnType<boolean>>({
         status: 'LOADING',
         authorized: undefined,
@@ -115,21 +116,6 @@ export function useUser({
             permissions = defaultPermissions,
             memberships = [],
         } = session ?? {}
-
-        // If permissions are undefined it can only mean that defaultPermissions are undefined...
-        if (permissions === undefined) {
-            // ...so then we need to fetch the default permissions.
-            readDefaultPermissionsAction().then((defaultPermissionsRes): void => {
-                if (!defaultPermissionsRes.success) throw new Error('Could not read default permissions.')
-
-                setDefaultPermissions(defaultPermissionsRes.data)
-            })
-
-            // Since reading the default permissions is an async operations we return from this
-            // useEffect callback. Once the default permissions have been retrieved this callback
-            // will be run again.
-            return
-        }
 
         // Authorized is true if both these conditions are true
         // 1. The user is logged inn or (the user is not logged inn and the user session is not required)
@@ -159,7 +145,7 @@ export function useUser({
             ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
             : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
         )
-    }, [session, nextAuthStatus, defaultPermissions])
+    }, [session, nextAuthStatus])
 
     return useUserReturn
 }

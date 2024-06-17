@@ -11,9 +11,7 @@ export default async function Ombuls() {
     const { permissions } = await getUser({
         requiredPermissions: [['OMBUL_READ']],
         shouldRedirect: true,
-        userRequired: true,
     })
-
     const showCreateButton = permissions.includes('OMBUL_CREATE')
 
     const latestOmbulRes = await readLatestOmbulAction()
