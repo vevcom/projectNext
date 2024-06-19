@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist && tsc-alias",
     "seed": "node dist/seed.js",
-    "dobbelOmega-pull": "npx prisma db pull --schema ../schema.veven.prisma",
-    "dobbelOmega-generate": "npx prisma generate --schema ../schema.veven.prisma"
+    "dobbelOmega-pull": "npx prisma db pull --schema ../vevenSchema/schema.veven.prisma",
+    "dobbelOmega-generate": "npx prisma generate --schema ../vevenSchema/schema.veven.prisma"
   },
   "author": "vevcom",
   "license": "ISC",
@@ -22,7 +22,7 @@
     "uuid": "^10.0.0"
   },
   "prisma": {
-    "schema": "../schema.prisma"
+    "schema": "../schema"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
