@@ -2,6 +2,7 @@ import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
 import { fetchStudyProgrammesFromFeide } from './feide/api'
+import { comparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/read'
@@ -12,7 +13,6 @@ import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import { comparePassword } from './password'
 
 export const authOptions: AuthOptions = {
     providers: [

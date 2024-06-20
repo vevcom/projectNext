@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
-import type { PrismaClient } from '@/generated/pn'
 import bcrypt from 'bcrypt'
+import type { PrismaClient } from '@/generated/pn'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
     const fn = [
@@ -8,7 +8,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         'trude', 'andreas', 'nora', 'knut', 'anne', 'sara', 'frikk', 'merete', 'klara',
         'britt helen', 'fiola', 'mika', 'helle', 'jesper'
     ]
-    
+
     const ln = [
         'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
         'noasdatter', 'trudesdatter', 'lien', 'svendsen',
@@ -47,7 +47,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     username: `${f}${i}${j}`,
                     credentials: {
                         create: {
-                            passwordHash: passwordHash,
+                            passwordHash,
                         },
                     },
                 },
@@ -69,7 +69,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             username: 'Harambe104',
             credentials: {
                 create: {
-                    passwordHash: passwordHash,
+                    passwordHash,
                 },
             },
         },

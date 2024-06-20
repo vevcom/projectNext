@@ -3,9 +3,9 @@ import { registerUserValidation, updateUserValidation } from './validation'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import { hashPassword } from '@/auth/password'
 import type { RegisterUserTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
-import { hashPassword } from '@/auth/password'
 
 export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
     const data = updateUserValidation.detailedValidate(rawdata)
@@ -57,7 +57,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
         }),
         prisma.credentials.create({
             data: {
-                passwordHash: passwordHash,
+                passwordHash,
                 user: {
                     connect: {
                         id,
