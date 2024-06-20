@@ -3,11 +3,11 @@ import crypto from 'crypto'
 
 function pepperPassword(password: string) {
     if (!process.env.PASSWORD_PEPPER) {
-        throw new Error("PASSWORD_PEPPER is not set.")
+        throw new Error('PASSWORD_PEPPER is not set.')
     }
-    
+
     const hmac = crypto.createHmac('sha256', process.env.PASSWORD_PEPPER)
-    
+
     const encryptedPassword = hmac.update(password).digest()
 
     // Convert "encryptedPassword" to base64 to avoid accidental null terminators
@@ -22,7 +22,7 @@ function pepperPassword(password: string) {
  */
 export async function hashPassword(password: string) {
     if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
-        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+        throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
     }
 
     const encryptedPassword = pepperPassword(password)
@@ -39,7 +39,7 @@ export async function hashPassword(password: string) {
  */
 export async function comparePassword(password: string, passwordHash: string) {
     if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
-        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+        throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
     }
 
     const encryptedPassword = pepperPassword(password)

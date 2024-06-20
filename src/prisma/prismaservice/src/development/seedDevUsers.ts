@@ -31,14 +31,14 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     ]
 
     if (!process.env.PASSWORD_PEPPER) {
-        throw new Error("PASSWORD_PEPPER is not set.")
+        throw new Error('PASSWORD_PEPPER is not set.')
     }
-    
+
     const hmac = crypto.createHmac('sha256', process.env.PASSWORD_PEPPER)
     const encryptedPassword = hmac.update('password').digest().toString('base64')
 
     if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
-        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+        throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
     }
 
     const passwordHash = await bcrypt.hash(encryptedPassword, Number(process.env.PASSWORD_SALT_ROUNDS))
