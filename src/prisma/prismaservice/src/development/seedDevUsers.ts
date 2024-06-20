@@ -1,11 +1,16 @@
 import { v4 as uuid } from 'uuid'
 import type { PrismaClient } from '@/generated/pn'
+import bcrypt from 'bcrypt'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
-    const fn = ['anne', 'johan', 'pål', 'lars', 'lasse', 'leo', 'noa',
+    const fn = [
+        'anne', 'johan', 'pål', 'lars', 'lasse', 'leo', 'noa',
         'trude', 'andreas', 'nora', 'knut', 'anne', 'sara', 'frikk', 'merete', 'klara',
-        'britt helen', 'fiola', 'mika', 'helle', 'jesper']
-    const ln = ['hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+        'britt helen', 'fiola', 'mika', 'helle', 'jesper'
+    ]
+    
+    const ln = [
+        'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
         'noasdatter', 'trudesdatter', 'lien', 'svendsen',
         'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
         'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
@@ -21,7 +26,11 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
         'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
         'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud']
+        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
+    ]
+
+    const passwordHash = await bcrypt.hash('password', 12)
+
     Promise.all(fn.map(async (f, i) => {
         await Promise.all(ln.map(async (l, j) => {
             await prisma.user.upsert({
@@ -38,7 +47,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     username: `${f}${i}${j}`,
                     credentials: {
                         create: {
-                            passwordHash: 'password',
+                            passwordHash: passwordHash,
                         },
                     },
                 },
@@ -60,7 +69,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             username: 'Harambe104',
             credentials: {
                 create: {
-                    passwordHash: 'password',
+                    passwordHash: passwordHash,
                 },
             },
         },

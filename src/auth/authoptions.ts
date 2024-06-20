@@ -12,6 +12,7 @@ import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import { comparePassword } from './password'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -39,8 +40,9 @@ export const authOptions: AuthOptions = {
 
                 if (!userCredentials) return null
 
-                // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (userCredentials.passwordHash !== credentials.password) return null
+                const passwordMatch = await comparePassword(credentials.password, userCredentials.passwordHash)
+
+                if (!passwordMatch) return null
 
                 return { id: String(userCredentials.userId) }
             }
