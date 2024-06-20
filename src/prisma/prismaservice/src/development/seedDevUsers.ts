@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 import type { PrismaClient } from '@/generated/pn'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
@@ -29,7 +30,18 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
     ]
 
-    const passwordHash = await bcrypt.hash('password', 12)
+    if (!process.env.PASSWORD_PEPPER) {
+        throw new Error("PASSWORD_PEPPER is not set.")
+    }
+    
+    const hmac = crypto.createHmac('sha256', process.env.PASSWORD_PEPPER)
+    const encryptedPassword = hmac.update('password').digest().toString('base64')
+
+    if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
+        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+    }
+
+    const passwordHash = await bcrypt.hash(encryptedPassword, Number(process.env.PASSWORD_SALT_ROUNDS))
 
     Promise.all(fn.map(async (f, i) => {
         await Promise.all(ln.map(async (l, j) => {

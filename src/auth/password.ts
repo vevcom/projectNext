@@ -1,6 +1,18 @@
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 
-const saltRounds = 12
+function pepperPassword(password: string) {
+    if (!process.env.PASSWORD_PEPPER) {
+        throw new Error("PASSWORD_PEPPER is not set.")
+    }
+    
+    const hmac = crypto.createHmac('sha256', process.env.PASSWORD_PEPPER)
+    
+    const encryptedPassword = hmac.update(password).digest()
+
+    // Convert "encryptedPassword" to base64 to avoid accidental null terminators
+    return encryptedPassword.toString('base64')
+}
 
 /**
  * Wrapper for the bcrypt `hash` function.
@@ -9,7 +21,13 @@ const saltRounds = 12
  * @returns Hashed password string.
  */
 export async function hashPassword(password: string) {
-    return bcrypt.hash(password, saltRounds)
+    if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
+        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+    }
+
+    const encryptedPassword = pepperPassword(password)
+
+    return bcrypt.hash(encryptedPassword, Number(process.env.PASSWORD_SALT_ROUNDS))
 }
 
 /**
@@ -20,5 +38,11 @@ export async function hashPassword(password: string) {
  * @returns `true` if the password matches, else `false`.
  */
 export async function comparePassword(password: string, passwordHash: string) {
-    return bcrypt.compare(password, passwordHash)
+    if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
+        throw new Error("PASSWORD_SALT_ROUNDS is not set or is zero.")
+    }
+
+    const encryptedPassword = pepperPassword(password)
+
+    return bcrypt.compare(encryptedPassword, passwordHash)
 }
