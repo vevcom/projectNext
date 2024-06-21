@@ -38,10 +38,6 @@ export async function hashPassword(password: string) {
  * @returns `true` if the password matches, else `false`.
  */
 export async function comparePassword(password: string, passwordHash: string) {
-    if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
-        throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
-    }
-
     const encryptedPassword = pepperPassword(password)
 
     return bcrypt.compare(encryptedPassword, passwordHash)
