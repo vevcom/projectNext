@@ -1,20 +1,15 @@
 import 'server-only'
-import { JWT_ISSUER } from './ConfigVars'
+import { JWT_ISSUER } from '../auth/ConfigVars'
 import { ServerError } from '@/server/error'
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
-import type { OmegaJWTAudience } from './Types'
+import type { OmegaJWTAudience } from '../auth/Types'
+import { readJWTPart, readJWTPayload } from './jwtReadUnsecure'
+import { JwtPayloadType, jwtPayloadValidation } from './validation'
 
 
 // See https://www.rfc-editor.org/rfc/rfc7519#section-4.1 for the
 // JWT payload specification.
-export type JWT<T = Record<string, unknown>> = T & {
-    iss: string,
-    jti: string,
-    aud: string,
-    sub: string,
-    iat: number,
-    exp: number,
-}
+export type JWT<T = Record<string, unknown>> = T & JwtPayloadType['Detailed']
 
 /**
  * Generates a JSON Web Token (JWT) with the given payload and expiration time.
@@ -22,11 +17,15 @@ export type JWT<T = Record<string, unknown>> = T & {
  * @param expiresIn - The expiration time of the JWT in seconds.
  * @returns The generated JWT.
  */
-export function generateJWT<T>(aud: OmegaJWTAudience, payload: T, expiresIn: number): string {
-    return jwt.sign({
-        aud,
-        ...payload
-    }, process.env.NEXTAUTH_SECRET ?? 'THIS VALUE MUST CHANGE', {
+export function generateJWT<T extends Object>(aud: OmegaJWTAudience, payload: T, expiresIn: number, asymetric = false): string {
+
+    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PRIVATE_KEY) {
+        throw new ServerError('INVALID CONFIGURATION', "Missing secret for JWT generation")
+    }
+
+    return jwt.sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.NEXTAUTH_SECRET, {
+        audience: aud,
+        algorithm: asymetric ? 'ES256' : 'HS256',
         issuer: JWT_ISSUER,
         expiresIn,
     })
@@ -39,18 +38,25 @@ export function generateJWT<T>(aud: OmegaJWTAudience, payload: T, expiresIn: num
  * @throws {ServerError} If the JWT is expired or invalid.
  */
 export function verifyJWT(token: string, aud?: OmegaJWTAudience): (jwt.JwtPayload & Record<string, string | number | null>) {
+    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PUBLIC_KEY) {
+        throw new ServerError('INVALID CONFIGURATION', 'JWT environ variables is not set. Missing NEXTAUTH_SECRET or JWT_PUBLIC_KEY')
+    }
+
     try {
-        const payload = jwt.verify(token, process.env.NEXTAUTH_SECRET ?? 'THIS VALUE MUST ALSO CHANGE', {
+        const JWTHeader = readJWTPart(token, 0)
+        let jwtKey = process.env.NEXTAUTH_SECRET
+        if (JWTHeader.alg === 'ES256') {
+            jwtKey = process.env.JWT_PUBLIC_KEY
+        }
+
+        const payload = jwt.verify(token, jwtKey, {
             issuer: JWT_ISSUER,
             ignoreExpiration: false,
+            audience: aud,
         })
 
         if (typeof payload === 'string') {
             throw new ServerError('JWT INVALID', 'The payload cannot be a string')
-        }
-
-        if (aud && typeof payload !== 'string' && payload.aud !== aud) {
-            throw new ServerError('JWT INVALID', 'The audience in the jwt does not match!')
         }
 
         return payload

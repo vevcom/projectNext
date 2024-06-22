@@ -1,7 +1,7 @@
 import 'server-only'
 import { VerifyEmailTemplate } from '@/server/notifications/email/templates/verifyEmail'
 import { sendSystemMail } from '@/server/notifications/email/send'
-import { generateJWT } from '@/auth/jwt'
+import { generateJWT } from '@/jwt/jwt'
 import { verifyEmailValidation } from '@/server/users/validation'
 import type { UserFiltered } from '@/server/users/Types'
 import { emailValidationExpiration } from './ConfigVars'

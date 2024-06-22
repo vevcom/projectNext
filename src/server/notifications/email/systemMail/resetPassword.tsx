@@ -1,7 +1,7 @@
 import 'server-only'
 import { sendSystemMail } from '@/server/notifications/email/send'
 import { ResetPasswordTemplate } from '@/server/notifications/email/templates/resetPassword'
-import { generateJWT } from '@/auth/jwt'
+import { generateJWT } from '@/jwt/jwt'
 import { readUser } from '@/server/users/read'
 import { ServerError } from '@/server/error'
 import { emailValidation } from '@/server/notifications/validation'

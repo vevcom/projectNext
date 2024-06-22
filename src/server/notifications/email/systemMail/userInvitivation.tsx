@@ -1,4 +1,4 @@
-import { generateJWT } from '@/auth/jwt';
+import { generateJWT } from '@/jwt/jwt';
 import { UserFiltered } from '@/server/users/Types';
 import 'server-only'
 import { userInvitationExpiration } from './ConfigVars';

@@ -19,6 +19,8 @@ services:
             NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
             NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
             DOMAIN: ${DOMAIN}
+            JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+            JWT_PUBLIC_KEY: ${JWT}
         depends_on:
             db:
                 condition: service_healthy

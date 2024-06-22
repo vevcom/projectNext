@@ -30,8 +30,8 @@ services:
             FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
             MAIL_SERVER: ${MAIL_SERVER}
             DOMAIN: ${DOMAIN}
-            OMEGAID_PRIVATE_KEY: ${OMEGAID_PRIVATE_KEY}
-            OMEGAID_PUBLIC_KEY: ${OMEGAID_PUBLIC_KEY}
+            JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+            JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
         depends_on:
             db:
                 condition: service_healthy

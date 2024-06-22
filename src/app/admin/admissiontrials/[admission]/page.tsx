@@ -2,7 +2,7 @@
 
 import RegisterAdmissiontrial from './registration'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { readOmegaIdPublicKey } from '@/actions/omegaid/read'
+import { readOmegaJWTPublicKey } from '@/actions/omegaid/read'
 import { Admission, type Admission as AdmissionType } from '@prisma/client'
 import { notFound } from 'next/navigation'
 import { AdmissionDisplayNames } from '@/server/admission/ConfigVars'
@@ -21,7 +21,7 @@ export default async function AdmissionTrials({
     }
     const admission = params.admission as AdmissionType
 
-    const publicKey = await readOmegaIdPublicKey()
+    const publicKey = await readOmegaJWTPublicKey()
 
     return <PageWrapper
         title={`Registrer opptak for ${AdmissionDisplayNames[admission]}`}

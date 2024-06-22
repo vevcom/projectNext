@@ -1,5 +1,5 @@
 import 'server-only'
-import { readJWTPayload } from '@/auth/jwtClient'
+import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/server/auth/feideAccounts/create'
 import { createUser } from '@/server/users/create'
 import { readUserOrNullOfFeideAccount } from '@/server/auth/feideAccounts/read'

@@ -1,7 +1,7 @@
 import 'server-only'
 import { ServerError } from '@/server/error'
 import { readUser } from '@/server/users/read'
-import { verifyJWT } from '@/auth/jwt'
+import { verifyJWT } from '@/jwt/jwt'
 
 export async function verifyResetPasswordToken(token: string): Promise<{
     userId: number
