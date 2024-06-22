@@ -26,7 +26,7 @@ export default function CreateUserForm({ className }: PropTypes) {
                 <TextInput label="username" name="username" key={uuid()}/>
                 <TextInput label="first name" name="firstname" key={uuid()}/>
                 <TextInput label="last name" name="lastname" key={uuid()}/>
-                <p>Når en bruker lages vil brukeren få tilsendt en epost, men en link for å fullføre registreringen.</p>
+                <p>Når en bruker lages vil brukeren få tilsendt en epost, med en link for å fullføre registreringen.</p>
             </Form>
         </div>
     )

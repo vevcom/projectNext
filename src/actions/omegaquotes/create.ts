@@ -24,9 +24,5 @@ export async function createQuoteAction(
 
     const results = await safeServerCall(() => createQuote(user.id, data))
 
-    if (results.success) {
-        dispatchSpecialNotification('NEW_OMEGAQUOTE', 'Ny Omegaquote♪', `${results.data.quote}\n - ${results.data.author}`)
-    }
-
     return results
 }
