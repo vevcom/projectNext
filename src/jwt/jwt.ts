@@ -13,6 +13,7 @@ export type JWT<T = Record<string, unknown>> = T & JwtPayloadType['Detailed']
 
 /**
  * Generates a JSON Web Token (JWT) with the given payload and expiration time.
+ * @param aud - An audience for the token, this is the purpose of the token
  * @param payload - The payload to be included in the JWT.
  * @param expiresIn - The expiration time of the JWT in seconds.
  * @returns The generated JWT.
