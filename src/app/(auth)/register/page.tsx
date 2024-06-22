@@ -36,7 +36,9 @@ export default async function Register({
 
         //TODO: Login the correct user
         // See https://github.com/nextauthjs/next-auth/discussions/5334
-    } else if (!authorized || !user) {
+    }
+    
+    if (!authorized || !user) {
         return notFound()
     }
 
