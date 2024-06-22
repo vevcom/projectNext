@@ -1,15 +1,15 @@
 'use server'
 
-import { resetPasswordValidation } from '@/server/auth/validation'
 import { createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { resetPasswordByEmail } from '@/server/auth/resetPassword'
 import type { ActionReturn } from '@/actions/Types'
+import { sendResetPasswordMail } from '@/server/notifications/email/systemMail/resetPassword'
+import { emailValidation } from '@/server/notifications/validation'
 
 
 export async function resetPasswordAction(rawdata: FormData): Promise<ActionReturn<string>> {
-    const parse = resetPasswordValidation.typeValidate(rawdata)
+    const parse = emailValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
 
-    return await safeServerCall(() => resetPasswordByEmail(parse.data.email))
+    return await safeServerCall(() => sendResetPasswordMail(parse.data.email))
 }

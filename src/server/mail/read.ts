@@ -40,11 +40,11 @@ import type { MailFlowObject, MailListTypes, ViaType } from './Types'
 function removeDuplicates<T extends {
     id: number,
 } & ViaType>(objects: T[]): T[] {
-    const seenIds = new Set()
+    const encounteredIds = new Set()
     const ret: T[] = []
 
     for (const obj of objects) {
-        if (seenIds.has(obj.id)) {
+        if (encounteredIds.has(obj.id)) {
             const exisingObj = ret.find(item => item.id === obj.id)
             if (exisingObj && exisingObj.via && obj.via && obj.via instanceof Array) {
                 const via = obj.via[0]
@@ -55,7 +55,7 @@ function removeDuplicates<T extends {
                 }
             }
         } else {
-            seenIds.add(obj.id)
+            encounteredIds.add(obj.id)
             ret.push(obj)
         }
     }

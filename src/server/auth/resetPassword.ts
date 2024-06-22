@@ -1,28 +1,7 @@
 import 'server-only'
-import { resetPasswordValidation } from './validation'
 import { ServerError } from '@/server/error'
 import { readUser } from '@/server/users/read'
 import { verifyJWT } from '@/auth/jwt'
-import { sendResetPasswordMail } from '@/server/notifications/email/systemMail/resetPassword'
-
-export async function resetPasswordByEmail(email: string): Promise<string> {
-    const parse = resetPasswordValidation.detailedValidate({ email })
-
-    try {
-        const user = await readUser({
-            email: parse.email,
-        })
-
-        await sendResetPasswordMail(user)
-
-        return email
-    } catch (e) {
-        if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
-            return email
-        }
-        throw e
-    }
-}
 
 export async function verifyResetPasswordToken(token: string): Promise<{
     userId: number
