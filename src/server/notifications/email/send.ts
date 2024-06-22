@@ -1,7 +1,8 @@
 import 'server-only'
 import { getMailHandler } from './mailHandler'
-import type Mail from 'nodemailer/lib/mailer'
 import { render } from '@react-email/render'
+import type React from 'react'
+import type Mail from 'nodemailer/lib/mailer'
 
 export async function sendMail(rawdata: Mail.Options) {
     await getMailHandler().sendSingleMail(rawdata)
@@ -23,7 +24,7 @@ export async function sendBulkMail(rawdata: Mail.Options[]) {
 export async function sendSystemMail(
     to: string,
     subject: string,
-    body: JSX.Element,
+    body: React.JSX.Element,
 ) {
     await sendMail({
         to,

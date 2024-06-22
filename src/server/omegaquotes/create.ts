@@ -1,10 +1,10 @@
 import 'server-only'
 import { createOmegaquotesValidation } from './validation'
+import { dispatchSpecialNotification } from '@/server/notifications/create'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { CreateOmegaguotesTypes } from './validation'
 import type { OmegaQuote } from '@prisma/client'
-import { dispatchSpecialNotification } from '../notifications/create'
 
 /**
  * A function to create a quote

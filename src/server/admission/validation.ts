@@ -2,8 +2,8 @@ import 'server-only'
 
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
 import { Admission } from '@prisma/client'
+import type { ValidationTypes } from '@/server/Validation'
 
 export const baseAdmissionTrialValidation = new ValidationBase({
     type: {

@@ -1,11 +1,10 @@
 import 'server-only'
 import { OmegaIdExpiryTime } from './ConfigVars'
-import type { OmegaId, OmegaIdJWT } from './Types'
 import { generateJWT } from '@/jwt/jwt'
+import type { OmegaId, OmegaIdJWT } from './Types'
 
 
 export function generateOmegaId(user: OmegaId): string {
-
     const payload: OmegaIdJWT = {
         sub: user.id,
         usrnm: user.username,

@@ -52,5 +52,4 @@ export async function readUserOmegaMembershipLevel(userId: number): Promise<Omeg
     }
 
     throw new ServerError('UNKNOWN ERROR', 'The user has a omega membership to a group that does not exist.')
-
 }

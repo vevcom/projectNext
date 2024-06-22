@@ -1,8 +1,8 @@
 import { ntnuEmailDomain } from './ConfigVars'
+import { validMailAdressDomains } from '@/server/mail/ConfigVars'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
-import { validMailAdressDomains } from '../ConfigVars'
 
 
 export const basemailAddressExternalValidation = new ValidationBase({
@@ -16,7 +16,7 @@ export const basemailAddressExternalValidation = new ValidationBase({
         address: z.string().email().min(2).max(50)
             .refine(
                 address => !validMailAdressDomains.includes(address.split('@')[1].trim()),
-                `The address includes an invalid domain.`,
+                'The address includes an invalid domain.',
             )
             .refine(
                 address => !address.trim().endsWith(`@${ntnuEmailDomain}`),

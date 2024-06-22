@@ -3,10 +3,10 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createUser } from '@/server/users/create'
 import { createUserValidation } from '@/server/users/validation'
+import { sendUserInvitationEmail } from '@/server/notifications/email/systemMail/userInvitivation'
 import type { CreateUserTypes } from '@/server/users/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import { sendUserInvitationEmail } from '@/server/notifications/email/systemMail/userInvitivation'
 
 /**
  * A action that creates a user by the given data. It will also hash the password
@@ -23,7 +23,7 @@ export async function createUserAction(rawdata: FormData | CreateUserTypes['Type
 
         setTimeout(() => sendUserInvitationEmail(user), 1000)
 
-        return user;
+        return user
     })
 }
 

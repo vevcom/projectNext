@@ -8,14 +8,17 @@ import { v4 as uuid } from 'uuid'
 
 
 export default async function AdmissionTrials() {
-    
     const admissions = Object.keys(Admission) as AdmissionType[]
 
     return <PageWrapper
         title="Registrer opptak"
     >
         <ul>
-            {admissions.map(a => <li key={uuid()}><Link href={`admissiontrials/${a}`}>{AdmissionDisplayNames[a]}</Link></li>)}
+            {admissions.map(a =>
+                <li key={uuid()}>
+                    <Link href={`admissiontrials/${a}`}>{AdmissionDisplayNames[a]}</Link>
+                </li>
+            )}
         </ul>
 
     </PageWrapper>

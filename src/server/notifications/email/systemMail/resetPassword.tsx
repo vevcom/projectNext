@@ -7,7 +7,6 @@ import { ServerError } from '@/server/error'
 import { emailValidation } from '@/server/notifications/validation'
 
 export async function sendResetPasswordMail(email: string) {
-
     const parse = emailValidation.detailedValidate({ email })
 
     try {
@@ -18,9 +17,9 @@ export async function sendResetPasswordMail(email: string) {
         const jwt = generateJWT('resetpassword', {
             sub: user.id,
         }, 60 * 60)
-    
+
         const link = `${process.env.NEXTAUTH_URL}/auth/resetpassword?token=${jwt}`
-    
+
         await sendSystemMail(user.email, 'Glemt passord', <ResetPasswordTemplate user={user} link={link} />)
 
         return email

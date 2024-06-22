@@ -2,9 +2,9 @@
 
 import { createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { sendResetPasswordMail } from '@/server/notifications/email/systemMail/resetPassword'
 import { emailValidation } from '@/server/notifications/validation'
+import type { ActionReturn } from '@/actions/Types'
 
 
 export async function resetPasswordAction(rawdata: FormData): Promise<ActionReturn<string>> {

@@ -11,8 +11,8 @@ export async function readSubscriptionsAction(userId?: number):
 Promise<ActionReturn<Subscription[]>> {
     const { authorized, status, user, permissions } = await getUser({
         requiredPermissions: [
-            [ 'NOTIFICATION_CHANNEL_READ' ],
-            [ 'NOTIFICATION_SUBSCRIPTION_READ' ],
+            ['NOTIFICATION_CHANNEL_READ'],
+            ['NOTIFICATION_SUBSCRIPTION_READ'],
         ],
         userRequired: true,
     })
@@ -23,7 +23,7 @@ Promise<ActionReturn<Subscription[]>> {
         userId = user.id
     }
 
-    if (userId !== user.id && !permissions.includes("NOTIFICATION_SUBSCRIPTION_READ_OTHER")) {
+    if (userId !== user.id && !permissions.includes('NOTIFICATION_SUBSCRIPTION_READ_OTHER')) {
         return createActionError('UNAUTHORIZED')
     }
 

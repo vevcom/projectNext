@@ -1,7 +1,7 @@
+import { validMailAdressDomains } from '@/server/mail/ConfigVars'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
-import { validMailAdressDomains } from '../ConfigVars'
 
 
 export const baseMailAliasValidation = new ValidationBase({

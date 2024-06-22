@@ -12,22 +12,25 @@ import type { MailFlowObject, MailListTypes, ViaType } from './Types'
  * Mailalis -> Mailinglist  -> User
  *                          -> Group -> User
  *                          -> External address
- * 
- * To show how the mail traverses, each node in the network above can be used as a source to read the traversal in both directions.
+ *
+ * To show how the mail traverses, each node in the network above can be used
+ * as a source to read the traversal in both directions.
  * Each of the traversal functions is divieded in four parts
  *  1. Fetch the data from the database
  *  2. Parse the data into arrays with only one type of object
  *       This step also adds a via object (next paragraph) if it is nessasary
  *  3. Delete unnessesary fields
  *  4. Combine duplicate nodes
- * 
- * 
+ *
+ *
  * Since some nodes may have different paths to itself, a via property is used.
  * For example a user can be directly connected to a mailinglist or via a group.
- * We only want the user to appear once, but we want to return all the paths to the users (both via the group and direct).
- * 
- * 
- * The end results should be an object that can be displayed to the user to show how mail is routed though a arbirtrary node in the network.
+ * We only want the user to appear once, but we want to return
+ * all the paths to the users (both via the group and direct).
+ *
+ *
+ * The end results should be an object that can be displayed to the user to show
+ * how mail is routed though a arbirtrary node in the network.
 */
 
 /**
@@ -160,7 +163,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
 }
 
 /**
- * Reads the mail flow based on a mailinglist with the provided ID. 
+ * Reads the mail flow based on a mailinglist with the provided ID.
  * @param id - The ID of the mailing list.
  * @returns A Promise that resolves to a MailFlowObject.
  */
@@ -282,7 +285,7 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
         mailaddressExternal: [mailAddressExternal],
         mailingList: mailingList.map(l => {
             Reflect.deleteProperty(mailingList, 'mailAliases')
-            return l 
+            return l
         }),
         alias: removeDuplicates(aliases),
         user: [],
@@ -446,7 +449,7 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
 
 /**
  * Reads the mail traversal based on a source node.
- * 
+ *
  * @param {Object} options - The options object.
  * @param {MailListTypes} options.filter - The filter to apply.
  * @param {number} options.id - The ID of the source object to propertate.

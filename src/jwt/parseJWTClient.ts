@@ -1,11 +1,10 @@
 'use client'
 
+import { readJWTPayload } from './jwtReadUnsecure'
 import { JWT_ISSUER } from '@/auth/ConfigVars'
-import type { JWT } from './jwt'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaId } from '@/server/omegaid/Types'
-import { readJWTPayload } from './jwtReadUnsecure'
 
 /**
  * Parses a JSON Web Token (JWT) and verifies its signature using the provided public key.
@@ -13,10 +12,11 @@ import { readJWTPayload } from './jwtReadUnsecure'
  * @param token - The JWT to parse and verify.
  * @param publicKey - The public key used to verify the JWT signature.
  * @param timeOffset - The time offset in milliseconds to account for clock differences.
- * @returns A promise that resolves to an `ActionReturn` object containing the parsed JWT payload if the JWT is valid, or an error object if the JWT is invalid.
+ * @returns A promise that resolves to an `ActionReturn` object containing the parsed JWT payload if the JWT is valid,
+ * or an error object if the JWT is invalid.
  */
 export async function parseJWT(token: string, publicKey: string, timeOffset: number): Promise<ActionReturn<OmegaId>> {
-    // TODO: This only works in safari :///
+    // TODO: This only works in safari and firefox :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {
         return {
@@ -72,27 +72,27 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
 
     try {
         const payload = readJWTPayload(token)
-    
+
         if (!(
-            typeof(payload.usrnm) === 'string' &&
-            typeof(payload.gn) === 'string' &&
-            typeof(payload.sn) == 'string'
+            typeof (payload.usrnm) === 'string' &&
+            typeof (payload.gn) === 'string' &&
+            typeof (payload.sn) === 'string'
         )) {
             return invalidJWT('Invalid fields')
         }
-    
+
         if (new Date(payload.exp * 1000 + timeOffset) < new Date()) {
             return invalidJWT('QR koden er utløpt')
         }
-    
+
         if (payload.iss !== JWT_ISSUER) {
             return invalidJWT('Invalid issuer')
         }
-    
+
         if (payload.aud !== 'omegaid' satisfies OmegaJWTAudience) {
             return invalidJWT('Invalid audience')
         }
-    
+
         return {
             success: true,
             data: {

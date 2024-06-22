@@ -23,11 +23,11 @@ export const baseJWTValidation = new ValidationBase({
 
 export const jwtPayloadValidation = baseJWTValidation.createValidation({
     keys: [
-       'iss',
-       'aud',
-       'sub',
-       'iat',
-       'exp',
+        'iss',
+        'aud',
+        'sub',
+        'iat',
+        'exp',
     ],
     transformer: data => data,
 })

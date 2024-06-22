@@ -5,7 +5,6 @@ import { verifyUserEmailAction } from '@/actions/users/update'
 import { readUser } from '@/server/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { notFound, redirect } from 'next/navigation'
-import { signOut } from 'next-auth/react'
 
 export default async function Register({
     searchParams,
@@ -29,7 +28,7 @@ export default async function Register({
 
         if (user && verify.data.id !== user.id) {
             // TODO: Logout
-            console.log("Should logout")
+            console.log('Should logout')
         }
 
         console.log(verify)
@@ -37,7 +36,7 @@ export default async function Register({
         //TODO: Login the correct user
         // See https://github.com/nextauthjs/next-auth/discussions/5334
     }
-    
+
     if (!authorized || !user) {
         return notFound()
     }
