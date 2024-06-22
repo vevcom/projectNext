@@ -80,7 +80,7 @@ class MailHandler {
         await this.waitForSetup
 
         if (!this.testAccount) {
-            throw new Error('Test account ins not set after setup, this should never happen.')
+            throw new Error('Test account is not set after setup, this should never happen.')
         }
 
         return this.testAccount
@@ -129,4 +129,18 @@ class MailHandler {
     }
 }
 
-export const mailHandler = new MailHandler()
+function mailHandlerSingleton() {
+    return new MailHandler()
+}
+
+declare const globalThis: {
+    mailHandlerGlobal: ReturnType<typeof mailHandlerSingleton>;
+} & typeof global;
+
+export function init() {
+    globalThis.mailHandlerGlobal = mailHandlerSingleton()
+}
+
+export function getMailHandler() {
+    return globalThis.mailHandlerGlobal
+}

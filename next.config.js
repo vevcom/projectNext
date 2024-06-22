@@ -12,6 +12,9 @@ const nextConfig = {
       
       return config;
     },
+    experimental: {
+      instrumentationHook: true,
+    },
 }
 
 module.exports = nextConfig
