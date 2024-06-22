@@ -7,7 +7,7 @@ RUN npm ci
 
 # Generate prisma client
 RUN mkdir -p src/prisma
-COPY src/prisma/schema.prisma src/prisma/
+COPY src/prisma/schema src/prisma/schema
 RUN npx prisma generate
 
 # Copy remaining files except src

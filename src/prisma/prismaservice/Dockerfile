@@ -2,11 +2,11 @@
 FROM node:20-alpine AS base
 
 WORKDIR /usr/src/app
-COPY ./schema.prisma ./schema.prisma
-COPY ./schema.veven.prisma ./schema.veven.prisma
+COPY ./schema ./schema
+COPY ./vevenSchema ./vevenSchema
 
 # Remove the projectnext generator lines
-RUN sed -i '/generator projectnext {/,/}/d' ./schema.prisma
+RUN sed -i '/generator projectnext {/,/}/d' ./schema/schema.prisma
 
 WORKDIR /usr/src/app/prismaservice
 COPY /prismaservice/package*.json ./

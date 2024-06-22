@@ -6,29 +6,29 @@
   "scripts": {
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist && tsc-alias",
     "seed": "node dist/seed.js",
-    "dobbelOmega-pull": "npx prisma db pull --schema ../schema.veven.prisma",
-    "dobbelOmega-generate": "npx prisma generate --schema ../schema.veven.prisma"
+    "dobbelOmega-pull": "npx prisma db pull --schema ../vevenSchema/schema.veven.prisma",
+    "dobbelOmega-generate": "npx prisma generate --schema ../vevenSchema/schema.veven.prisma"
   },
   "author": "vevcom",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.15.0",
     "rehype-format": "^5.0.0",
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
-    "sharp": "^0.33.3",
+    "sharp": "^0.33.4",
     "unified": "^11.0.4",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "prisma": {
-    "schema": "../schema.prisma"
+    "schema": "../schema"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.14.2",
     "@types/uuid": "^9.0.8",
-    "prisma": "^5.12.1",
-    "tsc-alias": "^1.8.8",
+    "prisma": "^5.15.0",
+    "tsc-alias": "^1.8.10",
     "tscpaths": "^0.0.9",
     "typescript": "^5.4.5"
   }

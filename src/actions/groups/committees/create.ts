@@ -14,7 +14,6 @@ export async function createCommitteeAction(
     const { authorized, status } = await getUser({
         requiredPermissions: [['COMMITTEE_CREATE']],
         shouldRedirect: false,
-        userRequired: false,
     })
 
     if (!authorized) return createActionError(status)

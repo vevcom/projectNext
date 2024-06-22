@@ -1,100 +1,104 @@
-version: '3.8'
+
 
 services:
-  projectnext:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-      target: dev
-    ports:
-      - 3000:3000
-    volumes:
-      - devstore:/usr/src/app/store
-      - dotnext:/usr/src/app/.next
-      - ./src:/usr/src/app/src
-      - ./src/prisma/schema.prisma:/usr/src/app/src/prisma/schema.prisma
-      - ./package.json:/usr/src/app/package.json
-      - ./package-lock.json:/usr/src/app/package-lock.json
-      - ./logs:/usr/src/app/logs
-    environment:
-      NODE_ENV: development
-      DB_URI: ${DB_URI}
-      LOG_LEVEL: ${LOG_LEVEL}
-      LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
-      LOG_TO_FOLDER: ${LOG_TO_FOLDER}
-      LOG_MAX_FILES: ${LOG_MAX_FILES}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
-      FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
-      FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
-      MAIL_SERVER: ${MAIL_SERVER}
-      DOMAIN: ${DOMAIN}
-      OMEGAID_PRIVATE_KEY: ${OMEGAID_PRIVATE_KEY}
-      OMEGAID_PUBLIC_KEY: ${OMEGAID_PUBLIC_KEY}
-    depends_on:
-      db:
-        condition: service_healthy
-      prisma:
-        condition: service_completed_successfully
-    links:
-      - db
+    projectnext:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+            target: dev
+        ports:
+            - 3000:3000
+        volumes:
+            - devstore:/usr/src/app/store
+            - dotnext:/usr/src/app/.next
+            - ./src:/usr/src/app/src
+            - ./src/prisma/schema:/usr/src/app/src/prisma/schema
+            - ./package.json:/usr/src/app/package.json
+            - ./package-lock.json:/usr/src/app/package-lock.json
+            - ./logs:/usr/src/app/logs
+        environment:
+            NODE_ENV: development
+            DB_URI: ${DB_URI}
+            LOG_LEVEL: ${LOG_LEVEL}
+            LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
+            LOG_TO_FOLDER: ${LOG_TO_FOLDER}
+            LOG_MAX_FILES: ${LOG_MAX_FILES}
+            NEXTAUTH_URL: ${NEXTAUTH_URL}
+            NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+            NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
+            FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
+            FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
+            MAIL_SERVER: ${MAIL_SERVER}
+            DOMAIN: ${DOMAIN}
+            OMEGAID_PRIVATE_KEY: ${OMEGAID_PRIVATE_KEY}
+            OMEGAID_PUBLIC_KEY: ${OMEGAID_PUBLIC_KEY}
+        depends_on:
+            db:
+                condition: service_healthy
+            prisma:
+                condition: service_completed_successfully
+        links:
+            - db
 
-  db:
-    image: postgres:16.0-alpine
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - devdb:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"]
-      interval: 0.5s
-      timeout: 0.5s
-      retries: 60
+    db:
+        image: postgres:16.0-alpine
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - devdb:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"
+                ]
+            interval: 0.5s
+            timeout: 0.5s
+            retries: 60
 
-  prisma:
-    build:
-      context: ./src/prisma
-      dockerfile: ./prismaservice/Dockerfile
-      target: dev
-      args:
-        SHOULD_MIGRATE: ${VEVEN_DB_URI}
-    environment:
-      NODE_ENV: development
-      DB_URI: ${DB_URI}
-      MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
-      VEVEN_STORE_URL: ${VEVEN_STORE_URL}
-      VEVEN_DB_URI: ${VEVEN_DB_URI}
-      MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
-    volumes:
-      - ./src/prisma/schema.prisma:/usr/src/app/schema.prisma
-      - devstore:/usr/src/app/prismaservice/store
-    depends_on:
-      db:
-        condition: service_healthy
-    links:
-      - db
+    prisma:
+        build:
+            context: ./src/prisma
+            dockerfile: ./prismaservice/Dockerfile
+            target: dev
+            args:
+                SHOULD_MIGRATE: ${VEVEN_DB_URI}
+        environment:
+            NODE_ENV: development
+            DB_URI: ${DB_URI}
+            MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
+            VEVEN_STORE_URL: ${VEVEN_STORE_URL}
+            VEVEN_DB_URI: ${VEVEN_DB_URI}
+            MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
+        volumes:
+            - ./src/prisma/schema:/usr/src/app/schema
+            - devstore:/usr/src/app/prismaservice/store
+        depends_on:
+            db:
+                condition: service_healthy
+        links:
+            - db
 
-  nginx:
-    image: nginx:1.21.3-alpine
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - devstore:/usr/store
-    depends_on:
-      - projectnext
-    links:
-      - projectnext
+    nginx:
+        image: nginx:1.21.3-alpine
+        ports:
+            - 80:80
+        volumes:
+            - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+            - devstore:/usr/store
+        depends_on:
+            - projectnext
+        links:
+            - projectnext
 
 volumes:
-  devdb:
-    driver: local
-  devstore:
-    driver: local
-  dotnext:
-    driver: local
+    devdb:
+        driver: local
+    devstore:
+        driver: local
+    dotnext:
+        driver: local
