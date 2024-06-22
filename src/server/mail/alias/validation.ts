@@ -1,6 +1,7 @@
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
+import { validMailAdressDomains } from '../ConfigVars'
 
 
 export const baseMailAliasValidation = new ValidationBase({
@@ -11,7 +12,10 @@ export const baseMailAliasValidation = new ValidationBase({
     },
     details: {
         id: z.number().min(1),
-        address: z.string().email(),
+        address: z.string().email().refine(
+            address => validMailAdressDomains.includes(address.split('@')[1].trim()),
+            `The domain is not valid, valid domains are: ${validMailAdressDomains.join(', ')}`
+        ),
         description: z.string(),
     }
 })

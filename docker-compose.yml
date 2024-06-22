@@ -18,9 +18,13 @@ services:
             NEXTAUTH_URL: ${NEXTAUTH_URL}
             NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
             NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
+            FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
+            FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
+            MAIL_SERVER: ${MAIL_SERVER}
+            MAIL_DOMAIN: ${MAIL_DOMAIN}
             DOMAIN: ${DOMAIN}
             JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
-            JWT_PUBLIC_KEY: ${JWT}
+            JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
         depends_on:
             db:
                 condition: service_healthy
