@@ -5,7 +5,7 @@ import { readNotificationChannelsAction } from '@/actions/notifications/channel/
 import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
 import type { NotificationChannel } from '@/server/notifications/Types'
 import type { Subscription } from '@/server/notifications/subscription/Types'
-import type { NotificationBranch } from './Types'
+import type { NotificationBranch } from '../Types'
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')

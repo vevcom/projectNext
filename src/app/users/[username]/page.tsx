@@ -1,4 +1,4 @@
-import { NotificationSettings } from './notificationSettings/notificationsSettings'
+
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
@@ -47,8 +47,8 @@ export default async function User({ params }: PropTypes) {
                 {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
-
-            <NotificationSettings />
+            <br/>
+            {me && <Link href="./me/notifications">Varslinger</Link>} 
 
             <OmegaId />
 

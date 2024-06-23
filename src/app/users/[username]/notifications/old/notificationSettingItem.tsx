@@ -5,7 +5,7 @@ import styles from './notificationSettingItem.module.scss'
 import { allMethodsOff } from '@/server/notifications/Types'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { NotificationBranch } from './Types'
+import type { NotificationBranch } from '../Types'
 
 export function NotificationSettingItem({
     channel

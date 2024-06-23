@@ -3,7 +3,7 @@ import type { NotificationChannel as prismaNC, NotificationMethod as prismaNM } 
 export const notificationMethodTypes = ['availableMethods', 'defaultMethods'] as const
 export type NotificationMethodTypes = typeof notificationMethodTypes[number]
 
-export const notificationMethods = ['email', 'emailWeekly', 'push'] as const
+export const notificationMethods = ['email', 'emailWeekly', 'push'] as const satisfies (keyof NotificationMethod)[];
 export type NotificationMethods = typeof notificationMethods[number]
 
 export type NotificationMethod = Omit<prismaNM, 'id'>
