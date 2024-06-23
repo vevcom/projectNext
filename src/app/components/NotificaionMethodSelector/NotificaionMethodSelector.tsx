@@ -5,7 +5,7 @@ import Checkbox from '@/app/components/UI/Checkbox'
 
 import { v4 as uuid } from 'uuid'
 import React from 'react'
-import type { NotificationMethodTypes, NotificationMethod, NotificationMethods } from '@/server/notifications/Types'
+import type { NotificationMethodTypes, NotificationMethodGeneral, NotificationMethods } from '@/server/notifications/Types'
 import NotificationMethodCheckboxes from './NotificationMethodCheckboxes'
 
 export default function NotificationMethodSelector({
@@ -17,9 +17,9 @@ export default function NotificationMethodSelector({
 }: {
     title?: string,
     formPrefix?: NotificationMethodTypes,
-    methods: NotificationMethod
-    editable?: NotificationMethod,
-    onChange?: (method: NotificationMethod) => void
+    methods: NotificationMethodGeneral
+    editable?: NotificationMethodGeneral,
+    onChange?: (method: NotificationMethodGeneral) => void
 }) {
 
     const checkboxes = NotificationMethodCheckboxes({

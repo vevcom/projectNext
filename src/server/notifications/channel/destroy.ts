@@ -3,12 +3,12 @@ import { destroyNotificaionChannelValidation } from './validation'
 import { allMethodsOn } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 import type { DestroyNotificationChannelType } from './validation'
 
 
 export async function destroyNotificationChannel(data: DestroyNotificationChannelType['Detailed']):
-Promise<NotificationChannel> {
+Promise<ExpandedNotificationChannel> {
     const { id } = destroyNotificaionChannelValidation.detailedValidate(data)
 
     // NOTE: this should maybe be just a archive not a delete

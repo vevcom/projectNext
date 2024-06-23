@@ -1,6 +1,6 @@
 'use client'
 
-import { NotificationChannel, NotificationMethod, NotificationMethods, allMethodsOff } from "@/server/notifications/Types"
+import { ExpandedNotificationChannel, NotificationMethodGeneral, NotificationMethods, allMethodsOff } from "@/server/notifications/Types"
 import { NotificationBranch } from "./Types"
 import { MinimizedSubscription, Subscription } from "@/server/notifications/subscription/Types"
 import { useState } from "react"
@@ -16,13 +16,13 @@ import { useUser } from "@/auth/useUser"
 import { ErrorMessage } from "@/server/error"
 import { SUCCESS_FEEDBACK_TIME } from "@/components/Form/ConfigVars"
 
-function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
+function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
     if (!rootChannel) {
         throw Error('Ingen ROOT varslings kanal')
     }
 
-    function extendChannel(channel: NotificationChannel): NotificationBranch {
+    function extendChannel(channel: ExpandedNotificationChannel): NotificationBranch {
         return {
             ...channel,
             children: [],
@@ -63,7 +63,7 @@ function findBranchInTree(branch: NotificationBranch, branchId: number): Notific
     return null
 }
 
-function changeMethodsInBranch(branch: NotificationBranch, newMethods: NotificationMethod): NotificationBranch {
+function changeMethodsInBranch(branch: NotificationBranch, newMethods: NotificationMethodGeneral): NotificationBranch {
     if (!branch.subscription) {
         branch.subscription = {
             new: true,
@@ -131,7 +131,7 @@ export default function NotificationSettings({
     channels,
     subscriptions,
 }: {
-    channels: NotificationChannel[],
+    channels: ExpandedNotificationChannel[],
     subscriptions: Subscription[],
 }) {
 
@@ -152,7 +152,7 @@ export default function NotificationSettings({
     const { user } = useUser()
     
 
-    function handleChange(branchId: number, method: NotificationMethod) {
+    function handleChange(branchId: number, method: NotificationMethodGeneral) {
         const branch = findBranchInTree(channelTree, branchId)
         if (!branch) return
 

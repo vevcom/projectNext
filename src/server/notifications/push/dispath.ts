@@ -1,10 +1,10 @@
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 import type { UserFiltered } from '@/server/users/Types'
 import type { Notification } from '@prisma/client'
 
 
 export async function dispatchPushNotifications(
-    channel: NotificationChannel,
+    channel: ExpandedNotificationChannel,
     notificaion: Notification,
     users: UserFiltered[]
 ) {

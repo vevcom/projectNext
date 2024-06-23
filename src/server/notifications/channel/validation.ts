@@ -4,7 +4,7 @@ import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { ValidationTypes } from '@/server/Validation'
-import type { NotificationChannel, NotificationMethod, NotificationMethodTypes } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral, NotificationMethodTypes } from '@/server/notifications/Types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(notificationMethods.filter(m => notificationMethods.includes(m)).map(m => {
@@ -15,7 +15,7 @@ export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
         }
 
         return [m, value === 'on']
-    })) as NotificationMethod
+    })) as NotificationMethodGeneral
 }
 
 /**
@@ -24,7 +24,7 @@ export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
  * @param defaultMethods - The default notification methods.
  * @returns A boolean indicating whether the available methods are valid.
  */
-export function validateMethods(availableMethods: NotificationMethod, defaultMethods: NotificationMethod): boolean {
+export function validateMethods(availableMethods: NotificationMethodGeneral, defaultMethods: NotificationMethodGeneral): boolean {
     for (let i = 0; i < notificationMethods.length; i++) {
         const a = availableMethods[notificationMethods[i]]
         const d = defaultMethods[notificationMethods[i]]
@@ -35,11 +35,11 @@ export function validateMethods(availableMethods: NotificationMethod, defaultMet
     return true
 }
 
-export function validateNewParent(channelId: number, newParentId: number, channels: NotificationChannel[]): boolean {
+export function validateNewParent(channelId: number, newParentId: number, channels: ExpandedNotificationChannel[]): boolean {
     return findValidParents(channelId, channels).map(c => c.id).includes(newParentId)
 }
 
-export function findValidParents(channelId: number, channels: NotificationChannel[]): NotificationChannel[] {
+export function findValidParents(channelId: number, channels: ExpandedNotificationChannel[]): ExpandedNotificationChannel[] {
     const validParents = channels.filter(c => c.id !== channelId)
     // Remove chrildren of the current channel
     const channelIDS = new Set(validParents.map(c => c.id))

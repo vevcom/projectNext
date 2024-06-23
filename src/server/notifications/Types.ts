@@ -1,16 +1,16 @@
-import type { NotificationChannel as prismaNC, NotificationMethod as prismaNM } from '@prisma/client'
+import type { NotificationChannel, NotificationMethod } from '@prisma/client'
 
 export const notificationMethodTypes = ['availableMethods', 'defaultMethods'] as const
 export type NotificationMethodTypes = typeof notificationMethodTypes[number]
 
-export const notificationMethods = ['email', 'emailWeekly', 'push'] as const satisfies (keyof NotificationMethod)[];
+export const notificationMethods = ['email', 'emailWeekly', 'push'] as const satisfies (keyof NotificationMethodGeneral)[];
 export type NotificationMethods = typeof notificationMethods[number]
 
-export type NotificationMethod = Omit<prismaNM, 'id'>
+export type NotificationMethodGeneral = Omit<NotificationMethod, 'id'>
 
-export type NotificationChannel = prismaNC & {
-    availableMethods: NotificationMethod
-    defaultMethods: NotificationMethod
+export type ExpandedNotificationChannel = NotificationChannel & {
+    availableMethods: NotificationMethodGeneral
+    defaultMethods: NotificationMethodGeneral
 }
 
 export const allMethodsOn = {

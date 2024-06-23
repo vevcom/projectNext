@@ -3,7 +3,7 @@
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
-import { NotificationMethod, notificationMethods } from '../Types'
+import { NotificationMethodGeneral, notificationMethods } from '../Types'
 import { newAllMethodsOff } from '../notificationMethodOperations'
 import { MinimizedSubscription } from './Types'
 import { validateMethods as ValidateMethods } from '../channel/validation'
@@ -12,7 +12,7 @@ export const validateMethods = ValidateMethods
 
 export function parseMethods(raw: unknown):
 {success: false, error: z.ZodError } |
-{success: true, data: NotificationMethod }
+{success: true, data: NotificationMethodGeneral }
 {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
         return {
@@ -26,7 +26,7 @@ export function parseMethods(raw: unknown):
     }
 
     const objectRaw = raw as {[key: string]: boolean}
-    const ret: NotificationMethod = newAllMethodsOff()
+    const ret: NotificationMethodGeneral = newAllMethodsOff()
 
     for (let method of notificationMethods) {
         if (

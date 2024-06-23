@@ -5,12 +5,12 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { ServerError } from '@/server/error'
 import type { MinimizedSubscription, Subscription } from './Types'
-import type { NotificationMethod } from '@/server/notifications/Types'
+import type { NotificationMethodGeneral } from '@/server/notifications/Types'
 
 async function createTransactionPart(
     userId: number,
     channelId: number,
-    methods: NotificationMethod
+    methods: NotificationMethodGeneral
 ): Promise<(() => Promise<Subscription>) | null> {
     const whereFilter = {
         userId_channelId: {

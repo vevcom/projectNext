@@ -1,4 +1,4 @@
-import type { NotificationMethod, allMethodsOn } from '@/server/notifications/Types'
+import type { NotificationMethodGeneral, allMethodsOn } from '@/server/notifications/Types'
 import type { Prisma } from '@prisma/client'
 
 

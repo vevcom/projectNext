@@ -2,10 +2,10 @@ import 'server-only'
 import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 
 
-export async function readNotificationChannels(): Promise<NotificationChannel[]> {
+export async function readNotificationChannels(): Promise<ExpandedNotificationChannel[]> {
     return await prismaCall(() => prisma.notificationChannel.findMany({
         include: {
             defaultMethods: {
@@ -18,7 +18,7 @@ export async function readNotificationChannels(): Promise<NotificationChannel[]>
     }))
 }
 
-export async function readDefaultNotificationChannels(): Promise<NotificationChannel[]> {
+export async function readDefaultNotificationChannels(): Promise<ExpandedNotificationChannel[]> {
     return await prismaCall(() => prisma.notificationChannel.findMany({
         where: {
             defaultMethods: {

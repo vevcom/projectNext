@@ -8,18 +8,18 @@ import { createNotificationChannelAction } from '@/actions/notifications/channel
 import { booleanOperationOnMethods } from '@/server/notifications/notificationMethodOperations'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/server/notifications/Types'
 
 
 export default function AddNotificationChannel({
     channels
 }: {
-    channels: NotificationChannel[]
+    channels: ExpandedNotificationChannel[]
 }) {
     const { push } = useRouter()
 
-    const [availableMethods, setAvailableMethods] = useState(allMethodsOn as NotificationMethod)
-    const [defaultMethods, setDefaultMethods] = useState(allMethodsOff as NotificationMethod)
+    const [availableMethods, setAvailableMethods] = useState(allMethodsOn as NotificationMethodGeneral)
+    const [defaultMethods, setDefaultMethods] = useState(allMethodsOff as NotificationMethodGeneral)
     const [selectedParentId, setSelectedParentId] = useState(channels.find(c => c.special === 'ROOT')?.id)
     const [editableMethods, setEditableMethods] = useState(
         channels.find(c => c.id === selectedParentId)?.availableMethods ?? allMethodsOn

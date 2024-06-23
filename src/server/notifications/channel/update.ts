@@ -5,7 +5,7 @@ import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { NotificationChannel, NotificationMethod } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/server/notifications/Types'
 import type { UpdateNotificationChannelType } from './validation'
 
 
@@ -18,9 +18,9 @@ export async function updateNotificationChannel({
     defaultMethods,
     availableMethods,
 }: UpdateNotificationChannelType['Detailed'] & {
-    defaultMethods: NotificationMethod,
-    availableMethods: NotificationMethod,
-}): Promise<NotificationChannel> {
+    defaultMethods: NotificationMethodGeneral,
+    availableMethods: NotificationMethodGeneral,
+}): Promise<ExpandedNotificationChannel> {
     const parse = updateNotificaionChannelValidation.detailedValidate({
         id,
         name,
@@ -58,7 +58,7 @@ export async function updateNotificationChannel({
         updateParentId = true
     }
 
-    function methodsAreEqual(lhs: NotificationMethod, rhs: NotificationMethod) {
+    function methodsAreEqual(lhs: NotificationMethodGeneral, rhs: NotificationMethodGeneral) {
         for (let i = 0; i < notificationMethods.length; i++) {
             if (lhs[notificationMethods[i]] !== rhs[notificationMethods[i]]) {
                 return false

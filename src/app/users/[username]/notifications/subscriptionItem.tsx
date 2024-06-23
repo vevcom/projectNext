@@ -1,7 +1,7 @@
 
 
 import NotificationMethodCheckboxes from "@/components/NotificaionMethodSelector/NotificationMethodCheckboxes";
-import { NotificationChannel, NotificationMethod, allMethodsOff } from "@/server/notifications/Types";
+import { ExpandedNotificationChannel, NotificationMethodGeneral, allMethodsOff } from "@/server/notifications/Types";
 import styles from "./subscriptionItem.module.scss"
 import { v4 as uuid } from 'uuid'
 import { NotificationBranch } from "./Types";
@@ -14,13 +14,13 @@ export default function SubscriptionItem({
 }: {
     branch: NotificationBranch,
     depth?: number,
-    onChange?: (branchId: number, method: NotificationMethod) => void
+    onChange?: (branchId: number, method: NotificationMethodGeneral) => void
 }) {
 
     const checkboxes = NotificationMethodCheckboxes({
         methods: branch.subscription?.methods ?? allMethodsOff,
         editable: branch.availableMethods,
-        onChange: (method: NotificationMethod) => {
+        onChange: (method: NotificationMethodGeneral) => {
             if (!onChange) {
                 return
             }

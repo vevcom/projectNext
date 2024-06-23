@@ -9,7 +9,7 @@ import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { findValidParents } from '@/server/notifications/channel/validation'
 import { updateNotificationChannelAction } from '@/actions/notifications/channel/update'
 import { useState } from 'react'
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 import type { MailAlias } from '@prisma/client'
 
 export default function ChannelSettings({
@@ -17,8 +17,8 @@ export default function ChannelSettings({
     channels,
     mailAliases,
 }: {
-    currentChannel: NotificationChannel,
-    channels: NotificationChannel[],
+    currentChannel: ExpandedNotificationChannel,
+    channels: ExpandedNotificationChannel[],
     mailAliases: MailAlias[],
 }) {
     const [currentChannelState, setCurrentChannel] = useState(currentChannel)

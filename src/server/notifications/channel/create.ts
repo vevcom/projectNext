@@ -5,7 +5,7 @@ import { DEFAULT_NOTIFICATION_ALIAS } from '@/server/notifications/email/ConfigV
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import { allMethodsOff, allMethodsOn, type NotificationChannel, type NotificationMethod } from '@/server/notifications/Types'
+import { allMethodsOff, allMethodsOn, type ExpandedNotificationChannel, type NotificationMethodGeneral } from '@/server/notifications/Types'
 import type { CreateNotificationChannelType } from './validation'
 
 export async function createNotificationChannel({
@@ -15,9 +15,9 @@ export async function createNotificationChannel({
     availableMethods,
     defaultMethods,
 }: CreateNotificationChannelType['Detailed'] & {
-    availableMethods: NotificationMethod
-    defaultMethods: NotificationMethod
-}): Promise<NotificationChannel> {
+    availableMethods: NotificationMethodGeneral
+    defaultMethods: NotificationMethodGeneral
+}): Promise<ExpandedNotificationChannel> {
     const parse = createNotificaionChannelValidation.detailedValidate({
         name,
         description,

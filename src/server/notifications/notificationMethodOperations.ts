@@ -1,5 +1,5 @@
 import { allMethodsOff, allMethodsOn, notificationMethods } from './Types'
-import type { NotificationMethod } from './Types'
+import type { NotificationMethodGeneral } from './Types'
 
 export function newAllMethodsOff() {
     return {...allMethodsOff}
@@ -10,10 +10,10 @@ export function newAllMethodsOn() {
 }
 
 export function booleanOperationOnMethods(
-    lhs: NotificationMethod,
-    rhs: NotificationMethod,
+    lhs: NotificationMethodGeneral,
+    rhs: NotificationMethodGeneral,
     operation: 'AND' | 'OR' | 'XOR'
-): NotificationMethod {
+): NotificationMethodGeneral {
     const ret = Object.assign({}, lhs)
 
     for (const key of notificationMethods) {

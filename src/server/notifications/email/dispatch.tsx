@@ -6,13 +6,13 @@ import { repalceSpecialSymbols } from '@/server/notifications/dispatch'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { render } from '@react-email/render'
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 import type { Notification } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
 
 
 export async function dispatchEmailNotifications(
-    channel: NotificationChannel,
+    channel: ExpandedNotificationChannel,
     notificaion: Notification,
     users: UserFiltered[]
 ) {

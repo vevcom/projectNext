@@ -6,13 +6,13 @@ import TextInput from '@/app/components/UI/TextInput'
 import Textarea from '@/app/components/UI/Textarea'
 import { dispatchNotificationAction } from '@/actions/notifications/create'
 import { useState } from 'react'
-import type { NotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
 
 
 export default function NotificaionForm({
     channels,
 }: {
-    channels: NotificationChannel[]
+    channels: ExpandedNotificationChannel[]
 }) {
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
 

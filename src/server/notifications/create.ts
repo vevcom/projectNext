@@ -5,7 +5,7 @@ import { dispathMethod } from './dispatch'
 import { userFilterSelection } from '@/server/users/ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { NotificationChannel } from './Types'
+import type { ExpandedNotificationChannel } from './Types'
 import type { Notification, SpecialNotificationChannel } from '@prisma/client'
 import type { CreateNotificationType } from './validation'
 
@@ -102,7 +102,7 @@ export async function dispatchNotification(data: CreateNotificationType['Detaile
         dispathMethod[method]({
             ...results,
             subscriptions: undefined,
-        } as NotificationChannel, notification, userFiltered)
+        } as ExpandedNotificationChannel, notification, userFiltered)
     })
 
     return {
