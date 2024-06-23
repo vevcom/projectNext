@@ -39,6 +39,8 @@ enum SpecialCmsParagraph {
   FRONTPAGE_2
   FRONTPAGE_3
   FRONTPAGE_4
+
+  HELP_SUBSCRIPTIONS
 }
 
 model CmsParagraph {
