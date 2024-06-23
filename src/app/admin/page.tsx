@@ -21,17 +21,17 @@ export default function Admin() {
 
             <h3><FontAwesomeIcon icon={faChild} />Opptak</h3>
             <Link href="admin/phaestum">Phaestum</Link>
-            <Link href="admin/admissiontrials">Registrer opptak</Link>
+            <Link href="admin/admission">Registrer opptak</Link>
 
             <h3><FontAwesomeIcon icon={faKey} />Tillgangsstyring</h3>
             <Link href="admin/permission-roles">Tillgangsroller</Link>
             <Link href="admin/default-permissions">Standard tillganger</Link>
 
             <h3><FontAwesomeIcon icon={faPaperPlane} />Varslinger</h3>
-            <Link href="admin/sendnotification">Send varsel</Link>
-            <Link href="admin/notificationchannels">Varslingkanaler</Link>
+            <Link href="admin/send-notification">Send varsel</Link>
+            <Link href="admin/notification-channels">Varslingkanaler</Link>
             <Link href="admin/mail">Mailing lister</Link>
-            <Link href="admin/sendmail">Send e-post</Link>
+            <Link href="admin/send-mail">Send e-post</Link>
 
         </div>
     )
