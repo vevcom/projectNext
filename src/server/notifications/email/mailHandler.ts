@@ -137,10 +137,10 @@ declare const globalThis: {
     mailHandlerGlobal: ReturnType<typeof mailHandlerSingleton>;
 } & typeof global
 
-export function init() {
-    globalThis.mailHandlerGlobal = mailHandlerSingleton()
-}
-
 export function getMailHandler() {
+    if (!globalThis.mailHandlerGlobal) {
+        globalThis.mailHandlerGlobal = mailHandlerSingleton()
+    }
+
     return globalThis.mailHandlerGlobal
 }
