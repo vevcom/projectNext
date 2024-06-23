@@ -7,6 +7,10 @@ import { useState } from "react"
 import SubscriptionItem from "./subscriptionItem"
 import { v4 as uuid } from 'uuid'
 import { booleanOperationOnMethods, newAllMethodsOff } from "@/server/notifications/notificationMethodOperations"
+import { notificationMethodsDisplayMap } from "@/server/notifications/ConfigVars";
+import { notificationMethods } from "@/server/notifications/Types";
+import styles from "./notificationSettings.module.scss"
+import SubmitButton from "@/app/components/UI/SubmitButton"
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -118,6 +122,8 @@ export default function NotificationSettings({
         generateChannelTree(channels, subscriptions)
     )
 
+    const [ hasChanged, setHasChanged ] = useState(false)
+
     function handleChange(branchId: number, method: NotificationMethod) {
         const branch = findBranchInTree(channelTree, branchId)
         if (!branch) return
@@ -125,13 +131,32 @@ export default function NotificationSettings({
         changeMethodsInBranch(branch, method)
 
         setChannelTree(channelTree)
+        setHasChanged(true)
     }
 
-    return <tbody>
-        <SubscriptionItem
-            key={uuid()}
-            branch={channelTree}
-            onChange={handleChange}
-        />
-    </tbody>
+    return <>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kanal</th>
+                    {notificationMethods.map(method =>
+                        <th className={styles.notificationMethodsTH}>{notificationMethodsDisplayMap[method]}</th>
+                    )}
+                </tr>
+            </thead>
+            <tbody>
+                <SubscriptionItem
+                    key={uuid()}
+                    branch={channelTree}
+                    onChange={handleChange}
+                />
+            </tbody>
+        </table>
+
+        {hasChanged && <SubmitButton
+            color="primary"
+            success={true}
+            pending={false}
+        >Lagre</SubmitButton>}
+    </>
 }

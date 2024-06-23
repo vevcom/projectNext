@@ -2,10 +2,7 @@
 import { readNotificationChannelsAction } from "@/actions/notifications/channel/read";
 import { readSubscriptionsAction } from "@/actions/notifications/subscription/read";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
-import { notificationMethodsDisplayMap } from "@/server/notifications/ConfigVars";
-import { notificationMethods } from "@/server/notifications/Types";
 import NotificationSettings from "./notificaionSettings";
-import styles from "./page.module.scss"
 
 
 export default async function Notififcations() {
@@ -22,17 +19,6 @@ export default async function Notififcations() {
     return <PageWrapper
         title="Varslinger"
     >
-        <table>
-            <thead>
-                <tr>
-                    <th>Kanal</th>
-                    {notificationMethods.map(method =>
-                        <th className={styles.notificationMethodsTH}>{notificationMethodsDisplayMap[method]}</th>
-                    )}
-                </tr>
-            </thead>
-            <NotificationSettings channels={channels.data} subscriptions={subscriptions.data} />
-        </table>
-
+        <NotificationSettings channels={channels.data} subscriptions={subscriptions.data} />
     </PageWrapper>
 }
