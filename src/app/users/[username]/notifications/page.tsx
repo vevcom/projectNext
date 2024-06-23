@@ -7,6 +7,8 @@ import NotificationSettings from "./notificationSettings";
 
 export default async function Notififcations() {
 
+    // TODO: Make mobile friendly
+
     const [channels, subscriptions] = await Promise.all([
         readNotificationChannelsAction(),
         readSubscriptionsAction(),

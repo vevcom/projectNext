@@ -11,11 +11,15 @@ import { parseSubscriptionMatrix, updateSubscriptionValidation } from '@/server/
 
 export async function updateSubscriptionsAction(userId: number, subscriptions: MinimizedSubscription[]):
 Promise<ActionReturn<Subscription[]>> {
-    const { authorized, status, user } = await getUser({
+    const { authorized, status, user, permissions } = await getUser({
         requiredPermissions: [['NOTIFICATION_SUBSCRIPTION_UPDATE']],
         userRequired: true,
     })
     if (!authorized) return createActionError(status)
+    
+    if (userId !== user.id && !permissions.includes('NOTIFICATION_SUBSCRIPTION_UPDATE_OTHER')) {
+        return createActionError('UNAUTHORIZED')
+    }
 
     const parse = parseSubscriptionMatrix(subscriptions)
     if (!parse.success) return createZodActionError(parse)
