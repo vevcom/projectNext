@@ -211,8 +211,8 @@ export default function NotificationSettings({
     }
 
     return <>
-        <table cellSpacing="0">
-            <thead>
+        <table cellSpacing="0" className={styles.table}>
+            <thead className={styles.tableHead}>
                 <tr>
                     <th>Kanal</th>
                     {notificationMethods.map(method =>
@@ -220,7 +220,7 @@ export default function NotificationSettings({
                             key={uuid()}
                             className={styles.notificationMethodsTH}
                         >
-                            {notificationMethodsDisplayMap[method]}
+                            <span>{notificationMethodsDisplayMap[method]}</span>
                         </th>
                     )}
                 </tr>
