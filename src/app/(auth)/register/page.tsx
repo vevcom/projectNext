@@ -51,7 +51,7 @@ export default async function Register({
     }
 
     if (!updatedUser.data.emailVerified) {
-        redirect('/registeremail')
+        redirect('/register-email')
     }
 
     return <RegistrationForm />
