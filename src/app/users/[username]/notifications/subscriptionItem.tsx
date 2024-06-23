@@ -37,7 +37,8 @@ export default function SubscriptionItem({
                     '--depth': depth ?? 0,
                 } as React.CSSProperties}
             >
-                {branch.name}
+                <b>{branch.name}</b><br/>
+                {branch.description}
             </td>
 
             {checkboxes.map(c => <td

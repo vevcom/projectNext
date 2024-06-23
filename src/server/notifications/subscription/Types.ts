@@ -1,4 +1,4 @@
-import type { allMethodsOn } from '@/server/notifications/Types'
+import type { NotificationMethod, allMethodsOn } from '@/server/notifications/Types'
 import type { Prisma } from '@prisma/client'
 
 
@@ -9,3 +9,5 @@ export type Subscription = Prisma.NotificationSubscriptionGetPayload<{
         },
     }
 }>
+
+export type MinimizedSubscription = Pick<Subscription, 'channelId' | 'methods'>

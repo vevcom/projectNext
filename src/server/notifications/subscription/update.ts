@@ -1,30 +1,21 @@
 import 'server-only'
-import { updateSubscriptionValidation, validateMethods } from './validation'
+import { validateMethods } from './validation'
 import { allMethodsOff, allMethodsOn } from '@/server/notifications/Types'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { ServerError } from '@/server/error'
-import type { Subscription } from './Types'
+import type { MinimizedSubscription, Subscription } from './Types'
 import type { NotificationMethod } from '@/server/notifications/Types'
-import type { UpdateSubscriptionType } from './validation'
 
-
-export async function updateSubscription({
-    channelId,
-    userId,
-    methods,
-}: UpdateSubscriptionType['Detailed'] & {
-    methods: NotificationMethod,
-}): Promise<Subscription | null> {
-    const parse = updateSubscriptionValidation.detailedValidate({
-        channelId,
-        userId,
-    })
-
+async function createTransactionPart(
+    userId: number,
+    channelId: number,
+    methods: NotificationMethod
+): Promise<(() => Promise<Subscription>) | null> {
     const whereFilter = {
         userId_channelId: {
-            userId: parse.userId,
-            channelId: parse.channelId,
+            userId,
+            channelId,
         }
     }
 
@@ -38,11 +29,11 @@ export async function updateSubscription({
     if (validateMethods(allMethodsOff, methods)) {
         // No change, do nothing
         if (!subscriptionExists) {
-            return null
+            return null;
         }
 
         // Delete the realtion
-        return prismaCall(async () => prisma.$transaction(async () => {
+        return async () => {
             const sub = await prisma.notificationSubscription.delete({
                 where: whereFilter,
                 include: {
@@ -59,9 +50,8 @@ export async function updateSubscription({
             })
 
             return sub
-        }))
+        }
     }
-
 
     // Verify that the new methods are a subset of the available methods
     const notificaionChannel = await prismaCall(() => prisma.notificationChannel.findUniqueOrThrow({
@@ -81,32 +71,33 @@ export async function updateSubscription({
 
     // Update the relation
     if (subscriptionExists) {
-        const results = await prismaCall(() => prisma.notificationMethod.update({
-            where: {
-                id: subscription.methodsId,
-            },
-            data: methods,
-            select: allMethodsOn,
-        }))
-
-        return {
-            ...subscription,
-            methods: results,
+        return async () => {
+            const results = await prisma.notificationMethod.update({
+                where: {
+                    id: subscription.methodsId,
+                },
+                data: methods,
+                select: allMethodsOn,
+            })
+    
+            return {
+                ...subscription,
+                methods: results,
+            }
         }
     }
 
     // Create the relation
-
-    return await prismaCall(() => prisma.notificationSubscription.create({
+    return () => prisma.notificationSubscription.create({
         data: {
             channel: {
                 connect: {
-                    id: parse.channelId,
+                    id: channelId,
                 },
             },
             user: {
                 connect: {
-                    id: parse.userId,
+                    id: userId,
                 },
             },
             methods: {
@@ -118,5 +109,28 @@ export async function updateSubscription({
                 select: allMethodsOn,
             }
         }
-    }))
+    })
+}
+
+
+export async function updateSubscriptions(
+    userId: number,
+    subscriptions: MinimizedSubscription[]
+): Promise<Subscription[]> {
+
+    // Detalied validation of the subscriptions
+
+    // Prepare updates and validate the data with the data in the database
+    const transactionParts = (await Promise.all(
+        subscriptions.map(s => createTransactionPart(userId, s.channelId, s.methods))
+    )).filter(i => i) as (() => Promise<Subscription>)[]
+
+    // Update the subscriptions
+    return await prismaCall(() =>
+        prisma.$transaction(async () => {
+            return Promise.all(
+                transactionParts.map(part => part())
+            )
+        })
+    )
 }

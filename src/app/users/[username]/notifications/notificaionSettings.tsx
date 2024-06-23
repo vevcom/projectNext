@@ -2,7 +2,7 @@
 
 import { NotificationChannel, NotificationMethod, NotificationMethods, allMethodsOff } from "@/server/notifications/Types"
 import { NotificationBranch } from "./Types"
-import { Subscription } from "@/server/notifications/subscription/Types"
+import { MinimizedSubscription, Subscription } from "@/server/notifications/subscription/Types"
 import { useState } from "react"
 import SubscriptionItem from "./subscriptionItem"
 import { v4 as uuid } from 'uuid'
@@ -11,6 +11,9 @@ import { notificationMethodsDisplayMap } from "@/server/notifications/ConfigVars
 import { notificationMethods } from "@/server/notifications/Types";
 import styles from "./notificationSettings.module.scss"
 import SubmitButton from "@/app/components/UI/SubmitButton"
+import { updateSubscriptionsAction } from "@/actions/notifications/subscription/update"
+import { useUser } from "@/auth/useUser"
+import { ErrorMessage } from "@/server/error"
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -78,12 +81,6 @@ function changeMethodsInBranch(branch: NotificationBranch, newMethods: Notificat
         .filter(([key, value]) => value)
         .map(([key, value]) => key) as NotificationMethods[]
 
-    console.log(branch.name)
-    console.log(branch.subscription.methods)
-    console.log(newMethods)
-
-    console.log(changedMethodArr)
-
     function recursiveChange(subBranch: NotificationBranch) {
         for (let method of changedMethodArr) {
             if (!subBranch.availableMethods[method]) {
@@ -110,6 +107,25 @@ function changeMethodsInBranch(branch: NotificationBranch, newMethods: Notificat
     return branch
 }
 
+function prepareDataForDelivery(tree: NotificationBranch) {
+    const ret: MinimizedSubscription[] = []
+
+    function traverseBranch(branch: NotificationBranch) {
+        if (branch.subscription) {
+            ret.push({
+                channelId: branch.id,
+                methods: branch.subscription.methods
+            })
+        }
+
+        branch.children.forEach(traverseBranch)
+    }
+
+    traverseBranch(tree)
+
+    return ret;
+}
+
 export default function NotificationSettings({
     channels,
     subscriptions,
@@ -123,6 +139,17 @@ export default function NotificationSettings({
     )
 
     const [ hasChanged, setHasChanged ] = useState(false)
+    const [ formState, setFormState ] = useState<{
+        pending: boolean,
+        success: boolean,
+        errors?: ErrorMessage[]
+    }>({
+        pending: false,
+        success: false,
+    })
+    
+    const { user } = useUser()
+    
 
     function handleChange(branchId: number, method: NotificationMethod) {
         const branch = findBranchInTree(channelTree, branchId)
@@ -132,6 +159,37 @@ export default function NotificationSettings({
 
         setChannelTree(channelTree)
         setHasChanged(true)
+    }
+
+    async function handleSubmit() {
+        if (!user) {
+            setFormState({
+                success: false,
+                pending: false,
+            })
+            return
+        }
+
+        setFormState({
+            success: false,
+            pending: true
+        })
+        const data = prepareDataForDelivery(channelTree)
+        const results = await updateSubscriptionsAction(user.id, data)
+
+        if (results.success) {
+            setFormState({
+                success: true,
+                pending: false,
+            })
+            return
+        }
+
+        setFormState({
+            success: false,
+            pending: false,
+            errors: results.error
+        })
     }
 
     return <>
@@ -155,8 +213,10 @@ export default function NotificationSettings({
 
         {hasChanged && <SubmitButton
             color="primary"
-            success={true}
-            pending={false}
+            success={formState.success}
+            pending={formState.pending}
+            generalErrors={formState.errors}
+            onClick={handleSubmit}
         >Lagre</SubmitButton>}
     </>
 }

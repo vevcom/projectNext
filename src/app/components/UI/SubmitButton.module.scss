@@ -1,5 +1,16 @@
 @use '@/styles/ohma';
 
+.error {
+    color: ohma.$colors-red;
+    display: flex;
+    flex-direction: column; 
+    min-height: 1.15em;
+    &.pending {
+        visibility: hidden;
+    }
+    margin-bottom: 3px;
+}
+
 .submitButton {
     width: 150px;
     margin: 0;
