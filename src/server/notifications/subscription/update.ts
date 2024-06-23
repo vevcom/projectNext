@@ -118,8 +118,6 @@ export async function updateSubscriptions(
     subscriptions: MinimizedSubscription[]
 ): Promise<Subscription[]> {
 
-    // Detalied validation of the subscriptions
-
     // Prepare updates and validate the data with the data in the database
     const transactionParts = (await Promise.all(
         subscriptions.map(s => createTransactionPart(userId, s.channelId, s.methods))
