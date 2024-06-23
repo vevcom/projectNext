@@ -11,15 +11,17 @@ export function readJWTPayload<T = Record<string, unknown>>(jwtString: string): 
 
     if (!(
         payload &&
-        typeof (payload) === 'object' &&
-        typeof (payload.iss) === 'string' &&
-        typeof (payload.aud) === 'string' &&
-        typeof (payload.sub) === 'number' &&
-        typeof (payload.iat) === 'number' &&
-        typeof (payload.exp) === 'number'
+        typeof payload === 'object' &&
+        typeof payload.iss === 'string' &&
+        typeof payload.aud === 'string' &&
+        (typeof payload.sub === 'number' || typeof payload.sub === 'string') &&
+        typeof payload.iat === 'number' &&
+        typeof payload.exp === 'number'
     )) {
         throw new Error('Invalid JWT string')
     }
+
+    console.log(payload)
 
     return payload
 }

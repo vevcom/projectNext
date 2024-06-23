@@ -8,14 +8,14 @@ export const baseJWTValidation = new ValidationBase({
     type: {
         iss: z.string(),
         aud: z.string(),
-        sub: z.number(),
+        sub: z.string().or(z.number()),
         iat: z.number(),
         exp: z.number(),
     },
     details: {
         iss: z.string(),
         aud: z.string(),
-        sub: z.number(),
+        sub: z.string().or(z.number()),
         iat: z.number(),
         exp: z.number(),
     }
