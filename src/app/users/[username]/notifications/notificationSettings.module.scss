@@ -3,3 +3,11 @@
 .notificationMethodsTH {
     min-width: 8rem;
 }
+
+.submitButton {
+    transition: opacity 200ms ease;
+
+    .hideSubmitButton {
+        opacity: 0;
+    }
+}

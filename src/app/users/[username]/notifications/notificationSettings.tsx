@@ -14,6 +14,7 @@ import SubmitButton from "@/app/components/UI/SubmitButton"
 import { updateSubscriptionsAction } from "@/actions/notifications/subscription/update"
 import { useUser } from "@/auth/useUser"
 import { ErrorMessage } from "@/server/error"
+import { SUCCESS_FEEDBACK_TIME } from "@/components/Form/ConfigVars"
 
 function generateChannelTree(channels: NotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -182,6 +183,20 @@ export default function NotificationSettings({
                 success: true,
                 pending: false,
             })
+
+            setTimeout(
+                () => setHasChanged(false),
+                SUCCESS_FEEDBACK_TIME
+            )
+
+            setTimeout(
+                () => setFormState({
+                    pending: false,
+                    success: false,
+                }),
+                SUCCESS_FEEDBACK_TIME + 200
+            )
+
             return
         }
 
@@ -193,7 +208,7 @@ export default function NotificationSettings({
     }
 
     return <>
-        <table>
+        <table cellSpacing="0">
             <thead>
                 <tr>
                     <th>Kanal</th>
@@ -211,12 +226,14 @@ export default function NotificationSettings({
             </tbody>
         </table>
 
-        {hasChanged && <SubmitButton
-            color="primary"
-            success={formState.success}
-            pending={formState.pending}
-            generalErrors={formState.errors}
-            onClick={handleSubmit}
-        >Lagre</SubmitButton>}
+        <div className={`${styles.submitButton} ${hasChanged ? '' : styles.hideSubmitButton}`}>
+            <SubmitButton
+                color="primary"
+                success={formState.success}
+                pending={formState.pending}
+                generalErrors={formState.errors}
+                onClick={handleSubmit}
+            >Lagre</SubmitButton>
+        </div>
     </>
 }

@@ -10,7 +10,7 @@ import type { MinimizedSubscription, Subscription } from '@/server/notifications
 
 
 export async function updateSubscriptionsAction(userId: number, subscriptions: MinimizedSubscription[]):
-Promise<ActionReturn<Subscription | null>> {
+Promise<ActionReturn<Subscription[]>> {
     const { authorized, status, user } = await getUser({
         requiredPermissions: [['NOTIFICATION_SUBSCRIPTION_UPDATE']],
         userRequired: true,

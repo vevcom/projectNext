@@ -7,6 +7,7 @@ import { useFormStatus } from 'react-dom'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
 import type { ErrorMessage } from '@/server/error'
+import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
@@ -89,7 +90,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             successCallback?.(res.data)
             return setTimeout(() => {
                 setSuccess(false)
-            }, 3000)
+            }, SUCCESS_FEEDBACK_TIME)
         }
         //No error provided
         if (!res.error) {

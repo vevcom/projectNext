@@ -2,7 +2,7 @@
 import { readNotificationChannelsAction } from "@/actions/notifications/channel/read";
 import { readSubscriptionsAction } from "@/actions/notifications/subscription/read";
 import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
-import NotificationSettings from "./notificaionSettings";
+import NotificationSettings from "./notificationSettings";
 
 
 export default async function Notififcations() {
