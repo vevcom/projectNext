@@ -27,11 +27,15 @@
         }
     }
     
-    .submitButton {
-        transition: opacity 200ms ease;
-    
-        .hideSubmitButton {
-            opacity: 0;
-        }
+}
+
+.submitButton {
+    transition: opacity 200ms ease;
+
+    max-width: 15rem;
+    margin: auto;
+
+    &.hideSubmitButton {
+        opacity: 0;
     }
 }
