@@ -1,7 +1,7 @@
 'use server'
 
 import AddNotificationChannel from './addNotificationChannel'
-import AddHeaderItemPopUp from '@/app/components/AddHeaderItem/AddHeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 import { ServerError } from '@/server/error'
