@@ -3,7 +3,7 @@ import type { NotificationChannel, NotificationMethod } from '@prisma/client'
 export const notificationMethodTypes = ['availableMethods', 'defaultMethods'] as const
 export type NotificationMethodTypes = typeof notificationMethodTypes[number]
 
-export const notificationMethods = ['email', 'emailWeekly', 'push'] as const satisfies (keyof NotificationMethodGeneral)[];
+export const notificationMethods = ['email', 'emailWeekly', 'push'] as const satisfies (keyof NotificationMethodGeneral)[]
 export type NotificationMethods = typeof notificationMethods[number]
 
 export type NotificationMethodGeneral = Omit<NotificationMethod, 'id'>

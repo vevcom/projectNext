@@ -2,11 +2,11 @@ import { allMethodsOff, allMethodsOn, notificationMethods } from './Types'
 import type { NotificationMethodGeneral } from './Types'
 
 export function newAllMethodsOff() {
-    return {...allMethodsOff}
+    return { ...allMethodsOff }
 }
 
 export function newAllMethodsOn() {
-    return {...allMethodsOn}
+    return { ...allMethodsOn }
 }
 
 export function booleanOperationOnMethods(

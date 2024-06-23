@@ -4,7 +4,11 @@ import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { ValidationTypes } from '@/server/Validation'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral, NotificationMethodTypes } from '@/server/notifications/Types'
+import type {
+    ExpandedNotificationChannel,
+    NotificationMethodGeneral,
+    NotificationMethodTypes
+} from '@/server/notifications/Types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(notificationMethods.filter(m => notificationMethods.includes(m)).map(m => {
@@ -24,7 +28,10 @@ export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
  * @param defaultMethods - The default notification methods.
  * @returns A boolean indicating whether the available methods are valid.
  */
-export function validateMethods(availableMethods: NotificationMethodGeneral, defaultMethods: NotificationMethodGeneral): boolean {
+export function validateMethods(
+    availableMethods: NotificationMethodGeneral,
+    defaultMethods: NotificationMethodGeneral
+): boolean {
     for (let i = 0; i < notificationMethods.length; i++) {
         const a = availableMethods[notificationMethods[i]]
         const d = defaultMethods[notificationMethods[i]]

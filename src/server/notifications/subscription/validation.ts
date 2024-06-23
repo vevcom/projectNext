@@ -1,19 +1,18 @@
 
 
+import { notificationMethods, type NotificationMethodGeneral } from '@/server/notifications/Types'
+import { newAllMethodsOff } from '@/server/notifications/notificationMethodOperations'
+import { validateMethods as ValidateMethods } from '@/server/notifications/channel/validation'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/server/Validation'
-import { NotificationMethodGeneral, notificationMethods } from '../Types'
-import { newAllMethodsOff } from '../notificationMethodOperations'
-import { MinimizedSubscription } from './Types'
-import { validateMethods as ValidateMethods } from '../channel/validation'
+import type { MinimizedSubscription } from './Types'
 
 export const validateMethods = ValidateMethods
 
 export function parseMethods(raw: unknown):
 {success: false, error: z.ZodError } |
-{success: true, data: NotificationMethodGeneral }
-{
+{success: true, data: NotificationMethodGeneral } {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
         return {
             success: false,
@@ -28,7 +27,7 @@ export function parseMethods(raw: unknown):
     const objectRaw = raw as {[key: string]: boolean}
     const ret: NotificationMethodGeneral = newAllMethodsOff()
 
-    for (let method of notificationMethods) {
+    for (const method of notificationMethods) {
         if (
             !objectRaw.hasOwnProperty(method) ||
             !(typeof objectRaw[method] === 'boolean')
@@ -54,8 +53,7 @@ export function parseMethods(raw: unknown):
 
 export function parseSubscriptionMatrix(raw: unknown):
 {success: false, error: z.ZodError } |
-{success: true, data: MinimizedSubscription[] }
-{
+{success: true, data: MinimizedSubscription[] } {
     if (!Array.isArray(raw)) {
         return {
             success: false,
@@ -69,8 +67,7 @@ export function parseSubscriptionMatrix(raw: unknown):
 
     function validateRow(row: unknown):
     {success: false, error: z.ZodError } |
-    {success: true, data: MinimizedSubscription }
-    {
+    {success: true, data: MinimizedSubscription } {
         if (!row || typeof row !== 'object' || Array.isArray(row)) {
             return {
                 success: false,
@@ -85,7 +82,7 @@ export function parseSubscriptionMatrix(raw: unknown):
         const objectRow = row as {[key: string]: boolean}
 
         if (!objectRow.hasOwnProperty('channelId') ||
-            typeof objectRow['channelId'] !== 'number'
+            typeof objectRow.channelId !== 'number'
         ) {
             return {
                 success: false,
@@ -117,8 +114,8 @@ export function parseSubscriptionMatrix(raw: unknown):
     const errors = new z.ZodError([])
 
     const ret: MinimizedSubscription[] = []
-    
-    for (let row of parsed) {
+
+    for (const row of parsed) {
         if (row.success) {
             ret.push(row.data)
         } else {
@@ -137,7 +134,7 @@ export function parseSubscriptionMatrix(raw: unknown):
         success: true,
         data: ret,
     }
-} 
+}
 
 export const baseSubscriptionValidation = new ValidationBase({
     type: {

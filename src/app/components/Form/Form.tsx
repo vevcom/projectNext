@@ -1,13 +1,13 @@
 'use client'
 import styles from './Form.module.scss'
+import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
 import SubmitButton from '@/components/UI/SubmitButton'
-import type {Colors, Confirmation} from '@/components/UI/SubmitButton'
 import { Children, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
 import type { ErrorMessage } from '@/server/error'
-import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {

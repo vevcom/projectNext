@@ -1,10 +1,12 @@
 
 
-import NotificationMethodCheckboxes from "@/components/NotificaionMethodSelector/NotificationMethodCheckboxes";
-import { ExpandedNotificationChannel, NotificationMethodGeneral, allMethodsOff } from "@/server/notifications/Types";
-import styles from "./subscriptionItem.module.scss"
+import styles from './subscriptionItem.module.scss'
+import NotificationMethodCheckboxes from '@/components/NotificaionMethodSelector/NotificationMethodCheckboxes'
+import { allMethodsOff } from '@/server/notifications/Types'
 import { v4 as uuid } from 'uuid'
-import { NotificationBranch } from "./Types";
+import type { NotificationMethodGeneral } from '@/server/notifications/Types'
+import type { NotificationBranch } from './Types'
+import React from 'react'
 
 
 export default function SubscriptionItem({
@@ -16,7 +18,6 @@ export default function SubscriptionItem({
     depth?: number,
     onChange?: (branchId: number, method: NotificationMethodGeneral) => void
 }) {
-
     const checkboxes = NotificationMethodCheckboxes({
         methods: branch.subscription?.methods ?? allMethodsOff,
         editable: branch.availableMethods,
@@ -42,14 +43,14 @@ export default function SubscriptionItem({
             </td>
 
             {checkboxes.map(c => <td
-                    key={uuid()}
-                    className={styles.checkbox}
-                >
-                    <div>{c}</div>
-                </td>
+                key={uuid()}
+                className={styles.checkbox}
+            >
+                <div>{c}</div>
+            </td>
             )}
         </tr>
-        
+
         {branch.children.map(b => <SubscriptionItem
             key={uuid()}
             branch={b}

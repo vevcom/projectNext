@@ -1,11 +1,12 @@
-import { ErrorMessage } from "@/server/error"
-import { ReactNode, useState } from "react"
-import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
+import styles from './SubmitButton.module.scss'
+import Button from '@/components/UI/Button'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
-import styles from './SubmitButton.module.scss'
-import Button from "@/components/UI/Button"
-import { useFormStatus } from "react-dom"
+import { useFormStatus } from 'react-dom'
+import type { ErrorMessage } from '@/server/error'
+import type { ReactNode } from 'react'
+import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 
 export type Colors = ButtonPropTypes['color']
 export type Confirmation = {
@@ -32,7 +33,6 @@ export default function SubmitButton({
     pending?: boolean,
     onClick?: React.MouseEventHandler<HTMLButtonElement>,
 }) {
-
     const formStatus = useFormStatus()
     if (pending === undefined) {
         pending = formStatus.pending

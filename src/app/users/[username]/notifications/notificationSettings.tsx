@@ -1,20 +1,24 @@
 'use client'
 
-import { ExpandedNotificationChannel, NotificationMethodGeneral, NotificationMethods, allMethodsOff } from "@/server/notifications/Types"
-import { NotificationBranch } from "./Types"
-import { MinimizedSubscription, Subscription } from "@/server/notifications/subscription/Types"
-import { useState } from "react"
-import SubscriptionItem from "./subscriptionItem"
+import SubscriptionItem from './subscriptionItem'
+import styles from './notificationSettings.module.scss'
+import { booleanOperationOnMethods, newAllMethodsOff } from '@/server/notifications/notificationMethodOperations'
+import { notificationMethodsDisplayMap } from '@/server/notifications/ConfigVars'
+import { allMethodsOff, notificationMethods } from '@/server/notifications/Types'
+import SubmitButton from '@/app/components/UI/SubmitButton'
+import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
+import { useUser } from '@/auth/useUser'
+import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { v4 as uuid } from 'uuid'
-import { booleanOperationOnMethods, newAllMethodsOff } from "@/server/notifications/notificationMethodOperations"
-import { notificationMethodsDisplayMap } from "@/server/notifications/ConfigVars";
-import { notificationMethods } from "@/server/notifications/Types";
-import styles from "./notificationSettings.module.scss"
-import SubmitButton from "@/app/components/UI/SubmitButton"
-import { updateSubscriptionsAction } from "@/actions/notifications/subscription/update"
-import { useUser } from "@/auth/useUser"
-import { ErrorMessage } from "@/server/error"
-import { SUCCESS_FEEDBACK_TIME } from "@/components/Form/ConfigVars"
+import { useState } from 'react'
+import type { MinimizedSubscription, Subscription } from '@/server/notifications/subscription/Types'
+import type { NotificationBranch } from './Types'
+import type { ErrorMessage } from '@/server/error'
+import type {
+    ExpandedNotificationChannel,
+    NotificationMethodGeneral,
+    NotificationMethods
+} from '@/server/notifications/Types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -79,11 +83,11 @@ function changeMethodsInBranch(branch: NotificationBranch, newMethods: Notificat
 
     const changedMethodArr = Object
         .entries(changedMethod)
-        .filter(([key, value]) => value)
-        .map(([key, value]) => key) as NotificationMethods[]
+        .filter(keyValue => keyValue[1])
+        .map(keyValue => keyValue[0]) as NotificationMethods[]
 
     function recursiveChange(subBranch: NotificationBranch) {
-        for (let method of changedMethodArr) {
+        for (const method of changedMethodArr) {
             if (!subBranch.availableMethods[method]) {
                 continue
             }
@@ -124,7 +128,7 @@ function prepareDataForDelivery(tree: NotificationBranch) {
 
     traverseBranch(tree)
 
-    return ret;
+    return ret
 }
 
 export default function NotificationSettings({
@@ -134,13 +138,12 @@ export default function NotificationSettings({
     channels: ExpandedNotificationChannel[],
     subscriptions: Subscription[],
 }) {
-
-    const [ channelTree, setChannelTree ] = useState(
+    const [channelTree, setChannelTree] = useState(
         generateChannelTree(channels, subscriptions)
     )
 
-    const [ hasChanged, setHasChanged ] = useState(false)
-    const [ formState, setFormState ] = useState<{
+    const [hasChanged, setHasChanged] = useState(false)
+    const [formState, setFormState] = useState<{
         pending: boolean,
         success: boolean,
         errors?: ErrorMessage[]
@@ -148,9 +151,9 @@ export default function NotificationSettings({
         pending: false,
         success: false,
     })
-    
+
     const { user } = useUser()
-    
+
 
     function handleChange(branchId: number, method: NotificationMethodGeneral) {
         const branch = findBranchInTree(channelTree, branchId)
@@ -213,7 +216,12 @@ export default function NotificationSettings({
                 <tr>
                     <th>Kanal</th>
                     {notificationMethods.map(method =>
-                        <th className={styles.notificationMethodsTH}>{notificationMethodsDisplayMap[method]}</th>
+                        <th
+                            key={uuid()}
+                            className={styles.notificationMethodsTH}
+                        >
+                            {notificationMethodsDisplayMap[method]}
+                        </th>
                     )}
                 </tr>
             </thead>

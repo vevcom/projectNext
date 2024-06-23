@@ -48,7 +48,7 @@ export default async function User({ params }: PropTypes) {
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
             <br/>
-            {me && <Link href="./me/notifications">Varslinger</Link>} 
+            {me && <Link href="./me/notifications">Varslinger</Link>}
 
             <OmegaId />
 

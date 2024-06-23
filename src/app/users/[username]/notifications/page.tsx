@@ -1,12 +1,11 @@
 'use server'
-import { readNotificationChannelsAction } from "@/actions/notifications/channel/read";
-import { readSubscriptionsAction } from "@/actions/notifications/subscription/read";
-import PageWrapper from "@/app/components/PageWrapper/PageWrapper";
-import NotificationSettings from "./notificationSettings";
+import NotificationSettings from './notificationSettings'
+import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 
 
 export default async function Notififcations() {
-
     // TODO: Make mobile friendly
 
     const [channels, subscriptions] = await Promise.all([
@@ -15,7 +14,7 @@ export default async function Notififcations() {
     ])
 
     if (!channels.success || !subscriptions.success) {
-        throw new Error("Failed to load channels or subscriptions")
+        throw new Error('Failed to load channels or subscriptions')
     }
 
     return <PageWrapper

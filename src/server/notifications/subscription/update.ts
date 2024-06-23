@@ -29,7 +29,7 @@ async function createTransactionPart(
     if (validateMethods(allMethodsOff, methods)) {
         // No change, do nothing
         if (!subscriptionExists) {
-            return null;
+            return null
         }
 
         // Delete the realtion
@@ -79,7 +79,7 @@ async function createTransactionPart(
                 data: methods,
                 select: allMethodsOn,
             })
-    
+
             return {
                 ...subscription,
                 methods: results,
@@ -117,7 +117,6 @@ export async function updateSubscriptions(
     userId: number,
     subscriptions: MinimizedSubscription[]
 ): Promise<Subscription[]> {
-
     // Prepare updates and validate the data with the data in the database
     const transactionParts = (await Promise.all(
         subscriptions.map(s => createTransactionPart(userId, s.channelId, s.methods))
@@ -125,10 +124,8 @@ export async function updateSubscriptions(
 
     // Update the subscriptions
     return await prismaCall(() =>
-        prisma.$transaction(async () => {
-            return Promise.all(
-                transactionParts.map(part => part())
-            )
-        })
+        prisma.$transaction(async () => Promise.all(
+            transactionParts.map(part => part())
+        ))
     )
 }

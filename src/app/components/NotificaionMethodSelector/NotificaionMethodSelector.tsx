@@ -1,12 +1,9 @@
 'use client'
 
 import styles from './NotificaionMethodSelector.module.scss'
-import Checkbox from '@/app/components/UI/Checkbox'
-
-import { v4 as uuid } from 'uuid'
-import React from 'react'
-import type { NotificationMethodTypes, NotificationMethodGeneral, NotificationMethods } from '@/server/notifications/Types'
 import NotificationMethodCheckboxes from './NotificationMethodCheckboxes'
+import React from 'react'
+import type { NotificationMethodTypes, NotificationMethodGeneral } from '@/server/notifications/Types'
 
 export default function NotificationMethodSelector({
     title,
@@ -21,7 +18,6 @@ export default function NotificationMethodSelector({
     editable?: NotificationMethodGeneral,
     onChange?: (method: NotificationMethodGeneral) => void
 }) {
-
     const checkboxes = NotificationMethodCheckboxes({
         formPrefix,
         label: true,
