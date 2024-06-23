@@ -28,10 +28,7 @@ export function parseMethods(raw: unknown):
     const ret: NotificationMethodGeneral = newAllMethodsOff()
 
     for (const method of notificationMethods) {
-        if (
-            !objectRaw.hasOwnProperty(method) ||
-            !(typeof objectRaw[method] === 'boolean')
-        ) {
+        if (typeof objectRaw[method] !== 'boolean') {
             return {
                 success: false,
                 error: new z.ZodError([{
@@ -81,9 +78,7 @@ export function parseSubscriptionMatrix(raw: unknown):
 
         const objectRow = row as {[key: string]: boolean}
 
-        if (!objectRow.hasOwnProperty('channelId') ||
-            typeof objectRow.channelId !== 'number'
-        ) {
+        if (typeof objectRow.channelId !== 'number') {
             return {
                 success: false,
                 error: new z.ZodError([{
