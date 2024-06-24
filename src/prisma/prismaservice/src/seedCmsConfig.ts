@@ -160,10 +160,6 @@ export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
         name: 'frontpage_4_paragraph',
         file: 'frontpage/frontpage_4.md'
     },
-    HELP_SUBSCRIPTIONS: {
-        name: 'help_subscriptions',
-        file: 'help/help_subscriptions.md'
-    }
 }
 
 
