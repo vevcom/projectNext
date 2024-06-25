@@ -142,7 +142,8 @@ export default function NotificationSettings({
         generateChannelTree(channels, subscriptions)
     )
 
-    const [hasChanged, setHasChanged] = useState(false)
+    const [hasChanged, setHasChanged] = useState<number>(new Date().getTime() - 1)
+    const [lastSubmit, setLastSubmit] = useState<number>(new Date().getTime())
     const [formState, setFormState] = useState<{
         pending: boolean,
         success: boolean,
@@ -162,7 +163,7 @@ export default function NotificationSettings({
         changeMethodsInBranch(branch, method)
 
         setChannelTree(channelTree)
-        setHasChanged(true)
+        setHasChanged(new Date().getTime())
     }
 
     async function handleSubmit() {
@@ -173,6 +174,9 @@ export default function NotificationSettings({
             })
             return
         }
+
+        const submitTimestamp = (new Date().getTime())
+        console.log("last:", lastSubmit)
 
         setFormState({
             success: false,
@@ -188,7 +192,9 @@ export default function NotificationSettings({
             })
 
             setTimeout(
-                () => setHasChanged(false),
+                () => {
+                    setLastSubmit(submitTimestamp)
+                },
                 SUCCESS_FEEDBACK_TIME
             )
 
@@ -234,7 +240,7 @@ export default function NotificationSettings({
             </tbody>
         </table>
 
-        <div className={`${styles.submitButton} ${hasChanged ? '' : styles.hideSubmitButton}`}>
+        <div className={`${styles.submitButton} ${hasChanged > lastSubmit ? '' : styles.hideSubmitButton}`}>
             <SubmitButton
                 color="primary"
                 success={formState.success}
