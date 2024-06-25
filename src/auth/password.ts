@@ -11,7 +11,7 @@ const ENCRYPTION_OUTPUT_ENCODING = 'base64'
 
 /**
  * Encrypts a password hash for safe storage.
- * 
+ *
  * @param passwordHash The password hash to encrypt.
  * @returns Encrypted password hash.
  */
@@ -25,10 +25,10 @@ function encryptPasswordHash(passwordHash: string): string {
 
     const cipher = crypto.createCipheriv(
         ENCRYPTION_ALGORITHM,
-        encryptionKeyBuffer, 
+        encryptionKeyBuffer,
         initializationVector,
     )
-    
+
     const passwordHashBuffer = Buffer.from(passwordHash, ENCRYPTION_INPUT_ENCODING)
 
     // We need the IV to decrypt the hash, so we'll store it at the beginning of the encryption output.
@@ -37,13 +37,13 @@ function encryptPasswordHash(passwordHash: string): string {
         cipher.update(passwordHashBuffer),
         cipher.final(),
     ])
-    
+
     return encrypted.toString(ENCRYPTION_OUTPUT_ENCODING)
 }
 
 /**
  * Decrypts an encrypted password hash.
- * 
+ *
  * @param encryptedPasswordHash Encrypted password hash to decrypt.
  * @returns Decrypted password hash.
  */
@@ -51,20 +51,20 @@ function decryptPasswordHash(encryptedPasswordHash: string): string {
     if (!process.env.PASSWORD_ENCRYPTION_KEY) {
         throw new Error('PASSWORD_ENCRYPTION_KEY is not set.')
     }
-    
+
     const encrypted = Buffer.from(encryptedPasswordHash, ENCRYPTION_OUTPUT_ENCODING)
 
     const initializationVector = encrypted.subarray(0, IV_LENGTH)
     const encryptedPasswordHashBuffer = encrypted.subarray(IV_LENGTH)
-    
+
     const encryptionKeyBuffer = Buffer.from(process.env.PASSWORD_ENCRYPTION_KEY, ENCRYPTION_KEY_ENCONDING)
-    
+
     const decipher = crypto.createDecipheriv(
-        ENCRYPTION_ALGORITHM, 
-        encryptionKeyBuffer, 
+        ENCRYPTION_ALGORITHM,
+        encryptionKeyBuffer,
         initializationVector
     )
-    
+
     const decrypted = Buffer.concat([
         decipher.update(encryptedPasswordHashBuffer),
         decipher.final()
@@ -84,7 +84,7 @@ export async function hashPassword(password: string) {
     if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
         throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
     }
-    
+
     const passwordHash = await bcrypt.hash(password, Number(process.env.PASSWORD_SALT_ROUNDS))
 
     return encryptPasswordHash(passwordHash)
@@ -92,7 +92,7 @@ export async function hashPassword(password: string) {
 
 /**
  * Wrapper for the bcrypt `compare` function.
- * 
+ *
  * @param password Entered password from user to to check.
  * @param encryptedPasswordHash The encrypted password hash to compare against.
  * @returns `true` if the password matches, else `false`.

@@ -97,10 +97,10 @@ function encryptPasswordHash(passwordHash: string): string {
 
     const cipher = crypto.createCipheriv(
         ENCRYPTION_ALGORITHM,
-        encryptionKeyBuffer, 
+        encryptionKeyBuffer,
         initializationVector,
     )
-    
+
     const passwordHashBuffer = Buffer.from(passwordHash, ENCRYPTION_INPUT_ENCODING)
 
     // We need the IV to decrypt the hash, so we'll store it at the beginning of the encryption output.
@@ -109,7 +109,7 @@ function encryptPasswordHash(passwordHash: string): string {
         cipher.update(passwordHashBuffer),
         cipher.final(),
     ])
-    
+
     return encrypted.toString(ENCRYPTION_OUTPUT_ENCODING)
 }
 
@@ -117,7 +117,7 @@ export async function hashPassword(password: string) {
     if (!Number(process.env.PASSWORD_SALT_ROUNDS)) {
         throw new Error('PASSWORD_SALT_ROUNDS is not set or is zero.')
     }
-    
+
     const passwordHash = await bcrypt.hash(password, Number(process.env.PASSWORD_SALT_ROUNDS))
 
     return encryptPasswordHash(passwordHash)
