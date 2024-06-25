@@ -15,7 +15,7 @@ export async function sendVerifyEmail(user: UserFiltered, email: string) {
         sub: user.id,
     }, emailValidationExpiration)
 
-    const link = `${process.env.NEXTAUTH_URL}/register?token=${jwt}`
+    const link = `${process.env.DOMAIN}/register?token=${jwt}`
 
     await sendSystemMail(user.email, 'Bekreft e-post', <VerifyEmailTemplate user={user} link={link} />)
 }

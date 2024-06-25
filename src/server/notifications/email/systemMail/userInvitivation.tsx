@@ -12,7 +12,7 @@ export async function sendUserInvitationEmail(user: UserFiltered) {
         email: user.email,
     }, userInvitationExpiration)
 
-    const link = `${process.env.NEXTAUTH_URL}/register?token=${jwt}`
+    const link = `${process.env.DOMAIN}/register?token=${jwt}`
 
     await sendSystemMail(
         user.email,

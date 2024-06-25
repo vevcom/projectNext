@@ -65,13 +65,11 @@ export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Det
         }
     }
 
-    if (storedUser.feideAccount?.email !== email) {
-        if (email.endsWith(`@${ntnuEmailDomain}`)) {
-            throw new ServerError(
-                'BAD PARAMETERS',
-                `Den nye e-posten må være din ${ntnuEmailDomain}-e-post, eller en personlig e-post.`
-            )
-        }
+    if (email.endsWith(`@${ntnuEmailDomain}`)) {
+        throw new ServerError(
+            'BAD PARAMETERS',
+            `Den nye e-posten må være din ${ntnuEmailDomain}-e-post, eller en personlig e-post.`
+        )
     }
 
     await sendVerifyEmail(storedUser, email)
