@@ -129,18 +129,14 @@ class MailHandler {
     }
 }
 
-function mailHandlerSingleton() {
+export function mailHandlerSingleton() {
     return new MailHandler()
 }
 
-declare const globalThis: {
-    mailHandlerGlobal: ReturnType<typeof mailHandlerSingleton>;
-} & typeof global
-
 export function getMailHandler() {
-    if (!globalThis.mailHandlerGlobal) {
-        globalThis.mailHandlerGlobal = mailHandlerSingleton()
+    if (!global.mailHandler) {
+        global.mailHandler = mailHandlerSingleton()
     }
 
-    return globalThis.mailHandlerGlobal
+    return global.mailHandler
 }
