@@ -2,6 +2,7 @@ import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
 import { fetchStudyProgrammesFromFeide } from './feide/api'
+import { comparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/read'
@@ -39,8 +40,9 @@ export const authOptions: AuthOptions = {
 
                 if (!userCredentials) return null
 
-                // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (userCredentials.passwordHash !== credentials.password) return null
+                const passwordMatch = await comparePassword(credentials.password, userCredentials.passwordHash)
+
+                if (!passwordMatch) return null
 
                 return { id: String(userCredentials.userId) }
             }

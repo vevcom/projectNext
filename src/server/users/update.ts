@@ -3,6 +3,7 @@ import { registerUserValidation, updateUserValidation } from './validation'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import { hashPassword } from '@/auth/password'
 import type { RegisterUserTypes, UpdateUserTypes } from './validation'
 import type { User } from '@prisma/client'
 
@@ -41,6 +42,8 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
     if (alredyRegistered) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
+    const passwordHash = await hashPassword(password)
+
     await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
@@ -54,7 +57,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
         }),
         prisma.credentials.create({
             data: {
-                passwordHash: password,
+                passwordHash,
                 user: {
                     connect: {
                         id,
