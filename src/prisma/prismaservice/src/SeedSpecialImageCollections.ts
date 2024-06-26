@@ -1,5 +1,22 @@
 import { SpecialCollection } from '@/generated/pn'
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient, SpecialVisibilityPurpose } from '@/generated/pn'
+
+export const specialCollectionsVisibility = {
+    OMBULCOVERS: {
+        specialVisibility: 'OMBUL'
+    },
+    PROFILEIMAGES: {
+        specialVisibility: 'USER'
+    },
+    STANDARDIMAGES: {
+        specialVisibility: 'PUBLIC'
+    },
+    COMMITTEELOGOS: {
+        specialVisibility: 'COMMITTEE'
+    }
+} satisfies {[T in SpecialCollection]: {
+    specialVisibility: SpecialVisibilityPurpose
+}}
 
 export default async function SeedSpecialImageCollections(prisma: PrismaClient) {
     const keys = Object.keys(SpecialCollection) as SpecialCollection[]
@@ -13,7 +30,12 @@ export default async function SeedSpecialImageCollections(prisma: PrismaClient) 
             },
             create: {
                 name: special,
-                special
+                special,
+                visibility: {
+                    connect: {
+                        specialPurpose: specialCollectionsVisibility[special].specialVisibility
+                    }
+                }
             }
         })
     ))

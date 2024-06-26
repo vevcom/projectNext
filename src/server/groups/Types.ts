@@ -1,7 +1,15 @@
-import type { Group, Membership } from '@prisma/client'
+import type { Group, GroupType } from '@prisma/client'
 
-export type ExpandedGroup = Group
+export type ExpandedGroup = Group & {
+    firstOrder: number
+    name: string
+    members: number
+}
 
-export type ExpandedMembership = Membership
-
-export type BasicMembership = Omit<Membership, 'order' | 'userId'>
+export type GroupsStructured = {
+    [key in GroupType]: {
+        name: string,
+        description: string,
+        groups: ExpandedGroup[]
+    }
+}

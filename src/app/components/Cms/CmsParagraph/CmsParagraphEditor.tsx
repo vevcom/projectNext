@@ -27,7 +27,7 @@ type PropTypes = {
 }
 
 export default function CmsParagraphEditor({ cmsParagraph, editorClassName }: PropTypes) {
-    const canEdit = useEditing() //TODO: pass visibility / permissions to useEditing
+    const canEdit = useEditing({}) //TODO: pass visibility / permissions to useEditing
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
 

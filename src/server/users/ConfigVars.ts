@@ -1,5 +1,7 @@
 import { createSelection } from '@/server/createSelection'
-import type { User } from '@prisma/client'
+import type { Prisma, User } from '@prisma/client'
+
+export const maxNumberOfGroupsInFilter = 7
 
 export const userFieldsToExpose = [
     'id',
@@ -14,3 +16,21 @@ export const userFieldsToExpose = [
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])
+
+export const standardMembershipSelection = [
+    {
+        group: {
+            groupType: 'CLASS'
+        }
+    },
+    {
+        group: {
+            groupType: 'OMEGA_MEMBERSHIP_GROUP'
+        }
+    },
+    {
+        group: {
+            groupType: 'STUDY_PROGRAMME'
+        }
+    },
+] satisfies Prisma.MembershipWhereInput[]

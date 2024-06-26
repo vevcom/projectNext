@@ -16,7 +16,7 @@ type PropTypes = {
 }
 
 export default function SectionMover({ articleId, sectionId, className, showUp, showDown }: PropTypes) {
-    const canEdit = useEditing() //TODO: check visibility of section for user and pass it to useEditing
+    const canEdit = useEditing({}) //TODO: check visibility of section for user and pass it to useEditing
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
         await moveSectionOrderAction(articleId, sectionId, direction)

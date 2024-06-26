@@ -24,7 +24,7 @@ type PropTypes = {
 }
 
 export default function ImageControls({ articleSection, className }: PropTypes) {
-    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
+    const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
     const { refresh } = useRouter()
     if (!canEdit) return null
 

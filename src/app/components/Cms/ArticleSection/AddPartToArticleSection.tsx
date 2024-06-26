@@ -16,7 +16,7 @@ type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
 
 export default function AddPartToArticleSection({ articleSectionName, children, ...props }: PropTypes) {
     const { refresh } = useRouter()
-    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
+    const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
     const handleAdd = useCallback(async (part: ArticleSectionPart) => {
         await addArticleSectionPartAction(articleSectionName, part)
         refresh()

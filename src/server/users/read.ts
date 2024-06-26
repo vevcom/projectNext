@@ -1,7 +1,9 @@
-import { userFilterSelection } from './ConfigVars'
+import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
+import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { UserFiltered, UserDetails } from './Types'
+import { getMembershipFilter } from '@/auth/getMembershipFilter'
+import type { UserDetails, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
 import type { User } from '@prisma/client'
 
@@ -14,27 +16,77 @@ import type { User } from '@prisma/client'
 export async function readUserPage<const PageSize extends number>({
     page,
     details
-}: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
+}: ReadPageInput<PageSize, UserDetails>): Promise<UserPagingReturn[]> {
     const words = details.partOfName.split(' ')
-    return await prismaCall(() => prisma.user.findMany({
+
+    if (details.groups.length > maxNumberOfGroupsInFilter) {
+        throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
+    }
+    const groupSelection = details.selectedGroup ? [
+        getMembershipFilter(details.selectedGroup.groupOrder, details.selectedGroup.groupId)
+    ] : []
+
+    const groups = [...details.groups, ...(details.selectedGroup ? [details.selectedGroup] : [])]
+
+    const users = await prismaCall(() => prisma.user.findMany({
         skip: page.page * page.pageSize,
         take: page.pageSize,
-        select: userFilterSelection,
-        where: {
-            AND: words.map((word, i) => {
-                const condition = {
-                    [i === words.length - 1 ? 'contains' : 'equals']: word,
-                    mode: 'insensitive'
-                } as const
-                return {
+        select: {
+            ...userFilterSelection,
+            memberships: {
+                select: {
+                    admin: true,
+                    title: true,
+                    groupId: true,
+                    group: {
+                        select: {
+                            class: { select: { year: true } },
+                            studyProgramme: { select: { code: true } },
+                            omegaMembershipGroup: { select: { omegaMembershipLevel: true } }
+                        }
+                    }
+                },
+                where: {
                     OR: [
-                        { firstname: condition },
-                        { lastname: condition },
-                        { username: condition },
-                    ],
+                        {
+                            AND: [
+                                {
+                                    OR: standardMembershipSelection,
+                                },
+                                getMembershipFilter('ACTIVE')
+                            ]
+                        },
+                        {
+                            OR: groupSelection
+                        }
+                    ]
+
                 }
-            })
-            //TODO select on groups
+            },
+        },
+        where: {
+            AND: [
+                ...words.map((word, i) => {
+                    const condition = {
+                        [i === words.length - 1 ? 'contains' : 'equals']: word,
+                        mode: 'insensitive'
+                    } as const
+                    return {
+                        OR: [
+                            { firstname: condition },
+                            { lastname: condition },
+                            { username: condition },
+                        ],
+                    }
+                }),
+                ...groups.map(group => ({
+                    memberships: {
+                        some: {
+                            ...getMembershipFilter(group.groupOrder, group.groupId),
+                        }
+                    }
+                }))
+            ],
         },
         orderBy: [
             { lastname: 'asc' },
@@ -45,6 +97,28 @@ export async function readUserPage<const PageSize extends number>({
             { username: 'asc' },
         ]
     }))
+    return users.map(user => {
+        const clas = user.memberships.find(
+            m => m.group.class !== null)?.group.class?.year
+        const studyProgramme = user.memberships.find(
+            m => m.group.studyProgramme !== null)?.group.studyProgramme?.code
+        const membershipType = user.memberships.find(
+            m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
+        const title = user.memberships.find(
+            m => m.groupId === details.selectedGroup?.groupId)?.title
+        const admin = user.memberships.find(
+            m => m.groupId === details.selectedGroup?.groupId)?.admin
+        return {
+            ...user,
+            class: clas,
+            studyProgramme,
+            membershipType,
+            selectedGroupInfo: {
+                title,
+                admin
+            }
+        }
+    })
 }
 
 type readUserWhere = {

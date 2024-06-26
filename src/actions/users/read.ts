@@ -1,8 +1,12 @@
 'use server'
+import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readUserPage } from '@/server/users/read'
-import type { UserFiltered, UserDetails } from '@/server/users/Types'
+import { getUser } from '@/auth/getUser'
+import { readGroupsExpanded } from '@/server/groups/read'
+import type { UserDetails, UserPagingReturn } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ExpandedGroup } from '@/server/groups/Types'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -12,8 +16,20 @@ import type { ActionReturn, ReadPageInput } from '@/actions/Types'
  */
 export async function readUserPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize, UserDetails>
-): Promise<ActionReturn<UserFiltered[]>> {
-    //TODO: Permission check
+): Promise<ActionReturn<UserPagingReturn[]>> {
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['USERS_READ']]
+    })
+    if (!authorized) return createActionError(status)
 
     return safeServerCall(() => readUserPage(readPageInput))
+}
+
+export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['USERS_READ']]
+    })
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readGroupsExpanded())
 }
