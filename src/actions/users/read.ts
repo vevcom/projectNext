@@ -27,7 +27,7 @@ export async function readUserPageAction<const PageSize extends number>(
 
 export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: [['USER_READ']]
+        requiredPermissions: [['USERS_READ']]
     })
     if (!authorized) return createActionError(status)
 
