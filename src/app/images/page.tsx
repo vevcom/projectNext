@@ -16,7 +16,8 @@ export default async function Images() {
     const collectionPage = await readImageCollectionsPageAction({
         page: {
             pageSize,
-            page: 0
+            page: 0,
+            cursor: null
         },
         details: undefined,
     })
@@ -34,6 +35,7 @@ export default async function Images() {
                     startPage={{
                         pageSize,
                         page: 1,
+                        cursor: { id: collections[collections.length - 1].id }
                     }}
                     details={undefined}
                     serverRenderedData={collections}

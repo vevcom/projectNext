@@ -17,7 +17,8 @@ export default async function Users() {
                     serverRenderedData={[]}
                     startPage={{
                         pageSize: 50,
-                        page: 0
+                        page: 0,
+                        cursor: null,
                     }}
                     details={{
                         groups: [],

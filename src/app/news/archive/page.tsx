@@ -10,7 +10,8 @@ export default async function NewsArchive() {
     const res = await readOldNewsPageAction<PageSizeOldNews>({
         page: {
             page: 0,
-            pageSize
+            pageSize,
+            cursor: null,
         },
         details: undefined
     })
@@ -23,6 +24,7 @@ export default async function NewsArchive() {
                 startPage={{
                     page: 1,
                     pageSize,
+                    cursor: { id: serverRendered[serverRendered.length - 1].id },
                 }}
                 details={undefined}
                 serverRenderedData={serverRendered}
