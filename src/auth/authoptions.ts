@@ -13,6 +13,7 @@ import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import { createMembershipsForUser } from '@/server/groups/memberships/create'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -123,9 +124,7 @@ export const authOptions: AuthOptions = {
                         const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(account.access_token)
                         const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
 
-                        // Everything from here...
-                        const order = (await readCurrentOmegaOrder()).order
-
+                        const { order } = await readCurrentOmegaOrder()
                         await prisma.membership.deleteMany({
                             where: {
                                 OR: studyProgrammes.map(({ groupId }) => ({
@@ -137,14 +136,10 @@ export const authOptions: AuthOptions = {
 
                         const userId = user ? Number(user.id) : token.user.id
 
-                        await prisma.membership.createMany({
-                            data: studyProgrammes.map(({ groupId }) => ({
-                                groupId,
-                                order,
-                                admin: false,
-                                userId,
-                            }))
-                        })
+                        createMembershipsForUser(userId, studyProgrammes.map(({ groupId }) => ({
+                            groupId,
+                            admin: false
+                        })))
                     }
                     // ...to here should be a function.
 
