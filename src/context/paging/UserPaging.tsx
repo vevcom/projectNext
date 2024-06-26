@@ -11,5 +11,9 @@ const fetcher = async (x: ReadPageInput<PageSizeUsers, UserCursor, UserDetails>)
 }
 
 export const UserPagingContext = generatePagingContext<UserFiltered, UserCursor, PageSizeUsers, UserDetails>()
-const UserPagingProvider = generatePagingProvider({ Context: UserPagingContext, fetcher })
+const UserPagingProvider = generatePagingProvider({
+    Context: UserPagingContext,
+    fetcher,
+    getCursorAfterFetch: data => ({ id: data[data.length - 1].id }),
+})
 export default UserPagingProvider

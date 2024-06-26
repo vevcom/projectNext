@@ -34,6 +34,13 @@ export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDet
     getCursorAfterFetch: (data: Data[]) => Cursor,
 }
 
+/**
+ * Generates a paging provider. Should be used in conjunction with generatePagingContext.
+ * @param fetcher The fetcher function that fetches the data.
+ * @param Context The context to use.
+ * @param getCursorAfterFetch A function that returns the cursor after fetching the data. You need
+ * to provide the way to set the next cursor after fetching the data.
+ */
 function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
     fetcher,
     Context,
@@ -100,10 +107,10 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
                 data: [...stateRef.current.data, ...result.data],
                 loading: false,
                 allLoaded: false,
-                page: { 
-                    ...stateRef.current.page, 
+                page: {
+                    ...stateRef.current.page,
                     cursor: getCursorAfterFetch(result.data),
-                    page: stateRef.current.page.page + 1 
+                    page: stateRef.current.page.page + 1
                 }
             }
             setState(newState)

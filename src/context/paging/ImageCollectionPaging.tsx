@@ -11,9 +11,13 @@ const fetcher = async (x: ReadPageInput<PageSizeImageCollection, ImageCollection
 }
 
 export const ImageCollectionPagingContext = generatePagingContext<
-    ImageCollectionPageReturn, 
-    ImageCollectionCursor, 
+    ImageCollectionPageReturn,
+    ImageCollectionCursor,
     PageSizeImageCollection
 >()
-const ImageCollectionPagingProvider = generatePagingProvider({ Context: ImageCollectionPagingContext, fetcher })
+const ImageCollectionPagingProvider = generatePagingProvider({
+    Context: ImageCollectionPagingContext,
+    fetcher,
+    getCursorAfterFetch: data => ({ id: data[data.length - 1].id }),
+})
 export default ImageCollectionPagingProvider

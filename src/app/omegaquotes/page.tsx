@@ -19,13 +19,13 @@ export default async function OmegaQuotes() {
 
     const pageSize: PageSizeOmegaquote = 20
 
-    const readQuotes = await readQuotesPageAction({ 
-        page: { 
-            pageSize, 
+    const readQuotes = await readQuotesPageAction({
+        page: {
+            pageSize,
             page: 0,
             cursor: null,
-        }, 
-        details: undefined 
+        },
+        details: undefined
     })
     if (!readQuotes.success) notFound()
     const quotes = readQuotes.data
