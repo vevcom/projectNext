@@ -4,6 +4,7 @@ import prisma from '@/prisma'
 import logger from '@/logger'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
@@ -43,7 +44,6 @@ export async function readImageCollection(
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ImageCollectionPageReturn[]> {
-    const { cursor, pageSize } = page
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
         include: {
             coverImage: true,
@@ -60,10 +60,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
             { createdAt: 'desc' },
             { name: 'asc' }
         ],
-        cursor: {
-            id: cursor.id
-        },
-        take: pageSize,
+        ...cursorPageingSelection(page)
     }))
 
     const lensCamera = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')

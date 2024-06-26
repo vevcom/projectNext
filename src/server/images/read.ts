@@ -1,4 +1,5 @@
 import 'server-only'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
@@ -10,15 +11,11 @@ export async function readImagesPage<const PageSize extends number>(
     { page, details }: ReadPageInput<PageSize, ImageCursor, ImageDetails>
 ): Promise<Image[]> {
     const { collectionId } = details
-    const { pageSize, cursor } = page
     return await prismaCall(() => prisma.image.findMany({
         where: {
             collectionId,
         },
-        cursor: {
-            id: cursor.id,
-        },
-        take: pageSize,
+        ...cursorPageingSelection(page)
     }))
 }
 

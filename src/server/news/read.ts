@@ -1,4 +1,5 @@
 import 'server-only'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
@@ -15,10 +16,7 @@ export async function readOldNewsPage<const PageSize extends number>(
                 lt: new Date(),
             }
         },
-        cursor: {
-            id: page.cursor.id,
-        },
-        take: page.pageSize,
+        ...cursorPageingSelection(page),
         orderBy: {
             article: {
                 createdAt: 'desc',

@@ -7,6 +7,6 @@ import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/server/omegaquotes/
 export type PageSizeOmegaquote = 20;
 const fetcher = async (x: ReadPageInput<PageSizeOmegaquote, OmegaquoteCursor>) => await readQuotesPageAction(x)
 
-export const OmegaquotePagingContext = generatePagingContext<OmegaquoteFiltered, OmegaquoteCursor,PageSizeOmegaquote>()
+export const OmegaquotePagingContext = generatePagingContext<OmegaquoteFiltered, OmegaquoteCursor, PageSizeOmegaquote>()
 const OmegaquotePagingProvider = generatePagingProvider({ Context: OmegaquotePagingContext, fetcher })
 export default OmegaquotePagingProvider
