@@ -3,7 +3,7 @@ import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails, UserCursor } from './Types'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
 
 /**

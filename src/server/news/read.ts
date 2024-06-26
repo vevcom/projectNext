@@ -5,7 +5,7 @@ import { ServerError } from '@/server/error'
 import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
 import prisma from '@/prisma'
 import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, NewsCursor>

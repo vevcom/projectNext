@@ -1,7 +1,7 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readOldNewsPageAction } from '@/actions/news/read'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
 
 export type PageSizeOldNews = 20

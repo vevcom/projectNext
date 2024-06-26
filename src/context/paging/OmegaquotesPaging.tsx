@@ -1,7 +1,7 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from '@/context/paging/PagingGenerator'
 import { readQuotesPageAction } from '@/actions/omegaquotes/read'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/server/omegaquotes/Types'
 
 export type PageSizeOmegaquote = 20;

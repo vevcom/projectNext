@@ -5,7 +5,8 @@ import { readImage, readImagesPage, readSpecialImage } from '@/server/images/rea
 import { createBadImage } from '@/server/images/create'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { ActionReturn } from '@/actions/Types'
 import type { ImageDetails, ImageCursor } from '@/server/images/Types'
 
 /**

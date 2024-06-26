@@ -3,7 +3,7 @@ import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { ImageDetails, ImageCursor } from '@/server/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
 

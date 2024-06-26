@@ -11,7 +11,7 @@ import type {
     ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
-import type { ReadPageInput } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 
 
 /**

@@ -21,23 +21,6 @@ export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = (
     }
 )
 
-export type Page<PageSize extends number, Cursor> = {
-    readonly pageSize: PageSize,
-} &
-({
-    page: number,
-    cursor: Cursor
-} | {
-    page: 0,
-    cursor: null
-})
-
-
-export type ReadPageInput<PageSize extends number, Cursor, InputDetailType = undefined> = {
-    page: Page<PageSize, Cursor>,
-    details: InputDetailType,
-}
-
 export type Action<ReturnType, DataGuarantee extends boolean = true> = (formData: FormData) => (
     Promise<ActionReturn<ReturnType, DataGuarantee>>
 )
