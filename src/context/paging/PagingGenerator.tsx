@@ -31,11 +31,13 @@ export type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
 export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
     fetcher: (x: ReadPageInput<PageSize, Cursor, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
     Context: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
+    getCursorAfterFetch: (data: Data[]) => Cursor,
 }
 
 function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
     fetcher,
-    Context
+    Context,
+    getCursorAfterFetch,
 }: GeneratorPropTypes<Data, Cursor, PageSize, FetcherDetails, DataGuarantee>
 ) {
     return function PagingProvider(
@@ -98,7 +100,11 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
                 data: [...stateRef.current.data, ...result.data],
                 loading: false,
                 allLoaded: false,
-                page: { ...stateRef.current.page, page: stateRef.current.page.page + 1 }
+                page: { 
+                    ...stateRef.current.page, 
+                    cursor: getCursorAfterFetch(result.data),
+                    page: stateRef.current.page.page + 1 
+                }
             }
             setState(newState)
             setLoading(false)
