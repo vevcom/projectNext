@@ -9,7 +9,8 @@ import type { ActionReturn, ActionReturnError } from '@/actions/Types'
  */
 export default function useActionCall<
     Data,
-    DataGuarantee extends true>(
+    DataGuarantee extends true
+>(
     action: () => Promise<ActionReturn<Data, DataGuarantee>>
 ) {
     const [res, setRes] = useState<{
@@ -30,6 +31,8 @@ export default function useActionCall<
             } else {
                 setRes({ data: null, error: result })
             }
+        }).catch(() => {
+            setRes({ data: null, error: { success: false, errorCode: 'UNKNOWN ERROR' } })
         })
     }, [action])
 

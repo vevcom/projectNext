@@ -1,0 +1,48 @@
+enum SEX {
+  FEMALE
+  MALE
+  OTHER
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  username      String        @unique
+  email         String        @unique
+  firstname     String        @default("[Fjernet]")
+  lastname      String        @default("[Fjernet]")
+  acceptedTerms DateTime?
+  sex           SEX?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt // is also updated manually
+  omegaQuote    OmegaQuote[]
+  memberships   Membership[]
+  credentials   Credentials?
+  feideAccount  FeideAccount?
+
+  // We need to explicitly mark the combination of 'id', 'username' and 'email' as
+  // unique to make the relation to 'Credentials' work.
+  @@unique([id, username, email])
+}
+
+model Credentials {
+  user                 User     @relation(fields: [userId, username, email], references: [id, username, email], onDelete: Cascade, onUpdate: Cascade)
+  userId               Int      @unique
+  username             String   @unique
+  email                String   @unique
+  passwordHash         String
+  credentialsUpdatedAt DateTime @updatedAt
+
+  // We need to explicitly mark the combination of 'userId', 'username' and 'email' as
+  // unique to make the relation to 'User' work.
+  @@unique([userId, username, email])
+}
+
+model FeideAccount {
+  id          String   @id
+  accessToken String   @db.Text
+  email       String   @unique
+  expiresAt   DateTime
+  issuedAt    DateTime
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}

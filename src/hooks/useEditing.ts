@@ -4,8 +4,9 @@ import { EditModeContext } from '@/context/EditMode'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { Permission } from '@prisma/client'
+import type { Matrix } from '@/utils/checkMatrix'
 import type { VisibilityCollapsed } from '@/server/visibility/Types'
-import type { PermissionMatrix } from '@/auth/checkPermissionMatrix'
 
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.
@@ -27,7 +28,7 @@ export default function useEditing({
     operation = 'OR',
     level = 'ADMIN'
 }: {
-    requiredPermissions?: PermissionMatrix,
+    requiredPermissions?: Matrix<Permission>,
     requiredVisibility?: VisibilityCollapsed
     operation?: 'AND' | 'OR',
     level?: 'ADMIN' | 'REGULAR'

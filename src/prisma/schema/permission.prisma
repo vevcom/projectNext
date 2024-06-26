@@ -1,0 +1,107 @@
+enum Permission {
+  // Job ads
+  JOBAD_CREATE
+  JOBAD_READ
+  JOBAD_UPDATE
+  JOBAD_DESTROY
+
+  // Omega Quotes
+  OMEGAQUOTES_WRITE
+  OMEGAQUOTES_READ
+
+  // Ombul
+  OMBUL_CREATE
+  OMBUL_READ
+  OMBUL_UPDATE
+  OMBUL_DESTROY
+
+  // Groups - Generic
+  GROUP_READ
+  GROUP_DESTROY
+  GROUP_ADMIN //TODO: Temp needs discussion about this
+  // Since groups can only be created with a specific type, there is no need to
+  // have permissions to create or update a generic group.
+
+  // omega order
+  OMEGA_ORDER_READ
+  OMEGA_ORDER_CREATE
+  // Since groups can only be created with a specific type, there is no need to
+  // have permissions to create or update a generic group.
+
+  // Groups - Classes
+  CLASS_CREATE
+  CLASS_READ
+  CLASS_UPDATE
+  CLASS_DESTROY
+
+  // Groups - Committess
+  COMMITTEE_CREATE
+  COMMITTEE_READ
+  COMMITTEE_UPDATE
+  COMMITTEE_DESTROY
+
+  // Groups - InterestGroups
+  INTEREST_GROUP_CREATE
+  INTEREST_GROUP_READ
+  INTEREST_GROUP_UPDATE
+  INTEREST_GROUP_DESTROY
+
+  // Groups - OmegaMembershipGroup
+  OMEGA_MEMBERSHIP_GROUP_READ
+  OMEGA_MEMBERSHIP_GROUP_UPDATE
+  // Since omega membership groups always need to exist there are no
+  // permissions to create or destroy them.
+
+  // Groups - StudyProgramme
+  STUDY_PROGRAMME_CREATE
+  STUDY_PROGRAMME_READ
+  STUDY_PROGRAMME_UPDATE
+  STUDY_PROGRAMME_DESTROY
+
+
+  // CMS permissions - it overrides the visibility of things
+  CMS_ADMIN
+
+  // User list permissions - theese are admin permissions, and do not have anything
+  // to do with a user´s ability to edit its own user.
+  // USER_READ for example means that the user can read the list of users.
+  USERS_READ
+  USERS_UPDATE
+  USERS_DESTROY
+  USERS_CREATE
+
+  IMAGE_COLLECTION_CREATE
+  IMAGE_ADMIN
+
+  EVENT_CREATE
+  EVENT_ADMIN
+}
+
+model Role {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  groups      RolesGroups[]
+  permissions RolePermission[]
+}
+
+model RolePermission {
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roleId     Int
+  permission Permission
+
+  @@unique([roleId, permission])
+}
+
+model DefaultPermission {
+  permission Permission @unique
+}
+
+model RolesGroups {
+  group         Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId       Int
+  role          Role    @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roleId        Int
+  forAdminsOnly Boolean
+
+  @@unique([groupId, roleId])
+}

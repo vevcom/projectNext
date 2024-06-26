@@ -18,7 +18,7 @@ export async function readUserPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize, UserDetails>
 ): Promise<ActionReturn<UserPagingReturn[]>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: [['USER_READ']]
+        requiredPermissions: [['USERS_READ']]
     })
     if (!authorized) return createActionError(status)
 

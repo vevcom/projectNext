@@ -1,15 +1,16 @@
+import 'server-only'
 import { authOptions } from './authoptions'
-import { checkPermissionMatrix } from './checkPermissionMatrix'
+import checkMatrix from '@/utils/checkMatrix'
 import { readDefaultPermissions } from '@/server/permissionRoles/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
-import type { PermissionMatrix } from './checkPermissionMatrix'
+import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
 import type { BasicMembership } from '@/server/groups/memberships/Types'
 import type { UserFiltered } from '@/server/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
-    requiredPermissions?: PermissionMatrix,
+    requiredPermissions?: Matrix<Permission>,
     userRequired?: UserRequired,
     shouldRedirect?: ShouldRedirect,
     redirectUrl?: string,
@@ -91,7 +92,7 @@ export async function getUser({
         memberships = [],
     } = await getServerSession(authOptions) ?? {}
 
-    if ((user || !userRequired) && checkPermissionMatrix(permissions, requiredPermissions)) {
+    if ((user || !userRequired) && checkMatrix(permissions, requiredPermissions)) {
         // Cannot have ternary expression for just status because then ts gets confused.
         return user
             ? { user, authorized: true, status: 'AUTHORIZED', permissions, memberships }

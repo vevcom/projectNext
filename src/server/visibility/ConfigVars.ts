@@ -40,8 +40,8 @@ export const SpecialVisibilityConfig = {
         adminLevel: 'COMMITTEE_CREATE'
     },
     USER: {
-        regularLevel: 'USER_READ',
-        adminLevel: 'USER_CREATE'
+        regularLevel: 'USERS_READ',
+        adminLevel: 'USERS_CREATE'
     }
 } satisfies {[T in SpecialVisibilityPurpose]: {
     regularLevel: Permission | null,

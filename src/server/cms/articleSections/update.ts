@@ -10,7 +10,7 @@ import { createCmsParagraph } from '@/server/cms/paragraphs/create'
 import { createCmsLink } from '@/server/cms/links/create'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
-import type { ImageSize, ArticleSection, Position } from '@prisma/client'
+import type { ImageSize, ArticleSection, Position, Prisma } from '@prisma/client'
 import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
 
 /**
@@ -75,7 +75,7 @@ export async function addArticleSectionPart(
     const where = {
         name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined
-    } as const
+    } as const satisfies Prisma.ArticleSectionWhereUniqueInput
 
     const articleSection = await prismaCall(() => prisma.articleSection.findUnique({
         where,
@@ -137,7 +137,7 @@ export async function removeArticleSectionPart(
     const where = {
         name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined
-    } as const
+    } as const satisfies Prisma.ArticleSectionWhereUniqueInput
     const articleSection = await prismaCall(() => prisma.articleSection.findUnique({
         where,
         include: { cmsLink: true, cmsParagraph: true, cmsImage: true }
