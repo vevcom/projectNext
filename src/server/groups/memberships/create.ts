@@ -1,5 +1,5 @@
 import 'server-only'
-import { canEasalyManageMembershipOfGroup, canEasalyManageMembershipOfGroups } from './canEasalyManageMembership'
+import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } from './canEasilyManageMembership'
 import { readCurrentGroupOrder, readCurrentGroupOrders } from '@/server/groups/read'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { prismaCall } from '@/server/prismaCall'
@@ -13,7 +13,7 @@ export async function createMembershipForUser(
     admin: boolean,
     orderArg?: number
 ): Promise<ExpandedMembership> {
-    if (!await canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
@@ -52,7 +52,7 @@ export async function createMembershipsForGroup(
     data: { userId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
-    if (!await canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
@@ -93,7 +93,7 @@ export async function createMembershipsForUser(
     data: { groupId: number, admin: boolean }[],
     orderArg?: number,
 ): Promise<void> {
-    if (!await canEasalyManageMembershipOfGroups(data.map(group => group.groupId))) {
+    if (!await canEasilyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const ordersMap = await readCurrentGroupOrders(data.map(group => group.groupId))

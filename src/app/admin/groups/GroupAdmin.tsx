@@ -4,7 +4,7 @@ import AddUsersToGroup from './AddUsersToGroup'
 import UserList from '@/app/components/User/UserList/UserList'
 import { GroupSelectionContext } from '@/context/groupSelection'
 import UserPagingProvider from '@/context/paging/UserPaging'
-import { CanEasalyManageMembership } from '@/server/groups/memberships/ConfigVars'
+import { CanEasilyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
 import Form from '@/app/components/Form/Form'
@@ -27,7 +27,7 @@ export default function GroupAdmin() {
 
     const group = groupSelectionCtx.group
 
-    const canEasalyManageMembership = CanEasalyManageMembership[group.groupType]
+    const canEasilyManageMembership = CanEasilyManageMembership[group.groupType]
 
     return (
         <UserPagingProvider
@@ -90,7 +90,7 @@ export default function GroupAdmin() {
                     disableFilters={{ [group.groupType]: true }}
                 />
                 {
-                    canEasalyManageMembership ? (
+                    canEasilyManageMembership ? (
                         <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
                             <>Legg til brukere</>
                         }>

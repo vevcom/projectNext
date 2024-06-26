@@ -10,10 +10,10 @@ import { readUser } from '@/server/users/read'
 import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
+import { createMembershipsForUser } from '@/server/groups/memberships/create'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import { createMembershipsForUser } from '@/server/groups/memberships/create'
 
 export const authOptions: AuthOptions = {
     providers: [

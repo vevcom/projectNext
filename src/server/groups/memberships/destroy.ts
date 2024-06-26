@@ -1,5 +1,5 @@
 import 'server-only'
-import { canEasalyManageMembershipOfGroup } from './canEasalyManageMembership'
+import { canEasilyManageMembershipOfGroup } from './canEasilyManageMembership'
 import { readCurrentGroupOrder } from '@/server/groups/read'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
@@ -15,7 +15,7 @@ export async function destoryMembershipOfUser({
     userId: number,
     orderArg?: number
 }): Promise<ExpandedMembership> {
-    if (!await canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
@@ -36,7 +36,7 @@ export async function destroyMembershipOfUsers(
     userIds: number[],
     orderArg?: number,
 ): Promise<void> {
-    if (!await canEasalyManageMembershipOfGroup(groupId)) {
+    if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)

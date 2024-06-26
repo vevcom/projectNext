@@ -1,17 +1,17 @@
-import { CanEasalyManageMembership } from './ConfigVars'
+import { CanEasilyManageMembership } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 
-export async function canEasalyManageMembershipOfGroup(groupId: number): Promise<boolean> {
+export async function canEasilyManageMembershipOfGroup(groupId: number): Promise<boolean> {
     const group = await prismaCall(() => prisma.group.findUniqueOrThrow({
         where: {
             id: groupId
         }
     }))
-    return CanEasalyManageMembership[group.groupType]
+    return CanEasilyManageMembership[group.groupType]
 }
 
-export async function canEasalyManageMembershipOfGroups(groupIds: number[]): Promise<boolean> {
+export async function canEasilyManageMembershipOfGroups(groupIds: number[]): Promise<boolean> {
     const groups = await prismaCall(() => prisma.group.findMany({
         where: {
             id: {
@@ -19,5 +19,5 @@ export async function canEasalyManageMembershipOfGroups(groupIds: number[]): Pro
             }
         }
     }))
-    return groups.every(group => CanEasalyManageMembership[group.groupType])
+    return groups.every(group => CanEasilyManageMembership[group.groupType])
 }

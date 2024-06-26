@@ -49,4 +49,6 @@ model VisibilityRequirmenetGroup {
   visibilityRequirmenetId Int
   group                   Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId                 Int
+
+  @@unique([visibilityRequirmenetId, groupId])
 }

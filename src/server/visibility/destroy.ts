@@ -1,4 +1,5 @@
 import 'server-only'
+import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 
@@ -13,6 +14,9 @@ export async function destroyVisibility(id: number): Promise<void> {
             id
         }
     }))
+    if (visibility.specialPurpose) {
+        throw new ServerError('BAD PARAMETERS', 'Kan ikke slette en spesiell visibility')
+    }
     await Promise.all([
         prismaCall(() => prisma.visibilityLevel.deleteMany({
             where: {

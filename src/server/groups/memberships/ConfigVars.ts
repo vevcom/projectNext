@@ -6,7 +6,7 @@ import type { GroupType } from '@prisma/client'
  * - CLASS: Use class bump system or TODO: add function to change class memberships
  * - OMEGA_MEMBERSHIP_GROUP: use the admition system
  */
-export const CanEasalyManageMembership = {
+export const CanEasilyManageMembership = {
     CLASS: false,
     COMMITTEE: true,
     INTEREST_GROUP: true,

@@ -24,7 +24,7 @@ export const PurposeTextsConfig = {
 
 /**
  * Which permissions link to special visibility purposes
- * If the spacial visibility were to disappear, it will be regenerated from this.
+ * If the special visibility were to disappear, it will be regenerated from this.
  */
 export const SpecialVisibilityConfig = {
     OMBUL: {
