@@ -6,7 +6,7 @@ import { createBadImage } from '@/server/images/create'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageDetails } from '@/server/images/Types'
+import type { ImageDetails, ImageCursor } from '@/server/images/Types'
 
 /**
  * Read one page of images.
@@ -14,7 +14,7 @@ import type { ImageDetails } from '@/server/images/Types'
  * @returns
  */
 export async function readImagesPageAction<const PageSize extends number>(
-    pageReadInput: ReadPageInput<PageSize, ImageDetails>
+    pageReadInput: ReadPageInput<PageSize, ImageCursor, ImageDetails>
 ): Promise<ActionReturn<Image[]>> {
     //TODO: auth route based on collection
     return await safeServerCall(() => readImagesPage(pageReadInput))

@@ -4,10 +4,10 @@ import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { readQuotesPage } from '@/server/omegaquotes/read'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { OmegaquoteFiltered } from '@/server/omegaquotes/Types'
+import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/server/omegaquotes/Types'
 
 export async function readQuotesPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize>
+    readPageInput: ReadPageInput<PageSize, OmegaquoteCursor>
 ): Promise<ActionReturn<OmegaquoteFiltered[]>> {
     //TODO:  REFACTOR when new permission system is working
     const { status, authorized } = await getUser({

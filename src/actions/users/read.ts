@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readUserPage } from '@/server/users/read'
-import type { UserFiltered, UserDetails } from '@/server/users/Types'
+import type { UserFiltered, UserDetails, UserCursor } from '@/server/users/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 /**
@@ -11,7 +11,7 @@ import type { ActionReturn, ReadPageInput } from '@/actions/Types'
  * @returns
  */
 export async function readUserPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize, UserDetails>
+    readPageInput: ReadPageInput<PageSize, UserCursor, UserDetails>
 ): Promise<ActionReturn<UserFiltered[]>> {
     //TODO: Permission check
 

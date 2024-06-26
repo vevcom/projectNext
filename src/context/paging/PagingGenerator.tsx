@@ -4,44 +4,44 @@ import React, { createContext, useState, useRef, useEffect } from 'react'
 import type { ActionReturn, Page, ReadPageInput } from '@/actions/Types'
 import type { Context as ReactContextType } from 'react'
 
-export type StateTypes<Data, PageSize extends number> = {
-    page: Page<PageSize>,
+export type StateTypes<Data, Cursor, PageSize extends number> = {
+    page: Page<PageSize, Cursor>,
     data: Data[],
     allLoaded: boolean,
 }
 
-export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
-    state: StateTypes<Data, PageSize>,
+export type PagingContextType<Data, Cursor, PageSize extends number, FetcherDetails> = ReactContextType<{
+    state: StateTypes<Data, Cursor, PageSize>,
     loadMore: () => Promise<Data[]>,
     refetch: () => Promise<Data[]>,
     setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
     serverRenderedData: Data[],
-    startPage: Page<PageSize>,
+    startPage: Page<PageSize, Cursor>,
     loading: boolean,
     deatils: FetcherDetails,
 } | null>
 
-export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    startPage: Page<PageSize>,
+export type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
+    startPage: Page<PageSize, Cursor>,
     children: React.ReactNode,
     details: FetcherDetails,
     serverRenderedData: Data[],
 }
 
-export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
-    fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
-    Context: PagingContextType<Data, PageSize, FetcherDetails>,
+export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
+    fetcher: (x: ReadPageInput<PageSize, Cursor, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
+    Context: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
 }
 
-function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
+function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
     fetcher,
     Context
-}: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>
+}: GeneratorPropTypes<Data, Cursor, PageSize, FetcherDetails, DataGuarantee>
 ) {
     return function PagingProvider(
-        { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, PageSize, FetcherDetails>
+        { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, Cursor, PageSize, FetcherDetails>
     ) {
-        const [state, setState_] = useState<StateTypes<Data, PageSize>>({
+        const [state, setState_] = useState<StateTypes<Data, Cursor, PageSize>>({
             data: serverRenderedData,
             page: startPage,
             allLoaded: false
@@ -56,7 +56,7 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 
         //Update state if you want to cause a rerender, else update ref.current
         const stateRef = useRef(state)
-        const setState = (newState: StateTypes<Data, PageSize>) => {
+        const setState = (newState: StateTypes<Data, Cursor, PageSize>) => {
             stateRef.current = newState
             setState_(newState)
         }
@@ -150,20 +150,22 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 }
 function generatePagingContext<
     Data,
+    Cursor,
     const PageSize extends number,
     FetcherDetails = undefined
 >(): PagingContextType<
     Data,
+    Cursor,
     PageSize,
     FetcherDetails
     > {
     const context = createContext<{
-        state: StateTypes<Data, PageSize>,
+        state: StateTypes<Data, Cursor, PageSize>,
         loadMore: () => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
         setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
         serverRenderedData: Data[],
-        startPage: Page<PageSize>,
+        startPage: Page<PageSize, Cursor>,
         loading: boolean,
         deatils: FetcherDetails,
             } | null>(null)

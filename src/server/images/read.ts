@@ -3,19 +3,21 @@ import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import type { ReadPageInput } from '@/actions/Types'
-import type { ImageDetails } from '@/server/images/Types'
+import type { ImageDetails, ImageCursor } from '@/server/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
 
 export async function readImagesPage<const PageSize extends number>(
-    { page, details }: ReadPageInput<PageSize, ImageDetails>
+    { page, details }: ReadPageInput<PageSize, ImageCursor, ImageDetails>
 ): Promise<Image[]> {
     const { collectionId } = details
-    const { page: pageNumber, pageSize } = page
+    const { pageSize, cursor } = page
     return await prismaCall(() => prisma.image.findMany({
         where: {
             collectionId,
         },
-        skip: pageNumber * pageSize,
+        cursor: {
+            id: cursor.id,
+        },
         take: pageSize,
     }))
 }

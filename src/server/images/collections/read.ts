@@ -7,6 +7,7 @@ import { ServerError } from '@/server/error'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
+    ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
 import type { ReadPageInput } from '@/actions/Types'
@@ -40,9 +41,9 @@ export async function readImageCollection(
  * @returns - A page of image collections
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+    { page }: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ImageCollectionPageReturn[]> {
-    const { page: pageNumber, pageSize } = page
+    const { cursor, pageSize } = page
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
         include: {
             coverImage: true,
@@ -59,7 +60,9 @@ export async function readImageCollectionsPage<const PageSize extends number>(
             { createdAt: 'desc' },
             { name: 'asc' }
         ],
-        skip: pageNumber * pageSize,
+        cursor: {
+            id: cursor.id
+        },
         take: pageSize,
     }))
 

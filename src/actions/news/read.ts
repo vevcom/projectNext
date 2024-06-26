@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readNews, readNewsCurrent, readOldNewsPage } from '@/server/news/read'
-import type { ExpandedNewsArticle, SimpleNewsArticle } from '@/server/news/Types'
+import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 
 export async function readOldNewsPageAction<const PageSize extends number>(
-    readPageImput: ReadPageInput<PageSize>
+    readPageImput: ReadPageInput<PageSize, NewsCursor>
 ): Promise<ActionReturn<SimpleNewsArticle[]>> {
     //TODO: only read news with right visibility
     return await safeServerCall(() => readOldNewsPage(readPageImput))

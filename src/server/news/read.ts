@@ -3,11 +3,11 @@ import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
 import prisma from '@/prisma'
-import type { ExpandedNewsArticle, SimpleNewsArticle } from '@/server/news/Types'
+import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
 import type { ReadPageInput } from '@/actions/Types'
 
 export async function readOldNewsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+    { page }: ReadPageInput<PageSize, NewsCursor>
 ): Promise<SimpleNewsArticle[]> {
     const news = await prismaCall(() => prisma.newsArticle.findMany({
         where: {
@@ -15,7 +15,9 @@ export async function readOldNewsPage<const PageSize extends number>(
                 lt: new Date(),
             }
         },
-        skip: page.page * page.pageSize,
+        cursor: {
+            id: page.cursor.id,
+        },
         take: page.pageSize,
         orderBy: {
             article: {

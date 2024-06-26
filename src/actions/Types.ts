@@ -21,13 +21,14 @@ export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = (
     }
 )
 
-export type Page<PageSize extends number> = {
+export type Page<PageSize extends number, Cursor> = {
     readonly pageSize: PageSize,
     page: number,
+    cursor: Cursor
 }
 
-export type ReadPageInput<PageSize extends number, InputDetailType = undefined> = {
-    page: Page<PageSize>,
+export type ReadPageInput<PageSize extends number, Cursor, InputDetailType = undefined> = {
+    page: Page<PageSize, Cursor>,
     details: InputDetailType,
 }
 
