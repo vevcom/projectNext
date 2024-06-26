@@ -27,7 +27,6 @@ export default async function adminCommittee() {
             }}
             startPage={{
                 page: 0,
-                cursor: null,
                 pageSize,
             }}
         >

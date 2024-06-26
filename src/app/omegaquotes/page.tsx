@@ -38,7 +38,6 @@ export default async function OmegaQuotes() {
                 startPage={{
                     pageSize,
                     page: 1,
-                    cursor: { id: quotes[quotes.length - 1].id }
                 }}
                 details={undefined}
                 serverRenderedData={quotes}

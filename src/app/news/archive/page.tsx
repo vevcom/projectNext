@@ -24,7 +24,6 @@ export default async function NewsArchive() {
                 startPage={{
                     page: 1,
                     pageSize,
-                    cursor: { id: serverRendered[serverRendered.length - 1].id },
                 }}
                 details={undefined}
                 serverRenderedData={serverRendered}

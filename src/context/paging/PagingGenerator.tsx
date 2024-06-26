@@ -16,13 +16,13 @@ export type PagingContextType<Data, Cursor, PageSize extends number, FetcherDeta
     refetch: () => Promise<Data[]>,
     setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
     serverRenderedData: Data[],
-    startPage: Page<PageSize, Cursor>,
+    startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     loading: boolean,
     deatils: FetcherDetails,
 } | null>
 
 export type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
-    startPage: Page<PageSize, Cursor>,
+    startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     children: React.ReactNode,
     details: FetcherDetails,
     serverRenderedData: Data[],
@@ -52,7 +52,10 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
     ) {
         const [state, setState_] = useState<StateTypes<Data, Cursor, PageSize>>({
             data: serverRenderedData,
-            page: startPage,
+            page: {
+                ...startPage,
+                cursor: getCursorAfterFetch(serverRenderedData)
+            },
             allLoaded: false
         })
         const [loading, setLoading_] = useState(false)
@@ -72,7 +75,10 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
         const resetState = () => {
             stateRef.current = {
                 data: serverRenderedData,
-                page: startPage,
+                page: {
+                    ...startPage,
+                    cursor: getCursorAfterFetch(serverRenderedData),
+                },
                 allLoaded: false
             }
             loadingRef.current = false
@@ -178,7 +184,7 @@ function generatePagingContext<
         refetch: () => Promise<Data[]>,
         setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
         serverRenderedData: Data[],
-        startPage: Page<PageSize, Cursor>,
+        startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
         loading: boolean,
         deatils: FetcherDetails,
             } | null>(null)

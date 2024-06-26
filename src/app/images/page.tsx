@@ -35,7 +35,6 @@ export default async function Images() {
                     startPage={{
                         pageSize,
                         page: 1,
-                        cursor: { id: collections[collections.length - 1].id }
                     }}
                     details={undefined}
                     serverRenderedData={collections}

@@ -18,7 +18,6 @@ export default async function Users() {
                     startPage={{
                         pageSize: 50,
                         page: 0,
-                        cursor: null,
                     }}
                     details={{
                         groups: [],

@@ -46,7 +46,6 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                         {
                             pageSize: 30,
                             page: 0,
-                            cursor: null,
                         }
                     }
                     details={{ collectionId: currentCollectionId }}
@@ -76,7 +75,6 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                     startPage={{
                                         pageSize: 12,
                                         page: 0,
-                                        cursor: null,
                                     }}
                                     details={undefined}
                                     serverRenderedData={[]}

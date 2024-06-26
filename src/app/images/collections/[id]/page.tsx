@@ -40,7 +40,6 @@ export default async function Collection({ params }: PropTypes) {
                 startPage={{
                     pageSize,
                     page: 1,
-                    cursor: { id: images[images.length - 1].id }
                 }}
                 details={{ collectionId: collection.id }}
                 serverRenderedData={images}
