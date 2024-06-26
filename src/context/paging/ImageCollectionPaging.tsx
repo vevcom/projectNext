@@ -18,6 +18,6 @@ export const ImageCollectionPagingContext = generatePagingContext<
 const ImageCollectionPagingProvider = generatePagingProvider({
     Context: ImageCollectionPagingContext,
     fetcher,
-    getCursorAfterFetch: data => ({ id: data[data.length - 1].id }),
+    getCursorAfterFetch: data => data.length ? { id: data[data.length - 1].id } : null,
 })
 export default ImageCollectionPagingProvider
