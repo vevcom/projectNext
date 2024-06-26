@@ -7,3 +7,7 @@ export type UserDetails = {
     groups: string[]
     partOfName: string
 }
+
+export type UserCursor = {
+    id: number
+}

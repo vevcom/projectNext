@@ -1,51 +1,77 @@
 'use client'
 
 import React, { createContext, useState, useRef, useEffect } from 'react'
-import type { ActionReturn, Page, ReadPageInput } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput, Page } from '@/server/paging/Types'
 import type { Context as ReactContextType } from 'react'
 
-export type StateTypes<Data, PageSize extends number> = {
-    page: Page<PageSize>,
+export type StateTypes<Data, Cursor, PageSize extends number> = {
+    page: Page<PageSize, Cursor>,
     data: Data[],
     allLoaded: boolean,
 }
 
-export type PagingContextType<Data, PageSize extends number, FetcherDetails> = ReactContextType<{
-    state: StateTypes<Data, PageSize>,
+export type PagingContextType<Data, Cursor, PageSize extends number, FetcherDetails> = ReactContextType<{
+    state: StateTypes<Data, Cursor, PageSize>,
     loadMore: () => Promise<Data[]>,
     refetch: () => Promise<Data[]>,
     setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
     serverRenderedData: Data[],
-    startPage: Page<PageSize>,
+    startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     loading: boolean,
     deatils: FetcherDetails,
 } | null>
 
-export type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    startPage: Page<PageSize>,
+export type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
+    startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     children: React.ReactNode,
     details: FetcherDetails,
     serverRenderedData: Data[],
 }
 
-export type GeneratorPropTypes<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
-    fetcher: (x: ReadPageInput<PageSize, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
-    Context: PagingContextType<Data, PageSize, FetcherDetails>,
+export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
+    fetcher: (x: ReadPageInput<PageSize, Cursor, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
+    Context: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
+    getCursorAfterFetch: (data: Data[]) => Cursor | null,
 }
 
-function generatePagingProvider<Data, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
+/**
+ * Generates a paging provider. Should be used in conjunction with generatePagingContext.
+ * @param fetcher The fetcher function that fetches the data.
+ * @param Context The context to use.
+ * @param getCursorAfterFetch A function that returns the cursor after fetching the data. You need
+ * to provide the way to set the next cursor after fetching the data. A return of null is interpreted as
+ * no data returned at all. In this case, the cursor will be unchanged.
+ * @returns A react component that provides the paging context.
+ */
+function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
     fetcher,
-    Context
-}: GeneratorPropTypes<Data, PageSize, FetcherDetails, DataGuarantee>
+    Context,
+    getCursorAfterFetch,
+}: GeneratorPropTypes<Data, Cursor, PageSize, FetcherDetails, DataGuarantee>
 ) {
     return function PagingProvider(
-        { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, PageSize, FetcherDetails>
+        { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, Cursor, PageSize, FetcherDetails>
     ) {
-        const [state, setState_] = useState<StateTypes<Data, PageSize>>({
-            data: serverRenderedData,
-            page: startPage,
-            allLoaded: false
-        })
+        const generateDefaultState = () => {
+            const cursor = getCursorAfterFetch(serverRenderedData)
+            const page: Page<PageSize, Cursor> = cursor ? {
+                ...startPage,
+                cursor,
+            } : {
+                ...startPage,
+                page: 0,
+                cursor: null,
+            }
+            return {
+                data: serverRenderedData,
+                page,
+                allLoaded: false
+            }
+        }
+        const [state, setState_] = useState<StateTypes<Data, Cursor, PageSize>>(
+            generateDefaultState()
+        )
         const [loading, setLoading_] = useState(false)
         const loadingRef = useRef(loading)
         const setLoading = (newLoading: boolean) => {
@@ -56,16 +82,12 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 
         //Update state if you want to cause a rerender, else update ref.current
         const stateRef = useRef(state)
-        const setState = (newState: StateTypes<Data, PageSize>) => {
+        const setState = (newState: StateTypes<Data, Cursor, PageSize>) => {
             stateRef.current = newState
             setState_(newState)
         }
         const resetState = () => {
-            stateRef.current = {
-                data: serverRenderedData,
-                page: startPage,
-                allLoaded: false
-            }
+            stateRef.current = generateDefaultState()
             loadingRef.current = false
         }
 
@@ -94,11 +116,36 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
                 setLoading(false)
                 return []
             }
+
+            if (!result.data.length) {
+                const newState = {
+                    data: stateRef.current.data,
+                    loading: false,
+                    allLoaded: true,
+                    page: {
+                        ...stateRef.current.page,
+                    }
+                }
+                setState(newState)
+                setLoading(false)
+                return result.data
+            }
+            const newCursor = getCursorAfterFetch(result.data) ?? stateRef.current.page.cursor
+            const newPage: Page<PageSize, Cursor> = newCursor ? {
+                ...stateRef.current.page,
+                cursor: newCursor,
+                page: stateRef.current.page.page + 1
+            } : {
+                ...stateRef.current.page,
+                cursor: null,
+                page: 0
+            }
+
             const newState = {
                 data: [...stateRef.current.data, ...result.data],
                 loading: false,
-                allLoaded: false,
-                page: { ...stateRef.current.page, page: stateRef.current.page.page + 1 }
+                allLoaded: !newCursor,
+                page: newPage
             }
             setState(newState)
             setLoading(false)
@@ -150,20 +197,22 @@ function generatePagingProvider<Data, PageSize extends number, FetcherDetails, D
 }
 function generatePagingContext<
     Data,
+    Cursor,
     const PageSize extends number,
     FetcherDetails = undefined
 >(): PagingContextType<
     Data,
+    Cursor,
     PageSize,
     FetcherDetails
     > {
     const context = createContext<{
-        state: StateTypes<Data, PageSize>,
+        state: StateTypes<Data, Cursor, PageSize>,
         loadMore: () => Promise<Data[]>,
         refetch: () => Promise<Data[]>,
         setDetails: (details: FetcherDetails, withFetch?: boolean) => void,
         serverRenderedData: Data[],
-        startPage: Page<PageSize>,
+        startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
         loading: boolean,
         deatils: FetcherDetails,
             } | null>(null)

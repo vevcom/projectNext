@@ -9,3 +9,7 @@ export type ExpandedNewsArticle = NewsArticle & {
 export type SimpleNewsArticle = NewsArticle & {
     coverImage: Image | null
 }
+
+export type NewsCursor = {
+    id: number
+}

@@ -12,15 +12,15 @@ import React, {
 import { useInView } from 'react-intersection-observer'
 import type { PagingContextType } from '@/context/paging/PagingGenerator'
 
-type PropTypes<Data, PageSize extends number, FetcherDetails> = {
-    pagingContext: PagingContextType<Data, PageSize, FetcherDetails>,
+type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
+    pagingContext: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
     renderer: (data: Data, i: number) => React.ReactNode,
 }
 
-export default function EndlessScroll<Data, const PageSize extends number, FetcherDetails>({
+export default function EndlessScroll<Data, Cursor, const PageSize extends number, FetcherDetails>({
     pagingContext,
     renderer
-}: PropTypes<Data, PageSize, FetcherDetails>) {
+}: PropTypes<Data, Cursor, PageSize, FetcherDetails>) {
     const context = useContext(pagingContext)
 
     //This component must be rendered inside ContextProvider

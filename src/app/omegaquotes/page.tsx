@@ -1,13 +1,13 @@
 import OmegaquoteList from './omegaquotesQuoteList'
 import OmegaquoteQuote from './omegaquotesQuote'
 import CreateOmegaquoteForm from './CreateOmegaquoteForm'
-import OmegaquotePagingProvider from '@/context/paging/omegaquotesPaging'
+import OmegaquotePagingProvider from '@/context/paging/OmegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readQuotesPageAction } from '@/actions/omegaquotes/read'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
+import type { PageSizeOmegaquote } from '@/context/paging/OmegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const { permissions } = await getUser({
@@ -19,7 +19,14 @@ export default async function OmegaQuotes() {
 
     const pageSize: PageSizeOmegaquote = 20
 
-    const readQuotes = await readQuotesPageAction({ page: { pageSize, page: 0 }, details: undefined })
+    const readQuotes = await readQuotesPageAction({
+        page: {
+            pageSize,
+            page: 0,
+            cursor: null,
+        },
+        details: undefined
+    })
     if (!readQuotes.success) notFound()
     const quotes = readQuotes.data
 

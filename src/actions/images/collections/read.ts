@@ -3,10 +3,12 @@ import { createActionError } from '@/actions/error'
 import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { SpecialCollection } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { ImageCollection } from '@prisma/client'
 import type {
     ExpandedImageCollection,
+    ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
 
@@ -28,7 +30,7 @@ export async function readImageCollectionAction(
  * @returns - A page of image collections
  */
 export async function readImageCollectionsPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize>
+    readPageInput: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
     return await safeServerCall(() => readImageCollectionsPage(readPageInput))

@@ -8,3 +8,7 @@ export type ImageCollectionPageReturn = ImageCollection & {
     coverImage: Image | null,
     numberOfImages: number,
 }
+
+export type ImageCollectionCursor = {
+    id: number
+}

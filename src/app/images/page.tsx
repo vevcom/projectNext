@@ -16,7 +16,8 @@ export default async function Images() {
     const collectionPage = await readImageCollectionsPageAction({
         page: {
             pageSize,
-            page: 0
+            page: 0,
+            cursor: null
         },
         details: undefined,
     })

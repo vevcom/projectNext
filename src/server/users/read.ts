@@ -1,8 +1,9 @@
 import { userFilterSelection } from './ConfigVars'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { UserFiltered, UserDetails } from './Types'
-import type { ReadPageInput } from '@/actions/Types'
+import type { UserFiltered, UserDetails, UserCursor } from './Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
 
 /**
@@ -14,11 +15,10 @@ import type { User } from '@prisma/client'
 export async function readUserPage<const PageSize extends number>({
     page,
     details
-}: ReadPageInput<PageSize, UserDetails>): Promise<UserFiltered[]> {
+}: ReadPageInput<PageSize, UserCursor, UserDetails>): Promise<UserFiltered[]> {
     const words = details.partOfName.split(' ')
     return await prismaCall(() => prisma.user.findMany({
-        skip: page.page * page.pageSize,
-        take: page.pageSize,
+        ...cursorPageingSelection(page),
         select: userFilterSelection,
         where: {
             AND: words.map((word, i) => {
