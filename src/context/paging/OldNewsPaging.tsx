@@ -11,6 +11,6 @@ export const OldNewsPagingContext = generatePagingContext<SimpleNewsArticle, New
 const OldNewsPagingProvider = generatePagingProvider({
     Context: OldNewsPagingContext,
     fetcher,
-    getCursorAfterFetch: data => data.length ? { id: data[data.length - 1].id } : null,
+    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
 })
 export default OldNewsPagingProvider

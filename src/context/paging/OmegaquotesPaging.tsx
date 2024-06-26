@@ -11,7 +11,7 @@ export const OmegaquotePagingContext = generatePagingContext<OmegaquoteFiltered,
 const OmegaquotePagingProvider = generatePagingProvider({
     Context: OmegaquotePagingContext,
     fetcher,
-    getCursorAfterFetch: data => data.length ? { id: data[data.length - 1].id } : null,
+    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
 
 })
 export default OmegaquotePagingProvider

@@ -54,7 +54,7 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
     ) {
         const generateDefaultState = () => {
             const cursor = getCursorAfterFetch(serverRenderedData)
-            const page : Page<PageSize, Cursor> = cursor ? {
+            const page: Page<PageSize, Cursor> = cursor ? {
                 ...startPage,
                 cursor,
             } : {
@@ -115,7 +115,7 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
                 setLoading(false)
                 return []
             }
-            
+
             if (!result.data.length) {
                 const newState = {
                     data: stateRef.current.data,
@@ -130,7 +130,7 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
                 return result.data
             }
             const newCursor = getCursorAfterFetch(result.data) ?? stateRef.current.page.cursor
-            const newPage : Page<PageSize, Cursor> = newCursor ? {
+            const newPage: Page<PageSize, Cursor> = newCursor ? {
                 ...stateRef.current.page,
                 cursor: newCursor,
                 page: stateRef.current.page.page + 1
@@ -139,11 +139,11 @@ function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDe
                 cursor: null,
                 page: 0
             }
-            
+
             const newState = {
                 data: [...stateRef.current.data, ...result.data],
                 loading: false,
-                allLoaded: newCursor ? false : true,
+                allLoaded: !newCursor,
                 page: newPage
             }
             setState(newState)
