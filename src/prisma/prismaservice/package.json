@@ -25,8 +25,8 @@
     "schema": "../schema"
   },
   "devDependencies": {
+    "@types/uuid": "^10.0.0",
     "@types/node": "^20.14.8",
-    "@types/uuid": "^9.0.8",
     "prisma": "^5.15.1",
     "tsc-alias": "^1.8.10",
     "tscpaths": "^0.0.9",
