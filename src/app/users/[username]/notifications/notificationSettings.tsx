@@ -4,7 +4,7 @@ import SubscriptionItem from './subscriptionItem'
 import styles from './notificationSettings.module.scss'
 import { booleanOperationOnMethods, newAllMethodsOff } from '@/server/notifications/notificationMethodOperations'
 import { notificationMethodsDisplayMap } from '@/server/notifications/ConfigVars'
-import { allMethodsOff, notificationMethods } from '@/server/notifications/Types'
+import { notificationMethods } from '@/server/notifications/Types'
 import SubmitButton from '@/app/components/UI/SubmitButton'
 import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
 import { useUser } from '@/auth/useUser'
@@ -95,7 +95,7 @@ function changeMethodsInBranch(branch: NotificationBranch, newMethods: Notificat
             if (newMethods[method] && !subBranch.subscription) {
                 subBranch.subscription = {
                     new: true,
-                    methods: allMethodsOff,
+                    methods: newAllMethodsOff(),
                 }
             }
 
@@ -176,7 +176,7 @@ export default function NotificationSettings({
         }
 
         const submitTimestamp = (new Date().getTime())
-        console.log("last:", lastSubmit)
+        console.log('last:', lastSubmit)
 
         setFormState({
             success: false,
