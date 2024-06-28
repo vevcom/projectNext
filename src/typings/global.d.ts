@@ -4,6 +4,6 @@ import type { DefaultArgs } from '@prisma/client/runtime/library'
 
 declare global {
    // eslint-disable-next-line no-var
-   let prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
-   let mailHandler: ReturnType<typeof mailHandlerSingleton>
+   var prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
+   var mailHandler: ReturnType<typeof mailHandlerSingleton>
 }
