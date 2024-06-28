@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import AddNews from './AddNews'
 import CurrentNews from './CurrentNews'
-import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Link from 'next/link'
 

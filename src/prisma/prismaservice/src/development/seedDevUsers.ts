@@ -51,6 +51,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                             passwordHash,
                         },
                     },
+                    acceptedTerms: new Date(),
                 },
             })
         }))
@@ -73,6 +74,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     passwordHash,
                 },
             },
+            acceptedTerms: new Date(),
         },
     })
     console.log(harambe)

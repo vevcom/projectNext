@@ -1,5 +1,6 @@
 import 'server-only'
 import { fetchExtendedUserInfoFromFeide } from './api'
+import { feideScope } from './ConfigVars'
 import type { OAuthConfig, OAuthUserConfig } from 'next-auth/providers/index'
 
 /**
@@ -29,7 +30,7 @@ export default function FeideProvider<P extends FeideProfile>(
         wellKnown: 'https://auth.dataporten.no/.well-known/openid-configuration',
         authorization: {
             params: {
-                scope: 'openid email groups-edu groups-org userid userinfo-mobile userinfo-name longterm',
+                scope: feideScope,
             },
         },
         checks: ['pkce', 'state'],

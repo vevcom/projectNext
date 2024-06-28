@@ -1,5 +1,5 @@
 import 'server-only'
-import { readJWTPayload } from '@/auth/jwt'
+import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/server/auth/feideAccounts/create'
 import { createUser } from '@/server/users/create'
 import { readUserOrNullOfFeideAccount } from '@/server/auth/feideAccounts/read'
@@ -19,7 +19,6 @@ import type { Adapter, AdapterUser } from 'next-auth/adapters'
 function convertToAdapterUser(user: UserFiltered): AdapterUser {
     return {
         ...user,
-        emailVerified: null,
         id: String(user.id),
     }
 }
@@ -92,6 +91,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 firstname: user.firstname,
                 lastname: user.lastname,
                 username,
+                emailVerified: null, //(new Date()).toISOString(),
             })
 
             return convertToAdapterUser(createdUser)

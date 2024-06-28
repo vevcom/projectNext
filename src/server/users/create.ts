@@ -1,8 +1,9 @@
 import 'server-only'
+import { readOmegaMembershipGroup } from '@/server/groups/omegaMembershipGroups/read'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { createUserValidation } from '@/server/users/validation'
-import { hashPassword } from '@/auth/password'
 import type { User } from '@prisma/client'
 import type { CreateUserTypes } from '@/server/users/validation'
 
@@ -14,7 +15,8 @@ import type { CreateUserTypes } from '@/server/users/validation'
 export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<User> {
     const data = createUserValidation.detailedValidate(rawdata)
 
-    const passwordHash = data.password && await hashPassword(data.password)
+    const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
+    const omegaOrder = await readCurrenOmegaOrder()
 
     // Since "password" and "confirmPasswor" are not part of the user model they must be
     // deleted before "data" can be unpacked in the create user call.
@@ -24,11 +26,13 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
     return await prismaCall(() => prisma.user.create({
         data: {
             ...data,
-            credentials: passwordHash ? {
-                create: {
-                    passwordHash
-                },
-            } : undefined,
+            memberships: {
+                create: [{
+                    groupId: omegaMembership.groupId,
+                    order: omegaOrder.order,
+                    admin: false,
+                }]
+            }
         },
     }))
 }

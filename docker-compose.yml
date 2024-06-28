@@ -20,6 +20,13 @@ services:
             PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
             PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
             NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
+            FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
+            FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
+            MAIL_SERVER: ${MAIL_SERVER}
+            MAIL_DOMAIN: ${MAIL_DOMAIN}
+            DOMAIN: ${DOMAIN}
+            JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+            JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
         depends_on:
             db:
                 condition: service_healthy
@@ -65,6 +72,7 @@ services:
             VEVEN_STORE_URL: ${VEVEN_STORE_URL}
             VEVEN_DB_URI: ${VEVEN_DB_URI}
             MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
+            MAIL_SERVER: ${MAIL_SERVER}
             PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
             PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
         volumes:

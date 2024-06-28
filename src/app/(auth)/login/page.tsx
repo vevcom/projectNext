@@ -1,8 +1,10 @@
 'use client'
+import styles from './page.module.scss'
 import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import type { FormEvent } from 'react'
 
 export default function LogIn() {
@@ -34,5 +36,7 @@ export default function LogIn() {
             redirect: true,
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
         })}>Logg inn med Feide</BorderButton>
+        <Link href="/reset-password" className={styles.resetPasswordLink}>Glemt passord?</Link>
+        <p>Er det første gang du logger inn? Da er det bare å logge inn med feide for å lage en bruker.</p>
     </>
 }

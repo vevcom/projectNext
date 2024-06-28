@@ -3,3 +3,4 @@ node_modules/
 dist/
 src/prisma/prismaservice/generated/
 src/prisma/prismaservice/dist/
+src/typings/global.d.ts

@@ -6,24 +6,40 @@
 
     display: table-cell;
     vertical-align: middle;
+
     > .card {
-        margin: auto;
-        width: 60%;
         @include ohma.card;
-        padding: 4*ohma.$gap; 
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-        background-color: ohma.$colors-secondary;
-        > .input {
-            grid-column: 1/2;
-            max-width: 250px;
-            margin: auto;
-        }
-        > .image {
+        margin-top: 4*ohma.$gap;
+        margin-bottom: 4*ohma.$gap;
+        padding: 4*ohma.$gap;
+        background-color: ohma.$colors-white;
+        box-shadow: 0 0 1rem ohma.$colors-gray-500;
+
+        @include ohma.screenLg {
+            @include ohma.pagePadding(650px);
             display: grid;
-            place-items: center;
-            grid-column: 2/3;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+
+            > .input {
+                grid-column: 1/2;
+                max-width: 250px;
+                margin: auto;
+            }
+    
+            > .image {
+                display: grid;
+                place-items: center;
+                grid-column: 2/3;
+            }
+        }
+
+        @include ohma.screenMobile {
+            @include ohma.pagePadding(300px);
+
+            > .image {
+                display: none;
+            }
         }
     }
 }

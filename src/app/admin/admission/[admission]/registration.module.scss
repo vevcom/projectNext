@@ -1,0 +1,18 @@
+@use '@/styles/ohma';
+
+.registration {
+
+    > .feedbackBox {
+        min-height: 2rem;
+        text-align: center;
+        font-size: ohma.$fonts-xl;
+
+        &.error {
+            color: ohma.$colors-error;
+        }
+
+        &.success {
+            color: ohma.$colors-green;
+        }
+    }
+}
