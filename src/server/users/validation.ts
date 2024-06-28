@@ -14,7 +14,7 @@ const baseUserValidation = new ValidationBase({
         lastname: z.string(),
         allergies: z.string().optional().nullable(),
         password: z.string(),
-        confirmPassword: z.string().optional(),
+        confirmPassword: z.string(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
