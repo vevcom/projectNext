@@ -14,8 +14,8 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
-import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
 import { hashPassword } from '@/auth/password'
+import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
 import type { User } from '@prisma/client'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
 
@@ -89,7 +89,7 @@ export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Det
  * @param rawdata - Registration data.
  * @returns null
  */
-export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<null> {
+export async function registerUser(id: number, rawdata: RegisterUserTypes['Detailed']): Promise<UserFiltered> {
     const { sex, password, mobile, allergies } = registerUserValidation.detailedValidate(rawdata)
 
     if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
@@ -129,7 +129,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
     const passwordHash = await hashPassword(password)
 
-    await prismaCall(() => prisma.$transaction([
+    const results = await prismaCall(() => prisma.$transaction([
         prisma.user.update({
             where: {
                 id
@@ -142,60 +142,59 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
             },
             select: userFilterSelection
         }),
-        prisma.credentials.create({
-            data: {
-                passwordHash,
+        prisma.credentials.upsert({
+            where: {
+                userId: id
+            },
+            create: {
                 user: {
                     connect: {
-                        id,
+                        id
                     },
                 },
+                passwordHash,
             },
             update: {
-                passwordHash: password,
+                passwordHash,
             },
         })
     ]))
 
-    const promises = [
-        createDefaultSubscriptions(id),
-    ]
+    try {
+        await createDefaultSubscriptions(id)
+    } catch (error) {
+        if (!(error instanceof ServerError) || error.errorCode !== 'DUPLICATE') {
+            // Duplicate subscriptions doen't do anything, and it will make development easier.
+            // In addition will this tolerate if we invalidate a users accepted terms,
+            // without deleting the user's subscriptions
 
-    promises.push((async () => {
-        const partOfOmega = storedUser.memberships.reduce(
-            (acc, val) => acc || (val.group.studyProgramme?.partOfOmega === true),
-            false
-        )
+            throw error
+        }
+    }
 
-        await updateUserOmegaMembershipGroup(id, partOfOmega ? 'SOELLE' : 'EXTERNAL', true)
-    })())
+    const partOfOmega = storedUser.memberships.reduce(
+        (acc, val) => acc || (val.group.studyProgramme?.partOfOmega === true),
+        false
+    )
 
-    await Promise.all(promises)
+    await updateUserOmegaMembershipGroup(id, partOfOmega ? 'SOELLE' : 'EXTERNAL', true)
 
-    return null
+    return results[0]
 }
 
 export async function updateUserPassword(id: number, data: UpdateUserPasswordTypes['Detailed']): Promise<null> {
     const parse = updateUserPasswordValidation.detailedValidate(data)
 
-    await prismaCall(() => prisma.$transaction([
-        prisma.credentials.update({
-            where: {
-                userId: id,
-            },
-            data: {
-                passwordHash: parse.password,
-            }
-        }),
-        prisma.user.update({
-            where: {
-                id,
-            },
-            data: {
-                updatedAt: new Date(),
-            }
-        })
-    ]))
+    const passwordHash = await hashPassword(parse.password)
+
+    await prismaCall(() => prisma.credentials.update({
+        where: {
+            userId: id,
+        },
+        data: {
+            passwordHash,
+        }
+    }))
 
     return null
 }

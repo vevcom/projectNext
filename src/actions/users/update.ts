@@ -43,7 +43,7 @@ export async function registerNewEmailAction(rawdata: FormData): Promise<ActionR
 
 export async function registerOwnUser(
     rawdata: FormData | RegisterUserTypes['Type']
-): Promise<ActionReturn<null>> {
+): Promise<ActionReturn<UserFiltered>> {
     const { authorized, status, user } = await getUser({
         userRequired: true,
     }) //TODO: Permission check

@@ -13,7 +13,7 @@ const baseUserValidation = new ValidationBase({
         firstname: z.string(),
         lastname: z.string(),
         allergies: z.string().optional().nullable(),
-        password: z.string().optional(),
+        password: z.string(),
         confirmPassword: z.string().optional(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
@@ -28,8 +28,8 @@ const baseUserValidation = new ValidationBase({
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         allergies: z.string().max(150).optional().nullable(),
-        password: z.string().max(50).min(2).optional(),
-        confirmPassword: z.string().max(50).min(2).optional(),
+        password: z.string().max(50).min(12),
+        confirmPassword: z.string().max(50).min(12),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),

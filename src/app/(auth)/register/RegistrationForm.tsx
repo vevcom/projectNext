@@ -9,7 +9,7 @@ import { sexOptions } from '@/server/users/ConfigVars'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
-export default async function RegistrationForm() {
+export default function RegistrationForm() {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
@@ -34,8 +34,8 @@ export default async function RegistrationForm() {
     >
         <TextInput label="Telefonnummer" name="mobile" />
         <TextInput label="Allergier / diett" name="allergies" />
-        <TextInput label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
-        <TextInput label="Gjenta passord" name="confirmPassword" />
+        <TextInput type="password" label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
+        <TextInput type="password" label="Gjenta passord" name="confirmPassword" />
         <Select label="Kjønn" name="sex" options={sexOptions}/>
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
