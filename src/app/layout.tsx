@@ -14,6 +14,7 @@ import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
+import PwaInstaller from './pwaInstaller'
 
 config.autoAddCss = false
 
@@ -59,6 +60,8 @@ export default async function RootLayout({ children }: PropTypes) {
                         </EditModeProvider>
                     </DefaultPermissionsProvider>
                 </SessionProvider>
+
+                <PwaInstaller NODE_ENV={process.env.NODE_ENV} />
             </body>
         </html>
     )

@@ -16,6 +16,7 @@ services:
             - ./package.json:/usr/src/app/package.json
             - ./package-lock.json:/usr/src/app/package-lock.json
             - ./logs:/usr/src/app/logs
+            - ./public:/usr/src/app/public
         environment:
             NODE_ENV: development
             DB_URI: ${DB_URI}
