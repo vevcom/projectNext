@@ -1,16 +1,4 @@
-import type { Locker } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { readLocker } from './read'
 
-export type LockerWithReservation = Locker & {
-    LockerReservation: {
-        id: number,
-        endDate: Date | null,
-        group: {
-            id: number
-        } | null,
-        user: {
-            id: number
-            firstname: string
-            lastname: string
-        }
-    }[]
-}
+export type LockerWithReservation = Prisma.PromiseReturnType<typeof readLocker>

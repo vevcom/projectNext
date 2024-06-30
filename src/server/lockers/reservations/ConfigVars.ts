@@ -8,7 +8,38 @@ export const lockerReservationIncluder = {
             endDate: true,
             group: {
                 select: {
-                    id: true
+                    id: true,
+                    groupType: true,
+                    class: {
+                        select: {
+                            year: true
+                        }
+                    },
+                    committee: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    interestGroup: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    manualGroup: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    omegaMembershipGroup: {
+                        select: {
+                            omegaMembershipLevel: true
+                        }
+                    },
+                    studyProgramme: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
             },
             user: {

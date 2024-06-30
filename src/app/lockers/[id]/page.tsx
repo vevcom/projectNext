@@ -6,6 +6,7 @@ import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm' 
 import { getUser } from '@/auth/getUser'
 import { readGroups } from '@/server/groups/read'
+import { getGroupNameFromLocker } from '../util'
 
 
 type PropTypes = {
@@ -29,7 +30,9 @@ export default async function Locker({ params }: PropTypes) {
         return <LockerNotFound />
     }
 
-    const reserved = locker.data.LockerReservation.length > 0
+    const isReserved = locker.data.LockerReservation.length > 0
+    const reservation = locker.data.LockerReservation[0]
+    const groupName = getGroupNameFromLocker(locker.data)
 
     const groups = await readGroups()
     const groupsFormData = groups.map(group => ({value: group.id.toString(), label: group.id.toString()}))
@@ -40,14 +43,14 @@ export default async function Locker({ params }: PropTypes) {
                 <h2>Skap nr. {params.id}</h2>
                 <p>{locker.data.building} {locker.data.floor}. etasje</p>
                 {
-                    reserved 
+                    isReserved 
                     ?
                     <>
-                            <p>Dette skapet er reservert av {locker.data.LockerReservation[0].user.firstname} {locker.data.LockerReservation[0].user.lastname} {locker.data.LockerReservation[0].group ? `på vegne av ${locker.data.LockerReservation[0].group.id}` : ""} {locker.data.LockerReservation[0].endDate == null ? "på ubestemt tid" : `fram til ${locker.data.LockerReservation[0].endDate.toLocaleDateString()}`}</p>
+                            <p>Dette skapet er reservert av {reservation.user.firstname} {reservation.user.lastname} {reservation.group ? `på vegne av ${groupName}` : ""} {reservation.endDate == null ? "på ubestemt tid" : `fram til ${reservation.endDate.toLocaleDateString()}`}</p>
                             {
-                                user.id == locker.data.LockerReservation[0].user.id
+                                user.id == reservation.user.id
                                 ?
-                                <UpdateLockerReservationForm reservationId={locker.data.LockerReservation[0].id} groupsFormData={groupsFormData}/>
+                                <UpdateLockerReservationForm reservationId={reservation.id} groupsFormData={groupsFormData}/>
                                 :
                                 <></>
                             }

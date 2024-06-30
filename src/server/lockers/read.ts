@@ -7,7 +7,7 @@ import type { ReadPageInput } from '@/actions/Types'
 import type { LockerWithReservation } from '@/server/lockers/Types'
 import { lockerReservationIncluder } from './reservations/ConfigVars'
 
-export async function readLocker(id: number): Promise<LockerWithReservation> {
+export async function readLocker(id: number) {
     const locker = await prismaCall(() => prisma.locker.findUnique({
         where: {
             id

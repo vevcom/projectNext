@@ -15,7 +15,7 @@ export default function LockerList() {
                 <h3>Bygg</h3>
                 <h3>Etasje</h3>
                 <h3 className={styles.hideSecond}>Person</h3>
-                <h3 className={styles.hideFirst}>Komité</h3>
+                <h3 className={styles.hideFirst}>Gruppe</h3>
                 <h3>Dato</h3>
             </div>
             <div>
