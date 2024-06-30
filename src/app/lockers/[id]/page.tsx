@@ -5,7 +5,7 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm' 
 import { getUser } from '@/auth/getUser'
-import { readGroups } from '@/server/groups/read'
+import { readGroupsOfUser } from '@/server/groups/read'
 import { getGroupNameFromLocker } from '../util'
 
 
@@ -34,8 +34,33 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = getGroupNameFromLocker(locker.data)
 
-    const groups = await readGroups()
-    const groupsFormData = groups.map(group => ({value: group.id.toString(), label: group.id.toString()}))
+    const groups = await readGroupsOfUser(user.id)
+
+    const groupsFormData = groups.map(group => {
+        let name = "test"
+        switch (group.groupType) {
+            case "CLASS":
+                name = group.class?.year + ". Klasse"
+                break
+            case "COMMITTEE":
+                name = group.committee?.name 
+                break
+            case "INTEREST_GROUP":
+                name = group.interestGroup?.name
+                break
+            case "MANUAL_GROUP":
+                name = group.manualGroup?.name
+                break
+            case "OMEGA_MEMBERSHIP_GROUP":
+                name = group.omegaMembershipGroup?.omegaMembershipLevel
+                break
+            case "STUDY_PROGRAMME":
+                name = group.studyProgramme?.name
+                break
+
+        }
+        return {value: group.id.toString(), label: name}
+    })
 
     return (
         <PageWrapper title="Skapreservasjon">
