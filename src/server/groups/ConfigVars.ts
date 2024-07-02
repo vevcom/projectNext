@@ -1,4 +1,5 @@
 import type { GroupType, OmegaMembershipLevel } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 /**
  * A object that describes the different group types in a friendly way
@@ -64,3 +65,18 @@ export const OmegaMembershipLevelConfig = {
         description: string
     }
 }
+
+export const groupsExpandedIncluder = {
+    memberships: {
+        take: 1,
+        orderBy: {
+            order: 'asc'
+        },
+    },
+    committee: { select: { name: true } },
+    manualGroup: { select: { name: true } },
+    class: { select: { year: true } },
+    interestGroup: { select: { name: true } },
+    omegaMembershipGroup: { select: { omegaMembershipLevel: true } },
+    studyProgramme: { select: { name: true } },
+} as const satisfies Prisma.GroupInclude

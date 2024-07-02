@@ -1,9 +1,10 @@
-import { GroupTypesConfig, OmegaMembershipLevelConfig } from './ConfigVars'
+import { GroupTypesConfig, OmegaMembershipLevelConfig, groupsExpandedIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import type { Group, OmegaMembershipLevel, User } from '@prisma/client'
-import type { ExpandedGroup, GroupsStructured } from './Types'
+import type { Group, User } from '@prisma/client'
+import type { ExpandedGroup, GroupsStructured, GroupWithIncludes } from './Types'
+import type { Prisma } from '@prisma/client'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -42,38 +43,38 @@ export async function readGroup(id: number): Promise<Group> {
     }))
 }
 
-export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
-    const groups = await prismaCall(() => prisma.group.findMany({
-        include: {
-            memberships: {
-                take: 1,
-                orderBy: {
-                    order: 'asc'
-                },
-            },
-            committee: { select: { name: true } },
-            manualGroup: { select: { name: true } },
-            class: { select: { year: true } },
-            interestGroup: { select: { name: true } },
-            omegaMembershipGroup: { select: { omegaMembershipLevel: true } },
-            studyProgramme: { select: { name: true } },
-        }
-    }))
-
-    const groupsWithMembers = await Promise.all(groups.map(group => prisma.membership.count({
+export async function expandGroup(group: GroupWithIncludes): Promise<ExpandedGroup> {
+    const members = await prisma.membership.count({
         where: getMembershipFilter('ACTIVE', group.id)
     })
-    )).then(members => groups.map((group, i) => ({ ...group, members: members[i] })))
+    const name = inferGroupName(group)
+    const firstOrder = group.memberships[0]?.order ?? group.order
+    return {
+        ...group,
+        members,
+        firstOrder,
+        name,
+    }
+}
 
-    return groupsWithMembers.map(group => {
-        const name = inferGroupName(group)
-        const firstOrder = group.memberships[0]?.order ?? group.order
-        return {
-            ...group,
-            firstOrder,
-            name,
-        }
-    })
+export async function readGroupExpanded(id: number): Promise<ExpandedGroup> {
+    const group = await prismaCall(() => prisma.group.findFirstOrThrow({
+        where: {
+            id,
+        },
+        include: groupsExpandedIncluder,
+    }))
+    return expandGroup(group)
+}
+
+
+export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
+    const groups = await prismaCall(() => prisma.group.findMany({
+        include: groupsExpandedIncluder,
+    }))
+
+    const groupsExpanded = await Promise.all(groups.map(expandGroup))
+    return groupsExpanded
 }
 
 /**
@@ -101,16 +102,7 @@ export async function readGroupsStructured(): Promise<GroupsStructured> {
  * @param group - The group to infer the name of
  * @returns
  */
-export function inferGroupName(group: {
-    id: Group['id'],
-    groupType: Group['groupType'],
-    committee?: { name: string } | null,
-    manualGroup?: { name: string } | null,
-    class?: { year: number } | null,
-    interestGroup?: { name: string } | null,
-    omegaMembershipGroup?: { omegaMembershipLevel: OmegaMembershipLevel } | null,
-    studyProgramme?: { name: string } | null,
-}) {
+export function inferGroupName(group: GroupWithIncludes) {
     let name = `group id ${group.id}`
     switch (group.groupType) {
         case 'COMMITTEE':
