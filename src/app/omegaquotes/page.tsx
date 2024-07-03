@@ -11,7 +11,6 @@ import type { PageSizeOmegaquote } from '@/context/paging/omegaquotesPaging'
 
 export default async function OmegaQuotes() {
     const { permissions } = await getUser({
-        userRequired: true,
         shouldRedirect: true,
         requiredPermissions: [['OMEGAQUOTES_READ']],
     })

@@ -3,6 +3,7 @@ import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails } from './Types'
 import type { ReadPageInput } from '@/actions/Types'
+import type { User } from '@prisma/client'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -44,4 +45,18 @@ export async function readUserPage<const PageSize extends number>({
             { username: 'asc' },
         ]
     }))
+}
+
+type readUserWhere = {
+    name?: string,
+    id?: number,
+    email?: string,
+}
+
+export async function readUser(where: readUserWhere): Promise<User> {
+    return await prismaCall(() => prisma.user.findFirstOrThrow({ where }))
+}
+
+export async function readUserOrNull(where: readUserWhere): Promise<User | null> {
+    return await prismaCall(() => prisma.user.findFirst({ where }))
 }

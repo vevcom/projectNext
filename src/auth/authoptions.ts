@@ -1,15 +1,18 @@
+import 'server-only'
 import FeideProvider from './feide/FeideProvider'
-import PrismaAdapter from './feide/PrismaAdapter'
-import signUp from './feide/signUp'
+import VevenAdapter from './VevenAdapter'
+import { fetchStudyProgrammesFromFeide } from './feide/api'
+import { comparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/read'
-import { updateFeideAccount } from '@/server/auth/feide/update'
+import { readUser } from '@/server/users/read'
+import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
+import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
-import type { JWT } from 'next-auth/jwt'
-import type { AuthOptions, Profile, User as nextAuthUser } from 'next-auth'
-import type { ExtendedFeideUser } from './feide/Types'
+import type { AuthOptions } from 'next-auth'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -17,7 +20,7 @@ export const authOptions: AuthOptions = {
             name: 'Credentials',
             credentials: {
                 username: { label: 'Username', type: 'text' },
-                password: { label: 'Password', type: 'password' }
+                password: { label: 'Password', type: 'password' },
             },
             authorize: async (credentials) => {
                 if (!credentials?.username || !credentials.password) return null
@@ -37,10 +40,11 @@ export const authOptions: AuthOptions = {
 
                 if (!userCredentials) return null
 
-                // TODO - faktisk gjør encryption, legg til hashing på POST
-                if (userCredentials.passwordHash !== credentials.password) return null
+                const passwordMatch = await comparePassword(credentials.password, userCredentials.passwordHash)
 
-                return { id: userCredentials.userId }
+                if (!passwordMatch) return null
+
+                return { id: String(userCredentials.userId) }
             }
         }),
         FeideProvider({
@@ -58,36 +62,41 @@ export const authOptions: AuthOptions = {
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
 
-            const credentials = await prisma.credentials.findUnique({
-                where: {
-                    userId: token.user.id
-                },
-                select: {
-                    credentialsUpdatedAt: true
+            switch (token.provider) {
+                case 'credentials': {
+                    const credentials = await prisma.credentials.findUnique({
+                        where: {
+                            userId: token.user.id
+                        },
+                        select: {
+                            credentialsUpdatedAt: true
+                        }
+                    })
+
+                    // Check if the users credentials were updated after the token was
+                    // created. I.e. if the user updates their password you don't want
+                    // their old token to be valid. 'iat' is given in seconds so we
+                    // have to convert it to milliseconds.
+                    // Add 10 seconds to get time to login after a credentials update
+                    if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime() - 10000) return null
+
+                    break
                 }
-            })
+                case 'feide': {
+                    const hasFeide = await prisma.feideAccount.count({
+                        where: {
+                            userId: token.user.id
+                        },
+                    })
 
-            if (credentials === null) {
-                const hasFeide = await prisma.feideAccount.findUnique({
-                    where: {
-                        userId: token.user.id
-                    },
-                    select: {
-                        userId: true
-                    }
-                })
+                    if (!hasFeide) return null
 
-                if (hasFeide) {
-                    return token
+                    break
+                }
+                default: {
+                    return null
                 }
             }
-
-            // Check if the users credentials were updated after the token was
-            // created. I.e. if the user updates their password you don't want
-            // their old token to be valid. 'iat' is given in seconds so we
-            // have to convert it to milliseconds.
-            // Add 10 seconds to get time to login after a credentials update
-            if (!credentials || token.iat * 1000 < credentials.credentialsUpdatedAt.getTime() - 10000) return null
 
             return token
         },
@@ -99,79 +108,94 @@ export const authOptions: AuthOptions = {
             session.memberships = token.memberships
             return session
         },
-        async jwt({
-            token,
-            user,
-            trigger,
-            profile
-        }: {
-            token: JWT,
-            user: nextAuthUser,
-            trigger?: 'update' | 'signIn' | 'signUp',
-            profile?: Profile,
-        }) {
-            if (!trigger) {
-                // TODO - refactor when read user action exists
-                const dbUser = await prisma.user.findUniqueOrThrow({
-                    where: {
-                        id: token.user.id,
-                    },
-                    select: {
-                        updatedAt: true,
-                    },
-                })
+        async jwt({ account, profile, token, trigger, user }) {
+            switch (trigger) {
+                case 'signUp':
+                case 'signIn': {
+                    if (account?.provider === 'feide') {
+                        if (!account.access_token) {
+                            // Should never happen.
+                            throw new Error('Account has no access token!')
+                        }
 
-                // Check if the user data that is on the jwt was changed
-                // after the token was created. If so get new data from db.
-                // 'iat' is given in seconds so we have to convert it to
-                // milliseconds.
-                if (token.iat && token.iat * 1000 > dbUser?.updatedAt.getTime()) {
-                    return token
+                        if (profile?.email) await updateEmailForFeideAccount(account.providerAccountId, profile.email)
+
+                        const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(account.access_token)
+                        const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
+
+                        // Everything from here...
+                        const order = (await readCurrenOmegaOrder()).order
+
+                        await prisma.membership.deleteMany({
+                            where: {
+                                OR: studyProgrammes.map(({ groupId }) => ({
+                                    groupId,
+                                    order,
+                                }))
+                            }
+                        })
+
+                        const userId = user ? Number(user.id) : token.user.id
+
+                        await prisma.membership.createMany({
+                            data: studyProgrammes.map(({ groupId }) => ({
+                                groupId,
+                                order,
+                                admin: false,
+                                userId,
+                            }))
+                        })
+                    }
+                    // ...to here should be a function.
+
+                    break
                 }
-            }
+                // Trigger is undefined for subsequent calls
+                case undefined: {
+                    const dbUser = await readUser({ id: token.user.id })
 
-            if (trigger === 'signUp') {
-                token.email = undefined
-                user.id = Number(user.id)
-                if (!profile || !profile.sub) {
-                    throw Error('No profile found when signing up')
+                    // Check if the user data that is on the jwt was changed
+                    // after the token was created. If so get new data from db.
+                    // 'iat' is given in seconds so we have to convert it to
+                    // milliseconds.
+                    if (token.iat && token.iat * 1000 > dbUser?.updatedAt.getTime()) {
+                        return token
+                    }
+
+                    break
                 }
-                signUp({ user, profile } as {user: nextAuthUser, profile: ExtendedFeideUser})
-            }
-
-            // Check if user logged in with feide
-            if (trigger === 'signIn' && profile?.sub) {
-                updateFeideAccount(profile.sub, profile.tokens)
+                // There exists a third trigger 'update' which we don't support.
+                default: {
+                    throw new Error(`Got unsupported trigger in jwt callback. Trigger: ${trigger}`)
+                }
             }
 
             // The 'user' object will only be set when the trigger is 'signIn'.
-            // We also have to type guard 'user.id' because the default next
+            // We also have to type convert 'user.id' because the default next
             // auth type for it is different from our model.
             const userId = user ? Number(user.id) : token?.user.id
 
-            // TODO - refactor when read user action exists
-            const userInfo = await prisma.user.findUniqueOrThrow({
-                where: {
-                    id: userId,
-                },
-            })
+            // The account object will only be available during sign in/up.
+            // For other cases we will already have a provider stored in the token
+            // which we can reuse.
+            const provider = account?.provider ?? token.provider
 
-            const userPermissions = await readPermissionsOfUser(userId)
-            const userMemberships = await readMembershipsOfUser(userId)
-
-            token = {
-                user: userInfo,
-                permissions: userPermissions,
-                memberships: userMemberships,
+            if (provider !== 'credentials' && provider !== 'feide') {
+                throw new Error(`Got unsupported provider. Provider: ${provider}`)
             }
 
-            return token
+            return {
+                provider,
+                user: await readUser({ id: userId }),
+                permissions: await readPermissionsOfUser(userId),
+                memberships: await readMembershipsOfUser(userId),
+            }
         }
     },
     pages: {
         signIn: '/login',
         signOut: '/logout',
-        newUser: '/register'
+        newUser: '/register',
     },
-    adapter: PrismaAdapter(prisma),
+    adapter: VevenAdapter(prisma),
 }
