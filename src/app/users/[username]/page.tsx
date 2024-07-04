@@ -1,8 +1,11 @@
+import styles from "./page.module.scss"
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
+import Image from "@/components/Image/Image"
+import { readSpecialImage } from "@/server/images/read"
 
 type PropTypes = {
     params: {
@@ -31,11 +34,23 @@ export default async function User({ params }: PropTypes) {
         notFound()
     }
 
+    const img = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
+
+    // if (!img) {
+    //     throw new Error("image not found")
+    // }
+    console.log(img)
+
+    console.log(userProfile)
+
     return (
-        <>
-            <h1>{`${user.firstname} ${user.lastname}`}</h1>
-            <p>{`E-post: '${user.email}'`}</p>
-            <p>{`Bruker-ID: ${user.id}`}</p>
+        <div className={styles.pageWrapper}>
+            <div className={styles.profileHeader}>
+                <Image image={img} width={120}/>
+            </div>
+            <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
+            <p>{`E-post: '${userProfile.email}'`}</p>
+            <p>{`Bruker-ID: ${userProfile.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
                 {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
@@ -45,6 +60,6 @@ export default async function User({ params }: PropTypes) {
                 {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
             {me && <Link href="/logout">Logg ut</Link>}
-        </>
+        </div>
     )
 }
