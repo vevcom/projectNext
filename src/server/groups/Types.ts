@@ -3,10 +3,7 @@ import type { Group, GroupType, OmegaMembershipLevel } from '@prisma/client'
 /**
  * Type used to be able to infer the extra fields in ExpandedGroup
  */
-export type GroupWithIncludes = {
-    id: Group['id'],
-    groupType: Group['groupType'],
-    order: Group['order'],
+export type GroupWithIncludes = Group & {
     committee?: { name: string } | null,
     manualGroup?: { name: string } | null,
     class?: { year: number } | null,
@@ -16,6 +13,9 @@ export type GroupWithIncludes = {
     memberships: { order: number }[]
 }
 
+/**
+ * Type including extra infered fields based on the type of group and the group data
+ */
 export type ExpandedGroup = Group & {
     firstOrder: number
     name: string
