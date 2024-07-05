@@ -1,21 +1,39 @@
 @use '@/styles/ohma';
 
-$iconSize: 30px;
-
 .wrapper {
     width: 100%;
     display: flex;
     flex-direction: row;
     padding: ohma.$gap;
-    > .backLink {
-        > .icon {
-            margin: ohma.$gap;
-            color: ohma.$colors-gray-600;
-            width: $iconSize;
-            height: $iconSize;
+    position: relative;
+    padding: 0;
+    .backButton {
+        position: absolute;
+        top: .5em;
+        left: .5em;
+    }
+    .sidebar {
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        a {
+            color: ohma.$colors-gray-700;
+            text-decoration: none;
+            padding: .5em;
+            border-radius: .5em;
+            margin: .5em 0;
+            transition: background-color .3s;
+            &:hover {
+                background-color: ohma.$colors-gray-200;
+            }
+        }
+        h3 {
+            margin-top: 1em;
         }
     }
-    > .content {
+    .content {
+        padding: 1em;
         width: 100%;
     }
 }

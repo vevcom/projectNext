@@ -1,16 +1,14 @@
-import { readGroupExpanded } from "@/server/groups/read"
-import styles from './GroupAdmin.module.scss'
+import styles from './page.module.scss'
 import AddUsersToGroup from './AddUsersToGroup'
-import UserList from '@/app/components/User/UserList/UserList'
 import UserPagingProvider from '@/context/paging/UserPaging'
 import { CanEasilyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
-import Form from '@/app/components/Form/Form'
-import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
-import { faArrowLeft, faCog } from '@fortawesome/free-solid-svg-icons'
+import GroupMembers from './GroupMembers'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import { readGroupExpandedAction } from "@/actions/groups/read"
 
 type PropTypes = {
     params: {
@@ -19,7 +17,9 @@ type PropTypes = {
 }
 
 export default async function GroupAdmin({ params } : PropTypes) {
-    const group = await readGroupExpanded(parseInt(params.id))
+    const groupRes = await readGroupExpandedAction(parseInt(params.id))
+    if (!groupRes.success) throw new Error('Failed to load group')
+    const group = groupRes.data
 
     const canEasilyManageMembership = CanEasilyManageMembership[group.groupType]
 
@@ -48,41 +48,7 @@ export default async function GroupAdmin({ params } : PropTypes) {
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>
-                <UserList
-                    displayForUser={user => (
-                        <PopUp
-                            PopUpKey={`Admin for ${user.id}`}
-                            showButtonContent={
-                                <FontAwesomeIcon icon={faCog} />
-                            }
-                        >
-                            <p>{user.firstname} {user.lastname}</p>
-                            <i>{user.username}</i>
-                            <Form
-                                submitText="Deaktiver medlemsskap"
-                                action={updateMembershipActiveAction.bind(null, {
-                                    groupId: group.id,
-                                    userId: user.id
-                                }).bind(null, false)}
-                                successCallback={refresh}
-                                key={`Deactivate ${user.id}`}
-                                closePopUpOnSuccess={`Admin for ${user.id}`}
-                            />
-                            <Form
-                                submitText={user.selectedGroupInfo?.admin ? 'Fjern admin' : 'Gjør til admin'}
-                                action={updateMembershipAdminAcion.bind(null, {
-                                    groupId: group.id,
-                                    userId: user.id
-                                }).bind(null, !user.selectedGroupInfo?.admin)}
-                                successCallback={refresh}
-                                key={`Admin ${user.id}`}
-                                closePopUpOnSuccess={`Admin for ${user.id}`}
-                            />
-                        </PopUp>
-                    )}
-                    className={styles.groupMembers}
-                    disableFilters={{ [group.groupType]: true }}
-                />
+                <GroupMembers group={group} />
                 {
                     canEasilyManageMembership ? (
                         <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={

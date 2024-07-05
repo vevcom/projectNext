@@ -1,0 +1,8 @@
+@use '@/styles/ohma';
+
+.SlideSidebar {
+    background-color: ohma.$colors-gray-300;
+    margin: .5em;
+    padding: 2em;
+    border-radius: ohma.$rounding;
+}

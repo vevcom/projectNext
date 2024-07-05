@@ -1,5 +1,4 @@
 import styles from './page.module.scss'
-import GroupAdmin from './GroupAdmin'
 import GroupSelector from './GroupSelector'
 import { readGroupsAdmin } from '@/actions/groups/read'
 import { GroupTypeOrdering } from '@/server/groups/ConfigVars'
@@ -49,9 +48,6 @@ export default async function GroupsAdmin() {
                         </div>
                     ))
                 }
-            </div>
-            <div className={styles.group}>
-                <GroupAdmin />
             </div>
         </div>
     )
