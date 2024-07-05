@@ -12,29 +12,6 @@
         top: .5em;
         left: .5em;
     }
-    .sidebar {
-        margin-top: 1em;
-        display: flex;
-        flex-direction: column;
-        width: 200px;
-        a {
-            color: ohma.$colors-gray-700;
-            text-decoration: none;
-            padding: .5em;
-            border-radius: .5em;
-            margin: .5em 0;
-            transition: background-color .3s;
-            &:hover {
-                background-color: ohma.$colors-gray-200;
-            }
-        }
-        h3 {
-            margin-top: 1em;
-            svg {
-                margin-right: .2em; 
-            }
-        }
-    }
     .content {
         padding: 1em;
         width: 100%;

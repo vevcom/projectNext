@@ -5,4 +5,55 @@
     margin: .5em;
     padding: 2em;
     border-radius: ohma.$rounding;
+    position: relative;
+
+    .toggle {   
+        position: absolute;
+        right: -1em;
+        top: min(50%, 50vh);
+        transform: translateY(-50%);
+        width: 3em;
+        height: 3em;
+        border-radius: 50%;
+        background-color: ohma.$colors-gray-500;
+        border: none;
+        svg {
+            color: ohma.$colors-gray-100;
+        }
+    }
+
+    transition: margin-top .3s .2s, translate .3s;
+    &.closed {
+        translate: calc(-100% + 1.5em) 0;
+        margin-top: 3em;
+        .toggle {
+            svg {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    .sidebar {
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        a {
+            color: ohma.$colors-gray-700;
+            text-decoration: none;
+            padding: .5em;
+            border-radius: .5em;
+            margin: .5em 0;
+            transition: background-color .3s;
+            &:hover, &.active {
+                background-color: ohma.$colors-gray-200;
+            }
+        }
+        h3 {
+            margin-top: 1em;
+            svg {
+                margin-right: .2em; 
+            }
+        }
+    }
 }
