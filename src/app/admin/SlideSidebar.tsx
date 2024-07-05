@@ -171,11 +171,16 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
                     ))
                 }
             </aside>
-            <button onClick={handleToggle} className={styles.toggle}>
-                <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
+            {
+                !(currentPath === 'admin' && open) && (
+                    <button onClick={handleToggle} className={styles.toggle}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                )
+            }
+            
         </div>
-        <div className={styles.content}>
+        <div className={open ? `${styles.content} ${styles.open}` : `${styles.content} ${styles.closed}`}>
             {children}
         </div>
         </>

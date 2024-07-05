@@ -2,8 +2,8 @@
 
 .wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto 1fr;
     padding: ohma.$gap;
     position: relative;
     padding: 0;

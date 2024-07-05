@@ -9,7 +9,7 @@
 
     .toggle {   
         position: absolute;
-        right: -1em;
+        right: -.6em;
         top: min(50%, 50vh);
         transform: translateY(-50%);
         width: 3em;
@@ -22,15 +22,27 @@
         }
     }
 
-    transition: margin-top .3s .2s, translate .3s;
     &.closed {
-        translate: calc(-100% + 1.5em) 0;
-        margin-top: 3em;
+        .sidebar {
+            width: .4em;
+        }
         .toggle {
-            svg {
+            > svg {
                 transform: rotate(180deg);
             }
         }
+    }
+
+    //Closing
+    &.closed .sidebar {
+        transition: width .3s .1s, opacity .1s;
+        opacity: 0;
+    }
+
+    //Opening
+    &:not(.closed) .sidebar {
+        transition: width .3s, opacity .3s .3s;
+        opacity: 1;
     }
 
     .sidebar {
@@ -56,4 +68,8 @@
             }
         }
     }
+}
+
+.content {
+    width: 100%;
 }
