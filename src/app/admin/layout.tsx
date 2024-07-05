@@ -16,11 +16,10 @@ export default function AdminLayout({ children }: PropTypes) {
     const currentPath = pathname.split('/').length > 2 ? pathname.split('/')[2] : 'admin'
     return (
         <div className={styles.wrapper}>
-            <SlideSidebar currentPath={currentPath} />
-            <BackButton className={styles.backButton} />
-            <div className={styles.content}>
+            <SlideSidebar currentPath={currentPath}>
                 {children}
-            </div>
+            </SlideSidebar>
+            <BackButton className={styles.backButton} />
         </div>
     )
 }

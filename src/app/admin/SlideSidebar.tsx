@@ -13,8 +13,8 @@ import {
     faUserGroup,
     faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
-import type {
-    IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import type { ReactNode } from 'react'
 
 const navigations = [
     {
@@ -118,6 +118,7 @@ const navigations = [
 
 type PropTypes = {
     currentPath: string
+    children: ReactNode
 }
 
 /**
@@ -125,7 +126,7 @@ type PropTypes = {
  * @param children - The children to render in the sidebar.
  * @returns
  */
-export default function SlideSidebar({ currentPath }: PropTypes) {
+export default function SlideSidebar({ currentPath, children }: PropTypes) {
     const [open, setOpen] = useState(true)
     const previousPath = useRef<string>(currentPath)
 
@@ -145,6 +146,7 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
     }
 
     return (
+        <>
         <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
             <aside className={styles.sidebar}>
                 {
@@ -173,5 +175,9 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
                 <FontAwesomeIcon icon={faArrowLeft} />
             </button>
         </div>
+        <div className={styles.content}>
+            {children}
+        </div>
+        </>
     )
 }
