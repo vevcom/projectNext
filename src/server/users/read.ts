@@ -3,9 +3,10 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import type { UserDetails, UserPagingReturn } from './Types'
-import type { ReadPageInput } from '@/actions/Types'
+import type { UserCursor, UserDetails, UserPagingReturn } from './Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -16,7 +17,7 @@ import type { User } from '@prisma/client'
 export async function readUserPage<const PageSize extends number>({
     page,
     details
-}: ReadPageInput<PageSize, UserDetails>): Promise<UserPagingReturn[]> {
+}: ReadPageInput<PageSize, UserCursor, UserDetails>): Promise<UserPagingReturn[]> {
     const words = details.partOfName.split(' ')
 
     if (details.groups.length > maxNumberOfGroupsInFilter) {
@@ -29,9 +30,9 @@ export async function readUserPage<const PageSize extends number>({
     const groups = [...details.groups, ...(details.selectedGroup ? [details.selectedGroup] : [])]
 
     const users = await prismaCall(() => prisma.user.findMany({
-        skip: page.page * page.pageSize,
-        take: page.pageSize,
+        
         select: {
+            ...cursorPageingSelection(page),
             ...userFilterSelection,
             memberships: {
                 select: {

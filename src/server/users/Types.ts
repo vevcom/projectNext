@@ -33,3 +33,7 @@ export type UserDetails = {
         groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }
 }
+
+export type UserCursor = {
+    id: number
+}

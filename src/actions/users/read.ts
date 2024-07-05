@@ -4,9 +4,10 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { readUserPage } from '@/server/users/read'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/server/groups/read'
-import type { UserDetails, UserPagingReturn } from '@/server/users/Types'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
 import type { ExpandedGroup } from '@/server/groups/Types'
+import type { UserFiltered, UserDetails, UserCursor, UserPagingReturn } from '@/server/users/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -15,7 +16,7 @@ import type { ExpandedGroup } from '@/server/groups/Types'
  * @returns
  */
 export async function readUserPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize, UserDetails>
+    readPageInput: ReadPageInput<PageSize, UserCursor ,UserDetails>
 ): Promise<ActionReturn<UserPagingReturn[]>> {
     const { status, authorized } = await getUser({
         requiredPermissions: [['USERS_READ']]

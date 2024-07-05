@@ -8,12 +8,14 @@ import { includeVisibility } from '@/server/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { SpecialCollection } from '@prisma/client'
 import type { VisibilityCollapsed } from '@/server/visibility/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { ImageCollection } from '@prisma/client'
 import type {
     ExpandedImageCollection,
+    ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
-import type { ImageCollection } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * Action that reads an image collection by id or name
@@ -41,7 +43,7 @@ export async function readImageCollectionAction(
  * @returns - A page of image collections
  */
 export async function readImageCollectionsPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize>
+    readPageInput: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     const { memberships, permissions } = await getUser()
     const visibilityFilter = getVisibilityFilter(memberships, permissions)
