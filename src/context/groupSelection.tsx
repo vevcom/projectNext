@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useState } from 'react'
 import type { ExpandedGroup } from '@/server/groups/Types'
 import type { ReactNode } from 'react'

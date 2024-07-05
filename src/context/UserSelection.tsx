@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { UserFiltered } from '@/server/users/Types'
