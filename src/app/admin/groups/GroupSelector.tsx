@@ -1,8 +1,8 @@
-import Link from "next/link"
-import type { ExpandedGroup } from "@/server/groups/Types"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
-import styles from "./GroupSelector.module.scss"
+import styles from './GroupSelector.module.scss'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import type { ExpandedGroup } from '@/server/groups/Types'
 
 type PropTypes = {
     group: ExpandedGroup

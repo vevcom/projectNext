@@ -4,7 +4,6 @@ import { prismaCall } from '@/server/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import type { Group, User } from '@prisma/client'
 import type { ExpandedGroup, GroupsStructured, GroupWithIncludes } from './Types'
-import type { Prisma } from '@prisma/client'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())

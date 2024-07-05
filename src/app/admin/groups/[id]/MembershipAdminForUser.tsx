@@ -1,17 +1,17 @@
 'use client'
-import type { UserPagingReturn } from '@/server/users/Types'
-import type { ExpandedGroup } from '@/server/groups/Types'
+import styles from './MembershipAdminForUser.module.scss'
 import Form from '@/app/components/Form/Form'
 import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
 import { useRouter } from 'next/navigation'
-import styles from './MembershipAdminForUser.module.scss'
+import type { UserPagingReturn } from '@/server/users/Types'
+import type { ExpandedGroup } from '@/server/groups/Types'
 
 type PropTypes = {
     user: UserPagingReturn,
     group: ExpandedGroup,
 }
 
-export default function MembershipAdminForUser({ user, group } : PropTypes) {
+export default function MembershipAdminForUser({ user, group }: PropTypes) {
     const { refresh } = useRouter()
 
     return (
@@ -39,6 +39,6 @@ export default function MembershipAdminForUser({ user, group } : PropTypes) {
                 closePopUpOnSuccess={`Admin for ${user.id}`}
             />
         </div>
-        
+
     )
 }

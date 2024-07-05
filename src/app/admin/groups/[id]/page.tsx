@@ -1,14 +1,14 @@
 import styles from './page.module.scss'
 import AddUsersToGroup from './AddUsersToGroup'
+import GroupMembers from './GroupMembers'
 import UserPagingProvider from '@/context/paging/UserPaging'
 import { CanEasilyManageMembership } from '@/server/groups/memberships/ConfigVars'
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
-import GroupMembers from './GroupMembers'
+import { readGroupExpandedAction } from '@/actions/groups/read'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { readGroupExpandedAction } from "@/actions/groups/read"
 
 type PropTypes = {
     params: {
@@ -16,8 +16,8 @@ type PropTypes = {
     }
 }
 
-export default async function GroupAdmin({ params } : PropTypes) {
-    const groupRes = await readGroupExpandedAction(parseInt(params.id))
+export default async function GroupAdmin({ params }: PropTypes) {
+    const groupRes = await readGroupExpandedAction(parseInt(params.id, 10))
     if (!groupRes.success) throw new Error('Failed to load group')
     const group = groupRes.data
 

@@ -1,9 +1,9 @@
 'use client'
-import { usePathname } from 'next/navigation'
 import styles from './layout.module.scss'
-import React from 'react'
 import BackButton from './BackButton'
 import SlideSidebar from './SlideSidebar'
+import React from 'react'
+import { usePathname } from 'next/navigation'
 
 type PropTypes = {
     children: React.ReactNode
@@ -11,7 +11,6 @@ type PropTypes = {
 
 export default function AdminLayout({ children }: PropTypes) {
     const pathname = usePathname()
-    const href = `/${pathname?.split('/').slice(1, -1).join('/')}` ?? '/admin'
 
     // pathname takes form /admin/[currentPath]/... => ['', 'admin', '[currentPath]', ...]
     const currentPath = pathname.split('/').length > 2 ? pathname.split('/')[2] : 'admin'
