@@ -4,7 +4,7 @@ import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import Image from "@/components/Image/Image"
+import Image from "@/components/Image/Image"  
 import { readSpecialImage } from "@/server/images/read"
 
 type PropTypes = {
@@ -34,22 +34,21 @@ export default async function User({ params }: PropTypes) {
         notFound()
     }
 
-    const img = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
-
-    // if (!img) {
-    //     throw new Error("image not found")
-    // }
-    console.log(img)
+    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
 
     console.log(userProfile)
 
     return (
         <div className={styles.pageWrapper}>
-            <div className={styles.profileHeader}>
-                <Image image={img} width={120}/>
+            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership*/}
             </div>
-            <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
-            <p>{`E-post: '${userProfile.email}'`}</p>
+            <div className={styles.profileHeader}>
+                <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                <div className={styles.nameSection}>
+                    <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
+                    <p>{`E-post: '${userProfile.email}'`}</p>
+                </div>
+            </div>
             <p>{`Bruker-ID: ${userProfile.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
