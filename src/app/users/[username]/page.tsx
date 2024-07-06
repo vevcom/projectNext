@@ -27,6 +27,13 @@ export default async function User({ params }: PropTypes) {
     const userProfile = await prisma.user.findUnique({
         where: {
             username
+        },
+        include: {
+            memberships: {
+                select: {
+                    groupId: true
+                }
+            }
         }
     })
 
@@ -34,31 +41,50 @@ export default async function User({ params }: PropTypes) {
         notFound()
     }
 
-    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
-
     console.log(userProfile)
+
+    const groupIds = userProfile.memberships.map(group => group.groupId)
+    console.log(groupIds)
+
+    const committees = await prisma.committee.findMany({
+        where: {
+            id: {
+                in: groupIds
+            }
+        }      
+    })
+
+    console.log(committees)
+
+    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
 
     return (
         <div className={styles.pageWrapper}>
             <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership*/}
             </div>
-            <div className={styles.profileHeader}>
-                <Image className={styles.profilePicture} image={profileImage} width={240}/>
-                <div className={styles.nameSection}>
-                    <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
-                    <p>{`E-post: '${userProfile.email}'`}</p>
+            <div className={styles.profileContent}>
+                <div className={styles.profileHeader}>
+                    <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                    <div className={styles.nameSection}>
+                        <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
+                        <p>{`E-post: '${userProfile.email}'`}</p>
+                    </div>
                 </div>
+                <ul>
+                    {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
+                </ul>
+                <p>{`Bruker-ID: ${userProfile.id}`}</p>
+                <h2>Tillganger:</h2>
+                <ul>
+                    {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
+                </ul>
+                <h2>Grupper:</h2>
+                <ul>
+                    {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+                </ul>
+                {me && <Link href="/logout">Logg ut</Link>}
             </div>
-            <p>{`Bruker-ID: ${userProfile.id}`}</p>
-            <h2>Tillganger:</h2>
-            <ul>
-                {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
-            </ul>
-            <h2>Grupper:</h2>
-            <ul>
-                {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
-            </ul>
-            {me && <Link href="/logout">Logg ut</Link>}
+            
         </div>
     )
 }
