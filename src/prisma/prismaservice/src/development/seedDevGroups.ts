@@ -62,4 +62,23 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             },
         },
     })
+
+
+    await prisma.studyProgramme.create({
+        data: {
+            name: "Elektronisk Systemdesign og Innovasjon",
+            code: "MTEL",
+            insititueCode: "MTEL",
+            yearsLength: 5,
+            startYear: 2023,
+
+            group: {
+                create: {
+                    groupType: "STUDY_PROGRAMME",
+                    membershipRenewal: true,
+                    memberships
+                }
+            }
+        }
+    })
 }
