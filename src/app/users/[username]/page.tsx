@@ -54,7 +54,38 @@ export default async function User({ params }: PropTypes) {
         }      
     })
 
-    console.log(committees)
+    const studyProgramme = await prisma.studyProgramme.findFirst({
+        where: {
+            id: {
+                in: groupIds
+            }
+        },
+        include: {
+            group: {
+                include: {
+                    memberships: {
+                        include: {
+                            omegaOrder: {
+                                select: {
+                                    order: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    if (!studyProgramme) {
+        throw new Error("studyProgramme not found")
+    }
+
+    console.log(studyProgramme)
+
+    console.log(studyProgramme.group.memberships[0].omegaOrder.order)
+
+    const order = studyProgramme.group.memberships[0].omegaOrder.order
 
     const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
 
@@ -65,11 +96,14 @@ export default async function User({ params }: PropTypes) {
             <div className={styles.profileContent}>
                 <div className={styles.profileHeader}>
                     <Image className={styles.profilePicture} image={profileImage} width={240}/>
-                    <div className={styles.nameSection}>
+                    <div className={styles.textSection}>
                         <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
-                        <p>{`E-post: '${userProfile.email}'`}</p>
+                        <p>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                        <hr/>
+                        <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                     </div>
                 </div>
+                <p>{`E-post: '${userProfile.email}'`}</p>
                 <ul>
                     {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
                 </ul>

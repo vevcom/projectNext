@@ -59,16 +59,35 @@
 
         .profilePicture {
             border-radius: 50%;
-            border: 2px solid ohma.$colors-white;
+            border: 3px solid ohma.$colors-white;
             background-color: ohma.$colors-white;
         }
 
-        .nameSection {
+        .textSection {
+            margin-left: 2em;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            
             h1 {
-                font-size: 2.5em;
+                font-size: 3em;
+            }
+            
+            p {
+                color: gray;
+            }
+            
+            hr {
+                border: none;
+                margin: 0.5em 0;
+                height: 1px;
+                background-color: gray;
+            }
+
+            .orderText {
+                font-family: ohma.$fonts-secondary;
+                font-weight: lighter;
+                font-style: italic;
             }
         }
     
