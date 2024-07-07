@@ -83,8 +83,6 @@ export default async function User({ params }: PropTypes) {
 
     console.log(studyProgramme)
 
-    console.log(studyProgramme.group.memberships[0].omegaOrder.order)
-
     const order = studyProgramme.group.memberships[0].omegaOrder.order
 
     const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
@@ -94,29 +92,38 @@ export default async function User({ params }: PropTypes) {
             <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership*/}
             </div>
             <div className={styles.profileContent}>
-                <div className={styles.profileHeader}>
-                    <Image className={styles.profilePicture} image={profileImage} width={240}/>
-                    <div className={styles.textSection}>
-                        <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
-                        <p>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
-                        <hr/>
-                        <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
-                    </div>
+                <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                <div className={styles.header}>
+                    <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
+                    <p>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                    <hr/>
+                    <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
-                <p>{`E-post: '${userProfile.email}'`}</p>
-                <ul>
-                    {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
-                </ul>
-                <p>{`Bruker-ID: ${userProfile.id}`}</p>
-                <h2>Tillganger:</h2>
-                <ul>
-                    {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
-                </ul>
-                <h2>Grupper:</h2>
-                <ul>
-                    {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
-                </ul>
-                {me && <Link href="/logout">Logg ut</Link>}
+                <div className={styles.leftSection}>
+                    {me && <Link href="/logout">Logg ut</Link>}
+                </div>
+                <div className={styles.profileMain}>
+                    {(userProfile.bio != "") &&
+                        <div className={styles.bio}>
+                            <h2>Bio:</h2>
+                            <p>{userProfile.bio}</p>
+                        </div>
+                    }
+                    <p>{`E-post: '${userProfile.email}'`}</p>
+                    <p>{`Brukernavn: ${userProfile.username}`}</p>
+                    <ul>
+                        {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
+                    </ul>
+                    <p>{`Bruker-ID: ${userProfile.id}`}</p>
+                    <h2>Tillganger:</h2>
+                    <ul>
+                        {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
+                    </ul>
+                    <h2>Grupper:</h2>
+                    <ul>
+                        {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+                    </ul>
+                </div> 
             </div>
             
         </div>

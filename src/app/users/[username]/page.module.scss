@@ -54,46 +54,46 @@
 .profileContent {
     margin-top: -3em;
     margin-left: 2em;
-    .profileHeader {
+
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+
+    .profilePicture {
+        border-radius: 50%;
+        border: 3px solid ohma.$colors-white;
+        background-color: ohma.$colors-white;
+    }
+
+    .header {
+        margin-left: 2em;
         display: flex;
-
-        .profilePicture {
-            border-radius: 50%;
-            border: 3px solid ohma.$colors-white;
-            background-color: ohma.$colors-white;
+        flex-direction: column;
+        justify-content: center;
+        
+        h1 {
+            font-size: 3em;
+        }
+        
+        p {
+            color: gray;
+        }
+        
+        hr {
+            border: none;
+            margin: 0.5em 0;
+            height: 1px;
+            background-color: gray;
         }
 
-        .textSection {
-            margin-left: 2em;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            
-            h1 {
-                font-size: 3em;
-            }
-            
-            p {
-                color: gray;
-            }
-            
-            hr {
-                border: none;
-                margin: 0.5em 0;
-                height: 1px;
-                background-color: gray;
-            }
-
-            .orderText {
-                font-family: ohma.$fonts-secondary;
-                font-weight: lighter;
-                font-style: italic;
-            }
+        .orderText {
+            font-family: ohma.$fonts-secondary;
+            font-weight: lighter;
+            font-style: italic;
         }
-    
+    }
+
+    .profileMain {
+        margin-left: 2em;
     }
 }
-
-
-
 
