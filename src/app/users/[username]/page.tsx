@@ -3,7 +3,6 @@ import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { v4 as uuid } from 'uuid'
 import Image from "@/components/Image/Image"  
 import { readSpecialImage } from "@/server/images/read"
 import BorderButton from "@/app/components/UI/BorderButton"
@@ -42,10 +41,7 @@ export default async function User({ params }: PropTypes) {
         notFound()
     }
 
-    console.log(userProfile)
-
     const groupIds = userProfile.memberships.map(group => group.groupId)
-    console.log(groupIds)
 
     const committees = await prisma.committee.findMany({
         where: {
@@ -82,31 +78,37 @@ export default async function User({ params }: PropTypes) {
         throw new Error("studyProgramme not found")
     }
 
-    console.log(studyProgramme)
-
     const order = studyProgramme.group.memberships[0].omegaOrder.order
 
     const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
 
     return (
         <div className={styles.pageWrapper}>
-            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership*/}
+            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership */}
             </div>
             <div className={styles.profileContent}>
-                <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                <div className={styles.imageWrapper}>
+                    <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                </div>
                 <div className={styles.header}>
                     <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
-                    <p>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                    <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                    <div className={styles.committeesWrapper}>
+                        {committees.map(committee => <div className={styles.committee}><p>{committee.name}</p></div>)} {/* TODO change to your own committee title instead of committee name*/}
+                    </div>
                     <hr/>
                     <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
                 <div className={styles.leftSection}>
-                    {me && <Link href={`/users/${username}/settings`}>
-                        <BorderButton color="secondary" children={<p>Innstillinger</p>} /> 
-                    </Link>}
-                    {me && <Link href="/logout">
+                    <div className={styles.buttons}>
+                        {me && <Link href={`/users/${username}/settings`}>
+                            <BorderButton color="secondary" children={<p>Innstillinger</p>} /> 
+                        </Link>}
+                        {me && <Link href="/logout">
                         <BorderButton color="secondary" children={<p>Logg ut</p>} />
                     </Link>}
+                    </div>
+                    
                 </div>
                 <div className={styles.profileMain}>
                     {(userProfile.bio != "") &&
@@ -115,11 +117,14 @@ export default async function User({ params }: PropTypes) {
                             <p>{userProfile.bio}</p>
                         </div>
                     }
-                    <p>{`E-post: '${userProfile.email}'`}</p>
-                    <p>{`Brukernavn: ${userProfile.username}`}</p>
-                    <ul>
-                        {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
-                    </ul>
+                    <p>
+                        <span className={styles.email}>E-post:</span> 
+                        {userProfile.email}
+                    </p>
+                    <p>
+                        <span className={styles.username}>Brukernavn:</span>
+                        {userProfile.username}
+                    </p>
                 </div> 
             </div>
             

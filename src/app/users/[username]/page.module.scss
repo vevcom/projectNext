@@ -56,30 +56,32 @@
 }
 
 .profileContent {
-    margin-top: -3em;
-    margin-left: 2em;
+    margin: -2.5em 0 2em 0;
 
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: max(300px) 1fr;
 
-    .profilePicture {
-        border-radius: 50%;
-        border: 3px solid ohma.$colors-white;
-        background-color: ohma.$colors-white;
+    gap: 0.5em;
+    
+    .imageWrapper {
+        display: flex;
+        justify-content: center;
+
+        .profilePicture {
+            border-radius: 50%;
+            border: 3px solid ohma.$colors-white;
+            background-color: ohma.$colors-white;
+        }
     }
+    
 
     .header {
-        margin-left: 2em;
         display: flex;
         flex-direction: column;
         justify-content: center;
         
         h1 {
             font-size: 3em;
-        }
-        
-        p {
-            color: gray;
         }
         
         hr {
@@ -89,9 +91,29 @@
             background-color: rgba(0, 0, 0, 0.2)
         }
 
+        .studyProgramme {
+            color: ohma.$colors-gray-500;
+        }
+
+        .committeesWrapper {
+            display: flex;
+
+            .committee {
+                margin-top: 0.5em;
+                p {
+                    border-radius: 0.3em;
+                    padding: 0.5em;
+                    background-color: ohma.$colors-primary;
+                    display: inline-block;
+                }
+            }
+        }
+            
+
         .orderText {
+            color: ohma.$colors-gray-500;
             font-family: ohma.$fonts-secondary;
-            font-weight: lighter;
+            font-weight: ohma.$fonts-weight-s;
             font-style: italic;
         }
     }
@@ -101,13 +123,30 @@
         flex-direction: column;
         align-items: center;
 
-        p {
-            width: 8em;
-        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            p {
+                width: 8em;
+            }
+        } 
     }
 
     .profileMain {
-        margin-left: 2em;
+        .bio {
+            margin-bottom: 2em; 
+        }
+
+        .email, .username {
+            width: 10em;
+            display: inline-block;
+            font-weight: ohma.$fonts-weight-m;
+        }
+
+        p {
+            font-weight: ohma.$fonts-weight-s;
+        }
     }
 }
 
