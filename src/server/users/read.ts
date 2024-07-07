@@ -48,7 +48,7 @@ export async function readUserPage<const PageSize extends number>({
 }
 
 type readUserWhere = {
-    name?: string,
+    username?: string,
     id?: number,
     email?: string,
 }
@@ -59,4 +59,17 @@ export async function readUser(where: readUserWhere): Promise<User> {
 
 export async function readUserOrNull(where: readUserWhere): Promise<User | null> {
     return await prismaCall(() => prisma.user.findFirst({ where }))
+}
+
+export async function readUserProfile(where: readUserWhere) {
+    return await prismaCall(() => prisma.user.findFirstOrThrow({
+        where,
+        include: {
+            memberships: {
+                select: {
+                    groupId: true
+                }
+            }
+        }
+    }))
 }

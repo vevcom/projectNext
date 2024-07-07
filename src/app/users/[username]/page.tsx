@@ -6,6 +6,9 @@ import Link from 'next/link'
 import Image from "@/components/Image/Image"  
 import { readSpecialImage } from "@/server/images/read"
 import BorderButton from "@/app/components/UI/BorderButton"
+import { readUserProfile } from "@/server/users/read"
+import { readCommitteesFromIds } from "@/server/groups/committees/read"
+import { prismaCall } from "@/server/prismaCall"
 
 type PropTypes = {
     params: {
@@ -23,35 +26,16 @@ export default async function User({ params }: PropTypes) {
     const me = params.username === 'me' || params.username === user.username
     const username = me ? user.username : params.username
 
-    // TODO REFACTOR
-    const userProfile = await prisma.user.findUnique({
-        where: {
-            username
-        },
-        include: {
-            memberships: {
-                select: {
-                    groupId: true
-                }
-            }
-        }
-    })
+    const userProfile = await readUserProfile({username})
 
     if (!userProfile) {
         notFound()
     }
 
     const groupIds = userProfile.memberships.map(group => group.groupId)
+    const committees = await readCommitteesFromIds(groupIds)
 
-    const committees = await prisma.committee.findMany({
-        where: {
-            id: {
-                in: groupIds
-            }
-        }      
-    })
-
-    const studyProgramme = await prisma.studyProgramme.findFirst({
+    const studyProgramme = await prismaCall(() => prisma.studyProgramme.findFirst({
         where: {
             id: {
                 in: groupIds
@@ -72,7 +56,7 @@ export default async function User({ params }: PropTypes) {
                 }
             }
         }
-    })
+    }))
 
     if (!studyProgramme) {
         throw new Error("studyProgramme not found")
@@ -80,7 +64,7 @@ export default async function User({ params }: PropTypes) {
 
     const order = studyProgramme.group.memberships[0].omegaOrder.order
 
-    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
+    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE") // TODO display correct image
 
     return (
         <div className={styles.pageWrapper}>
