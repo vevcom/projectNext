@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 import Image from "@/components/Image/Image"  
 import { readSpecialImage } from "@/server/images/read"
+import BorderButton from "@/app/components/UI/BorderButton"
 
 type PropTypes = {
     params: {
@@ -100,9 +101,12 @@ export default async function User({ params }: PropTypes) {
                     <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
                 <div className={styles.leftSection}>
-                    {me && <Link href={`/users/${username}/settings`}>Innstillinger</Link>}
-                    <br/>
-                    {me && <Link href="/logout">Logg ut</Link>}
+                    {me && <Link href={`/users/${username}/settings`}>
+                        <BorderButton color="secondary" children={<p>Innstillinger</p>} /> 
+                    </Link>}
+                    {me && <Link href="/logout">
+                        <BorderButton color="secondary" children={<p>Logg ut</p>} />
+                    </Link>}
                 </div>
                 <div className={styles.profileMain}>
                     {(userProfile.bio != "") &&
