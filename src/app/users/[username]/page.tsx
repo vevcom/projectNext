@@ -14,13 +14,13 @@ type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const { user, permissions, memberships } = await getUser({
+    const { user } = await getUser({
         userRequired: true,
         shouldRedirect: true,
         returnUrl: `/users/${params.username}`,
     })
 
-    const me = params.username === 'me'
+    const me = params.username === 'me' || params.username === user.username
     const username = me ? user.username : params.username
 
     // TODO REFACTOR
@@ -100,6 +100,8 @@ export default async function User({ params }: PropTypes) {
                     <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
                 <div className={styles.leftSection}>
+                    {me && <Link href={`/users/${username}/settings`}>Innstillinger</Link>}
+                    <br/>
                     {me && <Link href="/logout">Logg ut</Link>}
                 </div>
                 <div className={styles.profileMain}>
@@ -113,15 +115,6 @@ export default async function User({ params }: PropTypes) {
                     <p>{`Brukernavn: ${userProfile.username}`}</p>
                     <ul>
                         {committees.map(committee => <li key={uuid()}>{committee.name}</li>)}
-                    </ul>
-                    <p>{`Bruker-ID: ${userProfile.id}`}</p>
-                    <h2>Tillganger:</h2>
-                    <ul>
-                        {me && permissions.map(permission => <li key={uuid()}>{permission}</li>)}
-                    </ul>
-                    <h2>Grupper:</h2>
-                    <ul>
-                        {me && memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
                     </ul>
                 </div> 
             </div>
