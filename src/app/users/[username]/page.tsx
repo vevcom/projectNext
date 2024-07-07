@@ -26,13 +26,13 @@ export default async function User({ params }: PropTypes) {
     const me = params.username === 'me' || params.username === user.username
     const username = me ? user.username : params.username
 
-    const userProfile = await readUserProfile({username})
+    const profile = await readUserProfile({username})
 
-    if (!userProfile) {
+    if (!profile) {
         notFound()
     }
 
-    const groupIds = userProfile.memberships.map(group => group.groupId)
+    const groupIds = profile.memberships.map(group => group.groupId)
     const committees = await readCommitteesFromIds(groupIds)
 
     const studyProgramme = await prismaCall(() => prisma.studyProgramme.findFirst({
@@ -58,13 +58,19 @@ export default async function User({ params }: PropTypes) {
         }
     }))
 
+    console.log(profile)
+    console.log(profile.image)
+
     if (!studyProgramme) {
         throw new Error("studyProgramme not found")
     }
 
     const order = studyProgramme.group.memberships[0].omegaOrder.order
 
-    const profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE") // TODO display correct image
+    let profileImage = profile.image
+    if (!profileImage) {
+        profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
+    }
 
     return (
         <div className={styles.pageWrapper}>
@@ -75,13 +81,13 @@ export default async function User({ params }: PropTypes) {
                     <Image className={styles.profilePicture} image={profileImage} width={240}/>
                 </div>
                 <div className={styles.header}>
-                    <h1>{`${userProfile.firstname} ${userProfile.lastname}`}</h1>
+                    <h1>{`${profile.firstname} ${profile.lastname}`}</h1>
                     <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
                     <div className={styles.committeesWrapper}>
                         {committees.map(committee => <div className={styles.committee}><p>{committee.name}</p></div>)} {/* TODO change to your own committee title instead of committee name*/}
                     </div>
                     <hr/>
-                    <p className={styles.orderText}>{userProfile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
+                    <p className={styles.orderText}>{profile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
                 <div className={styles.leftSection}>
                     <div className={styles.buttons}>
@@ -95,19 +101,19 @@ export default async function User({ params }: PropTypes) {
                     
                 </div>
                 <div className={styles.profileMain}>
-                    {(userProfile.bio != "") &&
+                    {(profile.bio != "") &&
                         <div className={styles.bio}>
                             <h2>Bio:</h2>
-                            <p>{userProfile.bio}</p>
+                            <p>{profile.bio}</p>
                         </div>
                     }
                     <p>
                         <span className={styles.email}>E-post:</span> 
-                        {userProfile.email}
+                        {profile.email}
                     </p>
                     <p>
                         <span className={styles.username}>Brukernavn:</span>
-                        {userProfile.username}
+                        {profile.username}
                     </p>
                 </div> 
             </div>

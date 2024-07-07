@@ -69,7 +69,8 @@ export async function readUserProfile(where: readUserWhere) {
                 select: {
                     groupId: true
                 }
-            }
+            },
+            image: true
         }
     }))
 }
