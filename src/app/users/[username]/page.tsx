@@ -58,9 +58,6 @@ export default async function User({ params }: PropTypes) {
         }
     }))
 
-    console.log(profile)
-    console.log(profile.image)
-
     if (!studyProgramme) {
         throw new Error("studyProgramme not found")
     }
@@ -74,7 +71,7 @@ export default async function User({ params }: PropTypes) {
 
     return (
         <div className={styles.pageWrapper}>
-            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on membership */}
+            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on flair */}
             </div>
             <div className={styles.profileContent}>
                 <div className={styles.imageWrapper}>

@@ -85,8 +85,8 @@
         
         hr {
             border: none;
-            margin: 0.5em 4em 0.5em 0;
             height: 1px;
+            margin: 0.5em 4em 0.5em 0;
             background-color: rgba(0, 0, 0, 0.2)
         }
 
@@ -158,6 +158,11 @@
             text-align: center;
             align-items: center;
             margin: 1em 2em;
+
+            hr {
+                width: 80%;
+                margin: 0.5em auto 0.5em auto;
+            }
         }
 
         .profileMain {
