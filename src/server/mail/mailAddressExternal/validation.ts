@@ -16,11 +16,11 @@ export const basemailAddressExternalValidation = new ValidationBase({
         address: z.string().email().min(2).max(50)
             .refine(
                 address => !validMailAdressDomains.includes(address.split('@')[1].trim()),
-                'The address includes an invalid domain.',
+                'E-post adressen inneholder et forbudt domene navn.',
             )
             .refine(
                 address => !address.trim().endsWith(`@${ntnuEmailDomain}`),
-                `The address cannot be a ${ntnuEmailDomain} address. The person must a regsitered user to recieve mail`,
+                `E-post addressen kan ikke ha ${ntnuEmailDomain} domene. I slike tilfeller må personen være en bruker på nettsiden.`,
             ),
         description: z.string().max(200).optional(),
     }

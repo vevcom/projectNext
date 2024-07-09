@@ -50,17 +50,26 @@ export function findValidParents(channelId: number, channels: ExpandedNotificati
     const validParents = channels.filter(c => c.id !== channelId)
     // Remove chrildren of the current channel
     const channelIDS = new Set(validParents.map(c => c.id))
-    while (true) {
+    for (let i = 0; i < 1000; i++) {
         const lengthBeforeReduction = channelIDS.size
+
         for (let i = validParents.length - 1; i >= 0; i--) {
+
             if (!channelIDS.has(validParents[i].parentId)) {
                 channelIDS.delete(validParents[i].id)
                 validParents.splice(i, 1)
             }
         }
+
+        // Quit the loop if the last round didn't remove any more parent
         if (lengthBeforeReduction === channelIDS.size) {
             break
         }
+
+        if(i >= 999) {
+            // It's highly unlikely that this wil ever throw
+            throw new Error("Stopping infinite loop, while finding valid parents.")
+        } 
     }
 
     return validParents

@@ -13,14 +13,14 @@ export type ExpandedNotificationChannel = NotificationChannel & {
     defaultMethods: NotificationMethodGeneral
 }
 
-export const allMethodsOn = {
+export const allMethodsOn: NotificationMethodGeneral = {
     email: true,
     emailWeekly: true,
     push: true,
-} satisfies Record<NotificationMethods, boolean>
+}
 
-export const allMethodsOff = {
+export const allMethodsOff: NotificationMethodGeneral = {
     email: false,
     emailWeekly: false,
     push: false,
-} satisfies Record<NotificationMethods, boolean>
+}
