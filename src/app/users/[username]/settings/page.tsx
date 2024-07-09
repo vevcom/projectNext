@@ -14,7 +14,6 @@ export default async function Settings({ params }: PropTypes) {
     const { user, permissions }= await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}/settings`,
-        userRequired: true,
     })
 
     const { profile, me } = await getProfile(user, params.username)

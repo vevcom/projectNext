@@ -21,6 +21,12 @@ export async function readUserPageAction<const PageSize extends number>(
 
 export async function readUserProfileAction(username: string) : Promise<ActionReturn<Profile>> {
     //TODO: Permission check
+    /*
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['USER_READ']]
+    })
+    if (!authorized) return createActionError(status)
+    */
 
     return safeServerCall(() => readUserProfile(username))
 }
