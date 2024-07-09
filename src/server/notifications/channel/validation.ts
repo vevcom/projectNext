@@ -53,11 +53,10 @@ export function findValidParents(channelId: number, channels: ExpandedNotificati
     for (let i = 0; i < 1000; i++) {
         const lengthBeforeReduction = channelIDS.size
 
-        for (let i = validParents.length - 1; i >= 0; i--) {
-
-            if (!channelIDS.has(validParents[i].parentId)) {
-                channelIDS.delete(validParents[i].id)
-                validParents.splice(i, 1)
+        for (let j = validParents.length - 1; j >= 0; j--) {
+            if (!channelIDS.has(validParents[j].parentId)) {
+                channelIDS.delete(validParents[j].id)
+                validParents.splice(j, 1)
             }
         }
 
@@ -66,10 +65,10 @@ export function findValidParents(channelId: number, channels: ExpandedNotificati
             break
         }
 
-        if(i >= 999) {
+        if (i >= 999) {
             // It's highly unlikely that this wil ever throw
-            throw new Error("Stopping infinite loop, while finding valid parents.")
-        } 
+            throw new Error('Stopping infinite loop, while finding valid parents.')
+        }
     }
 
     return validParents

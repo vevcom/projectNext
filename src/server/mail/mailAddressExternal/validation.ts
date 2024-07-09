@@ -20,7 +20,8 @@ export const basemailAddressExternalValidation = new ValidationBase({
             )
             .refine(
                 address => !address.trim().endsWith(`@${ntnuEmailDomain}`),
-                `E-post addressen kan ikke ha ${ntnuEmailDomain} domene. I slike tilfeller må personen være en bruker på nettsiden.`,
+                `E-post addressen kan ikke ha ${ntnuEmailDomain} domene.
+                 I slike tilfeller må personen være en bruker på nettsiden.`,
             ),
         description: z.string().max(200).optional(),
     }
