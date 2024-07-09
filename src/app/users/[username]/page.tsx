@@ -38,7 +38,9 @@ export default async function User({ params }: PropTypes) {
         shouldRedirect: true,
         returnUrl: `/users/${params.username}`,
     })
+    console.log(params.username)
     const { profile, me } = await getProfile(user, params.username)
+    console.log(profile)    
     
     // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
@@ -67,11 +69,8 @@ export default async function User({ params }: PropTypes) {
         }
     }))
 
-    if (!studyProgramme) {
-        throw new Error('studyProgramme not found')
-    }
-
-    const order = studyProgramme.group.memberships[0].omegaOrder.order
+    // TODO: Change to the correct order
+    const order = studyProgramme ? studyProgramme.group.memberships[0].omegaOrder.order : 0
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImage('DEFAULT_PROFILE_IMAGE')
 
@@ -87,7 +86,11 @@ export default async function User({ params }: PropTypes) {
                 </div>
                 <div className={styles.header}>
                     <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
-                    <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                    {
+                    studyProgramme && (
+                        <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                    )
+                    }
                     <div className={styles.committeesWrapper}>
                         {committees.map(committee => <div className={styles.committee}><p>{committee.name}</p></div>)} {/* TODO change to your own committee title instead of committee name*/}
                     </div>
