@@ -1,8 +1,8 @@
+import { getProfile } from '@/app/users/[username]/page'
 import { getUser } from '@/auth/getUser'
 import { v4 as uuid } from 'uuid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getProfile } from '../page'
 
 type PropTypes = {
     params: {
@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 export default async function Settings({ params }: PropTypes) {
-    const { user, permissions }= await getUser({
+    const { user, permissions } = await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}/settings`,
     })
@@ -21,7 +21,7 @@ export default async function Settings({ params }: PropTypes) {
     //TODO: Either you need to have the USER_UPDATE permission or be the user you are trying to view (me is true)
     if (!me /*&& !permissions.includes('USER_UPDATE')*/) return notFound()
     console.log(permissions)
-    
+
     return (
         <div>
             <Link href={`/users/${profile.user.username}`}>Tilbake</Link>

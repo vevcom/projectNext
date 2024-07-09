@@ -6,10 +6,12 @@ import { readSpecialImage } from '@/server/images/read'
 import BorderButton from '@/app/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/server/groups/committees/read'
 import { prismaCall } from '@/server/prismaCall'
+import { readUserProfileAction } from '@/actions/users/read'
+import { sexConfig } from '@/server/users/ConfigVars'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { readUserProfileAction } from '@/actions/users/read'
-import { UserFiltered } from '@/server/users/Types'
+import { v4 as uuid } from 'uuid'
+import type { UserFiltered } from '@/server/users/Types'
 
 type PropTypes = {
     params: {
@@ -40,8 +42,8 @@ export default async function User({ params }: PropTypes) {
     })
     console.log(params.username)
     const { profile, me } = await getProfile(user, params.username)
-    console.log(profile)    
-    
+    console.log(profile)
+
     // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
     const committees = await readCommitteesFromIds(groupIds)
@@ -87,15 +89,22 @@ export default async function User({ params }: PropTypes) {
                 <div className={styles.header}>
                     <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
                     {
-                    studyProgramme && (
-                        <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
-                    )
+                        studyProgramme && (
+                            <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
+                        )
                     }
                     <div className={styles.committeesWrapper}>
-                        {committees.map(committee => <div className={styles.committee}><p>{committee.name}</p></div>)} {/* TODO change to your own committee title instead of committee name*/}
+                        {
+                            committees.map(committee =>
+                                <div className={styles.committee} key={uuid()}><p>{committee.name}</p></div>
+                            )
+                        }
+                        {/* TODO change to your own committee title instead of committee name*/}
                     </div>
                     <hr/>
-                    <p className={styles.orderText}>{profile.user.sex == 'FEMALE' ? 'Syster' : 'Broder'} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
+                    <p className={styles.orderText}>
+                        {sexConfig[profile.user.sex ?? 'OTHER'].title} uudaf {order}´dis orden i Sanctus Omega Broderskab
+                    </p>
                 </div>
                 <div className={styles.leftSection}>
                     <div className={styles.buttons}>
@@ -113,7 +122,7 @@ export default async function User({ params }: PropTypes) {
 
                 </div>
                 <div className={styles.profileMain}>
-                    {(profile.user.bio != '') &&
+                    {(profile.user.bio !== '') &&
                         <div className={styles.bio}>
                             <h2>Bio:</h2>
                             <p>{profile.user.bio}</p>

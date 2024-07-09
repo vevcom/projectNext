@@ -1,12 +1,12 @@
 import { userFilterSelection } from './ConfigVars'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
+import { readMembershipsOfUser } from '@/server/groups/read'
 import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails, UserCursor, Profile } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
-import { readPermissionsOfUser } from '../permissionRoles/read'
-import { readMembershipsOfUser } from '../groups/read'
 
 /**
  * A function to read a page of users with the given details (filtering)

@@ -19,7 +19,7 @@ export async function readUserPageAction<const PageSize extends number>(
     return safeServerCall(() => readUserPage(readPageInput))
 }
 
-export async function readUserProfileAction(username: string) : Promise<ActionReturn<Profile>> {
+export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
     //TODO: Permission check
     /*
     const { status, authorized } = await getUser({

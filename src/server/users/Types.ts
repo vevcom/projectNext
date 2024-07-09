@@ -1,4 +1,4 @@
-import { BasicMembership } from '../groups/Types'
+import type { BasicMembership } from '@/server/groups/Types'
 import type { userFieldsToExpose } from './ConfigVars'
 import type { Image, Permission, User } from '@prisma/client'
 
