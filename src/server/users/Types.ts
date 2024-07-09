@@ -12,3 +12,7 @@ export type RegisterNewEmailType = {
     verified: boolean,
     email: string,
 }
+
+export type UserCursor = {
+    id: number
+}
