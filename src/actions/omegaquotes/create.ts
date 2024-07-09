@@ -21,5 +21,7 @@ export async function createQuoteAction(
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await safeServerCall(() => createQuote(user.id, data))
+    const results = await safeServerCall(() => createQuote(user.id, data))
+
+    return results
 }

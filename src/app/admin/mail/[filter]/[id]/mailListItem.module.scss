@@ -1,0 +1,13 @@
+@use '@/styles/ohma';
+
+.mailListItem {
+    > span {
+        color: ohma.$colors-gray-600;
+    }
+}
+
+.editable {
+    a {
+        margin-left: 0.5rem;
+    }
+}

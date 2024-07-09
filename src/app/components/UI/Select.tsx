@@ -1,27 +1,52 @@
 import styles from './Select.module.scss'
-import { v4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
+import type { HTMLAttributes } from 'react'
 
-export type Proptypes = {
+export default function Select<V extends number | string>({
+    name,
+    label,
+    defaultValue,
+    value,
+    options,
+    onChange,
+    className,
+}: {
     name: string,
     label?: string,
+    value?: V,
+    defaultValue?: V,
     options: {
-        value: string,
+        value: V,
         label?: string,
     }[],
-}
-
-export default function Select({ name, label, options }: Proptypes) {
-    const id = v4()
+    onChange?: (valu: V) => void,
+} & Omit<HTMLAttributes<HTMLElement>, 'onChange'>) {
+    const id = uuid()
 
     const optionElements = options.map(
-        (option) => <option key={v4()} value={option.value}>
+        (option) => <option
+            key={uuid()}
+            value={option.value}
+        >
             {option.label ?? option.value}
         </option>
     )
 
-    return <div className={styles.Select}>
+    return <div className={`${styles.Select} ${className}`}>
         <label htmlFor={id}>{label ?? name}</label>
-        <select id={id} name={name}>
+        <select
+            id={id}
+            name={name}
+            {
+                ...(value ? { value } : { defaultValue })
+            }
+            onChange={(event) => {
+                if (onChange && options.length > 0) {
+                    const v = event.target.value
+                    onChange((typeof (options[0].value) === 'number' ? Number(v) : v) as V)
+                }
+            }
+            }>
             {optionElements}
         </select>
     </div>

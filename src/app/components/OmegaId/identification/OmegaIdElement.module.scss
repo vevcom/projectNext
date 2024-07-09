@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.OmegaIdElement {
+
+    max-width: 400px;
+
+    > p {
+        width: 100%;
+        text-align: center;
+    }
+}

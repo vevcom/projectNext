@@ -4,7 +4,7 @@ import type { InputHTMLAttributes } from 'react'
 
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
-    label: string
+    label?: string
 }
 
 function Checkbox({ label, ...props }: PropTypes) {
@@ -13,7 +13,7 @@ function Checkbox({ label, ...props }: PropTypes) {
     return (
         <div id={props.name} className={styles.Checkbox}>
             <input type="checkbox" {...props} ></input>
-            <label htmlFor={props.id}>{ label }</label>
+            {label && <label htmlFor={props.id}>{ label }</label>}
         </div>
     )
 }
