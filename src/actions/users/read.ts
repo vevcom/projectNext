@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readUserPage } from '@/server/users/read'
-import type { UserFiltered, UserDetails, UserCursor } from '@/server/users/Types'
+import { readUserPage, readUserProfile } from '@/server/users/read'
+import type { UserFiltered, UserDetails, UserCursor, Profile } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 
@@ -17,4 +17,10 @@ export async function readUserPageAction<const PageSize extends number>(
     //TODO: Permission check
 
     return safeServerCall(() => readUserPage(readPageInput))
+}
+
+export async function readUserProfileAction(username: string) : Promise<ActionReturn<Profile>> {
+    //TODO: Permission check
+
+    return safeServerCall(() => readUserProfile(username))
 }

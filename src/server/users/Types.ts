@@ -1,5 +1,6 @@
+import { BasicMembership } from '../groups/Types'
 import type { userFieldsToExpose } from './ConfigVars'
-import type { User } from '@prisma/client'
+import type { Image, Permission, User } from '@prisma/client'
 
 export type UserFiltered = Pick<User, typeof userFieldsToExpose[number]>
 
@@ -10,4 +11,10 @@ export type UserDetails = {
 
 export type UserCursor = {
     id: number
+}
+
+export type Profile = {
+    user: UserFiltered & { image: Image | null, bio: string },
+    memberships: BasicMembership[],
+    permissions: Permission[]
 }

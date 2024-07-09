@@ -2,7 +2,7 @@ import { userFilterSelection } from './ConfigVars'
 import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import type { UserFiltered, UserDetails, UserCursor } from './Types'
+import type { UserFiltered, UserDetails, UserCursor, Profile } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
 import { readPermissionsOfUser } from '../permissionRoles/read'
@@ -63,23 +63,14 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
     return await prismaCall(() => prisma.user.findFirst({ where }))
 }
 
-export async function readUserProfile(where: readUserWhere) {
-    return await prismaCall(() => prisma.user.findFirstOrThrow({
-        where,
-        include: {
-            memberships: {
-                select: {
-                    groupId: true
-                }
-            },
-            image: true
-        }
-    }))
-}
-
-export async function readUserWithPermissionsAndMemberships(username: string) {
+export async function readUserProfile(username: string): Promise<Profile> {
     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
         where: { username },
+        select: {
+            ...userFilterSelection,
+            bio: true,
+            image: true,
+        },
     }))
 
     const permissions = await readPermissionsOfUser(user.id)

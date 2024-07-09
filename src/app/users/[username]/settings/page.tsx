@@ -2,7 +2,7 @@ import { getUser } from '@/auth/getUser'
 import { v4 as uuid } from 'uuid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { readUserWithPermissionsAndMemberships } from '@/server/users/read'
+import { getProfile } from '../page'
 
 type PropTypes = {
     params: {
@@ -11,20 +11,18 @@ type PropTypes = {
 }
 
 export default async function Settings({ params }: PropTypes) {
-    const { user, permissions, memberships }= await getUser({
+    const { user, permissions }= await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}/settings`,
         userRequired: true,
     })
 
-    const me = params.username === 'me'
-    const profile = await readUserWithPermissionsAndMemberships(me ? user.username : params.username)
+    const { profile, me } = await getProfile(user, params.username)
 
     //TODO: Either you need to have the USER_UPDATE permission or be the user you are trying to view (me is true)
     if (!me /*&& !permissions.includes('USER_UPDATE')*/) return notFound()
+    console.log(permissions)
     
-    if (!profile) return notFound()
-        
     return (
         <div>
             <Link href={`/users/${profile.user.username}`}>Tilbake</Link>
