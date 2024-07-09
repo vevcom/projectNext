@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation"
-import { getUser } from "@/auth/getUser"
+import { getUser } from '@/auth/getUser'
 import { v4 as uuid } from 'uuid'
-import { readPermissionsOfUser } from "@/server/permissionRoles/read"
-import { readMembershipsOfUser } from "@/server/groups/read"
-import Link from "next/link"
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { readUserWithPermissionsAndMemberships } from '@/server/users/read'
 
 type PropTypes = {
     params: {
@@ -12,40 +11,32 @@ type PropTypes = {
 }
 
 export default async function Settings({ params }: PropTypes) {
-    const { user } = await getUser({
-        userRequired: true,
+    const { user, permissions, memberships }= await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}/settings`,
+        userRequired: true,
     })
 
     const me = params.username === 'me'
-    const username = me ? user.username : params.username
+    const profile = await readUserWithPermissionsAndMemberships(me ? user.username : params.username)
 
-    const profile = await prisma.user.findUnique({
-        where: {
-            username
-        }
-    }) 
-
-    if (!profile) {
-        return notFound()
-    }
-
-    const permissions = await readPermissionsOfUser(profile.id)
-    const memberships = await readMembershipsOfUser(profile.id)
-
+    //TODO: Either you need to have the USER_UPDATE permission or be the user you are trying to view (me is true)
+    if (!me /*&& !permissions.includes('USER_UPDATE')*/) return notFound()
+    
+    if (!profile) return notFound()
+        
     return (
         <div>
-            <Link href={`/users/${username}`}>Tilbake</Link>
-            <h1>{profile.firstname} {profile.lastname}</h1> 
-            <p>{`Bruker-ID: ${profile.id}`}</p>
+            <Link href={`/users/${profile.user.username}`}>Tilbake</Link>
+            <h1>{profile.user.firstname} {profile.user.lastname}</h1>
+            <p>{`Bruker-ID: ${profile.user.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
-                {permissions.map(permission => <li key={uuid()}>{permission}</li>)}
+                {profile.permissions.map(permission => <li key={uuid()}>{permission}</li>)}
             </ul>
             <h2>Grupper:</h2>
             <ul>
-                {memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+                {profile.memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
             </ul>
         </div>
     )

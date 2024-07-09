@@ -5,6 +5,8 @@ import prisma from '@/prisma'
 import type { UserFiltered, UserDetails, UserCursor } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
+import { readPermissionsOfUser } from '../permissionRoles/read'
+import { readMembershipsOfUser } from '../groups/read'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -73,4 +75,15 @@ export async function readUserProfile(where: readUserWhere) {
             image: true
         }
     }))
+}
+
+export async function readUserWithPermissionsAndMemberships(username: string) {
+    const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
+        where: { username },
+    }))
+
+    const permissions = await readPermissionsOfUser(user.id)
+    const memberships = await readMembershipsOfUser(user.id)
+
+    return { user, permissions, memberships }
 }

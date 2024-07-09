@@ -1,14 +1,14 @@
-import styles from "./page.module.scss"
+import styles from './page.module.scss'
 import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
-import { notFound } from 'next/navigation'
+import Image from '@/components/Image/Image'
+import { readSpecialImage } from '@/server/images/read'
+import BorderButton from '@/app/components/UI/BorderButton'
+import { readUserProfile } from '@/server/users/read'
+import { readCommitteesFromIds } from '@/server/groups/committees/read'
+import { prismaCall } from '@/server/prismaCall'
 import Link from 'next/link'
-import Image from "@/components/Image/Image"  
-import { readSpecialImage } from "@/server/images/read"
-import BorderButton from "@/app/components/UI/BorderButton"
-import { readUserProfile } from "@/server/users/read"
-import { readCommitteesFromIds } from "@/server/groups/committees/read"
-import { prismaCall } from "@/server/prismaCall"
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: {
@@ -26,7 +26,7 @@ export default async function User({ params }: PropTypes) {
     const me = params.username === 'me' || params.username === user.username
     const username = me ? user.username : params.username
 
-    const profile = await readUserProfile({username})
+    const profile = await readUserProfile({ username })
 
     if (!profile) {
         notFound()
@@ -59,14 +59,14 @@ export default async function User({ params }: PropTypes) {
     }))
 
     if (!studyProgramme) {
-        throw new Error("studyProgramme not found")
+        throw new Error('studyProgramme not found')
     }
 
     const order = studyProgramme.group.memberships[0].omegaOrder.order
 
     let profileImage = profile.image
     if (!profileImage) {
-        profileImage = await readSpecialImage("DEFAULT_PROFILE_IMAGE")
+        profileImage = await readSpecialImage('DEFAULT_PROFILE_IMAGE')
     }
 
     return (
@@ -84,37 +84,37 @@ export default async function User({ params }: PropTypes) {
                         {committees.map(committee => <div className={styles.committee}><p>{committee.name}</p></div>)} {/* TODO change to your own committee title instead of committee name*/}
                     </div>
                     <hr/>
-                    <p className={styles.orderText}>{profile.sex == "FEMALE" ? "Syster" : "Broder"} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
+                    <p className={styles.orderText}>{profile.sex == 'FEMALE' ? 'Syster' : 'Broder'} uudaf {order}´dis orden i Sanctus Omega Broderskab</p>
                 </div>
                 <div className={styles.leftSection}>
                     <div className={styles.buttons}>
                         {me && <Link href={`/users/${username}/settings`}>
-                            <BorderButton color="secondary" children={<p>Innstillinger</p>} /> 
+                            <BorderButton color="secondary" children={<p>Innstillinger</p>} />
                         </Link>}
                         {me && <Link href="/logout">
-                        <BorderButton color="secondary" children={<p>Logg ut</p>} />
-                    </Link>}
+                            <BorderButton color="secondary" children={<p>Logg ut</p>} />
+                        </Link>}
                     </div>
-                    
+
                 </div>
                 <div className={styles.profileMain}>
-                    {(profile.bio != "") &&
+                    {(profile.bio != '') &&
                         <div className={styles.bio}>
                             <h2>Bio:</h2>
                             <p>{profile.bio}</p>
                         </div>
                     }
                     <p>
-                        <span className={styles.email}>E-post:</span> 
+                        <span className={styles.email}>E-post:</span>
                         {profile.email}
                     </p>
                     <p>
                         <span className={styles.username}>Brukernavn:</span>
                         {profile.username}
                     </p>
-                </div> 
+                </div>
             </div>
-            
+
         </div>
     )
 }
