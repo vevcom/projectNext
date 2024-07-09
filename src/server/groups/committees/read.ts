@@ -38,3 +38,13 @@ export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedC
         },
     }))
 }
+
+export async function readCommitteesFromIds(ids: number[]) {
+    return await prismaCall(() => prisma.committee.findMany({
+        where: {
+            id: {
+                in: ids
+            }
+        }
+    }))
+}
