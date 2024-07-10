@@ -38,7 +38,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
 ) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
-    const canEdit = useEditing() //TODO: auth must be passed
+    const canEdit = useEditing({}) //TODO: auth must be passed
     const ref = useRef<HTMLInputElement>(null)
     const submitRef = useRef<HTMLButtonElement>(null)
     useKeyPress('Enter', () => {

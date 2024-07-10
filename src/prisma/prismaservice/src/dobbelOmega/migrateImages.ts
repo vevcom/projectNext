@@ -33,6 +33,14 @@ export default async function migrateImages(
         create: {
             name: 'Søppel fra Veven',
             description: 'Denne samlingen inneholder bilder som ikke tilhører noen samling',
+            visibility: {
+                create: {
+                    purpose: 'IMAGE',
+                    published: true,
+                    regularLevel: {},
+                    adminLevel: {},
+                }
+            }
         },
     })
 

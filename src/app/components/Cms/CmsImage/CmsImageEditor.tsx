@@ -27,7 +27,7 @@ type PropTypes = {
  * @returns
  */
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
-    const canEdit = useEditing()
+    const canEdit = useEditing({})
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isCollectionActive = (collection: { id: number }) => (

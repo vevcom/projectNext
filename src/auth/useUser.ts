@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
 import type { Matrix } from '@/utils/checkMatrix'
-import type { BasicMembership } from '@/server/groups/Types'
+import type { BasicMembership } from '@/server/groups/memberships/Types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.

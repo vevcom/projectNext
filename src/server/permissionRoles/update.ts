@@ -2,7 +2,7 @@ import 'server-only'
 import { readDefaultPermissions, readUsersOfRole } from './read'
 import { updateDefaultPermissionsValidation, updateRoleValidation } from './validation'
 import { expandedRoleIncluder } from './ConfigVars'
-import { readMembershipsOfGroup } from '@/server/groups/read'
+import { readMembershipsOfGroup } from '@/server/groups/memberships/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
@@ -67,10 +67,8 @@ export async function updateRole(
 export async function updateDefaultPermissions(
     rawdata: UpdateDefaultPermissionsTypes['Detailed']
 ): Promise<Permission[]> {
-    console.log('yo3')
     const { permissions } = updateDefaultPermissionsValidation.detailedValidate(rawdata)
 
-    console.log('yo4')
     // Delete removed permissions
     await prismaCall(() => prisma.defaultPermission.deleteMany({
         where: {

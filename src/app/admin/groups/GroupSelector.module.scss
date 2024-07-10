@@ -1,0 +1,14 @@
+@use '@/styles/ohma';
+
+.GroupSelector {
+    display: block;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background-color: ohma.$colors-gray-400;
+    border-radius: 50%;
+    color: ohma.$colors-gray-800;
+    display: grid;
+    place-items: center;
+    margin-bottom: .2em;
+}

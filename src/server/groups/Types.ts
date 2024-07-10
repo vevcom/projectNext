@@ -1,7 +1,31 @@
-import type { Group, Membership } from '@prisma/client'
+import type { Group, GroupType, OmegaMembershipLevel } from '@prisma/client'
 
-export type ExpandedGroup = Group
+/**
+ * Type used to be able to infer the extra fields in ExpandedGroup
+ */
+export type GroupWithIncludes = Group & {
+    committee?: { name: string } | null,
+    manualGroup?: { name: string } | null,
+    class?: { year: number } | null,
+    interestGroup?: { name: string } | null,
+    omegaMembershipGroup?: { omegaMembershipLevel: OmegaMembershipLevel } | null,
+    studyProgramme?: { name: string } | null,
+    memberships: { order: number }[]
+}
 
-export type ExpandedMembership = Membership
+/**
+ * Type including extra infered fields based on the type of group and the group data
+ */
+export type ExpandedGroup = Group & {
+    firstOrder: number
+    name: string
+    members: number
+}
 
-export type BasicMembership = Omit<Membership, 'order' | 'userId'>
+export type GroupsStructured = {
+    [key in GroupType]: {
+        name: string,
+        description: string,
+        groups: ExpandedGroup[]
+    }
+}

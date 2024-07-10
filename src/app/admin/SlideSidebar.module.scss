@@ -1,0 +1,75 @@
+@use '@/styles/ohma';
+
+.SlideSidebar {
+    background-color: ohma.$colors-gray-300;
+    margin: .5em;
+    padding: 2em;
+    border-radius: ohma.$rounding;
+    position: relative;
+
+    .toggle {   
+        position: absolute;
+        right: -.6em;
+        top: min(50%, 50vh);
+        transform: translateY(-50%);
+        width: 3em;
+        height: 3em;
+        border-radius: 50%;
+        background-color: ohma.$colors-gray-500;
+        border: none;
+        svg {
+            color: ohma.$colors-gray-100;
+        }
+    }
+
+    &.closed {
+        .sidebar {
+            width: .4em;
+        }
+        .toggle {
+            > svg {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    //Closing
+    &.closed .sidebar {
+        transition: width .3s .1s, opacity .1s;
+        opacity: 0;
+    }
+
+    //Opening
+    &:not(.closed) .sidebar {
+        transition: width .3s, opacity .3s .3s;
+        opacity: 1;
+    }
+
+    .sidebar {
+        margin-top: 1em;
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+        a {
+            color: ohma.$colors-gray-700;
+            text-decoration: none;
+            padding: .5em;
+            border-radius: .5em;
+            margin: .5em 0;
+            transition: background-color .3s;
+            &:hover, &.active {
+                background-color: ohma.$colors-gray-200;
+            }
+        }
+        h3 {
+            margin-top: 1em;
+            svg {
+                margin-right: .2em; 
+            }
+        }
+    }
+}
+
+.content {
+    width: 100%;
+}

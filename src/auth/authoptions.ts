@@ -5,11 +5,12 @@ import { fetchStudyProgrammesFromFeide } from './feide/api'
 import { comparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
-import { readMembershipsOfUser } from '@/server/groups/read'
+import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { readUser } from '@/server/users/read'
 import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
+import { createMembershipsForUser } from '@/server/groups/memberships/create'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
@@ -123,9 +124,7 @@ export const authOptions: AuthOptions = {
                         const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(account.access_token)
                         const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
 
-                        // Everything from here...
-                        const order = (await readCurrenOmegaOrder()).order
-
+                        const { order } = await readCurrentOmegaOrder()
                         await prisma.membership.deleteMany({
                             where: {
                                 OR: studyProgrammes.map(({ groupId }) => ({
@@ -137,14 +136,10 @@ export const authOptions: AuthOptions = {
 
                         const userId = user ? Number(user.id) : token.user.id
 
-                        await prisma.membership.createMany({
-                            data: studyProgrammes.map(({ groupId }) => ({
-                                groupId,
-                                order,
-                                admin: false,
-                                userId,
-                            }))
-                        })
+                        createMembershipsForUser(userId, studyProgrammes.map(({ groupId }) => ({
+                            groupId,
+                            admin: false
+                        })))
                     }
                     // ...to here should be a function.
 

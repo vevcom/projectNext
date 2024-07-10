@@ -24,6 +24,7 @@ model Image {
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
+  User                    User[]
 }
 
 enum SpecialCollection {
@@ -43,6 +44,8 @@ model ImageCollection {
   special      SpecialCollection? @unique
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
+  visibility   Visibility         @relation(fields: [visibilityId], references: [id])
+  visibilityId Int                @unique
 }
 
 enum ImageSize {

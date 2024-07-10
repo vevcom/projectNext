@@ -68,14 +68,41 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
             username: 'Harambe104',
+            bio: 'Harambe did nothing wrong',
             credentials: {
                 create: {
                     passwordHash,
                 },
             },
+            image: {
+                connect: {
+                    name: 'Harambe104'
+                }
+            }
+        },
+    })
+
+    const vever = await prisma.user.upsert({
+        where: {
+            email: 'vever@vevcom.com'
+        },
+        update: {
+
+        },
+        create: {
+            firstname: 'Vever',
+            lastname: 'Vevsen',
+            email: 'vever@vevcom.com',
+            username: 'Vever104',
+            credentials: {
+                create: {
+                    passwordHash: 'password',
+                },
+            },
         },
     })
     console.log(harambe)
+    console.log(vever)
 }
 
 // WE NEED TO FIND A BETTER WAY TO SHARE CODE BETWEEN PRISMA SERVICE AND NEXT

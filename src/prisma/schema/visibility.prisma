@@ -1,0 +1,54 @@
+enum VisibilityPurpose {
+  IMAGE
+  EVENT
+  ARTICLE_CATEGORY
+  NEWS_ARTICLE
+  SPECIAL
+}
+
+enum SpecialVisibilityPurpose {
+  OMBUL
+  COMMITTEE
+  USER
+  PUBLIC
+}
+
+model Visibility {
+  id              Int                       @id @default(autoincrement())
+  imageCollection ImageCollection?
+  published       Boolean                   @default(false)
+  purpose         VisibilityPurpose
+  specialPurpose  SpecialVisibilityPurpose? @unique
+
+  regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
+  regularLevelId Int             @unique
+  adminLevel     VisibilityLevel @relation(fields: [adminLevelId], references: [id], name: "adminLevel")
+  adminLevelId   Int             @unique
+}
+
+model VisibilityLevel {
+  id                Int                     @id @default(autoincrement())
+  permission        Permission? //Used if type of the Visibility is SPECIAL. (If null everybody will have access at this level)
+  requirements      VisibilityRequirement[]
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  regularVisibility Visibility?             @relation(name: "regularLevel")
+  adminVisibility   Visibility?             @relation(name: "adminLevel")
+}
+
+model VisibilityRequirement {
+  id                          Int                          @id @default(autoincrement())
+  visibility                  VisibilityLevel              @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibilityId                Int
+  visibilityRequirmenetGroups VisibilityRequirmenetGroup[]
+}
+
+model VisibilityRequirmenetGroup {
+  id                      Int                   @id @default(autoincrement())
+  visibilityRequirmenet   VisibilityRequirement @relation(fields: [visibilityRequirmenetId], references: [id], onDelete: Cascade)
+  visibilityRequirmenetId Int
+  group                   Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId                 Int
+
+  @@unique([visibilityRequirmenetId, groupId])
+}

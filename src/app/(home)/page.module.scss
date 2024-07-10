@@ -50,6 +50,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             }
         }
         > a:not(.scrollDown) {
+            width: 100%;
             @include ohma.borderBtn();
         }
         > .scrollDown {
