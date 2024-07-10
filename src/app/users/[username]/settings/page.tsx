@@ -18,8 +18,7 @@ export default async function Settings({ params }: PropTypes) {
 
     const { profile, me } = await getProfile(user, params.username)
 
-    //TODO: Either you need to have the USER_UPDATE permission or be the user you are trying to view (me is true)
-    if (!me /*&& !permissions.includes('USER_UPDATE')*/) return notFound()
+    if (!me && !permissions.includes('USERS_UPDATE')) return notFound()
     console.log(permissions)
 
     return (

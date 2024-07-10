@@ -36,13 +36,11 @@ export async function getProfile(user: UserFiltered | null, paramUsername: strin
 }
 
 export default async function User({ params }: PropTypes) {
-    const { user } = await getUser({
+    const { user, permissions } = await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}`,
     })
-    console.log(params.username)
     const { profile, me } = await getProfile(user, params.username)
-    console.log(profile)
 
     // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
@@ -76,7 +74,7 @@ export default async function User({ params }: PropTypes) {
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImage('DEFAULT_PROFILE_IMAGE')
 
-    const canAdministrate = me /*|| permissions.includes('USER_UPDATE') */
+    const canAdministrate = me || permissions.includes('USERS_UPDATE') 
 
     return (
         <div className={styles.wrapper}>
