@@ -10,10 +10,13 @@ model User {
   email         String        @unique
   firstname     String        @default("[Fjernet]")
   lastname      String        @default("[Fjernet]")
+  bio           String        @default("")
   acceptedTerms DateTime?
   sex           SEX?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt // is also updated manually
+  image         Image?        @relation(fields: [imageId], references: [id])
+  imageId       Int?
   omegaQuote    OmegaQuote[]
   memberships   Membership[]
   credentials   Credentials?

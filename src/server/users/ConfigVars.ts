@@ -1,5 +1,5 @@
 import { createSelection } from '@/server/createSelection'
-import type { Prisma, User } from '@prisma/client'
+import type { Prisma, User, SEX } from '@prisma/client'
 
 export const maxNumberOfGroupsInFilter = 7
 
@@ -34,3 +34,19 @@ export const standardMembershipSelection = [
         }
     },
 ] satisfies Prisma.MembershipWhereInput[]
+
+
+export const sexConfig = {
+    MALE: {
+        title: 'Broder',
+        pronoun: 'Hands',
+    },
+    FEMALE: {
+        title: 'Syster',
+        pronoun: 'Hendes',
+    },
+    OTHER: {
+        title: 'Søsken',
+        pronoun: 'Hends',
+    }
+} as const satisfies { [key in SEX]: { title: string, pronoun: string }}

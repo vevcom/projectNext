@@ -24,6 +24,7 @@ model Image {
   updatedAt               DateTime         @updatedAt
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
+  User                    User[]
 }
 
 enum SpecialCollection {

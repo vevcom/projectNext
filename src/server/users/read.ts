@@ -1,12 +1,14 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
-import prisma from '@/prisma'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import type { UserCursor, UserDetails, UserPagingReturn } from './Types'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
+import { readMembershipsOfUser } from '@/server/groups/memberships/read'
+import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
+import prisma from '@/prisma'
+import type { UserFiltered, UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
-import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -123,7 +125,7 @@ export async function readUserPage<const PageSize extends number>({
 }
 
 type readUserWhere = {
-    name?: string,
+    username?: string,
     id?: number,
     email?: string,
 }
@@ -134,4 +136,20 @@ export async function readUser(where: readUserWhere): Promise<User> {
 
 export async function readUserOrNull(where: readUserWhere): Promise<User | null> {
     return await prismaCall(() => prisma.user.findFirst({ where }))
+}
+
+export async function readUserProfile(username: string): Promise<Profile> {
+    const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
+        where: { username },
+        select: {
+            ...userFilterSelection,
+            bio: true,
+            image: true,
+        },
+    }))
+
+    const permissions = await readPermissionsOfUser(user.id)
+    const memberships = await readMembershipsOfUser(user.id)
+
+    return { user, permissions, memberships }
 }

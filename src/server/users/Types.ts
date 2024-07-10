@@ -1,5 +1,6 @@
+import type { BasicMembership } from '@/server/groups/memberships/Types'
 import type { userFieldsToExpose } from './ConfigVars'
-import type { OmegaMembershipLevel, User } from '@prisma/client'
+import type { OmegaMembershipLevel, User, Image, Permission } from '@prisma/client'
 
 export type UserFiltered = Pick<User, typeof userFieldsToExpose[number]>
 
@@ -36,4 +37,10 @@ export type UserDetails = {
 
 export type UserCursor = {
     id: number
+}
+
+export type Profile = {
+    user: UserFiltered & { image: Image | null, bio: string },
+    memberships: BasicMembership[],
+    permissions: Permission[]
 }

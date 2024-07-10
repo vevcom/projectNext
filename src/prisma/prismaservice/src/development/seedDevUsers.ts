@@ -68,11 +68,17 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
             username: 'Harambe104',
+            bio: 'Harambe did nothing wrong',
             credentials: {
                 create: {
                     passwordHash,
                 },
             },
+            image: {
+                connect: {
+                    name: 'Harambe104'
+                }
+            }
         },
     })
 
