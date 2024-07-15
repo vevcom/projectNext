@@ -12,7 +12,7 @@
   "author": "vevcom",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.15.1",
+    "@prisma/client": "^5.16.2",
     "rehype-format": "^5.0.0",
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
@@ -26,12 +26,12 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.14.10",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
-    "prisma": "^5.15.1",
+    "prisma": "^5.16.2",
     "tsc-alias": "^1.8.10",
     "tscpaths": "^0.0.9",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   }
 }
