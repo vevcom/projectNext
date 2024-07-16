@@ -10,7 +10,7 @@ type PropTypes = {
     },
 }
 
-export default async function Settings({ params }: PropTypes) {
+export default async function UserSettings({ params }: PropTypes) {
     const { user, permissions } = await getUser({
         shouldRedirect: true,
         returnUrl: `/users/${params.username}/settings`,

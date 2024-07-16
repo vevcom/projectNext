@@ -8,6 +8,8 @@ import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/serve
 import { readUserPage, readUserProfile } from '@/server/users/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReadPageInput } from '@/server/paging/Types'
+import { Permission } from '@prisma/client'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -27,18 +29,26 @@ export async function readUserPageAction<const PageSize extends number>(
 }
 
 /**
- * Action meant to read the profile of a user. A profile is a user with more information about them attached.
+ * Action meant to read the profile of a user. 
+ * A profile is a user with more information about them attached.
  * @param username - The username of the user to read
  * @returns - The profile of the user
  */
 export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
-    const { status, authorized } = await getUser({
+    const { user, authorized, status } = await getUser({
         requiredPermissions: [['USERS_READ']]
     })
     if (!authorized) return createActionError(status)
 
     return safeServerCall(() => readUserProfile(username))
 }
+
+export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {
+
+    readPermissionsOfUser
+} 
+
+
 
 export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {
     const { status, authorized } = await getUser({
@@ -48,3 +58,4 @@ export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<Ex
 
     return await safeServerCall(() => readGroupsExpanded())
 }
+

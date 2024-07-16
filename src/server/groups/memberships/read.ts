@@ -3,7 +3,7 @@ import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import prisma from '@/prisma'
-import type { ExpandedMembership, BasicMembership } from './Types'
+import type { ExpandedMembership, BasicMembership, MembershipSelectorType } from './Types'
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {
     const count = await prismaCall(() => prisma.group.count({
@@ -42,7 +42,7 @@ export async function readMembershipsOfGroups(ids: number[]): Promise<ExpandedMe
  */
 export async function readMembershipsOfUser(
     id: number,
-    order?: number | 'ACTIVE'
+    order?: MembershipSelectorType
 ): Promise<BasicMembership[]> {
     return await prismaCall(() => prisma.membership.findMany({
         where: order ? {

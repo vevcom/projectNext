@@ -2,11 +2,10 @@ import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelec
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import prisma from '@/prisma'
-import type { UserFiltered, UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
+import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
 
@@ -148,8 +147,7 @@ export async function readUserProfile(username: string): Promise<Profile> {
         },
     }))
 
-    const permissions = await readPermissionsOfUser(user.id)
     const memberships = await readMembershipsOfUser(user.id)
 
-    return { user, permissions, memberships }
+    return { user, memberships }
 }

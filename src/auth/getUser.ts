@@ -70,7 +70,8 @@ export type AuthStatus = GetUserReturnType['status']
  * @param redirectUrl - The url to redirect the user to, by default to 404 page.
  * @param returnUrl - If set, the user is redirected to the login page and then back to the given url.
  *
- * @returns The user object and auth status (either `AUTHORIZED`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
+ * @returns The user object and auth status 
+ * (either `AUTHORIZED`, `AUTHORIZED_NO_USER`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
  */
 // This function is overloaded to get correct typing for when required is set to true or false.
 export async function getUser<UserRequired extends boolean = false>(
