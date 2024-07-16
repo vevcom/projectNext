@@ -1,10 +1,10 @@
 import { BypassPermissions } from '@/server/visibility/ConfigVars'
-import type { BasicMembership } from '@/server/groups/memberships/Types'
+import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { Permission } from '@prisma/client'
 import type { GroupMatrix, VisibilityCollapsed } from '@/server/visibility/Types'
 
 type MembershipAndPermission = {
-    memberships: BasicMembership[],
+    memberships: MembershipFiltered[],
     permissions: Permission[]
 }
 
@@ -39,7 +39,7 @@ level: 'REGULAR' | 'ADMIN',
     return checkVisibilityATLevel(memberships, visibility[level === 'REGULAR' ? 'regular' : 'admin'])
 }
 
-function checkVisibilityATLevel(memberships: BasicMembership[], visibilityLevel: GroupMatrix) {
+function checkVisibilityATLevel(memberships: MembershipFiltered[], visibilityLevel: GroupMatrix) {
     if (!visibilityLevel.length) return true
     return visibilityLevel.every(requirement =>
         requirement.some(

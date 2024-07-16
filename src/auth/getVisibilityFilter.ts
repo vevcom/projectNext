@@ -1,6 +1,6 @@
 import 'server-only'
 import { BypassPermissions } from '@/server/visibility/ConfigVars'
-import type { BasicMembership } from '@/server/groups/memberships/Types'
+import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { Permission, Prisma, VisibilityPurpose } from '@prisma/client'
 
 function userMayBypassVisibilityBasedOnPermission(
@@ -26,7 +26,7 @@ function isVisibilityPurpose(purpose: string): purpose is VisibilityPurpose {
  * ```where: getVisibilityFilter(user.memberships, user.permissions)```
  */
 export function getVisibilityFilter(
-    groups: BasicMembership[] | undefined,
+    groups: MembershipFiltered[] | undefined,
     permissions: Permission[],
 ) {
     const groupIds = groups ? groups.map(group => group.groupId) : []

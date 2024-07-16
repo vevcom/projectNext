@@ -1,4 +1,8 @@
-import type { GroupType } from '@prisma/client'
+import type { GroupType, Membership } from '@prisma/client'
+import { createSelection } from '@/server/createSelection'
+
+export const membershipFieldsToExpose = ['active', 'order', 'active', 'groupId'] as const satisfies (keyof Membership)[]
+export const membershipFilterSelection = createSelection([...membershipFieldsToExpose])
 
 /**
  * This object defines which group types can easily create memberships, by calling createMembership

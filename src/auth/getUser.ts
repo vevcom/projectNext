@@ -6,7 +6,7 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
-import type { BasicMembership } from '@/server/groups/memberships/Types'
+import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { UserFiltered } from '@/server/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
@@ -28,7 +28,7 @@ type AuthorizedGetUserReturnType<UserRequired extends boolean = false> = ({
 )) & {
     authorized: true,
     permissions: Permission[],
-    memberships: BasicMembership[],
+    memberships: MembershipFiltered[],
 }
 
 type UnAuthorizedGetUserReturnType = ({
@@ -40,7 +40,7 @@ type UnAuthorizedGetUserReturnType = ({
 }) & {
     authorized: false,
     permissions: Permission[],
-    memberships: BasicMembership[],
+    memberships: MembershipFiltered[],
 }
 
 type GetUserReturnType<UserRequired extends boolean = false> = (
@@ -118,4 +118,11 @@ export async function getUser({
     return user
         ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
         : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
+}
+
+class UserServerSession {
+    public user : UserFiltered
+    constructor() {
+
+    }
 }
