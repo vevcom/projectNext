@@ -1,6 +1,9 @@
+import { Matrix } from '@/utils/checkMatrix'
 import type { Permission, VisibilityPurpose } from '@prisma/client'
 
-export type GroupMatrix = number[][]
+export type GroupMatrix = Matrix<number>
+
+export type VisibilityLevelType = 'ADMIN' | 'REGULAR'
 
 export type VisibilityLevelMatrices = {
     regular: GroupMatrix,

@@ -1,7 +1,7 @@
 import { BypassPermissions } from '@/server/visibility/ConfigVars'
 import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { Permission } from '@prisma/client'
-import type { GroupMatrix, VisibilityCollapsed } from '@/server/visibility/Types'
+import type { GroupMatrix, VisibilityCollapsed, VisibilityLevelType } from '@/server/visibility/Types'
 
 type MembershipAndPermission = {
     memberships: MembershipFiltered[],
@@ -23,7 +23,7 @@ export function checkVisibility({
     permissions
 }: MembershipAndPermission,
 visibility: VisibilityCollapsed,
-level: 'REGULAR' | 'ADMIN',
+level: VisibilityLevelType,
 ) {
     const bypassPermission = BypassPermissions[visibility.purpose]
     if (bypassPermission && permissions.includes(bypassPermission)) return true
