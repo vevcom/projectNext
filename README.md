@@ -13,6 +13,12 @@ Have the docker deamon running, then run:
 docker compose -f docker-compose.dev.yml up --build
 ```
 
+#### DevContainer
+
+```bash
+docker exec -it -w $PWD pn-dev /bin/bash
+```
+
 #### Working with the DB
 
 To remigrate the db, just rerun the prisma container

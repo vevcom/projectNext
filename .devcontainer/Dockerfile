@@ -9,3 +9,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/d
 RUN apt update
 
 RUN apt install docker.io docker-compose-plugin -y
+
+# Color bash
+COPY ./.bashrc /root/.bashrc
