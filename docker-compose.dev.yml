@@ -3,19 +3,19 @@
 services:
     projectnext:
         build:
-            context: ./
-            dockerfile: ./Dockerfile
+            context: ${PROJECT_ROOT:-.}/
+            dockerfile: ${PROJECT_ROOT:-.}/Dockerfile
             target: dev
         ports:
             - 3000:3000
         volumes:
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
-            - ./src:/usr/src/app/src
-            - ./src/prisma/schema:/usr/src/app/src/prisma/schema
-            - ./package.json:/usr/src/app/package.json
-            - ./package-lock.json:/usr/src/app/package-lock.json
-            - ./logs:/usr/src/app/logs
+            - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
+            - ${PROJECT_ROOT:-.}/src/prisma/schema:/usr/src/app/src/prisma/schema
+            - ${PROJECT_ROOT:-.}/package.json:/usr/src/app/package.json
+            - ${PROJECT_ROOT:-.}/package-lock.json:/usr/src/app/package-lock.json
+            - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
         environment:
             NODE_ENV: development
             DB_URI: ${DB_URI}
@@ -65,8 +65,8 @@ services:
 
     prisma:
         build:
-            context: ./src/prisma
-            dockerfile: ./prismaservice/Dockerfile
+            context: ${PROJECT_ROOT:-.}/src/prisma
+            dockerfile: ${PROJECT_ROOT:-.}/prismaservice/Dockerfile
             target: dev
             args:
                 SHOULD_MIGRATE: ${VEVEN_DB_URI}
@@ -80,7 +80,7 @@ services:
             PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
             PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
         volumes:
-            - ./src/prisma/schema:/usr/src/app/schema
+            - ${PROJECT_ROOT:-.}/src/prisma/schema:/usr/src/app/schema
             - devstore:/usr/src/app/prismaservice/store
         depends_on:
             db:
@@ -93,7 +93,7 @@ services:
         ports:
             - 80:80
         volumes:
-            - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+            - ${PROJECT_ROOT:-.}/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
             - devstore:/usr/store
         depends_on:
             - projectnext
