@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuid } from 'uuid'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailListTypes, ViaType } from '@/server/mail/Types'
+import type { MailListTypes, ViaArrayType } from '@/server/mail/Types'
 
 export default function MailListItem({
     type,
@@ -20,7 +20,7 @@ export default function MailListItem({
     id: number,
     displayText: string,
     destroyFunction?: null | ((identity: number) => Promise<ActionReturn<null>>),
-} & ViaType) {
+} & ViaArrayType) {
     if (!MailListTypeArray.includes(type)) {
         notFound()
     }

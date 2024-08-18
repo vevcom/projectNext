@@ -7,17 +7,19 @@ export const MailListTypeArray = ['alias', 'mailingList', 'group', 'user', 'mail
 export type MailListTypes = typeof MailListTypeArray[number];
 
 export type ViaType = {
-    via?: {
-        type: MailListTypes,
-        id: number,
-        label: string,
-    }[],
+    type: MailListTypes,
+    id: number,
+    label: string,
+}
+
+export type ViaArrayType = {
+    via?: ViaType[],
 }
 
 export type MailFlowObject = {
-    alias: MailAlias[] & ViaType,
-    mailingList: MailingList[] & ViaType,
-    group: Group[] & ViaType,
-    user: UserFiltered[] & ViaType,
-    mailaddressExternal: MailAddressExternal[] & ViaType,
+    alias: MailAlias[] & ViaArrayType,
+    mailingList: MailingList[] & ViaArrayType,
+    group: Group[] & ViaArrayType,
+    user: UserFiltered[] & ViaArrayType,
+    mailaddressExternal: MailAddressExternal[] & ViaArrayType,
 }

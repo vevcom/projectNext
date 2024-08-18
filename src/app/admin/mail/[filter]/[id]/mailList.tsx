@@ -5,7 +5,7 @@ import styles from './mailList.module.scss'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailListTypes, ViaType } from '@/server/mail/Types'
+import type { MailListTypes, ViaArrayType } from '@/server/mail/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { UserFiltered } from '@/server/users/Types'
 
@@ -18,11 +18,11 @@ const typeDisplayName: Record<MailListTypes, string> = {
 }
 
 type TypeConversion = {
-    alias: (MailAlias & ViaType),
-    mailingList: (MailingList & ViaType),
-    group: (Group & ViaType),
-    user: (UserFiltered & ViaType),
-    mailaddressExternal: (MailAddressExternal & ViaType),
+    alias: (MailAlias & ViaArrayType),
+    mailingList: (MailingList & ViaArrayType),
+    group: (Group & ViaArrayType),
+    user: (UserFiltered & ViaArrayType),
+    mailaddressExternal: (MailAddressExternal & ViaArrayType),
 }
 
 export default function MailList<T extends MailListTypes>({
