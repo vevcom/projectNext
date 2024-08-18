@@ -3,13 +3,13 @@ import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/server/groups/read'
+import { readUserPage, readUserProfile } from '@/server/users/read'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import type { ExpandedGroup } from '@/server/groups/Types'
 import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/server/users/Types'
-import { readUserPage, readUserProfile } from '@/server/users/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReadPageInput } from '@/server/paging/Types'
-import { Permission } from '@prisma/client'
-import { readPermissionsOfUser } from '@/server/permissionRoles/read'
+import type { Permission } from '@prisma/client'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -18,7 +18,7 @@ import { readPermissionsOfUser } from '@/server/permissionRoles/read'
  * @returns
  */
 export async function readUserPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize, UserCursor ,UserDetails>
+    readPageInput: ReadPageInput<PageSize, UserCursor, UserDetails>
 ): Promise<ActionReturn<UserPagingReturn[]>> {
     const { status, authorized } = await getUser({
         requiredPermissions: [['USERS_READ']]
@@ -29,7 +29,7 @@ export async function readUserPageAction<const PageSize extends number>(
 }
 
 /**
- * Action meant to read the profile of a user. 
+ * Action meant to read the profile of a user.
  * A profile is a user with more information about them attached.
  * @param username - The username of the user to read
  * @returns - The profile of the user
@@ -44,10 +44,8 @@ export async function readUserProfileAction(username: string): Promise<ActionRet
 }
 
 export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {
-
     readPermissionsOfUser
-} 
-
+}
 
 
 export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {

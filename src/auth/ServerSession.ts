@@ -1,17 +1,18 @@
 import 'server-only'
 import { authOptions } from './authoptions'
+import { checkVisibility } from './checkVisibility'
+import { getVisibilityFilter } from './getVisibilityFilter'
 import checkMatrix from '@/utils/checkMatrix'
 import { readDefaultPermissions } from '@/server/permissionRoles/read'
+import { VisibilityLevelType } from '@/server/visibility/Types'
+import { createActionError } from '@/actions/error'
 import { getServerSession as getServerSessionNextAuth } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
 import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { UserFiltered } from '@/server/users/Types'
-import { checkVisibility } from './checkVisibility'
-import { VisibilityCollapsed, VisibilityLevelType } from '@/server/visibility/Types'
-import { getVisibilityFilter } from './getVisibilityFilter'
-import { createActionError } from '@/actions/error'
 
 type Session<UserGuarantee extends 'HAS_USER' | 'MAYBE_USER' | 'NO_USER'> = {
     user: UserGuarantee extends 'HAS_USER' ? UserFiltered : (
@@ -20,10 +21,10 @@ type Session<UserGuarantee extends 'HAS_USER' | 'MAYBE_USER' | 'NO_USER'> = {
         )
     ),
     permissions: Permission[],
-    memberships: MembershipFiltered[], 
+    memberships: MembershipFiltered[],
 }
 
-type SessionWithAuth<UserRequiered extends boolean> =  ({
+type SessionWithAuth<UserRequiered extends boolean> = ({
     authorized: false,
     status: 'UNAUTHORIZED',
 } & Session<'HAS_USER'>) | ({
@@ -56,13 +57,13 @@ class ServerSession {
      * The way to do authentication in the server. This function will run a
      * auther on the session in question and return both the session and
      * authorized (bool), and status.
-     * @param auther - The auther object to use for authentication. It contains 
+     * @param auther - The auther object to use for authentication. It contains
      * the pipeline for the authentication.
-     * @returns 
+     * @returns
      */
     public authenticate<UserRequieredOut extends boolean>(
         auther: Auther
-    ): SessionWithAuth<UserRequieredOut>  {
+    ): SessionWithAuth<UserRequieredOut> {
         return auther.auth(this.session)
     }
 
@@ -76,7 +77,7 @@ class ServerSession {
             permissions = await readDefaultPermissions(),
             memberships = [],
         } = await getServerSessionNextAuth(authOptions) ?? {}
-        return new ServerSession({user, permissions, memberships})
+        return new ServerSession({ user, permissions, memberships })
     }
 
     /**
@@ -89,7 +90,7 @@ class ServerSession {
     }
 }
 
-type AutherRedirectConfig = { 
+type AutherRedirectConfig = {
     shouldRedirect: boolean,
     redirectUrl: string | null,
     returnUrl: string | null,
@@ -118,18 +119,18 @@ export class Auther<UserRequieredOut extends boolean> {
         const sessionWithAuth = this.checkers.some(checker => checker.check(session).authorized)
 
         if (success) {
-            if (session.user) return { status: 'AUTHORIZED' , authorized: true }
+            if (session.user) return { status: 'AUTHORIZED', authorized: true }
             return { status: 'AUTHORIZED_NO_USER', authorized: true }
         }
         if (this.redirectConfig.shouldRedirect) {
             if (!session.user && this.config.returnUrl) {
                 redirect(`/login?callbackUrl=${encodeURI(this.config.returnUrl)}`)
             }
-    
+
             if (this.redirectConfig.redirectUrl) {
                 redirect(this.config.redirectUrl)
             }
-    
+
             notFound() //TODO: Should probably redirect to an unauthorized page when we have one.
         }
 
@@ -137,13 +138,13 @@ export class Auther<UserRequieredOut extends boolean> {
         return { status: 'UNAUTHENTICATED', authorized: false }
     }
 
-    public redirectOnFail({ 
-        redirectUrl, 
+    public redirectOnFail({
+        redirectUrl,
         returnUrl
-    } : Pick<AutherRedirectConfig, 'redirectUrl' | 'returnUrl'>) {
+    }: Pick<AutherRedirectConfig, 'redirectUrl' | 'returnUrl'>) {
         this.redirectConfig = {
             shouldRedirect: true,
-            redirectUrl, 
+            redirectUrl,
             returnUrl
         }
         return this
@@ -153,16 +154,18 @@ export class Auther<UserRequieredOut extends boolean> {
 export class AuthCheck {
     public check: (session: Session<'MAYBE_USER'>) => SessionWithAuth<false>
 
-    protected extendCheck(newStage: (session: Session<'MAYBE_USER'>) => boolean)  {
+    protected extendCheck(newStage: (session: Session<'MAYBE_USER'>) => boolean) {
         this.check = (session) => {
             const sessionWithAuth = this.check(session)
             if (!sessionWithAuth.authorized) return sessionWithAuth
             if (newStage(sessionWithAuth)) return sessionWithAuth
-            if (session.user) return {
-                ...session,
-                authorized: false,
-                status: 'UNAUTHORIZED',
-                user: session.user,
+            if (session.user) {
+                return {
+                    ...session,
+                    authorized: false,
+                    status: 'UNAUTHORIZED',
+                    user: session.user,
+                }
             }
             return {
                 ...session,
@@ -175,11 +178,13 @@ export class AuthCheck {
 
     public constructor() {
         this.check = (session) => {
-            if (session.user) return {
-                ...session,
-                authorized: true,
-                status: 'AUTHORIZED',
-                user: session.user,
+            if (session.user) {
+                return {
+                    ...session,
+                    authorized: true,
+                    status: 'AUTHORIZED',
+                    user: session.user,
+                }
             }
             return {
                 ...session,
@@ -200,7 +205,6 @@ export class AuthCheck {
     public requireUser(session: Session<'MAYBE_USER'>) {
         return new AuthCheckUserRequiered(this.check)
     }
-        
 }
 
 class AuthCheckUserRequiered extends AuthCheck {
@@ -222,11 +226,13 @@ class AuthCheckUserRequiered extends AuthCheck {
                 memberships: session.memberships
             })
             if (!sessionWithAuth.authorized) return sessionWithAuth
-            if (session.user) return {
-                ...session,
-                authorized: true,
-                status: 'AUTHORIZED',
-                user: session.user,
+            if (session.user) {
+                return {
+                    ...session,
+                    authorized: true,
+                    status: 'AUTHORIZED',
+                    user: session.user,
+                }
             }
             return {
                 ...session,
@@ -244,12 +250,12 @@ async function readProfile(username: string) {
     const authReadProfile = new Auther().check(
         new AuthCheck().requireUser
     )
-    const { 
-        user, 
-        permissions, 
-        memberships, 
-        authorized, 
-        status 
+    const {
+        user,
+        permissions,
+        memberships,
+        authorized,
+        status
     } = (await ServerSession.get()).authenticate()
     if (!authorized) return createActionError(status)
 }

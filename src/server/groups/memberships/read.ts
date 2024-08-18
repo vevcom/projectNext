@@ -1,10 +1,10 @@
 import 'server-only'
+import { membershipFilterSelection } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import prisma from '@/prisma'
 import type { ExpandedMembership, MembershipFiltered, MembershipSelectorType } from './Types'
-import { membershipFilterSelection } from './ConfigVars'
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {
     const count = await prismaCall(() => prisma.group.count({

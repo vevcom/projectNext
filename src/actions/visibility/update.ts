@@ -1,6 +1,6 @@
 'use server'
+import type { VisibilityLevelType } from '@/server/visibility/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { VisibilityLevelType } from '@/server/visibility/Types'
 
 export async function updateVisibilityAction(
     level: VisibilityLevelType,

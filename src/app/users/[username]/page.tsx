@@ -75,7 +75,7 @@ export default async function User({ params }: PropTypes) {
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImage('DEFAULT_PROFILE_IMAGE')
 
-    const canAdministrate = me || permissions.includes('USERS_UPDATE') 
+    const canAdministrate = me || permissions.includes('USERS_UPDATE')
 
     return (
         <div className={styles.wrapper}>

@@ -147,42 +147,42 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
 
     return (
         <>
-        <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
-            <aside className={styles.sidebar}>
+            <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
+                <aside className={styles.sidebar}>
+                    {
+                        navigations.map(navigation => (
+                            <>
+                                <h3 className={styles.header}>
+                                    <FontAwesomeIcon icon={navigation.header.icon} />
+                                    {navigation.header.title}
+                                </h3>
+                                {
+                                    navigation.links.map(link => (
+                                        <Link
+                                            key={link.title}
+                                            href={link.href}
+                                            className={link.href === `/admin/${currentPath}` ? styles.active : ''}
+                                        >
+                                            {link.title}
+                                        </Link>
+                                    ))
+                                }
+                            </>
+                        ))
+                    }
+                </aside>
                 {
-                    navigations.map(navigation => (
-                        <>
-                            <h3 className={styles.header}>
-                                <FontAwesomeIcon icon={navigation.header.icon} />
-                                {navigation.header.title}
-                            </h3>
-                            {
-                                navigation.links.map(link => (
-                                    <Link
-                                        key={link.title}
-                                        href={link.href}
-                                        className={link.href === `/admin/${currentPath}` ? styles.active : ''}
-                                    >
-                                        {link.title}
-                                    </Link>
-                                ))
-                            }
-                        </>
-                    ))
+                    !(currentPath === 'admin' && open) && (
+                        <button onClick={handleToggle} className={styles.toggle}>
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    )
                 }
-            </aside>
-            {
-                !(currentPath === 'admin' && open) && (
-                    <button onClick={handleToggle} className={styles.toggle}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
-                    </button>
-                )
-            }
-            
-        </div>
-        <div className={open ? `${styles.content} ${styles.open}` : `${styles.content} ${styles.closed}`}>
-            {children}
-        </div>
+
+            </div>
+            <div className={open ? `${styles.content} ${styles.open}` : `${styles.content} ${styles.closed}`}>
+                {children}
+            </div>
         </>
     )
 }

@@ -1,5 +1,5 @@
+import type { membershipFieldsToExpose } from './ConfigVars'
 import type { Membership } from '@prisma/client'
-import { membershipFieldsToExpose } from './ConfigVars'
 
 export type ExpandedMembership = Membership
 export type MembershipFiltered = Pick<Membership, typeof membershipFieldsToExpose[number]>
