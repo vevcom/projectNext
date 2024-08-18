@@ -18,16 +18,15 @@ export default function CreateUserForm({ className }: PropTypes) {
         <div className={`${styles.CreateUserForm} ${className}`}>
             <Form
                 title="Lag en bruker"
-                submitText="Create user"
+                submitText="Lag bruker"
                 action={createUserAction}
                 successCallback={refresh}
             >
-                <TextInput label="username" name="username" key={uuid()}/>
-                <TextInput label="password" name="password" key={uuid()}/>
-                <TextInput label="confirm password" name="confirmPassword" key={uuid()}/>
                 <TextInput label="email" name="email" key={uuid()}/>
+                <TextInput label="username" name="username" key={uuid()}/>
                 <TextInput label="first name" name="firstname" key={uuid()}/>
                 <TextInput label="last name" name="lastname" key={uuid()}/>
+                <p>Når en bruker lages vil brukeren få tilsendt en epost, med en link for å fullføre registreringen.</p>
             </Form>
         </div>
     )

@@ -1,5 +1,6 @@
 import 'server-only'
 import { createOmegaquotesValidation } from './validation'
+import { dispatchSpecialNotification } from '@/server/notifications/create'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { CreateOmegaguotesTypes } from './validation'
@@ -16,7 +17,7 @@ export async function createQuote(
     rawdata: CreateOmegaguotesTypes['Detailed']
 ): Promise<OmegaQuote> {
     const data = createOmegaquotesValidation.detailedValidate(rawdata)
-    return await prismaCall(() => prisma.omegaQuote.create({
+    const results = await prismaCall(() => prisma.omegaQuote.create({
         data: {
             ...data,
             userPoster: {
@@ -26,4 +27,8 @@ export async function createQuote(
             }
         }
     }))
+
+    dispatchSpecialNotification('NEW_OMEGAQUOTE', 'Ny Omegaquote♪', `${results.quote}\n - ${results.author}`)
+
+    return results
 }

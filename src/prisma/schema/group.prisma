@@ -41,6 +41,7 @@ model Group {
   manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
+  mailingLists         MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -108,4 +109,5 @@ model StudyProgramme {
   insititueCode String?
   yearsLength   Int?
   startYear     Int?
+  partOfOmega   Boolean @default(false)
 }

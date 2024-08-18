@@ -14,7 +14,7 @@ export function createZodActionError<T>(parse: SafeParseError<T>): ActionReturnE
     return {
         success: false,
         errorCode: 'BAD PARAMETERS',
-        error: parse.error.issues
+        error: parse.error.issues,
     }
 }
 

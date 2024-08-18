@@ -3,6 +3,11 @@ export type ServerErrorCode =
     | 'NOT FOUND'
     | 'BAD PARAMETERS'
     | 'UNKNOWN ERROR'
+    | 'JWT EXPIRED'
+    | 'JWT INVALID'
+    | 'SERVER ERROR'
+    | 'INVALID CONFIGURATION'
+    | 'NOT IMPLEMENTED'
 
 export type ErrorMessage = {
     path?: (number | string)[],

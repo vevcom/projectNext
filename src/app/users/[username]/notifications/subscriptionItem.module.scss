@@ -1,0 +1,23 @@
+@use '@/styles/ohma';
+
+.subscriptionItem {
+
+    &:nth-child(odd) {
+        background-color: ohma.$colors-gray-200;
+    }
+
+    .channelName {
+        --depth: 0;
+
+        padding-left: calc(var(--depth) * 1rem);
+    }
+
+    .checkbox {
+    
+        > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

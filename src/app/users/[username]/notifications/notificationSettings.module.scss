@@ -1,0 +1,41 @@
+@use '@/styles/ohma';
+
+.table {
+    
+    .tableHead {
+
+        vertical-align: bottom;
+
+        .notificationMethodsTH {
+            white-space: nowrap;
+            padding-left: 0.2rem;
+            padding-right: 0.2rem;
+    
+            @include ohma.screenLg {
+                min-width: 8rem;
+            }
+    
+            @include ohma.screenMobile {
+                > span {
+                    -ms-writing-mode: tb-rl;
+                    -webkit-writing-mode: vertical-rl;
+                    writing-mode: vertical-rl;
+                    transform: rotate(180deg);
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+    
+}
+
+.submitButton {
+    transition: opacity 200ms ease;
+
+    max-width: 15rem;
+    margin: auto;
+
+    &.hideSubmitButton {
+        opacity: 0;
+    }
+}
