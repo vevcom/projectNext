@@ -16,7 +16,7 @@
     "rehype-stringify": "^10.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
-    "sharp": "^0.33.4",
+    "sharp": "^0.33.5",
     "unified": "^11.0.5",
     "uuid": "^10.0.0"
   },
@@ -32,6 +32,6 @@
     "prisma": "^5.18.0",
     "tsc-alias": "^1.8.10",
     "tscpaths": "^0.0.9",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.4"
   }
 }
