@@ -13,7 +13,7 @@ import { createDefaultSubscriptions } from '@/server/notifications/subscription/
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { ntnuEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
+import { NTNUEmailDomain } from '@/server/mail/mailAddressExternal/ConfigVars'
 import { hashPassword } from '@/auth/password'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
 import type { User } from '@prisma/client'
@@ -66,10 +66,10 @@ export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Det
         }
     }
 
-    if (email.endsWith(`@${ntnuEmailDomain}`)) {
+    if (email.endsWith(`@${NTNUEmailDomain}`)) {
         throw new ServerError(
             'BAD PARAMETERS',
-            `Den nye e-posten må være din ${ntnuEmailDomain}-e-post, eller en personlig e-post.`
+            `Den nye e-posten må være din ${NTNUEmailDomain}-e-post, eller en personlig e-post.`
         )
     }
 

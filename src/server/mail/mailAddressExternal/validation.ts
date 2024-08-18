@@ -1,4 +1,4 @@
-import { ntnuEmailDomain } from './ConfigVars'
+import { NTNUEmailDomain } from './ConfigVars'
 import { validMailAdressDomains } from '@/server/mail/ConfigVars'
 import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
@@ -19,8 +19,8 @@ export const basemailAddressExternalValidation = new ValidationBase({
                 'E-post adressen inneholder et forbudt domene navn.',
             )
             .refine(
-                address => !address.trim().endsWith(`@${ntnuEmailDomain}`),
-                `E-post addressen kan ikke ha ${ntnuEmailDomain} domene.
+                address => !address.trim().endsWith(`@${NTNUEmailDomain}`),
+                `E-post addressen kan ikke ha ${NTNUEmailDomain} domene.
                  I slike tilfeller må personen være en bruker på nettsiden.`,
             ),
         description: z.string().max(200).optional(),
