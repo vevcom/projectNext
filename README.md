@@ -13,6 +13,15 @@ Have the docker deamon running, then run:
 docker compose -f docker-compose.dev.yml up --build
 ```
 
+#### DevContainer
+
+To streamline development in VSCode you can use a devContainer. First download the [devContainer extension](vscode:extension/ms-vscode-remote.remote-containers). Then open the project inside the container. In the container you should have all the tools you need for development.
+
+If you want to have access to the container outside vscode, use the command bellow.
+```bash
+docker exec -it -w /workspaces/projectNext pn-dev /bin/bash
+```
+
 #### Working with the DB
 
 To remigrate the db, just rerun the prisma container
