@@ -19,7 +19,7 @@ To streamline development in VSCode you can use a devContainer. First download t
 
 If you want to have access to the container outside vscode, use the command bellow.
 ```bash
-docker exec -it -w $PWD pn-dev /bin/bash
+docker exec -it -w /workspaces/projectNext pn-dev /bin/bash
 ```
 
 #### Working with the DB
