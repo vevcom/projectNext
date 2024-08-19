@@ -1,0 +1,29 @@
+model Screen {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  screenPageScreen ScreenPageScreen[]
+}
+
+model ScreenPageScreen {
+  screenPage   ScreenPage @relation(references: [id], fields: [screenPageId])
+  screenPageId Int
+  screen       Screen     @relation(references: [id], fields: [screenId])
+  screenId     Int
+  order        Int
+
+  @@id([screenPageId, screenId])
+  @@unique([order, screenId])
+}
+
+enum ScreenPageType {
+  IMAGE
+  CUSTOM
+  JOBAD
+}
+
+model ScreenPage {
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
+  type             ScreenPageType
+  screenPageScreen ScreenPageScreen[]
+}
