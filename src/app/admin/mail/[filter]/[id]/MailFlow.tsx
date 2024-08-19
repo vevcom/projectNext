@@ -18,10 +18,12 @@ export default async function MailFlow({
     filter,
     id,
     data,
+    refreshPage,
 }: {
     filter: MailListTypes,
     id: number,
     data: MailFlowObject,
+    refreshPage: () => Promise<void>
 }) {
     let aliasDestroy: DestroyFunction = null
     let mailingListDestroy: DestroyFunction = null
@@ -140,11 +142,11 @@ export default async function MailFlow({
 
     return <>
         <div className={styles.mailListContainer}>
-            <MailList type="alias" items={data.alias} destroyFunction={aliasDestroy}/>
-            <MailList type="mailingList" items={data.mailingList} destroyFunction={mailingListDestroy}/>
-            <MailList type="group" items={data.group} destroyFunction={groupDestroy} />
-            <MailList type="user" items={data.user} destroyFunction={userDestroy} />
-            <MailList type="mailaddressExternal" items={data.mailaddressExternal} destroyFunction={addressExternalDestroy} />
+            <MailList type="alias" items={data.alias} filter={filter} destroyFunction={aliasDestroy} refreshPage={refreshPage} />
+            <MailList type="mailingList" items={data.mailingList} filter={filter} destroyFunction={mailingListDestroy} refreshPage={refreshPage} />
+            <MailList type="group" items={data.group} filter={filter} destroyFunction={groupDestroy} refreshPage={refreshPage} />
+            <MailList type="user" items={data.user} filter={filter} destroyFunction={userDestroy} refreshPage={refreshPage} />
+            <MailList type="mailaddressExternal" items={data.mailaddressExternal} filter={filter} destroyFunction={addressExternalDestroy} refreshPage={refreshPage} />
         </div>
     </>
 }

@@ -6,7 +6,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "dbaeumer.vscode-eslint",
                 "prisma.prisma"
             ]
         }

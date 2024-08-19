@@ -9,11 +9,13 @@ import type { MailingList } from '@prisma/client'
 
 export default function EditUser({
     data,
-    mailingLists
+    mailingLists,
+    refreshPage,
 }: {
     id: number,
     data: MailFlowObject,
-    mailingLists: MailingList[]
+    mailingLists: MailingList[],
+    refreshPage: () => Promise<void>
 }) {
     const focusedUser = data.user[0]
     if (!focusedUser) {
@@ -24,11 +26,11 @@ export default function EditUser({
     const permissions = uResults.permissions ?? []
 
     return <div>
-        <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
         { permissions.includes('MAILINGLIST_USER_CREATE') && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListUserRelationAction}
+            successCallback={refreshPage}
         >
             <input type="hidden" name="userId" value={focusedUser.id} />
             <Select

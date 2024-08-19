@@ -11,3 +11,7 @@
         }
     }
 }
+
+.active {
+    background-color: lighten(ohma.$colors-green, 30%);
+}

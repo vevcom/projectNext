@@ -14,11 +14,13 @@ import type { MailFlowObject } from '@/server/mail/Types'
 
 export default function EditMailAddressExternal({
     data,
-    mailingLists
+    mailingLists,
+    refreshPage,
 }: {
     id: number,
     data: MailFlowObject,
-    mailingLists: MailingList[]
+    mailingLists: MailingList[],
+    refreshPage: () => Promise<void>
 }) {
     const { push } = useRouter()
 
@@ -31,7 +33,6 @@ export default function EditMailAddressExternal({
     const permissions = uResults.permissions ?? []
 
     return <>
-        <h2>{focusedAddress.address}</h2>
         { permissions.includes('MAILADDRESS_EXTERNAL_UPDATE') && <div>
             <Form
                 title="Ekstern mailaddresse"
@@ -60,6 +61,7 @@ export default function EditMailAddressExternal({
                 title="Legg til mailliste"
                 submitText="Legg til"
                 action={createMailingListExternalRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" name="mailAddressExternalId" value={focusedAddress.id} />
                 <Select

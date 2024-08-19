@@ -10,11 +10,13 @@ import type { MailingList } from '@prisma/client'
 
 export default function EditGroup({
     data,
-    mailingLists
+    mailingLists,
+    refreshPage,
 }: {
     id: number,
     data: MailFlowObject,
-    mailingLists: MailingList[]
+    mailingLists: MailingList[],
+    refreshPage: () => Promise<void>
 }) {
     const focusedGroup = data.group[0]
     if (!focusedGroup) {
@@ -25,11 +27,11 @@ export default function EditGroup({
     const permissions = uResults.permissions ?? []
 
     return <div>
-        <h2>{focusedGroup.id}</h2>
         { permissions.includes('MAILINGLIST_GROUP_CREATE') && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListGroupRelationAction}
+            successCallback={refreshPage}
         >
             <input type="hidden" name="groupId" value={focusedGroup.id} />
             <Select

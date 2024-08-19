@@ -14,11 +14,13 @@ import type { MailingList } from '@prisma/client'
 
 export default function EditMailAlias({
     data,
-    mailingLists
+    mailingLists,
+    refreshPage,
 }: {
     id: number,
     data: MailFlowObject,
-    mailingLists: MailingList[]
+    mailingLists: MailingList[],
+    refreshPage: () => Promise<void>
 }) {
     const { push } = useRouter()
 
@@ -31,7 +33,6 @@ export default function EditMailAlias({
     const permissions = uResults.permissions ?? []
 
     return <>
-        <h2>{focusedAlias.address}</h2>
         { permissions.includes('MAILALIAS_UPDATE') && <div>
             <Form
                 title="Alias"
@@ -60,6 +61,7 @@ export default function EditMailAlias({
                 title="Legg til mailliste"
                 submitText="Legg til"
                 action={createAliasMailingListRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" name="mailAliasId" value={focusedAlias.id} />
                 <Select

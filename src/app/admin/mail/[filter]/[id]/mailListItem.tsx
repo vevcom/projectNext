@@ -25,7 +25,7 @@ export default function MailListItem({
         notFound()
     }
 
-    const editable = (destroyFunction && via)
+    const editable = (destroyFunction && !via)
 
     return <li className={`${styles.mailListItem} ${editable ? styles.editable : ''}`}>
         {editable ? <FontAwesomeIcon icon={faTrashCan} onClick={destroyFunction.bind(null, id)} /> : null}

@@ -6,35 +6,24 @@ import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailListTypes, ViaArrayType } from '@/server/mail/Types'
-import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
-import type { UserFiltered } from '@/server/users/Types'
-
-const typeDisplayName: Record<MailListTypes, string> = {
-    alias: 'Alias',
-    mailingList: 'Mail lister',
-    group: 'Grupper',
-    user: 'Brukere',
-    mailaddressExternal: 'Eksterne adresser',
-}
-
-type TypeConversion = {
-    alias: (MailAlias & ViaArrayType),
-    mailingList: (MailingList & ViaArrayType),
-    group: (Group & ViaArrayType),
-    user: (UserFiltered & ViaArrayType),
-    mailaddressExternal: (MailAddressExternal & ViaArrayType),
-}
+import { typeDisplayName } from './ConfigVars'
+import { TypeConversion } from './Types'
+import { getDisplayText } from './common'
 
 export default function MailList<T extends MailListTypes>({
     type,
     items,
-    destroyFunction
+    destroyFunction,
+    refreshPage,
+    filter
 }: {
     type: T,
-    items: TypeConversion[T][],
+    items: (TypeConversion[T] & ViaArrayType)[],
     destroyFunction?: null | ((id: number) => Promise<ActionReturn<null>>),
+    refreshPage: () => Promise<void>,
+    filter: MailListTypes
 }) {
-    const [itemsState, setItemsState] = useState<TypeConversion[T][]>(items)
+    const active = filter === type
 
     let destroyFunc = destroyFunction
 
@@ -47,7 +36,7 @@ export default function MailList<T extends MailListTypes>({
                     return results
                 }
 
-                setItemsState(itemsState.filter(i => i.id !== id))
+                refreshPage()
             }
             return {
                 success: false,
@@ -57,35 +46,13 @@ export default function MailList<T extends MailListTypes>({
         }
     }
 
-    function getDisplayText(item: TypeConversion[T]): string {
-        if ((type === 'alias' || type === 'mailaddressExternal') && 'address' in item) {
-            return item.address
-        }
-
-        if (type === 'mailingList' && 'name' in item) {
-            return item.name
-        }
-
-        if (type === 'user' && 'firstname' in item && 'lastname' in item) {
-            return `${item.firstname} ${item.lastname}`
-        }
-
-        if (type === 'group') {
-            return String(item.id)
-        }
-
-        console.warn('This code should never run. This mens that the argument passed to MailList is invalid.')
-
-        return ''
-    }
-
-    return <div className={styles.mailList}>
+    return <div className={`${styles.mailList} ${active ? styles.active : ''}`}>
         <h3>{typeDisplayName[type]}</h3>
 
         <ul>
-            { itemsState.map(i => <MailListItem
+            { items.map(i => <MailListItem
                 type={type}
-                displayText={getDisplayText(i)}
+                displayText={getDisplayText(type, i)}
                 via={i.via}
                 id={i.id}
                 key={uuid()}

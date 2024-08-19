@@ -11,6 +11,7 @@ import type { UserFiltered } from '@/server/users/Types'
 import type { MailListTypes } from '@/server/mail/Types'
 import type { MailingList, MailAlias, MailAddressExternal } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
+import { MailOptionsType } from './Types'
 
 
 export async function readMailFlowAction(filter: MailListTypes, id: number) {
@@ -31,12 +32,7 @@ export async function readMailFlowAction(filter: MailListTypes, id: number) {
     }))
 }
 
-export async function readMailOptions(): Promise<ActionReturn<{
-    alias: MailAlias[],
-    mailingList: MailingList[],
-    mailaddressExternal: MailAddressExternal[],
-    users: UserFiltered[],
-}>> {
+export async function readMailOptions(): Promise<ActionReturn<MailOptionsType>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [
             ['MAILINGLIST_READ'],

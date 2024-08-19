@@ -21,11 +21,13 @@ export default function EditMailingList({
     data,
     mailaliases,
     mailAddressExternal,
+    refreshPage,
 }: {
     id: number,
     data: MailFlowObject,
     mailaliases: MailAlias[],
     mailAddressExternal: MailAddressExternal[],
+    refreshPage: () => Promise<void>,
 }) {
     const { push } = useRouter()
 
@@ -35,7 +37,6 @@ export default function EditMailingList({
     const permissions = uResults.permissions ?? []
 
     return <>
-        <h2>{focusedMailingList.name}</h2>
         { permissions.includes('MAILINGLIST_UPDATE') && <div>
             <Form
                 title="Mailliste"
@@ -65,6 +66,7 @@ export default function EditMailingList({
                 title="Legg til mailalias"
                 submitText="Legg til"
                 action={createAliasMailingListRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
                 <Select
@@ -79,6 +81,7 @@ export default function EditMailingList({
                 title="Grupper"
                 submitText="Legg til"
                 action={createMailingListGroupRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <TextInput type="text" name="groupId" label="Gruppe id" />
@@ -89,6 +92,7 @@ export default function EditMailingList({
                 title="Brukere"
                 submitText="Legg til"
                 action={createMailingListUserRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <TextInput type="text" name="userId" label="Bruker id" />
@@ -99,6 +103,7 @@ export default function EditMailingList({
                 title="Ekstern mailadresse"
                 submitText="Legg til"
                 action={createMailingListExternalRelationAction}
+                successCallback={refreshPage}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
                 <Select
