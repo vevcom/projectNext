@@ -8,4 +8,12 @@
     justify-content: space-between;
     align-items: top;
     gap: 2em;
+
+    > div {
+        border: 1px black solid;
+        border-radius: ohma.$rounding;
+        padding: ohma.$rounding;
+        flex: 1 1 13rem;
+        align-content: center;
+    }
 }

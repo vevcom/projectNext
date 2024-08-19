@@ -47,7 +47,7 @@ export default async function MailFlowPage({
         <ClientStateWrapper
             filter={filter}
             id={id}
-            mailFlowObject={results.data}
+            mailFlow={results.data}
             mailOptions={mailOptions.data}
         />
     </PageWrapper>

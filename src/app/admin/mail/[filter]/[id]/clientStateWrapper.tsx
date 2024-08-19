@@ -16,59 +16,55 @@ import { readMailFlowAction } from "@/actions/mail/read"
 export default function ClientStateWrapper({
     filter,
     id,
-    mailFlowObject,
+    mailFlow,
     mailOptions
 }: {
     filter: MailListTypes
     id: number
-    mailFlowObject: MailFlowObject,
+    mailFlow: MailFlowObject,
     mailOptions: MailOptionsType
 }) {
 
-    const [ mailFlowState, setMailFlowSate ] = useState(mailFlowObject)
-
-    async function refreshMailFlow() {
-        const results = await readMailFlowAction(filter, id);
-        if (!results.success) return;
-
-        setMailFlowSate(results.data)
-    }
-
+    const { jsx, refreshMailFlow } = MailFlow({
+        filter: filter,
+        id: id,
+        mailFlow: mailFlow,
+    })
 
     return <>
         <div className={styles.editContainer}>
             {filter === 'mailingList' ? <EditMailingList
                 id={id}
-                data={mailFlowState}
+                data={mailFlow}
                 mailaliases={mailOptions.alias}
                 mailAddressExternal={mailOptions.mailaddressExternal}
                 refreshPage={refreshMailFlow}
             /> : null}
             {filter === 'alias' ? <EditMailAlias
                 id={id}
-                data={mailFlowState}
+                data={mailFlow}
                 mailingLists={mailOptions.mailingList}
                 refreshPage={refreshMailFlow}
             /> : null}
             {filter === 'mailaddressExternal' ? <EditMailAddressExternal
                 id={id}
-                data={mailFlowState}
+                data={mailFlow}
                 mailingLists={mailOptions.mailingList}
                 refreshPage={refreshMailFlow}
             /> : null}
             {filter === 'user' ? <EditUser
                 id={id}
-                data={mailFlowState}
+                data={mailFlow}
                 mailingLists={mailOptions.mailingList}
                 refreshPage={refreshMailFlow}
             /> : null}
             {filter === 'group' ? <EditGroup
                 id={id}
-                data={mailFlowState}
+                data={mailFlow}
                 mailingLists={mailOptions.mailingList}
                 refreshPage={refreshMailFlow}
             /> : null}
         </div>
-        <MailFlow filter={filter} id={id} data={mailFlowState} refreshPage={refreshMailFlow} />
+        { jsx }
     </>
 }

@@ -11,20 +11,30 @@ import {
 import { useUser } from '@/auth/useUser'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailFlowObject, MailListTypes } from '@/server/mail/Types'
+import { useState } from 'react'
+import { readMailFlowAction } from '@/actions/mail/read'
 
 type DestroyFunction = null | ((id: number) => Promise<ActionReturn<null>>)
 
-export default async function MailFlow({
+export default function MailFlow({
     filter,
     id,
-    data,
-    refreshPage,
+    mailFlow,
 }: {
     filter: MailListTypes,
     id: number,
-    data: MailFlowObject,
-    refreshPage: () => Promise<void>
+    mailFlow: MailFlowObject,
 }) {
+
+    const [ mailFlowState, setMailFlowSate ] = useState(mailFlow)
+
+    async function refreshMailFlow() {
+        const results = await readMailFlowAction(filter, id);
+        if (!results.success) return;
+
+        setMailFlowSate(results.data)
+    }
+
     let aliasDestroy: DestroyFunction = null
     let mailingListDestroy: DestroyFunction = null
     let groupDestroy: DestroyFunction = null
@@ -140,13 +150,18 @@ export default async function MailFlow({
         }
     }
 
-    return <>
+    const ret = <>
         <div className={styles.mailListContainer}>
-            <MailList type="alias" items={data.alias} filter={filter} destroyFunction={aliasDestroy} refreshPage={refreshPage} />
-            <MailList type="mailingList" items={data.mailingList} filter={filter} destroyFunction={mailingListDestroy} refreshPage={refreshPage} />
-            <MailList type="group" items={data.group} filter={filter} destroyFunction={groupDestroy} refreshPage={refreshPage} />
-            <MailList type="user" items={data.user} filter={filter} destroyFunction={userDestroy} refreshPage={refreshPage} />
-            <MailList type="mailaddressExternal" items={data.mailaddressExternal} filter={filter} destroyFunction={addressExternalDestroy} refreshPage={refreshPage} />
+            <MailList type="alias" items={mailFlowState.alias} filter={filter} destroyFunction={aliasDestroy} refreshPage={refreshMailFlow} />
+            <MailList type="mailingList" items={mailFlowState.mailingList} filter={filter} destroyFunction={mailingListDestroy} refreshPage={refreshMailFlow} />
+            <MailList type="group" items={mailFlowState.group} filter={filter} destroyFunction={groupDestroy} refreshPage={refreshMailFlow} />
+            <MailList type="user" items={mailFlowState.user} filter={filter} destroyFunction={userDestroy} refreshPage={refreshMailFlow} />
+            <MailList type="mailaddressExternal" items={mailFlowState.mailaddressExternal} filter={filter} destroyFunction={addressExternalDestroy} refreshPage={refreshMailFlow} />
         </div>
     </>
+
+    return {
+        jsx: ret,
+        refreshMailFlow
+    }
 }
