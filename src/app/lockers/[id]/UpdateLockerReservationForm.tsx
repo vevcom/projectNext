@@ -20,8 +20,8 @@ export default function UpdateLockerReservationForm({ reservationId, groupsFormD
     const [indefinateDate, setIndefinateDate] = useState(false)
     const [groupId, setGroupId] = useState("-1") // State on groupId is used to prevent form from resetting when indefinateDate is toggled
 
-    function handleGroupIdChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        setGroupId(event.target.value)
+    function handleGroupIdChange(value: string) {
+        setGroupId(value)
     }
 
     return (
