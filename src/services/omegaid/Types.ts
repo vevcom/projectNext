@@ -1,5 +1,5 @@
 import type { omegaIdFields } from './ConfigVars'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 export type OmegaId = Pick<UserFiltered, typeof omegaIdFields[number]>
 

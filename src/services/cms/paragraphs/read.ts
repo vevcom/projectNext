@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
-import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/services/error'
+import { prismaCall } from '@/services/prismaCall'
 import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'
 
 export async function readCmsParagraph(name: string): Promise<CmsParagraph> {

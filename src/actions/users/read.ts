@@ -1,9 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readUserPage } from '@/server/users/read'
-import type { UserFiltered, UserDetails, UserCursor } from '@/server/users/Types'
+import { readUserPage } from '@/services/users/read'
+import type { UserFiltered, UserDetails, UserCursor } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 
 /**
  * A action to read a page of users with the given details (filtering)

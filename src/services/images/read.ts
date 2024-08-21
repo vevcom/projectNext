@@ -1,10 +1,10 @@
 import 'server-only'
-import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
-import type { ReadPageInput } from '@/server/paging/Types'
-import type { ImageDetails, ImageCursor } from '@/server/images/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { ImageDetails, ImageCursor } from '@/services/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
 
 export async function readImagesPage<const PageSize extends number>(

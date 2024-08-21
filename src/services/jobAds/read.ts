@@ -1,8 +1,8 @@
 import 'server-only'
 import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
 import type { ExpandedJobAd, SimpleJobAd } from './Types'
 
 export async function readJobAdByNameAndOrder(idOrName: number | {

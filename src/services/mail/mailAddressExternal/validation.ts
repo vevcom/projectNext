@@ -1,8 +1,8 @@
 import { NTNUEmailDomain } from './ConfigVars'
-import { validMailAdressDomains } from '@/server/mail/ConfigVars'
-import { ValidationBase } from '@/server/Validation'
+import { validMailAdressDomains } from '@/services/mail/ConfigVars'
+import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 
 export const basemailAddressExternalValidation = new ValidationBase({

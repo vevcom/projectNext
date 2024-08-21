@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { Account } from 'next-auth'
 
 export async function updateFeideAccount(

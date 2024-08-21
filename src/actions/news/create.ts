@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createNews } from '@/server/news/create'
-import { createNewsArticleValidation } from '@/server/news/validation'
+import { createNews } from '@/services/news/create'
+import { createNewsArticleValidation } from '@/services/news/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedNewsArticle } from '@/server/news/Types'
-import type { CreateNewsArticleTypes } from '@/server/news/validation'
+import type { ExpandedNewsArticle } from '@/services/news/Types'
+import type { CreateNewsArticleTypes } from '@/services/news/validation'
 
 export async function createNewsAction(
     rawdata: FormData | CreateNewsArticleTypes['Type']

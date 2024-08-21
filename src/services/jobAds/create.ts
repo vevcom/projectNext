@@ -1,10 +1,10 @@
 import 'server-only'
 import { createJobAdValidation } from './validation'
 import { jobAdArticleRealtionsIncluder } from './ConfigVars'
-import { prismaCall } from '@/server/prismaCall'
-import { createArticle } from '@/server/cms/articles/create'
+import { prismaCall } from '@/services/prismaCall'
+import { createArticle } from '@/services/cms/articles/create'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
 import type { ExpandedJobAd } from './Types'
 import type { CreateJobAdTypes } from './validation'
 

@@ -1,9 +1,9 @@
 import 'server-only'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
-import { destroyFile } from '@/server/store/destroyFile'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import { destroyFile } from '@/services/store/destroyFile'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 
 /**
  * A function to destroy an ombul, also deletes the file from the store, and the cmsImage on cascade

@@ -1,8 +1,8 @@
 import 'server-only'
-import { prismaCall } from '@/server/prismaCall'
-import { destroyArticle } from '@/server/cms/articles/destroy'
+import { prismaCall } from '@/services/prismaCall'
+import { destroyArticle } from '@/services/cms/articles/destroy'
 import prisma from '@/prisma'
-import type { SimpleNewsArticle } from '@/server/news/Types'
+import type { SimpleNewsArticle } from '@/services/news/Types'
 
 /**
  * Yhis function destroys a newsArticle. It is also responsible for sleaning up the article,

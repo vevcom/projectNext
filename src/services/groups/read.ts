@@ -1,7 +1,7 @@
-import { ServerError } from '@/server/error'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { ServerError } from '@/services/error'
+import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { User } from '@prisma/client'
 import type { BasicMembership, ExpandedGroup, ExpandedMembership } from './Types'
 

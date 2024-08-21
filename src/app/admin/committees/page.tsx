@@ -1,12 +1,12 @@
 import styles from './page.module.scss'
 import CreateCommitteeForm from './CreateCommitteeForm'
-import ImageSelectionProvider from '@/context/ImageSelection'
-import ImageList from '@/app/components/Image/ImageList/ImageList'
-import ImagePagingProvider from '@/context/paging/ImagePaging'
+import ImageSelectionProvider from '@/contexts/ImageSelection'
+import ImageList from '@/components/Image/ImageList/ImageList'
+import ImagePagingProvider from '@/contexts/paging/ImagePaging'
 import { readSpecialImageCollectionAction } from '@/actions/images/collections/read'
-import PopUpProvider from '@/context/PopUp'
+import PopUpProvider from '@/contexts/PopUp'
 import { readSpecialImageAction } from '@/actions/images/read'
-import type { PageSizeImage } from '@/context/paging/ImagePaging'
+import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 
 export default async function adminCommittee() {
     const committeeLogoCollectionRes = await readSpecialImageCollectionAction('COMMITTEELOGOS')

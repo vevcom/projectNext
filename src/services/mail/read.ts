@@ -1,7 +1,7 @@
 import 'server-only'
-import { prismaCall } from '@/server/prismaCall'
-import { userFilterSelection } from '@/server/users/ConfigVars'
-import { ServerError } from '@/server/error'
+import { prismaCall } from '@/services/prismaCall'
+import { userFilterSelection } from '@/services/users/ConfigVars'
+import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './Types'
 

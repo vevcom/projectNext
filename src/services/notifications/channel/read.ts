@@ -1,8 +1,8 @@
 import 'server-only'
-import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
-import { prismaCall } from '@/server/prismaCall'
+import { allMethodsOn, notificationMethods } from '@/services/notifications/Types'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 
 
 export async function readNotificationChannels(): Promise<ExpandedNotificationChannel[]> {

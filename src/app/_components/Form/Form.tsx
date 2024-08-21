@@ -7,7 +7,7 @@ import { useFormStatus } from 'react-dom'
 import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
-import type { ErrorMessage } from '@/server/error'
+import type { ErrorMessage } from '@/services/error'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {

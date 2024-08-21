@@ -3,7 +3,7 @@
 import styles from './NotificaionMethodSelector.module.scss'
 import NotificationMethodCheckboxes from './NotificationMethodCheckboxes'
 import React from 'react'
-import type { NotificationMethodTypes, NotificationMethodGeneral } from '@/server/notifications/Types'
+import type { NotificationMethodTypes, NotificationMethodGeneral } from '@/services/notifications/Types'
 
 export default function NotificationMethodSelector({
     title,

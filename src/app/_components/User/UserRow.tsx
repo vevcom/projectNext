@@ -1,5 +1,5 @@
 import styles from './UserRow.module.scss'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 type PropTypes = {
     user: UserFiltered

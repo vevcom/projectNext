@@ -1,5 +1,5 @@
 import { updateStudyProgrammeValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { UpdateStudyProgrammeTypes } from './validation'
 import type { ExpandedStudyProgramme } from './Types'

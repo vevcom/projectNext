@@ -1,11 +1,11 @@
 import 'server-only'
-import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
-import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/server/news/ConfigVars'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
+import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from '@/services/news/ConfigVars'
 import prisma from '@/prisma'
-import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, NewsCursor>

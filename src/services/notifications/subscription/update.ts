@@ -1,11 +1,11 @@
 import 'server-only'
 import { validateMethods } from './validation'
-import { allMethodsOff, allMethodsOn } from '@/server/notifications/Types'
-import { prismaCall } from '@/server/prismaCall'
+import { allMethodsOff, allMethodsOn } from '@/services/notifications/Types'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { MinimizedSubscription, Subscription } from './Types'
-import type { NotificationMethodGeneral } from '@/server/notifications/Types'
+import type { NotificationMethodGeneral } from '@/services/notifications/Types'
 
 async function createTransactionPart(
     userId: number,

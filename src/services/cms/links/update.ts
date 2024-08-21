@@ -1,7 +1,7 @@
 import 'server-only'
 import { updateCmsLinkValidation } from './validation'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { UpdateCmsLinkTypes } from './validation'
 import type { CmsLink } from '@prisma/client'
 

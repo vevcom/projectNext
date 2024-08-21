@@ -1,11 +1,11 @@
 'use server'
 import { createCmsImageActionValidation } from './validation'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createCmsImage } from '@/server/cms/images/create'
+import { createCmsImage } from '@/services/cms/images/create'
 import { createZodActionError } from '@/actions/error'
 import type { CreateCmsImageActionTypes } from './validation'
 import type { Image } from '@prisma/client'
-import type { ExpandedCmsImage } from '@/server/cms/images/Types'
+import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createCmsImageAction(

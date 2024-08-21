@@ -1,9 +1,9 @@
 'use server'
 
 import RegisterAdmissiontrial from './registration'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readOmegaJWTPublicKey } from '@/actions/omegaid/read'
-import { AdmissionDisplayNames } from '@/server/admission/ConfigVars'
+import { AdmissionDisplayNames } from '@/services/admission/ConfigVars'
 import { Admission, type Admission as AdmissionType } from '@prisma/client'
 import { notFound } from 'next/navigation'
 

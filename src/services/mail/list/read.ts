@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { MailingList } from '@prisma/client'
 

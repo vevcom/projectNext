@@ -1,10 +1,10 @@
 import 'server-only'
-import { sendSystemMail } from '@/server/notifications/email/send'
-import { ResetPasswordTemplate } from '@/server/notifications/email/templates/resetPassword'
+import { sendSystemMail } from '@/services/notifications/email/send'
+import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'
-import { readUser } from '@/server/users/read'
-import { ServerError } from '@/server/error'
-import { emailValidation } from '@/server/notifications/validation'
+import { readUser } from '@/services/users/read'
+import { ServerError } from '@/services/error'
+import { emailValidation } from '@/services/notifications/validation'
 
 export async function sendResetPasswordMail(email: string) {
     const parse = emailValidation.detailedValidate({ email })

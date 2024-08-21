@@ -1,5 +1,5 @@
 import 'server-only'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'

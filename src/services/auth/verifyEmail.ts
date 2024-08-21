@@ -1,7 +1,7 @@
 import 'server-only'
-import { readUser } from '@/server/users/read'
+import { readUser } from '@/services/users/read'
 import { verifyJWT } from '@/jwt/jwt'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 
 
 export async function verifyVerifyEmailToken(token: string): Promise<{

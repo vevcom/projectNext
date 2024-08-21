@@ -1,7 +1,7 @@
 import 'server-only'
 import { updateImageCollectionValidation } from './validation'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { ImageCollection } from '@prisma/client'
 import type { UpdateImageCollectionTypes } from './validation'
 

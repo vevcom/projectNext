@@ -1,5 +1,5 @@
 'use server'
-import { readArticle } from '@/server/cms/articles/read'
+import { readArticle } from '@/services/cms/articles/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'

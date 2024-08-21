@@ -1,8 +1,8 @@
 import 'server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
-import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/services/error'
+import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticle } from './Types'
 
 /**

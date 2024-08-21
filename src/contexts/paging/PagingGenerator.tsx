@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useRef, useEffect } from 'react'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput, Page } from '@/server/paging/Types'
+import type { ReadPageInput, Page } from '@/services/paging/Types'
 import type { Context as ReactContextType } from 'react'
 
 export type StateTypes<Data, Cursor, PageSize extends number> = {

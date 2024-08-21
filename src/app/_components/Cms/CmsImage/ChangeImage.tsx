@@ -1,7 +1,7 @@
 'use client'
 import styles from './ChangeImage.module.scss'
 import Image from '@/components/Image/Image'
-import { ImageSelectionContext } from '@/context/ImageSelection'
+import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
 import { updateCmsImageAction, updateCmsImageConfigAction } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

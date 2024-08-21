@@ -1,9 +1,9 @@
 import 'next-auth'
 import 'next-auth/adapters'
 
-import type { BasicMembership } from '@/server/groups/Types'
+import type { BasicMembership } from '@/services/groups/Types'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 declare module 'next-auth' {
     interface User extends Partial<UserFiltered> {}

@@ -1,11 +1,11 @@
 import 'server-only'
 import { updateNotificaionChannelValidation, validateMethods, validateNewParent } from './validation'
 import { readNotificationChannels } from './read'
-import { allMethodsOn, notificationMethods } from '@/server/notifications/Types'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
+import { allMethodsOn, notificationMethods } from '@/services/notifications/Types'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 import type { UpdateNotificationChannelType } from './validation'
 
 

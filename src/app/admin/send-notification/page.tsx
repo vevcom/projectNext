@@ -1,7 +1,7 @@
 'use server'
 import NotificaionForm from './notificationForm'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { ServerError } from '@/server/error'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { ServerError } from '@/services/error'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 
 

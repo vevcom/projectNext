@@ -4,7 +4,7 @@ import { readJWTPayload } from './jwtReadUnsecure'
 import { JWT_ISSUER } from '@/auth/ConfigVars'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { OmegaId } from '@/server/omegaid/Types'
+import type { OmegaId } from '@/services/omegaid/Types'
 
 /**
  * Parses a JSON Web Token (JWT) and verifies its signature using the provided public key.

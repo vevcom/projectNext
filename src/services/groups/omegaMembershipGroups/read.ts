@@ -1,6 +1,6 @@
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { OmegaMembershipLevel } from '@prisma/client'
 import type { ExpandedOmegaMembershipGroup } from './Types'
 

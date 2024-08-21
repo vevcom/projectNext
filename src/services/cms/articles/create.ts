@@ -2,7 +2,7 @@ import 'server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import { createArticleValidation } from './validation'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleTypes } from './validation'
 import type { ExpandedArticle } from './Types'
 

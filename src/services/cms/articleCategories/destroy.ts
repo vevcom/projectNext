@@ -1,6 +1,6 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 
 export async function destroyArticleCategory(id: number): Promise<ExpandedArticleCategory> {

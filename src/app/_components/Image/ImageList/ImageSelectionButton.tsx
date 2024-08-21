@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageSelectionButton.module.scss'
-import { ImageSelectionContext } from '@/context/ImageSelection'
+import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { useContext } from 'react'

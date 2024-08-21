@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { Html, Markdown } from '@react-email/components'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 export function DefaultEmailTemplate({
     text,

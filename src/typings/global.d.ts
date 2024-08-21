@@ -1,4 +1,4 @@
-import type { mailHandlerSingleton } from '@/server/notifications/email/mailHandler'
+import type { mailHandlerSingleton } from '@/services/notifications/email/mailHandler'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { DefaultArgs } from '@prisma/client/runtime/library'
 

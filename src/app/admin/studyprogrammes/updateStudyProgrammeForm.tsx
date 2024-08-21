@@ -2,9 +2,9 @@
 
 import { createStudyProgrammeAction } from '@/actions/groups/studyProgrammes/create'
 import { updateStudyProgrammeAction } from '@/actions/groups/studyProgrammes/update'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import Select from '@/components/UI/Select'
+import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import type { StudyProgramme } from '@prisma/client'
 

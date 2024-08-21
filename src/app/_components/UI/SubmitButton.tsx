@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import { useFormStatus } from 'react-dom'
-import type { ErrorMessage } from '@/server/error'
+import type { ErrorMessage } from '@/services/error'
 import type { ReactNode } from 'react'
 import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
 

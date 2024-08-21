@@ -1,6 +1,6 @@
 import 'server-only'
-import { prismaCall } from '@/server/prismaCall'
-import { destroyArticle } from '@/server/cms/articles/destroy'
+import { prismaCall } from '@/services/prismaCall'
+import { destroyArticle } from '@/services/cms/articles/destroy'
 import prisma from '@/prisma'
 import type { SimpleJobAd } from './Types'
 

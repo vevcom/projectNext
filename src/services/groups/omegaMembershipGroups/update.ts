@@ -2,9 +2,9 @@ import 'server-only'
 import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from './ConfigVars'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import { ServerError } from '@/server/error'
+import { prismaCall } from '@/services/prismaCall'
+import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
+import { ServerError } from '@/services/error'
 import type { OmegaMembershipLevel } from '@prisma/client'
 
 function omegaMembershipGTEQ(lhs: OmegaMembershipLevel, rhs: OmegaMembershipLevel) {

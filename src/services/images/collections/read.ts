@@ -1,17 +1,17 @@
 import 'server-only'
-import { readSpecialImage } from '@/server/images/read'
+import { readSpecialImage } from '@/services/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
-import { prismaCall } from '@/server/prismaCall'
-import { ServerError } from '@/server/error'
-import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn
-} from '@/server/images/collections/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+} from '@/services/images/collections/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 
 
 /**

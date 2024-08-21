@@ -1,6 +1,6 @@
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedMembership } from './Types'
 
 export async function addMemberToGroup(

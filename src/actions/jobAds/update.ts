@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateJobAdValidation } from '@/server/jobAds/validation'
-import { updateJobAd } from '@/server/jobAds/update'
+import { updateJobAdValidation } from '@/services/jobAds/validation'
+import { updateJobAd } from '@/services/jobAds/update'
 import { getUser } from '@/auth/getUser'
-import type { UpdateJobAdTypes } from '@/server/jobAds/validation'
-import type { SimpleJobAd } from '@/server/jobAds/Types'
+import type { UpdateJobAdTypes } from '@/services/jobAds/validation'
+import type { SimpleJobAd } from '@/services/jobAds/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function updateJobAdAction(

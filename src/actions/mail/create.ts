@@ -8,13 +8,13 @@ import {
     createMailingListExternalValidation,
     createMailingListGroupValidation,
     createMailingListUserValidation
-} from '@/server/mail/validation'
+} from '@/services/mail/validation'
 import {
     createAliasMailingListRelation,
     createMailingListExternalRelation,
     createMailingListGroupRelation,
     createMailingListUserRelation
-} from '@/server/mail/create'
+} from '@/services/mail/create'
 import type { ActionReturn } from '@/actions/Types'
 import type {
     MailAliasMailingList,

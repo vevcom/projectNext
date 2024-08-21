@@ -1,8 +1,8 @@
 import 'server-only'
 import { destoryMailAliasValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { MailAlias } from '@prisma/client'
 
 

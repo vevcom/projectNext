@@ -1,9 +1,9 @@
 import { userFilterSelection } from './ConfigVars'
-import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
-import { prismaCall } from '@/server/prismaCall'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { UserFiltered, UserDetails, UserCursor } from './Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 import type { User } from '@prisma/client'
 
 /**

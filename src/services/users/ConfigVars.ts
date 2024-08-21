@@ -1,4 +1,4 @@
-import { createSelection } from '@/server/createSelection'
+import { createSelection } from '@/services/createSelection'
 import type { SEX, User } from '@prisma/client'
 
 export const userFieldsToExpose = [

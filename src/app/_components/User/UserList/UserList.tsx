@@ -1,6 +1,6 @@
 'use client'
 import styles from './UserList.module.scss'
-import { UserPagingContext } from '@/context/paging/UserPaging'
+import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserRow'
 import { useContext } from 'react'

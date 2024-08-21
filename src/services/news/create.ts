@@ -1,10 +1,10 @@
 import 'server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import { createNewsArticleValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
-import { createArticle } from '@/server/cms/articles/create'
+import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
+import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
 import type { ExpandedNewsArticle } from './Types'
 

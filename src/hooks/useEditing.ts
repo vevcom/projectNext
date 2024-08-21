@@ -1,6 +1,6 @@
 'use client'
 import { useUser } from '@/auth/useUser'
-import { EditModeContext } from '@/context/EditMode'
+import { EditModeContext } from '@/contexts/EditMode'
 import { useContext, useEffect, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Permission } from '@prisma/client'

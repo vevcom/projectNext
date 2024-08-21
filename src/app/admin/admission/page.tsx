@@ -1,7 +1,7 @@
 'use server'
 
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { AdmissionDisplayNames } from '@/server/admission/ConfigVars'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { AdmissionDisplayNames } from '@/services/admission/ConfigVars'
 import { Admission, type Admission as AdmissionType } from '@prisma/client'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'

@@ -1,6 +1,6 @@
-import { ValidationBase } from '@/server/Validation'
+import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 const typeIdTemplate = z.string().or(z.number())
 const detailsIdTemplate = z.number().min(1)

@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageList.module.scss'
 import ImageListImage from './ImageListImage'
-import { ImagePagingContext } from '@/context/paging/ImagePaging'
+import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import ImageUploader from '@/components/Image/ImageUploader'
 import PopUp from '@/components/PopUp/PopUp'

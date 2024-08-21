@@ -3,9 +3,9 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updateNotificationChannel } from '@/server/notifications/channel/update'
-import { parseMethods, updateNotificaionChannelValidation } from '@/server/notifications/channel/validation'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import { updateNotificationChannel } from '@/services/notifications/channel/update'
+import { parseMethods, updateNotificaionChannelValidation } from '@/services/notifications/channel/validation'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 

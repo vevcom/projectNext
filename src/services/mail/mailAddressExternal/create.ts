@@ -1,6 +1,6 @@
 import 'server-only'
 import { createMailAddressExternalValidation, type CreateMailAddressExternalTypes } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { MailAddressExternal } from '@prisma/client'
 

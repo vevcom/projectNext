@@ -3,12 +3,12 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Select from '@/components/UI/Select'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
-import { allMethodsOff, allMethodsOn } from '@/server/notifications/Types'
+import { allMethodsOff, allMethodsOn } from '@/services/notifications/Types'
 import { createNotificationChannelAction } from '@/actions/notifications/channel/create'
-import { booleanOperationOnMethods } from '@/server/notifications/notificationMethodOperations'
+import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 
 
 export default function AddNotificationChannel({

@@ -1,5 +1,5 @@
 'use server'
-import { destroyImageCollection } from '@/server/images/collections/destroy'
+import { destroyImageCollection } from '@/services/images/collections/destroy'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'

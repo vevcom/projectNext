@@ -2,13 +2,13 @@ import { sendBulkMail } from './send'
 import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
-import { repalceSpecialSymbols } from '@/server/notifications/dispatch'
-import { prismaCall } from '@/server/prismaCall'
+import { repalceSpecialSymbols } from '@/services/notifications/dispatch'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { render } from '@react-email/render'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { Notification } from '@prisma/client'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 
 export async function dispatchEmailNotifications(

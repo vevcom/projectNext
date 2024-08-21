@@ -7,7 +7,7 @@ import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import type { ExpandedJobAd } from '@/server/jobAds/Types'
+import type { ExpandedJobAd } from '@/services/jobAds/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateMailAliasValidation, type UpdateMailAliasTypes } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { MailAlias } from '@prisma/client'
 

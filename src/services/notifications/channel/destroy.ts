@@ -1,9 +1,9 @@
 import 'server-only'
 import { destroyNotificaionChannelValidation } from './validation'
-import { allMethodsOn } from '@/server/notifications/Types'
-import { prismaCall } from '@/server/prismaCall'
+import { allMethodsOn } from '@/services/notifications/Types'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { DestroyNotificationChannelType } from './validation'
 
 

@@ -1,5 +1,5 @@
 import 'server-only'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
 import type { StoreLocations } from './StoreLocations'

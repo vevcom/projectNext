@@ -1,7 +1,7 @@
-import { ValidationBase } from '@/server/Validation'
+import { ValidationBase } from '@/services/Validation'
 import { SpecialCmsParagraph } from '@prisma/client'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 export const baseCmsParagraphValidation = new ValidationBase({
     type: {

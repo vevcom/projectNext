@@ -1,9 +1,9 @@
 import 'server-only'
 import { readUsersOfRole } from './read'
 import { expandedRoleIncluder } from './ConfigVars'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { invalidateManyUserSessionData } from '@/server/auth/invalidateSession'
+import { invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import type { ExpandedRole } from './Types'
 
 /**

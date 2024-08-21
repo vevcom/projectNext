@@ -1,15 +1,15 @@
 'use client'
 
-import TextInput from '@/app/components/UI/TextInput'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
+import TextInput from '@/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import Select from '@/components/UI/Select'
 import { createMailingListExternalRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import { updateMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/update'
 import { destroyMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/destroy'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@prisma/client'
-import type { MailFlowObject } from '@/server/mail/Types'
+import type { MailFlowObject } from '@/services/mail/Types'
 
 
 export default function EditMailAddressExternal({

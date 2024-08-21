@@ -1,7 +1,7 @@
-import { ValidationBase } from '@/server/Validation'
+import { ValidationBase } from '@/services/Validation'
 import { SEX } from '@prisma/client'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 const baseUserValidation = new ValidationBase({
     type: {

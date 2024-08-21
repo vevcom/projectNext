@@ -1,6 +1,6 @@
 import 'server-only'
-import { readDefaultNotificationChannels } from '@/server/notifications/channel/read'
-import { prismaCall } from '@/server/prismaCall'
+import { readDefaultNotificationChannels } from '@/services/notifications/channel/read'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 
 

@@ -1,8 +1,8 @@
-import { ValidationBase } from '@/server/Validation'
-import { maxOmbulFileSize } from '@/server/ombul/ConfigVars'
-import { imageFileSchema } from '@/server/images/validation'
+import { ValidationBase } from '@/services/Validation'
+import { maxOmbulFileSize } from '@/services/ombul/ConfigVars'
+import { imageFileSchema } from '@/services/images/validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 export const baseOmbulValidation = new ValidationBase({
     type: {

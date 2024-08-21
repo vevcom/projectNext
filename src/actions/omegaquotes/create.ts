@@ -2,9 +2,9 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { createQuote } from '@/server/omegaquotes/create'
-import { createOmegaquotesValidation } from '@/server/omegaquotes/validation'
-import type { CreateOmegaguotesTypes } from '@/server/omegaquotes/validation'
+import { createQuote } from '@/services/omegaquotes/create'
+import { createOmegaquotesValidation } from '@/services/omegaquotes/validation'
+import type { CreateOmegaguotesTypes } from '@/services/omegaquotes/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaQuote } from '@prisma/client'
 

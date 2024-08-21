@@ -6,7 +6,7 @@ import { addSectionToArticleAction } from '@/cms/articles/update'
 import { maxSections } from '@/cms/articles/ConfigVars'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import type { ArticleSectionPart } from '@/server/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
 
 type PropTypes = {
     articleId: number,

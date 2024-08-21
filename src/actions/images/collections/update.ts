@@ -1,11 +1,11 @@
 'use server'
 import { createZodActionError } from '@/actions/error'
-import { updateImageCollection } from '@/server/images/collections/update'
+import { updateImageCollection } from '@/services/images/collections/update'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { updateImageCollectionValidation } from '@/server/images/collections/validation'
+import { updateImageCollectionValidation } from '@/services/images/collections/validation'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateImageCollectionTypes } from '@/server/images/collections/validation'
+import type { UpdateImageCollectionTypes } from '@/services/images/collections/validation'
 
 /**
  * A action that updates an image collection

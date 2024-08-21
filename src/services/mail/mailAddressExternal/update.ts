@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateMailAddressExternalValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { MailAddressExternal } from '@prisma/client'
 import type { UpdatemailAddressExternalTypes } from './validation'

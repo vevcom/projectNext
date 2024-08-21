@@ -1,7 +1,7 @@
 import 'server-only'
 import { readJWTPart } from './jwtReadUnsecure'
 import { JWT_ISSUER } from '@/auth/ConfigVars'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import { JsonWebTokenError, TokenExpiredError, sign, verify } from 'jsonwebtoken'
 import type jwt from 'jsonwebtoken'
 import type { JwtPayloadType } from './validation'

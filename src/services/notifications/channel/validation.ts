@@ -1,14 +1,14 @@
 
-import { notificationMethods } from '@/server/notifications/Types'
-import { ValidationBase } from '@/server/Validation'
+import { notificationMethods } from '@/services/notifications/Types'
+import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 import type {
     ExpandedNotificationChannel,
     NotificationMethodGeneral,
     NotificationMethodTypes
-} from '@/server/notifications/Types'
+} from '@/services/notifications/Types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(notificationMethods.filter(m => notificationMethods.includes(m)).map(m => {

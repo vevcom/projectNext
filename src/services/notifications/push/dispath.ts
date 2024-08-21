@@ -1,5 +1,5 @@
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
-import type { UserFiltered } from '@/server/users/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { UserFiltered } from '@/services/users/Types'
 import type { Notification } from '@prisma/client'
 
 

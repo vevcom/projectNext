@@ -1,11 +1,11 @@
 
 
-import { notificationMethods, type NotificationMethodGeneral } from '@/server/notifications/Types'
-import { newAllMethodsOff } from '@/server/notifications/notificationMethodOperations'
-import { validateMethods as ValidateMethods } from '@/server/notifications/channel/validation'
-import { ValidationBase } from '@/server/Validation'
+import { notificationMethods, type NotificationMethodGeneral } from '@/services/notifications/Types'
+import { newAllMethodsOff } from '@/services/notifications/notificationMethodOperations'
+import { validateMethods as ValidateMethods } from '@/services/notifications/channel/validation'
+import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/server/Validation'
+import type { ValidationTypes } from '@/services/Validation'
 import type { MinimizedSubscription } from './Types'
 
 export const validateMethods = ValidateMethods

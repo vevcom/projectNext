@@ -1,7 +1,7 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { ServerError } from '@/server/error'
-import { prismaCall } from '@/server/prismaCall'
+import { ServerError } from '@/services/error'
+import { prismaCall } from '@/services/prismaCall'
 import type { SpecialCmsImage } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 

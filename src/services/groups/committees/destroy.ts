@@ -1,5 +1,5 @@
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedCommittee } from './Types'
 
 export async function destroyCommittee(id: number): Promise<ExpandedCommittee> {

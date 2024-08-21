@@ -1,13 +1,13 @@
 import 'server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
-import { readDefaultPermissions } from '@/server/permissionRoles/read'
+import { readDefaultPermissions } from '@/services/permissionRoles/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
-import type { BasicMembership } from '@/server/groups/Types'
-import type { UserFiltered } from '@/server/users/Types'
+import type { BasicMembership } from '@/services/groups/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: Matrix<Permission>,

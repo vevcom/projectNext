@@ -1,7 +1,7 @@
 import 'server-only'
 import { createArticleCategoryValidation } from './validation'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleCategoryTypes } from './validation'
 import type { ExpandedArticleCategory } from './Types'
 

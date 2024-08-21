@@ -1,6 +1,6 @@
 import { dispatchEmailNotifications } from './email/dispatch'
 import { dispatchPushNotifications } from './push/dispath'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 import type { Notification } from '@prisma/client'
 import type { ExpandedNotificationChannel, notificationMethods } from './Types'
 
