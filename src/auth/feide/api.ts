@@ -1,3 +1,5 @@
+import 'server-only'
+
 /**
  * The attributes returned by the extended user info endpoint.
  * All possible attributes are documented [here](https://docs.feide.no/reference/schema/attributes/index.html).

@@ -31,7 +31,8 @@
       "@/hooks/*": ["src/hooks/*"],
       "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*", "src/server/cms/*"],
       "@/server/*": ["src/server/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/utils/*": ["src/utils/*"],
+      "@/jwt/*": ["src/jwt/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

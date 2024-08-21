@@ -7,3 +7,12 @@ export type UserDetails = {
     groups: string[]
     partOfName: string
 }
+
+export type RegisterNewEmailType = {
+    verified: boolean,
+    email: string,
+}
+
+export type UserCursor = {
+    id: number
+}

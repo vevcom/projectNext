@@ -12,13 +12,21 @@ model User {
   lastname          String              @default("[Fjernet]")
   acceptedTerms     DateTime?
   sex               SEX?
+  allergies     String?
+  mobile        String?
+  emailVerified DateTime?
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt // is also updated manually
+  LockerReservation LockerReservation[]
   omegaQuote        OmegaQuote[]
   memberships       Membership[]
   credentials       Credentials?
   feideAccount      FeideAccount?
-  LockerReservation LockerReservation[]
+
+  notificationSubscriptions NotificationSubscription[]
+  mailingLists              MailingListUser[]
+  admissionTrials           AdmissionTrial[]           @relation(name: "user")
+  registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
