@@ -25,8 +25,8 @@ export default function CreateLockerForm({ locations }: PropTypes) {
         }
     })
 
-    const handleBuildingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setBuilding(event.target.value)
+    const handleBuildingChange = (value: string) => {
+        setBuilding(value)
     }
 
     return (
