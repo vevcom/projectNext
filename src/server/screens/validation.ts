@@ -17,7 +17,8 @@ const baseScreenValidation = new ValidationBase({
     }
 })
 
-const transformConnectToPages = (connectToPages: string[]) => connectToPages.map(parseInt)
+const transformConnectToPages = (connectToPages: string[] | undefined) =>
+    (connectToPages ? connectToPages.map(parseInt) : undefined)
 
 export const createScreenValidation = baseScreenValidation.createValidation({
     keys: ['name'],
@@ -25,7 +26,7 @@ export const createScreenValidation = baseScreenValidation.createValidation({
 })
 export type CreateScreenTypes = ValidationTypes<typeof createScreenValidation>
 
-export const updateScreenValidation = baseScreenValidation.createValidation({
+export const updateScreenValidation = baseScreenValidation.createValidationPartial({
     keys: ['orientation', 'name', 'connectToPages'],
     transformer: data => ({ ...data, connectToPages: transformConnectToPages(data.connectToPages) })
 })
