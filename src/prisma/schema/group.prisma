@@ -31,12 +31,12 @@ enum GroupType {
 // 'Group' should never be created by itself. It should always be created
 // with a reference to one specific type of group.
 model Group {
-  id                Int           @id @default(autoincrement())
-  groupType         GroupType
-  memberships       Membership[]
-  roles             RolesGroups[]
-  omegaOrder        OmegaOrder    @relation(fields: [order], references: [order])
-  order             Int //The order the group is in currently.
+  id          Int           @id @default(autoincrement())
+  groupType   GroupType
+  memberships Membership[]
+  roles       RolesGroups[]
+  omegaOrder  OmegaOrder    @relation(fields: [order], references: [order])
+  order       Int //The order the group is in currently.
 
   class                Class?
   committee            Committee?
@@ -46,6 +46,7 @@ model Group {
   studyProgramme       StudyProgramme?
 
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+  mailingLists               MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -113,4 +114,5 @@ model StudyProgramme {
   insititueCode String?
   yearsLength   Int?
   startYear     Int?
+  partOfOmega   Boolean @default(false)
 }

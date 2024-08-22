@@ -15,6 +15,7 @@ export type PropTypes = {
     showButtonContent: ReactNode,
     showButtonClass?: string,
     PopUpKey: PopUpKeyType,
+    showButtonStyle?: React.CSSProperties,
 }
 
 export default function PopUp({
@@ -22,6 +23,7 @@ export default function PopUp({
     children,
     showButtonContent,
     showButtonClass,
+    showButtonStyle,
 }: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -70,7 +72,11 @@ export default function PopUp({
     }, [])
 
     return (
-        <button className={`${styles.openBtn} ${showButtonClass}`} onClick={handleOpening}>
+        <button
+            className={`${styles.openBtn} ${showButtonClass}`}
+            style={showButtonStyle}
+            onClick={handleOpening}
+        >
             {showButtonContent}
         </button>
     )

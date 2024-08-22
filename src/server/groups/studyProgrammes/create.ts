@@ -1,22 +1,17 @@
+import { createStudyProgrammeValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
+import type { CreateStudyProgrammeTypes } from './validation'
 import type { ExpandedStudyProgramme } from './Types'
 
-type CreateStudyProgrammeArgs = {
-    code: string,
-    name: string,
-    instituteCode?: string,
-    startYear?: number,
-    yearsLength?: number,
-}
-
-export async function createStudyProgramme(data: CreateStudyProgrammeArgs): Promise<ExpandedStudyProgramme> {
+export async function createStudyProgramme(data: CreateStudyProgrammeTypes['Detailed']): Promise<ExpandedStudyProgramme> {
+    const parse = createStudyProgrammeValidation.detailedValidate(data)
     const order = (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.studyProgramme.create({
         data: {
-            ...data,
+            ...parse,
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
@@ -27,7 +22,9 @@ export async function createStudyProgramme(data: CreateStudyProgrammeArgs): Prom
     }))
 }
 
-export async function upsertStudyProgrammes(programmes: CreateStudyProgrammeArgs[]): Promise<ExpandedStudyProgramme[]> {
+export async function upsertStudyProgrammes(
+    programmes: CreateStudyProgrammeTypes['Detailed'][]
+): Promise<ExpandedStudyProgramme[]> {
     if (programmes.length === 0) return []
 
     const existingStudyProgrammes = await prismaCall(() => prisma.studyProgramme.findMany({

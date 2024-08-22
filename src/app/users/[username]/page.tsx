@@ -8,6 +8,7 @@ import { readCommitteesFromIds } from '@/server/groups/committees/read'
 import { prismaCall } from '@/server/prismaCall'
 import { readUserProfileAction } from '@/actions/users/read'
 import { sexConfig } from '@/server/users/ConfigVars'
+import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
@@ -112,7 +113,7 @@ export default async function User({ params }: PropTypes) {
                                 <p>Instillinger</p>
                             </BorderButton>
                         </Link>}
-                        {canAdministrate && <Link href="/logout">
+                        {me && <Link href="/logout">
                             <BorderButton color="secondary">
                                 <p>Logg ut</p>
                             </BorderButton>
@@ -137,7 +138,13 @@ export default async function User({ params }: PropTypes) {
                     </p>
                 </div>
             </div>
-
+            {
+                canAdministrate && (
+                    <div className={styles.userLinks}>
+                        <Link href="./me/notifications">Varslinger</Link>
+                    </div>
+                )
+            }
         </div>
     )
 }

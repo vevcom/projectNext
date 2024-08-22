@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: PropTypes) {
 
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={`${inter.className} ${styles.body}`}>
                 <SessionProvider session={session}>
                     <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
                         <EditModeProvider>

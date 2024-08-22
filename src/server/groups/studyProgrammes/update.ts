@@ -1,20 +1,21 @@
+import { updateStudyProgrammeValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { UpdateStudyProgrammeTypes } from './validation'
 import type { ExpandedStudyProgramme } from './Types'
 
-type UpdateStudyProgrammeArgs = {
-    code?: string,
-    name?: string,
-    instituteCode?: string,
-    startYear?: number,
-    yearsLength?: number,
-}
+export async function updateStudyProgramme(
+    data: UpdateStudyProgrammeTypes['Detailed']
+): Promise<ExpandedStudyProgramme> {
+    const parse = updateStudyProgrammeValidation.detailedValidate(data)
 
-export async function updateStudyProgramme(id: number, data: UpdateStudyProgrammeArgs): Promise<ExpandedStudyProgramme> {
     return prismaCall(() => prisma.studyProgramme.update({
         where: {
-            id,
+            id: parse.id,
         },
-        data,
+        data: {
+            ...parse,
+            id: undefined,
+        },
     }))
 }

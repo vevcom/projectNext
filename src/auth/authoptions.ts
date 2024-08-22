@@ -1,7 +1,7 @@
 import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
-import { fetchStudyProgrammesFromFeide } from './feide/api'
+import { updateUserStudyProgrammes } from './feide/userRoutines'
 import { comparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/server/permissionRoles/read'
@@ -121,27 +121,10 @@ export const authOptions: AuthOptions = {
 
                         if (profile?.email) await updateEmailForFeideAccount(account.providerAccountId, profile.email)
 
-                        const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(account.access_token)
-                        const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
-
-                        const { order } = await readCurrentOmegaOrder()
-                        await prisma.membership.deleteMany({
-                            where: {
-                                OR: studyProgrammes.map(({ groupId }) => ({
-                                    groupId,
-                                    order,
-                                }))
-                            }
-                        })
-
                         const userId = user ? Number(user.id) : token.user.id
 
-                        createMembershipsForUser(userId, studyProgrammes.map(({ groupId }) => ({
-                            groupId,
-                            admin: false
-                        })))
+                        await updateUserStudyProgrammes(userId, account.access_token)
                     }
-                    // ...to here should be a function.
 
                     break
                 }

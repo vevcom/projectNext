@@ -11,11 +11,15 @@ import {
     faNewspaper,
     faUser,
     faUserGroup,
-    faArrowLeft
+    faArrowLeft,
+    faPaperPlane
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
 
+/**
+ * Declaration for the admin navigation links.
+ */
 const navigations = [
     {
         header: {
@@ -104,6 +108,30 @@ const navigations = [
                 href: '/admin/default-permissions'
             }
         ],
+    }, 
+    {
+        header: {
+            icon: faPaperPlane,
+            title: 'Varslinger'
+        },
+        links: [
+            {
+                title: 'Send varsel',
+                href: '/admin/send-notification'
+            },
+            {
+                title: 'Varslingkanaler',
+                href: '/admin/notification-channels'
+            },
+            {
+                title: 'Mailing lister',
+                href: '/admin/mail'
+            },
+            {
+                title: 'Send e-post',
+                href: '/admin/send-mail'
+            }
+        ]
     }
 ] satisfies {
     header: {

@@ -1,30 +1,67 @@
 import styles from './Select.module.scss'
-import { v4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import type { SelectHTMLAttributes } from 'react'
 
-export type Proptypes = SelectHTMLAttributes<HTMLSelectElement> & {
+export type PropTypes<ValueType> = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> & {
     name: string,
     label?: string,
+    value?: ValueType,
+    defaultValue?: ValueType,
+    onChange?: (value: ValueType) => void,
     options: {
-        value: string,
+        value: ValueType,
         label?: string,
-        key: string,
+        key?: string,
     }[],
+} 
+
+export function SelectConstructor<ValueType extends string | number>(valueConverter: (value: string) => ValueType) {
+    return function Select({
+        name,
+        label,
+        defaultValue,
+        value,
+        options,
+        onChange,
+        className,
+        ...props
+    }: PropTypes<ValueType>) {
+        const id = uuid()
+
+        const optionElements = options.map(
+            (option) => <option
+                key={option.key ?? uuid()}
+                value={option.value}
+            >
+                {option.label ?? option.value}
+            </option>
+        )
+
+        return (
+            <div className={`${styles.Select} ${className}`}>
+                <label htmlFor={id}>{label ?? name}</label>
+                <select
+                    {...props}
+                    id={id}
+                    name={name}
+                    {
+                        ...(value ? { value } : { defaultValue })
+                    }
+                    onChange={(event) => {
+                        if (onChange && options.length > 0) {
+                            const value = event.target.value
+                            onChange(valueConverter(value))
+                        }
+                        }
+                    }
+                >
+                    {optionElements}
+                </select>
+            </div>
+        )
+    }
 }
 
-export default function Select({ name, label, options, ...props }: Proptypes) {
-    const id = v4()
-
-    const optionElements = options.map(
-        (option) => <option key={option.key} value={option.value}>
-            {option.label ?? option.value}
-        </option>
-    )
-
-    return <div className={styles.Select}>
-        <label htmlFor={id}>{label ?? name}</label>
-        <select {...props} id={id} name={name}>
-            {optionElements}
-        </select>
-    </div>
-}
+export const SelectString = SelectConstructor((value: string) => value)
+export const SelectNumber = SelectConstructor((value: string) => Number(value))
+export const SelectNumberPossibleNULL = SelectConstructor((value: string) => value === 'NULL' ? 'NULL' : Number(value))

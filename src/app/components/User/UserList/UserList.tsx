@@ -1,6 +1,6 @@
 'use client'
 import styles from './UserList.module.scss'
-import Select from '@/UI/Select'
+import { SelectNumberPossibleNULL } from '@/UI/Select'
 import { UserPagingContext } from '@/context/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/app/components/User/UserList/UserRow'
@@ -34,30 +34,30 @@ function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
 function getGroupOptions(groups: ExpandedGroup[] | null, type: GroupType) {
     return [
         ...getGroupType(groups, type).map(group => ({
-            value: group.id.toString(),
+            value: group.id,
             label: group.name,
             key: group.id.toString()
         })),
         {
-            value: 'null',
+            value: 'NULL',
             label: 'Alle',
-            key: 'null'
-        }
+            key: 'NULL'
+        } as const,
     ]
 }
 
 function getOrdereOptions(group: ExpandedGroup) {
     return [
-        {
-            value: 'null',
-            label: 'Alle aktive',
-            key: 'null'
-        },
         ...Array.from({ length: group.order - group.firstOrder + 1 }, (_, i) => group.firstOrder + i).map(order => ({
-            value: order.toString(),
+            value: order,
             label: order.toString(),
             key: order.toString()
         })),
+        {
+            value: 'NULL',
+            label: 'Alle aktive',
+            key: 'NULL'
+        }as const,
     ]
 }
 
@@ -133,9 +133,8 @@ export default function UserList({
         userPaging.setDetails({ ...userPaging.deatils, partOfName: e.target.value })
     }
 
-    const handleGroupSelect = (e: ChangeEvent<HTMLSelectElement>, type: GroupSelectionType) => {
+    const handleGroupSelect = (groupId: number | 'NULL', type: GroupSelectionType) => {
         if (!groups) return
-        const groupId = parseInt(e.target.value, 10)
         setGroupSelection({
             ...groupSelection,
             [type]: {
@@ -145,8 +144,8 @@ export default function UserList({
         })
     }
 
-    const handleGroupOrderSelect = (e: ChangeEvent<HTMLSelectElement>, type: GroupSelectionType) => {
-        const groupOrder = e.target.value === 'null' ? null : parseInt(e.target.value, 10)
+    const handleGroupOrderSelect = (order: number | 'NULL', type: GroupSelectionType) => {
+        const groupOrder = order === 'NULL' ? null : order
         setGroupSelection({
             ...groupSelection,
             [type]: {
@@ -170,15 +169,15 @@ export default function UserList({
                 {
                     !disableFilters.COMMITTEE && (
                         <div className={styles.group}>
-                            <Select
+                            <SelectNumberPossibleNULL
                                 name="komite"
-                                onChange={(e) => handleGroupSelect(e, 'COMMITTEE')}
+                                onChange={groupId => handleGroupSelect(groupId, 'COMMITTEE')}
                                 options={getGroupOptions(groups, 'COMMITTEE')}
                             />
                             {
-                                groupSelection.COMMITTEE.group && <Select
+                                groupSelection.COMMITTEE.group && <SelectNumberPossibleNULL
                                     name="orden"
-                                    onChange={(e) => handleGroupOrderSelect(e, 'COMMITTEE')}
+                                    onChange={order => handleGroupOrderSelect(order, 'COMMITTEE')}
                                     options={getOrdereOptions(groupSelection.COMMITTEE.group)}
                                 />
                             }
@@ -188,15 +187,15 @@ export default function UserList({
                 {
                     !disableFilters.CLASS && (
                         <div className={styles.group}>
-                            <Select
+                            <SelectNumberPossibleNULL
                                 name="klasse"
-                                onChange={(e) => handleGroupSelect(e, 'CLASS')}
+                                onChange={groupId => handleGroupSelect(groupId, 'CLASS')}
                                 options={getGroupOptions(groups, 'CLASS')}
                             />
                             {
-                                groupSelection.CLASS.group && <Select
+                                groupSelection.CLASS.group && <SelectNumberPossibleNULL
                                     name="orden"
-                                    onChange={(e) => handleGroupOrderSelect(e, 'CLASS')}
+                                    onChange={order => handleGroupOrderSelect(order, 'CLASS')}
                                     options={getOrdereOptions(groupSelection.CLASS.group)}
                                 />
                             }
@@ -206,15 +205,15 @@ export default function UserList({
                 {
                     !disableFilters.STUDY_PROGRAMME && (
                         <div className={styles.group}>
-                            <Select
+                            <SelectNumberPossibleNULL
                                 name="studie"
-                                onChange={(e) => handleGroupSelect(e, 'STUDY_PROGRAMME')}
+                                onChange={groupId => handleGroupSelect(groupId, 'STUDY_PROGRAMME')}
                                 options={getGroupOptions(groups, 'STUDY_PROGRAMME')}
                             />
                             {
-                                groupSelection.STUDY_PROGRAMME.group && <Select
+                                groupSelection.STUDY_PROGRAMME.group && <SelectNumberPossibleNULL
                                     name="orden"
-                                    onChange={(e) => handleGroupOrderSelect(e, 'STUDY_PROGRAMME')}
+                                    onChange={order => handleGroupOrderSelect(order, 'STUDY_PROGRAMME')}
                                     options={getOrdereOptions(groupSelection.STUDY_PROGRAMME.group)}
                                 />
                             }
@@ -224,15 +223,15 @@ export default function UserList({
                 {
                     !disableFilters.OMEGA_MEMBERSHIP_GROUP && (
                         <div className={styles.group}>
-                            <Select
+                            <SelectNumberPossibleNULL
                                 name="medlemskap"
-                                onChange={(e) => handleGroupSelect(e, 'OMEGA_MEMBERSHIP_GROUP')}
+                                onChange={groupId => handleGroupSelect(groupId, 'OMEGA_MEMBERSHIP_GROUP')}
                                 options={getGroupOptions(groups, 'OMEGA_MEMBERSHIP_GROUP')}
                             />
                             {
-                                groupSelection.OMEGA_MEMBERSHIP_GROUP.group && <Select
+                                groupSelection.OMEGA_MEMBERSHIP_GROUP.group && <SelectNumberPossibleNULL
                                     name="orden"
-                                    onChange={(e) => handleGroupOrderSelect(e, 'OMEGA_MEMBERSHIP_GROUP')}
+                                    onChange={order => handleGroupOrderSelect(order, 'OMEGA_MEMBERSHIP_GROUP')}
                                     options={getOrdereOptions(groupSelection.OMEGA_MEMBERSHIP_GROUP.group)}
                                 />
                             }

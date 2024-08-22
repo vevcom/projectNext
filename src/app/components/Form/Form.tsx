@@ -1,22 +1,15 @@
 'use client'
 import styles from './Form.module.scss'
-import Button from '@/components/UI/Button'
 import { PopUpContext } from '@/context/PopUp'
 import { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import type { PopUpKeyType } from '@/context/PopUp'
+import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
+import SubmitButton from '@/components/UI/SubmitButton'
+import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
 import type { ErrorMessage } from '@/server/error'
-import type { PropTypes as ButtonPropTypes } from '@/components/UI/Button'
-
-type Colors = ButtonPropTypes['color']
-type Confirmation = {
-    confirm: boolean,
-    text?: string,
-}
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
 export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
@@ -28,92 +21,13 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
     closePopUpOnSuccess?: PopUpKeyType
+    buttonClassName?: string,
 }
 type InputType = {
     input: ReactNode & { label?: string },
     errors: ErrorMessage[],
 }
 type Inputs = InputType[]
-
-
-function SubmitButton({
-    children,
-    generalErrors,
-    success,
-    color,
-    confirmation,
-}: {
-    children: ReactNode, generalErrors?:
-    ErrorMessage[],
-    success: boolean,
-    color: Colors,
-    confirmation: Confirmation,
-}) {
-    const { pending } = useFormStatus()
-    const [confirmedOpen, setConfirmedOpen] = useState(false)
-
-    const btnContent = () => {
-        if (pending) {
-            return (
-                <div className={styles.loader}>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            )
-        }
-        if (success) {
-            return (
-                <FontAwesomeIcon icon={faCircleCheck} />
-            )
-        }
-        return children
-    }
-    const button = (
-        <Button
-            className={styles.submitButton}
-            aria-disabled={pending || success}
-            color={success ? 'green' : color}
-            type="submit"
-        >
-            {btnContent()}
-        </Button>
-    )
-
-
-    const mainContent = () => (confirmedOpen ? (
-        <div className={styles.confirm}>
-            <p>{confirmation.text || 'Er du sikker?'}</p>
-            <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
-                <FontAwesomeIcon icon={faX} />
-            </button>
-            {button}
-        </div>
-    ) : (
-        <Button className={styles.submitButton} color={color} onClick={() => setConfirmedOpen(true)}>
-            {children}
-        </Button>
-    ))
-
-
-    return (
-        <div className={styles.submit}>
-            {
-                confirmation.confirm ? (
-                    mainContent()
-                ) : (
-                    button
-                )
-            }
-
-            <p className={[pending ? styles.pending : ' ', styles.error].join(' ')}>
-                {
-                    generalErrors && generalErrors[0]?.message
-                }
-            </p>
-        </div>
-    )
-}
 
 function Input({ input, errors }: InputType) {
     const { pending } = useFormStatus()
@@ -157,6 +71,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     successCallback,
     className,
     closePopUpOnSuccess,
+    buttonClassName,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ErrorMessage[]>()
@@ -185,7 +100,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             }
             return setTimeout(() => {
                 setSuccess(false)
-            }, 3000)
+            }, SUCCESS_FEEDBACK_TIME)
         }
         //No error provided
         if (!res.error) {
@@ -220,6 +135,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
                 success={success}
                 generalErrors={generalErrors}
                 confirmation={confirmation}
+                className={buttonClassName}
             >
                 {submitText}
             </SubmitButton>

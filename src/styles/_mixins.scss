@@ -111,6 +111,18 @@
     }
 }
 
+@mixin screenMobile {
+    @media (max-width: variables.$mobileBreakpoint) {
+        @content;
+    }
+}
+
+@mixin screenLg {
+    @media (min-width: calc(variables.$mobileBreakpoint + 1px)) {
+        @content;
+    }
+}
+
 @keyframes rotate {
     0% {
         transform: translate(0) rotate(0deg);

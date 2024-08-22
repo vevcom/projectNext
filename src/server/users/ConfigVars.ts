@@ -9,6 +9,8 @@ export const userFieldsToExpose = [
     'firstname',
     'lastname',
     'email',
+    'emailVerified',
+    'mobile',
     'createdAt',
     'updatedAt',
     'acceptedTerms',
@@ -40,13 +42,16 @@ export const sexConfig = {
     MALE: {
         title: 'Broder',
         pronoun: 'Hands',
+        label: 'Mann',
     },
     FEMALE: {
         title: 'Syster',
         pronoun: 'Hendes',
+        label: 'Kvinne',
     },
     OTHER: {
         title: 'Søsken',
         pronoun: 'Hends',
+        label: 'Annet',
     }
-} as const satisfies { [key in SEX]: { title: string, pronoun: string }}
+} as const satisfies { [key in SEX]: { title: string, pronoun: string, label: string } }
