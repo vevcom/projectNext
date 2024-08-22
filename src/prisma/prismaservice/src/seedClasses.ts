@@ -5,7 +5,7 @@ import type { PrismaClient } from '@/generated/pn'
  * Seeds classes and omega membership groups.
  * @param prisma - The prisma client
  */
-export default async function seedGroups(prisma: PrismaClient) {
+export default async function seedClasses(prisma: PrismaClient) {
     const omegaOrder = await prisma.omegaOrder.findFirst()
     if (!omegaOrder) throw new Error('No omega order found')
     const order = omegaOrder.order
@@ -21,18 +21,4 @@ export default async function seedGroups(prisma: PrismaClient) {
             }
         }
     })))
-
-    for (const level of Object.values(OmegaMembershipLevel)) {
-        await prisma.omegaMembershipGroup.create({
-            data: {
-                omegaMembershipLevel: level,
-                group: {
-                    create: {
-                        groupType: 'OMEGA_MEMBERSHIP_GROUP',
-                        order,
-                    },
-                }
-            }
-        })
-    }
 }

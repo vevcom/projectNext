@@ -10,7 +10,7 @@ import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
-import seedGroups from './seedGroups'
+import seedClasses from './seedClasses'
 import SeedSpecialVisibility from './seedSpecialVisibility'
 import seedMail from './seedMail'
 import seedStudyProgramme from './seedStudyProgramme'
@@ -26,11 +26,11 @@ async function seed() {
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
-    await seedGroups(prisma)
     await seedMail(prisma)
     await seedNotificationChannels(prisma)
     await seedStudyProgramme(prisma)
     await seedOmegaMembershipGroups(prisma)
+    await seedClasses(prisma)
     console.log('seed standard done')
 
     const shouldMigrate = process.env.MIGRATE_FROM_VEVEN === 'true'
