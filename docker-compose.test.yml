@@ -5,3 +5,9 @@ services:
             service: projectnext
         build:
             target: test
+    test-db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
+        ports:
+            - 5432:5432
