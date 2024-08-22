@@ -68,12 +68,13 @@
         // disallow use of undeclared variables unless mentioned in a /*global */ block
         "no-undef": "error",
         // disallow use of variables before they are defined
-        "no-use-before-define": [
+        "@typescript-eslint/no-use-before-define": [
             "error",
             {
                 "functions": false,
                 "classes": false,
-                "variables": true
+                "variables": true,
+                "typedefs": false
             }
         ],
         // enforces no braces where they can be omitted

@@ -1,13 +1,13 @@
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
-import { readImagesPage } from '@/actions/images/read'
-import { readImageCollection } from '@/actions/images/collections/read'
+import { readImagesPageAction } from '@/actions/images/read'
+import { readImageCollectionAction } from '@/actions/images/collections/read'
 import ImageList from '@/app/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/context/paging/ImagePaging'
 import ImageSelectionProvider from '@/context/ImageSelection'
 import PopUpProvider from '@/context/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/context/paging/ImagePaging'
 
@@ -22,11 +22,14 @@ export default async function Collection({ params }: PropTypes) {
 
     const pageSize: PageSizeImage = 30
 
-    const readCollection = await readImageCollection(Number(params.id))
+    const readCollection = await readImageCollectionAction(Number(params.id))
     if (!readCollection.success) notFound()
     const collection = readCollection.data
 
-    const readImages = await readImagesPage({ page: { pageSize, page: 0 }, details: { collectionId: collection.id } })
+    const readImages = await readImagesPageAction({
+        page: { pageSize, page: 0, cursor: null },
+        details: { collectionId: collection.id }
+    })
     if (!readImages.success) notFound()
     const images = readImages.data
     const isAdmin = user?.username === 'Harambe104' //temp
@@ -45,7 +48,7 @@ export default async function Collection({ params }: PropTypes) {
                     <div className={styles.wrapper}>
                         {isAdmin &&
                             <aside className={styles.admin}>
-                                <CollectionAdmin coverImage={collection.coverImage} collectionId={collection.id} />
+                                <CollectionAdmin collection={collection} />
                             </aside>
                         }
                         <div className={styles.images}>

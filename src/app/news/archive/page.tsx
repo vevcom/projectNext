@@ -1,16 +1,17 @@
 import OldNewsList from './OldNewsList'
 import NewsCard from '@/app/news/NewsCard'
 import OldNewsPagingProvider from '@/context/paging/OldNewsPaging'
-import { readOldNewsPage } from '@/actions/news/read'
+import { readOldNewsPageAction } from '@/actions/news/read'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import type { PageSizeOldNews } from '@/context/paging/OldNewsPaging'
 
 export default async function NewsArchive() {
     const pageSize: PageSizeOldNews = 20
-    const res = await readOldNewsPage<PageSizeOldNews>({
+    const res = await readOldNewsPageAction<PageSizeOldNews>({
         page: {
             page: 0,
-            pageSize
+            pageSize,
+            cursor: null,
         },
         details: undefined
     })

@@ -1,12 +1,12 @@
 import styles from './page.module.scss'
 import AddCategory from './AddCategory'
-import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readArticleCategories } from '@/cms/articleCategories/read'
+import { readArticleCategoriesAction } from '@/cms/articleCategories/read'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default async function ArticleCategoryList() {
-    const res = await readArticleCategories()
+    const res = await readArticleCategoriesAction()
     if (!res.success) throw new Error(res.error ? res.error[0].message : 'Noe uforutsett skjedde')
 
     const categories = res.data

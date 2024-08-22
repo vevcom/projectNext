@@ -2,22 +2,21 @@ import styles from './page.module.scss'
 import CreateOmbul from './CreateOmbul'
 import OmbulCover from './OmbulCover'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import AddHeaderItemPopUp from '@/components/AddHeaderItem/AddHeaderItemPopUp'
-import { readLatestOmbul, readOmbuls } from '@/actions/ombul/read'
-import { getUser } from '@/auth/user'
-import type { ExpandedOmbul } from '@/actions/ombul/Types'
+import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
+import { readLatestOmbulAction, readOmbulsAction } from '@/actions/ombul/read'
+import { getUser } from '@/auth/getUser'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 export default async function Ombuls() {
-    const { user } = await getUser({
-        requiredPermissions: ['OMBUL_READ'],
-        required: true,
+    const { permissions } = await getUser({
+        requiredPermissions: [['OMBUL_READ']],
+        shouldRedirect: true,
     })
+    const showCreateButton = permissions.includes('OMBUL_CREATE')
 
-    const showCreateButton = user.permissions.includes('OMBUL_CREATE')
-
-    const latestOmbulRes = await readLatestOmbul()
+    const latestOmbulRes = await readLatestOmbulAction()
     const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null
-    const ombulRes = await readOmbuls()
+    const ombulRes = await readOmbulsAction()
     if (!ombulRes.success) throw new Error('Failed to read ombuls')
     const ombuls = ombulRes.data
 
@@ -29,6 +28,7 @@ export default async function Ombuls() {
         groups[year].push(ombul)
         return groups
     }, {} as { [year: number]: ExpandedOmbul[] })).toSorted(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
+
 
     return (
         <PageWrapper

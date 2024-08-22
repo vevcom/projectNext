@@ -1,98 +1,39 @@
 'use server'
-import { readSpecialImage } from '@/actions/images/read'
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import logger from '@/logger'
+import { createActionError } from '@/actions/error'
+import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { SpecialCollection } from '@prisma/client'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { ImageCollection, Image } from '@prisma/client'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { ImageCollection } from '@prisma/client'
+import type {
+    ExpandedImageCollection,
+    ImageCollectionCursor,
+    ImageCollectionPageReturn
+} from '@/server/images/collections/Types'
 
 /**
- * Reads an image collection by id or name
+ * Action that reads an image collection by id or name
  * @param idOrName - the id or name of the image collection
  * @returns the image collection in actionrturn
  */
-export async function readImageCollection(
+export async function readImageCollectionAction(
     idOrName: number | string
-): Promise<ActionReturn<ImageCollection & {coverImage: Image | null}>> {
+): Promise<ActionReturn<ExpandedImageCollection>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: typeof idOrName === 'number' ? {
-                id: idOrName,
-            } : {
-                name: idOrName,
-            },
-            include: {
-                coverImage: true,
-            }
-        })
-        if (!collection) return createActionError('NOT FOUND', 'Collection not found')
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
-}
-
-export type ImageCollectionPageReturn = ImageCollection & {
-    coverImage: Image | null,
-    numberOfImages: number,
+    return await safeServerCall(() => readImageCollection(idOrName))
 }
 
 /**
- * Returns a page of image collections, orders by createdAt (and then name)
+ * Action that returns a page of image collections, orders by createdAt (and then name)
  * @param page - the page to read of the Page type
- * @returns
+ * @returns - A page of image collections
  */
-export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+export async function readImageCollectionsPageAction<const PageSize extends number>(
+    readPageInput: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
     //TODO: Auth image collections on visibility or permission (if special collection)
-    try {
-        const { page: pageNumber, pageSize } = page
-        const collections = await prisma.imageCollection.findMany({
-            include: {
-                coverImage: true,
-                images: {
-                    take: 1
-                },
-                _count: {
-                    select: {
-                        images: true
-                    }
-                }
-            },
-            orderBy: [
-                { createdAt: 'desc' },
-                { name: 'asc' }
-            ],
-            skip: pageNumber * pageSize,
-            take: pageSize,
-        })
-
-        const lensCameraRes = await readSpecialImage('DEFAULT_IMAGE_COLLECTION_COVER')
-        if (!lensCameraRes.success) return lensCameraRes
-        const lensCamera = lensCameraRes.data
-
-        const chooseCoverImage = (collection: {
-            coverImage: Image | null,
-            images: Image[]
-        }) => {
-            if (collection.coverImage) return collection.coverImage
-            if (collection.images[0]) return collection.images[0]
-            if (lensCamera) return lensCamera
-            return null
-        }
-        const returnData = collections.map(collection => ({
-            ...collection,
-            coverImage: chooseCoverImage(collection),
-            numberOfImages: collection._count.images,
-        }))
-
-        return { success: true, data: returnData }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => readImageCollectionsPage(readPageInput))
 }
 
 /**
@@ -100,7 +41,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
  * @param special - the special collection to read
  * @returns the special collection
  */
-export async function readSpecialImageCollection(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
+export async function readSpecialImageCollectionAction(special: SpecialCollection): Promise<ActionReturn<ImageCollection>> {
     //Check that the collection actually is a special collection, as the paramter is only a compile time type check
     if (!Object.values(SpecialCollection).includes(special)) {
         return createActionError('BAD PARAMETERS', `${special} is not special`)
@@ -108,24 +49,5 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
 
     //TODO: Auth special image collections on permission (not visibility)
     //TODO: Check permission associated with the special collection
-    try {
-        const collection = await prisma.imageCollection.findUnique({
-            where: {
-                special
-            }
-        })
-        if (!collection) {
-            logger.warn(`Special collection ${special} did not exist, creating it`)
-            const newCollection = await prisma.imageCollection.create({
-                data: {
-                    name: special,
-                    special
-                }
-            })
-            return { success: true, data: newCollection }
-        }
-        return { success: true, data: collection }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => readSpecialImageCollection(special))
 }

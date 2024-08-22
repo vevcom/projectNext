@@ -2,42 +2,37 @@
 
 import styles from './OmbulAdmin.module.scss'
 import Form from '@/app/components/Form/Form'
-import { updateOmbul, updateOmbulFile } from '@/actions/ombul/update'
-import { EditModeContext } from '@/context/EditMode'
+import { updateOmbulAction, updateOmbulFileAction } from '@/actions/ombul/update'
 import NumberInput from '@/app/components/UI/NumberInput'
 import FileInput from '@/app/components/UI/FileInput'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
-import { destroyOmbul } from '@/actions/ombul/destroy'
+import { destroyOmbulAction } from '@/actions/ombul/destroy'
+import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
-import type { ExpandedOmbul } from '@/actions/ombul/Types'
+import type { ReactNode } from 'react'
+import type { ExpandedOmbul } from '@/server/ombul/Types'
 
 type PropTypes = {
-    canUpdate: boolean
-    canDestroy: boolean
     ombul: ExpandedOmbul
+    children: ReactNode
 }
 
 /**
  * The admin panel for the ombul to change cover image (using cms image) anf update year, number and file.
  * The component is only shown if editmode is enabled.
- * @param canUpdate - does the user have permission to update the ombul
- * @param canDestroy - does the user have permission to destroy the ombul
- * @param coverImage - the cover image of the ombul (cmsImage)
  * @param ombul - The obul (expanded) to be edited
+ * @param children - The cmsimage cover. Rendered on server side.
  * @returns
  */
 export default function OmbulAdmin({
-    canUpdate,
-    canDestroy,
     ombul,
+    children,
 }: PropTypes) {
     const { push, refresh } = useRouter()
-    const editCtx = useContext(EditModeContext)
-    if (!editCtx?.editMode) return null
+    const canUpdate = useEditing([['OMBUL_UPDATE']])
+    const canDestroy = useEditing([['OMBUL_DESTROY']])
 
-    const updateOmbulAction = updateOmbul.bind(null, ombul.id)
-    const updateOmbulFileAction = updateOmbulFile.bind(null, ombul.id)
+    const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
+    const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)
 
     const handleChange = async (newOmbul: ExpandedOmbul | undefined) => {
         if (!newOmbul) return
@@ -49,6 +44,7 @@ export default function OmbulAdmin({
         push('/ombul')
         refresh()
     }
+    if (!canUpdate && !canDestroy) return null
 
     return (
         <div className={styles.OmbulAdmin}>
@@ -58,7 +54,7 @@ export default function OmbulAdmin({
                     canUpdate && (
                         <>
                             <Form
-                                action={updateOmbulAction}
+                                action={updateOmbulActionBind}
                                 successCallback={handleChange}
                                 submitText="Oppdater"
                             >
@@ -74,7 +70,7 @@ export default function OmbulAdmin({
                                 />
                             </Form>
                             <Form
-                                action={updateOmbulFileAction}
+                                action={updateOmbulFileActionBind}
                                 successCallback={handleChange}
                                 submitText="Oppdater fil"
                             >
@@ -86,7 +82,7 @@ export default function OmbulAdmin({
                 {
                     canDestroy && (
                         <Form
-                            action={destroyOmbul.bind(null, ombul.id)}
+                            action={destroyOmbulAction.bind(null, ombul.id)}
                             successCallback={handleDestroy}
                             submitText="Slett"
                             submitColor="red"
@@ -102,7 +98,7 @@ export default function OmbulAdmin({
                 {
                     canUpdate && (
                         <div className={styles.coverImage}>
-                            <CmsImage cmsImage={ombul.coverImage} width={250} />
+                            {children}
                         </div>
                     )
                 }

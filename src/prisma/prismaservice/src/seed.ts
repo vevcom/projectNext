@@ -8,6 +8,11 @@ import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
 import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
+import seedNotificationChannels from './seedNotificationsChannels'
+import seedDevGroups from './development/seedDevGroups'
+import seedMail from './seedMail'
+import seedStudyProgramme from './seedStudyProgramme'
+import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
 import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
@@ -18,6 +23,10 @@ async function seed() {
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
+    await seedMail(prisma)
+    await seedNotificationChannels(prisma)
+    await seedStudyProgramme(prisma)
+    await seedOmegaMembershipGroups(prisma)
     console.log('seed standard done')
 
     const shouldMigrate = process.env.MIGRATE_FROM_VEVEN === 'true'
@@ -27,6 +36,7 @@ async function seed() {
     if (process.env.NODE_ENV !== 'development') return
     console.log('seeding dev data....')
     await seedDevUsers(prisma)
+    await seedDevGroups(prisma)
     await seedDevPermissions(prisma)
     await seedDevImages(prisma)
     await seedDevOmegaquotes(prisma)

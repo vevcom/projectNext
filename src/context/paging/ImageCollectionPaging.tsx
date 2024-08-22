@@ -1,15 +1,23 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readImageCollectionsPage } from '@/actions/images/collections/read'
-import type { ReadPageInput } from '@/actions/Types'
-import type { ImageCollectionPageReturn } from '@/actions/images/collections/read'
+import { readImageCollectionsPageAction } from '@/actions/images/collections/read'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/server/images/collections/Types'
 
 export type PageSizeImageCollection = 12
-const fetcher = async (x: ReadPageInput<PageSizeImageCollection>) => {
-    const ret = await readImageCollectionsPage(x)
+const fetcher = async (x: ReadPageInput<PageSizeImageCollection, ImageCollectionCursor>) => {
+    const ret = await readImageCollectionsPageAction(x)
     return ret
 }
 
-export const ImageCollectionPagingContext = generatePagingContext<ImageCollectionPageReturn, PageSizeImageCollection>()
-const ImageCollectionPagingProvider = generatePagingProvider({ Context: ImageCollectionPagingContext, fetcher })
+export const ImageCollectionPagingContext = generatePagingContext<
+    ImageCollectionPageReturn,
+    ImageCollectionCursor,
+    PageSizeImageCollection
+>()
+const ImageCollectionPagingProvider = generatePagingProvider({
+    Context: ImageCollectionPagingContext,
+    fetcher,
+    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
+})
 export default ImageCollectionPagingProvider

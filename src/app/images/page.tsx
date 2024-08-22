@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
-import { readImageCollectionsPage } from '@/actions/images/collections/read'
+import { readImageCollectionsPageAction } from '@/actions/images/collections/read'
 import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
-import { getUser } from '@/auth/user'
+import { getUser } from '@/auth/getUser'
 import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
 
 export default async function Images() {
@@ -13,10 +13,11 @@ export default async function Images() {
     const isAdmin = user?.username === 'Harambe104' //temp
     const pageSize: PageSizeImageCollection = 12
 
-    const collectionPage = await readImageCollectionsPage({
+    const collectionPage = await readImageCollectionsPageAction({
         page: {
             pageSize,
-            page: 0
+            page: 0,
+            cursor: null
         },
         details: undefined,
     })

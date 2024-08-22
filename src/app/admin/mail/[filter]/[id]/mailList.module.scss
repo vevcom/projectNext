@@ -1,0 +1,13 @@
+@use '@/styles/ohma';
+
+.mailList {
+    margin: 1rem;
+
+    > ul {
+        list-style: none;
+
+        > li:nth-child(even) {
+            background-color: ohma.$colors-gray-200;
+        }
+    }
+}

@@ -1,0 +1,68 @@
+
+enum SpecialNotificationChannel {
+  ROOT
+  NEW_EVENT
+  NEW_OMBUL
+  NEW_NEWS_ARTICLE
+  NEW_JOBAD
+  NEW_OMEGAQUOTE
+  EVENT_PARTICIPANT
+}
+
+model NotificationChannel {
+  id          Int                         @id @default(autoincrement())
+  name        String                      @unique
+  description String                      @default("")
+  special     SpecialNotificationChannel? @unique
+  parentId    Int // Root is pointing to itself
+  parent      NotificationChannel         @relation(name: "parent", fields: [parentId], references: [id])
+  children    NotificationChannel[]       @relation(name: "parent")
+
+  defaultMethodsId   Int
+  defaultMethods     NotificationMethod @relation(name: "defaultMethods", fields: [defaultMethodsId], references: [id])
+  availableMethodsId Int
+  availableMethods   NotificationMethod @relation(name: "availableMethods", fields: [availableMethodsId], references: [id])
+
+  mailAliasId Int
+  mailAlias   MailAlias @relation(fields: [mailAliasId], references: [id])
+
+  subscriptions NotificationSubscription[]
+  notifications Notification[]
+}
+
+model NotificationMethod {
+  id          Int     @id @default(autoincrement())
+  email       Boolean @default(false)
+  push        Boolean @default(false)
+  emailWeekly Boolean @default(false)
+
+  channelDefault   NotificationChannel[]      @relation(name: "defaultMethods")
+  channelAvailable NotificationChannel[]      @relation(name: "availableMethods")
+  subscriptions    NotificationSubscription[]
+}
+
+model NotificationSubscription {
+  id        Int                 @id @default(autoincrement())
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  userId    Int
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelId Int
+  channel   NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  methodsId Int
+  methods   NotificationMethod  @relation(fields: [methodsId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channelId])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  title     String
+  message   String
+
+  channelId Int
+  channel   NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  // Add visibility later
+}

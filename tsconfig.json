@@ -29,9 +29,12 @@
       "@/prisma/*": ["src/prisma/*"],
       "@/context/*": ["src/context/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*"],
+      "@/cms/*": ["src/app/components/Cms/*", "src/actions/cms/*", "src/server/cms/*"],
+      "@/server/*": ["src/server/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/jwt/*": ["src/jwt/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/prisma/prismaservice"]
 }

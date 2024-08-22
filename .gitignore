@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+pncli-config.json
+
 # logs
 /logs
 
@@ -17,6 +19,7 @@
 
 # production
 /build
+/certs
 
 # misc
 .DS_Store

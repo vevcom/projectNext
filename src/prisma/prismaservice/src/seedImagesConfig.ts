@@ -7,7 +7,7 @@ type ImageSeedConfigBase = {
     collection: string,
 }
 
-const defaultCollection = 'STANDARDIMAGES' as const
+const defaultCollection = 'STANDARDIMAGES' satisfies SpecialCollection
 
 type ImageSeedConfig = ImageSeedConfigBase[]
 
@@ -97,7 +97,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         name: 'default_committee_logo',
         alt: 'komité logo',
         fsLocation: 'logo_simple.png',
-        collection: 'COMMITEELOGOS',
+        collection: 'COMMITTEELOGOS',
     },
     LOGO_SIMPLE: {
         name: 'logo_simple',

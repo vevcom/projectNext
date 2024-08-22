@@ -1,9 +1,9 @@
 'use client'
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
-import { EditModeContext } from '@/context/EditMode'
 import useKeyPress from '@/hooks/useKeyPress'
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import useEditing from '@/hooks/useEditing'
+import React, { useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
@@ -38,7 +38,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
 ) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
-    const editMode = useContext(EditModeContext)
+    const canEdit = useEditing() //TODO: auth must be passed
     const ref = useRef<HTMLInputElement>(null)
     const submitRef = useRef<HTMLButtonElement>(null)
     useKeyPress('Enter', () => {
@@ -48,7 +48,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
 
     useEffect(() => {
         setNoChange(true)
-    }, [editMode?.editMode])
+    }, [canEdit])
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         setNoChange(false)
@@ -59,7 +59,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
         ref.current?.setAttribute('value', value)
     }, [value])
 
-    if (!editMode?.editMode || !editable) return (children)
+    if (!canEdit || !editable) return (children)
     return (
         <div className={styles.EditableTextField}>
             <div

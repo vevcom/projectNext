@@ -1,0 +1,52 @@
+enum SpecialImage {
+  DEFAULT_IMAGE
+  DEFAULT_IMAGE_COLLECTION_COVER
+  DEFAULT_PROFILE_IMAGE
+  DAFAULT_COMMITTEE_LOGO
+  LOGO_SIMPLE
+  LOGO_WHITE
+  LOGO_WHITE_TEXT
+  MAGISK_HATT
+}
+
+model Image {
+  id                      Int              @id @default(autoincrement())
+  fsLocation              String           @unique
+  fsLocationSmallSize     String?          @unique
+  fsLocationMediumSize    String?          @unique
+  name                    String           @unique
+  ext                     String
+  alt                     String
+  collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
+  collectionId            Int
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  cmsImages               CmsImage[]
+  special                 SpecialImage?    @unique
+}
+
+enum SpecialCollection {
+  STANDARDIMAGES
+  OMBULCOVERS
+  PROFILEIMAGES
+  COMMITTEELOGOS
+}
+
+model ImageCollection {
+  id           Int                @id @default(autoincrement())
+  name         String             @unique
+  description  String?
+  images       Image[]
+  coverImage   Image?             @relation(fields: [coverImageId], references: [id], name: "coverImageForCollection")
+  coverImageId Int?               @unique
+  special      SpecialCollection? @unique
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+enum ImageSize {
+  SMALL
+  MEDIUM
+  LARGE
+}

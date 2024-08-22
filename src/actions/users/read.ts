@@ -1,89 +1,20 @@
 'use server'
-import { userFieldsToExpose } from './Types'
-import prisma from '@/prisma'
-import { createActionError, createPrismaActionError } from '@/actions/error'
-import type { UserFiltered, UserDetails } from './Types'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { User } from '@prisma/client'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { readUserPage } from '@/server/users/read'
+import type { UserFiltered, UserDetails, UserCursor } from '@/server/users/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
 
-export async function readUserPage<const PageSize extends number>({
-    page,
-    details
-}: ReadPageInput<PageSize, UserDetails>): Promise<ActionReturn<UserFiltered[]>> {
-    const words = details.partOfName.split(' ')
-    try {
-        const users = await prisma.user.findMany({
-            skip: page.page * page.pageSize,
-            take: page.pageSize,
-            select: userFieldsToExpose.reduce((prev, field) => ({
-                ...prev,
-                [field]: true
-            }), {} as { [key in typeof userFieldsToExpose[number]]: true }),
-            where: {
-                AND: words.map((word, i) => {
-                    const condition = {
-                        [i === words.length - 1 ? 'contains' : 'equals']: word,
-                        mode: 'insensitive'
-                    } as const
-                    return {
-                        OR: [
-                            { firstname: condition },
-                            { lastname: condition },
-                            { username: condition },
-                        ],
-                    }
-                })
-                //TODO select on groups
-            },
-            orderBy: [
-                { lastname: 'asc' },
-                { firstname: 'asc' },
-                // We have to sort with at least one unique field to have a
-                // consistent order. Sorting rows by fieds that have the same
-                // value is undefined behaviour in postgresql.
-                { username: 'asc' },
-            ]
-        })
-        return { success: true, data: users }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
-}
+/**
+ * A action to read a page of users with the given details (filtering)
+ * @param readPageInput - This is a) the page to read and b) the details to filter by like
+ * name and groups
+ * @returns
+ */
+export async function readUserPageAction<const PageSize extends number>(
+    readPageInput: ReadPageInput<PageSize, UserCursor, UserDetails>
+): Promise<ActionReturn<UserFiltered[]>> {
+    //TODO: Permission check
 
-
-export async function readUserById(id: number): Promise<ActionReturn<User>> {
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                id,
-            },
-        })
-
-        if (!user) {
-            return createActionError('NOT FOUND', 'Bruker ikke funnet.')
-        }
-
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
-}
-
-
-export async function readUserByEmail(email: string): Promise<ActionReturn<User>> {
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        })
-
-        if (!user) {
-            return createActionError('NOT FOUND', 'User not found')
-        }
-
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return safeServerCall(() => readUserPage(readPageInput))
 }

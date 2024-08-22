@@ -1,10 +1,10 @@
 import Form from '@/components/Form/Form'
-import { createImage } from '@/actions/images/create'
+import { createImageAction } from '@/actions/images/create'
 import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
-type ResponseType = Awaited<ReturnType<typeof createImage>>;
+type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
 type T = Pick<ResponseType & { success: true }, 'data'>['data']
 
 type PropTypes = Omit<FormPropTypes<T, true>, 'action' | 'submitText' | 'title'> & {
@@ -22,7 +22,7 @@ export default function ImageUploader({ collectionId, ...formProps }: PropTypes)
         <Form
             title="last opp bilde"
             submitText="last opp"
-            action={createImage.bind(null, collectionId)}
+            action={createImageAction.bind(null, collectionId)}
             {...formProps}
         >
             <TextInput color="black" label="navn" name="name" />

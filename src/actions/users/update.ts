@@ -1,55 +1,89 @@
 'use server'
-
-import { updateUserSchema } from './schema'
-import { createActionError, createPrismaActionError, createZodActionError } from '@/actions/error'
-import prisma from '@/prisma'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError, createActionError } from '@/actions/error'
+import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/server/users/update'
+import { getUser } from '@/auth/getUser'
+import {
+    updateUserValidation,
+    registerUserValidation,
+    updateUserPasswordValidation,
+    verifyEmailValidation
+} from '@/server/users/validation'
+import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
+import { ServerError } from '@/server/error'
+import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
+import type { RegisterNewEmailType, UserFiltered } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import type { UpdateUserSchemaType } from './schema'
+import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
 
-
-export async function updateUser(id: number, rawdata: FormData | UpdateUserSchemaType): Promise<ActionReturn<User>> {
-    const parse = updateUserSchema.safeParse(rawdata)
-
+export async function updateUserAction(
+    id: number,
+    rawdata: FormData | UpdateUserTypes['Type']
+): Promise<ActionReturn<User>> {
+    //TODO: Permission check
+    const parse = updateUserValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id,
-            },
-            data
-        })
-        return { success: true, data: user }
-    } catch (error) {
-        return createPrismaActionError(error)
-    }
+    return await safeServerCall(() => updateUser(id, data))
 }
 
-// These function should maybe be in another place than server actions? @Paulijuz
+export async function registerNewEmailAction(rawdata: FormData): Promise<ActionReturn<RegisterNewEmailType>> {
+    const { user, authorized, status } = await getUser({
+        userRequired: true,
+    })
+    if (!authorized) return createActionError(status)
 
-export async function invalidateOneUserSessionData(userId: number): Promise<ActionReturn<void, false>> {
-    try {
-        await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                updatedAt: new Date(),
-            }
-        })
-    } catch (e) {
-        return createPrismaActionError(e)
-    }
+    const parse = verifyEmailValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
 
-    return { success: true }
+    return await safeServerCall(() => registerNewEmail(user.id, parse.data))
 }
 
-export async function invalidateManyUserSessionData(userIds: number[]): Promise<ActionReturn<void, false>> {
-    const results = await Promise.all(userIds.map(userId => invalidateOneUserSessionData(userId)))
+export async function registerOwnUser(
+    rawdata: FormData | RegisterUserTypes['Type']
+): Promise<ActionReturn<UserFiltered>> {
+    const { authorized, status, user } = await getUser({
+        userRequired: true,
+    }) //TODO: Permission check
+    if (!authorized) return createActionError(status)
+    //TODO: Permission check
 
-    if (results.some(result => !result.success)) return createActionError('UNKNOWN ERROR')
+    const parse = registerUserValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
 
-    return { success: true }
+    return await safeServerCall(() => registerUser(user.id, parse.data))
+}
+
+export async function resetPasswordAction(token: string, rawdata: FormData): Promise<ActionReturn<null>> {
+    const parse = updateUserPasswordValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
+
+    return await safeServerCall(async () => {
+        if (typeof token !== 'string') {
+            throw new ServerError('BAD PARAMETERS', 'The token must be a string.')
+        }
+
+        const { userId } = await verifyResetPasswordToken(token)
+
+        await updateUserPassword(userId, parse.data)
+
+        return null
+    })
+}
+
+export async function verifyUserEmailAction(token: string): Promise<ActionReturn<UserFiltered>> {
+    return await safeServerCall(async () => {
+        if (typeof token !== 'string') {
+            throw new ServerError('BAD PARAMETERS', 'The token must be a string.')
+        }
+
+        const {
+            userId,
+            email
+        } = await verifyVerifyEmailToken(token)
+
+        return await verifyUserEmail(userId, email)
+    })
 }
