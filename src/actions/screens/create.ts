@@ -1,5 +1,5 @@
 'use server'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { createPageValidation } from '@/server/screens/pages/validation'
 import { createScreen } from '@/server/screens/create'

@@ -2,15 +2,14 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readScreen } from '@/server/screens/read'
-import type { Screen } from '@prisma/client'
+import { destroyScreen } from '@/server/screens/destroy'
 import type { ActionReturn } from '@/actions/Types'
 
-export async function readScreenAction(id: number): Promise<ActionReturn<Screen>> {
+export async function destroyScreenAction(id: number): Promise<ActionReturn<void>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: [['SCREEN_READ']]
+        requiredPermissions: [['SCREEN_ADMIN']]
     })
     if (!authorized) return createActionError(status)
 
-    return await safeServerCall(() => readScreen(id))
+    return await safeServerCall(() => destroyScreen(id))
 }
