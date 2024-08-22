@@ -20,7 +20,7 @@ export const createLockerLocationValidation = baseLockerLocationValidation.creat
     keys: [
         'building',
         'floor',
-        ],
+    ],
     transformer: data => data
 })
 

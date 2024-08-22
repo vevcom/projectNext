@@ -8,9 +8,9 @@ export type PageSizeLocker = 20
 const fetcher = async (x: ReadPageInput<PageSizeLocker, LockerCursor>) => await readLockerPageAction(x)
 
 export const LockerPagingContext = generatePagingContext<LockerWithReservation, LockerCursor, PageSizeLocker>()
-const LockerPagingProvider = generatePagingProvider({ 
+const LockerPagingProvider = generatePagingProvider({
     Context: LockerPagingContext,
     fetcher,
-    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null), 
+    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
 })
 export default LockerPagingProvider

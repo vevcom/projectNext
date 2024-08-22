@@ -1,17 +1,18 @@
-import { Dispatch, SetStateAction } from "react"
+import type { Dispatch, SetStateAction, RefObject } from 'react'
 
-export interface CameraFeedProps {
-    videoRef: React.RefObject<HTMLVideoElement>,
-    cameraState: CameraState,
-    setCameraState: Dispatch<SetStateAction<CameraState>>,
-    constraints: MediaStreamConstraints
-    callbackFunction?: Function,
-    width?: number,
-    height?: number
-}
 
 export enum CameraState {
     Off,
     Pending,
     On
+}
+
+export interface CameraFeedProps {
+    videoRef: RefObject<HTMLVideoElement>,
+    cameraState: CameraState,
+    setCameraState: Dispatch<SetStateAction<CameraState>>,
+    constraints: MediaStreamConstraints
+    callbackFunction?: () => void,
+    width?: number,
+    height?: number
 }

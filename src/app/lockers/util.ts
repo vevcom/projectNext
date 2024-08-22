@@ -1,29 +1,49 @@
-import { LockerWithReservation } from "@/server/lockers/Types";
+import type { LockerWithReservation } from '@/server/lockers/Types'
 
-export function getGroupNameFromLocker(locker: LockerWithReservation) {
-    if (locker.LockerReservation.length == 0) {
-        return ""
+export function getGroupNameFromLocker(locker: LockerWithReservation): string {
+    if (locker.LockerReservation.length === 0) {
+        return ''
     }
 
     const reservation = locker.LockerReservation[0]
     if (!reservation.group) {
-        return ""
-    } 
+        return ''
+    }
 
     const group = reservation.group
 
     switch (group.groupType) {
-        case "CLASS":
-            return group.class?.year + ". Klasse"
-        case "COMMITTEE":
-            return group.committee?.name 
-        case "INTEREST_GROUP":
-            return group.interestGroup?.name
-        case "MANUAL_GROUP":
+        case 'CLASS':
+            if (!group.class) {
+                return ''
+            }
+            return `${group.class.year}. Klasse`
+        case 'COMMITTEE':
+            if (!group.committee) {
+                return ''
+            }
+            return group.committee.name
+        case 'INTEREST_GROUP':
+            if (!group.interestGroup) {
+                return ''
+            }
+            return group.interestGroup.name
+        case 'MANUAL_GROUP':
+            if (!group.manualGroup) {
+                return ''
+            }
             return group.manualGroup?.name
-        case "OMEGA_MEMBERSHIP_GROUP":
+        case 'OMEGA_MEMBERSHIP_GROUP':
+            if (!group.omegaMembershipGroup) {
+                return ''
+            }
             return group.omegaMembershipGroup?.omegaMembershipLevel
-        case "STUDY_PROGRAMME":
+        case 'STUDY_PROGRAMME':
+            if (!group.studyProgramme) {
+                return ''
+            }
             return group.studyProgramme?.name
+        default:
+            return ''
     }
 }

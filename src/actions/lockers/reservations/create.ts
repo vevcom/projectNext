@@ -1,14 +1,14 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
+import { readLockerAction } from '@/actions/lockers/read'
 import { getUser } from '@/auth/getUser'
+import { readUsersOfGroups } from '@/server/groups/read'
 import { createLockerReservation } from '@/server/lockers/reservations/create'
 import { createLockerReservationValidation } from '@/server/lockers/reservations/validation'
 import type { CreateLockerReservationTypes } from '@/server/lockers/reservations/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
-import { readLockerAction } from '../read'
-import { readUsersOfGroups } from '@/server/groups/read'
 
 /**
  * An action that creates a locker reservation based on the given data. Duplicate reservations will not be created
@@ -34,7 +34,7 @@ export async function createLockerReservationAction(
     const locker = await readLockerAction(lockerId)
     if (locker.success) {
         if (locker.data.LockerReservation.length) {
-            return createActionError("DUPLICATE")
+            return createActionError('DUPLICATE')
         }
     }
 
@@ -42,16 +42,16 @@ export async function createLockerReservationAction(
     if (data.groupId) {
         let userInGroup = false
         const groupUsers = await readUsersOfGroups([{ groupId: data.groupId, admin: false }])
-        
+
         for (const groupUser of groupUsers) {
-            if (user.id == groupUser.id) {
+            if (user.id === groupUser.id) {
                 userInGroup = true
                 break
-            } 
+            }
         }
-        
+
         if (!userInGroup) {
-            return createActionError("UNAUTHORIZED")
+            return createActionError('UNAUTHORIZED')
         }
     }
 

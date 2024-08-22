@@ -1,11 +1,11 @@
-"use client"
-import styles from "./page.module.scss"
-import { useCallback, useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
-import CameraFeed from "@/app/components/Camera/CameraFeed"
-import { CameraState } from "@/app/components/Camera/Types"
-import Button from "@/app/components/UI/Button"
-import jsQR from "jsqr"
+'use client'
+import styles from './page.module.scss'
+import CameraFeed from '@/app/components/Camera/CameraFeed'
+import { CameraState } from '@/app/components/Camera/Types'
+import Button from '@/app/components/UI/Button'
+import { useRouter } from 'next/navigation'
+import jsQR from 'jsqr'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export default function Scanner() {
     const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -19,7 +19,7 @@ export default function Scanner() {
 
     const constraints = {
         video: {
-            facingMode: { ideal: "environment" },
+            facingMode: { ideal: 'environment' },
             width,
             height
         }
@@ -27,10 +27,10 @@ export default function Scanner() {
 
     const callBackFunction = useCallback(() => {
         // The video feed is drawn on a canvas to extract the imageData
-        const canvas = document.createElement("canvas")
-        const ctx = canvas.getContext("2d")
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
         if (!videoRef.current || !ctx) {
-            throw new Error("videoRef.current or ctx is undefined")
+            throw new Error('videoRef.current or ctx is undefined')
         }
         canvas.width = videoRef.current.videoWidth
         canvas.height = videoRef.current.videoHeight
@@ -49,8 +49,8 @@ export default function Scanner() {
     }, [])
 
     useEffect(() => {
-        if (hasAsked && cameraState == CameraState.Off) {
-            router.push("/lockers")
+        if (hasAsked && cameraState === CameraState.Off) {
+            router.push('/lockers')
         }
     }, [cameraState, hasAsked])
 
@@ -58,17 +58,22 @@ export default function Scanner() {
         <>
             <h1 className={styles.title}>Scan QR Kode</h1>
             <div className={styles.camera}>
-                <CameraFeed 
-                    videoRef={videoRef} 
+                <CameraFeed
+                    videoRef={videoRef}
                     cameraState={cameraState}
-                    setCameraState={setCameraState} 
+                    setCameraState={setCameraState}
                     constraints={constraints}
                     width={width}
                     height={height}
                     callbackFunction={callBackFunction}
-                /> 
-     
-                <Button className={styles.button} onClick={() => { setCameraState(CameraState.Off) }}>Avbryt</Button> 
+                />
+
+                <Button
+                    className={styles.button}
+                    onClick={() => { setCameraState(CameraState.Off) }}
+                >
+                    Avbryt
+                </Button>
             </div>
         </>
     )

@@ -1,13 +1,13 @@
-"use client"
-import styles from "./LockerList.module.scss"
-import { LockerPagingContext } from "@/context/paging/LockerPaging"
-import { useContext } from "react"
-import EndlessScroll from "@/components/PagingWrappers/EndlessScroll"
-import LockerRow from "./LockerRow"
+'use client'
+import styles from './LockerList.module.scss'
+import LockerRow from './LockerRow'
+import { LockerPagingContext } from '@/context/paging/LockerPaging'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import { useContext } from 'react'
 
 export default function LockerList() {
     const context = useContext(LockerPagingContext)
-    if (!context) throw new Error("No context")
+    if (!context) throw new Error('No context')
     return (
         <div className={styles.lockerList}>
             <div className={styles.lockerListHeader}>

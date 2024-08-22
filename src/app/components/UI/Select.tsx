@@ -1,4 +1,4 @@
-import {  } from 'react'
+import {} from 'react'
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
 import type { HTMLAttributes } from 'react'

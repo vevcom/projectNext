@@ -1,9 +1,9 @@
-import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import LockerIdForm from './LockerIdForm'
 import LockerList from './LockerList'
+import QRButton from './QRButton'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import LockerPagingProvider from '@/context/paging/LockerPaging'
 import { getUser } from '@/auth/getUser'
-import LockerIdForm from "./LockerIdForm"
-import QRButton from './QRButton'
 
 export default async function Lockers() {
     await getUser({
@@ -13,21 +13,21 @@ export default async function Lockers() {
     })
 
     return (
-        <PageWrapper title="Skap"> 
-            <LockerIdForm /> 
-            <br/> 
+        <PageWrapper title="Skap">
+            <LockerIdForm />
+            <br/>
             <QRButton />
-            
+
             <h2>Skapliste</h2>
             <LockerPagingProvider
-                    startPage={{
-                        pageSize: 20,
-                        page: 0
-                    }}
-                    details={undefined}
-                    serverRenderedData={[]}
-                >
-                    <LockerList />
+                startPage={{
+                    pageSize: 20,
+                    page: 0
+                }}
+                details={undefined}
+                serverRenderedData={[]}
+            >
+                <LockerList />
             </LockerPagingProvider>
         </PageWrapper>
     )

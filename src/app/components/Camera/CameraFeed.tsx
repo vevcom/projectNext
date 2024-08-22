@@ -1,14 +1,15 @@
-"use client"
-import { useEffect, useRef, useCallback } from "react"
-import { CameraFeedProps, CameraState } from "./Types"
+'use client'
+import { CameraState } from './Types'
+import { useEffect, useRef, useCallback } from 'react'
+import type { CameraFeedProps } from './Types'
 
 
 export default function CameraFeed(props: CameraFeedProps) {
     const streamRef = useRef<MediaStream | null>(null)
     const animationFrameRef = useRef<number | null>(null)
-    const callbackFunctionRef = useRef<Function | undefined>(props.callbackFunction)
+    const callbackFunctionRef = useRef<(() => void) | undefined>(props.callbackFunction)
 
-    
+
     const handleVideoPlay = useCallback(() => {
         const callbackWrapper = () => {
             if (callbackFunctionRef.current) {
@@ -23,17 +24,17 @@ export default function CameraFeed(props: CameraFeedProps) {
 
     const start = useCallback(async () => {
         streamRef.current = await navigator.mediaDevices.getUserMedia(props.constraints)
-        .catch((error: Error) => {
-            props.setCameraState(CameraState.Off)
-            console.error(error)
-            return null
-        })
+            .catch((error: Error) => {
+                props.setCameraState(CameraState.Off)
+                console.error(error)
+                return null
+            })
         if (!streamRef.current) {
             return
         }
         const video = props.videoRef.current
         if (!video) {
-            console.error("videoRef must be linked to a HTMLVideoElement")
+            console.error('videoRef must be linked to a HTMLVideoElement')
             return
         }
         video.srcObject = streamRef.current
@@ -42,7 +43,7 @@ export default function CameraFeed(props: CameraFeedProps) {
             console.error(error)
             return
         })
-        video.addEventListener("loadedmetadata", handleVideoPlay)
+        video.addEventListener('loadedmetadata', handleVideoPlay)
     }, [props.constraints])
 
 
@@ -57,9 +58,8 @@ export default function CameraFeed(props: CameraFeedProps) {
             animationFrameRef.current = null
         }
         if (props.videoRef.current) {
-            props.videoRef.current.removeEventListener("loadedmetadata", handleVideoPlay)
+            props.videoRef.current.removeEventListener('loadedmetadata', handleVideoPlay)
         }
-
     }, [])
 
 
@@ -73,7 +73,10 @@ export default function CameraFeed(props: CameraFeedProps) {
                 break
             case CameraState.On:
                 return stop
+            default:
+                return undefined
         }
+        return undefined
     }, [props.cameraState])
 
 
@@ -83,6 +86,13 @@ export default function CameraFeed(props: CameraFeedProps) {
 
 
     return (
-        <video width={props.width} height={props.height} ref={props.videoRef} playsInline style={{ backgroundColor: 'black' }}></video>
+        <video
+            width={props.width}
+            height={props.height}
+            ref={props.videoRef}
+            playsInline
+            style={{ backgroundColor: 'black' }}
+        >
+        </video>
     )
 }

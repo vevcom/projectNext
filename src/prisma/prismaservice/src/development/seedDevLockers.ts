@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@/generated/pn'
 
-const buildings = ["G-Blokk", "Test-Blokk"]
+const buildings = ['G-Blokk', 'Test-Blokk']
 const floors = [1, 2, 3]
 const n = 10
 const m = 10
@@ -29,14 +29,14 @@ export default async function seedDevLockers(prisma: PrismaClient) {
             await prisma.locker.create({
                 data: {
                     building,
-                    floor 
+                    floor
                 }
             })
         }
     }))))
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
 
     for (let i = 1; i < m; i++) {
         await prisma.lockerReservation.create({

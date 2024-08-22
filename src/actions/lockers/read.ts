@@ -1,10 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import type { ActionReturn, ReadPageInput } from '@/actions/Types'
-import type { LockerWithReservation } from '@/server/lockers/Types'
 import { readLocker, readLockerPage, updateLockerReservationIfExpired } from '@/server/lockers/read'
 import { getUser } from '@/auth/getUser'
+import type { ActionReturn } from '@/actions/Types'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { LockerWithReservation, LockerCursor } from '@/server/lockers/Types'
 
 /**
  * An action to read a locker, including it´s active reservation.
@@ -32,16 +33,16 @@ export async function readLockerAction(id: number): Promise<ActionReturn<LockerW
  * @returns A Promise that resolves to an ActionReturn containing a LockerWithReservation list
  */
 export async function readLockerPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize>
+    readPageInput: ReadPageInput<PageSize, LockerCursor>
 ): Promise<ActionReturn<LockerWithReservation[]>> {
     const { status, authorized } = await getUser({
         requiredPermissions: [['LOCKER_READ']],
     })
     if (!authorized) return createActionError(status)
-    
+
     const result = await safeServerCall(() => readLockerPage(readPageInput))
     if (result.success) {
-        for (let locker of result.data) {
+        for (const locker of result.data) {
             await updateLockerReservationIfExpired(locker)
         }
     }

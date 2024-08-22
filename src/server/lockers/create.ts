@@ -1,7 +1,8 @@
 import 'server-only'
+import { createLockerValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
-import { CreateLockerTypes, createLockerValidation } from './validation'
+import type { CreateLockerTypes } from './validation'
 
 export async function createLocker(rawdata: CreateLockerTypes['Detailed']) {
     const data = createLockerValidation.detailedValidate(rawdata)

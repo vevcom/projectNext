@@ -22,7 +22,7 @@ export const createLockerValidation = baseLockerValidation.createValidation({
         'building',
         'floor',
         'id'
-        ],
+    ],
     transformer: data => data
 })
 

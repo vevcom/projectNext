@@ -66,7 +66,7 @@ export async function readMembershipsOfUser(
 
 export async function readGroupsOfUser(id: number) {
     const memberships = await prisma.membership.findMany({
-        where: { userId: id},
+        where: { userId: id },
         include: {
             group: true
         }
@@ -80,7 +80,7 @@ export async function readGroupsOfUser(id: number) {
                 include = { class: true }
                 break
             case 'COMMITTEE':
-                include = { committee: true}
+                include = { committee: true }
                 break
             case 'INTEREST_GROUP':
                 include = { interestGroup: true }
@@ -94,6 +94,8 @@ export async function readGroupsOfUser(id: number) {
             case 'STUDY_PROGRAMME':
                 include = { studyProgramme: true }
                 break
+            default:
+                break
         }
 
         const group = await prisma.group.findUnique({
@@ -101,8 +103,8 @@ export async function readGroupsOfUser(id: number) {
             include
         })
 
-        if (group == null) {
-            throw new ServerError("NOT FOUND", "Fant ikke gruppe")
+        if (group === null) {
+            throw new ServerError('NOT FOUND', 'Fant ikke gruppe')
         }
 
         return group

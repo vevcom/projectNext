@@ -14,7 +14,7 @@ export async function createLockerLocationAction(
     rawdata: FormData | CreateLockerLocationTypes['Type']
 ): Promise<ActionReturn<LockerLocation>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: [['LOCKER_CREATE']], 
+        requiredPermissions: [['LOCKER_CREATE']],
     })
     if (!authorized) return createActionError(status)
     const parse = createLockerLocationValidation.typeValidate(rawdata)

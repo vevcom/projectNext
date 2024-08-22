@@ -1,11 +1,11 @@
 import 'server-only'
+import { lockerReservationIncluder } from './reservations/ConfigVars'
 import prisma from '@/prisma'
 import { createActionError } from '@/actions/error'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
-import type { ReadPageInput } from '@/actions/Types'
-import type { LockerWithReservation } from '@/server/lockers/Types'
-import { lockerReservationIncluder } from './reservations/ConfigVars'
+import type { ReadPageInput } from '@/server/paging/Types'
+import type { LockerWithReservation, LockerCursor } from '@/server/lockers/Types'
 
 export async function readLocker(id: number) {
     const locker = await prismaCall(() => prisma.locker.findUnique({
@@ -20,22 +20,27 @@ export async function readLocker(id: number) {
 
 
 export async function readLockerPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize>
+    { page }: ReadPageInput<PageSize, LockerCursor>
 ): Promise<LockerWithReservation[]> {
     const { page: pageNumber, pageSize } = page
     return await prismaCall(() => prisma.locker.findMany({
         orderBy: {
-            id: "asc"
+            id: 'asc'
         },
         skip: pageNumber * pageSize,
         take: pageSize,
         include: lockerReservationIncluder
-    }))        
+    }))
 }
 
 
 export async function updateLockerReservationIfExpired(locker: LockerWithReservation) {
-    if (locker.LockerReservation.length && locker.LockerReservation[0].endDate != null && locker.LockerReservation[0].endDate.getTime() < Date.now()) {
+    if (!locker.LockerReservation.length) return
+
+    const reservation = locker.LockerReservation[0]
+
+    if (reservation.endDate === null) return
+    if (reservation.endDate.getTime() < Date.now()) {
         try {
             const updateResult = await prisma.lockerReservation.update({
                 where: {
@@ -46,15 +51,14 @@ export async function updateLockerReservationIfExpired(locker: LockerWithReserva
                 }
             })
             if (!updateResult) {
-                return createActionError("NOT FOUND", "lockerReservation not found while updating") 
+                createActionError('NOT FOUND', 'lockerReservation not found while updating')
             }
             locker.LockerReservation = []
-        }
-        catch (error) {
+        } catch (error) {
             if (error instanceof ServerError) {
-                return createActionError(error.errorCode, error.errors)
+                createActionError(error.errorCode, error.errors)
             }
-            return createActionError("UNKNOWN ERROR", "unknown error while updating expired locker")
+            createActionError('UNKNOWN ERROR', 'unknown error while updating expired locker')
         }
     }
 }
