@@ -6,8 +6,6 @@ import { CanEasilyManageMembership } from '@/server/groups/memberships/ConfigVar
 import PopUp from '@/app/components/PopUp/PopUp'
 import UserSelectionProvider from '@/context/UserSelection'
 import { readGroupExpandedAction } from '@/actions/groups/read'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 
 type PropTypes = {
@@ -40,11 +38,8 @@ export default async function GroupAdmin({ params }: PropTypes) {
             }}
         >
             <div className={styles.wrapper}>
-                <Link href="/admin/groups">
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </Link>
                 <div className={styles.groupInfo}>
-                    <h2>{group.name}</h2>
+                    <h1>{group.name}</h1>
                     <p>Medlemmer: {group.members}</p>
                     <p>Orden: {group.order}</p>
                 </div>

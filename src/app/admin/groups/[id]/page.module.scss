@@ -1,12 +1,9 @@
 @use '@/styles/ohma';
 
 .wrapper {
+    margin-top: 1em;
     height: 85vh;
     width: 80vw; 
-    box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
-    background-color: lighten(ohma.$colors-secondary, 40);
-    position: relative;
-    @include ohma.card;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     z-index: 5;
@@ -28,7 +25,7 @@
     }
     .addUsers, .link {
         position: absolute;
-        top: 0;
+        top: 1em;
         right: 1em;
         @include ohma.btn(ohma.$colors-primary);
         width: 200px;
@@ -40,7 +37,7 @@
     }
 
     .groupInfo {
-        border-bottom: 3px solid ohma.$colors-gray-800;
+        border-bottom: 3px solid ohma.$colors-gray-600;
         margin-bottom: ohma.$gap;
     }
 }
