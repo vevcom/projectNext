@@ -1,4 +1,3 @@
-import { OmegaMembershipLevel } from '@/generated/pn'
 import type { PrismaClient } from '@/generated/pn'
 
 /**
