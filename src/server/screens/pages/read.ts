@@ -2,6 +2,7 @@ import 'server-only'
 import { screenPageIncluder } from './ConfigVars'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import type { ScreenPage } from '@prisma/client'
 import type { ExpandedScreenPage } from './Types'
 
 export async function readPage(id: number): Promise<ExpandedScreenPage> {
@@ -9,4 +10,8 @@ export async function readPage(id: number): Promise<ExpandedScreenPage> {
         where: { id },
         include: screenPageIncluder
     }))
+}
+
+export async function readPages(): Promise<ScreenPage[]> {
+    return await prismaCall(() => prisma.screenPage.findMany())
 }
