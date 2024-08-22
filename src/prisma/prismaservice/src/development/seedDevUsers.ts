@@ -79,7 +79,8 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                 connect: {
                     name: 'Harambe104'
                 }
-            }
+            },
+            acceptedTerms: new Date(),
         },
     })
 
