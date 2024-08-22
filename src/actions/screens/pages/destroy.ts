@@ -1,11 +1,11 @@
-import { createActionError } from "@/actions/error";
-import { safeServerCall } from "@/actions/safeServerCall";
-import { ActionReturn } from "@/actions/Types";
-import { getUser } from "@/auth/getUser";
-import { destroyPage } from "@/server/screens/pages/destroy";
+import { createActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { getUser } from '@/auth/getUser'
+import { destroyPage } from '@/server/screens/pages/destroy'
+import type { ActionReturn } from '@/actions/Types'
 
 
-export async function destroyPageAction(id: number) : Promise<ActionReturn<void>> {
+export async function destroyPageAction(id: number): Promise<ActionReturn<void>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCREEN_ADMIN']]
     })
