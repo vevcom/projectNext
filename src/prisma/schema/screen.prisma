@@ -1,6 +1,12 @@
+enum ScreenOrientation {
+  PORTRAIT
+  LANDSCAPE
+}
+
 model Screen {
   id               Int                @id @default(autoincrement())
   name             String             @unique
+  orientation      ScreenOrientation
   screenPageScreen ScreenPageScreen[]
 }
 
@@ -17,7 +23,7 @@ model ScreenPageScreen {
 
 enum ScreenPageType {
   IMAGE
-  CUSTOM
+  TEXT_AND_IMAGE
   JOBAD
 }
 
@@ -25,5 +31,11 @@ model ScreenPage {
   id               Int                @id @default(autoincrement())
   name             String             @unique
   type             ScreenPageType
+  jobAd            JobAd?             @relation(fields: [jobAdId], references: [id])
+  jobAdId          Int?
+  cmsImage         CmsImage?          @relation(fields: [cmsImageId], references: [id])
+  cmsImageId       Int?
+  cmsParagraph     CmsParagraph?      @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId   Int?
   screenPageScreen ScreenPageScreen[]
 }
