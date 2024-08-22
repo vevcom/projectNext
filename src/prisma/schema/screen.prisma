@@ -33,9 +33,9 @@ model ScreenPage {
   type             ScreenPageType
   jobAd            JobAd?             @relation(fields: [jobAdId], references: [id])
   jobAdId          Int?
-  cmsImage         CmsImage?          @relation(fields: [cmsImageId], references: [id])
-  cmsImageId       Int?
-  cmsParagraph     CmsParagraph?      @relation(fields: [cmsParagraphId], references: [id])
-  cmsParagraphId   Int?
+  cmsImage         CmsImage          @relation(fields: [cmsImageId], references: [id])
+  cmsImageId       Int
+  cmsParagraph     CmsParagraph      @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId   Int
   screenPageScreen ScreenPageScreen[]
 }
