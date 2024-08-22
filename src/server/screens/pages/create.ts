@@ -1,3 +1,4 @@
+import 'server-only'
 import { type CreatePageTypes, createPageValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
