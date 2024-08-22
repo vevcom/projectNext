@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import GroupSelector from './GroupSelector'
-import { readGroupsAdmin } from '@/actions/groups/read'
+import { readGroupsStructuredAction } from '@/actions/groups/read'
 import { GroupTypeOrdering } from '@/server/groups/ConfigVars'
 import { notFound } from 'next/navigation'
 
@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
  * A page that displays memberships in all groups for admins
  */
 export default async function GroupsAdmin() {
-    const res = await readGroupsAdmin()
+    const res = await readGroupsStructuredAction()
     if (!res.success) return notFound() //TODO: replace with better error page if error is e.g UNAUTHORIZED.
     const groups = res.data
 

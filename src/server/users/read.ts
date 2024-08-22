@@ -14,7 +14,7 @@ import type { User } from '@prisma/client'
  * A function to read a page of users with the given details (filtering)
  * @param readPageInput - This is a) the page to read and b) the details to filter by like
  * name and groups
- * @returns
+ * @returns many users
  */
 export async function readUserPage<const PageSize extends number>({
     page,

@@ -34,9 +34,9 @@ export async function readGroupsExpandedAction(): Promise<ActionReturn<ExpandedG
     return await safeServerCall(() => readGroupsExpanded())
 }
 
-export async function readGroupsAdmin(): Promise<ActionReturn<GroupsStructured>> {
+export async function readGroupsStructuredAction(): Promise<ActionReturn<GroupsStructured>> {
     const { status, authorized } = await getUser({
-        requiredPermissions: [['GROUP_ADMIN']] //TODO: We need to discuss permission structure for groups
+        requiredPermissions: [['GROUP_READ']]
     })
     if (!authorized) return createActionError(status)
 

@@ -47,7 +47,7 @@ export async function expandGroup(group: GroupWithIncludes): Promise<ExpandedGro
         where: getMembershipFilter('ACTIVE', group.id)
     })
     const name = inferGroupName(group)
-    const firstOrder = group.memberships[0]?.order ?? group.order
+    const firstOrder = group.memberships.sort((m1, m2) => m1.order - m2.order)[0]?.order ?? group.order
     return {
         ...group,
         members,

@@ -13,7 +13,7 @@ import type { Prisma } from '@prisma/client'
 export function getMembershipFilter(
     order: MembershipSelectorType,
     groupId?: number | undefined,
-    admin: boolean = false
+    admin: boolean | undefined = undefined
 ) {
     return {
         groupId,
