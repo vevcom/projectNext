@@ -6,6 +6,7 @@ import { SelectString } from '@/app/components/UI/Select'
 import TextInput from '@/app/components/UI/TextInput'
 import { useUser } from '@/auth/useUser'
 import { sexConfig } from '@/server/users/ConfigVars'
+import { SEX } from '@prisma/client'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
@@ -20,6 +21,11 @@ export default function RegistrationForm() {
 
     const lastUsername = userAuth.user?.username
     let lastPassword: string = ''
+
+    const sexOptions = Object.values(SEX).map(sex => ({
+        value: sex,
+        label: sexConfig[sex].label
+    }))
 
     return <Form
         title="Ekstra brukerinformasjon"

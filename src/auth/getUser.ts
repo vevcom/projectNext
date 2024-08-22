@@ -126,10 +126,3 @@ export async function getUser({
         ? { user, authorized: false, status: 'UNAUTHORIZED', permissions, memberships }
         : { user, authorized: false, status: 'UNAUTHENTICATED', permissions, memberships }
 }
-
-class UserServerSession {
-    public user: UserFiltered
-    constructor() {
-
-    }
-}

@@ -4,7 +4,6 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/server/groups/read'
 import { readUserPage, readUserProfile } from '@/server/users/read'
-import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import type { ExpandedGroup } from '@/server/groups/Types'
 import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/server/users/Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -35,7 +34,7 @@ export async function readUserPageAction<const PageSize extends number>(
  * @returns - The profile of the user
  */
 export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
-    const { user, authorized, status } = await getUser({
+    const { authorized, status } = await getUser({
         requiredPermissions: [['USERS_READ']]
     })
     if (!authorized) return createActionError(status)
@@ -44,7 +43,10 @@ export async function readUserProfileAction(username: string): Promise<ActionRet
 }
 
 export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {
-    readPermissionsOfUser
+    return {
+        success: true,
+        data: []
+    }
 }
 
 

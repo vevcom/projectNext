@@ -13,7 +13,7 @@ export type PropTypes<ValueType> = Omit<SelectHTMLAttributes<HTMLSelectElement>,
         label?: string,
         key?: string,
     }[],
-} 
+}
 
 export function SelectConstructor<ValueType extends string | number>(valueConverter: (value: string) => ValueType) {
     return function Select({
@@ -49,10 +49,9 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
                     }
                     onChange={(event) => {
                         if (onChange && options.length > 0) {
-                            const value = event.target.value
-                            onChange(valueConverter(value))
+                            onChange(valueConverter(event.target.value))
                         }
-                        }
+                    }
                     }
                 >
                     {optionElements}
@@ -64,4 +63,4 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
 
 export const SelectString = SelectConstructor((value: string) => value)
 export const SelectNumber = SelectConstructor((value: string) => Number(value))
-export const SelectNumberPossibleNULL = SelectConstructor((value: string) => value === 'NULL' ? 'NULL' : Number(value))
+export const SelectNumberPossibleNULL = SelectConstructor((value: string) => (value === 'NULL' ? 'NULL' : Number(value)))

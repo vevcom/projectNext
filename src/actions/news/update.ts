@@ -1,13 +1,12 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createZodActionError } from '@/actions/error'
+import { createZodActionError, createActionError } from '@/actions/error'
 import { updateNews } from '@/server/news/update'
 import { updateNewsArticleValidation } from '@/server/news/validation'
 import { dispatchSpecialNotification } from '@/server/notifications/create'
 import type { SimpleNewsArticle } from '@/server/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateNewsArticleTypes } from '@/server/news/validation'
-import { createActionError } from '@/actions/error'
 
 export async function updateNewsAction(
     id: number,

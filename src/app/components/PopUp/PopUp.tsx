@@ -7,7 +7,7 @@ import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useEffect, useState, useRef, useCallback } from 'react'
-import type { ReactNode } from 'react'
+import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/context/PopUp'
 
 export type PropTypes = {
@@ -15,7 +15,7 @@ export type PropTypes = {
     showButtonContent: ReactNode,
     showButtonClass?: string,
     PopUpKey: PopUpKeyType,
-    showButtonStyle?: React.CSSProperties,
+    showButtonStyle?: CSSProperties,
 }
 
 export default function PopUp({

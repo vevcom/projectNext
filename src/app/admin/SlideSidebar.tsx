@@ -108,7 +108,7 @@ const navigations = [
                 href: '/admin/default-permissions'
             }
         ],
-    }, 
+    },
     {
         header: {
             icon: faPaperPlane,

@@ -145,6 +145,7 @@ export default async function User({ params }: PropTypes) {
                     </div>
                 )
             }
+            <OmegaId />
         </div>
     )
 }
