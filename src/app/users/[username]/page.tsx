@@ -7,9 +7,12 @@ import { readCommitteesFromIds } from '@/server/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
 import { sexConfig } from '@/server/users/ConfigVars'
 import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
+import PopUp from '@/app/components/PopUp/PopUp'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 import type { UserFiltered } from '@/server/users/Types'
 
 type PropTypes = {
@@ -58,72 +61,79 @@ export default async function User({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <div className={`${styles.top} ${styles.standard}`}> {/* TODO change style based on flair */}
-            </div>
-            <div className={styles.profileContent}>
-                <div className={styles.imageWrapper}>
-                    <Image className={styles.profilePicture} image={profileImage} width={240}/>
-                </div>
-                <div className={styles.header}>
-                    <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
-                    {
-                        studyProgramme && (
-                            <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
-                        )
-                    }
-                    <div className={styles.committeesWrapper}>
+            <div className={styles.profile}>
+                <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
+
+                <div className={styles.profileContent}>
+                    <div className={styles.imageWrapper}>
+                        <Image className={styles.profilePicture} image={profileImage} width={240}/>
+                    </div>
+                    <div className={styles.header}>
+                        <div className={styles.nameAndId}>
+                            <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
+                            <PopUp
+                                showButtonClass={styles.omegaIdOpen}
+                                showButtonContent={
+                                    <FontAwesomeIcon icon={faQrcode} />
+                                }
+                                PopUpKey={'omegaId'}
+                            >
+                                <div className={styles.omegaId}>
+                                    <OmegaId />
+                                </div>
+                            </PopUp>
+                        </div>
                         {
-                            committees.map(committee =>
-                                <div className={styles.committee} key={uuid()}><p>{committee.name}</p></div>
+                            studyProgramme && (
+                                <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
                             )
                         }
-                        {/* TODO change to your own committee title instead of committee name*/}
-                    </div>
-                    <hr/>
-                    <p className={styles.orderText}>
-                        {sexConfig[profile.user.sex ?? 'OTHER'].title} uudaf {order}´dis orden i Sanctus Omega Broderskab
-                    </p>
-                </div>
-                <div className={styles.leftSection}>
-                    <div className={styles.buttons}>
-                        {me && <Link href={`/users/${profile.user.username}/settings`}>
-                            <BorderButton color="secondary">
-                                <p>Instillinger</p>
-                            </BorderButton>
-                        </Link>}
-                        {me && <Link href="/logout">
-                            <BorderButton color="secondary">
-                                <p>Logg ut</p>
-                            </BorderButton>
-                        </Link>}
-                    </div>
-
-                </div>
-                <div className={styles.profileMain}>
-                    {(profile.user.bio !== '') &&
-                        <div className={styles.bio}>
-                            <h2>Bio:</h2>
-                            <p>{profile.user.bio}</p>
+                        <div className={styles.committeesWrapper}>
+                            {
+                                committees.map(committee =>
+                                    <div className={styles.committee} key={uuid()}><p>{committee.name}</p></div>
+                                )
+                            }
+                            {/* TODO change to your own committee title instead of committee name*/}
                         </div>
-                    }
-                    <p>
-                        <span className={styles.email}>E-post:</span>
-                        {profile.user.email}
-                    </p>
-                    <p>
-                        <span className={styles.username}>Brukernavn:</span>
-                        {profile.user.username}
-                    </p>
+                        <hr/>
+                        <p className={styles.orderText}>
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title} uudaf {order}´dis orden i Sanctus Omega Broderskab
+                        </p>
+                    </div>
+                    <div className={styles.leftSection}>
+                        <div className={styles.buttons}>
+                            {canAdministrate && <Link href={`/users/${profile.user.username}/settings`}>
+                                <BorderButton color="secondary">
+                                    <p>Instillinger</p>
+                                </BorderButton>
+                            </Link>}
+                            {me && <Link href="/logout">
+                                <BorderButton color="secondary">
+                                    <p>Logg ut</p>
+                                </BorderButton>
+                            </Link>}
+                        </div>
+
+                    </div>
+                    <div className={styles.profileMain}>
+                        {(profile.user.bio !== '') &&
+                            <div className={styles.bio}>
+                                <h2>Bio:</h2>
+                                <p>{profile.user.bio}</p>
+                            </div>
+                        }
+                        <p>
+                            <span className={styles.email}>E-post:</span>
+                            {profile.user.email}
+                        </p>
+                        <p>
+                            <span className={styles.username}>Brukernavn:</span>
+                            {profile.user.username}
+                        </p>
+                    </div>
                 </div>
             </div>
-            {
-                canAdministrate && (
-                    <div className={styles.userLinks}>
-                        <Link href="./me/notifications">Varslinger</Link>
-                    </div>
-                )
-            }
-            <OmegaId />
         </div>
     )
 }
