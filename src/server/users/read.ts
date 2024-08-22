@@ -32,9 +32,8 @@ export async function readUserPage<const PageSize extends number>({
     const groups = [...details.groups, ...(details.selectedGroup ? [details.selectedGroup] : [])]
 
     const users = await prismaCall(() => prisma.user.findMany({
-
+        ...cursorPageingSelection(page),
         select: {
-            ...cursorPageingSelection(page),
             ...userFilterSelection,
             memberships: {
                 select: {
