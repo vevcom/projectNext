@@ -45,7 +45,7 @@ export default function NotificaionForm({
 
             <p>
                 Dersom du ønser å gjøre varselet mer personlig kan man bruke brukerinformasjon i varselet.
-                Under er en liste med kommandoer. Dersom det kun er e-post varslingere så kan du skrive i markdwon.
+                Under er en liste med kommandoer. Dersom det kun er e-post varslingere så kan du skrive i markdown.
             </p>
             <table>
                 <tr>

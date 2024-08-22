@@ -8,7 +8,7 @@ import { useState } from 'react'
 
 export default async function EmailRegistrationForm() {
     const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || 'users/me'
+    const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
     const [feedback, setFeedback] = useState<string | null>(null)
 
