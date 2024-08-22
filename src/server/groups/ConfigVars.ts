@@ -65,6 +65,12 @@ export const OmegaMembershipLevelConfig = {
     }
 }
 
+export const OMEGA_MEMBERSHIP_LEVEL_RANKING: OmegaMembershipLevel[] = [
+    'EXTERNAL',
+    'SOELLE',
+    'MEMBER',
+]
+
 export const groupsExpandedIncluder = {
     memberships: {
         take: 1,

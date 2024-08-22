@@ -1,6 +1,6 @@
 import 'server-only'
 import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
-import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from './ConfigVars'
+import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from '@/server/groups/ConfigVars'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'

@@ -28,7 +28,7 @@ export default async function UserSettings({ params }: PropTypes) {
             <Link href={`/users/${profile.user.username}`}>Tilbake</Link>
             <h1>{profile.user.firstname} {profile.user.lastname}</h1>
             <div className={styles.userLinks}>
-                <Link href="./me/notifications">Varslinger</Link>
+                <Link href="./notifications">Varslinger</Link>
             </div>
             <p>{`Bruker-ID: ${profile.user.id}`}</p>
             <h2>Tillganger:</h2>
