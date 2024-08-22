@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "echo Success!",
+    "test": "vitest run",
     "docker:dev": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.dev.yml up --build",
     "docker:test": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.test.yml run --rm --build projectnext",
     "docker:prod": "docker-compose --env-file .env -f docker-compose.test.yml up --build"
@@ -48,6 +48,7 @@
     "sharp": "^0.33.5",
     "unified": "^11.0.5",
     "uuid": "^10.0.0",
+    "vitest": "^2.1.8",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.24.1",
