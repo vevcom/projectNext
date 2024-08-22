@@ -3,7 +3,7 @@ import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from './ConfigVars'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { ServerError } from '@/server/error'
 import type { OmegaMembershipLevel } from '@prisma/client'
 
@@ -33,7 +33,7 @@ export async function updateUserOmegaMembershipGroup(
         }
     }
 
-    const currentOmegaOrder = await readCurrenOmegaOrder()
+    const currentOmegaOrder = await readCurrentOmegaOrder()
 
     await prismaCall(() => prisma.$transaction([
         prisma.membership.deleteMany({
@@ -46,6 +46,7 @@ export async function updateUserOmegaMembershipGroup(
         }),
         prisma.membership.create({
             data: {
+                active: true,
                 user: {
                     connect: {
                         id: userId,

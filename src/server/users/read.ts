@@ -5,6 +5,7 @@ import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import prisma from '@/prisma'
+import { readPermissionsOfUser } from '@/server/permissionRoles/read'
 import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { User } from '@prisma/client'
@@ -148,6 +149,7 @@ export async function readUserProfile(username: string): Promise<Profile> {
     }))
 
     const memberships = await readMembershipsOfUser(user.id)
+    const permissions = await readPermissionsOfUser(user.id)
 
-    return { user, memberships }
+    return { user, memberships, permissions }
 }
