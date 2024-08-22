@@ -24,6 +24,6 @@ export type CreatePageTypes = ValidationTypes<typeof createPageValidation>
 
 export const updatePageValidation = basePageValidation.createValidation({
     keys: ['name', 'type', 'connectToJobAd'],
-    transformer: data => ({ ...data, connectToJobAd: parseInt(data.connectToJobAd) })
+    transformer: data => ({ ...data, connectToJobAd: parseInt(data.connectToJobAd, 10) })
 })
 export type UpdatePageTypes = ValidationTypes<typeof updatePageValidation>
