@@ -1,11 +1,9 @@
 import styles from './page.module.scss'
-import prisma from '@/prisma'
 import { getUser } from '@/auth/getUser'
 import Image from '@/components/Image/Image'
 import { readSpecialImage } from '@/server/images/read'
 import BorderButton from '@/app/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/server/groups/committees/read'
-import { prismaCall } from '@/server/prismaCall'
 import { readUserProfileAction } from '@/actions/users/read'
 import { sexConfig } from '@/server/users/ConfigVars'
 import OmegaId from '@/app/components/OmegaId/identification/OmegaId'
@@ -48,31 +46,11 @@ export default async function User({ params }: PropTypes) {
     const groupIds = profile.memberships.map(group => group.groupId)
     const committees = await readCommitteesFromIds(groupIds)
 
-    const studyProgramme = await prismaCall(() => prisma.studyProgramme.findFirst({
-        where: {
-            id: {
-                in: groupIds
-            }
-        },
-        include: {
-            group: {
-                include: {
-                    memberships: {
-                        include: {
-                            omegaOrder: {
-                                select: {
-                                    order: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }))
+    //TODO: Basic user info will exist on the profile object
+    const studyProgramme = { name: 'Kybernetikk', code: 'MTTK' }
 
     // TODO: Change to the correct order
-    const order = studyProgramme ? studyProgramme.group.memberships[0].omegaOrder.order : 0
+    const order = 105
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImage('DEFAULT_PROFILE_IMAGE')
 
