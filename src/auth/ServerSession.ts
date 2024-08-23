@@ -8,7 +8,9 @@ type MembershipFiltered = {
     
 }
 
-type Session<UserGuarantee extends 'HAS_USER' | 'MAYBE_USER' | 'NO_USER'> = {
+export type UserGuaranteeOption = 'HAS_USER' | 'MAYBE_USER' | 'NO_USER'
+
+type Session<UserGuarantee extends UserGuaranteeOption> = {
     user: UserGuarantee extends 'HAS_USER' ? UserFiltered : (
         UserGuarantee extends 'MAYBE_USER' ? UserFiltered | null : (
         UserGuarantee extends 'NO_USER' ? null : never
@@ -18,10 +20,10 @@ type Session<UserGuarantee extends 'HAS_USER' | 'MAYBE_USER' | 'NO_USER'> = {
     memberships: MembershipFiltered[], 
 }
 
-export class ServerSession {
-    private session: Session<'MAYBE_USER'> 
+export class ServerSession<UserGuarantee extends UserGuaranteeOption> {
+    private session: Session<UserGuarantee> 
     
-    private constructor(session: Session<'MAYBE_USER'>) {
+    private constructor(session: Session<UserGuarantee>) {
         this.session = session
     }
 
@@ -37,7 +39,7 @@ export class ServerSession {
         return this.session.memberships
     }
 
-    public static async currentSession(): Promise<ServerSession> {
+    public static async current(): Promise<ServerSession<'MAYBE_USER'>> {
         const {
             user = null,
             permissions = await readDefaultPermissions(),
@@ -49,4 +51,8 @@ export class ServerSession {
     public auth(auth) {
 
     }
+}
+
+async function test() {
+    let session = await ServerSession.current()
 }
