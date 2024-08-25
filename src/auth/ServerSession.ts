@@ -52,7 +52,3 @@ export class ServerSession<UserGuarantee extends UserGuaranteeOption> {
 
     }
 }
-
-async function test() {
-    let session = await ServerSession.current()
-}

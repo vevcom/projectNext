@@ -1,12 +1,15 @@
-import { ServerSession } from "../ServerSession";
+import { ServerSession, UserGuaranteeOption } from "../ServerSession";
 
-export class AuthResult {
-    public session: ServerSession
-    public authorized: boolean
+export class AuthResult<UserGuatantee extends UserGuaranteeOption> {
+    public session: ServerSession<UserGuatantee>
+    private authorized_: boolean
+    public get authorized() {
+        return this.authorized_
+    }
 
-    public constructor(session: ServerSession, authorized: boolean) {
+    public constructor(session: ServerSession<UserGuatantee>, authorized: boolean) {
         this.session = session
-        this.authorized = authorized
+        this.authorized_ = authorized
     }
 
     public get status() {
@@ -19,4 +22,4 @@ export class AuthResult {
     }
 }
 
-export type AuthStatus = AuthResult['status']
+export type AuthStatus = AuthResult<'MAYBE_USER'>['status']
