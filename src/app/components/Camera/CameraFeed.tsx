@@ -1,5 +1,4 @@
 'use client'
-import { CameraState } from './Types'
 import { useEffect, useRef, useCallback } from 'react'
 import type { CameraFeedProps } from './Types'
 
@@ -18,14 +17,14 @@ export default function CameraFeed(props: CameraFeedProps) {
             }
         }
         callbackWrapper()
-        props.setCameraState(CameraState.On)
+        props.setCameraState('On')
     }, [])
 
 
     const start = useCallback(async () => {
         streamRef.current = await navigator.mediaDevices.getUserMedia(props.constraints)
             .catch((error: Error) => {
-                props.setCameraState(CameraState.Off)
+                props.setCameraState('Off')
                 console.error(error)
                 return null
             })
@@ -39,7 +38,7 @@ export default function CameraFeed(props: CameraFeedProps) {
         }
         video.srcObject = streamRef.current
         video.play().catch((error: Error) => {
-            props.setCameraState(CameraState.Off)
+            props.setCameraState('Off')
             console.error(error)
             return
         })
@@ -65,13 +64,13 @@ export default function CameraFeed(props: CameraFeedProps) {
 
     useEffect(() => {
         switch (props.cameraState) {
-            case CameraState.Pending:
+            case 'Pending':
                 start()
                 break
-            case CameraState.Off:
+            case 'Off':
                 stop()
                 break
-            case CameraState.On:
+            case 'On':
                 return stop
             default:
                 return undefined

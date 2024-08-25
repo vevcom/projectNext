@@ -1,11 +1,7 @@
 import type { Dispatch, SetStateAction, RefObject } from 'react'
 
 
-export enum CameraState {
-    Off,
-    Pending,
-    On
-}
+export type CameraState = 'Off' | 'Pending' | 'On'
 
 export interface CameraFeedProps {
     videoRef: RefObject<HTMLVideoElement>,
@@ -16,3 +12,4 @@ export interface CameraFeedProps {
     width?: number,
     height?: number
 }
+

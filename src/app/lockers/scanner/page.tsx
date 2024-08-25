@@ -1,7 +1,7 @@
 'use client'
 import styles from './page.module.scss'
 import CameraFeed from '@/app/components/Camera/CameraFeed'
-import { CameraState } from '@/app/components/Camera/Types'
+import type { CameraState } from '@/app/components/Camera/Types'
 import Button from '@/app/components/UI/Button'
 import { useRouter } from 'next/navigation'
 import jsQR from 'jsqr'
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 export default function Scanner() {
     const videoRef = useRef<HTMLVideoElement | null>(null)
-    const [cameraState, setCameraState] = useState<CameraState>(CameraState.Off)
+    const [cameraState, setCameraState] = useState<CameraState>('Off')
     const [hasAsked, setHasAsked] = useState<boolean>(false)
     const router = useRouter()
 
@@ -44,12 +44,12 @@ export default function Scanner() {
     }, [router])
 
     useEffect(() => {
-        setCameraState(CameraState.Pending)
+        setCameraState('Pending')
         setHasAsked(true)
     }, [])
 
     useEffect(() => {
-        if (hasAsked && cameraState === CameraState.Off) {
+        if (hasAsked && cameraState === 'Off') {
             router.push('/lockers')
         }
     }, [cameraState, hasAsked])
@@ -70,7 +70,7 @@ export default function Scanner() {
 
                 <Button
                     className={styles.button}
-                    onClick={() => { setCameraState(CameraState.Off) }}
+                    onClick={() => { setCameraState('Off') }}
                 >
                     Avbryt
                 </Button>
