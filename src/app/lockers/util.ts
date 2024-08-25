@@ -12,38 +12,43 @@ export function getGroupNameFromLocker(locker: LockerWithReservation): string {
 
     const group = reservation.group
 
+    return getGroupName(group)
+}
+
+// This should probably be in another file, but I don't know where
+export function getGroupName(group) {
     switch (group.groupType) {
         case 'CLASS':
             if (!group.class) {
-                return ''
+                return '?'
             }
             return `${group.class.year}. Klasse`
         case 'COMMITTEE':
             if (!group.committee) {
-                return ''
+                return '?'
             }
             return group.committee.name
         case 'INTEREST_GROUP':
             if (!group.interestGroup) {
-                return ''
+                return '?'
             }
             return group.interestGroup.name
         case 'MANUAL_GROUP':
             if (!group.manualGroup) {
-                return ''
+                return '?'
             }
-            return group.manualGroup?.name
+            return group.manualGroup.name
         case 'OMEGA_MEMBERSHIP_GROUP':
             if (!group.omegaMembershipGroup) {
-                return ''
+                return '?'
             }
-            return group.omegaMembershipGroup?.omegaMembershipLevel
+            return group.omegaMembershipGroup.omegaMembershipLevel
         case 'STUDY_PROGRAMME':
             if (!group.studyProgramme) {
-                return ''
+                return '?'
             }
-            return group.studyProgramme?.name
+            return group.studyProgramme.name
         default:
-            return ''
+            return '?'
     }
 }

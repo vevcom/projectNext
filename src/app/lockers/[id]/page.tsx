@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
-import { getGroupNameFromLocker } from '@/app/lockers/util'
+import { getGroupNameFromLocker, getGroupName } from '@/app/lockers/util'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/actions/lockers/read'
 import { getUser } from '@/auth/getUser'
@@ -37,27 +37,7 @@ export default async function Locker({ params }: PropTypes) {
     const groups = await readGroupsOfUser(user.id)
 
     const groupsFormData = groups.map(group => {
-        let name = 'test'
-        switch (group.groupType) {
-            case 'CLASS':
-                name = `${group.class?.year}. Klasse`
-                break
-            case 'COMMITTEE':
-                name = group.committee?.name
-                break
-            case 'INTEREST_GROUP':
-                name = group.interestGroup?.name
-                break
-            case 'MANUAL_GROUP':
-                name = group.manualGroup?.name
-                break
-            case 'OMEGA_MEMBERSHIP_GROUP':
-                name = group.omegaMembershipGroup?.omegaMembershipLevel
-                break
-            case 'STUDY_PROGRAMME':
-                name = group.studyProgramme?.name
-                break
-        }
+        const name = getGroupName(group)
         return { value: group.id.toString(), label: name }
     })
 
@@ -100,7 +80,10 @@ export default async function Locker({ params }: PropTypes) {
                         :
                         <>
                             <p>Dette skapet er ledig</p>
-                            <CreateLockerReservationForm lockerId={lockerId} groupsFormData={groupsFormData}/>
+                            <CreateLockerReservationForm
+                                lockerId={lockerId}
+                                groupsFormData={groupsFormData}
+                            />
                         </>
                 }
             </div>
