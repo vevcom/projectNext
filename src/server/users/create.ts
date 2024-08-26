@@ -18,11 +18,6 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
     const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
     const omegaOrder = await readCurrentOmegaOrder()
 
-    // Since "password" and "confirmPasswor" are not part of the user model they must be
-    // deleted before "data" can be unpacked in the create user call.
-    Reflect.deleteProperty(data, 'password')
-    Reflect.deleteProperty(data, 'confirmPassword')
-
     return await prismaCall(() => prisma.user.create({
         data: {
             ...data,
