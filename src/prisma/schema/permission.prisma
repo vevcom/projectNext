@@ -119,6 +119,9 @@ enum Permission {
 
   // Admisstion
   ADMISSION_TRIAL_CREATE
+
+  // API keys
+  APIKEY_ADMIN
 }
 
 model Role {
