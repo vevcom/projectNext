@@ -2,7 +2,7 @@ import { GroupTypesConfig, OmegaMembershipLevelConfig, groupsExpandedIncluder } 
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import type { Group, User } from '@prisma/client'
+import { type Group, type User } from '@prisma/client'
 import type { ExpandedGroup, GroupsStructured, GroupWithIncludes } from './Types'
 
 export async function readGroups(): Promise<Group[]> {
@@ -80,20 +80,38 @@ export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
  * Reads expanded groups and sorts them by group type
  */
 export async function readGroupsStructured(): Promise<GroupsStructured> {
-    const groups = await readGroupsExpanded()
+    const groupsStructured: GroupsStructured = {
+        CLASS: {
+            ...GroupTypesConfig.CLASS,
+            groups: [],
+        },
+        COMMITTEE: {
+            ...GroupTypesConfig.COMMITTEE,
+            groups: [],
+        },
+        INTEREST_GROUP: {
+            ...GroupTypesConfig.INTEREST_GROUP,
+            groups: [],
+        },
+        MANUAL_GROUP: {
+            ...GroupTypesConfig.MANUAL_GROUP,
+            groups: [],
+        },
+        OMEGA_MEMBERSHIP_GROUP: {
+            ...GroupTypesConfig.OMEGA_MEMBERSHIP_GROUP,
+            groups: [],
+        },
+        STUDY_PROGRAMME: {
+            ...GroupTypesConfig.STUDY_PROGRAMME,
+            groups: [],
+        },
+    } satisfies GroupsStructured
 
-    const stuctured = groups.reduce((acc, group) => {
-        if (!acc[group.groupType]) {
-            acc[group.groupType] = {
-                name: GroupTypesConfig[group.groupType].name,
-                description: GroupTypesConfig[group.groupType].description,
-                groups: []
-            }
-        }
-        acc[group.groupType].groups.push(group)
-        return acc
-    }, {} as GroupsStructured)
-    return stuctured
+    (await readGroupsExpanded()).forEach(group => {
+        groupsStructured[group.groupType].groups.push(group)
+    })
+
+    return groupsStructured
 }
 
 /**

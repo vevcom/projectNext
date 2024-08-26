@@ -13,6 +13,12 @@ export type GroupWithIncludes = Group & {
     memberships: { order: number }[]
 }
 
+export type GroupTypeInfo = {
+    name: string,
+    namePlural: string,
+    description: string
+}
+
 /**
  * Type including extra infered fields based on the type of group and the group data
  */
@@ -23,9 +29,7 @@ export type ExpandedGroup = Group & {
 }
 
 export type GroupsStructured = {
-    [key in GroupType]: {
-        name: string,
-        description: string,
+    [key in GroupType]: GroupTypeInfo & {
         groups: ExpandedGroup[]
     }
 }

@@ -1,4 +1,5 @@
 import type { GroupType, OmegaMembershipLevel, Prisma } from '@prisma/client'
+import type { GroupTypeInfo } from './Types'
 
 /**
  * A object that describes the different group types in a friendly way
@@ -35,11 +36,7 @@ export const GroupTypesConfig = {
         description: 'øvrige grupper'
     }
 } as const satisfies {
-    [key in GroupType]: {
-        name: string,
-        namePlural: string,
-        description: string
-    }
+    [key in GroupType]: GroupTypeInfo
 }
 
 export const GroupTypeOrdering: string[] = ['OMEGA_MEMBERSHIP_GROUP', 'CLASS', 'STUDY_PROGRAMME',
