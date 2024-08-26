@@ -1,7 +1,7 @@
 model ApiKey {
-    id           Int    @id @default(autoincrement())
-    name         String @unique
-    keyEncrypted String @unique
-    active       Boolean
-    permissions  Permission[]
+  id               Int          @id @default(autoincrement())
+  name             String       @unique
+  keyHashEncrypted String       @unique
+  active           Boolean
+  permissions      Permission[]
 }

@@ -27,32 +27,32 @@ export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>(
             case 'GET':
                 if (GET) {
                     const data = await GET.handler(req)
-                }
-                else {
+                    res.json(data)
+                } else {
                     res.status(405).end()
                 }
                 break
             case 'POST':
                 if (POST) {
                     const data = await POST.handler(req)
-                }
-                else {
+                    res.json(data)
+                } else {
                     res.status(405).end()
                 }
                 break
             case 'PUT':
                 if (PUT) {
                     const data = await PUT.handler(req)
-                }
-                else {
+                    res.json(data)
+                } else {
                     res.status(405).end()
                 }
                 break
             case 'DELETE':
                 if (DELETE) {
                     const data = await DELETE.handler(req)
-                }
-                else {
+                    res.json(data)
+                } else {
                     res.status(405).end()
                 }
                 break
