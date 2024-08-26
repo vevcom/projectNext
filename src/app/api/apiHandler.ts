@@ -2,26 +2,23 @@ import 'server-only'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Permission } from '@prisma/client'
 
-type APIHandler<Return> = (req: NextApiRequest) => Promise<Return>
+type APIHandlerFunction<Return> = (req: NextApiRequest) => Promise<Return>
+type APIHandler<Return> = {
+    permission: Permission,
+    handler: APIHandlerFunction<Return>
+}
 
-export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>(
-    GET?: {
-        permission: Permission,
-        handler: APIHandler<GETReturn>
-    },
-    POST?: {
-        permission: Permission,
-        handler: APIHandler<POSTReturn>
-    },
-    PUT?: {
-        permission: Permission,
-        handler: APIHandler<PUTReturn>
-    },
-    DELETE?: {
-        permission: Permission,
-        handler: APIHandler<DELETEReturn>
-    }
-) {
+export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>({
+    GET,
+    POST,
+    PUT,
+    DELETE
+}: {
+    GET?: APIHandler<GETReturn>,
+    POST?: APIHandler<POSTReturn>,
+    PUT?: APIHandler<PUTReturn>,
+    DELETE?: APIHandler<DELETEReturn>
+}) {
     return async function handler(req: NextApiRequest, res: NextApiResponse) {
         switch (req.method) {
             case 'GET':

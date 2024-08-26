@@ -22,9 +22,8 @@ export function hashAndEncrypter(
             return encrypt(hashed)
         },
         decryptAndCompare: async (data: string, encryptedData: string) => {
-            const hashed = await hash(data)
             const decrypted = decrypt(encryptedData)
-            return compare(hashed, decrypted)
+            return compare(data, decrypted)
         }
     }
 }
