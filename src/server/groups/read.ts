@@ -1,9 +1,26 @@
 import { GroupTypesConfig, OmegaMembershipLevelConfig, groupsExpandedIncluder } from './ConfigVars'
+import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
 import { prismaCall } from '@/server/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import { type Group, type User } from '@prisma/client'
-import type { ExpandedGroup, GroupsStructured, GroupWithIncludes } from './Types'
+import logger from '@/logger'
+import type {
+    Group,
+    User,
+    Committee,
+    ManualGroup,
+    Class,
+    InterestGroup,
+    OmegaMembershipGroup,
+    StudyProgramme,
+} from '@prisma/client'
+import type {
+    ExpandedGroup,
+    GroupsStructured,
+    GroupWithDumbRelations,
+    GroupWithRelations,
+    GroupWithRelationsNameInferencer
+} from './Types'
 
 export async function readGroups(): Promise<Group[]> {
     return await prismaCall(() => prisma.group.findMany())
@@ -42,12 +59,17 @@ export async function readGroup(id: number): Promise<Group> {
     }))
 }
 
-export async function expandGroup(group: GroupWithIncludes): Promise<ExpandedGroup> {
+export async function expandGroup(group: GroupWithRelationsNameInferencer & {
+    membershipsToInferFirstOrder: {order: number}[]
+}): Promise<ExpandedGroup> {
     const members = await prisma.membership.count({
         where: getMembershipFilter('ACTIVE', group.id)
     })
     const name = inferGroupName(group)
-    const firstOrder = group.memberships.sort((m1, m2) => m1.order - m2.order)[0]?.order ?? group.order
+    const membershipsSorted = group.membershipsToInferFirstOrder.sort(
+        (m1, m2) => m1.order - m2.order
+    )
+    const firstOrder = membershipsSorted.length ? membershipsSorted[0].order : group.order
     return {
         ...group,
         members,
@@ -62,15 +84,15 @@ export async function readGroupExpanded(id: number): Promise<ExpandedGroup> {
             id,
         },
         include: groupsExpandedIncluder,
-    }))
+    })).then(checkGroupValidity).then(grp => ({ ...grp, membershipsToInferFirstOrder: grp.memberships }))
     return expandGroup(group)
 }
 
 
 export async function readGroupsExpanded(): Promise<ExpandedGroup[]> {
-    const groups = await prismaCall(() => prisma.group.findMany({
+    const groups = (await prismaCall(() => prisma.group.findMany({
         include: groupsExpandedIncluder,
-    }))
+    }))).map(checkGroupValidity).map(grp => ({ ...grp, membershipsToInferFirstOrder: grp.memberships }))
 
     const groupsExpanded = await Promise.all(groups.map(expandGroup))
     return groupsExpanded
@@ -114,40 +136,6 @@ export async function readGroupsStructured(): Promise<GroupsStructured> {
     return groupsStructured
 }
 
-/**
- * This function tries to give a name to a group based on the group type and the group data.
- * @param group - The group to infer the name of
- * @returns
- */
-export function inferGroupName(group: GroupWithIncludes) {
-    let name = `group id ${group.id}`
-    switch (group.groupType) {
-        case 'COMMITTEE':
-            name = group.committee?.name ?? name
-            break
-        case 'MANUAL_GROUP':
-            name = group.manualGroup?.name ?? name
-            break
-        case 'CLASS':
-            name = `${group.class?.year ?? '??'}. Klasse`
-            break
-        case 'INTEREST_GROUP':
-            name = group.interestGroup?.name ?? name
-            break
-        case 'OMEGA_MEMBERSHIP_GROUP':
-            name = group.omegaMembershipGroup?.omegaMembershipLevel ?
-                OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name :
-                name
-            break
-        case 'STUDY_PROGRAMME':
-            name = group.studyProgramme?.name ?? name
-            break
-        default:
-            break
-    }
-    return name
-}
-
 export async function readUsersOfGroups(groups: { groupId: number, admin: boolean }[]): Promise<User[]> {
     return (await prismaCall(() => prisma.membership.findMany({
         where: {
@@ -160,4 +148,146 @@ export async function readUsersOfGroups(groups: { groupId: number, admin: boolea
             user: true
         }
     }))).map(({ user }) => user)
+}
+
+/**
+ * WARNING: Make sure that you have actually included the relations in the query
+ * This function makes sure the group has a relation to the group type it is supposed to have
+ * @param group - The group to check the validity of
+ * @throws - If the group is invalid for example groupType committee but no committee relation then
+ * it will throw an error
+ * @returns - The group with the correct relation (better typing)
+ */
+export function checkGroupValidity<
+    CommitteeKeys extends keyof Committee,
+    ManualGroupKeys extends keyof ManualGroup,
+    ClassKeys extends keyof Class,
+    InterestGroupKeys extends keyof InterestGroup,
+    OmegaMembershipGroupKeys extends keyof OmegaMembershipGroup,
+    StudyProgrammeKeys extends keyof StudyProgramme,
+    ExtraFields extends object,
+>(group: GroupWithDumbRelations<
+    CommitteeKeys,
+    ManualGroupKeys,
+    ClassKeys,
+    InterestGroupKeys,
+    OmegaMembershipGroupKeys,
+    StudyProgrammeKeys
+> & ExtraFields): GroupWithRelations<
+    CommitteeKeys,
+    ManualGroupKeys,
+    ClassKeys,
+    InterestGroupKeys,
+    OmegaMembershipGroupKeys,
+    StudyProgrammeKeys
+> & Omit<ExtraFields, 'committee' | 'manualGroup' | 'class' | 'interestGroup' | 'omegaMembershipGroup' | 'studyProgramme'> {
+    const WRONG_GROUP_TYPE_ERROR_STRING = 'Ånei, serveren er i en invalid tilstand. Kontakt en administrator' as const
+
+    switch (group.groupType) {
+        case 'COMMITTEE':
+            if (!group.committee) {
+                logger.error(
+                    'Group with type committee without committee relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'COMMITTEE',
+                committee: group.committee,
+            }
+        case 'MANUAL_GROUP':
+            if (!group.manualGroup) {
+                logger.error(
+                    'Group with type manual group without manual group relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'MANUAL_GROUP',
+                manualGroup: group.manualGroup,
+            }
+        case 'CLASS':
+            if (!group.class) {
+                logger.error(
+                    'Group with type class without class relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'CLASS',
+                class: group.class,
+            }
+        case 'INTEREST_GROUP':
+            if (!group.interestGroup) {
+                logger.error(
+                    'Group with type interest group without interest group relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'INTEREST_GROUP',
+                interestGroup: group.interestGroup,
+            }
+        case 'OMEGA_MEMBERSHIP_GROUP':
+            if (!group.omegaMembershipGroup) {
+                logger.error(
+                    'Group with type omega membership group without omega membership group relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'OMEGA_MEMBERSHIP_GROUP',
+                omegaMembershipGroup: group.omegaMembershipGroup,
+            }
+        case 'STUDY_PROGRAMME':
+            if (!group.studyProgramme) {
+                logger.error(
+                    'Group with type study programme without study programme relation detected',
+                    group
+                )
+                throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+            }
+            return {
+                ...group,
+                groupType: 'STUDY_PROGRAMME',
+                studyProgramme: group.studyProgramme,
+            }
+        default:
+            logger.error('Group with unknown group type detected', group)
+            throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
+    }
+}
+
+/**
+ * This function tries to give a name to a group based on the group type and the group data.
+ * @param group - The group to infer the name of
+ * @returns
+ */
+export function inferGroupName(group: GroupWithRelationsNameInferencer): string {
+    switch (group.groupType) {
+        case 'COMMITTEE':
+            return group.committee.name
+        case 'MANUAL_GROUP':
+            return group.manualGroup.name
+        case 'CLASS':
+            return `${group.class.year}. Klasse`
+        case 'INTEREST_GROUP':
+            return group.interestGroup.name
+        case 'OMEGA_MEMBERSHIP_GROUP':
+            return OmegaMembershipLevelConfig[group.omegaMembershipGroup?.omegaMembershipLevel].name
+        case 'STUDY_PROGRAMME':
+            return group.studyProgramme?.name
+        default:
+    }
+    return 'Group with unknown name'
 }

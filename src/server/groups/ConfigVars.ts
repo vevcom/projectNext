@@ -68,17 +68,24 @@ export const OMEGA_MEMBERSHIP_LEVEL_RANKING: OmegaMembershipLevel[] = [
     'MEMBER',
 ]
 
-export const groupsExpandedIncluder = {
-    memberships: {
-        take: 1,
-        orderBy: {
-            order: 'asc'
-        },
-    },
+export const groupsWithRelationsIncluder = {
     committee: { select: { name: true } },
     manualGroup: { select: { name: true } },
     class: { select: { year: true } },
     interestGroup: { select: { name: true } },
     omegaMembershipGroup: { select: { omegaMembershipLevel: true } },
     studyProgramme: { select: { name: true } },
+} as const satisfies Prisma.GroupInclude
+
+export const groupsExpandedIncluder = {
+    ...groupsWithRelationsIncluder,
+    memberships: {
+        take: 1,
+        orderBy: {
+            order: 'asc'
+        },
+        select: {
+            order: true
+        }
+    },
 } as const satisfies Prisma.GroupInclude
