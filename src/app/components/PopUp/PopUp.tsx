@@ -6,14 +6,16 @@ import { PopUpContext } from '@/context/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
-import React, { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import type { ReactNode, CSSProperties } from 'react'
+import type { PopUpKeyType } from '@/context/PopUp'
 
 export type PropTypes = {
-    children: React.ReactNode,
-    showButtonContent: React.ReactNode,
+    children: ReactNode,
+    showButtonContent: ReactNode,
     showButtonClass?: string,
-    showButtonStyle?: React.CSSProperties,
-    PopUpKey: number | string,
+    PopUpKey: PopUpKeyType,
+    showButtonStyle?: CSSProperties,
 }
 
 export default function PopUp({
@@ -29,7 +31,7 @@ export default function PopUp({
     const popUpContext = useContext(PopUpContext)
     useKeyPress('Escape', () => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
-    const contentRef = useRef<React.ReactNode>(null)
+    const contentRef = useRef<ReactNode>(null)
 
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
@@ -40,6 +42,12 @@ export default function PopUp({
             popUpContext.remove(PopUpKey)
         }
     }, [isOpen])
+
+    useEffect(() => {
+        if (popUpContext.keyOfCurrentNode !== PopUpKey) {
+            setIsOpen(false)
+        }
+    }, [popUpContext.keyOfCurrentNode])
 
     useEffect(() => {
         contentRef.current = (

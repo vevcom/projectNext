@@ -17,7 +17,7 @@ type PropTypes = {
 
 export default function RemovePart({ part, articleSectionName }: PropTypes) {
     const { refresh } = useRouter()
-    const canEdit = useEditing()
+    const canEdit = useEditing({})
     const [confirmOpen, setConfirmOpen] = useState(false)
     const confirmRef = useClickOutsideRef(() => setConfirmOpen(false))
     if (!canEdit) return null

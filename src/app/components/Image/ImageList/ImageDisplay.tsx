@@ -24,7 +24,7 @@ type PropTypes = {
 export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
-    const canEdit = useEditing() //TODO: authe
+    const canEdit = useEditing({}) //TODO: authe
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')

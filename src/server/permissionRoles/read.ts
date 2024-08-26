@@ -1,10 +1,11 @@
 import 'server-only'
 import { expandedRoleIncluder } from './ConfigVars'
-import { readMembershipsOfUser, readUsersOfGroups } from '@/server/groups/read'
+import { readUsersOfGroups } from '@/server/groups/read'
+import { readMembershipsOfUser } from '@/server/groups/memberships/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { User } from '@/prisma/prismaservice/generated/pn'
-import type { BasicMembership } from '@/server/groups/Types'
+import type { MembershipFiltered } from '@/server/groups/memberships/Types'
 import type { Permission, RolesGroups } from '@prisma/client'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
 
@@ -41,7 +42,7 @@ export async function readRolesOfGroup(groupId: number, admin: boolean = false):
     return rolesGroups.map(roleGroup => roleGroup.role)
 }
 
-export async function readRolesOfMemberships(data: BasicMembership[]): Promise<ExpandedRole[]> {
+export async function readRolesOfMemberships(data: MembershipFiltered[]): Promise<ExpandedRole[]> {
     const rolesGroups = await prismaCall(() => prisma.rolesGroups.findMany({
         where: {
             OR: data.map(({ groupId, admin }) => ({

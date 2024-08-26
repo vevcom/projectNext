@@ -2,7 +2,7 @@
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readUserPageAction } from '@/actions/users/read'
 import type { ReadPageInput } from '@/server/paging/Types'
-import type { UserCursor, UserDetails, UserFiltered } from '@/server/users/Types'
+import type { UserDetails, UserPagingReturn, UserCursor } from '@/server/users/Types'
 
 export type PageSizeUsers = 50;
 const fetcher = async (x: ReadPageInput<PageSizeUsers, UserCursor, UserDetails>) => {
@@ -10,7 +10,7 @@ const fetcher = async (x: ReadPageInput<PageSizeUsers, UserCursor, UserDetails>)
     return users
 }
 
-export const UserPagingContext = generatePagingContext<UserFiltered, UserCursor, PageSizeUsers, UserDetails>()
+export const UserPagingContext = generatePagingContext<UserPagingReturn, UserCursor, PageSizeUsers, UserDetails>()
 const UserPagingProvider = generatePagingProvider({
     Context: UserPagingContext,
     fetcher,

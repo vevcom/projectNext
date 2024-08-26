@@ -2,8 +2,12 @@
 import { createActionError } from '@/actions/error'
 import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { getUser } from '@/auth/getUser'
+import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
+import { includeVisibility } from '@/server/visibility/read'
+import { checkVisibility } from '@/auth/checkVisibility'
 import { SpecialCollection } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import type { VisibilityCollapsed } from '@/server/visibility/Types'
 import type { ReadPageInput } from '@/server/paging/Types'
 import type { ImageCollection } from '@prisma/client'
 import type {
@@ -11,6 +15,7 @@ import type {
     ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * Action that reads an image collection by id or name
@@ -19,9 +24,17 @@ import type {
  */
 export async function readImageCollectionAction(
     idOrName: number | string
-): Promise<ActionReturn<ExpandedImageCollection>> {
-    //TODO: Auth image collections on visibility or permission (if special collection)
-    return await safeServerCall(() => readImageCollection(idOrName))
+): Promise<ActionReturn<ExpandedImageCollection & {visibility: VisibilityCollapsed}>> {
+    const collection = await safeServerCall(() => includeVisibility(
+        () => readImageCollection(idOrName),
+        data => data.visibilityId
+    ))
+    if (!collection.success) return collection
+    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR')) {
+        return createActionError('UNAUTHORIZED', 'You do not have permission to view this collection')
+    }
+
+    return collection
 }
 
 /**
@@ -32,8 +45,10 @@ export async function readImageCollectionAction(
 export async function readImageCollectionsPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
-    //TODO: Auth image collections on visibility or permission (if special collection)
-    return await safeServerCall(() => readImageCollectionsPage(readPageInput))
+    const { memberships, permissions } = await getUser()
+    const visibilityFilter = getVisibilityFilter(memberships, permissions)
+    console.log(visibilityFilter)
+    return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
 }
 
 /**

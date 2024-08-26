@@ -1,11 +1,13 @@
 import { createStudyProgrammeValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import type { CreateStudyProgrammeTypes } from './validation'
 import type { ExpandedStudyProgramme } from './Types'
 
 export async function createStudyProgramme(data: CreateStudyProgrammeTypes['Detailed']): Promise<ExpandedStudyProgramme> {
     const parse = createStudyProgrammeValidation.detailedValidate(data)
+    const order = (await readCurrentOmegaOrder()).order
 
     return await prismaCall(() => prisma.studyProgramme.create({
         data: {
@@ -13,7 +15,7 @@ export async function createStudyProgramme(data: CreateStudyProgrammeTypes['Deta
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
+                    order,
                 }
             }
         }
@@ -40,6 +42,8 @@ export async function upsertStudyProgrammes(
         return existingStudyProgrammes
     }
 
+    const order = (await readCurrentOmegaOrder()).order
+
     const createdStudyProgrammes = await prismaCall(() => (
         prisma.$transaction(
             newStudyProgrammes.map(programme => (
@@ -49,7 +53,7 @@ export async function upsertStudyProgrammes(
                         group: {
                             create: {
                                 groupType: 'STUDY_PROGRAMME',
-                                membershipRenewal: true,
+                                order,
                             },
                         },
                     },

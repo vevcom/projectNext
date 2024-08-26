@@ -1,53 +1,66 @@
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
-import type { HTMLAttributes } from 'react'
+import type { SelectHTMLAttributes } from 'react'
 
-export default function Select<V extends number | string>({
-    name,
-    label,
-    defaultValue,
-    value,
-    options,
-    onChange,
-    className,
-}: {
+export type PropTypes<ValueType> = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> & {
     name: string,
     label?: string,
-    value?: V,
-    defaultValue?: V,
+    value?: ValueType,
+    defaultValue?: ValueType,
+    onChange?: (value: ValueType) => void,
     options: {
-        value: V,
+        value: ValueType,
         label?: string,
+        key?: string,
     }[],
-    onChange?: (valu: V) => void,
-} & Omit<HTMLAttributes<HTMLElement>, 'onChange'>) {
-    const id = uuid()
-
-    const optionElements = options.map(
-        (option) => <option
-            key={uuid()}
-            value={option.value}
-        >
-            {option.label ?? option.value}
-        </option>
-    )
-
-    return <div className={`${styles.Select} ${className}`}>
-        <label htmlFor={id}>{label ?? name}</label>
-        <select
-            id={id}
-            name={name}
-            {
-                ...(value ? { value } : { defaultValue })
-            }
-            onChange={(event) => {
-                if (onChange && options.length > 0) {
-                    const v = event.target.value
-                    onChange((typeof (options[0].value) === 'number' ? Number(v) : v) as V)
-                }
-            }
-            }>
-            {optionElements}
-        </select>
-    </div>
 }
+
+export function SelectConstructor<ValueType extends string | number>(valueConverter: (value: string) => ValueType) {
+    return function Select({
+        name,
+        label,
+        defaultValue,
+        value,
+        options,
+        onChange,
+        className,
+        ...props
+    }: PropTypes<ValueType>) {
+        const id = uuid()
+
+        const optionElements = options.map(
+            (option) => <option
+                key={option.key ?? uuid()}
+                value={option.value}
+            >
+                {option.label ?? option.value}
+            </option>
+        )
+
+        return (
+            <div className={`${styles.Select} ${className}`}>
+                <label htmlFor={id}>{label ?? name}</label>
+                <select
+                    {...props}
+                    id={id}
+                    name={name}
+                    {
+                        ...(value ? { value } : { defaultValue })
+                    }
+                    onChange={(event) => {
+                        if (onChange && options.length > 0) {
+                            onChange(valueConverter(event.target.value))
+                        }
+                    }
+                    }
+                >
+                    {optionElements}
+                </select>
+            </div>
+        )
+    }
+}
+
+export const SelectString = SelectConstructor((value: string) => value)
+export const SelectNumber = SelectConstructor((value: string) => Number(value))
+export const SelectNumberPossibleNULL = SelectConstructor((value: string) => (value === 'NULL' ? 'NULL' : Number(value)))
