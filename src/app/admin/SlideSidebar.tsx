@@ -106,6 +106,10 @@ const navigations = [
             {
                 title: 'Standard tillganger',
                 href: '/admin/default-permissions'
+            },
+            {
+                title: 'Api Nøkler',
+                href: '/admin/api-keys'
             }
         ],
     },
