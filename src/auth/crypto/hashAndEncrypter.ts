@@ -4,6 +4,9 @@ import { ServerError } from '@/server/error'
 import type { EncrypterConfig } from './encrypter'
 
 /**
+ * WARNING: If you pass a undefined salt or encryptionKey, the function will throw an error.
+ * This is done so one can pass environment variables to the function and it will throw an error
+ * 
  * The hashAndEnctypter uses the hasher and encrypter to hash and encrypt data.
  * it generates two methods one for hashing then encrypting data. And one for comparing
  * this (hashed and encrypted) data with other data.

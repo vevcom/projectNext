@@ -5,8 +5,9 @@ import prisma from '@/prisma';
 import crypto from 'crypto'
 import { apiKeyFilterSelection } from './ConfigVars';
 import { apiKeyHashAndEncrypt } from './hashEncryptKey';
+import { ApiKeyFilteredWithKey } from './Types';
 
-export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']) {
+export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Promise<ApiKeyFilteredWithKey> {
     const data = createApiKeyValidation.detailedValidate(rawdata)
 
     const NODE_ENV = process.env.NODE_ENV
@@ -15,7 +16,7 @@ export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']) {
     const key = prepend + crypto.randomBytes(32).toString('utf8')
     const keyHashEncrypted = await apiKeyHashAndEncrypt(key)
 
-    return await prismaCall(() => prisma.apiKey.create({
+    const apiKey = await prismaCall(() => prisma.apiKey.create({
         data: {
             keyHashEncrypted,
             name: data.name,
@@ -23,4 +24,5 @@ export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']) {
         },
         select: apiKeyFilterSelection
     }))
+    return { ...apiKey, key }
 }
