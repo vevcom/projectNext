@@ -75,6 +75,8 @@ services:
             MAIL_SERVER: ${MAIL_SERVER}
             PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
             PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
+            API_KEY_SALT_ROUNDS: ${API_KEY_SALT_ROUNDS}
+            API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
         volumes:
             - store:/usr/src/app/prismaservice/store
         depends_on:
