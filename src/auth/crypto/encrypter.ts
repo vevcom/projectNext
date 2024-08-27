@@ -30,6 +30,13 @@ export const defaultEncrypterConfig: EncrypterConfig = {
     outputEncoding: 'base64',
 }
 
+/**
+ * A encrypter returns methods to encrypt and decrypt data. You pass it the config you
+ * want to use in the encryption and decryption.
+ * @param key - The key to use for encryption.
+ * @param config - The configuration for the encryption.
+ * @returns Methods to encrypt and decrypt data.
+ */
 export function encrypter(key: string, {
     algorithm,
     ivLength,

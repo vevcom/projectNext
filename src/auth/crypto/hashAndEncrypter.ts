@@ -3,6 +3,15 @@ import { encrypter } from './encrypter'
 import { ServerError } from '@/server/error'
 import type { EncrypterConfig } from './encrypter'
 
+/**
+ * The hashAndEnctypter uses the hasher and encrypter to hash and encrypt data.
+ * it generates two methods one for hashing then encrypting data. And one for comparing
+ * this (hashed and encrypted) data with other data.
+ * @param salt - The number of rounds to use in the hashing.
+ * @param encryptionKey - The key to use for encryption.
+ * @param encrypterConfig - The configuration for the encryption.
+ * @returns 
+ */
 export function hashAndEncrypter(
     salt: string | undefined,
     encryptionKey: string | undefined,
