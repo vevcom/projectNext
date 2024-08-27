@@ -4,4 +4,7 @@ model ApiKey {
   keyHashEncrypted String       @unique
   active           Boolean
   permissions      Permission[]
+  expiresAt        DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
