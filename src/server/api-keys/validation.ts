@@ -5,7 +5,7 @@ import { Permission } from '@prisma/client'
 
 const baseApiKeyValidation = new ValidationBase({
     type: {
-        name: z.string(),
+        name: z.string().min(10, 'minimum lengde 10').max(100, 'maksimum lengde 100'),
         expiresAt: z.string(),
         active: z.boolean(),
         permissions: zfd.repeatable(z.nativeEnum(Permission).array())
