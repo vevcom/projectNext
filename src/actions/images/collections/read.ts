@@ -1,20 +1,24 @@
 'use server'
 import { createActionError } from '@/actions/error'
-import { readImageCollection, readImageCollectionsPage, readSpecialImageCollection } from '@/server/images/collections/read'
+import {
+    readImageCollection,
+    readImageCollectionsPage,
+    readSpecialImageCollection
+} from '@/services/images/collections/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
-import { includeVisibility } from '@/server/visibility/read'
+import { includeVisibility } from '@/services/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { SpecialCollection } from '@prisma/client'
-import type { VisibilityCollapsed } from '@/server/visibility/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { VisibilityCollapsed } from '@/services/visibility/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 import type { ImageCollection } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn
-} from '@/server/images/collections/Types'
+} from '@/services/images/collections/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 /**

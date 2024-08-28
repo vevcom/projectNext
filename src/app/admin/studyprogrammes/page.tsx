@@ -3,8 +3,8 @@
 import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
 import StudyProgrammeTableBody from './studyProgrammeTable'
 import { readStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
-import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { getUser } from '@/auth/getUser'
 
 

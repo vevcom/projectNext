@@ -1,9 +1,9 @@
 'use server'
 
-import { createMailAliasValidation } from '@/server/mail/alias/validation'
+import { createMailAliasValidation } from '@/services/mail/alias/validation'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createMailAlias } from '@/server/mail/alias/create'
+import { createMailAlias } from '@/services/mail/alias/create'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions//Types'
 import type { MailAlias } from '@prisma/client'

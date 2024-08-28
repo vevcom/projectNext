@@ -3,7 +3,7 @@ import EditNews from './EditNews'
 import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
 import { readNewsAction } from '@/actions/news/read'
-import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
+import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {

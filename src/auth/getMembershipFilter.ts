@@ -1,4 +1,4 @@
-import type { MembershipSelectorType } from '@/server/groups/memberships/Types'
+import type { MembershipSelectorType } from '@/services/groups/memberships/Types'
 import type { Prisma } from '@prisma/client'
 
 /**

@@ -2,8 +2,8 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readGroupExpanded, readGroups, readGroupsExpanded, readGroupsStructured } from '@/server/groups/read'
-import type { ExpandedGroup, GroupsStructured } from '@/server/groups/Types'
+import { readGroupExpanded, readGroups, readGroupsExpanded, readGroupsStructured } from '@/services/groups/read'
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import type { Group } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 

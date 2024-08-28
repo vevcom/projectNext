@@ -1,5 +1,5 @@
 import { createActionError } from './error'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { ActionReturn } from './Types'
 
 /**

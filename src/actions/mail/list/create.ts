@@ -1,9 +1,9 @@
 'use server'
 
-import { createMailingListValidation } from '@/server/mail/list/validation'
+import { createMailingListValidation } from '@/services/mail/list/validation'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createMailingList } from '@/server/mail/list/create'
+import { createMailingList } from '@/services/mail/list/create'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions//Types'
 import type { MailingList } from '@prisma/client'

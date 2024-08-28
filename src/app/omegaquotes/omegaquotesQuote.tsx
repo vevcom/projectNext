@@ -1,5 +1,5 @@
 import styles from './omegaquotesQuote.module.scss'
-import type { OmegaquoteFiltered } from '@/server/omegaquotes/Types'
+import type { OmegaquoteFiltered } from '@/services/omegaquotes/Types'
 
 export type OmegaquoteQuotePropTypes = {
     quote: OmegaquoteFiltered

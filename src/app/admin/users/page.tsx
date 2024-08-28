@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import CreateUserForm from '@/app/components/User/CreateUserForm'
+import CreateUserForm from '@/components/User/CreateUserForm'
 
 export default function Users() {
     return (

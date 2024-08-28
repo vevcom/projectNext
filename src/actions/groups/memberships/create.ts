@@ -3,7 +3,7 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createMembershipsForGroup } from '@/server/groups/memberships/create'
+import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import type { ActionReturn } from '@/actions/Types'
 
 /**

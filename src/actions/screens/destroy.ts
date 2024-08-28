@@ -2,7 +2,7 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { destroyScreen } from '@/server/screens/destroy'
+import { destroyScreen } from '@/services/screens/destroy'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function destroyScreenAction(id: number): Promise<ActionReturn<void>> {

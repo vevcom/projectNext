@@ -3,8 +3,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updateMailingList } from '@/server/mail/list/update'
-import { updateMailingListValidation } from '@/server/mail/list/validation'
+import { updateMailingList } from '@/services/mail/list/update'
+import { updateMailingListValidation } from '@/services/mail/list/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailingList } from '@prisma/client'
 

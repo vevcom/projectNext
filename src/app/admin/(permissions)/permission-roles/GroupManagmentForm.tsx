@@ -1,7 +1,7 @@
 'use client'
 
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import { addGroupToRoleAction, removeGroupFromRoleAction } from '@/actions/permissionRoles/update'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'

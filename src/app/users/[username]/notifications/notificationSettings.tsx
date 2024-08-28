@@ -2,23 +2,23 @@
 
 import SubscriptionItem from './subscriptionItem'
 import styles from './notificationSettings.module.scss'
-import { booleanOperationOnMethods, newAllMethodsOff } from '@/server/notifications/notificationMethodOperations'
-import { notificationMethodsDisplayMap } from '@/server/notifications/ConfigVars'
-import { notificationMethods } from '@/server/notifications/Types'
-import SubmitButton from '@/app/components/UI/SubmitButton'
+import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifications/notificationMethodOperations'
+import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVars'
+import { notificationMethods } from '@/services/notifications/Types'
+import SubmitButton from '@/components/UI/SubmitButton'
 import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
 import { useUser } from '@/auth/useUser'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { MinimizedSubscription, Subscription } from '@/server/notifications/subscription/Types'
+import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
 import type { NotificationBranch } from './Types'
-import type { ErrorMessage } from '@/server/error'
+import type { ErrorMessage } from '@/services/error'
 import type {
     ExpandedNotificationChannel,
     NotificationMethodGeneral,
     NotificationMethods
-} from '@/server/notifications/Types'
+} from '@/services/notifications/Types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')

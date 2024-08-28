@@ -1,15 +1,15 @@
 'use client'
 
 import styles from './OmbulAdmin.module.scss'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { updateOmbulAction, updateOmbulFileAction } from '@/actions/ombul/update'
-import NumberInput from '@/app/components/UI/NumberInput'
-import FileInput from '@/app/components/UI/FileInput'
+import NumberInput from '@/components/UI/NumberInput'
+import FileInput from '@/components/UI/FileInput'
 import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 
 type PropTypes = {
     ombul: ExpandedOmbul

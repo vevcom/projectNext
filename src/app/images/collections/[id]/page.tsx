@@ -2,13 +2,13 @@ import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import { readImagesPageAction } from '@/actions/images/read'
 import { readImageCollectionAction } from '@/actions/images/collections/read'
-import ImageList from '@/app/components/Image/ImageList/ImageList'
-import ImagePagingProvider from '@/context/paging/ImagePaging'
-import ImageSelectionProvider from '@/context/ImageSelection'
-import PopUpProvider from '@/context/PopUp'
+import ImageList from '@/components/Image/ImageList/ImageList'
+import ImagePagingProvider from '@/contexts/paging/ImagePaging'
+import ImageSelectionProvider from '@/contexts/ImageSelection'
+import PopUpProvider from '@/contexts/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { notFound } from 'next/navigation'
-import type { PageSizeImage } from '@/context/paging/ImagePaging'
+import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 
 type PropTypes = {
     params: {

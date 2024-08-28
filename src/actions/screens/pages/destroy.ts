@@ -2,7 +2,7 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { destroyPage } from '@/server/screens/pages/destroy'
+import { destroyPage } from '@/services/screens/pages/destroy'
 import type { ActionReturn } from '@/actions/Types'
 
 

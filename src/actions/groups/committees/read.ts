@@ -1,9 +1,9 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readCommittee, readCommittees } from '@/server/groups/committees/read'
+import { readCommittee, readCommittees } from '@/services/groups/committees/read'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ExpandedCommittee } from '@/server/groups/committees/Types'
+import type { ExpandedCommittee } from '@/services/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 /**

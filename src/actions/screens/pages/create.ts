@@ -1,12 +1,12 @@
 'use server'
-import { createScreenValidation } from '@/server/screens/validation'
+import { createScreenValidation } from '@/services/screens/validation'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { createPage } from '@/server/screens/pages/create'
+import { createPage } from '@/services/screens/pages/create'
 import type { ScreenPage } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateScreenTypes } from '@/server/screens/validation'
+import type { CreateScreenTypes } from '@/services/screens/validation'
 
 export async function createPageAction(formdata: CreateScreenTypes['Type']): Promise<ActionReturn<ScreenPage>> {
     const { status, authorized } = await getUser({

@@ -2,9 +2,9 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updatePage } from '@/server/screens/pages/update'
-import { updatePageValidation } from '@/server/screens/pages/validation'
-import type { UpdatePageTypes } from '@/server/screens/pages/validation'
+import { updatePage } from '@/services/screens/pages/update'
+import { updatePageValidation } from '@/services/screens/pages/validation'
+import type { UpdatePageTypes } from '@/services/screens/pages/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ScreenPage } from '@prisma/client'
 

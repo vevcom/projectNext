@@ -1,5 +1,5 @@
 'use client'
-import OmegaIdReader from '@/app/components/OmegaId/reader/OmegaIdReader'
+import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
 
 
 export default function OmegaIdContainer({
