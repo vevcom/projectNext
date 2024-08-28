@@ -7,7 +7,8 @@ export const apiKeyFieldsToExpose = [
     'createdAt',
     'updatedAt',
     'name',
-    'permissions'
+    'permissions',
+    'expiresAt'
 ] as const satisfies (keyof ApiKey)[]
 
 export const apiKeyFilterSelection = createSelection([...apiKeyFieldsToExpose])

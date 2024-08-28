@@ -1,14 +1,15 @@
 'use server'
-
-import { createActionError, createZodActionError } from '../error'
-import { safeServerCall } from '../safeServerCall'
+import { createActionError, createZodActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { createApiKeyValidation, type CreateApiKeyTypes } from '@/server/api-keys/validation'
 import { getUser } from '@/auth/getUser'
 import { createApiKey } from '@/server/api-keys/create'
 import type { ApiKeyFilteredWithKey } from '@/server/api-keys/Types'
-import type { ActionReturn } from '../Types'
+import type { ActionReturn } from '@/actions/Types'
 
-export async function createApiKeyAction(rawdata: FormData | CreateApiKeyTypes['Type']): Promise<ActionReturn<ApiKeyFilteredWithKey>> {
+export async function createApiKeyAction(
+    rawdata: FormData | CreateApiKeyTypes['Type']
+): Promise<ActionReturn<ApiKeyFilteredWithKey>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['APIKEY_ADMIN']]
     })
