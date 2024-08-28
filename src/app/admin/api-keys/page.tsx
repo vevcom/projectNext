@@ -19,30 +19,32 @@ export default async function ApiKeysAdmin() {
                 <CreateApiKeyForm popUpKey={popUpKey} />
             </AddHeaderItemPopUp>
         }>
-            <table className={styles.ApiKeysList}>
-                <thead>
-                    <tr>
-                        <th>Navn</th>
-                        <th>Opprettet</th>
-                        <th>Sist oppdatert</th>
-                        <th>Utløper</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {apiKeys.map(apiKey => (
-                        <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()} passHref>
-                            <tr className={apiKey.active ? styles.activated : styles.deactivated}>
-                                <td>{apiKey.name}</td>
-                                <td>{apiKey.createdAt.toDateString()}</td>
-                                <td>{apiKey.updatedAt.toDateString()}</td>
-                                <td>{apiKey.expiresAt ? apiKey.expiresAt.toDateString() : 'Ikke satt'}</td>
-                                <td>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</td>
-                            </tr>
-                        </Link>
-                    ))}
-                </tbody>
-            </table>
+            <div className={styles.wrapper}>
+                <table className={styles.ApiKeysList}>
+                    <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Opprettet</th>
+                            <th>Sist oppdatert</th>
+                            <th>Utløper</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {apiKeys.map(apiKey => (
+                            <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()} passHref>
+                                <tr className={apiKey.active ? styles.activated : styles.deactivated}>
+                                    <td>{apiKey.name}</td>
+                                    <td>{apiKey.createdAt.toDateString()}</td>
+                                    <td>{apiKey.updatedAt.toDateString()}</td>
+                                    <td>{apiKey.expiresAt ? apiKey.expiresAt.toDateString() : 'Ikke satt'}</td>
+                                    <td>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</td>
+                                </tr>
+                            </Link>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </PageWrapper>
     )
 }

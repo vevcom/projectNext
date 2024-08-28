@@ -1,24 +1,31 @@
 @use '@/styles/ohma';
 
-.ApiKeysList {
+@include ohma.screenMobile {
+    .wrapper {
+        max-width: 80vw;
+        overflow-y: scroll;
+    }
+}
+
+.ApiKeysList {    
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 18px;
     text-align: left;
     th, td {
-        border: 1px solid #ddd;
+        border: 1px solid ohma.$colors-gray-300;
         padding: 8px;
     }
     th {
-        background-color: #f2f2f2;
+        background-color: ohma.$colors-gray-200;
         color: black;
     }
     tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: ohma.$colors-gray-100;
     }
     tr:hover {
-        background-color: #ddd;
+        background-color: ohma.$colors-gray-200;
     }
     a {
         display: contents;
@@ -28,11 +35,11 @@
 }
 
 .activated {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: lighten(ohma.$colors-green, 50%);
+    color: ohma.$colors-green;
 }
 
 .deactivated {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: lighten(ohma.$colors-red, 50%);
+    color: ohma.$colors-red;
 }

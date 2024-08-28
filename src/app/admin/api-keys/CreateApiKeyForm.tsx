@@ -8,6 +8,7 @@ import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import type { PopUpKeyType } from '@/context/PopUp'
+import { useRouter } from 'next/navigation'
 
 type Color = 'red' | 'green' | null
 
@@ -27,6 +28,7 @@ export default function CreateApiKeyForm({ popUpKey }: PropTypes) {
         message: string | null
     }>({ color: null, message: null })
     const popUpContext = useContext(PopUpContext)
+    const { refresh } = useRouter()
 
     const setCopySuccess = (message: string | null, color: Color) => {
         setCopySuccess_({
@@ -41,6 +43,7 @@ export default function CreateApiKeyForm({ popUpKey }: PropTypes) {
         setTimeout(() => {
             setApiKeyToShow(null)
             popUpContext?.remove(popUpKey)
+            refresh()
         }, 20_000)
     }
 
