@@ -22,7 +22,8 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
     refreshOnSuccess?: boolean,
-    closePopUpOnSuccess?: PopUpKeyType
+    navigateOnSuccess?: string,
+    closePopUpOnSuccess?: PopUpKeyType,
     buttonClassName?: string,
 }
 type InputType = {
@@ -73,6 +74,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     successCallback,
     className,
     refreshOnSuccess,
+    navigateOnSuccess,
     closePopUpOnSuccess,
     buttonClassName,
     ...props
@@ -81,7 +83,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
     const PopUpCtx = useContext(PopUpContext)
-    const { refresh } = useRouter()
+    const { refresh, push } = useRouter()
 
     useEffect(() => {
         setInputs(() => makeInputArray(children))
@@ -105,6 +107,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             return setTimeout(() => {
                 setSuccess(false)
                 if (refreshOnSuccess) refresh()
+                if (navigateOnSuccess) push(navigateOnSuccess)
             }, SUCCESS_FEEDBACK_TIME)
         }
         //No error provided

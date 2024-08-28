@@ -8,6 +8,7 @@ import TextInput from '@/app/components/UI/TextInput'
 import DisplayAllPermissions from '@/app/components/Permission/DisplayAllPermissions'
 import Slider from '@/app/components/UI/Slider'
 import { displayDate } from '@/date/displayDate'
+import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 
 type PropTypes = {
     params: {
@@ -51,6 +52,16 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                         )}
                         />
                     </Form>
+                    <Form
+                        submitText="Slett nøkkel"
+                        action={destroyApiKeyAction.bind(null, apiKey.id)}
+                        confirmation={{
+                            text: 'Er du sikker på at du vil slette denne nøkkelen? Heller anbefaler vi å deaktivere den.',
+                            confirm: true,
+                        }}
+                        submitColor="red"
+                        navigateOnSuccess="/admin/api-keys"
+                    />
                 </div>
             </div>
         </PageWrapper>

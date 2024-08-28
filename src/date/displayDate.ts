@@ -1,5 +1,8 @@
-
-
+/**
+ * Displays date and time in norwegian format
+ * @param date - The date to display
+ * @returns
+ */
 export function displayDate(date: Date): string {
     return date.toLocaleString('nb-NO', {
         year: 'numeric',
