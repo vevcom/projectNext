@@ -4,13 +4,19 @@ import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { ApiKeyFiltered } from './Types'
+import { updateApiKeyIfExpired } from './update'
 
 export async function readApiKeys(): Promise<ApiKeyFiltered[]> {
-    return await prismaCall(() =>
+    const apiKeys = await prismaCall(() =>
         prisma.apiKey.findMany({
-            select: apiKeyFilterSelection
+            select: apiKeyFilterSelection,
+            orderBy: [
+                { active: 'desc' },
+                { name: 'asc' }
+            ]
         })
     )
+    return await Promise.all(apiKeys.map(updateApiKeyIfExpired))
 }
 
 export async function readApiKey(idOrName: number | string): Promise<ApiKeyFiltered> {
@@ -24,5 +30,5 @@ export async function readApiKey(idOrName: number | string): Promise<ApiKeyFilte
         })
     )
     if (!apiKey) throw new ServerError('BAD PARAMETERS', 'Api key does not exist')
-    return apiKey
+    return updateApiKeyIfExpired(apiKey)
 }
