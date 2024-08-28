@@ -1,6 +1,6 @@
 'use server'
 import { createCmsParagraphActionValidation } from './validation'
-import { createCmsParagraph } from '@/server/cms/paragraphs/create'
+import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import type { CreateCmsParagraphActionTypes } from './validation'

@@ -1,12 +1,12 @@
 import styles from './page.module.scss'
 import { readApiKeyAction } from '@/actions/api-keys/read'
 import { updateApiKeyAction } from '@/actions/api-keys/update'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import Form from '@/app/components/Form/Form'
-import DateInput from '@/app/components/UI/DateInput'
-import TextInput from '@/app/components/UI/TextInput'
-import DisplayAllPermissions from '@/app/components/Permission/DisplayAllPermissions'
-import Slider from '@/app/components/UI/Slider'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import Form from '@/components/Form/Form'
+import DateInput from '@/components/UI/DateInput'
+import TextInput from '@/components/UI/TextInput'
+import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
+import Slider from '@/components/UI/Slider'
 import { displayDate } from '@/date/displayDate'
 import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 
@@ -41,7 +41,11 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                     >
                         <TextInput name="name" label="Navn" defaultValue={apiKey.name} />
                         <Slider label="Aktiv" name="active" defaultChecked={apiKey.active} />
-                        <DateInput includeTime name="expiresAt" label="Utløpsdato" defaultValue={apiKey.expiresAt ?? undefined} />
+                        <DateInput includeTime
+                            name="expiresAt"
+                            label="Utløpsdato"
+                            defaultValue={apiKey.expiresAt ?? undefined}
+                        />
                         <DisplayAllPermissions renderBesidePermission={permission => (
                             <input
                                 type="checkbox"

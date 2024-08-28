@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { updateMembership } from '@/server/groups/memberships/update'
-import type { ExpandedMembership } from '@/server/groups/memberships/Types'
+import { updateMembership } from '@/services/groups/memberships/update'
+import type { ExpandedMembership } from '@/services/groups/memberships/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function updateMembershipAdminAcion(membership: {

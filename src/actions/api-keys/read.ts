@@ -2,8 +2,8 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readApiKey, readApiKeys } from '@/server/api-keys/read'
-import type { ApiKeyFiltered } from '@/server/api-keys/Types'
+import { readApiKey, readApiKeys } from '@/services/api-keys/read'
+import type { ApiKeyFiltered } from '@/services/api-keys/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function readApiKeysAction(): Promise<ActionReturn<ApiKeyFiltered[]>> {

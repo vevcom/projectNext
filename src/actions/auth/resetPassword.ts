@@ -2,8 +2,8 @@
 
 import { createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { sendResetPasswordMail } from '@/server/notifications/email/systemMail/resetPassword'
-import { emailValidation } from '@/server/notifications/validation'
+import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
+import { emailValidation } from '@/services/notifications/validation'
 import type { ActionReturn } from '@/actions/Types'
 
 

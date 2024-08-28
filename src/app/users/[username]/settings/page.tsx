@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import { getProfile } from '@/app/users/[username]/page'
 import { getUser } from '@/auth/getUser'
-import Permission from '@/app/components/Permission/Permission'
+import Permission from '@/components/Permission/Permission'
 import { v4 as uuid } from 'uuid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'

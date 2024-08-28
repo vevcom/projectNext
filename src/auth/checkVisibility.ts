@@ -1,7 +1,7 @@
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
-import type { MembershipFiltered } from '@/server/groups/memberships/Types'
+import { BypassPermissions } from '@/services/visibility/ConfigVars'
+import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { Permission } from '@prisma/client'
-import type { GroupMatrix, VisibilityCollapsed, VisibilityLevelType } from '@/server/visibility/Types'
+import type { GroupMatrix, VisibilityCollapsed, VisibilityLevelType } from '@/services/visibility/Types'
 
 type MembershipAndPermission = {
     memberships: MembershipFiltered[],

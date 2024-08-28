@@ -1,6 +1,6 @@
 import 'server-only'
-import { BypassPermissions } from '@/server/visibility/ConfigVars'
-import type { MembershipFiltered } from '@/server/groups/memberships/Types'
+import { BypassPermissions } from '@/services/visibility/ConfigVars'
+import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { Permission, Prisma, VisibilityPurpose } from '@prisma/client'
 
 function userMayBypassVisibilityBasedOnPermission(

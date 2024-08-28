@@ -1,7 +1,7 @@
 import { updateDefaultPermissionsAction } from '@/actions/permissionRoles/update'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
-import DisplayAllPermissions from '@/app/components/Permission/DisplayAllPermissions'
+import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
 import React from 'react'
 
 export default async function Defaults() {

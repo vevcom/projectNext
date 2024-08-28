@@ -1,14 +1,14 @@
 'use client'
 
-import TextInput from '@/app/components/UI/TextInput'
-import Form from '@/app/components/Form/Form'
-import { SelectNumber } from '@/app/components/UI/Select'
+import TextInput from '@/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import { SelectNumber } from '@/components/UI/Select'
 import { createAliasMailingListRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import { updateMailAliasAction } from '@/actions/mail/alias/update'
 import { destroyMailAliasAction } from '@/actions/mail/alias/destory'
 import { useRouter } from 'next/navigation'
-import type { MailFlowObject } from '@/server/mail/Types'
+import type { MailFlowObject } from '@/services/mail/Types'
 import type { MailingList } from '@prisma/client'
 
 

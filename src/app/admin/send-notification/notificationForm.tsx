@@ -1,12 +1,12 @@
 'use client'
 import styles from './notificaionForm.module.scss'
-import { SelectNumber } from '@/app/components/UI/Select'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
-import Textarea from '@/app/components/UI/Textarea'
+import { SelectNumber } from '@/components/UI/Select'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import Textarea from '@/components/UI/Textarea'
 import { dispatchNotificationAction } from '@/actions/notifications/create'
 import { useState } from 'react'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 
 
 export default function NotificaionForm({

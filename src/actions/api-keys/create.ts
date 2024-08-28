@@ -1,10 +1,10 @@
 'use server'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createApiKeyValidation, type CreateApiKeyTypes } from '@/server/api-keys/validation'
+import { createApiKeyValidation, type CreateApiKeyTypes } from '@/services/api-keys/validation'
 import { getUser } from '@/auth/getUser'
-import { createApiKey } from '@/server/api-keys/create'
-import type { ApiKeyFilteredWithKey } from '@/server/api-keys/Types'
+import { createApiKey } from '@/services/api-keys/create'
+import type { ApiKeyFilteredWithKey } from '@/services/api-keys/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createApiKeyAction(

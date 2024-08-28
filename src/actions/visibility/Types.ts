@@ -1,4 +1,4 @@
-import type { ExpandedGroup, GroupsStructured } from '@/server/groups/Types'
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 
 export type VisibilityRequiermentForAdmin = {
     name: string

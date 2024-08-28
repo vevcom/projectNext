@@ -3,10 +3,10 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updateSubscriptions } from '@/server/notifications/subscription/update'
-import { parseSubscriptionMatrix, updateSubscriptionValidation } from '@/server/notifications/subscription/validation'
+import { updateSubscriptions } from '@/services/notifications/subscription/update'
+import { parseSubscriptionMatrix, updateSubscriptionValidation } from '@/services/notifications/subscription/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { MinimizedSubscription, Subscription } from '@/server/notifications/subscription/Types'
+import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
 
 
 export async function updateSubscriptionsAction(userId: number, subscriptions: MinimizedSubscription[]):

@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import { destroyApiKey } from '@/server/api-keys/destroy'
+import { destroyApiKey } from '@/services/api-keys/destroy'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions/Types'
 

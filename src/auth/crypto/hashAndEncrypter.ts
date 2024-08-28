@@ -1,6 +1,6 @@
 import { hasher } from './hasher'
 import { encrypter } from './encrypter'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import type { EncrypterConfig } from './encrypter'
 
 /**

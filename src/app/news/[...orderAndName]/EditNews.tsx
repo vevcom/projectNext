@@ -5,10 +5,10 @@ import { updateNewsAction } from '@/actions/news/update'
 import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import DateInput from '@/app/components/UI/DateInput'
+import DateInput from '@/components/UI/DateInput'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import type { ExpandedNewsArticle } from '@/server/news/Types'
+import type { ExpandedNewsArticle } from '@/services/news/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

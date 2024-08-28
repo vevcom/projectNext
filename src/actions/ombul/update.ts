@@ -2,10 +2,10 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { updateOmbul, updateOmbulFile } from '@/server/ombul/update'
-import { updateOmbulFileValidation, updateOmbulValidation } from '@/server/ombul/validation'
-import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/server/ombul/validation'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import { updateOmbul, updateOmbulFile } from '@/services/ombul/update'
+import { updateOmbulFileValidation, updateOmbulValidation } from '@/services/ombul/validation'
+import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/services/ombul/validation'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 /**

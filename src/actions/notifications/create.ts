@@ -3,8 +3,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createNotificaionValidation } from '@/server/notifications/validation'
-import { dispatchNotification } from '@/server/notifications/create'
+import { createNotificaionValidation } from '@/services/notifications/validation'
+import { dispatchNotification } from '@/services/notifications/create'
 import type { ActionReturn } from '@/actions/Types'
 import type { Notification } from '@prisma/client'
 

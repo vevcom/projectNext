@@ -1,12 +1,12 @@
 'use server'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { createCommittee } from '@/server/groups/committees/create'
+import { createCommittee } from '@/services/groups/committees/create'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createCommitteeValidation } from '@/server/groups/committees/validation'
-import type { ExpandedCommittee } from '@/server/groups/committees/Types'
+import { createCommitteeValidation } from '@/services/groups/committees/validation'
+import type { ExpandedCommittee } from '@/services/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateCommitteeTypes } from '@/server/groups/committees/validation'
+import type { CreateCommitteeTypes } from '@/services/groups/committees/validation'
 
 export async function createCommitteeAction(
     rawData: FormData | CreateCommitteeTypes['Type']

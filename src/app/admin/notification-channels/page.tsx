@@ -1,10 +1,10 @@
 'use server'
 
 import AddNotificationChannel from './addNotificationChannel'
-import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 

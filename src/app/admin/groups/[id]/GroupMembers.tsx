@@ -1,11 +1,11 @@
 'use client'
 import styles from './GroupMembers.module.scss'
 import MembershipAdminForUser from './MembershipAdminForUser'
-import UserList from '@/app/components/User/UserList/UserList'
-import PopUp from '@/app/components/PopUp/PopUp'
+import UserList from '@/components/User/UserList/UserList'
+import PopUp from '@/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedGroup } from '@/server/groups/Types'
+import type { ExpandedGroup } from '@/services/groups/Types'
 
 type PropTypes = {
     group: ExpandedGroup

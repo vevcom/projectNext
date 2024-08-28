@@ -1,14 +1,14 @@
 'use client'
 import styles from './CreateApiKeyForm.module.scss'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { createApiKeyAction } from '@/actions/api-keys/create'
-import TextInput from '@/app/components/UI/TextInput'
-import { PopUpContext } from '@/context/PopUp'
+import TextInput from '@/components/UI/TextInput'
+import { PopUpContext } from '@/contexts/PopUp'
 import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { PopUpKeyType } from '@/context/PopUp'
+import type { PopUpKeyType } from '@/contexts/PopUp'
 
 type Color = 'red' | 'green' | null
 

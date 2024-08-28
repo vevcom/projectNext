@@ -1,9 +1,9 @@
 'use server'
 
 import ResetPasswordForm from './resetpasswordForm'
-import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
+import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 
 
 export default async function ResetPassword({
