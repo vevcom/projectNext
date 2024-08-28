@@ -11,6 +11,7 @@ import type { UpdateApiKeyTypes } from './validation'
 export async function updateApiKey(id: number, rawdata: UpdateApiKeyTypes['Detailed']): Promise<void> {
     const data = updateApiKeyValidation.detailedValidate(rawdata)
 
+    console.log('dateNow', getTimeNow())
     if (data.active && data.expiresAt && data.expiresAt < getTimeNow()) {
         throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
     }

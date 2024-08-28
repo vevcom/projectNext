@@ -7,6 +7,7 @@ import DateInput from '@/app/components/UI/DateInput'
 import TextInput from '@/app/components/UI/TextInput'
 import DisplayAllPermissions from '@/app/components/Permission/DisplayAllPermissions'
 import Slider from '@/app/components/UI/Slider'
+import { displayDate } from '@/date/displayDate'
 
 type PropTypes = {
     params: {
@@ -25,9 +26,9 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                 <h2>Navn: {apiKey.name}</h2>
                 <i>{apiKey.active ? 'Denne api nøkkelen er aktiv' : 'Denne api nøkkelen er inaktiv'}</i>
                 <div className={styles.dates}>
-                    <p>Utgår: {apiKey.expiresAt ? apiKey.expiresAt.toDateString() : 'ingen utløp'}</p>
-                    <p>Opprettet: {apiKey.createdAt.toDateString()}</p>
-                    <p>Sist oppdatert: {apiKey.updatedAt.toDateString()}</p>
+                    <p>Utgår: {apiKey.expiresAt ? displayDate(apiKey.expiresAt) : 'ingen utløp'}</p>
+                    <p>Opprettet: {displayDate(apiKey.createdAt)}</p>
+                    <p>Sist oppdatert: {displayDate(apiKey.updatedAt)}</p>
                 </div>
 
                 <div className={styles.admin}>

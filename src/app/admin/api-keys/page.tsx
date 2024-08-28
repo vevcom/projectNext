@@ -5,6 +5,7 @@ import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp
 import { readApiKeysAction } from '@/actions/api-keys/read'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
+import { displayDate } from '@/date/displayDate'
 
 const popUpKey = 'createApiKey'
 
@@ -35,9 +36,9 @@ export default async function ApiKeysAdmin() {
                             <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()} passHref>
                                 <tr className={apiKey.active ? styles.activated : styles.deactivated}>
                                     <td>{apiKey.name}</td>
-                                    <td>{apiKey.createdAt.toDateString()}</td>
-                                    <td>{apiKey.updatedAt.toDateString()}</td>
-                                    <td>{apiKey.expiresAt ? apiKey.expiresAt.toDateString() : 'Ikke satt'}</td>
+                                    <td>{displayDate(apiKey.createdAt)}</td>
+                                    <td>{displayDate(apiKey.updatedAt)}</td>
+                                    <td>{apiKey.expiresAt ? displayDate(apiKey.expiresAt) : 'Ikke satt'}</td>
                                     <td>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</td>
                                 </tr>
                             </Link>
