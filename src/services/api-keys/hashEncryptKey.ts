@@ -1,3 +1,4 @@
+import 'server-only'
 import { hashAndEncrypter } from '@/auth/crypto/hashAndEncrypter'
 
 export const {
