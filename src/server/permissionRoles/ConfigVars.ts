@@ -1,9 +1,8 @@
-import type { Prisma } from '@prisma/client'
-import { Permission } from '@prisma/client'
-import { PermissionInfo } from './Types'
+import type { Permission, Prisma } from '@prisma/client'
+import type { PermissionInfo } from './Types'
 
 export const permissionCategories = [
-    'OmegaQuotes', 
+    'omega quotes',
     'ombul',
     'groups',
     'jobad',
@@ -20,12 +19,12 @@ export const PermissionConfig = {
     OMEGAQUOTES_READ: {
         name: 'Les OmegaQuotes',
         description: 'kan lese OmegaQuotes',
-        category: 'OmegaQuotes',
+        category: 'omega quotes',
     },
     OMEGAQUOTES_WRITE: {
         name: 'Skrive OmegaQuotes',
         description: 'kan skrive OmegaQuotes',
-        category: 'OmegaQuotes',
+        category: 'omega quotes',
     },
     OMBUL_CREATE: {
         name: 'Lage ombul',

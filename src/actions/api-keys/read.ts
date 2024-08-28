@@ -15,11 +15,11 @@ export async function readApiKeysAction(): Promise<ActionReturn<ApiKeyFiltered[]
     return await safeServerCall(() => readApiKeys())
 }
 
-export async function readApiKeyAction(id: number): Promise<ActionReturn<ApiKeyFiltered>> {
+export async function readApiKeyAction(idOrName: number | string): Promise<ActionReturn<ApiKeyFiltered>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['APIKEY_ADMIN']]
     })
     if (!authorized) return createActionError(status)
 
-    return await safeServerCall(() => readApiKey(id))
+    return await safeServerCall(() => readApiKey(idOrName))
 }

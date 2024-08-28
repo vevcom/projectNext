@@ -3,12 +3,12 @@
 import { updateRoleAction } from '@/actions/permissionRoles/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
-import { permissionCategories } from '@/app/admin/(permissions)/ConfigVars'
+import { PermissionConfig } from '@/server/permissionRoles/ConfigVars'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
+import { Permission } from '@prisma/client'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
-import type { Permission } from '@prisma/client'
 
 /**
  * This function returns all the permissions set to be displayed by
@@ -17,11 +17,8 @@ import type { Permission } from '@prisma/client'
  * determinded by if they are enabeld on the role that is passed in.
  */
 function generateDisplayedPermissionsState(role: ExpandedRole) {
-    return permissionCategories.reduce((result, category) => ({
-        ...category.permissions.reduce((permissions, permission) => ({
-            [permission.permission]: role.permissions.some(p => p.permission === permission.permission),
-            ...permissions,
-        }), {}),
+    return Object.values(Permission).reduce((result, permission) => ({
+        [permission]: role.permissions.some(p => p.permission === permission),
         ...result,
     }), {})
 }

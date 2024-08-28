@@ -13,11 +13,12 @@ export async function readApiKeys(): Promise<ApiKeyFiltered[]> {
     )
 }
 
-export async function readApiKey(id: number): Promise<ApiKeyFiltered> {
+export async function readApiKey(idOrName: number | string): Promise<ApiKeyFiltered> {
     const apiKey = await prismaCall(() =>
         prisma.apiKey.findUnique({
             where: {
-                id
+                id: typeof idOrName === 'number' ? idOrName : undefined,
+                name: typeof idOrName === 'string' ? idOrName : undefined
             },
             select: apiKeyFilterSelection
         })
