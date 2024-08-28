@@ -7,8 +7,8 @@ import { PopUpContext } from '@/context/PopUp'
 import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import type { PopUpKeyType } from '@/context/PopUp'
 import { useRouter } from 'next/navigation'
+import type { PopUpKeyType } from '@/context/PopUp'
 
 type Color = 'red' | 'green' | null
 
