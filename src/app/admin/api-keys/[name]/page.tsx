@@ -39,7 +39,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                     >
                         <TextInput name="name" label="Navn" defaultValue={apiKey.name} />
                         <Slider label="Aktiv" name="active" defaultChecked={apiKey.active} />
-                        <DateInput name="expiresAt" label="Utløpsdato" defaultValue={apiKey.expiresAt ?? undefined} />
+                        <DateInput includeTime name="expiresAt" label="Utløpsdato" defaultValue={apiKey.expiresAt ?? undefined} />
                         <DisplayAllPermissions renderBesidePermission={permission => (
                             <input
                                 type="checkbox"

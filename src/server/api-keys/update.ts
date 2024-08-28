@@ -3,14 +3,15 @@ import { updateApiKeyValidation } from './validation'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
 import prisma from '@/prisma'
-import type { UpdateApiKeyTypes } from './validation'
-import { ApiKey } from '@prisma/client'
 import logger from '@/logger'
+import { getTimeNow } from '@/utils/getTimeNow'
+import type { ApiKey } from '@prisma/client'
+import type { UpdateApiKeyTypes } from './validation'
 
 export async function updateApiKey(id: number, rawdata: UpdateApiKeyTypes['Detailed']): Promise<void> {
     const data = updateApiKeyValidation.detailedValidate(rawdata)
 
-    if (data.active && data.expiresAt && data.expiresAt < new Date()) {
+    if (data.active && data.expiresAt && data.expiresAt < getTimeNow()) {
         throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
     }
 
@@ -27,7 +28,7 @@ export async function updateApiKeyIfExpired<ExtraFields extends object>(
         throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
     }
 
-    if (!apiKey.expiresAt || apiKey.expiresAt > new Date()) return apiKey
+    if (!apiKey.expiresAt || apiKey.expiresAt > getTimeNow()) return apiKey
     logger.info('Deactivating expired api key', { id: apiKey.id })
 
     const updated = await prismaCall(() => prisma.apiKey.update({

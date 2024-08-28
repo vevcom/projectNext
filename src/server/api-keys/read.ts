@@ -1,10 +1,10 @@
 import 'server-only'
 import { apiKeyFilterSelection } from './ConfigVars'
+import { updateApiKeyIfExpired } from './update'
 import { ServerError } from '@/server/error'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import type { ApiKeyFiltered } from './Types'
-import { updateApiKeyIfExpired } from './update'
 
 export async function readApiKeys(): Promise<ApiKeyFiltered[]> {
     const apiKeys = await prismaCall(() =>
