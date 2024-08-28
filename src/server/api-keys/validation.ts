@@ -8,7 +8,7 @@ const baseApiKeyValidation = new ValidationBase({
     type: {
         name: z.string().min(10, 'minimum lengde 10').max(100, 'maksimum lengde 100'),
         expiresAt: z.string(),
-        active: z.boolean(),
+        active: z.literal('on').optional(),
         permissions: zfd.repeatable(z.nativeEnum(Permission).array())
     },
     details: {
@@ -27,6 +27,10 @@ export type CreateApiKeyTypes = ValidationTypes<typeof createApiKeyValidation>
 
 export const updateApiKeyValidation = baseApiKeyValidation.createValidationPartial({
     keys: ['name', 'expiresAt', 'active', 'permissions'],
-    transformer: data => ({ ...data, expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined })
+    transformer: data => ({
+        ...data,
+        expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined,
+        active: data.active === 'on'
+    })
 })
 export type UpdateApiKeyTypes = ValidationTypes<typeof updateApiKeyValidation>

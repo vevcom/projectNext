@@ -9,15 +9,11 @@ export async function updateApiKey(id: number, rawdata: UpdateApiKeyTypes['Detai
     const data = updateApiKeyValidation.detailedValidate(rawdata)
 
     if (data.active && data.expiresAt && data.expiresAt < new Date()) {
-        throw new ServerError('BAD PARAMETERS', 'If you want to activate the key, the expiration date must be in the future')
+        throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
     }
 
     await prismaCall(() => prisma.apiKey.update({
         where: { id },
-        data: {
-            name: data.name,
-            permissions: data.permissions,
-            expiresAt: data.expiresAt
-        }
+        data,
     }))
 }

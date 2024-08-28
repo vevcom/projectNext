@@ -3,8 +3,7 @@
 import { updateRoleAction } from '@/actions/permissionRoles/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
-import { permissionCategories } from '@/server/permissionRoles/ConfigVars'
-import PermissionCategory from '@/app/components/Permission/PermissionCategory'
+import DisplayAllPermissions from '@/app/components/Permission/DisplayAllPermissions'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Permission } from '@prisma/client'
@@ -45,25 +44,20 @@ export function UpdateRoleForm({ selectedRole }: PropTypes) {
         <Form submitText="Lagre" action={updateRoleAction} successCallback={refresh}>
             <input type="hidden" name="id" value={selectedRole.id} />
             <TextInput label="Navn" name="name" value={nameField} onChange={e => setNameField(e.target.value) } />
-            {
-                permissionCategories.map(category =>
-                    <PermissionCategory key={category} category={category} renderBesidePermission={
-                        permission => (
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="permissions"
-                                    value={permission}
-                                    checked={checkedPermissions[permission]}
-                                    onChange={e =>
-                                        setCheckedPermissions({ ...checkedPermissions, [permission]: e.target.checked })
-                                    }
-                                />
-                            </label>
-                        )}
+            <DisplayAllPermissions renderBesidePermission={permission => (
+                <label>
+                    <input
+                        type="checkbox"
+                        name="permissions"
+                        value={permission}
+                        checked={checkedPermissions[permission]}
+                        onChange={e =>
+                            setCheckedPermissions({ ...checkedPermissions, [permission]: e.target.checked })
+                        }
                     />
-                )
-            }
+                </label>
+            )}
+            />
         </Form>
     )
 }

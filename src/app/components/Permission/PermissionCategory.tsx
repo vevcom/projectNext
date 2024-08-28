@@ -5,8 +5,7 @@ import { Permission as PermissionEnum } from '@prisma/client'
 import type { PermissiobCategory } from '@/server/permissionRoles/Types'
 import type { ReactNode } from 'react'
 
-
-type PropTypes = {
+export type PropTypes = {
     category: PermissiobCategory
     renderBesidePermission?: (permission: PermissionEnum) => ReactNode
 }

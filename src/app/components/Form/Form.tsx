@@ -5,6 +5,7 @@ import { PopUpContext } from '@/context/PopUp'
 import SubmitButton from '@/components/UI/SubmitButton'
 import { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/context/PopUp'
 import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
@@ -20,6 +21,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
+    refreshOnSuccess?: boolean,
     closePopUpOnSuccess?: PopUpKeyType
     buttonClassName?: string,
 }
@@ -70,6 +72,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     action,
     successCallback,
     className,
+    refreshOnSuccess,
     closePopUpOnSuccess,
     buttonClassName,
     ...props
@@ -78,6 +81,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
     const PopUpCtx = useContext(PopUpContext)
+    const { refresh } = useRouter()
 
     useEffect(() => {
         setInputs(() => makeInputArray(children))
@@ -100,6 +104,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             }
             return setTimeout(() => {
                 setSuccess(false)
+                if (refreshOnSuccess) refresh()
             }, SUCCESS_FEEDBACK_TIME)
         }
         //No error provided
