@@ -119,6 +119,9 @@ enum Permission {
 
   // Admisstion
   ADMISSION_TRIAL_CREATE
+
+  SCREEN_READ
+  SCREEN_ADMIN
 }
 
 model Role {
