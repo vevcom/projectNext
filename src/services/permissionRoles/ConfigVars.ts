@@ -13,6 +13,7 @@ export const permissionCategories = [
     'events',
     'notifikasjoner',
     'mail',
+    'skjermer',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -380,7 +381,17 @@ export const PermissionConfig = {
         name: 'API nøkkel administrator',
         description: 'kan administrere API nøkler',
         category: 'diverse admin',
-    }
+    },
+    SCREEN_ADMIN: {
+        name: 'Skjermadministrator',
+        description: 'kan administrere skjermer',
+        category: 'skjermer',
+    },
+    SCREEN_READ: {
+        name: 'Les skjermer',
+        description: 'kan lese skjermer',
+        category: 'skjermer',
+    },
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {

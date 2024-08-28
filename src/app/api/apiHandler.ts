@@ -1,10 +1,11 @@
 import 'server-only'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Permission } from '@prisma/client'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-type APIHandlerFunction<Return> = (req: NextApiRequest) => Promise<Return>
+type APIHandlerFunction<Return> = (req: NextRequest) => Promise<Return>
+type Auther = { auth: (x: string) => boolean }
 type APIHandler<Return> = {
-    permission: Permission,
+    permission: Auther,
     handler: APIHandlerFunction<Return>
 }
 
@@ -19,42 +20,42 @@ export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>({
     PUT?: APIHandler<PUTReturn>,
     DELETE?: APIHandler<DELETEReturn>
 }) {
-    return async function handler(req: NextApiRequest, res: NextApiResponse) {
+    return async function handler(req: NextRequest) {
         switch (req.method) {
             case 'GET':
                 if (GET) {
                     const data = await GET.handler(req)
-                    res.json(data)
+                    NextResponse.json(data, { status: 200 })
                 } else {
-                    res.status(405).end()
+                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
                 }
                 break
             case 'POST':
                 if (POST) {
                     const data = await POST.handler(req)
-                    res.json(data)
+                    NextResponse.json(data, { status: 200 })
                 } else {
-                    res.status(405).end()
+                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
                 }
                 break
             case 'PUT':
                 if (PUT) {
                     const data = await PUT.handler(req)
-                    res.json(data)
+                    NextResponse.json(data, { status: 200 })
                 } else {
-                    res.status(405).end()
+                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
                 }
                 break
             case 'DELETE':
                 if (DELETE) {
                     const data = await DELETE.handler(req)
-                    res.json(data)
+                    NextResponse.json(data, { status: 200 })
                 } else {
-                    res.status(405).end()
+                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
                 }
                 break
             default:
-                res.status(405).end()
+                NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
         }
     }
 }
