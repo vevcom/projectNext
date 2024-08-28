@@ -11,4 +11,7 @@ export const apiKeyFieldsToExpose = [
     'expiresAt'
 ] as const satisfies (keyof ApiKey)[]
 
+export const KeyAllowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+export const KeyLength = 32;
+
 export const apiKeyFilterSelection = createSelection([...apiKeyFieldsToExpose])
