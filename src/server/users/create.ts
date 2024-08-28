@@ -1,6 +1,6 @@
 import 'server-only'
 import { readOmegaMembershipGroup } from '@/server/groups/omegaMembershipGroups/read'
-import { readCurrenOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
 import { prismaCall } from '@/server/prismaCall'
 import prisma from '@/prisma'
 import { createUserValidation } from '@/server/users/validation'
@@ -16,12 +16,7 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
     const data = createUserValidation.detailedValidate(rawdata)
 
     const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
-    const omegaOrder = await readCurrenOmegaOrder()
-
-    // Since "password" and "confirmPasswor" are not part of the user model they must be
-    // deleted before "data" can be unpacked in the create user call.
-    Reflect.deleteProperty(data, 'password')
-    Reflect.deleteProperty(data, 'confirmPassword')
+    const omegaOrder = await readCurrentOmegaOrder()
 
     return await prismaCall(() => prisma.user.create({
         data: {
@@ -31,6 +26,7 @@ export async function createUser(rawdata: CreateUserTypes['Detailed']): Promise<
                     groupId: omegaMembership.groupId,
                     order: omegaOrder.order,
                     admin: false,
+                    active: true,
                 }]
             }
         },

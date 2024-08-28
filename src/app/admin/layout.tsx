@@ -1,28 +1,25 @@
 'use client'
 import styles from './layout.module.scss'
+import BackButton from './BackButton'
+import SlideSidebar from './SlideSidebar'
 import React from 'react'
-import Link from 'next/link'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePathname } from 'next/navigation'
 
 type PropTypes = {
     children: React.ReactNode
 }
 
-export default function RootLayout({ children }: PropTypes) {
-    //go back one layer in url
+export default function AdminLayout({ children }: PropTypes) {
     const pathname = usePathname()
-    const href = `/${pathname?.split('/').slice(1, -1).join('/')}` ?? '/admin'
 
+    // pathname takes form /admin/[currentPath]/... => ['', 'admin', '[currentPath]', ...]
+    const currentPath = pathname.split('/').length > 2 ? pathname.split('/')[2] : 'admin'
     return (
         <div className={styles.wrapper}>
-            <Link className={styles.backLink} href={href}>
-                <FontAwesomeIcon icon={faArrowLeft} className={styles.icon}/>
-            </Link>
-            <div className={styles.content}>
+            <SlideSidebar currentPath={currentPath}>
                 {children}
-            </div>
+            </SlideSidebar>
+            <BackButton className={styles.backButton} />
         </div>
     )
 }

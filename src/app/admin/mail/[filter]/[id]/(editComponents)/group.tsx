@@ -1,7 +1,6 @@
 'use client'
-
 import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
+import { SelectNumber } from '@/app/components/UI/Select'
 import { createMailingListGroupRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import type { MailFlowObject } from '@/server/mail/Types'
@@ -34,7 +33,7 @@ export default function EditGroup({
             successCallback={refreshPage}
         >
             <input type="hidden" name="groupId" value={focusedGroup.id} />
-            <Select
+            <SelectNumber
                 options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
                 name="mailingListId"
                 label="Mailliste"

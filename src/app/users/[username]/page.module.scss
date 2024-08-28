@@ -1,0 +1,204 @@
+@use '@/styles/ohma';
+
+.profile {
+    background: ohma.$colors-white;
+    box-shadow: 0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23);
+    border-radius: 1em;
+    margin: 2em;
+    padding-bottom: 2em;
+}
+
+.standard {
+    background-color: ohma.$colors-secondary;
+}
+
+.bronze {
+    background: linear-gradient(to bottom right, #673208, #db6c2b);
+}
+
+.silver {
+    background: linear-gradient(to bottom right, #ededed, #bdbdbd);
+}
+
+.gold {
+    background: linear-gradient(to bottom right, #B69312, #FFDF6F);
+}
+
+.diamond {
+    background: linear-gradient(to bottom right, #1CA9A7, #6FFFEF);
+}
+
+.top {
+    width: 100%;
+    height: 5em;
+    border-radius: 1em 1em 0 0;
+}
+
+.shine::before {
+    content: '';
+    position: absolute;
+    background:  linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+    height: 100%;
+    width: 60px;
+    left: -100px;
+    top: -50px;
+    transform: skewX(-30deg);
+    animation: slide 0.8s cubic-bezier(1, 0.75, 1, 1);
+    animation-delay: 2s;
+}
+
+.nameAndId {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    > h1 {
+        margin-right: .2em;
+    } 
+    > .omegaIdOpen {
+        width: 2em;
+        height: 2em;
+        background-color: transparent;
+        border: none;
+    }
+    @include ohma.screenMobile {
+        justify-content: center;
+    }
+}
+
+.omegaId {
+    min-width: 50vw;
+    min-height: 50vw;
+    display: grid;
+    place-items: center;
+    > * {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@keyframes slide {
+    0% {
+        left: -80px;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.profileContent {
+    margin: -2.5em 0 2em 0;
+
+    display: grid;
+    grid-template-columns: max(300px) 1fr;
+
+    gap: 0.5em;
+    
+    .imageWrapper {
+        display: flex;
+        justify-content: center;
+
+        .profilePicture {
+            border-radius: 50%;
+            border: 3px solid ohma.$colors-white;
+            background-color: ohma.$colors-white;
+        }
+    }
+    
+    .header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+        h1 {
+            font-size: 3em;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            margin: 0.5em 4em 0.5em 0;
+            background-color: rgba(0, 0, 0, 0.2)
+        }
+
+        .studyProgramme {
+            color: ohma.$colors-gray-500;
+        }
+
+        .committeesWrapper {
+            display: flex;
+
+            .committee {
+                margin-top: 0.5em;
+                p {
+                    border-radius: 0.3em;
+                    padding: 0.5em;
+                    background-color: ohma.$colors-primary;
+                    display: inline-block;
+                }
+            }
+        }
+            
+
+        .orderText {
+            color: ohma.$colors-gray-500;
+            font-family: ohma.$fonts-secondary;
+            font-weight: ohma.$fonts-weight-s;
+            font-style: italic;
+        }
+    }
+
+    .leftSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            p {
+                width: 8em;
+            }
+        } 
+    }
+
+    .profileMain {
+        .bio {
+            margin-bottom: 2em; 
+        }
+
+        .email, .username {
+            width: 10em;
+            display: inline-block;
+            font-weight: ohma.$fonts-weight-m;
+        }
+
+        p {
+            font-weight: ohma.$fonts-weight-s;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    @include ohma.screenMobile {
+        display: block;
+        flex-direction: column;
+        align-items: center;
+
+        .header {
+            text-align: center;
+            align-items: center;
+            margin: 1em 2em;
+
+            hr {
+                width: 80%;
+                margin: 0.5em auto 0.5em auto;
+            }
+        }
+
+        .profileMain {
+            margin: 1em 2em;
+        }
+    }
+
+}
+

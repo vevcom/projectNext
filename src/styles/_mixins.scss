@@ -23,7 +23,6 @@
     margin: variables.$gap;
     color: colors.$black;
     border: none;
-    width: 100%;
     transition: .5s background;
     &:hover {
         background-color: darken($color, 10%);

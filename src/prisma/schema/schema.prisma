@@ -1,11 +1,11 @@
 generator projectnext {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["prismaSchemaFolder"]
 }
 
 generator prismaservice {
-  provider = "prisma-client-js"
-  output   = "../prismaservice/generated/pn"
+  provider        = "prisma-client-js"
+  output          = "../prismaservice/generated/pn"
   previewFeatures = ["prismaSchemaFolder"]
 }
 

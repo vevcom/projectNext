@@ -8,6 +8,11 @@
     }
 }
 
+.visibility {
+    margin: 1em 0;
+    grid-column: 1/3;
+}
+
 .CollectionAdmin {
     @include ohma.card;
     width: min(400px, 90vw);

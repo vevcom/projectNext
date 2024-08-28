@@ -2,7 +2,7 @@
 
 import TextInput from '@/app/components/UI/TextInput'
 import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
+import { SelectNumber } from '@/app/components/UI/Select'
 import { createMailingListExternalRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import { updateMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/update'
@@ -64,7 +64,7 @@ export default function EditMailAddressExternal({
                 successCallback={refreshPage}
             >
                 <input type="hidden" name="mailAddressExternalId" value={focusedAddress.id} />
-                <Select
+                <SelectNumber
                     options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
                     name="mailingListId"
                     label="Mailliste"

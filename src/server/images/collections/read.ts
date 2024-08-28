@@ -1,9 +1,11 @@
 import 'server-only'
+import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
 import { readSpecialImage } from '@/server/images/read'
 import prisma from '@/prisma'
 import logger from '@/logger'
 import { prismaCall } from '@/server/prismaCall'
 import { ServerError } from '@/server/error'
+import { readSpecialVisibility } from '@/server/visibility/read'
 import { cursorPageingSelection } from '@/server/paging/cursorPageingSelection'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
@@ -11,6 +13,7 @@ import type {
     ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/server/images/collections/Types'
+import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
 import type { ReadPageInput } from '@/server/paging/Types'
 
 
@@ -42,9 +45,11 @@ export async function readImageCollection(
  * @returns - A page of image collections
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
-    { page }: ReadPageInput<PageSize, ImageCollectionCursor>
+    { page }: ReadPageInput<PageSize, ImageCollectionCursor>,
+    visibilityFilter: VisibilityFilter
 ): Promise<ImageCollectionPageReturn[]> {
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
+        where: visibilityFilter,
         include: {
             coverImage: true,
             images: {
@@ -91,10 +96,18 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     }))
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
+        const permissionLevels = specialCollectionsSpecialVisibilityMap[special]
+        const visability = await readSpecialVisibility(permissionLevels.specialVisibility)
+
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
                 name: special,
-                special
+                special,
+                visibility: {
+                    connect: {
+                        id: visability.id
+                    }
+                }
             }
         }))
         return newCollection

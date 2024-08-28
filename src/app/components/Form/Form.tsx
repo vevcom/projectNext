@@ -1,9 +1,11 @@
 'use client'
 import styles from './Form.module.scss'
 import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
+import { PopUpContext } from '@/context/PopUp'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { Children, useEffect, useState } from 'react'
+import { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import type { PopUpKeyType } from '@/context/PopUp'
 import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
 import type { Action } from '@/actions/Types'
@@ -18,6 +20,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     confirmation?: Confirmation,
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
+    closePopUpOnSuccess?: PopUpKeyType
     buttonClassName?: string,
 }
 type InputType = {
@@ -67,12 +70,14 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     action,
     successCallback,
     className,
+    closePopUpOnSuccess,
     buttonClassName,
     ...props
 }: PropTypes<GiveActionReturn, DataGuarantee>) {
     const [generalErrors, setGeneralErrors] = useState<ErrorMessage[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)
+    const PopUpCtx = useContext(PopUpContext)
 
     useEffect(() => {
         setInputs(() => makeInputArray(children))
@@ -88,6 +93,11 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         if (res.success) {
             setSuccess(true)
             successCallback?.(res.data)
+            if (closePopUpOnSuccess) {
+                setTimeout(() => {
+                    PopUpCtx?.remove(closePopUpOnSuccess)
+                }, 2000)
+            }
             return setTimeout(() => {
                 setSuccess(false)
             }, SUCCESS_FEEDBACK_TIME)
