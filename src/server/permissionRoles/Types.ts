@@ -1,5 +1,5 @@
 import type { permissionCategories } from './ConfigVars'
-import type { Prisma, Permission } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 export type PermissiobCategory = typeof permissionCategories[number]
 export type PermissionInfo = {

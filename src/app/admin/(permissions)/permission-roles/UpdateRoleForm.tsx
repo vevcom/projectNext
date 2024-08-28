@@ -3,9 +3,9 @@
 import { updateRoleAction } from '@/actions/permissionRoles/update'
 import Form from '@/app/components/Form/Form'
 import TextInput from '@/app/components/UI/TextInput'
-import { PermissionConfig } from '@/server/permissionRoles/ConfigVars'
+import { permissionCategories } from '@/server/permissionRoles/ConfigVars'
+import PermissionCategory from '@/app/components/Permission/PermissionCategory'
 import React, { useEffect, useState } from 'react'
-import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
 import { Permission } from '@prisma/client'
 import type { ExpandedRole } from '@/server/permissionRoles/Types'
@@ -45,26 +45,25 @@ export function UpdateRoleForm({ selectedRole }: PropTypes) {
         <Form submitText="Lagre" action={updateRoleAction} successCallback={refresh}>
             <input type="hidden" name="id" value={selectedRole.id} />
             <TextInput label="Navn" name="name" value={nameField} onChange={e => setNameField(e.target.value) } />
-
-            {permissionCategories.map(category => (
-                category.permissions.map((entry, index) => (
-                    <div key={uuid()}>
-                        {index === 0 && <h3>{category.title}</h3>}
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="permissions"
-                                value={entry.permission}
-                                checked={checkedPermissions[entry.permission]}
-                                onChange={e =>
-                                    setCheckedPermissions({ ...checkedPermissions, [entry.permission]: e.target.checked }
-                                    )}
-                            />
-                            {entry.name}
-                        </label>
-                    </div>
-                ))
-            ))}
+            {
+                permissionCategories.map(category =>
+                    <PermissionCategory key={category} category={category} renderBesidePermission={
+                        permission => (
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="permissions"
+                                    value={permission}
+                                    checked={checkedPermissions[permission]}
+                                    onChange={e =>
+                                        setCheckedPermissions({ ...checkedPermissions, [permission]: e.target.checked })
+                                    }
+                                />
+                            </label>
+                        )}
+                    />
+                )
+            }
         </Form>
     )
 }

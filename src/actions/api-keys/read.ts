@@ -1,10 +1,10 @@
 'use server'
 import { createActionError } from '../error'
-import { safeServerCall } from '../safeServerCall'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readApiKey, readApiKeys } from '@/server/api-keys/read'
 import type { ApiKeyFiltered } from '@/server/api-keys/Types'
-import type { ActionReturn } from '../Types'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function readApiKeysAction(): Promise<ActionReturn<ApiKeyFiltered[]>> {
     const { authorized, status } = await getUser({

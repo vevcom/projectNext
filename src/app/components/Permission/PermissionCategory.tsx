@@ -7,7 +7,7 @@ import type { ReactNode } from 'react'
 
 type PropTypes = {
     category: PermissiobCategory
-    renderBesidePermission: (permission: PermissionEnum) => ReactNode
+    renderBesidePermission?: (permission: PermissionEnum) => ReactNode
 }
 
 /**
@@ -26,7 +26,7 @@ export default function PermissionCategory({ category, renderBesidePermission }:
             {
                 permissionsInCategory.map(permission => (
                     <Permission key={permission} permission={permission} displayCategory={false}>
-                        {renderBesidePermission(permission)}
+                        {renderBesidePermission ? renderBesidePermission(permission) : <></>}
                     </Permission>
                 ))
             }
