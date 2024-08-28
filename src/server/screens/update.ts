@@ -29,8 +29,7 @@ export async function updateScreen(id: number, rawdata: UpdateScreenTypes['Detai
             }
         },
     }))
-    //Get heighst order:
-    const highestOrder = await getHeighstOrder(id)
+    const highestOrder = await getHighestOrder(id)
     let order = highestOrder + 1
     const pagesToAdd = connectToPages.filter(
         connectToId => !screen.screenPageScreen.some(sps => sps.screenPageId === connectToId)
@@ -45,7 +44,7 @@ export async function updateScreen(id: number, rawdata: UpdateScreenTypes['Detai
     return await readScreen(id)
 }
 
-async function getHeighstOrder(id: number): Promise<number> {
+async function getHighestOrder(id: number): Promise<number> {
     const screen = await prismaCall(() => prisma.screen.findUniqueOrThrow({
         where: { id },
         include: {
@@ -76,11 +75,11 @@ export async function movePageInScreen(
         }
     }))
     if (!screenPageScreen2) throw new ServerError('BAD PARAMETERS', 'Du kan ikke flytte denne lengre')
-    const heighstOrder = await getHeighstOrder(id.screen)
+    const highestOrder = await getHighestOrder(id.screen)
     await prismaCall(() => prisma.screenPageScreen.update({
         where: { screenPageId_screenId: { screenId: id.screen, screenPageId: id.page } },
         data: {
-            order: heighstOrder + 1
+            order: highestOrder + 1
         }
     }))
     await prismaCall(() => prisma.screenPageScreen.update({
