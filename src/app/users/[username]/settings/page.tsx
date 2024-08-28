@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import { getProfile } from '@/app/users/[username]/page'
 import { getUser } from '@/auth/getUser'
+import Permission from '@/app/components/Permission/Permission'
 import { v4 as uuid } from 'uuid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Permission from '@/app/components/Permission/Permission'
 
 type PropTypes = {
     params: {
@@ -34,7 +34,7 @@ export default async function UserSettings({ params }: PropTypes) {
             <p>{`Bruker-ID: ${profile.user.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
-                {profile.permissions.map(permission => 
+                {profile.permissions.map(permission =>
                     <Permission key={uuid()} permission={permission} className={styles.permission} />
                 )}
             </ul>

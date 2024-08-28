@@ -3,10 +3,11 @@ import styles from './CreateApiKeyForm.module.scss'
 import Form from '@/app/components/Form/Form'
 import { createApiKeyAction } from '@/actions/api-keys/create'
 import TextInput from '@/app/components/UI/TextInput'
+import { PopUpContext } from '@/context/PopUp'
 import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
-import { PopUpContext, PopUpKeyType } from '@/context/PopUp'
+import type { PopUpKeyType } from '@/context/PopUp'
 
 type Color = 'red' | 'green' | null
 
@@ -17,7 +18,7 @@ type PropTypes = {
 /**
  * Component for creating a new API key
  * @param popUpKey - Used to know the popUp to use after the form is submitted and the key has displayed
- * @returns 
+ * @returns
  */
 export default function CreateApiKeyForm({ popUpKey }: PropTypes) {
     const [apiKeyToShow, setApiKeyToShow] = useState<string | null>(null)
@@ -64,7 +65,7 @@ export default function CreateApiKeyForm({ popUpKey }: PropTypes) {
             >
                 <TextInput name="name" label="Navn" />
             </Form>
-            
+
             <div className={styles.keyHolder}>
                 <h3>Nøkkel</h3>
                 <div className={styles.keyAndCopy}>

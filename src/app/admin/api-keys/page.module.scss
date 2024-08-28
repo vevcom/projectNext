@@ -1,0 +1,38 @@
+@use '@/styles/ohma';
+
+.ApiKeysList {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+        color: black;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    a {
+        display: contents;
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.activated {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.deactivated {
+    background-color: #f8d7da;
+    color: #721c24;
+}

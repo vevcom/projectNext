@@ -20,17 +20,19 @@ export default async function ApiKeysAdmin() {
             </AddHeaderItemPopUp>
         }>
             <table className={styles.ApiKeysList}>
-                <th>
-                    <td>Navn</td>
-                    <td>Opprettet</td>
-                    <td>Sist oppdatert</td>
-                    <td>Utløper</td>
-                    <td>Status</td>
-                </th>
-                {
-                    apiKeys.map(apiKey => (
-                        <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()}>
-                            <tr className={apiKey.active ? styles.activeated : styles.deactived}>
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Opprettet</th>
+                        <th>Sist oppdatert</th>
+                        <th>Utløper</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {apiKeys.map(apiKey => (
+                        <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()} passHref>
+                            <tr className={apiKey.active ? styles.activated : styles.deactivated}>
                                 <td>{apiKey.name}</td>
                                 <td>{apiKey.createdAt.toDateString()}</td>
                                 <td>{apiKey.updatedAt.toDateString()}</td>
@@ -38,8 +40,8 @@ export default async function ApiKeysAdmin() {
                                 <td>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</td>
                             </tr>
                         </Link>
-                    ))
-                }
+                    ))}
+                </tbody>
             </table>
         </PageWrapper>
     )

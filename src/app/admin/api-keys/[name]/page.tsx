@@ -1,4 +1,6 @@
+import styles from './page.module.scss'
 import { readApiKeyAction } from '@/actions/api-keys/read'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 
 type PropTypes = {
     params: {
@@ -12,12 +14,20 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
     const apiKey = res.data
 
     return (
-        <div>
-            <h1>{apiKey.name}</h1>
-            <i>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</i>
-            <p>Utgår: {apiKey.expiresAt?.toDateString()}</p>
-            <p>Opprettet: {apiKey.createdAt.toDateString()}</p>
-            <p>Sist oppdatert: {apiKey.updatedAt.toDateString()}</p>
-        </div>
+        <PageWrapper title="API nøkkel">
+            <div className={styles.wrapper}>
+                <h2>Navn: {apiKey.name}</h2>
+                <i>{apiKey.active ? 'Denne api nøkkelen er aktiv' : 'Denne api nøkkelen er inaktiv'}</i>
+                <div className={styles.dates}>
+                    <p>Utgår: {apiKey.expiresAt ? apiKey.expiresAt.toDateString() : 'ingen utløp'}</p>
+                    <p>Opprettet: {apiKey.createdAt.toDateString()}</p>
+                    <p>Sist oppdatert: {apiKey.updatedAt.toDateString()}</p>
+                </div>
+
+                <div className={styles.admin}>
+
+                </div>
+            </div>
+        </PageWrapper>
     )
 }

@@ -1,0 +1,10 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    > h2 {
+        margin-top: 1em 0;
+    }
+    > .dates {
+        margin-top: 2em;
+    }
+}

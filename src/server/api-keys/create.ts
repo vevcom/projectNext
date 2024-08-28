@@ -9,12 +9,12 @@ import type { ApiKeyFilteredWithKey } from './Types'
 import type { CreateApiKeyTypes } from './validation'
 
 function generateRandomString(allowedChars: string, length: number): string {
-    let result = '';
-    const bytes = crypto.randomBytes(length);
+    let result = ''
+    const bytes = crypto.randomBytes(length)
     for (let i = 0; i < length; i++) {
-        result += allowedChars[bytes[i] % allowedChars.length];
+        result += allowedChars[bytes[i] % allowedChars.length]
     }
-    return result;
+    return result
 }
 
 export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Promise<ApiKeyFilteredWithKey> {
