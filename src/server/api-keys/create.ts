@@ -23,10 +23,8 @@ export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Prom
     const NODE_ENV = process.env.NODE_ENV
     const prepend = NODE_ENV === 'production' ? 'prod' : 'dev'
 
-    const key = prepend + generateRandomString(KeyAllowedChars, KeyLength)
-    console.log('key', key)
+    const key = prepend + generateRandomString(KeyAllowedChars, KeyLength - prepend.length)
     const keyHashEncrypted = await apiKeyHashAndEncrypt(key)
-    console.log('keyHashEncrypted', keyHashEncrypted)
 
     const apiKey = await prismaCall(() => prisma.apiKey.create({
         data: {

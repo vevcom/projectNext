@@ -6,6 +6,8 @@ import { readApiKeysAction } from '@/actions/api-keys/read'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 
+const popUpKey = 'createApiKey'
+
 export default async function ApiKeysAdmin() {
     const res = await readApiKeysAction()
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'An error occurred')
@@ -13,8 +15,8 @@ export default async function ApiKeysAdmin() {
 
     return (
         <PageWrapper title="API-nøkler" headerItem={
-            <AddHeaderItemPopUp PopUpKey="createApiKey">
-                <CreateApiKeyForm />
+            <AddHeaderItemPopUp PopUpKey={popUpKey}>
+                <CreateApiKeyForm popUpKey={popUpKey} />
             </AddHeaderItemPopUp>
         }>
             <table className={styles.ApiKeysList}>

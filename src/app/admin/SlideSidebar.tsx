@@ -163,7 +163,6 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
     const previousPath = useRef<string>(currentPath)
 
     useOnNavigation(() => {
-        console.log('currentPath', currentPath)
         if (previousPath.current === 'admin' && currentPath !== 'admin') {
             setOpen(false)
         }
