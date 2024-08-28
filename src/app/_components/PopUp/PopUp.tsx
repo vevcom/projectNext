@@ -2,7 +2,7 @@
 import styles from './PopUp.module.scss'
 import Button from '@/components/UI/Button'
 import useKeyPress from '@/hooks/useKeyPress'
-import { PopUpContext } from '@/contextss/PopUp'
+import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'

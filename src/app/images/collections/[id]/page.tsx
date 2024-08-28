@@ -3,12 +3,12 @@ import CollectionAdmin from './CollectionAdmin'
 import { readImagesPageAction } from '@/actions/images/read'
 import { readImageCollectionAction } from '@/actions/images/collections/read'
 import ImageList from '@/components/Image/ImageList/ImageList'
-import ImagePagingProvider from '@/contextss/paging/ImagePaging'
-import ImageSelectionProvider from '@/contextss/ImageSelection'
-import PopUpProvider from '@/contextss/PopUp'
+import ImagePagingProvider from '@/contexts/paging/ImagePaging'
+import ImageSelectionProvider from '@/contexts/ImageSelection'
+import PopUpProvider from '@/contexts/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { notFound } from 'next/navigation'
-import type { PageSizeImage } from '@/contextss/paging/ImagePaging'
+import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 
 type PropTypes = {
     params: {

@@ -1,5 +1,5 @@
 'use client'
-import generatePagingProvider, { generatePagingContext } from '@/contextss/paging/PagingGenerator'
+import generatePagingProvider, { generatePagingContext } from '@/contexts/paging/PagingGenerator'
 import { readQuotesPageAction } from '@/actions/omegaquotes/read'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'

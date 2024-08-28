@@ -1,9 +1,9 @@
 import 'server-only'
 import { type CreatePageTypes, createPageValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import { createCmsImage } from '@/server/cms/images/create'
-import { createCmsParagraph } from '@/server/cms/paragraphs/create'
+import { createCmsImage } from '@/services/cms/images/create'
+import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { v4 } from 'uuid'
 import type { ScreenPage } from '@prisma/client'
 

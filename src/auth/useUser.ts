@@ -1,6 +1,6 @@
 'use client'
 
-import { DefaultPermissionsContext } from '@/contextss/DefaultPermissions'
+import { DefaultPermissionsContext } from '@/contexts/DefaultPermissions'
 import checkMatrix from '@/utils/checkMatrix'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'

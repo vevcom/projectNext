@@ -1,6 +1,6 @@
 import 'server-only'
 import { createScreenValidation } from './validation'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { CreateScreenTypes } from './validation'
 import type { Screen } from '@prisma/client'

@@ -2,7 +2,7 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readScreen, readScreens } from '@/server/screens/read'
+import { readScreen, readScreens } from '@/services/screens/read'
 import type { Screen } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 

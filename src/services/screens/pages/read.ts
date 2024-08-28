@@ -1,6 +1,6 @@
 import 'server-only'
 import { screenPageIncluder } from './ConfigVars'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ScreenPage } from '@prisma/client'
 import type { ExpandedScreenPage } from './Types'

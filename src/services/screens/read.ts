@@ -1,5 +1,5 @@
 import { screenPageIncluder } from './pages/ConfigVars'
-import { prismaCall } from '@/server/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedScreen } from './Types'
 import type { Screen } from '@prisma/client'

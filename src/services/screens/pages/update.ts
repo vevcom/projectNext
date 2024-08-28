@@ -1,8 +1,8 @@
 import 'server-only'
 import prisma from '@/prisma'
-import { prismaCall } from '@/server/prismaCall'
-import { updatePageValidation } from '@/server/screens/pages/validation'
-import type { UpdatePageTypes } from '@/server/screens/pages/validation'
+import { prismaCall } from '@/services/prismaCall'
+import { updatePageValidation } from '@/services/screens/pages/validation'
+import type { UpdatePageTypes } from '@/services/screens/pages/validation'
 import type { ScreenPage } from '@prisma/client'
 
 export async function updatePage(
