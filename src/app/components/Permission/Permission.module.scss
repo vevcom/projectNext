@@ -1,0 +1,24 @@
+@use '@/styles/ohma';
+
+.Permission {
+    display: flex;
+    background-color: ohma.$colors-gray-200;
+    @include ohma.round();
+    align-items: center;
+    gap: 1em;
+    .content {
+        display: flex;
+        flex-direction: column;
+        .name {
+            display: flex;
+            align-items: center;
+            gap: .4em;
+            > h3 {
+                font-size: ohma.$fonts-l;
+            }
+            > i {
+                font-size: ohma.$fonts-s;
+            }
+        }
+    }
+}

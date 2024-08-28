@@ -1,5 +1,5 @@
 'use server'
-import { createActionError } from '../error'
+import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readApiKey, readApiKeys } from '@/server/api-keys/read'

@@ -4,7 +4,6 @@ import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import PermissionCategory from '@/app/components/Permission/PermissionCategory'
 import { permissionCategories } from '@/server/permissionRoles/ConfigVars'
 import React from 'react'
-import { v4 as uuid } from 'uuid'
 
 export default async function Defaults() {
     const defaultPermissionsRes = await readDefaultPermissionsAction()

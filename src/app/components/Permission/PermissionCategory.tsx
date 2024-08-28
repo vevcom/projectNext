@@ -1,4 +1,5 @@
 import Permission from './Permission'
+import styles from './PermissionCategory.module.scss'
 import { PermissionConfig } from '@/server/permissionRoles/ConfigVars'
 import { Permission as PermissionEnum } from '@prisma/client'
 import type { PermissiobCategory } from '@/server/permissionRoles/Types'
@@ -21,15 +22,17 @@ export default function PermissionCategory({ category, renderBesidePermission }:
     )
 
     return (
-        <div>
-            <h2>{category}</h2>
-            {
-                permissionsInCategory.map(permission => (
-                    <Permission key={permission} permission={permission} displayCategory={false}>
-                        {renderBesidePermission ? renderBesidePermission(permission) : <></>}
-                    </Permission>
-                ))
-            }
+        <div className={styles.PermissionCategory}>
+            <h2>{category.toUpperCase()}</h2>
+            <div className={styles.list}>
+                {
+                    permissionsInCategory.map(permission => (
+                        <Permission key={permission} permission={permission} displayCategory={false}>
+                            {renderBesidePermission ? renderBesidePermission(permission) : <></>}
+                        </Permission>
+                    ))
+                }
+            </div>
         </div>
     )
 }
