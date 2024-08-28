@@ -1,5 +1,5 @@
-import type { ApiKey } from '@prisma/client'
 import { createSelection } from '@/server/createSelection'
+import type { ApiKey } from '@prisma/client'
 
 export const apiKeyFieldsToExpose = [
     'id',
@@ -7,7 +7,7 @@ export const apiKeyFieldsToExpose = [
     'createdAt',
     'updatedAt',
     'name',
-    'permissions'    
+    'permissions'
 ] as const satisfies (keyof ApiKey)[]
 
 export const apiKeyFilterSelection = createSelection([...apiKeyFieldsToExpose])

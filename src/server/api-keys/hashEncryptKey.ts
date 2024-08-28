@@ -1,4 +1,4 @@
-import { hashAndEncrypter } from "@/auth/crypto/hashAndEncrypter";
+import { hashAndEncrypter } from '@/auth/crypto/hashAndEncrypter'
 
 export const {
     hashAndEncrypt: apiKeyHashAndEncrypt,

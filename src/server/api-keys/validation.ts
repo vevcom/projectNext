@@ -1,7 +1,8 @@
-import { ValidationBase, ValidationTypes } from '@/server/Validation'
+import { ValidationBase } from '@/server/Validation'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import { Permission } from '@prisma/client'
+import type { ValidationTypes } from '@/server/Validation'
 
 const baseApiKeyValidation = new ValidationBase({
     type: {

@@ -1,5 +1,5 @@
-import { ApiKey } from "@prisma/client"
-import { apiKeyFieldsToExpose } from './ConfigVars'
+import type { apiKeyFieldsToExpose } from './ConfigVars'
+import type { ApiKey } from '@prisma/client'
 
 export type ApiKeyFiltered = Pick<ApiKey, typeof apiKeyFieldsToExpose[number]>
 

@@ -1,11 +1,12 @@
-import  'server-only'
-import { CreateApiKeyTypes, createApiKeyValidation } from './validation';
-import { prismaCall } from '../prismaCall';
-import prisma from '@/prisma';
+import 'server-only'
+import { createApiKeyValidation } from './validation'
+import { apiKeyFilterSelection } from './ConfigVars'
+import { apiKeyHashAndEncrypt } from './hashEncryptKey'
+import { prismaCall } from '@/server/prismaCall'
+import prisma from '@/prisma'
 import crypto from 'crypto'
-import { apiKeyFilterSelection } from './ConfigVars';
-import { apiKeyHashAndEncrypt } from './hashEncryptKey';
-import { ApiKeyFilteredWithKey } from './Types';
+import type { ApiKeyFilteredWithKey } from './Types'
+import type { CreateApiKeyTypes } from './validation'
 
 export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Promise<ApiKeyFilteredWithKey> {
     const data = createApiKeyValidation.detailedValidate(rawdata)

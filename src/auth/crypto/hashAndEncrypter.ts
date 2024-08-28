@@ -6,14 +6,14 @@ import type { EncrypterConfig } from './encrypter'
 /**
  * WARNING: If you pass a undefined salt or encryptionKey, the function will throw an error.
  * This is done so one can pass environment variables to the function and it will throw an error
- * 
+ *
  * The hashAndEnctypter uses the hasher and encrypter to hash and encrypt data.
  * it generates two methods one for hashing then encrypting data. And one for comparing
  * this (hashed and encrypted) data with other data.
  * @param salt - The number of rounds to use in the hashing.
  * @param encryptionKey - The key to use for encryption.
  * @param encrypterConfig - The configuration for the encryption.
- * @returns 
+ * @returns
  */
 export function hashAndEncrypter(
     salt: string | undefined,
