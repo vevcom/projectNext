@@ -1,14 +1,14 @@
 import 'server-only'
 import { fetchStudyProgrammesFromFeide } from './api'
 import { upsertStudyProgrammes } from '@/services/groups/studyProgrammes/create'
-import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import prisma from '@/prisma'
 
 export async function updateUserStudyProgrammes(userId: number, accessToken: string) {
     const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(accessToken)
     const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
 
-    const order = (await readCurrenOmegaOrder()).order
+    const { order } = await readCurrentOmegaOrder()
 
     // Find current user study programmes
     const memberships = await prisma.membership.findMany({
@@ -46,6 +46,7 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
             groupId: s.groupId,
             order,
             admin: false,
+            active: true,
             userId,
         }))
     })
@@ -55,6 +56,7 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
             groupId: m.groupId,
             order,
             admin: m.admin,
+            active: m.active,
             userId,
         }))
     })

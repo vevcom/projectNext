@@ -4,7 +4,7 @@ import { jobAdArticleRealtionsIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { createArticle } from '@/services/cms/articles/create'
 import prisma from '@/prisma'
-import { readCurrenOmegaOrder } from '@/services/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { ExpandedJobAd } from './Types'
 import type { CreateJobAdTypes } from './validation'
 
@@ -13,7 +13,7 @@ export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promis
 
     const article = await createArticle({ name: articleName })
 
-    const currentOrder = await readCurrenOmegaOrder()
+    const currentOrder = await readCurrentOmegaOrder()
 
     const jobAd = await prismaCall(() => prisma.jobAd.create({
         data: {

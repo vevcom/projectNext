@@ -7,8 +7,8 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
-import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
+import { ImagePagingContext } from '@/contextss/paging/ImagePaging'
+import { ImageSelectionContext } from '@/contextss/ImageSelection'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
@@ -24,7 +24,7 @@ type PropTypes = {
 export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
     const context = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
-    const canEdit = useEditing() //TODO: authe
+    const canEdit = useEditing({}) //TODO: authe
 
     //This component must be rendered inside a ImagePagingContextProvider
     if (!context) throw new Error('No context')

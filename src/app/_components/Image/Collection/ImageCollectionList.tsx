@@ -2,7 +2,7 @@
 import styles from './ImageCollectionList.module.scss'
 import CollectionCard from './CollectionCard'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import { ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
+import { ImageCollectionPagingContext } from '@/contextss/paging/ImageCollectionPaging'
 import React from 'react'
 
 type PropTypes = {

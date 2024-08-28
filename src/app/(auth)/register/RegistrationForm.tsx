@@ -2,10 +2,11 @@
 import { registerOwnUser } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
-import Select from '@/components/UI/Select'
+import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { useUser } from '@/auth/useUser'
-import { sexOptions } from '@/services/users/ConfigVars'
+import { sexConfig } from '@/services/users/ConfigVars'
+import { SEX } from '@prisma/client'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
@@ -20,6 +21,11 @@ export default function RegistrationForm() {
 
     const lastUsername = userAuth.user?.username
     let lastPassword: string = ''
+
+    const sexOptions = Object.values(SEX).map(sex => ({
+        value: sex,
+        label: sexConfig[sex].label
+    }))
 
     return <Form
         title="Ekstra brukerinformasjon"
@@ -36,7 +42,7 @@ export default function RegistrationForm() {
         <TextInput label="Allergier / diett" name="allergies" />
         <TextInput type="password" label="Passord" name="password" onChange={(e) => {lastPassword = e.target.value}}/>
         <TextInput type="password" label="Gjenta passord" name="confirmPassword" />
-        <Select label="Kjønn" name="sex" options={sexOptions}/>
+        <SelectString label="Kjønn" name="sex" options={sexOptions}/>
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
 }

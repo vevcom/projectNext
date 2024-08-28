@@ -5,7 +5,7 @@ import prisma from '@/prisma'
 import type { SimpleJobAd } from './Types'
 
 /**
- * This function destroys a jobAd. It is also responsible for sleaning up the article,
+ * This function destroys a jobAd. It is also responsible for cleaning up the article,
  * to avoid orphaned articles. It calls destroyArticle to destroy the article and its coverImage (cmsImage)
  * @param id - id of news article to destroy
  * @returns

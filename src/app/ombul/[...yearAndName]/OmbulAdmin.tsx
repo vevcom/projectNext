@@ -28,8 +28,12 @@ export default function OmbulAdmin({
     children,
 }: PropTypes) {
     const { push, refresh } = useRouter()
-    const canUpdate = useEditing([['OMBUL_UPDATE']])
-    const canDestroy = useEditing([['OMBUL_DESTROY']])
+    const canUpdate = useEditing({
+        requiredPermissions: [['OMBUL_UPDATE']]
+    })
+    const canDestroy = useEditing({
+        requiredPermissions: [['OMBUL_DESTROY']]
+    })
 
     const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
     const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)

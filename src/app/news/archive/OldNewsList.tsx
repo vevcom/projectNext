@@ -1,7 +1,7 @@
 'use client'
 import styles from './OldNewsList.module.scss'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import { OldNewsPagingContext } from '@/contexts/paging/OldNewsPaging'
+import { OldNewsPagingContext } from '@/contextss/paging/OldNewsPaging'
 import NewsCard from '@/app/news/NewsCard'
 import type { ReactNode } from 'react'
 

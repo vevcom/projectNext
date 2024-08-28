@@ -2,7 +2,7 @@
 
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
-import Select from '@/components/UI/Select'
+import { SelectNumber } from '@/components/UI/Select'
 import {
     createAliasMailingListRelationAction,
     createMailingListExternalRelationAction,
@@ -67,8 +67,8 @@ export default function EditMailingList({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
-                <Select
-                    options={mailaliases.map(a => ({ value: a.id, label: a.address }))}
+                <SelectNumber
+                    options={mailaliases.map(address => ({ value: address.id, label: address.address }))}
                     name="mailAliasId"
                     label="Mailalias"
                 />
@@ -101,8 +101,8 @@ export default function EditMailingList({
                 action={createMailingListExternalRelationAction}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
-                <Select
-                    options={mailAddressExternal.map(a => ({ value: a.id, label: a.address }))}
+                <SelectNumber
+                    options={mailAddressExternal.map(address => ({ value: address.id, label: address.address }))}
                     name="mailAddressExternalId"
                     label="Ekstern mail adresse"
                 />

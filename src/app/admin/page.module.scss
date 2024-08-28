@@ -1,7 +1,23 @@
 @use '@/styles/ohma';
 
+$iconSize: 10em;
+
 .wrapper {
     width: 100%;
-    display: grid;
-    place-items: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > .icon {
+        padding-top: calc(50vh - 50px - #{$iconSize}/2);
+        width: $iconSize;
+        height: $iconSize;
+        color: ohma.$colors-gray-500;
+        margin: 1em;
+    }
+    p {
+        color: ohma.$colors-gray-700;
+        font-size: 1.5em;
+        text-align: center;
+    }
 }

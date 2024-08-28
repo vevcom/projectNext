@@ -6,14 +6,14 @@ import { readUser } from '@/services/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { notFound, redirect } from 'next/navigation'
 
-export default async function Register({
-    searchParams,
-}: {
+type PropTypes = {
     searchParams: {
         token?: string,
         callbackUrl?: string,
     }
-}) {
+}
+
+export default async function Register({ searchParams }: PropTypes) {
     const { user, authorized } = await getUser({
         userRequired: false,
         shouldRedirect: false,
@@ -41,6 +41,7 @@ export default async function Register({
         return notFound()
     }
 
+    //TODO: change to action.
     const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
     if (!updatedUser.success) {
         return notFound()

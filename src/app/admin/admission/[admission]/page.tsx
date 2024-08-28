@@ -3,22 +3,21 @@
 import RegisterAdmissiontrial from './registration'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readOmegaJWTPublicKey } from '@/actions/omegaid/read'
-import { AdmissionDisplayNames } from '@/services/admission/ConfigVars'
-import { Admission, type Admission as AdmissionType } from '@prisma/client'
+import { AdmissionDisplayNames, AdmissionsArray } from '@/services/admission/ConfigVars'
+import { type Admission as AdmissionType } from '@prisma/client'
 import { notFound } from 'next/navigation'
 
-
-export default async function AdmissionTrials({
-    params,
-}: {
+type PropTypes = {
     params: {
-        admission: string
+        admission: AdmissionType
     }
-}) {
-    if (!Object.keys(Admission).includes(params.admission)) {
+}
+
+export default async function AdmissionTrials({ params }: PropTypes) {
+    if (!AdmissionsArray.includes(params.admission)) {
         notFound()
     }
-    const admission = params.admission as AdmissionType
+    const admission = params.admission
 
     const publicKey = await readOmegaJWTPublicKey()
 

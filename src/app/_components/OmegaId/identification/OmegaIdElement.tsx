@@ -7,11 +7,11 @@ import { useEffect, useState } from 'react'
 
 const EXPIRY_THRESHOLD = 60
 
-export default function OmegaIdElement({
-    token,
-}: {
+type PropTypes = {
     token: string,
-}) {
+}
+
+export default function OmegaIdElement({ token }: PropTypes) {
     const [tokenState, setTokenState] = useState(token)
 
     const { SVG } = useQRCode()

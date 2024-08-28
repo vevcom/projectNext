@@ -24,9 +24,8 @@ type PropTypes = {
 export default function EditJobAd({ jobAd, children }: PropTypes) {
     const { push } = useRouter()
     //TODO: chack visibility
-    const canEdit = useEditing()
+    const canEdit = useEditing({})
     if (!canEdit) return children
-
 
     const updateAction = updateJobAdAction.bind(null, jobAd.id)
 

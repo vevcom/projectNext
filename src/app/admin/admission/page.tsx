@@ -1,25 +1,21 @@
 'use server'
 
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { AdmissionDisplayNames } from '@/services/admission/ConfigVars'
-import { Admission, type Admission as AdmissionType } from '@prisma/client'
+import { AdmissionDisplayNames, AdmissionsArray } from '@/services/admission/ConfigVars'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
 
 export default async function AdmissionTrials() {
-    const admissions = Object.keys(Admission) as AdmissionType[]
-
-    return <PageWrapper
-        title="Registrer opptak"
-    >
-        <ul>
-            {admissions.map(a =>
-                <li key={uuid()}>
-                    <Link href={`admissiontrials/${a}`}>{AdmissionDisplayNames[a]}</Link>
-                </li>
-            )}
-        </ul>
-
-    </PageWrapper>
+    return (
+        <PageWrapper title="Registrer opptak">
+            <ul>
+                {AdmissionsArray.map(trial =>
+                    <li key={uuid()}>
+                        <Link href={`admissiontrials/${trial}`}>{AdmissionDisplayNames[trial]}</Link>
+                    </li>
+                )}
+            </ul>
+        </PageWrapper>
+    )
 }

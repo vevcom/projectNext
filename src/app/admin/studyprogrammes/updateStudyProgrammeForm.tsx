@@ -3,7 +3,7 @@
 import { createStudyProgrammeAction } from '@/actions/groups/studyProgrammes/create'
 import { updateStudyProgrammeAction } from '@/actions/groups/studyProgrammes/update'
 import Form from '@/components/Form/Form'
-import Select from '@/components/UI/Select'
+import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import type { StudyProgramme } from '@prisma/client'
@@ -29,7 +29,7 @@ export default function UpdateStudyProgrammeForm({
         <TextInput name="insititueCode" label="Institutt kode" defaultValue={studyProgramme?.insititueCode ?? ''} />
         <TextInput name="startYear" label="Start år" defaultValue={studyProgramme?.startYear ?? ''} />
         <TextInput name="yearsLength" label="Studiets lengde" defaultValue={studyProgramme?.yearsLength ?? ''} />
-        <Select label="Del av Omega" name="partOfOmega" options={[
+        <SelectString label="Del av Omega" name="partOfOmega" options={[
             { value: 'false', label: 'Nei' },
             { value: 'true', label: 'Ja' },
         ]} defaultValue={studyProgramme?.partOfOmega ? 'true' : 'false'} />

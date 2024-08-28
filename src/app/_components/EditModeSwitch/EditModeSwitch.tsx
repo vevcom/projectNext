@@ -1,6 +1,6 @@
 'use client'
 import styles from './EditModeSwitch.module.scss'
-import { EditModeContext } from '@/contexts/EditMode'
+import { EditModeContext } from '@/contextss/EditMode'
 import { useContext, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'

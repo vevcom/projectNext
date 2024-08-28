@@ -3,7 +3,7 @@ import styles from './CreateCommitteeForm.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { createCommitteeAction } from '@/actions/groups/committees/create'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
+import { ImageSelectionContext } from '@/contextss/ImageSelection'
 import { useContext } from 'react'
 
 /**

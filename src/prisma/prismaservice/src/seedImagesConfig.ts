@@ -68,6 +68,12 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'pwa.png',
         collection: defaultCollection,
     },
+    {
+        name: 'Harambe104',
+        alt: 'Harambe',
+        fsLocation: 'harambe.jpg',
+        collection: 'PROFILEIMAGES'
+    }
 ]
 
 /**

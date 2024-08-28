@@ -2,7 +2,7 @@
 
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
-import Select from '@/components/UI/Select'
+import { SelectNumber } from '@/components/UI/Select'
 import { createAliasMailingListRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import { updateMailAliasAction } from '@/actions/mail/alias/update'
@@ -62,7 +62,7 @@ export default function EditMailAlias({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" name="mailAliasId" value={focusedAlias.id} />
-                <Select
+                <SelectNumber
                     options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
                     name="mailingListId"
                     label="Mailliste"

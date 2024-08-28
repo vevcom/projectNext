@@ -1,7 +1,7 @@
 'use client'
 
 import Form from '@/components/Form/Form'
-import Select from '@/components/UI/Select'
+import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListUserRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
 import type { MailFlowObject } from '@/services/mail/Types'
@@ -31,7 +31,7 @@ export default function EditUser({
             action={createMailingListUserRelationAction}
         >
             <input type="hidden" name="userId" value={focusedUser.id} />
-            <Select
+            <SelectNumber
                 options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
                 name="mailingListId"
                 label="Mailliste"

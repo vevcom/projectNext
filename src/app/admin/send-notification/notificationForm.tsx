@@ -1,6 +1,6 @@
 'use client'
 import styles from './notificaionForm.module.scss'
-import Select from '@/components/UI/Select'
+import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
@@ -30,11 +30,11 @@ export default function NotificaionForm({
                 }
             }}
         >
-            <Select
+            <SelectNumber
                 name="channelId"
-                options={channels.map(c => ({
-                    value: c.id,
-                    label: c.name,
+                options={channels.map(channel => ({
+                    value: channel.id,
+                    label: channel.name,
                 }))}
                 className={styles.select}
                 label="Varlisngskanal"

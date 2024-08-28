@@ -6,10 +6,10 @@ import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
-import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
-import ImagePagingProvider from '@/contexts/paging/ImagePaging'
-import PopUpProvider from '@/contexts/PopUp'
-import ImageSelectionProvider from '@/contexts/ImageSelection'
+import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/contextss/paging/ImageCollectionPaging'
+import ImagePagingProvider from '@/contextss/paging/ImagePaging'
+import PopUpProvider from '@/contextss/PopUp'
+import ImageSelectionProvider from '@/contextss/ImageSelection'
 import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -27,7 +27,7 @@ type PropTypes = {
  * @returns
  */
 export default function CmsImageEditor({ cmsImage }: PropTypes) {
-    const canEdit = useEditing()
+    const canEdit = useEditing({})
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isCollectionActive = (collection: { id: number }) => (

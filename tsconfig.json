@@ -27,7 +27,7 @@
       "@/images/*": ["src/actions/images/*"],
       "@/actions/*": ["src/actions/*"],
       "@/prisma/*": ["src/prisma/*"],
-      "@/contexts/*": ["src/contexts/*"],
+      "@/contextss/*": ["src/contexts/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/cms/*": ["src/app/_components/Cms/*", "src/actions/cms/*", "src/services/cms/*"],
       "@/services/*": ["src/services/*"],

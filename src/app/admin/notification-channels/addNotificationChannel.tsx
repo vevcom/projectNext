@@ -1,7 +1,7 @@
 'use client'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import Select from '@/components/UI/Select'
+import { SelectNumber } from '@/components/UI/Select'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
 import { allMethodsOff, allMethodsOn } from '@/services/notifications/Types'
 import { createNotificationChannelAction } from '@/actions/notifications/channel/create'
@@ -43,10 +43,10 @@ export default function AddNotificationChannel({
         <TextInput name="name" label="Navn" />
         <TextInput name="description" label="Beskrivelse" />
 
-        <Select
+        <SelectNumber
             label="Forelder"
             name="parentId"
-            options={channels.map(c => ({ value: c.id, label: c.name }))}
+            options={channels.map(channel => ({ value: channel.id, label: channel.name }))}
             value={selectedParentId}
             onChange={handleNewParent}
         />

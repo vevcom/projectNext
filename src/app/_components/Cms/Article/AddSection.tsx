@@ -15,7 +15,7 @@ type PropTypes = {
 
 export default function AddSection({ articleId, currentNumberSections }: PropTypes) {
     const { refresh } = useRouter()
-    const canEdit = useEditing() //TODO: check visibility of article for user and pass it to useEditing
+    const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
     if (!canEdit) return null
 
     const handleAdd = async (part: ArticleSectionPart) => {

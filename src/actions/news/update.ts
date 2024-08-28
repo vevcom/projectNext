@@ -1,6 +1,6 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createActionError, createZodActionError } from '@/actions/error'
+import { createZodActionError, createActionError } from '@/actions/error'
 import { updateNews } from '@/services/news/update'
 import { updateNewsArticleValidation } from '@/services/news/validation'
 import { dispatchSpecialNotification } from '@/services/notifications/create'
