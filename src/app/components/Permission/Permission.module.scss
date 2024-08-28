@@ -20,5 +20,10 @@
                 font-size: ohma.$fonts-s;
             }
         }
+        .info {
+            display: flex;
+            align-items: center;
+            gap: .3em;
+        }
     }
 }

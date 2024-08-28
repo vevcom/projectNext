@@ -7,6 +7,7 @@ type PropTypes = {
     permission: PermissionT
     displayCategory?: boolean
     children?: ReactNode
+    className?: string
 }
 
 /**
@@ -16,18 +17,20 @@ type PropTypes = {
  * @param displayCategory - Display which category the permission is from (default true)
  * @returns
  */
-export default function Permission({ permission, children, displayCategory = true }: PropTypes) {
+export default function Permission({ permission, children, displayCategory = true, className }: PropTypes) {
     const permissionInfo = PermissionConfig[permission]
 
     return (
-        <div className={styles.Permission}>
+        <div className={`${styles.Permission} ${className}`}>
             {children}
             <div className={styles.content}>
                 <div className={styles.name}>
                     <h3>{permissionInfo.name}</h3> <i>({permission})</i>
                 </div>
-                <p>{permissionInfo.description}</p>
-                {displayCategory ? <p>{permissionInfo.category}</p> : <></>}
+                <div className={styles.info}>
+                    <p>{permissionInfo.description}</p>
+                    {displayCategory ? <><p> - </p><i>{permissionInfo.category}</i></> : <></>}
+                </div>
             </div>
         </div>
     )

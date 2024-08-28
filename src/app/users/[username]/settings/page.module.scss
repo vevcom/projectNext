@@ -1,5 +1,13 @@
 @use '@/styles/ohma';
 
+.wrapper {
+    padding: ohma.$minimalPagePadding;
+}
+
 .userLinks {
 
+}
+
+.permission {
+    margin-bottom: 1em;
 }
