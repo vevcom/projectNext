@@ -12,7 +12,8 @@ import {
     faUser,
     faUserGroup,
     faArrowLeft,
-    faPaperPlane
+    faPaperPlane,
+    faSchool
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -132,6 +133,17 @@ const navigations = [
                 href: '/admin/send-mail'
             }
         ]
+    }, {
+        header: {
+            icon: faSchool,
+            title: 'Skoler'
+        },
+        links: [
+            {
+                title: 'Skoler',
+                href: '/admin/schools'
+            },
+        ],
     }
 ] satisfies {
     header: {
