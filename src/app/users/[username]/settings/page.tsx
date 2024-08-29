@@ -22,7 +22,6 @@ export default async function UserSettings({ params }: PropTypes) {
     const { profile, me } = await getProfile(user, params.username)
 
     if (!me && !permissions.includes('USERS_UPDATE')) return notFound()
-    console.log(permissions)
 
     return (
         <div className={styles.wrapper}>

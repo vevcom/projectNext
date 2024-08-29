@@ -1,5 +1,6 @@
 import 'server-only'
 import { updateApiKeyValidation } from './validation'
+import { apiKeyFilterSelection } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
@@ -21,6 +22,13 @@ export async function updateApiKey(id: number, rawdata: UpdateApiKeyTypes['Detai
     }))
 }
 
+/**
+ * This function takes an api kay that comes from the database and checks if it is expired.
+ * If it is it will update the active status to false and return the updated api key.
+ * WARNING: Make sure to only pass api-keys that come straight from the database to this function.
+ * @param apiKey - The api key to update if expired
+ * @returns
+ */
 export async function updateApiKeyIfExpired<ExtraFields extends object>(
     apiKey: Pick<ApiKey, 'expiresAt' | 'active' | 'id'> & ExtraFields
 ): Promise<Pick<ApiKey, 'expiresAt' | 'active' | 'id'> & ExtraFields> {
@@ -33,7 +41,8 @@ export async function updateApiKeyIfExpired<ExtraFields extends object>(
 
     const updated = await prismaCall(() => prisma.apiKey.update({
         where: { id: apiKey.id },
-        data: { active: false }
+        data: { active: false },
+        select: { active: true },
     }))
     return {
         ...apiKey,
