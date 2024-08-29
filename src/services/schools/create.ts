@@ -1,3 +1,4 @@
+import 'server-only'
 import { School, StandardSchool } from "@prisma/client";
 import { prismaCall } from "../prismaCall";
 import { CreateSchoolTypes, createSchoolValidation } from "./validation";
@@ -9,7 +10,10 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']) : Pro
     const data = createSchoolValidation.detailedValidate(rawdata)
 
     return await prismaCall(() => prisma.school.create({
-        data,
+        data: {
+            name: data.name,
+            shortname: data.shortname,
+        }
     }))
 }
 

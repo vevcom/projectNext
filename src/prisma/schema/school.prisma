@@ -4,7 +4,7 @@ enum StandardSchool {
 
 model School {
   id             Int             @id @default(autoincrement())
-  name           String
+  name           String          @unique
   shortname      String
   standardSchool StandardSchool? @unique
   courses        Course[]
