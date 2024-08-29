@@ -7,6 +7,11 @@ model School {
   name           String          @unique
   shortname      String
   standardSchool StandardSchool? @unique
+  desctiption    String          @default("")
+  cmsParagraph   CmsParagraph    @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId Int
+  cmsImage       CmsImage        @relation(fields: [cmsImageId], references: [id])
+  cmsImageId     Int
   courses        Course[]
 
   createdAt DateTime @default(now())

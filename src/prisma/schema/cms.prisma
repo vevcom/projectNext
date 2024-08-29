@@ -33,6 +33,7 @@ model CmsImage {
   committee            Committee?
   special              SpecialCmsImage? @unique
   ScreenPage           ScreenPage[]
+  School               School[]
 }
 
 enum SpecialCmsParagraph {
@@ -54,6 +55,7 @@ model CmsParagraph {
   special          SpecialCmsParagraph? @unique
   ScreenPage       ScreenPage[]
   Course           Course[]
+  School           School[]
 }
 
 model CmsLink {
