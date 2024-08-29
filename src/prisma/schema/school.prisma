@@ -1,0 +1,14 @@
+enum StandardSchool {
+  NTNU
+}
+
+model School {
+  id             Int             @id @default(autoincrement())
+  name           String
+  shortname      String
+  standardSchool StandardSchool? @unique
+  courses        Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
