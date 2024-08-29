@@ -109,10 +109,11 @@ model StudyProgramme {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name          String
-  code          String  @unique
-  insititueCode String?
-  yearsLength   Int?
-  startYear     Int?
-  partOfOmega   Boolean @default(false)
+  name               String
+  code               String               @unique
+  insititueCode      String?
+  yearsLength        Int?
+  startYear          Int?
+  partOfOmega        Boolean              @default(false)
+  CourseStudyProgram CourseStudyProgram[]
 }
