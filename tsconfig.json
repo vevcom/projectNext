@@ -32,7 +32,8 @@
       "@/cms/*": ["src/app/_components/Cms/*", "src/actions/cms/*", "src/services/cms/*"],
       "@/services/*": ["src/services/*"],
       "@/utils/*": ["src/utils/*"],
-      "@/jwt/*": ["src/jwt/*"]
+      "@/jwt/*": ["src/jwt/*"],
+      "@/api/*": ["src/app/api/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -13,8 +13,8 @@ import { createDefaultSubscriptions } from '@/services/notifications/subscriptio
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
+import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
-import { hashPassword } from '@/auth/password'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
 import type { User } from '@prisma/client'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
@@ -127,7 +127,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 
     if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
 
-    const passwordHash = await hashPassword(password)
+    const passwordHash = await hashAndEncryptPassword(password)
 
     const results = await prismaCall(() => prisma.$transaction([
         prisma.user.update({
@@ -185,7 +185,7 @@ export async function registerUser(id: number, rawdata: RegisterUserTypes['Detai
 export async function updateUserPassword(id: number, data: UpdateUserPasswordTypes['Detailed']): Promise<null> {
     const parse = updateUserPasswordValidation.detailedValidate(data)
 
-    const passwordHash = await hashPassword(parse.password)
+    const passwordHash = await hashAndEncryptPassword(parse.password)
 
     await prismaCall(() => prisma.credentials.update({
         where: {

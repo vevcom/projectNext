@@ -1,4 +1,12 @@
+import type { permissionCategories } from './ConfigVars'
 import type { Prisma } from '@prisma/client'
+
+export type PermissiobCategory = typeof permissionCategories[number]
+export type PermissionInfo = {
+    name: string,
+    description: string,
+    category: PermissiobCategory,
+}
 
 export type ExpandedRole = Prisma.RoleGetPayload<{
     include: {

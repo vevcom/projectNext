@@ -1,5 +1,4 @@
 'use server'
-
 import { safeServerCall } from '@/actions/safeServerCall'
 import { sendMail as transportSendMail } from '@/services/notifications/email/send'
 import { getUser } from '@/auth/getUser'

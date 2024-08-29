@@ -2,7 +2,7 @@ import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
 import { updateUserStudyProgrammes } from './feide/userRoutines'
-import { comparePassword } from './password'
+import { decryptAndComparePassword } from './password'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
 
                 if (!userCredentials) return null
 
-                const passwordMatch = await comparePassword(credentials.password, userCredentials.passwordHash)
+                const passwordMatch = await decryptAndComparePassword(credentials.password, userCredentials.passwordHash)
 
                 if (!passwordMatch) return null
 
