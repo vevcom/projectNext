@@ -11,10 +11,10 @@ import type { ExpandedNewsArticle } from './Types'
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to
  * relate to the news article. The news will be linked to currentOmegaOrder
- * @param config.endDateTime - The date and time the news article will be removed from the website.
+ * @param rawdata.endDateTime - The date and time the news article will be removed from the website.
  * endDateTime is optional, if not provided it will be set to the current date + defaultNewsArticleOldCutoff
- * @param config.description - The description of the news article
- * @param config.name - The name of the news article (and article)
+ * @param rawdata.description - The description of the news article
+ * @param rawdata.name - The name of the news article (and article)
  * @returns
  */
 export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): Promise<ExpandedNewsArticle> {

@@ -49,7 +49,7 @@ export default function EditNews({ news, children }: PropTypes) {
                     />
                     <DateInput
                         color="white"
-                        defaultValue={news.endDateTime.toISOString().substring(0, 10)}
+                        defaultValue={news.endDateTime}
                         label="sluttdato"
                         name="endDateTime"
                     />

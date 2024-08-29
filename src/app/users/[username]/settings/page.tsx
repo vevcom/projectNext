@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import { getProfile } from '@/app/users/[username]/page'
 import { getUser } from '@/auth/getUser'
+import Permission from '@/components/Permission/Permission'
 import { v4 as uuid } from 'uuid'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -21,10 +22,9 @@ export default async function UserSettings({ params }: PropTypes) {
     const { profile, me } = await getProfile(user, params.username)
 
     if (!me && !permissions.includes('USERS_UPDATE')) return notFound()
-    console.log(permissions)
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <Link href={`/users/${profile.user.username}`}>Tilbake</Link>
             <h1>{profile.user.firstname} {profile.user.lastname}</h1>
             <div className={styles.userLinks}>
@@ -33,7 +33,9 @@ export default async function UserSettings({ params }: PropTypes) {
             <p>{`Bruker-ID: ${profile.user.id}`}</p>
             <h2>Tillganger:</h2>
             <ul>
-                {profile.permissions.map(permission => <li key={uuid()}>{permission}</li>)}
+                {profile.permissions.map(permission =>
+                    <Permission key={uuid()} permission={permission} className={styles.permission} />
+                )}
             </ul>
             <h2>Grupper:</h2>
             <ul>

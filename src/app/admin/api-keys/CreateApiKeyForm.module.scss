@@ -1,0 +1,37 @@
+@use '@/styles/ohma';
+
+.CreateApiKeyForm {
+    min-width: 50vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    .keyHolder {
+        flex: 1 1 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: flex-start;
+        .keyAndCopy {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            .copy {
+                background-color: transparent;
+                border: none;
+                svg {
+                    color: ohma.$colors-gray-500;
+                    width: 1.5em;
+                    height: 1.5em;
+                }
+            }
+        }
+    }
+    .copySuccess {
+        margin: .5em 0;
+        &.red {
+            color: ohma.$colors-red;
+        }
+        &.green {
+            color: ohma.$colors-green;
+        }
+    }
+}

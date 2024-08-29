@@ -1,5 +1,3 @@
-import 'server-only'
-
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
 import { Admission } from '@prisma/client'

@@ -120,6 +120,8 @@ enum Permission {
   // Admisstion
   ADMISSION_TRIAL_CREATE
 
+  // API keys
+  APIKEY_ADMIN
   SCREEN_READ
   SCREEN_ADMIN
 
