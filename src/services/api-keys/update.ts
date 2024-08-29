@@ -1,6 +1,5 @@
 import 'server-only'
 import { updateApiKeyValidation } from './validation'
-import { apiKeyFilterSelection } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
