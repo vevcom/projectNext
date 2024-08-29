@@ -1,15 +1,17 @@
 import 'server-only'
-import { School, StandardSchool } from "@prisma/client";
-import { prismaCall } from "../prismaCall";
-import { CreateSchoolTypes, createSchoolValidation } from "./validation";
-import { ServerError } from "../error";
-import { SchoolFilteredSelection, StandardSchoolsConfig } from "./ConfigVars";
-import { createCmsImage } from '../cms/images/create';
+import { createSchoolValidation } from './validation'
+import { SchoolFilteredSelection, StandardSchoolsConfig } from './ConfigVars'
+import { prismaCall } from '@/services/prismaCall'
+import { ServerError } from '@/services/error'
+import { createCmsImage } from '@/services/cms/images/create'
+import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { v4 as uuid } from 'uuid'
-import { createCmsParagraph } from '../cms/paragraphs/create';
-import { SchoolFiltered } from './Types';
+import { StandardSchool } from '@prisma/client'
+import type { SchoolFiltered } from './Types'
+import type { CreateSchoolTypes } from './validation'
+import prisma from '@/prisma'
 
-export async function createSchool(rawdata: CreateSchoolTypes['Detailed']) : Promise<SchoolFiltered> {
+export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)
 
     const cmsImage = await createCmsImage({ name: uuid() })
@@ -19,6 +21,7 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']) : Pro
         data: {
             name: data.name,
             shortname: data.shortname,
+            standardSchool: data.standardSchool,
             cmsImage: {
                 connect: {
                     id: cmsImage.id
@@ -34,12 +37,12 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']) : Pro
     }))
 }
 
-export async function createStandardSchool(standardSchool: StandardSchool) : Promise<SchoolFiltered> {
+export async function createStandardSchool(standardSchool: StandardSchool): Promise<SchoolFiltered> {
     if (!Object.values(StandardSchool).includes(standardSchool)) {
         throw new ServerError('BAD PARAMETERS', 'Invalid standard school')
     }
     return await createSchool({
         ...StandardSchoolsConfig[standardSchool],
-        standardSchool: standardSchool,
+        standardSchool,
     })
 }

@@ -1,7 +1,7 @@
 import { AddHeaderItemPopUp } from '../_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '../_components/PageWrapper/PageWrapper'
-import Form from '@/components/Form/Form'
 import TextInput from '../_components/UI/TextInput'
+import Form from '@/components/Form/Form'
 import { createCourseAction } from '@/actions/courses/create'
 import { create } from 'domain'
 

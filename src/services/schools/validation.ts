@@ -1,7 +1,7 @@
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/services/Validation'
 import { StandardSchool } from '@prisma/client'
+import type { ValidationTypes } from '@/services/Validation'
 
 const baseSchoolValidation = new ValidationBase({
     type: {
@@ -11,7 +11,7 @@ const baseSchoolValidation = new ValidationBase({
     },
     details: {
         name: z.string().max(50).min(1).trim(),
-        shortname: z.string().max(32).min(1).trim(),
+        shortname: z.string().max(20).min(1).trim(),
         standardSchool: z.nativeEnum(StandardSchool).optional(),
     }
 })

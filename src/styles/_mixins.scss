@@ -13,6 +13,28 @@
     padding: 5*variables.$rounding;
 }
 
+@mixin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    th, td {
+        border: 1px solid colors.$gray-300;
+        padding: 8px;
+    }
+    th {
+        background-color: colors.$gray-200;
+        color: black;
+    }
+    tr:nth-child(even) {
+        background-color: colors.$gray-100;
+    }
+    tr:hover {
+        background-color: colors.$gray-200;
+    }
+}
+
 @mixin btn($color: colors.$white) {
     text-align: center;
     text-decoration: none;

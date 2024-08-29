@@ -1,16 +1,16 @@
 'use server'
-import { getUser } from "@/auth/getUser"
-import { createActionError } from "../error"
-import { readSchool, readSchools, readStandardSchools } from "@/services/schools/read"
-import { safeServerCall } from "../safeServerCall"
-import { ActionReturn } from "../Types"
-import { SchoolFiltered } from "@/services/schools/Types"
+import { createActionError } from '../error'
+import { safeServerCall } from '../safeServerCall'
+import { readSchool, readSchools, readStandardSchools } from '@/services/schools/read'
+import { getUser } from '@/auth/getUser'
+import type { ActionReturn } from '../Types'
+import type { SchoolFiltered } from '@/services/schools/Types'
 
 export async function readSchoolsPageAction() {
 
 }
 
-export async function readStandardSchoolsAction() : Promise<ActionReturn<SchoolFiltered[]>> {
+export async function readStandardSchoolsAction(): Promise<ActionReturn<SchoolFiltered[]>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCHOOLS_READ']]
     })
@@ -19,11 +19,11 @@ export async function readStandardSchoolsAction() : Promise<ActionReturn<SchoolF
     return await safeServerCall(() => readStandardSchools())
 }
 
-export async function readSchoolsAction() : Promise<ActionReturn<SchoolFiltered[]>> {
+export async function readSchoolsAction({ onlyNonStandard }: {onlyNonStandard: boolean}): Promise<ActionReturn<SchoolFiltered[]>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCHOOLS_READ']]
     })
     if (!authorized) return createActionError(status)
 
-    return await safeServerCall(() => readSchools())
+    return await safeServerCall(() => readSchools({ onlyNonStandard }))
 }
