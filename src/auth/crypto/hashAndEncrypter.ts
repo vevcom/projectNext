@@ -1,3 +1,4 @@
+import 'server-only'
 import { hasher } from './hasher'
 import { encrypter } from './encrypter'
 import { ServerError } from '@/services/error'
@@ -20,20 +21,25 @@ export function hashAndEncrypter(
     encryptionKey: string | undefined,
     encrypterConfig: EncrypterConfig | undefined = undefined
 ) {
-    if (!salt || !Number(salt)) {
-        throw new ServerError('SERVER ERROR', 'Serveren manger config')
+    function getFunctions() {
+        if (!salt || !Number(salt)) {
+            throw new ServerError('SERVER ERROR', 'Serveren manger config')
+        }
+        if (!encryptionKey) {
+            throw new ServerError('SERVER ERROR', 'Serveren manger config')
+        }
+        const { hash, compare } = hasher(Number(salt))
+        const { encrypt, decrypt } = encrypter(encryptionKey, encrypterConfig)
+        return { hash, compare, encrypt, decrypt }
     }
-    if (!encryptionKey) {
-        throw new ServerError('SERVER ERROR', 'Serveren manger config')
-    }
-    const { hash, compare } = hasher(Number(salt))
-    const { encrypt, decrypt } = encrypter(encryptionKey, encrypterConfig)
     return {
         hashAndEncrypt: async (data: string) => {
+            const { hash, encrypt } = getFunctions()
             const hashed = await hash(data)
             return encrypt(hashed)
         },
         decryptAndCompare: async (data: string, encryptedData: string) => {
+            const { compare, decrypt } = getFunctions()
             const decrypted = decrypt(encryptedData)
             return compare(data, decrypted)
         }
