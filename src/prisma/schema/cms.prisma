@@ -53,6 +53,7 @@ model CmsParagraph {
   articleSectionId Int?                 @unique
   special          SpecialCmsParagraph? @unique
   ScreenPage       ScreenPage[]
+  Course           Course[]
 }
 
 model CmsLink {

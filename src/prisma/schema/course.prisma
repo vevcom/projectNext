@@ -1,0 +1,41 @@
+enum StandardSchool {
+  NTNU
+}
+
+model School {
+  id             Int             @id @default(autoincrement())
+  name           String
+  standardSchool StandardSchool? @unique
+  courses        Course[]
+}
+
+model Course {
+  id                             Int                  @id @default(autoincrement())
+  code                           String
+  name                           String
+  ectsPoints                     Int
+  schoolId                       Int
+  cmsParagraph                   CmsParagraph         @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId                 Int
+  school                         School               @relation(fields: [schoolId], references: [id])
+  thisCourseHasBeenApprovedAs    CourseApprovedAs[]   @relation("thisCourseHasBeenApprovedAs")
+  thisCourseHasBeenUsedToApprove CourseApprovedAs[]   @relation("thisCourseHasBeenUsedToApprove")
+  CourseStudyProgram             CourseStudyProgram[]
+}
+
+model CourseStudyProgram {
+  course         Course         @relation(fields: [courseId], references: [id])
+  courseId       Int
+  studyProgramme StudyProgramme @relation(fields: [studyProgramId], references: [id])
+  studyProgramId Int
+
+  @@id([courseId, studyProgramId])
+}
+
+model CourseApprovedAs {
+  id                 Int    @id @default(autoincrement())
+  courseId           Int
+  courseApprovedAsId Int
+  course             Course @relation(fields: [courseId], references: [id], name: "thisCourseHasBeenApprovedAs")
+  courseApprovedAs   Course @relation(fields: [courseApprovedAsId], references: [id], name: "thisCourseHasBeenUsedToApprove")
+}
