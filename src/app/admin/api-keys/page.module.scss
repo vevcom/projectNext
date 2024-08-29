@@ -8,25 +8,7 @@
 }
 
 .ApiKeysList {    
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 18px;
-    text-align: left;
-    th, td {
-        border: 1px solid ohma.$colors-gray-300;
-        padding: 8px;
-    }
-    th {
-        background-color: ohma.$colors-gray-200;
-        color: black;
-    }
-    tr:nth-child(even) {
-        background-color: ohma.$colors-gray-100;
-    }
-    tr:hover {
-        background-color: ohma.$colors-gray-200;
-    }
+    @include ohma.table();
     a {
         display: contents;
         text-decoration: none;

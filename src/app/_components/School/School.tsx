@@ -1,5 +1,5 @@
-import type { School as SchoolType } from "@prisma/client"
-import ImageCard from "../ImageCard/ImageCard"
+import ImageCard from '@/components/ImageCard/ImageCard'
+import type { School as SchoolType } from '@prisma/client'
 
 type PropTypes = {
     school: SchoolType
