@@ -3,7 +3,7 @@ import CreateApiKeyForm from './CreateApiKeyForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readApiKeysAction } from '@/actions/api-keys/read'
-import { displayDate } from '@/date/displayDate'
+import { displayDate } from '@/dates/displayDate'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 
