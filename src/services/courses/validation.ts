@@ -1,6 +1,6 @@
-import { ValidationBase } from "@/services/Validation"
-import type { ValidationTypes } from "@/services/Validation"
-import { z } from "zod"
+import { ValidationBase } from '@/services/Validation'
+import { z } from 'zod'
+import type { ValidationTypes } from '@/services/Validation'
 
 const baseCourseValidation = new ValidationBase({
     type: {
