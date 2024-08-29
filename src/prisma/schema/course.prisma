@@ -14,10 +14,10 @@ model Course {
   code                           String
   name                           String
   ectsPoints                     Int
+  school                         School               @relation(fields: [schoolId], references: [id])
   schoolId                       Int
   cmsParagraph                   CmsParagraph         @relation(fields: [cmsParagraphId], references: [id])
   cmsParagraphId                 Int
-  school                         School               @relation(fields: [schoolId], references: [id])
   thisCourseHasBeenApprovedAs    CourseApprovedAs[]   @relation("thisCourseHasBeenApprovedAs")
   thisCourseHasBeenUsedToApprove CourseApprovedAs[]   @relation("thisCourseHasBeenUsedToApprove")
   CourseStudyProgram             CourseStudyProgram[]
