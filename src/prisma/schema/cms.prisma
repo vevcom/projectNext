@@ -67,6 +67,7 @@ model CmsLink {
   text             String          @default("Link")
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
+  School           School[]
 }
 
 enum Position {
