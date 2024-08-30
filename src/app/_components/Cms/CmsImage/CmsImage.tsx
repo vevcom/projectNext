@@ -26,12 +26,12 @@ export const fallbackImage = '/images/fallback.jpg'
  * @param children - the children to display besides image
  * @returns
  */
-export default async function CmsImage({ 
-    cmsImage, 
-    children, 
+export default async function CmsImage({
+    cmsImage,
+    children,
     className = '',
     classNameImage,
-    ...props 
+    ...props
 }: PropTypes) {
     let image = cmsImage.image
     if (!image) {

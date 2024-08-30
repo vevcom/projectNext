@@ -1,6 +1,6 @@
 'use server'
-import type { CreateCourseTypes } from '@/services/courses/validation'
 import { safeServerCall } from '@/actions/safeServerCall'
+import type { CreateCourseTypes } from '@/services/courses/validation'
 
 export async function createCourseAction(rawdata: FormData | CreateCourseTypes['Type']) {
     console.log('createCourseAction', rawdata)

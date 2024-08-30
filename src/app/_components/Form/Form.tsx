@@ -22,7 +22,7 @@ export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType
     action: Action<ReturnType, DataGuarantee>,
     successCallback?: (data?: ReturnType) => void,
     refreshOnSuccess?: boolean,
-    navigateOnSuccess?: string,
+    navigateOnSuccess?: string | ((data?: ReturnType) => string),
     closePopUpOnSuccess?: PopUpKeyType,
     buttonClassName?: string,
 }
@@ -107,7 +107,9 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             return setTimeout(() => {
                 setSuccess(false)
                 if (refreshOnSuccess) refresh()
-                if (navigateOnSuccess) push(navigateOnSuccess)
+                if (navigateOnSuccess) {
+                    push(typeof navigateOnSuccess === 'string' ? navigateOnSuccess : navigateOnSuccess(res.data))
+                }
             }, SUCCESS_FEEDBACK_TIME)
         }
         //No error provided
