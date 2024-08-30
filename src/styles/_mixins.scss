@@ -10,7 +10,11 @@
 
 @mixin card {
     border-radius: variables.$cardRounding;
-    padding: 5*variables.$rounding;
+    padding: variables.$cardPadding;
+}
+
+@mixin boxShadow {
+    box-shadow: colors.$gray-700 0 0 10px;
 }
 
 @mixin table {
