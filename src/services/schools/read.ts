@@ -1,11 +1,11 @@
 import 'server-only'
 import { createStandardSchool } from './create'
-import { SchoolFilteredSelection } from './ConfigVars'
+import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import logger from '@/logger'
-import { StandardSchool } from '@prisma/client'
-import type { SchoolFiltered } from './Types'
 import prisma from '@/prisma'
+import { StandardSchool } from '@prisma/client'
+import type { ExpandedSchool, SchoolFiltered } from './Types'
 
 export async function readSchoolsPage() {
 
@@ -36,11 +36,14 @@ export async function readStandardSchools(): Promise<SchoolFiltered[]> {
     }))
 }
 
-export async function readSchool(name: string): Promise<SchoolFiltered> {
+export async function readSchool(shortname: string): Promise<ExpandedSchool> {
     return await prismaCall(() => prisma.school.findUniqueOrThrow({
         where: {
-            name,
+            shortname,
         },
-        select: SchoolFilteredSelection,
+        select: {
+            ...SchoolFilteredSelection,
+            ...SchoolRelationIncluder,
+        },
     }))
 }
