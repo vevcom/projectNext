@@ -1,12 +1,11 @@
 import styles from './page.module.scss'
 import { SchoolAdminList } from './SchoolAdminList'
 import Form from '@/components/Form/Form'
-import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
-import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
-import { createSchoolAction } from '@/actions/schools/create'
-import TextInput from '@/app/_components/UI/TextInput'
-import { readSchoolsAction, readStandardSchoolsAction } from '@/actions/schools/read'
-import React from 'react'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { createSchoolAction } from '@/education/schools/create'
+import TextInput from '@/components/UI/TextInput'
+import { readSchoolsAction, readStandardSchoolsAction } from '@/education/schools/read'
 
 export default async function SchoolsAdmin() {
     const standardSchoolsRes = await readStandardSchoolsAction()
@@ -32,7 +31,7 @@ export default async function SchoolsAdmin() {
             </AddHeaderItemPopUp>
         }>
             <div className={styles.wrapper}>
-                <p>Skoler er brukt i emnesystemet</p>
+                <p>Skoler er brukt på fagveven</p>
                 <h2>Standard Skoler</h2>
                 <SchoolAdminList schools={standardSchools} />
                 <h2>Andre Skoler</h2>

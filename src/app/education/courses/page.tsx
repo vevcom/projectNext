@@ -2,7 +2,7 @@ import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
-import { createCourseAction } from '@/actions/courses/create'
+import { createCourseAction } from '@/education/courses/create'
 
 export default function Courses() {
     return (

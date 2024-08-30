@@ -1,7 +1,7 @@
 import styles from './School.module.scss'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import type { ExpandedSchool } from '@/services/schools/Types'
+import type { ExpandedSchool } from '@/education/schools/Types'
 
 type PropTypes = {
     school: ExpandedSchool

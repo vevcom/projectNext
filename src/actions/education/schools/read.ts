@@ -1,10 +1,10 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readSchool, readSchools, readStandardSchools } from '@/services/schools/read'
+import { readSchool, readSchools, readStandardSchools } from '@/services/education/schools/read'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedSchool, SchoolFiltered } from '@/services/schools/Types'
+import type { ExpandedSchool, SchoolFiltered } from '@/education/schools/Types'
 
 export async function readSchoolsPageAction() {
 

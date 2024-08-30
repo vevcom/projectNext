@@ -2,11 +2,11 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updateSchoolValidation } from '@/services/schools/validation'
-import { updateSchool } from '@/services/schools/update'
+import { updateSchoolValidation } from '@/education/schools/validation'
+import { updateSchool } from '@/services/education/schools/update'
 import type { ActionReturn } from '@/actions/Types'
-import type { UpdateSchoolTypes } from '@/services/schools/validation'
-import type { SchoolFiltered } from '@/services/schools/Types'
+import type { UpdateSchoolTypes } from '@/education/schools/validation'
+import type { SchoolFiltered } from '@/education/schools/Types'
 
 export async function updateSchoolAction(
     id: number,
