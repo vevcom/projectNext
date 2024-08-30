@@ -5,10 +5,26 @@ import { prismaCall } from '@/services/prismaCall'
 import logger from '@/logger'
 import prisma from '@/prisma'
 import { StandardSchool } from '@prisma/client'
-import type { ExpandedSchool, SchoolFiltered } from './Types'
+import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './Types'
+import { ReadPageInput } from '@/services/paging/Types'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
 
-export async function readSchoolsPage() {
-
+export async function readSchoolsPage<const PageSize extends number>({
+    page,
+}: ReadPageInput<PageSize, SchoolCursor>): Promise<ExpandedSchool[]> {
+    console.log('readSchoolsPage')
+    return await prismaCall(() => prisma.school.findMany({
+        select: {
+            ...SchoolFilteredSelection,
+            ...SchoolRelationIncluder,
+        },
+        orderBy: [
+            { standardSchool: 'asc' },
+            { shortname: 'asc' },
+            { id: 'asc' },
+        ],
+        ...cursorPageingSelection(page),
+    }))
 }
 
 export async function readSchools({ onlyNonStandard }: {onlyNonStandard: boolean}): Promise<SchoolFiltered[]> {

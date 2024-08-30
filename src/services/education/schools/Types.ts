@@ -8,3 +8,7 @@ export type ExpandedSchool = SchoolFiltered & {
     cmsImage: ExpandedCmsImage,
     cmsParagraph: CmsParagraph,
 }
+
+export type SchoolCursor = {
+    id: number
+}
