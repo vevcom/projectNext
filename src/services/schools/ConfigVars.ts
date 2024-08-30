@@ -1,6 +1,6 @@
 import { createSelection } from '@/services/createSelection'
 import type { CreateSchoolTypes } from './validation'
-import type { School, StandardSchool } from '@prisma/client'
+import type { Prisma, School, StandardSchool } from '@prisma/client'
 
 export const StandardSchoolsConfig = {
     NTNU: {
@@ -13,6 +13,16 @@ export const SchoolFieldsToExpose = [
     'name',
     'shortname',
     'id',
+    'desctiption',
 ] as const satisfies (keyof School)[]
 
 export const SchoolFilteredSelection = createSelection(SchoolFieldsToExpose)
+
+export const SchoolRelationIncluder = {
+    cmsImage: {
+        include: {
+            image: true,
+        }
+    },
+    cmsParagraph: true,
+} satisfies Prisma.SchoolInclude

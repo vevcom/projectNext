@@ -5,7 +5,7 @@ enum StandardSchool {
 model School {
   id             Int             @id @default(autoincrement())
   name           String          @unique
-  shortname      String
+  shortname      String          @unique
   standardSchool StandardSchool? @unique
   desctiption    String          @default("")
   cmsParagraph   CmsParagraph    @relation(fields: [cmsParagraphId], references: [id])

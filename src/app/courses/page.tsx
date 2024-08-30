@@ -1,14 +1,13 @@
-import { AddHeaderItemPopUp } from '../_components/HeaderItems/HeaderItemPopUp'
-import PageWrapper from '../_components/PageWrapper/PageWrapper'
-import TextInput from '../_components/UI/TextInput'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { createCourseAction } from '@/actions/courses/create'
-import { create } from 'domain'
 
 export default function Courses() {
     return (
         <PageWrapper title="Courses" headerItem={
-            <AddHeaderItemPopUp>
+            <AddHeaderItemPopUp PopUpKey="create-couses">
                 <Form
                     action={createCourseAction}
                 >
@@ -16,7 +15,7 @@ export default function Courses() {
                 </Form>
             </AddHeaderItemPopUp>
         }>
-
+            <div>hei</div>
         </PageWrapper>
     )
 }
