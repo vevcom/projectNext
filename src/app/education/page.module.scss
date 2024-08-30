@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.links {
+    padding: 1em 0;
+    display: flex;
+    justify-content: space-between;
+    > * {
+        flex: 1;
+        margin: 0 1em;
+    }
+}
