@@ -16,6 +16,7 @@ import seedMail from './seedMail'
 import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
 import { PrismaClient } from '@/generated/pn'
+import seedDevSchools from './development/seedDevSchools'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -45,6 +46,7 @@ async function seed() {
     await seedDevPermissions(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)
+    await seedDevSchools(prisma)
     console.log('seed dev done')
 }
 
