@@ -10,8 +10,16 @@ type PropTypes = {
 export default function School({ school }: PropTypes) {
     return (
         <div className={styles.School}>
-            <CmsImage cmsImage={school.cmsImage} width={200} />
-            <CmsParagraph cmsParagraph={school.cmsParagraph} />
+            <CmsImage 
+                className={styles.cmsImage} 
+                classNameImage={styles.image}
+                cmsImage={school.cmsImage}
+                width={200} 
+            />
+            <div className={styles.text}>
+                <h2>{school.name}</h2>
+                <CmsParagraph cmsParagraph={school.cmsParagraph} />
+            </div>
         </div>
     )
 }

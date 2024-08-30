@@ -3,12 +3,32 @@
 .School {
     position: relative;
     display: flex;
-    background-color: ohma.$colors-gray-200;
+    background-color: ohma.$colors-secondary;
     @include ohma.card();
+    @include ohma.boxShadow();
+    overflow: hidden;
+    min-height: 300px;
     .cmsImage {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
+        height: 100%;
+        width: 300px;
+        > * {
+            width: 100%;
+            height: 100%;
+        }
+        .image {
+            width: 300px;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+    .text {
+        padding-left: 300px;
+        h2 {
+            font-size: ohma.$fonts-xl;
+        }
     }
 }

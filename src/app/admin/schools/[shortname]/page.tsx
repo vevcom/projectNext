@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import { readSchoolAction } from '@/actions/schools/read'
-import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import School from '@/components/School/School'
 
 type PropTypes = {
@@ -16,9 +16,9 @@ export default async function SchoolAdmin({ params }: PropTypes) {
     const school = res.data
     return (
         <PageWrapper title="Administrer skole">
-            <span className={styles.preview}>
+            <div className={styles.preview}>
                 <School school={school} />
-            </span>
+            </div>
         </PageWrapper>
     )
 }
