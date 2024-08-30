@@ -3,13 +3,13 @@ import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readSchool, readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
 import { getUser } from '@/auth/getUser'
+import type { ReadPageInput } from '@/services/paging/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
-import { ReadPageInput } from '@/services/paging/Types'
 
 export async function readSchoolsPageAction<const PageSize extends number>(
     pageReadInput: ReadPageInput<PageSize, SchoolCursor>
-) : Promise<ActionReturn<ExpandedSchool[]>> {
+): Promise<ActionReturn<ExpandedSchool[]>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCHOOLS_READ']]
     })

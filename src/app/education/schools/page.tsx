@@ -1,18 +1,19 @@
-import { readSchoolsPageAction } from '@/actions/education/schools/read'
 import styles from './page.module.scss'
+import { readSchoolsPageAction } from '@/actions/education/schools/read'
 import { getUser } from '@/auth/getUser'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import SchoolPagingProvider, { PageSizeSchool } from '@/contexts/paging/SchoolPaging'
-import Link from 'next/link'
+import SchoolPagingProvider from '@/contexts/paging/SchoolPaging'
 import SchoolList from '@/components/School/SchoolList'
 import { schoolListRenderer } from '@/components/School/SchoolListRenderer'
+import Link from 'next/link'
+import type { PageSizeSchool } from '@/contexts/paging/SchoolPaging'
 
 export default async function Schools() {
     const { permissions } = await getUser()
 
     const isSchoolAdmin = permissions.includes('SCHOOLS_ADMIN')
 
-    const pageSizeSchool : PageSizeSchool = 8
+    const pageSizeSchool: PageSizeSchool = 8
     const res = await readSchoolsPageAction({
         page: { pageSize: pageSizeSchool, page: 0, cursor: null },
         details: undefined,
@@ -35,7 +36,7 @@ export default async function Schools() {
                 startPage={{ pageSize: pageSizeSchool, page: 1 }}
             >
                 <div className={styles.wrapper}>
-                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false))} /> 
+                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false))} />
                 </div>
             </SchoolPagingProvider>
         </PageWrapper>
