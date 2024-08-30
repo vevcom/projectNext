@@ -17,12 +17,12 @@ import type { Image as ImageT } from '@prisma/client'
  * @param children - the children to display besides image
  * @returns
  */
-export default function CmsImageClient({ 
-    cmsImage, 
+export default function CmsImageClient({
+    cmsImage,
     children,
     className = '',
-    classNameImage, 
-    ...props 
+    classNameImage,
+    ...props
 }: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
     const [fallback, setFallback] = useState(false)

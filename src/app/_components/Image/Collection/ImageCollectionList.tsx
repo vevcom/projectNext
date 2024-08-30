@@ -13,7 +13,7 @@ type PropTypes = {
 /**
  * WARNING: The server rendered data should be CollectioCards to make it consistent with the endless scroll
  * @param serverRendered - Make sure to pass the server rendered collections here in the correct format
- * @returns 
+ * @returns
  */
 export default function ImageCollectionList({ serverRendered }: PropTypes) {
     return (

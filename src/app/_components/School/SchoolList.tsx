@@ -1,9 +1,9 @@
 'use client'
-import type { ReactNode } from "react";
-import { SchoolPagingContext } from "@/contexts/paging/SchoolPaging";
-import EndlessScroll from "../PagingWrappers/EndlessScroll";
 import styles from './SchoolList.module.scss'
-import { schoolListRenderer } from "./SchoolListRenderer";
+import { schoolListRenderer } from './SchoolListRenderer'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import { SchoolPagingContext } from '@/contexts/paging/SchoolPaging'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     serverRendered: ReactNode
@@ -13,7 +13,7 @@ type PropTypes = {
  * WARNING: This component needs SchoolPagingContext to work properly
  * @param serverRendered - Make sure to pass the server rendered schools here in the correct format
  * You may use the schoolListRenderer to make sure of this
- * @returns 
+ * @returns
  */
 export default function SchoolList({ serverRendered }: PropTypes) {
     return (
