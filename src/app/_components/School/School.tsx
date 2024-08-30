@@ -1,14 +1,17 @@
-import ImageCard from '@/components/ImageCard/ImageCard'
-import type { School as SchoolType } from '@prisma/client'
+import styles from './School.module.scss'
+import CmsImage from '@/cms/CmsImage/CmsImage'
+import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
+import type { ExpandedSchool } from '@/services/schools/Types'
 
 type PropTypes = {
-    school: SchoolType
+    school: ExpandedSchool
 }
 
 export default function School({ school }: PropTypes) {
     return (
-        <ImageCard image={null} title={school.shortname} href={`/schools/${school.name}`}>
-            {school.desctiption}
-        </ImageCard>
+        <div className={styles.School}>
+            <CmsImage cmsImage={school.cmsImage} width={200} />
+            <CmsParagraph cmsParagraph={school.cmsParagraph} />
+        </div>
     )
 }

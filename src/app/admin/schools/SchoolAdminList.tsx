@@ -18,7 +18,7 @@ export async function SchoolAdminList({ schools }: PropTypes) {
             </thead>
             <tbody>
                 {schools.map(school => (
-                    <Link href={`/admin/schools/${encodeURIComponent(school.name)}`}>
+                    <Link key={school.shortname} href={`/admin/schools/${encodeURIComponent(school.shortname)}`}>
                         <tr key={school.id}>
                             <td>{school.id}</td>
                             <td>{school.name}</td>

@@ -6,7 +6,9 @@ import React from 'react'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 
-export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & {
+export type PropTypes = Omit<
+    ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
+> & {
     cmsImage: ExpandedCmsImage,
     children?: React.ReactNode
 }

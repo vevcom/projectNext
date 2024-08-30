@@ -10,7 +10,9 @@ import React from 'react'
 
 export default async function SchoolsAdmin() {
     const standardSchoolsRes = await readStandardSchoolsAction()
-    if (!standardSchoolsRes.success) throw new Error(standardSchoolsRes.error?.length ? standardSchoolsRes.error[0].message : 'Ukjent feil')
+    if (!standardSchoolsRes.success) {
+        throw new Error(standardSchoolsRes.error?.length ? standardSchoolsRes.error[0].message : 'Ukjent feil')
+    }
     const standardSchools = standardSchoolsRes.data
 
     const schoolsRes = await readSchoolsAction({ onlyNonStandard: true })

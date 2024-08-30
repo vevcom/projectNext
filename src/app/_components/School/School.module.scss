@@ -1,5 +1,14 @@
 @use '@/styles/ohma';
 
 .School {
+    position: relative;
     display: flex;
+    background-color: ohma.$colors-gray-200;
+    @include ohma.card();
+    .cmsImage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
 }

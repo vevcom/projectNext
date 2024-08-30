@@ -127,6 +127,9 @@ enum Permission {
 
   SCHOOLS_READ
   SCHOOLS_ADMIN
+
+  COURSES_READ
+  COURSES_ADMIN
 }
 
 model Role {
