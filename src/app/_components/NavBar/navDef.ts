@@ -7,7 +7,6 @@ import {
     faPoo,
     faShoppingCart,
     faComment,
-    faQuestionCircle,
     faCamera,
     faList,
     faCircleInfo,
@@ -21,6 +20,7 @@ import {
     faTools,
     faChartLine,
     faSignature,
+    faSchool,
 } from '@fortawesome/free-solid-svg-icons'
 import type {
     IconDefinition } from '@fortawesome/free-solid-svg-icons'
@@ -107,10 +107,10 @@ export const itemsForMenu: NavItem[] = [
         icon: faSignature,
     },
     {
-        name: 'Guider',
-        href: '/articles/guider',
+        name: 'Fagveven',
+        href: '/education',
         show: 'all',
-        icon: faQuestionCircle,
+        icon: faSchool,
     },
     {
         name: 'Bilder',
