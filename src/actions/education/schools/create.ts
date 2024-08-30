@@ -1,12 +1,12 @@
 'use server'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { createSchoolValidation } from '@/services/schools/validation'
+import { createSchoolValidation } from '@/education/schools/validation'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createSchool } from '@/services/schools/create'
-import type { SchoolFiltered } from '@/services/schools/Types'
+import { createSchool } from '@/services/education/schools/create'
+import type { SchoolFiltered } from '@/education/schools/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateSchoolTypes } from '@/services/schools/validation'
+import type { CreateSchoolTypes } from '@/education/schools/validation'
 
 export async function createSchoolAction(
     rawdata: FormData | CreateSchoolTypes['Type']

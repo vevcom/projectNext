@@ -1,6 +1,6 @@
 import styles from './SchoolAdminList.module.scss'
 import Link from 'next/link'
-import type { SchoolFiltered } from '@/services/schools/Types'
+import type { SchoolFiltered } from '@/education/schools/Types'
 
 type PropTypes = {
     schools: SchoolFiltered[]

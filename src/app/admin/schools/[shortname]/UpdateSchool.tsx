@@ -1,8 +1,8 @@
 'use client'
 import Form from '@/app/_components/Form/Form'
-import { updateSchoolAction } from '@/actions/schools/update'
+import { updateSchoolAction } from '@/education/schools/update'
 import TextInput from '@/components/UI/TextInput'
-import type { SchoolFiltered } from '@/services/schools/Types'
+import type { SchoolFiltered } from '@/education/schools/Types'
 
 type PropTypes = {
     school: SchoolFiltered

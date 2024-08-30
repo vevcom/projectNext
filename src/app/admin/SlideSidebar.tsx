@@ -140,13 +140,17 @@ const navigations = [
     }, {
         header: {
             icon: faSchool,
-            title: 'Skoler'
+            title: 'Fagvev'
         },
         links: [
             {
                 title: 'Skoler',
                 href: '/admin/schools'
             },
+            {
+                title: 'Emnekatalog',
+                href: '/admin/courses'
+            }
         ],
     }
 ] satisfies {
