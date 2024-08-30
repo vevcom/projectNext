@@ -10,12 +10,14 @@ import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
 import type { SchoolFiltered } from './Types'
 import type { CreateSchoolTypes } from './validation'
+import { createCmsLink } from '@/services/cms/links/create'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)
 
     const cmsImage = await createCmsImage({ name: uuid() })
     const cmsParagraph = await createCmsParagraph({ name: uuid() })
+    const cmsLink = await createCmsLink({ name: uuid() })
 
     return await prismaCall(() => prisma.school.create({
         data: {
@@ -30,6 +32,11 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Prom
             cmsParagraph: {
                 connect: {
                     id: cmsParagraph.id
+                }
+            },
+            cmsLink: {
+                connect: {
+                    id: cmsLink.id
                 }
             },
         },

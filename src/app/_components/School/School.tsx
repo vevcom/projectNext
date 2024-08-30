@@ -3,6 +3,7 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
 import type { ExpandedSchool } from '@/education/schools/Types'
 import CmsImageClient from '../Cms/CmsImage/CmsImageClient'
+import CmsLink from '../Cms/CmsLink/CmsLink'
 
 type PropTypes = {
     school: ExpandedSchool
@@ -31,6 +32,7 @@ export default function School({ school, asClient = false }: PropTypes) {
             <div className={styles.text}>
                 <h2>{school.name}</h2>
                 <CmsParagraph cmsParagraph={school.cmsParagraph} />
+                <CmsLink cmsLink={school.cmsLink} />
             </div>
         </div>
     )

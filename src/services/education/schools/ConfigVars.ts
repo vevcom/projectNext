@@ -25,4 +25,5 @@ export const SchoolRelationIncluder = {
         }
     },
     cmsParagraph: true,
+    cmsLink: true,
 } satisfies Prisma.SchoolInclude
