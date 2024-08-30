@@ -5,8 +5,14 @@
     min-width: 70px; 
     height: 30px;
     > a {
-        @include ohma.borderBtn(ohma.$colors-secondary);
-        margin: 0;
+        &.primary {
+            @include ohma.borderBtn(ohma.$colors-primary);
+            margin: 0;
+        }
+        &.secondary {
+            @include ohma.borderBtn(ohma.$colors-secondary);
+            margin: 0;
+        }
         display: flex;
         justify-content: center;
         align-items: center;
