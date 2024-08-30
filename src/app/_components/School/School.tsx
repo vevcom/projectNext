@@ -32,7 +32,7 @@ export default function School({ school, asClient = false }: PropTypes) {
             <div className={styles.text}>
                 <h2>{school.name}</h2>
                 <CmsParagraph cmsParagraph={school.cmsParagraph} />
-                <CmsLink cmsLink={school.cmsLink} />
+                <CmsLink cmsLink={school.cmsLink} className={styles.cmsLink} color="primary"/>
             </div>
         </div>
     )

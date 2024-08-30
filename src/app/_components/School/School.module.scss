@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+$imageWidth: 300px;
+
 .School {
     position: relative;
     display: flex;
@@ -7,28 +9,32 @@
     @include ohma.card();
     @include ohma.boxShadow();
     overflow: hidden;
-    min-height: 300px;
+    min-height: $imageWidth;
     .cmsImage {
         position: absolute;
         top: 0;
         left: 0;
         height: 100%;
-        width: 300px;
+        width: $imageWidth;
         > * {
             width: 100%;
             height: 100%;
         }
         .image {
-            width: 300px;
+            width: $imageWidth;
             height: 100%;
             object-fit: cover;
             object-position: center;
         }
     }
     .text {
-        padding-left: 300px;
+        padding-left: $imageWidth;
         h2 {
             font-size: ohma.$fonts-xl;
+        }
+        .cmsLink {
+            margin-top: .5em;
+            width: 200px;
         }
     }
 }
