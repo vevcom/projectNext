@@ -12,7 +12,6 @@ import type { ReadPageInput } from '@/services/paging/Types'
 export async function readSchoolsPage<const PageSize extends number>({
     page,
 }: ReadPageInput<PageSize, SchoolCursor>): Promise<ExpandedSchool[]> {
-    console.log('readSchoolsPage')
     return await prismaCall(() => prisma.school.findMany({
         select: {
             ...SchoolFilteredSelection,
