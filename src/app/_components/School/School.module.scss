@@ -9,7 +9,7 @@ $imageWidth: 300px;
     @include ohma.card();
     @include ohma.boxShadow();
     overflow: hidden;
-    min-height: $imageWidth;
+    min-height: calc($imageWidth + 3em);
     .cmsImage {
         position: absolute;
         top: 0;
@@ -29,12 +29,37 @@ $imageWidth: 300px;
     }
     .text {
         padding-left: $imageWidth;
-        h2 {
-            font-size: ohma.$fonts-xl;
-        }
         .cmsLink {
             margin-top: .5em;
             width: 200px;
+        }
+        .name {
+            h2 {
+                font-size: ohma.$fonts-xl;
+            }
+            p {
+                font-size: ohma.$fonts-xl;
+                font-weight: ohma.$fonts-weight-s;
+            }
+            margin-bottom: 1em;
+        }
+    }
+    @include ohma.screenMobile {
+        flex-flow: column;
+        .cmsImage {
+            width: 100%;
+            height: 300px;
+            > * {
+                width: 100%  !important;
+            }
+            .image {
+                height: 300px;
+                width: 100%;
+            }
+        }
+        .text {
+            padding-top: calc(300px - 3em);
+            padding-left: 0;
         }
     }
 }
