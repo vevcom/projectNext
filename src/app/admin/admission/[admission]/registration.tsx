@@ -2,9 +2,9 @@
 
 import styles from './registration.module.scss'
 import { createAdmissionTrialAction } from '@/actions/admission/create'
-import Form from '@/app/components/Form/Form'
-import OmegaIdReader from '@/app/components/OmegaId/reader/OmegaIdReader'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
+import TextInput from '@/components/UI/TextInput'
 import type { Admission } from '@prisma/client'
 
 

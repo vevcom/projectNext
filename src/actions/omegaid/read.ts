@@ -1,6 +1,6 @@
 'use server'
 
-import { ServerError } from '@/server/error'
+import { ServerError } from '@/services/error'
 
 
 export async function readOmegaJWTPublicKey(): Promise<string> {

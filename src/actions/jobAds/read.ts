@@ -1,9 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readJobAdByNameAndOrder, readJobAdsCurrent } from '@/server/jobAds/read'
+import { readJobAdByNameAndOrder, readJobAdsCurrent } from '@/services/jobAds/read'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import type { ExpandedJobAd, SimpleJobAd } from '@/server/jobAds/Types'
+import type { ExpandedJobAd, SimpleJobAd } from '@/services/jobAds/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 

@@ -1,11 +1,11 @@
 'use client'
 import { createLockerReservationAction } from '@/actions/lockers/reservations/create'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
-import DateInput from '@/app/components/UI/DateInput'
-import Checkbox from '@/app/components/UI/Checkbox'
-import { useRouter } from 'next/navigation'
+import Form from '@/app/_components/Form/Form'
+import { SelectString } from '@/app/_components/UI/Select'
+import DateInput from '@/app/_components/UI/DateInput'
+import Checkbox from '@/app/_components/UI/Checkbox'
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     lockerId: number
@@ -31,7 +31,7 @@ export default function LockerReservationForm({ lockerId, groupsFormData }: Prop
             submitText="Reserver"
             action={createLockerReservationAction.bind(null, lockerId)}
         >
-            <Select
+            <SelectString
                 label="Reserver for"
                 name="groupId"
                 value={groupId}

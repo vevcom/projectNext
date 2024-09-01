@@ -1,4 +1,4 @@
-import type { ErrorMessage } from '@/server/error'
+import type { ErrorMessage } from '@/services/error'
 import type { SafeParseError } from 'zod'
 import type { ActionReturnError, ActionErrorCode } from './Types'
 

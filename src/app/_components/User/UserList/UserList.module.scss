@@ -1,0 +1,87 @@
+@use '@/styles/ohma';
+
+$selectionBtnSize: 25px;
+
+.UserList {
+    height: 100%;
+    > .filters {
+        padding-right: 3em;
+        width: 100%;
+        padding-left: .3em;
+        display: flex;
+        flex-flow: row wrap;
+        margin-bottom: ohma.$gap;
+        .name {
+            display: flex;
+            flex-direction: column;
+        }
+        gap: ohma.$gap;
+        .group {
+            display: flex;
+            flex-direction: column;
+            > * {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                select {
+                    width: 100%;
+                }
+            }
+            min-width: 150px;
+        }
+    }
+    > .list {
+        height: 100%;
+        overflow-y: scroll;
+        border-radius: ohma.$rounding;
+        background-color: ohma.$colors-white;
+        width: 100%;
+        padding: 0 .5em;
+        padding-top: .3em;
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 .5em;
+            > .userRow {
+                flex: 1 1 100%;
+            }
+            > button {
+                border: none;
+                width: $selectionBtnSize;
+                height: $selectionBtnSize;
+                display: grid;
+                place-items: center;
+                border-radius: ohma.$rounding;
+                &.selected {
+                    background-color: ohma.$colors-primary;                
+                }
+                margin-right: 1em;
+            }
+        }
+        > .head {
+            position: sticky;
+            top: 0;
+            left: 0;
+            box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
+            padding: 2*ohma.$gap 2*ohma.$gap;
+            border-radius: ohma.$rounding;
+            background-color: ohma.$colors-secondary;
+        }
+        .head, .userRow {
+            display: grid;
+            grid-template-columns: 3fr 2fr 1fr 1fr;
+            > * {
+                text-align: left;
+            }
+            &.extraInfo {
+                grid-template-columns: 1fr 1.3fr 1fr 1fr 1fr 0.5fr;
+            }
+        } 
+    }
+}
+
+.adjust {
+    width: calc(100% - $selectionBtnSize - 1em);
+    transform: translateX(calc($selectionBtnSize + 1em));
+}

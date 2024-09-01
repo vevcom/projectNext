@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createImage } from '@/server/images/create'
-import { createImagesValidation, createImageValidation } from '@/server/images/validation'
+import { createImage } from '@/services/images/create'
+import { createImagesValidation, createImageValidation } from '@/services/images/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
-import type { CreateImageTypes, CreateImagesTypes } from '@/server/images/validation'
+import type { CreateImageTypes, CreateImagesTypes } from '@/services/images/validation'
 
 export async function createImageAction(
     collectionId: number,

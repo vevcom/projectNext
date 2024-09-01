@@ -8,8 +8,10 @@ export default async function Roles() {
 
     const { data: roles } = res
 
-    return <>
-        <h1>Tillgangsroller</h1>
-        <RoleView roles={roles} />
-    </>
+    return (
+        <>
+            <h1>Tillgangsroller</h1>
+            <RoleView roles={roles} />
+        </>
+    )
 }

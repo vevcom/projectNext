@@ -4,10 +4,10 @@ import Textarea from '@/components/UI/Textarea'
 import { createNewsAction } from '@/actions/news/create'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { EditModeContext } from '@/context/EditMode'
+import { EditModeContext } from '@/contexts/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ExpandedNewsArticle } from '@/server/news/Types'
+import type { ExpandedNewsArticle } from '@/services/news/Types'
 
 export default function AddNews() {
     const { push } = useRouter()

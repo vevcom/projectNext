@@ -1,10 +1,10 @@
 'use client'
 
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
+import Form from '@/components/Form/Form'
+import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListUserRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
-import type { MailFlowObject } from '@/server/mail/Types'
+import type { MailFlowObject } from '@/services/mail/Types'
 import type { MailingList } from '@prisma/client'
 
 export default function EditUser({
@@ -31,7 +31,7 @@ export default function EditUser({
             action={createMailingListUserRelationAction}
         >
             <input type="hidden" name="userId" value={focusedUser.id} />
-            <Select
+            <SelectNumber
                 options={mailingLists.map(list => ({ value: list.id, label: list.name }))}
                 name="mailingListId"
                 label="Mailliste"

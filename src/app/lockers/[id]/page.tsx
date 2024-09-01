@@ -6,7 +6,7 @@ import { getGroupNameFromLocker, getGroupName } from '@/app/lockers/util'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/actions/lockers/read'
 import { getUser } from '@/auth/getUser'
-import { readGroupsOfUser } from '@/server/groups/read'
+import { readGroupsOfUser } from '@/services/groups/read'
 
 
 type PropTypes = {

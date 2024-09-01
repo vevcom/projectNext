@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import { readLocker, readLockerPage, updateLockerReservationIfExpired } from '@/server/lockers/read'
+import { readLocker, readLockerPage, updateLockerReservationIfExpired } from '@/services/lockers/read'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
-import type { LockerWithReservation, LockerCursor } from '@/server/lockers/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { LockerWithReservation, LockerCursor } from '@/services/lockers/Types'
 
 /**
  * An action to read a locker, including it´s active reservation.

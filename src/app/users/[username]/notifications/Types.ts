@@ -1,5 +1,5 @@
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/server/notifications/Types'
-import type { Subscription } from '@/server/notifications/subscription/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
+import type { Subscription } from '@/services/notifications/subscription/Types'
 
 
 export type NotificationBranch = ExpandedNotificationChannel & {

@@ -1,11 +1,11 @@
 'use client'
 import { updateLockerReservationAction } from '@/actions/lockers/reservations/update'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
-import DateInput from '@/app/components/UI/DateInput'
-import Checkbox from '@/app/components/UI/Checkbox'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Form from '@/app/_components/Form/Form'
+import { SelectString } from '@/app/_components/UI/Select'
+import DateInput from '@/app/_components/UI/DateInput'
+import Checkbox from '@/app/_components/UI/Checkbox'
 
 type PropTypes = {
     reservationId: number,
@@ -31,7 +31,7 @@ export default function UpdateLockerReservationForm({ reservationId, groupsFormD
             submitText="Oppdater"
             action={updateLockerReservationAction.bind(null, reservationId)}
         >
-            <Select
+            <SelectString
                 label="Reserver for"
                 name="groupId"
                 value={groupId}

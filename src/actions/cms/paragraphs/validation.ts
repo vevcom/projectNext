@@ -1,5 +1,5 @@
-import { baseCmsParagraphValidation } from '@/server/cms/paragraphs/validation'
-import type { ValidationTypes } from '@/server/Validation'
+import { baseCmsParagraphValidation } from '@/services/cms/paragraphs/validation'
+import type { ValidationTypes } from '@/services/Validation'
 
 export const createCmsParagraphActionValidation = baseCmsParagraphValidation.createValidation({
     keys: ['name'],

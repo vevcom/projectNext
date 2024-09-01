@@ -1,8 +1,8 @@
 'use client'
 
-import TextInput from '@/app/components/UI/TextInput'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
+import TextInput from '@/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import { SelectNumber } from '@/components/UI/Select'
 import {
     createAliasMailingListRelationAction,
     createMailingListExternalRelationAction,
@@ -14,7 +14,7 @@ import { updateMailingListAction } from '@/actions/mail/list/update'
 import { destroyMailingListAction } from '@/actions/mail/list/destory'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@prisma/client'
-import type { MailFlowObject } from '@/server/mail/Types'
+import type { MailFlowObject } from '@/services/mail/Types'
 
 
 export default function EditMailingList({
@@ -67,8 +67,8 @@ export default function EditMailingList({
                 action={createAliasMailingListRelationAction}
             >
                 <input type="hidden" value={focusedMailingList.id} name="mailingListId" />
-                <Select
-                    options={mailaliases.map(a => ({ value: a.id, label: a.address }))}
+                <SelectNumber
+                    options={mailaliases.map(address => ({ value: address.id, label: address.address }))}
                     name="mailAliasId"
                     label="Mailalias"
                 />
@@ -101,8 +101,8 @@ export default function EditMailingList({
                 action={createMailingListExternalRelationAction}
             >
                 <input type="hidden" name="mailingListId" value={focusedMailingList.id} />
-                <Select
-                    options={mailAddressExternal.map(a => ({ value: a.id, label: a.address }))}
+                <SelectNumber
+                    options={mailAddressExternal.map(address => ({ value: address.id, label: address.address }))}
                     name="mailAddressExternalId"
                     label="Ekstern mail adresse"
                 />

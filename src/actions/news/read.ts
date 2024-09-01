@@ -1,9 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readNews, readNewsCurrent, readOldNewsPage } from '@/server/news/read'
-import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/server/news/Types'
+import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'
+import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 
 export async function readOldNewsPageAction<const PageSize extends number>(
     readPageImput: ReadPageInput<PageSize, NewsCursor>

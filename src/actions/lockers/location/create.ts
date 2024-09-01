@@ -3,9 +3,9 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { createLockerLocation } from '@/server/lockers/location/create'
-import { createLockerLocationValidation } from '@/server/lockers/location/validation'
-import type { CreateLockerLocationTypes } from '@/server/lockers/location/validation'
+import { createLockerLocation } from '@/services/lockers/location/create'
+import { createLockerLocationValidation } from '@/services/lockers/location/validation'
+import type { CreateLockerLocationTypes } from '@/services/lockers/location/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerLocation } from '@prisma/client'
 

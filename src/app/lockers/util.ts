@@ -1,4 +1,4 @@
-import type { LockerWithReservation } from '@/server/lockers/Types'
+import type { LockerWithReservation } from '@/services/lockers/Types'
 
 export function getGroupNameFromLocker(locker: LockerWithReservation): string {
     if (locker.LockerReservation.length === 0) {

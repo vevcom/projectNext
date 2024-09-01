@@ -9,7 +9,7 @@ export default async function seedOmegaMembershipGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'OMEGA_MEMBERSHIP_GROUP',
-                    membershipRenewal: true
+                    order: 105
                 }
             }
         }

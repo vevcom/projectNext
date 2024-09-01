@@ -2,10 +2,10 @@ import styles from './page.module.scss'
 import CreateOmbul from './CreateOmbul'
 import OmbulCover from './OmbulCover'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readLatestOmbulAction, readOmbulsAction } from '@/actions/ombul/read'
 import { getUser } from '@/auth/getUser'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 
 export default async function Ombuls() {
     const { permissions } = await getUser({

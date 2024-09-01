@@ -1,9 +1,9 @@
 'use server'
 import { createZodActionError } from '@/actions/error'
-import { createArticleCategory } from '@/server/cms/articleCategories/create'
+import { createArticleCategory } from '@/services/cms/articleCategories/create'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createArticleCategoryValidation } from '@/server/cms/articleCategories/validation'
-import type { CreateArticleCategoryTypes } from '@/server/cms/articleCategories/validation'
+import { createArticleCategoryValidation } from '@/services/cms/articleCategories/validation'
+import type { CreateArticleCategoryTypes } from '@/services/cms/articleCategories/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 

@@ -1,8 +1,8 @@
 'use client'
 import styles from './LockerList.module.scss'
 import LockerRow from './LockerRow'
-import { LockerPagingContext } from '@/context/paging/LockerPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import { LockerPagingContext } from '@/contexts/paging/LockerPaging'
 import { useContext } from 'react'
 
 export default function LockerList() {

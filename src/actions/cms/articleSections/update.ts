@@ -1,5 +1,5 @@
 'use server'
-import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection } from '@/server/cms/articleSections/update'
+import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection } from '@/services/cms/articleSections/update'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ArticleSection, Position } from '@prisma/client'
 import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'

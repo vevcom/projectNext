@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import CreateLockerForm from './CreateLockerForm'
-import { readLockerLocations } from '@/server/lockers/location/read'
+import { readLockerLocations } from '@/services/lockers/location/read'
 
 
 export default async function Locker() {

@@ -1,7 +1,7 @@
 import styles from './LockerRow.module.scss'
 import { getGroupNameFromLocker } from './util'
 import Link from 'next/link'
-import type { LockerWithReservation } from '@/server/lockers/Types'
+import type { LockerWithReservation } from '@/services/lockers/Types'
 
 type PropTypes = {
     locker: LockerWithReservation

@@ -1,9 +1,9 @@
 'use client'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
-import NumberInput from '@/app/components/UI/NumberInput'
 import { createLockerAction } from '@/actions/lockers/create'
 import { useState } from 'react'
+import Form from '@/app/_components/Form/Form'
+import { SelectString } from '@/app/_components/UI/Select'
+import NumberInput from '@/app/_components/UI/NumberInput'
 
 type PropTypes = {
     locations: {
@@ -41,14 +41,14 @@ export default function CreateLockerForm({ locations }: PropTypes) {
             action={createLockerAction}
         >
 
-            <Select
+            <SelectString
                 label="Bygning"
                 name="building"
                 onChange={handleBuildingChange}
                 options={buildingOptions}
             />
 
-            <Select
+            <SelectString
                 label="Etasje"
                 name="floor"
                 options={getFloors(currentBuilding)}

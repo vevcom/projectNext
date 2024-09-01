@@ -6,10 +6,10 @@ import CreateMailingList from './createMailingListForm'
 import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
 import { getUser } from '@/auth/getUser'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { readMailAliases } from '@/server/mail/alias/read'
-import { readMailingLists } from '@/server/mail/list/read'
-import { readMailAddressExternal } from '@/server/mail/mailAddressExternal/read'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { readMailAliases } from '@/services/mail/alias/read'
+import { readMailingLists } from '@/services/mail/list/read'
+import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
 
 export default async function MailSettings() {
     const { permissions } = await getUser({

@@ -2,7 +2,7 @@
 import EmailRegistrationForm from './EmailregistrationForm'
 import { getUser } from '@/auth/getUser'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readUser } from '@/server/users/read'
+import { readUser } from '@/services/users/read'
 import { notFound, redirect } from 'next/navigation'
 
 export default async function Registeremail() {

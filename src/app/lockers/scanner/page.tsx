@@ -1,11 +1,11 @@
 'use client'
 import styles from './page.module.scss'
-import CameraFeed from '@/app/components/Camera/CameraFeed'
-import type { CameraState } from '@/app/components/Camera/Types'
-import Button from '@/app/components/UI/Button'
+import Button from '@/app/_components/UI/Button'
+import CameraFeed from '@/app/_components/Camera/CameraFeed'
 import { useRouter } from 'next/navigation'
 import jsQR from 'jsqr'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { CameraState } from '@/app/_components/Camera/Types'
 
 export default function Scanner() {
     const videoRef = useRef<HTMLVideoElement | null>(null)

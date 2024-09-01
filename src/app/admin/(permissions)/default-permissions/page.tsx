@@ -1,9 +1,8 @@
 import { updateDefaultPermissionsAction } from '@/actions/permissionRoles/update'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
-import { permissionCategories } from '@/app/admin/(permissions)/ConfigVars'
+import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
 import React from 'react'
-import { v4 as uuid } from 'uuid'
 
 export default async function Defaults() {
     const defaultPermissionsRes = await readDefaultPermissionsAction()
@@ -16,22 +15,19 @@ export default async function Defaults() {
 
     return (
         <Form submitText="Lagre" action={updateDefaultPermissionsAction}>
-            {permissionCategories.map(category => (
-                category.permissions.map((entry, index) => (
-                    <div key={uuid()}>
-                        {index === 0 && <h3>{category.title}</h3>}
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="permissions"
-                                value={entry.permission}
-                                defaultChecked={defaultPermissions.includes(entry.permission)}
-                            />
-                            {entry.name}
-                        </label>
-                    </div>
-                ))
-            ))}
+            <DisplayAllPermissions renderBesidePermission={
+                permission => (
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="permissions"
+                            value={permission}
+                            defaultChecked={defaultPermissions.includes(permission)}
+                        />
+                    </label>
+                )
+            }
+            />
         </Form>
     )
 }
