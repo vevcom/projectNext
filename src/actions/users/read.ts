@@ -1,9 +1,11 @@
 'use server'
+import { ReadUserAuther } from './Authers'
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/services/groups/read'
 import { readUserPage, readUserProfile } from '@/services/users/read'
+import { Session } from '@/auth/Session'
 import type { ExpandedGroup } from '@/services/groups/Types'
 import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -34,6 +36,10 @@ export async function readUserPageAction<const PageSize extends number>(
  * @returns - The profile of the user
  */
 export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
+    const session = await Session.fromNextAuth()
+    const authResult = ReadUserAuther.auth({ session, dynamicFields: { username } })
+    if (!authResult.authorized) return createActionError(authResult.status)
+
     const { authorized, status } = await getUser({
         requiredPermissions: [['USERS_READ']]
     })

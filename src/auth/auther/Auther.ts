@@ -1,24 +1,36 @@
-import { User } from '@prisma/client'
-import { AuthCheck, AuthCheckUserRequiered } from './AuthCheck'
-import { redirect } from 'next/navigation'
 import { AuthResult } from './AuthResult'
+import { notFound, redirect } from 'next/navigation'
+import type { SessionMaybeUser, SessionUser } from '@/auth/Session'
 
-type AutherRedirectConfig = { 
+type AutherRedirectConfig = {
     shouldRedirect: boolean,
     redirectUrl: string | null,
     returnUrl: string | null,
 }
 
-export class Auther<UserRequieredOut extends boolean> {
+export type UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
+
+export type CheckReturn<
+    UserRequieredOut extends UserRequieredOutOpt
+> = UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED' ? ({
+    success: true,
+    session: SessionUser
+} | {
+    success: false,
+    session: SessionMaybeUser
+}) : ({
+    success: boolean,
+    session: SessionMaybeUser
+})
+
+export abstract class Auther<
+    const UserRequieredOut
+    extends UserRequieredOutOpt,
+    const DynamicFields extends object | undefined = undefined
+> {
     private redirectConfig: AutherRedirectConfig
 
-    /**
-     * A checker represent one possible way to be authorized. If one checker passes
-     * the user is considered authorized.
-     */
-    private checkers: (UserRequieredOut extends true ? AuthCheckUserRequiered : AuthCheck)[]
-
-    public constructor(checkers: (UserRequieredOut extends true ? AuthCheckUserRequiered : AuthCheck)[]) {
+    public constructor() {
         this.redirectConfig = {
             shouldRedirect: false,
             redirectUrl: null,
@@ -27,36 +39,51 @@ export class Auther<UserRequieredOut extends boolean> {
         return this
     }
 
-    public auth(session: Session<'MAYBE_USER'>) AuthResult<UserRequieredOut> {
-        const success = this.checkers.some(checker => checker.check(session).authorized)
+    protected abstract check(
+        session: SessionMaybeUser,
+        dynamicFields: DynamicFields
+    ): CheckReturn<UserRequieredOut>
+
+    public auth({
+        session: sessionIn,
+        dynamicFields
+    }: {
+        session: SessionMaybeUser,
+        dynamicFields: DynamicFields
+    }): (UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED' ?
+        (AuthResult<'HAS_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>) :
+        (AuthResult<'HAS_USER' | 'NO_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
+    ) {
+        const { session, success } = this.check(sessionIn, dynamicFields)
 
         if (success) {
-            if (session.user) return { status: 'AUTHORIZED' , authorized: true }
-            return { status: 'AUTHORIZED_NO_USER', authorized: true }
+            if (session.user) return new AuthResult(session, true)
+            return new AuthResult(session, false)
         }
         if (this.redirectConfig.shouldRedirect) {
-            if (!session.user && this.config.returnUrl) {
-                redirect(`/login?callbackUrl=${encodeURI(this.config.returnUrl)}`)
+            if (!session.user && this.redirectConfig.returnUrl) {
+                redirect(`/login?callbackUrl=${encodeURI(this.redirectConfig.returnUrl)}`)
             }
-    
+
             if (this.redirectConfig.redirectUrl) {
-                redirect(this.config.redirectUrl)
+                redirect(this.redirectConfig.redirectUrl)
             }
-    
+
+            // This function throws an error, which is next.js's way of redirecting.
             notFound() //TODO: Should probably redirect to an unauthorized page when we have one.
         }
 
-        if (session.user) return { status: 'UNAUTHORIZED', authorized: false }
-        return { status: 'UNAUTHENTICATED', authorized: false }
+        if (session.user) return new AuthResult(session, false)
+        return new AuthResult(session, false)
     }
 
-    public redirectOnFail({ 
-        redirectUrl, 
+    public redirectOnFail({
+        redirectUrl,
         returnUrl
-    } : Pick<AutherRedirectConfig, 'redirectUrl' | 'returnUrl'>) {
+    }: Pick<AutherRedirectConfig, 'redirectUrl' | 'returnUrl'>) {
         this.redirectConfig = {
             shouldRedirect: true,
-            redirectUrl, 
+            redirectUrl,
             returnUrl
         }
         return this
