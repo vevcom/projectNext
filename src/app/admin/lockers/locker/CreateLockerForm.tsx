@@ -1,9 +1,9 @@
 'use client'
 import { createLockerAction } from '@/actions/lockers/create'
-import { useState } from 'react'
 import Form from '@/app/_components/Form/Form'
 import { SelectString } from '@/app/_components/UI/Select'
 import NumberInput from '@/app/_components/UI/NumberInput'
+import { useState } from 'react'
 
 type PropTypes = {
     locations: {

@@ -2,10 +2,10 @@ import 'server-only'
 import { lockerReservationIncluder } from './reservations/ConfigVars'
 import prisma from '@/prisma'
 import { createActionError } from '@/actions/error'
-import type { ReadPageInput } from '@/services/paging/Types'
-import type { LockerWithReservation, LockerCursor } from '@/services/lockers/Types'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { LockerWithReservation, LockerCursor } from '@/services/lockers/Types'
 
 export async function readLocker(id: number) {
     const locker = await prismaCall(() => prisma.locker.findUnique({

@@ -1,7 +1,7 @@
 
+import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/services/Validation'
-import { ValidationBase } from '@/services/Validation'
 
 
 export const baseLockerLocationValidation = new ValidationBase({

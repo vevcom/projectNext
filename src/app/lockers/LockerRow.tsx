@@ -1,5 +1,5 @@
 import styles from './LockerRow.module.scss'
-import { getGroupNameFromLocker } from './util'
+import { checkGroupValidity, inferGroupName } from '@/services/groups/read'
 import Link from 'next/link'
 import type { LockerWithReservation } from '@/services/lockers/Types'
 
@@ -10,7 +10,9 @@ type PropTypes = {
 export default function LockerRow({ locker }: PropTypes) {
     const isReserved = locker.LockerReservation.length > 0
     const reservation = locker.LockerReservation[0]
-    const groupName = getGroupNameFromLocker(locker)
+    const groupName = 'test'
+    // TODO fix groupName
+    // const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
     let endDateText = ''
     if (isReserved) {
@@ -20,6 +22,8 @@ export default function LockerRow({ locker }: PropTypes) {
             endDateText = reservation.endDate.toLocaleDateString()
         }
     }
+
+    console.log("test")
 
     return (
         <Link href={`/lockers/${locker.id}`} className={styles.lockerRow}>

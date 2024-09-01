@@ -1,9 +1,9 @@
 import 'server-only'
 import { createLockerReservationValidation } from '@/services/lockers/reservations/validation'
 import prisma from '@/prisma'
+import { prismaCall } from '@/services/prismaCall'
 import type { CreateLockerReservationTypes } from '@/services/lockers/reservations/validation'
 import type { LockerReservation } from '@prisma/client'
-import { prismaCall } from '@/services/prismaCall'
 
 
 export async function createLockerReservation(

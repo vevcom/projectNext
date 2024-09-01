@@ -272,49 +272,20 @@ export async function readGroupsOfUser(id: number) {
     const memberships = await prisma.membership.findMany({
         where: { userId: id },
         include: {
-            group: true
+            group: {
+                include: {
+                    class: true,
+                    committee: true,
+                    interestGroup: true,
+                    manualGroup: true,
+                    omegaMembershipGroup: true,
+                    studyProgramme: true,
+                }
+            }
         }
     })
 
-    const groupPromises = memberships.map(async (membership) => {
-        let include = {}
-
-        switch (membership.group.groupType) {
-            case 'CLASS':
-                include = { class: true }
-                break
-            case 'COMMITTEE':
-                include = { committee: true }
-                break
-            case 'INTEREST_GROUP':
-                include = { interestGroup: true }
-                break
-            case 'MANUAL_GROUP':
-                include = { manualGroup: true }
-                break
-            case 'OMEGA_MEMBERSHIP_GROUP':
-                include = { omegaMembershipGroup: true }
-                break
-            case 'STUDY_PROGRAMME':
-                include = { studyProgramme: true }
-                break
-            default:
-                break
-        }
-
-        const group = await prisma.group.findUnique({
-            where: { id: membership.groupId },
-            include
-        })
-
-        if (group === null) {
-            throw new ServerError('NOT FOUND', 'Fant ikke gruppe')
-        }
-
-        return group
-    })
-
-    const groups = await Promise.all(groupPromises)
+    const groups = memberships.map(item => checkGroupValidity(item.group))
     return groups
 }
 

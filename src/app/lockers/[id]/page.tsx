@@ -2,11 +2,10 @@ import styles from './page.module.scss'
 import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
-import { getGroupNameFromLocker, getGroupName } from '@/app/lockers/util'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/actions/lockers/read'
 import { getUser } from '@/auth/getUser'
-import { readGroupsOfUser } from '@/services/groups/read'
+import { checkGroupValidity, inferGroupName, readGroupsOfUser } from '@/services/groups/read'
 
 
 type PropTypes = {
@@ -32,12 +31,12 @@ export default async function Locker({ params }: PropTypes) {
 
     const isReserved = locker.data.LockerReservation.length > 0
     const reservation = locker.data.LockerReservation[0]
-    const groupName = getGroupNameFromLocker(locker.data)
+    const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
     const groups = await readGroupsOfUser(user.id)
 
     const groupsFormData = groups.map(group => {
-        const name = getGroupName(group)
+        const name = inferGroupName(group)
         return { value: group.id.toString(), label: name }
     })
 

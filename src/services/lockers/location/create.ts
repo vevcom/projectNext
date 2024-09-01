@@ -1,7 +1,7 @@
 import { createLockerLocationValidation } from './validation'
 import prisma from '@/prisma'
-import type { CreateLockerLocationTypes } from './validation'
 import { prismaCall } from '@/services/prismaCall'
+import type { CreateLockerLocationTypes } from './validation'
 
 export async function createLockerLocation(rawdata: CreateLockerLocationTypes['Detailed']) {
     const data = createLockerLocationValidation.detailedValidate(rawdata)

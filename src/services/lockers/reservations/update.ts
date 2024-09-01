@@ -1,8 +1,8 @@
 import 'server-only'
 import { updateLockerReservationValidation } from './validation'
 import prisma from '@/prisma'
-import type { UpdateLockerReservationTypes } from './validation'
 import { prismaCall } from '@/services/prismaCall'
+import type { UpdateLockerReservationTypes } from './validation'
 
 
 export async function updateLockerReservation(id: number, rawData: UpdateLockerReservationTypes['Detailed']) {
