@@ -33,7 +33,15 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
                 description: 'Denne samlingen ble migrert fra Veven',
                 createdAt: imageCollection.updatedAt,
                 updatedAt: imageCollection.updatedAt,
-                //TODO: Link to right committee
+                //TODO: Link to right committee through visibility
+                visibility: {
+                    create: {
+                        purpose: 'IMAGE',
+                        published: true,
+                        regularLevel: { create: {} },
+                        adminLevel: { create: {} }
+                    }
+                }
             }
         })
         IdMap.push({ vevenId: imageCollection.id, pnId: collection.id })

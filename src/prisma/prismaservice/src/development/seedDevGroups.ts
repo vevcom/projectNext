@@ -41,6 +41,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 connect: order
             },
             admin: true,
+            active: true,
         },
     }
 
@@ -51,8 +52,8 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    membershipRenewal: true,
                     memberships,
+                    order: order.order,
                 },
             },
             logoImage: {
@@ -61,5 +62,80 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 }
             },
         },
+    })
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.manualGroup.create({
+        data: {
+            name: `Testgruppe ${i}`,
+            shortName: `TG${i}`,
+            group: {
+                create: {
+                    groupType: 'MANUAL_GROUP',
+                    order: order.order,
+                },
+            },
+        }
+    })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.committee.create({
+        data: {
+            name: `Testkomité ${i}`,
+            shortName: `TK${i}`,
+            group: {
+                create: {
+                    groupType: 'COMMITTEE',
+                    order: order.order,
+                },
+            },
+            logoImage: {
+                create: {
+                    name: `Logoen til testkomité ${i}`
+                }
+            },
+        }
+    })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.interestGroup.create({
+        data: {
+            name: `Interessegruppe ${i}`,
+            shortName: `IG${i}`,
+            group: {
+                create: {
+                    groupType: 'INTEREST_GROUP',
+                    order: order.order,
+                },
+            },
+        }
+    })))
+
+    await Promise.all([1, 2, 3, 4, 5, 6].map(i => prisma.studyProgramme.create({
+        data: {
+            code: `COCO${i}`,
+            name: `Studieprogram ${i}`,
+            group: {
+                create: {
+                    groupType: 'STUDY_PROGRAMME',
+                    order: order.order,
+                },
+            },
+        }
+    })))
+
+    await prisma.studyProgramme.create({
+        data: {
+            name: 'Elektronisk Systemdesign og Innovasjon',
+            code: 'MTEL',
+            insititueCode: 'MTEL',
+            yearsLength: 5,
+            startYear: 2023,
+
+            group: {
+                create: {
+                    groupType: 'STUDY_PROGRAMME',
+                    memberships,
+                    order: order.order,
+                }
+            }
+        }
     })
 }

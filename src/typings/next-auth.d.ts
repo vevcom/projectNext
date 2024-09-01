@@ -1,9 +1,9 @@
 import 'next-auth'
 import 'next-auth/adapters'
 
-import type { BasicMembership } from '@/server/groups/Types'
+import type { MembershipFiltered } from '@/services/groups/Types'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 declare module 'next-auth' {
     interface User extends Partial<UserFiltered> {}
@@ -11,7 +11,7 @@ declare module 'next-auth' {
     interface Session {
         user: UserFiltered,
         permissions: Permission[],
-        memberships: BasicMembership[],
+        memberships: MembershipFiltered[],
     }
 }
 
@@ -20,7 +20,7 @@ declare module 'next-auth/jwt' {
         provider: 'credentials' | 'feide',
         user: UserFiltered,
         permissions: Permission[],
-        memberships: BasicMembership[],
+        memberships: MembershipFiltered[],
 
         // The standard JWT payload is hidden by next auth. To get correct
         // type hinting we need to declare the properties we wish to

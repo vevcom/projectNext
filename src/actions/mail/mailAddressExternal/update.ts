@@ -3,8 +3,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { updateMailAddressExternal } from '@/server/mail/mailAddressExternal/update'
-import { updateMailAddressExternalValidation } from '@/server/mail/mailAddressExternal/validation'
+import { updateMailAddressExternal } from '@/services/mail/mailAddressExternal/update'
+import { updateMailAddressExternalValidation } from '@/services/mail/mailAddressExternal/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailAddressExternal } from '@prisma/client'
 

@@ -2,10 +2,10 @@ import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
 import { readImageCollectionsPageAction } from '@/actions/images/collections/read'
-import ImageCollectionPagingProvider from '@/context/paging/ImageCollectionPaging'
+import ImageCollectionPagingProvider from '@/contexts/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { getUser } from '@/auth/getUser'
-import type { PageSizeImageCollection } from '@/context/paging/ImageCollectionPaging'
+import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
 
 export default async function Images() {
     const { user } = await getUser()

@@ -1,0 +1,45 @@
+@use '@/styles/ohma';
+
+@include ohma.screenMobile {
+    .wrapper {
+        max-width: 80vw;
+        overflow-y: scroll;
+    }
+}
+
+.ApiKeysList {    
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    th, td {
+        border: 1px solid ohma.$colors-gray-300;
+        padding: 8px;
+    }
+    th {
+        background-color: ohma.$colors-gray-200;
+        color: black;
+    }
+    tr:nth-child(even) {
+        background-color: ohma.$colors-gray-100;
+    }
+    tr:hover {
+        background-color: ohma.$colors-gray-200;
+    }
+    a {
+        display: contents;
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.activated {
+    background-color: lighten(ohma.$colors-green, 50%);
+    color: ohma.$colors-green;
+}
+
+.deactivated {
+    background-color: lighten(ohma.$colors-red, 50%);
+    color: ohma.$colors-red;
+}

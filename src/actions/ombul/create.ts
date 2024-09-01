@@ -2,11 +2,11 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { createOmbul } from '@/server/ombul/create'
-import { createOmbulValidation } from '@/server/ombul/validation'
+import { createOmbul } from '@/services/ombul/create'
+import { createOmbulValidation } from '@/services/ombul/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Ombul } from '@prisma/client'
-import type { CreateOmbulTypes } from '@/server/ombul/validation'
+import type { CreateOmbulTypes } from '@/services/ombul/validation'
 
 /**
  * Create a new Ombul.

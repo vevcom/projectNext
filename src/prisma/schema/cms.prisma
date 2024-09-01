@@ -32,6 +32,7 @@ model CmsImage {
   Ombul                Ombul?
   committee            Committee?
   special              SpecialCmsImage? @unique
+  ScreenPage           ScreenPage[]
 }
 
 enum SpecialCmsParagraph {
@@ -51,6 +52,7 @@ model CmsParagraph {
   articleSection   ArticleSection?      @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?                 @unique
   special          SpecialCmsParagraph? @unique
+  ScreenPage       ScreenPage[]
 }
 
 model CmsLink {

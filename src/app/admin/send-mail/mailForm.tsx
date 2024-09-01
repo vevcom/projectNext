@@ -1,9 +1,9 @@
 'use client'
 import styles from './mailForm.module.scss'
 import sendMail from '@/actions/sendmail/send'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
-import Textarea from '@/app/components/UI/Textarea'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import Textarea from '@/components/UI/Textarea'
 
 
 export default function MailForm() {

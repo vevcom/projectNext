@@ -2,7 +2,7 @@
 
 import styles from './studyProgrammeTable.module.scss'
 import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
-import PopUp from '@/app/components/PopUp/PopUp'
+import PopUp from '@/components/PopUp/PopUp'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { v4 as uuid } from 'uuid'

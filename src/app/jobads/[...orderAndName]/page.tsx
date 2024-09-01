@@ -2,7 +2,7 @@
 import styles from './page.module.scss'
 import EditJobAd from './EditJobAd'
 import { readJobAdAction } from '@/actions/jobAds/read'
-import Article from '@/app/components/Cms/Article/Article'
+import Article from '@/components/Cms/Article/Article'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {

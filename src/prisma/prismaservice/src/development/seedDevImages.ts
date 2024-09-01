@@ -12,6 +12,14 @@ export default async function seedDevImages(prisma: PrismaClient) {
             create: {
                 name: `test_collection_${i}`,
                 description: 'just a test',
+                visibility: {
+                    create: {
+                        purpose: 'IMAGE',
+                        published: true,
+                        regularLevel: { create: {} },
+                        adminLevel: { create: {} },
+                    }
+                }
             }
         })
     }

@@ -1,9 +1,9 @@
 'use server'
 
-import { createMailAddressExternalValidation } from '@/server/mail/mailAddressExternal/validation'
+import { createMailAddressExternalValidation } from '@/services/mail/mailAddressExternal/validation'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createMailAddressExternal } from '@/server/mail/mailAddressExternal/create'
+import { createMailAddressExternal } from '@/services/mail/mailAddressExternal/create'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions//Types'
 import type { MailAddressExternal } from '@prisma/client'

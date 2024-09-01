@@ -2,7 +2,7 @@
 import NotificationSettings from './notificationSettings'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default async function Notififcations() {
     // TODO: Make mobile friendly
