@@ -23,8 +23,6 @@ export default function LockerRow({ locker }: PropTypes) {
         }
     }
 
-    console.log("test")
-
     return (
         <Link href={`/lockers/${locker.id}`} className={styles.lockerRow}>
             <p>{locker.id}</p>
