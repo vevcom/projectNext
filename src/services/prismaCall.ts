@@ -1,6 +1,7 @@
 import { ServerError } from './error'
 import { Prisma } from '@prisma/client'
 import type { ServerErrorCode } from './error'
+import { default as prismaDefault } from '@/prisma'
 
 const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
     P2002: ['DUPLICATE', 'duplicate entry'],
@@ -25,4 +26,17 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
         if (pError) throw new ServerError(pError[0], pError[1])
         throw new ServerError('UNKNOWN ERROR', 'unknown prisma error')
     }
+}
+
+export type PrismaTransaction = Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
+
+
+export async function prismaTransactionWithErrorConvertion<T>(
+    call: (prisma: PrismaTransaction) => Promise<T>
+) {
+    return prismaDefault.$transaction(async prisma => {
+        return await prismaCall(() => {
+            return call(prisma)
+        })
+    })
 }

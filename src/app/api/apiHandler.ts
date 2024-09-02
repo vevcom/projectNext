@@ -30,7 +30,11 @@ export function apiHandler<
     serviceMethod: ServiceMethod<TypeValidation, DetailedValidation, Params, Return>
 }) {
     return async function handler(req: NextRequest) {
+        const data = req.body
+        console.log(data)
+
         const authorization = req.headers.get('authorization')
         const session = await Session.fromApiKey(authorization)
+        //const authRes = auther.auth({ session })
     }
 }
