@@ -1,7 +1,7 @@
 import 'server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/services/auth/feideAccounts/create'
-import { createUser } from '@/services/users/create'
+import { CreateUser } from '@/services/users/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
 import { updateUser } from '@/services/users/update'
 import { readUserOrNull } from '@/services/users/read'
@@ -86,7 +86,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
 
             const username = await generateUsername(prisma, user.username, user.lastname)
 
-            const createdUser = await createUser({
+            const createdUser = await CreateUser.transaction('NEW_TRANSACTION').execute({}, {
                 email: user.email,
                 firstname: user.firstname,
                 lastname: user.lastname,

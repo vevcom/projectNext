@@ -1,7 +1,7 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createUser } from '@/services/users/create'
+import { CreateUser } from '@/services/users/create'
 import { createUserValidation } from '@/services/users/validation'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import type { CreateUserTypes } from '@/services/users/validation'
@@ -14,12 +14,12 @@ import type { User } from '@prisma/client'
  * @returns - The created user
  */
 export async function createUserAction(rawdata: FormData | CreateUserTypes['Type']): Promise<ActionReturn<User>> {
-    const parse = createUserValidation.typeValidate(rawdata)
+    const parse = CreateUser.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
     return await safeServerCall(async () => {
-        const user = await createUser(data)
+        const user = await CreateUser.transaction('NEW_TRANSACTION').execute({}, data)
 
         setTimeout(() => sendUserInvitationEmail(user), 1000)
 
