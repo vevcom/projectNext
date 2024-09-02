@@ -17,7 +17,7 @@ export const baseLockerReservationValidation = new ValidationBase({
 })
 
 
-export const createLockerReservationValidation = baseLockerReservationValidation.createValidation({
+export const lockerReservationValidation = baseLockerReservationValidation.createValidation({
     keys: [
         'groupId',
         'indefinateDate',
@@ -30,20 +30,5 @@ export const createLockerReservationValidation = baseLockerReservationValidation
     })
 })
 
-export type CreateLockerReservationTypes = ValidationTypes<typeof createLockerReservationValidation>
+export type LockerReservationValidationTypes = ValidationTypes<typeof lockerReservationValidation>
 
-
-export const updateLockerReservationValidation = baseLockerReservationValidation.createValidation({
-    keys: [
-        'groupId',
-        'indefinateDate',
-        'endDate'
-    ],
-    transformer: data => ({
-        groupId: data.groupId === 'null' ? null : parseInt(data.groupId, 10),
-        indefinateDate: data.indefinateDate ? data.indefinateDate === 'on' : false,
-        endDate: data.endDate ? new Date(data.endDate) : null
-    })
-})
-
-export type UpdateLockerReservationTypes = ValidationTypes<typeof updateLockerReservationValidation>

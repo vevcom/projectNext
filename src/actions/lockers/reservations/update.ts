@@ -5,8 +5,8 @@ import { getUser } from '@/auth/getUser'
 import { readUsersOfGroups } from '@/services/groups/read'
 import { readLockerReservation } from '@/services/lockers/reservations/read'
 import { updateLockerReservation } from '@/services/lockers/reservations/update'
-import { createLockerReservationValidation } from '@/services/lockers/reservations/validation'
-import type { CreateLockerReservationTypes } from '@/services/lockers/reservations/validation'
+import { lockerReservationValidation } from '@/services/lockers/reservations/validation'
+import type { LockerReservationValidationTypes } from '@/services/lockers/reservations/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { LockerReservation } from '@prisma/client'
 
@@ -18,7 +18,7 @@ import type { LockerReservation } from '@prisma/client'
  */
 export async function updateLockerReservationAction(
     reservationId: number,
-    rawdata: FormData | CreateLockerReservationTypes['Type']
+    rawdata: FormData | LockerReservationValidationTypes['Type']
 ): Promise<ActionReturn<LockerReservation>> {
     const { user, status, authorized } = await getUser({
         requiredPermissions: [['LOCKERRESERVATION_UPDATE']],
@@ -27,7 +27,7 @@ export async function updateLockerReservationAction(
 
     if (!authorized) return createActionError(status)
 
-    const parse = createLockerReservationValidation.typeValidate(rawdata)
+    const parse = lockerReservationValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
