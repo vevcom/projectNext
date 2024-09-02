@@ -33,3 +33,20 @@ export async function readApiKey(idOrName: number | string): Promise<ApiKeyFilte
     if (!apiKey) throw new ServerError('BAD PARAMETERS', 'Api key does not exist')
     return updateApiKeyIfExpired(apiKey)
 }
+
+export async function readApiKeyHashedAndEncrypted(id: number) {
+    const apiKey = await prismaCall(() =>
+        prisma.apiKey.findUniqueOrThrow({
+            where: { id },
+            select: { 
+                keyHashEncrypted: true, 
+                active: true, 
+                expiresAt: true, 
+                id: true, 
+                permissions: true
+            }
+        })
+    )
+
+    return updateApiKeyIfExpired(apiKey)
+}

@@ -4,8 +4,10 @@ import { getServerSession as getSessionNextAuth } from 'next-auth'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
-import { readApiKey } from '@/services/api-keys/read'
+import { readApiKey, readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
+import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
+import { ServerError } from '@/services/error'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 
@@ -50,20 +52,25 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
     }
 
     /**
-     * 
-     * @param name - The name of the api key
-     * @param apiKeyHashedAndEncrypted - The hashed and encrypted api key to get the session from
+     * @param key - The key provided by client in the `id=keyId&key=key` format
+     * If the key is null, the session will be cratedwith only default permissios 
      */
-    public static async fromApiKey({
-        name,
-        apiKeyHashedAndEncrypted,
-    }: {
-        name: string,
-        apiKeyHashedAndEncrypted: string,
-    } | 'NO_KEY'): Promise<SessionNoUser> {
-        const standardPermissions = await readDefaultPermissions()
-        const permissionsFromKey = apiKeyHashedAndEncrypted ? await readApiKey(apiKeyHashedAndEncrypted) : []
+    public static async fromApiKey(keyAndIdEncoded: string | null): Promise<SessionNoUser> {
+        const defaultPermissions = await readDefaultPermissions()
+        if (!keyAndIdEncoded) return new Session({ user: null, permissions: defaultPermissions, memberships: [] })
+        const { id, key } = decodeApiKey(keyAndIdEncoded)
+        const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted(id)
+        if (!active) throw new ServerError('INVALID API KEY', 'Api nøkkelen har utløpt')
 
-        throw new Error(`Not implemented${apiKeyHashedAndEncrypted}`)
+        const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)
+        if (!success) throw new ServerError('INVALID API KEY', 'Api nøkkelen er ikke valid')
+
+        return new Session({ 
+            user: null, 
+            permissions: [...defaultPermissions, ...permissions].filter(
+                (permission, i, ps) => ps.indexOf(permission) === i
+            ),
+            memberships: [] 
+        })
     }
 }

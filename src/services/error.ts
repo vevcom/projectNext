@@ -8,6 +8,7 @@ export type ServerErrorCode =
     | 'SERVER ERROR'
     | 'INVALID CONFIGURATION'
     | 'NOT IMPLEMENTED'
+    | 'INVALID API KEY'
 
 export type ErrorMessage = {
     path?: (number | string)[],
