@@ -6,9 +6,13 @@ import React from 'react'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 
-export type PropTypes = Omit<ImagePropTypes, 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'> & {
+export type PropTypes = Omit<
+    ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
+> & {
     cmsImage: ExpandedCmsImage,
     children?: React.ReactNode
+    className?: string
+    classNameImage?: string
 }
 
 export const fallbackImage = '/images/fallback.jpg'
@@ -22,7 +26,13 @@ export const fallbackImage = '/images/fallback.jpg'
  * @param children - the children to display besides image
  * @returns
  */
-export default async function CmsImage({ cmsImage, children, ...props }: PropTypes) {
+export default async function CmsImage({
+    cmsImage,
+    children,
+    className = '',
+    classNameImage,
+    ...props
+}: PropTypes) {
     let image = cmsImage.image
     if (!image) {
         const defaultRes = await readSpecialImageAction('DEFAULT_IMAGE')
@@ -31,9 +41,9 @@ export default async function CmsImage({ cmsImage, children, ...props }: PropTyp
     }
 
     return (
-        <div className={styles.CmsImage}>
+        <div className={`${styles.CmsImage} ${className}`}>
             <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>
-            <Image imageSize={cmsImage.imageSize} image={image} {...props}/>
+            <Image className={classNameImage} imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
     )

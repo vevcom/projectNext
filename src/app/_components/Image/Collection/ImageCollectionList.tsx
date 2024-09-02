@@ -10,6 +10,11 @@ type PropTypes = {
 }
 
 // Note that this component may take iniitial imagecollections as props fetched on server
+/**
+ * WARNING: The server rendered data should be CollectioCards to make it consistent with the endless scroll
+ * @param serverRendered - Make sure to pass the server rendered collections here in the correct format
+ * @returns
+ */
 export default function ImageCollectionList({ serverRendered }: PropTypes) {
     return (
         <div className={styles.ImageCollectionList}>

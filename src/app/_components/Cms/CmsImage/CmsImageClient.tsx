@@ -17,7 +17,13 @@ import type { Image as ImageT } from '@prisma/client'
  * @param children - the children to display besides image
  * @returns
  */
-export default function CmsImageClient({ cmsImage, children, ...props }: PropTypes) {
+export default function CmsImageClient({
+    cmsImage,
+    children,
+    className = '',
+    classNameImage,
+    ...props
+}: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
     const [fallback, setFallback] = useState(false)
 
@@ -30,11 +36,12 @@ export default function CmsImageClient({ cmsImage, children, ...props }: PropTyp
     }, [readSpecialImageAction])
 
     return (
-        <div className={styles.CmsImage}>
+        <div className={`${styles.CmsImage} ${className}`}>
             {image && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
             <div className={styles.children}>{children}</div>
             {image &&
                 <Image
+                    className={classNameImage}
                     imageSize={cmsImage.imageSize}
                     image={image}
                     {...props}
