@@ -1,61 +1,26 @@
 import 'server-only'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import type { Auther } from '@/auth/auther/Auther'
 
-type APIHandlerFunction<Return> = (req: NextRequest) => Promise<Return>
-type Auther = { auth: (x: string) => boolean }
-type APIHandler<Return> = {
-    permission: Auther,
+abstract class ServerFunction<Params extends object, Data extends object, Return extends object> {
+    public abstract runOnUnsecureData(params: Params, data: unknown) : Return
+    public abstract run(params: Params, data: Data) : Return
+}
+
+type APIHandler<Return, DynamicFields extends object> = {
+    permission: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
     handler: APIHandlerFunction<Return>
 }
 
-export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>({
-    GET,
-    POST,
-    PUT,
-    DELETE
+export function apiHandler<Return, DynamicFields extends object>({
+    auther,
+    handler
 }: {
-    GET?: APIHandler<GETReturn>,
-    POST?: APIHandler<POSTReturn>,
-    PUT?: APIHandler<PUTReturn>,
-    DELETE?: APIHandler<DELETEReturn>
+    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
+    handler: ServerFunction
 }) {
     return async function handler(req: NextRequest) {
-        switch (req.method) {
-            case 'GET':
-                if (GET) {
-                    const data = await GET.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'POST':
-                if (POST) {
-                    const data = await POST.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'PUT':
-                if (PUT) {
-                    const data = await PUT.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'DELETE':
-                if (DELETE) {
-                    const data = await DELETE.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            default:
-                NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-        }
+        
     }
 }

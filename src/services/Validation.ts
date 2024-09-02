@@ -37,6 +37,15 @@ type Refiner<
     message: string
 }
 
+/*
+* A monadic type that is returned from the typeValidate method in Validation.
+*/
+export type SafeValidationReturn<T extends z.ZodRawShape> = { 
+    success: true, data: PureTsTypeOfSchema<T, true>
+} | { 
+    success: false, error: z.ZodError 
+}
+
 /**
  * A validatiorBase is meant to create Validators that wrapps zod functionality.
  * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
@@ -111,7 +120,7 @@ export class ValidationBase<
  * @method typeValidate validates the type schema
  * @method detailedValidate validates the detailed schema
  */
-class Validation<
+export class Validation<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -138,7 +147,7 @@ class Validation<
     }
 
     typeValidate(
-        data: FormData | PureTsTypeOfSchema<Type>
+        data: FormData | PureTsTypeOfSchema<Type> | unknown
     ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
         const parse = zfd.formData(this.typeSchema).safeParse(data)
         if (!parse.success) {
@@ -195,7 +204,7 @@ class ValidationPartial<
 
     typeValidate(
         data: FormData | Partial<PureTsTypeOfSchema<Type, true>>
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
+    ): SafeValidationReturn<Detailed> {
         const parse = zfd.formData(this.typeSchema.partial()).safeParse(data)
         if (!parse.success) {
             return {
