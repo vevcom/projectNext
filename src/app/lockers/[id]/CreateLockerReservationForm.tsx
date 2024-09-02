@@ -18,7 +18,7 @@ type PropTypes = {
 export default function LockerReservationForm({ lockerId, groupsFormData }: PropTypes) {
     const { refresh } = useRouter()
     const [indefinateDate, setIndefinateDate] = useState(false)
-    const [groupId, setGroupId] = useState('-1')
+    const [groupId, setGroupId] = useState('null')
 
     function handleGroupIdChange(value: string) {
         setGroupId(value)
@@ -35,7 +35,7 @@ export default function LockerReservationForm({ lockerId, groupsFormData }: Prop
                 label="Reserver for"
                 name="groupId"
                 value={groupId}
-                options={ [{ value: '-1', label: 'Meg selv' }, ...groupsFormData] }
+                options={ [{ value: 'null', label: 'Meg selv' }, ...groupsFormData] }
                 onChange={handleGroupIdChange}
             />
             <Checkbox

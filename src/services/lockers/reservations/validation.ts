@@ -24,8 +24,7 @@ export const createLockerReservationValidation = baseLockerReservationValidation
         'endDate'
     ],
     transformer: data => ({
-        // -1 is used to indicate that the locker is not being reserved by a group
-        groupId: data.groupId === '-1' ? null : parseInt(data.groupId, 10),
+        groupId: data.groupId === 'null' ? null : parseInt(data.groupId, 10),
         indefinateDate: data.indefinateDate ? data.indefinateDate === 'on' : false,
         endDate: data.endDate ? (new Date(data.endDate)) : null
     })
@@ -41,7 +40,7 @@ export const updateLockerReservationValidation = baseLockerReservationValidation
         'endDate'
     ],
     transformer: data => ({
-        groupId: parseInt(data.groupId, 10),
+        groupId: data.groupId === 'null' ? null : parseInt(data.groupId, 10),
         indefinateDate: data.indefinateDate ? data.indefinateDate === 'on' : false,
         endDate: data.endDate ? new Date(data.endDate) : null
     })
