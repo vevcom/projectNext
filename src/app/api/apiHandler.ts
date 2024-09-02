@@ -1,26 +1,36 @@
 import 'server-only'
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import type { Auther } from '@/auth/auther/Auther'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
+import { Session } from '@/auth/Session'
 
-abstract class ServerFunction<Params extends object, Data extends object, Return extends object> {
-    public abstract runOnUnsecureData(params: Params, data: unknown) : Return
-    public abstract run(params: Params, data: Data) : Return
-}
-
-type APIHandler<Return, DynamicFields extends object> = {
+type APIHandler<
+    Return extends object, 
+    DynamicFields extends object,
+    TypeValidation extends z.ZodRawShape,
+    DetailedValidation extends z.ZodRawShape,
+    Params extends object,
+> = {
     permission: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
-    handler: APIHandlerFunction<Return>
+    serviceMethod: ServiceMethod<TypeValidation, DetailedValidation, Params, Return>
 }
 
-export function apiHandler<Return, DynamicFields extends object>({
+export function apiHandler<
+    Return extends object, 
+    DynamicFields extends object,
+    TypeValidation extends z.ZodRawShape,
+    DetailedValidation extends z.ZodRawShape,
+    Params extends object,
+>({
     auther,
-    handler
+    serviceMethod,
 }: {
     auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
-    handler: ServerFunction
+    serviceMethod: ServiceMethod<TypeValidation, DetailedValidation, Params, Return>
 }) {
     return async function handler(req: NextRequest) {
-        
+        const authorization = req.headers.get('authorization')
+        const session = await Session.fromApiKey(authorization)
     }
 }

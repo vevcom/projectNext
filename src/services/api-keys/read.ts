@@ -6,6 +6,7 @@ import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ApiKeyFiltered } from './Types'
 
+
 export async function readApiKeys(): Promise<ApiKeyFiltered[]> {
     const apiKeys = await prismaCall(() =>
         prisma.apiKey.findMany({

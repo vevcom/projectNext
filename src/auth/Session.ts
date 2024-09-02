@@ -4,6 +4,8 @@ import { getServerSession as getSessionNextAuth } from 'next-auth'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
+import { readApiKey } from '@/services/api-keys/read'
+import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 
@@ -47,7 +49,21 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return new Session({ user, permissions, memberships })
     }
 
-    public static async fromApiKey(apiKeyHashedAndEncrypted: string): Promise<SessionNoUser> {
+    /**
+     * 
+     * @param name - The name of the api key
+     * @param apiKeyHashedAndEncrypted - The hashed and encrypted api key to get the session from
+     */
+    public static async fromApiKey({
+        name,
+        apiKeyHashedAndEncrypted,
+    }: {
+        name: string,
+        apiKeyHashedAndEncrypted: string,
+    } | 'NO_KEY'): Promise<SessionNoUser> {
+        const standardPermissions = await readDefaultPermissions()
+        const permissionsFromKey = apiKeyHashedAndEncrypted ? await readApiKey(apiKeyHashedAndEncrypted) : []
+
         throw new Error(`Not implemented${apiKeyHashedAndEncrypted}`)
     }
 }
