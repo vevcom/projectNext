@@ -6,3 +6,7 @@ export const ReadUserAuther = AutherOr([
     RequirePermission({ permission: 'USERS_READ' }),
     RequireUsername(undefined)
 ])
+
+export const CreateUserAuther = RequirePermission({ permission: 'USERS_CREATE' })
+
+export const UpdateUserAuther = RequirePermission({ permission: 'USERS_UPDATE' })

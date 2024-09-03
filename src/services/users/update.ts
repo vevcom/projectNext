@@ -15,20 +15,19 @@ import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
-import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
-import type { User } from '@prisma/client'
+import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
+import { ServiceMethod } from '../ServiceMethod'
 
-export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
-    const data = updateUserValidation.detailedValidate(rawdata)
-
-    return await prismaCall(() => prisma.user.update({
+export const UpdateUser = ServiceMethod({
+    validation: updateUserValidation,
+    handler: (prisma_, params: {id: number}, data) => prisma_.user.update({
         where: {
-            id,
+            id: params.id,
         },
         data
-    }))
-}
+    })
+})
 
 export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Detailed']): Promise<RegisterNewEmailType> {
     const { email } = verifyEmailValidation.detailedValidate(rawdata)

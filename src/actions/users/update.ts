@@ -1,10 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/services/users/update'
+import { UpdateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
-    updateUserValidation,
     registerUserValidation,
     updateUserPasswordValidation,
     verifyEmailValidation
@@ -22,11 +21,11 @@ export async function updateUserAction(
     rawdata: FormData | UpdateUserTypes['Type']
 ): Promise<ActionReturn<User>> {
     //TODO: Permission check
-    const parse = updateUserValidation.typeValidate(rawdata)
+    const parse = UpdateUser.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await safeServerCall(() => updateUser(id, data))
+    return await safeServerCall(() => UpdateUser.transaction('NEW_TRANSACTION').execute({params: {id}, data}))
 }
 
 export async function registerNewEmailAction(rawdata: FormData): Promise<ActionReturn<RegisterNewEmailType>> {
