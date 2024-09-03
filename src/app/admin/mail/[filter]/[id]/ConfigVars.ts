@@ -1,5 +1,4 @@
-import { MailListTypes } from "@/server/mail/Types";
-
+import { MailListTypes } from "@/services/mail/Types";
 
 
 export const MailDisplayLabels: Record<MailListTypes, String> = {
