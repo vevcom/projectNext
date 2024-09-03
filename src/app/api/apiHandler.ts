@@ -1,12 +1,11 @@
 import 'server-only'
+import { Session } from '@/auth/Session'
+import type { ServiceMethod } from '@/services/ServiceMethod'
 import type { NextRequest } from 'next/server'
 import type { Auther } from '@/auth/auther/Auther'
-import { ServiceMethod } from '@/services/ServiceMethod'
-import { z } from 'zod'
-import { Session } from '@/auth/Session'
 
 type APIHandler<
-    Return extends object, 
+    Return extends object,
     DynamicFields extends object,
     TypeValidationType,
     DetailedValidationType,
@@ -17,7 +16,7 @@ type APIHandler<
 }
 
 export function apiHandler<
-    Return extends object, 
+    Return extends object,
     DynamicFields extends object,
     TypeValidationType,
     DetailedValidationType,

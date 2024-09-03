@@ -1,13 +1,13 @@
 import { authOptions } from './authoptions'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'
-import { getServerSession as getSessionNextAuth } from 'next-auth'
-import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
-import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import { readApiKey, readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
+import { getServerSession as getSessionNextAuth } from 'next-auth'
+import type { Permission } from '@prisma/client'
+import type { UserFiltered } from '@/services/users/Types'
+import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 
@@ -53,7 +53,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
 
     /**
      * @param key - The key provided by client in the `id=keyId&key=key` format
-     * If the key is null, the session will be cratedwith only default permissios 
+     * If the key is null, the session will be cratedwith only default permissios
      */
     public static async fromApiKey(keyAndIdEncoded: string | null): Promise<SessionNoUser> {
         const defaultPermissions = await readDefaultPermissions()
@@ -65,12 +65,12 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)
         if (!success) throw new ServerError('INVALID API KEY', 'Api nøkkelen er ikke valid')
 
-        return new Session({ 
-            user: null, 
+        return new Session({
+            user: null,
             permissions: [...defaultPermissions, ...permissions].filter(
                 (permission, i, ps) => ps.indexOf(permission) === i
             ),
-            memberships: [] 
+            memberships: []
         })
     }
 }

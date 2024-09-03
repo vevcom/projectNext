@@ -2,12 +2,12 @@ import 'server-only'
 import { createApiKeyValidation } from './validation'
 import { apiKeyFilterSelection, KeyLength } from './ConfigVars'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
+import { encodeApiKey } from './apiKeyEncoder'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import crypto from 'crypto'
 import type { ApiKeyFilteredWithKey } from './Types'
 import type { CreateApiKeyTypes } from './validation'
-import { encodeApiKey } from './apiKeyEncoder'
 
 export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Promise<ApiKeyFilteredWithKey> {
     const data = createApiKeyValidation.detailedValidate(rawdata)

@@ -1,4 +1,4 @@
-import { ServerError } from '@/services/error';
+import { ServerError } from '@/services/error'
 
 
 /**
@@ -20,9 +20,9 @@ export function encodeApiKey({
  * @returns - The decoded key and id
  */
 export function decodeApiKey(key: string) {
-    const params = new URLSearchParams(key);
-    const id = params.get('id');
-    const keyStr = params.get('key');
+    const params = new URLSearchParams(key)
+    const id = params.get('id')
+    const keyStr = params.get('key')
     if (!id || !keyStr || isNaN(parseInt(id))) {
         throw new ServerError('BAD PARAMETERS', 'Invalid key')
     }

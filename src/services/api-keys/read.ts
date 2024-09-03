@@ -38,11 +38,11 @@ export async function readApiKeyHashedAndEncrypted(id: number) {
     const apiKey = await prismaCall(() =>
         prisma.apiKey.findUniqueOrThrow({
             where: { id },
-            select: { 
-                keyHashEncrypted: true, 
-                active: true, 
-                expiresAt: true, 
-                id: true, 
+            select: {
+                keyHashEncrypted: true,
+                active: true,
+                expiresAt: true,
+                id: true,
                 permissions: true
             }
         })

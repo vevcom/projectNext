@@ -40,10 +40,10 @@ type Refiner<
 /*
 * A monadic type that is returned from the typeValidate method in Validation.
 */
-export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends boolean> = { 
+export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends boolean> = {
     success: true, data: PureTsTypeOfSchema<T, Partialized>
-} | { 
-    success: false, error: z.ZodError 
+} | {
+    success: false, error: z.ZodError
 }
 
 /**

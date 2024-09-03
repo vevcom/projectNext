@@ -1,8 +1,8 @@
 import 'server-only'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createUserValidation } from '@/services/users/validation'
-import { ServiceMethod } from '../ServiceMethod'
 
 export const CreateUser = ServiceMethod({
     validation: createUserValidation,
