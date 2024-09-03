@@ -4,6 +4,9 @@ import { readSpecialImageAction } from '@/actions/images/read'
 import BackdropImage from '@/app/components/BackdropImage/BackdropImage'
 import Link from 'next/link'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import Image from '@/app/components/Image/Image'
+import CommitteeImage from '@/app/components/CommitteeImage/CommitteeImage'
+import ComitteeAdmin from './admin/page'
 
 export type PropTypes = {
     params: {
@@ -22,13 +25,17 @@ export default async function Committee({ params }: PropTypes) {
     }
 
     return (
-        <BackdropImage image={committeeLogo}>
-            <PageWrapper title={committee.name}>
-            <div className={styles.wrapper}>
-                <h1>{committee.name}</h1>
-                <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
-            </div>
-            </PageWrapper>
-        </BackdropImage>
+            <BackdropImage image={committeeLogo}>
+                <CommitteeImage image={committeeLogo}>
+                    <div></div>
+                </CommitteeImage>
+                    <PageWrapper title={committee.name}>
+                    <div className={styles.wrapper}>
+                        <p>{committee.name}</p>
+                        <p>{committee.description}</p>
+                        <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
+                    </div>
+                    </PageWrapper>
+            </BackdropImage>
     )
 }

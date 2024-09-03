@@ -27,7 +27,7 @@ export default async function Committees() {
                         <CommitteeCard
                             key={committee.id}
                             title={committee.name}
-                            href={`/committees/${committee.name}`}
+                            href={`/committees/${committee.shortName}`}
                             image={committee.logoImage.image}
                         >
                             {committee.description}
