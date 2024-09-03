@@ -4,6 +4,7 @@ import { readSpecialImage } from '@/server/images/read'
 import { prismaCall } from '@/server/prismaCall'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
+import { createArticle } from '@/server/cms/articles/create'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
@@ -11,6 +12,11 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
     if (!logoImageId) {
         defaultLogoImageId = (await readSpecialImage('DAFAULT_COMMITTEE_LOGO')).id
     }
+    const article = await createArticle(
+        {
+
+        }
+    )
 
     return await prismaCall(() => prisma.committee.create({
         data: {
@@ -32,6 +38,11 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
                     membershipRenewal: true,
                 }
             },
+            committeeArticle: {
+                connect: {
+                    id: article.id
+                }
+            }
         },
         include: {
             logoImage: {

@@ -7,6 +7,8 @@ import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import Image from '@/app/components/Image/Image'
 import CommitteeImage from '@/app/components/CommitteeImage/CommitteeImage'
 import ComitteeAdmin from './admin/page'
+import Article from '@/app/components/Cms/Article/Article'
+import { articleRealtionsIncluder } from '@/server/cms/articles/ConfigVars'
 
 export type PropTypes = {
     params: {
@@ -26,13 +28,14 @@ export default async function Committee({ params }: PropTypes) {
 
     return (
             <BackdropImage image={committeeLogo}>
-                <CommitteeImage image={committeeLogo}>
+                <CommitteeImage logoImage={committeeLogo} committeeImage={committee.committeeArticle.coverImage}>
                     <div></div>
                 </CommitteeImage>
                     <PageWrapper title={committee.name}>
                     <div className={styles.wrapper}>
                         <p>{committee.name}</p>
-                        <p>{committee.description}</p>
+                        <Article article={committee.committeeArticle} hideCoverImage>
+                        </Article>
                         <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
                     </div>
                     </PageWrapper>

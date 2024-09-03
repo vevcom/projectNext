@@ -2,10 +2,13 @@ import styles from './CommitteeImage.module.scss'
 import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
+import CmsImage from '../Cms/CmsImage/CmsImage'
+import { ExpandedCmsImage } from '@/server/cms/images/Types'
 
 type PropTypes = {
     children: ReactNode
-    image: ImageT
+    logoImage: ImageT
+    committeeImage: ExpandedCmsImage
     grayScale?: boolean
 }
 /**
@@ -14,17 +17,24 @@ type PropTypes = {
  * @param image - The image to render as a backdrop
  * @param grayScale - Whether the image should be rendered in grayscale (true by default)
  * */
-export default function CommitteeImage({ children, image, grayScale = false }: PropTypes) {
+export default function CommitteeImage({ children, logoImage, committeeImage, grayScale = false }: PropTypes) {
     return (
         <div className={styles.CommitteeImage}>
             <div className={styles.content}>
                 {children}
             </div>
-            <div className={styles.image}>
+            <div className={styles.images}>
+                <div className={styles.image}>
                 <Image
                     className={grayScale ? styles.gray : ''}
-                    image={image}
+                    image={logoImage}
                     width={350}
+                />
+                </div>
+                <CmsImage
+                    className={styles.committeeImage}
+                    cmsImage={committeeImage}
+                    width={600}
                 />
             </div>
         </div>

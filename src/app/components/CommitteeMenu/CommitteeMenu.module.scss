@@ -1,0 +1,15 @@
+@use "@/styles/ohma";
+
+.CommitteeMenu {
+    position: relative;
+    top: auto;
+    left: 0;
+
+    .container {
+        padding-top: 320px;
+        max-width: 400px;
+        max-height: fit-content;
+        background-color: violet;
+
+    }
+}

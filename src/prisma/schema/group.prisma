@@ -60,10 +60,12 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name        String
-  shortName   String   @unique
-  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId Int      @unique
+  committeeArticle   Article  @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  committeeArticleId Int      @unique
+  name               String
+  shortName          String   @unique
+  logoImage          CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId        Int      @unique
 }
 
 model InterestGroup {

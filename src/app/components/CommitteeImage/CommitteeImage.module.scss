@@ -2,41 +2,62 @@
 
 .CommitteeImage {
   position: relative;
-  max-width: 100%;
-  overflow: hidden; 
+  width: 100vw; /* Ensure the parent container is 100vw */
+  height: 300px; /* Make the parent container 100vh to cover the entire page */
+  overflow: hidden;
 
   .image {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 300px; 
-    object-fit: cover; 
-    background-color: pink; 
-    z-index: 1; 
-    transform: scale(1.0); 
-    animation: loading 1s ease-in-out forwards; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 275px;
+    object-fit: cover;
+    z-index: 1;
+    transform: scale(1.0);
+    animation: loading 1s ease-in-out forwards;
+    animation-delay: 1s;
+    overflow: visible;
+  }
+
+  .images {
+    position: relative;
+    width: 100%; /* Ensure full width for this container */
+    height: 100%; /* Ensure full height for this container */
+  }
+
+  .committeeImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Ensure this stretches to 100vw */
+    height: 100vh; /* Change to 100vh to cover the entire viewport */
+    object-fit: cover;
+    background-color: violet;
+    background-size: cover;
+    z-index: 0;
   }
 
   .content {
-    position: relative; 
-    padding-top: 320px; 
-    z-index: 2; 
-    margin: 0 auto; 
-    max-width: 800px; 
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    max-width: 800px;
   }
 }
 
 .image-container {
+  width: 100vw; /* Ensure the container is 100vw */
   max-width: 100%;
+  height: 100%; /* Ensure the container height is also 100vh */
 }
 
 // Keyframe animation to scale the image on load
 @keyframes loading {
   0% {
-    transform: scale(1.0); // Start at normal size
+    transform: scale(1.0); /* Start at normal size */
   }
   100% {
-    transform: scale(1.1); // End at scaled size
+    transform: scale(1.1); /* End at scaled size */
   }
 }

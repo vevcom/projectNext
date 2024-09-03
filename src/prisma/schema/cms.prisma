@@ -103,6 +103,7 @@ model Article {
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
   JobAd               JobAd?
+  Committee           Committee?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
