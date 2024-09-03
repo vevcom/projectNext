@@ -1,45 +1,63 @@
+import 'server-only'
 import { z } from 'zod'
-import { ValidationTypes, Validation } from './Validation'
 import { prismaTransactionWithErrorConvertion, type PrismaTransaction } from './prismaCall'
 
-type Data<
-    TypeValidation extends z.ZodRawShape,
-    DetailedValidation extends z.ZodRawShape,
-> = ValidationTypes<Validation<TypeValidation, DetailedValidation>>
+type TypeValidateReturn<
+    DetailedType
+> = {
+    success: true,
+    data: DetailedType,
+} | {
+    success: false,
+    error: z.ZodError,
+}
+
+export type ServiceMethod<
+    TypeType,
+    DetailedType,
+    Params extends object,
+    Return extends object | void = void,
+> = {
+    transaction: (prisma: PrismaTransaction | 'NEW_TRANSACTION') => {
+        execute: (config: {params: Params, data: DetailedType}) => Promise<Return>
+    }
+    typeValidate: (data: unknown | FormData | TypeType) => TypeValidateReturn<DetailedType>
+}
 
 export function ServiceMethod<
-    TypeValidation extends z.ZodRawShape,
-    DetailedValidation extends z.ZodRawShape,
+    TypeType,
+    DetailedType,
     Params extends object,
     Return extends object | void = void,
 >({
     validation,
     handler,
 }: {
-    validation: Validation<TypeValidation, DetailedValidation>,
-    handler: (prisma: PrismaTransaction, params: Params, data: Data<TypeValidation, DetailedValidation>['Detailed']) => Promise<Return>,
-}) {
+    validation: {
+        detailedValidate: (data: DetailedType) => DetailedType,
+        typeValidate: (data: unknown | FormData | TypeType) => TypeValidateReturn<DetailedType>,
+    },
+    handler: (
+        prisma: PrismaTransaction, 
+        params: Params, 
+        data: DetailedType
+    ) => Promise<Return>,
+}) : ServiceMethod<TypeType, DetailedType, Params, Return> {
     return {
-        transaction: (prisma: PrismaTransaction | 'NEW_TRANSACTION') => ({
-            execute: (params: Params, rawdata: Data<TypeValidation, DetailedValidation>['Detailed']) => {
-                const data = validation.detailedValidate(rawdata)
+        transaction: (prisma) => ({
+            execute: ({
+                params,
+                data: rawdata,
+            }) => {
+                const data = validation.detailedValidate(rawdata);
                 if (prisma === 'NEW_TRANSACTION') {
                     return prismaTransactionWithErrorConvertion(
                         newprisma => handler(newprisma, params, data)
-                    )
+                    );
                 }
-                return handler(prisma, params, data)
-            }
+                return handler(prisma, params, data);
+            },
         }),
-        typeValidate: (data: unknown | Data<TypeValidation, DetailedValidation>['Type']) => validation.typeValidate(data),
-    }
+        typeValidate: validation.typeValidate,
+    };
 }
-
-export type ServiceMethod<
-    TypeValidation extends z.ZodRawShape,
-    DetailedValidation extends z.ZodRawShape,
-    Params extends object,
-    Return extends object | void = void,
-> = ReturnType<typeof ServiceMethod<TypeValidation, DetailedValidation, Params, Return>>
-
-

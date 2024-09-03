@@ -40,8 +40,8 @@ type Refiner<
 /*
 * A monadic type that is returned from the typeValidate method in Validation.
 */
-export type SafeValidationReturn<T extends z.ZodRawShape> = { 
-    success: true, data: PureTsTypeOfSchema<T, true>
+export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends boolean> = { 
+    success: true, data: PureTsTypeOfSchema<T, Partialized>
 } | { 
     success: false, error: z.ZodError 
 }
@@ -148,7 +148,7 @@ export class Validation<
 
     typeValidate(
         data: FormData | PureTsTypeOfSchema<Type> | unknown
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
+    ): SafeValidationReturn<Detailed, false> {
         const parse = zfd.formData(this.typeSchema).safeParse(data)
         if (!parse.success) {
             return {
@@ -176,7 +176,7 @@ export class Validation<
  * @method typeValidate validates the type schema (in a partial way)
  * @method detailedValidate validates the detailed schema (in a partial way
  */
-class ValidationPartial<
+export class ValidationPartial<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -203,8 +203,8 @@ class ValidationPartial<
     }
 
     typeValidate(
-        data: FormData | Partial<PureTsTypeOfSchema<Type, true>>
-    ): SafeValidationReturn<Detailed> {
+        data: unknown | FormData | Partial<PureTsTypeOfSchema<Type, true>>
+    ): SafeValidationReturn<Detailed, true> {
         const parse = zfd.formData(this.typeSchema.partial()).safeParse(data)
         if (!parse.success) {
             return {

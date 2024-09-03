@@ -8,27 +8,24 @@ import { Session } from '@/auth/Session'
 type APIHandler<
     Return extends object, 
     DynamicFields extends object,
-    TypeValidation extends z.ZodRawShape,
-    DetailedValidation extends z.ZodRawShape,
+    TypeValidationType,
+    DetailedValidationType,
     Params extends object,
 > = {
-    permission: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
-    serviceMethod: ServiceMethod<TypeValidation, DetailedValidation, Params, Return>
+    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
+    serviceMethod: ServiceMethod<TypeValidationType, DetailedValidationType, Params, Return>
 }
 
 export function apiHandler<
     Return extends object, 
     DynamicFields extends object,
-    TypeValidation extends z.ZodRawShape,
-    DetailedValidation extends z.ZodRawShape,
+    TypeValidationType,
+    DetailedValidationType,
     Params extends object,
 >({
     auther,
     serviceMethod,
-}: {
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
-    serviceMethod: ServiceMethod<TypeValidation, DetailedValidation, Params, Return>
-}) {
+}: APIHandler<Return, DynamicFields, TypeValidationType, DetailedValidationType, Params>) {
     return async function handler(req: NextRequest) {
         const data = req.body
         console.log(data)

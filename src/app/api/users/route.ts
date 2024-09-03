@@ -1,5 +1,9 @@
 import 'server-only'
 import { apiHandler } from '@/api/apiHandler'
+import { ReadUserAuther } from '@/actions/users/Authers'
+import { CreateUser } from '@/services/users/create'
 
-const handler = apiHandler({})
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE }
+export const GET = apiHandler({
+    serviceMethod: CreateUser,
+    auther: ReadUserAuther,
+})

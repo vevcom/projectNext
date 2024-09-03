@@ -19,7 +19,7 @@ export async function createUserAction(rawdata: FormData | CreateUserTypes['Type
     const data = parse.data
 
     return await safeServerCall(async () => {
-        const user = await CreateUser.transaction('NEW_TRANSACTION').execute({}, data)
+        const user = await CreateUser.transaction('NEW_TRANSACTION').execute({ params: {}, data })
 
         setTimeout(() => sendUserInvitationEmail(user), 1000)
 
