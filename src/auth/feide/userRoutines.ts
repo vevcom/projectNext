@@ -1,7 +1,7 @@
 import 'server-only'
 import { fetchStudyProgrammesFromFeide } from './api'
-import { upsertStudyProgrammes } from '@/server/groups/studyProgrammes/create'
-import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
+import { upsertStudyProgrammes } from '@/services/groups/studyProgrammes/create'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import prisma from '@/prisma'
 
 export async function updateUserStudyProgrammes(userId: number, accessToken: string) {

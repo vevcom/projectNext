@@ -3,12 +3,11 @@
 import MailListItem from './mailListItem'
 import styles from './mailList.module.scss'
 import { v4 as uuid } from 'uuid'
-import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailListTypes, ViaArrayType } from '@/server/mail/Types'
 import { typeDisplayName } from './ConfigVars'
 import { TypeConversion } from './Types'
 import { getDisplayText } from './common'
+import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
 
 export default function MailList<T extends MailListTypes>({
     type,

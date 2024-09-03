@@ -1,21 +1,21 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/server/users/update'
+import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
     updateUserValidation,
     registerUserValidation,
     updateUserPasswordValidation,
     verifyEmailValidation
-} from '@/server/users/validation'
-import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
-import { ServerError } from '@/server/error'
-import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
-import type { RegisterNewEmailType, UserFiltered } from '@/server/users/Types'
+} from '@/services/users/validation'
+import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
+import { ServerError } from '@/services/error'
+import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
+import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User } from '@prisma/client'
-import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
+import type { UpdateUserTypes, RegisterUserTypes } from '@/services/users/validation'
 
 export async function updateUserAction(
     id: number,

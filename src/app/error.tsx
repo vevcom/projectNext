@@ -1,8 +1,8 @@
 'use client'
 
-import Button from './components/UI/Button'
 import styles from './error.module.scss'
-import SpecialCmsImageClient from './components/Cms/CmsImage/SpecialCmsImageClient'
+import Button from '@/components/UI/Button'
+import SpecialCmsImageClient from '@/components/Cms/CmsImage/SpecialCmsImageClient'
 
 export default function ErrorBoundary({ error, reset }: {error: Error, reset: () => void}) {
     return (

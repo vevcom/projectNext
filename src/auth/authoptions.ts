@@ -2,12 +2,12 @@ import 'server-only'
 import FeideProvider from './feide/FeideProvider'
 import VevenAdapter from './VevenAdapter'
 import { updateUserStudyProgrammes } from './feide/userRoutines'
-import { comparePassword } from './password'
+import { decryptAndComparePassword } from './password'
 import prisma from '@/prisma'
-import { readPermissionsOfUser } from '@/server/permissionRoles/read'
-import { readMembershipsOfUser } from '@/server/groups/memberships/read'
-import { readUser } from '@/server/users/read'
-import { updateEmailForFeideAccount } from '@/server/auth/feideAccounts/update'
+import { readPermissionsOfUser } from '@/services/permissionRoles/read'
+import { readMembershipsOfUser } from '@/services/groups/memberships/read'
+import { readUser } from '@/services/users/read'
+import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
@@ -38,7 +38,7 @@ export const authOptions: AuthOptions = {
 
                 if (!userCredentials) return null
 
-                const passwordMatch = await comparePassword(credentials.password, userCredentials.passwordHash)
+                const passwordMatch = await decryptAndComparePassword(credentials.password, userCredentials.passwordHash)
 
                 if (!passwordMatch) return null
 

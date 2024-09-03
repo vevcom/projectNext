@@ -1,7 +1,7 @@
 'use client'
 import { createMailingListAction } from '@/actions/mail/list/create'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 
 export default function CreateMailingList() {

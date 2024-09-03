@@ -1,7 +1,7 @@
 'use server'
 
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { AdmissionDisplayNames, AdmissionsArray } from '@/server/admission/ConfigVars'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { AdmissionDisplayNames, AdmissionsArray } from '@/services/admission/ConfigVars'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 

@@ -1,10 +1,10 @@
 'use client'
 import styles from './MembershipAdminForUser.module.scss'
-import Form from '@/app/components/Form/Form'
+import Form from '@/components/Form/Form'
 import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/actions/groups/memberships/update'
 import { useRouter } from 'next/navigation'
-import type { UserPagingReturn } from '@/server/users/Types'
-import type { ExpandedGroup } from '@/server/groups/Types'
+import type { UserPagingReturn } from '@/services/users/Types'
+import type { ExpandedGroup } from '@/services/groups/Types'
 
 type PropTypes = {
     user: UserPagingReturn,

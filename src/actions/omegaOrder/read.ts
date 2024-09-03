@@ -2,7 +2,7 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readCurrentOmegaOrder } from '@/server/omegaOrder/read'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaOrder } from '@prisma/client'
 

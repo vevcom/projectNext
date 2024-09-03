@@ -1,9 +1,9 @@
 import OldNewsList from './OldNewsList'
 import NewsCard from '@/app/news/NewsCard'
-import OldNewsPagingProvider from '@/context/paging/OldNewsPaging'
+import OldNewsPagingProvider from '@/contexts/paging/OldNewsPaging'
 import { readOldNewsPageAction } from '@/actions/news/read'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import type { PageSizeOldNews } from '@/context/paging/OldNewsPaging'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import type { PageSizeOldNews } from '@/contexts/paging/OldNewsPaging'
 
 export default async function NewsArchive() {
     const pageSize: PageSizeOldNews = 20

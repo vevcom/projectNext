@@ -119,6 +119,17 @@ enum Permission {
 
   // Admisstion
   ADMISSION_TRIAL_CREATE
+
+  // API keys
+  APIKEY_ADMIN
+  SCREEN_READ
+  SCREEN_ADMIN
+
+  SCHOOLS_READ
+  SCHOOLS_ADMIN
+
+  COURSES_READ
+  COURSES_ADMIN
 }
 
 model Role {

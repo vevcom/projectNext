@@ -2,8 +2,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readMailAddressExternalValidation } from '@/server/mail/mailAddressExternal/validation'
-import { destroyMailAddressExternal } from '@/server/mail/mailAddressExternal/destroy'
+import { readMailAddressExternalValidation } from '@/services/mail/mailAddressExternal/validation'
+import { destroyMailAddressExternal } from '@/services/mail/mailAddressExternal/destroy'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailAddressExternal } from '@prisma/client'
 

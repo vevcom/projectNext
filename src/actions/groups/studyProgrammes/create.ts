@@ -3,8 +3,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { createStudyProgramme } from '@/server/groups/studyProgrammes/create'
-import { createStudyProgrammeValidation } from '@/server/groups/studyProgrammes/validation'
+import { createStudyProgramme } from '@/services/groups/studyProgrammes/create'
+import { createStudyProgrammeValidation } from '@/services/groups/studyProgrammes/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { StudyProgramme } from '@prisma/client'
 

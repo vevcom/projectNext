@@ -1,12 +1,12 @@
 'use client'
 import styles from './AddUsersToGroup.module.scss'
-import UserList from '@/app/components/User/UserList/UserList'
-import Form from '@/app/components/Form/Form'
+import UserList from '@/components/User/UserList/UserList'
+import Form from '@/components/Form/Form'
 import { createMembershipsForGroupAction } from '@/actions/groups/memberships/create'
-import { UserSelectionContext } from '@/context/UserSelection'
+import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
-import type { PopUpKeyType } from '@/context/PopUp'
+import type { PopUpKeyType } from '@/contexts/PopUp'
 
 type PropTypes = {
     groupId: number,

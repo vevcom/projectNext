@@ -2,9 +2,9 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readLatestOmbul, readOmbul, readOmbuls } from '@/server/ombul/read'
+import { readLatestOmbul, readOmbul, readOmbuls } from '@/services/ombul/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 import type { Ombul } from '@prisma/client'
 
 export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {

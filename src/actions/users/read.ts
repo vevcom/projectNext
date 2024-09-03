@@ -2,12 +2,12 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readGroupsExpanded } from '@/server/groups/read'
-import { readUserPage, readUserProfile } from '@/server/users/read'
-import type { ExpandedGroup } from '@/server/groups/Types'
-import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/server/users/Types'
+import { readGroupsExpanded } from '@/services/groups/read'
+import { readUserPage, readUserProfile } from '@/services/users/read'
+import type { ExpandedGroup } from '@/services/groups/Types'
+import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 import type { Permission } from '@prisma/client'
 
 /**

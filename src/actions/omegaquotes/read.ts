@@ -2,10 +2,10 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readQuotesPage } from '@/server/omegaquotes/read'
+import { readQuotesPage } from '@/services/omegaquotes/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/server/paging/Types'
-import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/server/omegaquotes/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'
 
 export async function readQuotesPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize, OmegaquoteCursor>

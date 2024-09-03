@@ -1,12 +1,12 @@
 'use server'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { createImageCollection } from '@/server/images/collections/create'
+import { createImageCollection } from '@/services/images/collections/create'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createImageCollectionValidation } from '@/server/images/collections/validation'
+import { createImageCollectionValidation } from '@/services/images/collections/validation'
 import { getUser } from '@/auth/getUser'
 import type { ImageCollection } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import type { CreateImageCollectionTypes } from '@/server/images/collections/validation'
+import type { CreateImageCollectionTypes } from '@/services/images/collections/validation'
 
 export async function createImageCollectionAction(
     rawdata: FormData | CreateImageCollectionTypes['Type']

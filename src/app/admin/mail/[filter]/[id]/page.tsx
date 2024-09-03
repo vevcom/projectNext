@@ -1,13 +1,13 @@
 'use server'
 
 import { readMailOptions, readMailFlowAction } from '@/actions/mail/read'
-import { MailListTypeArray } from '@/server/mail/Types'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { MailListTypeArray } from '@/services/mail/Types'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
-import type { MailListTypes } from '@/server/mail/Types'
 import { MailDisplayLabels } from './ConfigVars'
 import { getDisplayTextFromFlowOject } from './common'
 import ClientStateWrapper from './clientStateWrapper'
+import type { MailListTypes } from '@/services/mail/Types'
 
 export default async function MailFlowPage({
     params

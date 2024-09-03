@@ -1,9 +1,9 @@
 'use client'
-import Form from '@/app/components/Form/Form'
-import { SelectNumber } from '@/app/components/UI/Select'
+import Form from '@/components/Form/Form'
+import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListGroupRelationAction } from '@/actions/mail/create'
 import { useUser } from '@/auth/useUser'
-import type { MailFlowObject } from '@/server/mail/Types'
+import type { MailFlowObject } from '@/services/mail/Types'
 import type { MailingList } from '@prisma/client'
 
 

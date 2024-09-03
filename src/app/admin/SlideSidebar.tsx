@@ -12,7 +12,8 @@ import {
     faUser,
     faUserGroup,
     faArrowLeft,
-    faPaperPlane
+    faPaperPlane,
+    faSchool
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -106,6 +107,10 @@ const navigations = [
             {
                 title: 'Standard tillganger',
                 href: '/admin/default-permissions'
+            },
+            {
+                title: 'Api Nøkler',
+                href: '/admin/api-keys'
             }
         ],
     },
@@ -132,6 +137,21 @@ const navigations = [
                 href: '/admin/send-mail'
             }
         ]
+    }, {
+        header: {
+            icon: faSchool,
+            title: 'Fagvev'
+        },
+        links: [
+            {
+                title: 'Skoler',
+                href: '/admin/schools'
+            },
+            {
+                title: 'Emnekatalog',
+                href: '/admin/courses'
+            }
+        ],
     }
 ] satisfies {
     header: {
@@ -159,7 +179,6 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
     const previousPath = useRef<string>(currentPath)
 
     useOnNavigation(() => {
-        console.log('currentPath', currentPath)
         if (previousPath.current === 'admin' && currentPath !== 'admin') {
             setOpen(false)
         }

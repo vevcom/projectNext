@@ -2,7 +2,7 @@
 import RegistrationForm from './RegistrationForm'
 import { getUser } from '@/auth/getUser'
 import { verifyUserEmailAction } from '@/actions/users/update'
-import { readUser } from '@/server/users/read'
+import { readUser } from '@/services/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { notFound, redirect } from 'next/navigation'
 

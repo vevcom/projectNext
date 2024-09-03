@@ -1,11 +1,11 @@
 'use client'
 import styles from './mailForm.module.scss'
 import sendMail from '@/actions/sendmail/send'
-import Form from '@/app/components/Form/Form'
-import Select from '@/app/components/UI/Select'
-import TextInput from '@/app/components/UI/TextInput'
-import Textarea from '@/app/components/UI/Textarea'
 import { MailAlias } from '@prisma/client'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import Textarea from '@/components/UI/Textarea'
+import { SelectString } from '@/components/UI/Select'
 
 
 export default function MailForm({
@@ -19,7 +19,7 @@ export default function MailForm({
         className={styles.mailForm}
         buttonClassName={styles.mailButton}
     >
-        <Select
+        <SelectString
             name="from"
             label="Avsender"
             options={aliases.map(alias => ({
