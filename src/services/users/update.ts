@@ -17,14 +17,13 @@ import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
-import { ServiceMethod } from '../ServiceMethod'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const UpdateUser = ServiceMethod({
+    data: true,
     validation: updateUserValidation,
-    handler: (prisma_, params: {id: number}, data) => prisma_.user.update({
-        where: {
-            id: params.id,
-        },
+    handler: (prisma_, params: { id: number } | { username: string }, data) => prisma_.user.update({
+        where: params,
         data
     })
 })

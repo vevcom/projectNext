@@ -26,7 +26,7 @@ export type CheckReturn<
 export abstract class Auther<
     const UserRequieredOut
     extends UserRequieredOutOpt,
-    const DynamicFields extends object | undefined = undefined
+    const DynamicFields extends object | undefined
 > {
     private redirectConfig: AutherRedirectConfig
 
@@ -57,8 +57,7 @@ export abstract class Auther<
         const { session, success } = this.check(sessionIn, dynamicFields)
 
         if (success) {
-            if (session.user) return new AuthResult(session, true)
-            return new AuthResult(session, false)
+            return new AuthResult(session, true)
         }
         if (this.redirectConfig.shouldRedirect) {
             if (!session.user && this.redirectConfig.returnUrl) {
@@ -73,7 +72,6 @@ export abstract class Auther<
             notFound() //TODO: Should probably redirect to an unauthorized page when we have one.
         }
 
-        if (session.user) return new AuthResult(session, false)
         return new AuthResult(session, false)
     }
 

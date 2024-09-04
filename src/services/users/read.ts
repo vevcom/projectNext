@@ -1,5 +1,5 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
-import { ServiceMethodNoData } from '../ServiceMethod'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -154,7 +154,8 @@ export async function readUserProfile(username: string): Promise<Profile> {
     return { user, memberships, permissions }
 }
 
-export const ReadUserProfile = ServiceMethodNoData({
+export const ReadUserProfile = ServiceMethod({
+    data: false,
     handler: async (prisma_, params: {username: string}) => {
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username },

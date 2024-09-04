@@ -5,6 +5,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createUserValidation } from '@/services/users/validation'
 
 export const CreateUser = ServiceMethod({
+    data: true,
     validation: createUserValidation,
     handler: async (prisma, _, data) => {
         const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')

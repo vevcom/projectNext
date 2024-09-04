@@ -1,6 +1,6 @@
 import { authOptions } from './authoptions'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'
-import { readApiKey, readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
+import { readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
@@ -52,6 +52,8 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
     }
 
     /**
+     * This function generates a Session from an api-key. If the kwy is bad
+     * an error will be thrown.
      * @param key - The key provided by client in the `id=keyId&key=key` format
      * If the key is null, the session will be cratedwith only default permissios
      */

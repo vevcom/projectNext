@@ -2,7 +2,7 @@ import { Auther } from './Auther'
 import type { SessionMaybeUser } from '@/auth/Session'
 
 export function AutherOr<
-    DynamicFields extends object | undefined = undefined
+    DynamicFields extends object | undefined
 >(
     authers: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', Partial<DynamicFields> | undefined>[]
 ) {
