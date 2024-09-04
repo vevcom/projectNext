@@ -42,6 +42,10 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return this.session.memberships
     }
 
+    public static empty(): SessionNoUser {
+        return new Session({ user: null, permissions: [], memberships: [] })
+    }
+
     public static async fromNextAuth(): Promise<SessionMaybeUser> {
         const {
             user = null,

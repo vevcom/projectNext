@@ -31,7 +31,7 @@ export type AuthRunConfig = {
 
 type ConfigType<Params> = {
     params: Params,
-    session: SessionMaybeUser
+    session: SessionMaybeUser | null
 }
 
 type ConfigTypeData<DetailedType, Params> = ConfigType<Params> & {

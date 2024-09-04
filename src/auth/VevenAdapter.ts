@@ -1,9 +1,8 @@
 import 'server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/services/auth/feideAccounts/create'
-import { CreateUser } from '@/services/users/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
-import { updateUser } from '@/services/users/update'
+import { User } from '@/services/users'
 import { readUserOrNull } from '@/services/users/read'
 import type { UserFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
@@ -86,13 +85,17 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
 
             const username = await generateUsername(prisma, user.username, user.lastname)
 
-            const createdUser = await CreateUser.transaction('NEW_TRANSACTION').execute({}, {
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                username,
-                emailVerified: null, //(new Date()).toISOString(),
-            })
+            const createdUser = await User.create.client('NEW').execute({
+                data: {
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    username,
+                    emailVerified: null, //(new Date()).toISOString(),
+                },
+                params: undefined,
+                session: null
+            }, { withAuth: false })
 
             return convertToAdapterUser(createdUser)
         },
@@ -129,12 +132,16 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async updateUser(user) {
             console.log('update u')
 
-            const updatedUser = await updateUser(Number(user.id), {
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                username: user.username,
-            })
+            const updatedUser = await User.update.client('NEW').execute({
+                params: { id: Number(user.id) },
+                data: {
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    username: user.username,
+                },
+                session: null
+            }, { withAuth: false })
 
             return convertToAdapterUser(updatedUser)
         },

@@ -1,4 +1,5 @@
 import { Smorekopp } from './error'
+import { Session } from '@/auth/Session'
 import type { ServiceMethod, ServiceMethodConfig } from './ServiceTypes'
 
 export function ServiceMethod<
@@ -80,7 +81,7 @@ export function ServiceMethod<
             execute: ({ data, params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
                     const authRes = config.auther.auth({
-                        session, dynamicFields: config.dynamicFields({ params, data })
+                        session: session ?? Session.empty(), dynamicFields: config.dynamicFields({ params, data })
                     })
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
@@ -94,7 +95,7 @@ export function ServiceMethod<
             execute: ({ params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
                     const authRes = config.auther.auth({
-                        session, dynamicFields: config.dynamicFields({ params })
+                        session: session ?? Session.empty(), dynamicFields: config.dynamicFields({ params })
                     })
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
