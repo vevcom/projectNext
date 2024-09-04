@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.PermissionCategory {
+    > h2 {
+        font-size: ohma.$fonts-xl;
+    }
+    > .list {
+        display: flex;
+        flex-direction: column;
+        gap: 2*ohma.$gap;
+    }
+}

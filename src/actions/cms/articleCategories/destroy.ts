@@ -1,5 +1,5 @@
 'use server'
-import { destroyArticleCategory } from '@/server/cms/articleCategories/destroy'
+import { destroyArticleCategory } from '@/services/cms/articleCategories/destroy'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
 import type { ActionReturn } from '@/actions/Types'

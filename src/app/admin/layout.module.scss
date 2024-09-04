@@ -1,21 +1,15 @@
 @use '@/styles/ohma';
 
-$iconSize: 30px;
-
 .wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto 1fr;
     padding: ohma.$gap;
-    > .backLink {
-        > .icon {
-            margin: ohma.$gap;
-            color: ohma.$colors-gray-600;
-            width: $iconSize;
-            height: $iconSize;
-        }
-    }
-    > .content {
-        width: 100%;
+    position: relative;
+    padding: 0;
+    .backButton {
+        position: absolute;
+        top: .5em;
+        left: .5em;
     }
 }

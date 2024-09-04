@@ -1,5 +1,5 @@
 import getCommittee from '@/app/committees/[name]/getCommittee'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import type { PropTypes } from '@/app/committees/[name]/page'
 import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 

@@ -1,5 +1,5 @@
 import type { AuthStatus } from '@/auth/getUser'
-import type { ServerErrorCode, ErrorMessage } from '@/server/error'
+import type { ServerErrorCode, ErrorMessage } from '@/services/error'
 
 export type ActionErrorCode = ServerErrorCode | AuthStatus
 

@@ -3,8 +3,8 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readNotificationChannels } from '@/server/notifications/channel/read'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import { readNotificationChannels } from '@/services/notifications/channel/read'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 

@@ -18,6 +18,13 @@ enum Permission {
   // Groups - Generic
   GROUP_READ
   GROUP_DESTROY
+  GROUP_ADMIN //TODO: Temp needs discussion about this
+  // Since groups can only be created with a specific type, there is no need to
+  // have permissions to create or update a generic group.
+
+  // omega order
+  OMEGA_ORDER_READ
+  OMEGA_ORDER_CREATE
   // Since groups can only be created with a specific type, there is no need to
   // have permissions to create or update a generic group.
 
@@ -51,6 +58,22 @@ enum Permission {
   STUDY_PROGRAMME_UPDATE
   STUDY_PROGRAMME_DESTROY
 
+  // CMS permissions - it overrides the visibility of things
+  CMS_ADMIN
+
+  // User list permissions - theese are admin permissions, and do not have anything
+  // to do with a user´s ability to edit its own user.
+  // USER_READ for example means that the user can read the list of users.
+  USERS_READ
+  USERS_UPDATE
+  USERS_DESTROY
+  USERS_CREATE
+
+  IMAGE_COLLECTION_CREATE
+  IMAGE_ADMIN
+
+  EVENT_CREATE
+  EVENT_ADMIN
   // Notifications
   NOTIFICATION_CHANNEL_CREATE
   NOTIFICATION_CHANNEL_READ
@@ -96,6 +119,17 @@ enum Permission {
 
   // Admisstion
   ADMISSION_TRIAL_CREATE
+
+  // API keys
+  APIKEY_ADMIN
+  SCREEN_READ
+  SCREEN_ADMIN
+
+  SCHOOLS_READ
+  SCHOOLS_ADMIN
+
+  COURSES_READ
+  COURSES_ADMIN
 }
 
 model Role {

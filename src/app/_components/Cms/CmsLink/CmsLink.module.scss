@@ -1,0 +1,27 @@
+@use '@/styles/ohma';
+
+.CmsLink {
+    position: relative;
+    min-width: 70px; 
+    height: 30px;
+    > a {
+        &.primary {
+            @include ohma.borderBtn(ohma.$colors-primary);
+            margin: 0;
+        }
+        &.secondary {
+            @include ohma.borderBtn(ohma.$colors-secondary);
+            margin: 0;
+        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

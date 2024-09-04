@@ -1,9 +1,9 @@
 'use server'
-import { createArticle } from '@/server/cms/articles/create'
+import { createArticle } from '@/services/cms/articles/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createArticleValidation } from '@/server/cms/articles/validation'
-import type { CreateArticleTypes } from '@/server/cms/articles/validation'
+import { createArticleValidation } from '@/services/cms/articles/validation'
+import type { CreateArticleTypes } from '@/services/cms/articles/validation'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { ActionReturn } from '@/actions/Types'
 

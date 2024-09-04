@@ -11,7 +11,7 @@ export default async function seedStudyProgramme(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
+                    order: 105,
                 }
             }
         }
@@ -27,7 +27,7 @@ export default async function seedStudyProgramme(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
+                    order: 105,
                 }
             }
         }
@@ -43,7 +43,7 @@ export default async function seedStudyProgramme(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'STUDY_PROGRAMME',
-                    membershipRenewal: true,
+                    order: 105,
                 }
             }
         }

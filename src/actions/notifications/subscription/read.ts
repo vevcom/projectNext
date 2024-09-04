@@ -3,8 +3,8 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readUserSubscriptions } from '@/server/notifications/subscription/read'
-import type { Subscription } from '@/server/notifications/subscription/Types'
+import { readUserSubscriptions } from '@/services/notifications/subscription/read'
+import type { Subscription } from '@/services/notifications/subscription/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function readSubscriptionsAction(userId?: number):

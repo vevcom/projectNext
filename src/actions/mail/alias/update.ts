@@ -3,8 +3,8 @@
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { createActionError, createZodActionError } from '@/actions/error'
-import { updateMailAliasValidation } from '@/server/mail/alias/validation'
-import { updateMailAlias } from '@/server/mail/alias/update'
+import { updateMailAliasValidation } from '@/services/mail/alias/validation'
+import { updateMailAlias } from '@/services/mail/alias/update'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailAlias } from '@prisma/client'
 

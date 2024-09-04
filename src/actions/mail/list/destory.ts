@@ -2,8 +2,8 @@
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { destroyMailingList } from '@/server/mail/list/destroy'
-import { readMailingListValidation } from '@/server/mail/list/validation'
+import { destroyMailingList } from '@/services/mail/list/destroy'
+import { readMailingListValidation } from '@/services/mail/list/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailingList } from '@prisma/client'
 

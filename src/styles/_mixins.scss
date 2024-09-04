@@ -10,7 +10,33 @@
 
 @mixin card {
     border-radius: variables.$cardRounding;
-    padding: 5*variables.$rounding;
+    padding: variables.$cardPadding;
+}
+
+@mixin boxShadow {
+    box-shadow: colors.$gray-700 0 0 10px;
+}
+
+@mixin table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    th, td {
+        border: 1px solid colors.$gray-300;
+        padding: 8px;
+    }
+    th {
+        background-color: colors.$gray-200;
+        color: black;
+    }
+    tr:nth-child(even) {
+        background-color: colors.$gray-100;
+    }
+    tr:hover {
+        background-color: colors.$gray-200;
+    }
 }
 
 @mixin btn($color: colors.$white) {
@@ -23,7 +49,6 @@
     margin: variables.$gap;
     color: colors.$black;
     border: none;
-    width: 100%;
     transition: .5s background;
     &:hover {
         background-color: darken($color, 10%);
