@@ -29,6 +29,7 @@ model User {
   mailingLists              MailingListUser[]
   admissionTrials           AdmissionTrial[]           @relation(name: "user")
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
+  Application               Application[]
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
