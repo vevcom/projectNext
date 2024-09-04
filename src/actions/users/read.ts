@@ -1,5 +1,4 @@
 'use server'
-import { ReadUserAuther } from './Authers'
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
@@ -11,6 +10,7 @@ import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/servi
 import type { ActionReturn } from '@/actions/Types'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { Permission } from '@prisma/client'
+import { User } from '@/services/users'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -37,15 +37,10 @@ export async function readUserPageAction<const PageSize extends number>(
  */
 export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
     const session = await Session.fromNextAuth()
-    const authResult = ReadUserAuther.auth({ session, dynamicFields: { username } })
-    if (!authResult.authorized) return createActionError(authResult.status)
 
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['USERS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return safeServerCall(() => readUserProfile(username))
+    return safeServerCall(() => User.readProfile.client('NEW').execute({
+        session, params: { username }
+    }, { withAuth: true }))
 }
 
 export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {

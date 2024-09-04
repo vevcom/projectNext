@@ -1,4 +1,4 @@
-import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from "@/actions/users/Authers";
+import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from "./Authers";
 import { ServiceMethod } from "../ServiceMethod";
 import { readProfile } from "./read";
 import { update } from "./update";
