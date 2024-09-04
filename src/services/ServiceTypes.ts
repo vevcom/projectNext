@@ -167,7 +167,7 @@ type ServiceMethodHandlerAuthConfig<
 > = {
     auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
     dynamicFields: (dataParams: DynamicFieldsInput<WithValidation, Params, DetailedType>) => DynamicFields
-} 
+}
 
 export type ServiceMethodConfig<
     WithValidation extends boolean,
@@ -202,7 +202,7 @@ export type ServiceMethodConfig<
         {
             serviceMethodHandler: ServiceMethodHandler<
                 false, void, void, Params, Return, WantsToOpenTransaction
-            > & { withData: false } 
+            > & { withData: false }
         } & ServiceMethodHandlerAuthConfig<
             false, void, Params, DynamicFields
         >

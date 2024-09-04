@@ -66,7 +66,7 @@ export function apiHandler<
     DetailedValidationType,
     RawParams,
     Params,
-    WantsToOpenTransaction, 
+    WantsToOpenTransaction,
     NoAuther
 >): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
 
@@ -81,8 +81,12 @@ export function apiHandler<
 >({
     serviceMethod,
     params
-}: | APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther>
-    | APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
+}: | APIHandler<
+    true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther
+    >
+    | APIHandler<
+    false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther
+    >
 
 ) {
     return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>

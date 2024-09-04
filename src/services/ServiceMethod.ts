@@ -59,15 +59,20 @@ export function ServiceMethod<
         | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
         | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, false>
 ): (
-    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true> 
+    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true>
     | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, true>
-    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> 
+    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false>
     | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
-) {       
+) {
     if (!config.hasAuther) {
-        return config.withData ? { 
-            withData: true, client: config.serviceMethodHandler.client, typeValidate: config.serviceMethodHandler.typeValidate 
-        } : { withData: false, client: config.serviceMethodHandler.client }
+        return config.withData ? {
+            withData: true,
+            client: config.serviceMethodHandler.client,
+            typeValidate: config.serviceMethodHandler.typeValidate
+        } : {
+            withData: false,
+            client: config.serviceMethodHandler.client
+        }
     }
     return config.withData ? {
         withData: true,
