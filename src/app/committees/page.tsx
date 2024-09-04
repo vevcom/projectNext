@@ -1,9 +1,8 @@
 import { readCommitteesAction } from '@/actions/groups/committees/read'
 import Link from 'next/link'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import styles from './page.module.scss'
-import CommitteeCard from '../components/CommitteeCard/CommitteeCard'
-import BackdropImage from '../components/BackdropImage/BackdropImage'
+import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
 
 export default async function Committees() {
     const res = await readCommitteesAction()
@@ -29,9 +28,7 @@ export default async function Committees() {
                             title={committee.name}
                             href={`/committees/${committee.shortName}`}
                             image={committee.logoImage.image}
-                        >
-                            {committee.description}
-                        </CommitteeCard>
+                        />
                     )
                 )
                 ) : (

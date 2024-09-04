@@ -3,7 +3,7 @@ import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 import CmsImage from '../Cms/CmsImage/CmsImage'
-import { ExpandedCmsImage } from '@/server/cms/images/Types'
+import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 
 type PropTypes = {
     children: ReactNode

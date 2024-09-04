@@ -20,7 +20,7 @@ export async function createImage({
     ...rawdata
 }: CreateImageTypes['Detailed'] & { collectionId: number }): Promise<Image> {
     const { file, ...meta } = createImageValidation.detailedValidate(rawdata)
-    const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
+    const allowedExt = ['png', 'jpg', 'jpeg', 'heic', 'webp']
 
     const uploadPromises = [
         createOneInStore(file, allowedExt, 250),

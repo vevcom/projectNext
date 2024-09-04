@@ -3,12 +3,9 @@ import getCommitee from './getCommittee'
 import { readSpecialImageAction } from '@/actions/images/read'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import Link from 'next/link'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import Image from '@/app/components/Image/Image'
-import CommitteeImage from '@/app/components/CommitteeImage/CommitteeImage'
-import ComitteeAdmin from './admin/page'
-import Article from '@/app/components/Cms/Article/Article'
-import { articleRealtionsIncluder } from '@/server/cms/articles/ConfigVars'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import Article from '@/components/Cms/Article/Article'
 
 export type PropTypes = {
     params: {

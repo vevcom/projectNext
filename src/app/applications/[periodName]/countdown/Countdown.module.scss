@@ -19,5 +19,6 @@
 
 .Countdown span {
     font-size: 13rem;
-    color: #333;
+    color: ohma.$colors-gray-200;
+    transform: translateY(-5%);
 }
