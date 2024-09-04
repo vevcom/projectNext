@@ -1,6 +1,5 @@
-import dynamic from "next/dynamic";
-import { Smorekopp } from "./error";
-import type { ServiceMethod, ServiceMethodConfig } from "./ServiceTypes";
+import { Smorekopp } from './error'
+import type { ServiceMethod, ServiceMethodConfig } from './ServiceTypes'
 
 export function ServiceMethod<
     TypeType,
@@ -11,16 +10,18 @@ export function ServiceMethod<
     WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction>
-) : ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
 
 export function ServiceMethod<
-    TypeType,
-    DetailedType,
     Params,
     Return,
     DynamicFields,
     WantsToOpenTransaction extends boolean
->(config: ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction>) : ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction>
+>(
+    config: ServiceMethodConfig<
+        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction
+    >
+): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction>
 
 export function ServiceMethod<
     TypeType,
@@ -30,16 +31,19 @@ export function ServiceMethod<
     DynamicFields,
     WantsToOpenTransaction extends boolean
 >(
-    config: 
-        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction> 
+    config:
+        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction>
         | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction>
-) : ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction> | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction> {
+): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction> |
+    ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction> {
     return config.withData ? {
         withData: true,
         client: (prisma) => ({
             execute: ({ data, params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
-                    const authRes = config.auther.auth({ session, dynamicFields: config.dynamicFields({ params, data })})
+                    const authRes = config.auther.auth({
+                        session, dynamicFields: config.dynamicFields({ params, data })
+                    })
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
                 return config.serviceMethodHandler.client(prisma).execute({ data, params, session })
@@ -51,7 +55,9 @@ export function ServiceMethod<
         client: (prisma) => ({
             execute: ({ params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
-                    const authRes = config.auther.auth({ session, dynamicFields: config.dynamicFields({ params }) })
+                    const authRes = config.auther.auth({
+                        session, dynamicFields: config.dynamicFields({ params })
+                    })
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
                 return config.serviceMethodHandler.client(prisma).execute({ params, session })

@@ -1,8 +1,8 @@
-import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from "./Authers";
-import { ServiceMethod } from "../ServiceMethod";
-import { readProfile } from "./read";
-import { update } from "./update";
-import { create } from "./create";
+import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from './Authers'
+import { readProfile } from './read'
+import { update } from './update'
+import { create } from './create'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const User = {
     readProfile: ServiceMethod({

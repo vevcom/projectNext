@@ -1,12 +1,11 @@
 import 'server-only'
 import { prismaErrorWrapper } from './prismaCall'
-import type { 
-    PrismaTransaction, 
-    ServiceMethodHandlerConfig, 
-    ServiceMethodHandler, 
-    PrismaPossibleTransaction 
-} from './ServiceTypes'
 import { default as globalPrisma } from '@/prisma'
+import type {
+    ServiceMethodHandlerConfig,
+    ServiceMethodHandler,
+    PrismaPossibleTransaction
+} from './ServiceTypes'
 
 export function ServiceMethodHandler<
     Params,
@@ -14,7 +13,9 @@ export function ServiceMethodHandler<
     WantsToOpenTransaction extends boolean,
 >({
     handler,
-}: ServiceMethodHandlerConfig<false, void, void, Params, Return, WantsToOpenTransaction>): ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction>
+}: ServiceMethodHandlerConfig<
+    false, void, void, Params, Return, WantsToOpenTransaction>
+): ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction>
 
 export function ServiceMethodHandler<
     TypeType,
@@ -22,7 +23,12 @@ export function ServiceMethodHandler<
     Params,
     Return,
     WantsToOpenTransaction extends boolean,
->(config: ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>): ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+>(config: ServiceMethodHandlerConfig<
+    true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction
+    >
+): ServiceMethodHandler<
+    true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction
+>
 
 export function ServiceMethodHandler<
     TypeType,
@@ -31,12 +37,11 @@ export function ServiceMethodHandler<
     Return,
     WantsToOpenTransaction extends boolean,
 >(
-    config: 
+    config:
     | ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
     | ServiceMethodHandlerConfig<false, void, void, Params, Return, WantsToOpenTransaction>
-) : | ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
-    | ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> 
-{
+): | ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+    | ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> {
     return config.withData ? {
         client: (prisma) => ({
             execute: ({

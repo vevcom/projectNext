@@ -1,5 +1,5 @@
-import { apiHandler } from "@/api/apiHandler"
-import { User } from "@/services/users"
+import { apiHandler } from '@/api/apiHandler'
+import { User } from '@/services/users'
 
 export const GET = apiHandler({
     serviceMethod: User.readProfile,

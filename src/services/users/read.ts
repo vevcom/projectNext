@@ -1,4 +1,5 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -9,7 +10,6 @@ import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { User } from '@prisma/client'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
 /**
  * A function to read a page of users with the given details (filtering)

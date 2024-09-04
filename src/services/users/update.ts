@@ -7,6 +7,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -17,7 +18,6 @@ import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
 export const update = ServiceMethodHandler({
     withData: true,

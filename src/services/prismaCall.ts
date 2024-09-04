@@ -1,5 +1,4 @@
 import { ServerError } from './error'
-import { default as prismaDefault } from '@/prisma'
 import { Prisma } from '@prisma/client'
 import type { ServerErrorCode } from './error'
 

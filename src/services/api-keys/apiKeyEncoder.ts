@@ -23,11 +23,11 @@ export function decodeApiKey(key: string) {
     const params = new URLSearchParams(key)
     const id = params.get('id')
     const keyStr = params.get('key')
-    if (!id || !keyStr || isNaN(parseInt(id))) {
+    if (!id || !keyStr || isNaN(parseInt(id, 10))) {
         throw new ServerError('BAD PARAMETERS', 'Invalid key')
     }
     return {
-        id: parseInt(id),
+        id: parseInt(id, 10),
         key: keyStr
     }
 }

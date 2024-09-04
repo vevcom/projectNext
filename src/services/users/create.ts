@@ -1,8 +1,8 @@
 import 'server-only'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createUserValidation } from '@/services/users/validation'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
 export const create = ServiceMethodHandler({
     withData: true,

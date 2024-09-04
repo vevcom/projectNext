@@ -1,12 +1,12 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createActionError, createZodActionError } from '@/actions/error'
+import { createZodActionError } from '@/actions/error'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
+import { Session } from '@/auth/Session'
+import { User } from '@/services/users'
 import type { CreateUserTypes } from '@/services/users/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { User as UserT } from '@prisma/client'
-import { Session } from '@/auth/Session'
-import { User } from '@/services/users'
 
 /**
  * A action that creates a user by the given data. It will also hash the password

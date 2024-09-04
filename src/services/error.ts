@@ -1,4 +1,4 @@
-import type { AuthStatus } from "@/auth/getUser"
+import type { AuthStatus } from '@/auth/getUser'
 
 export type ServerErrorCode =
     | 'DUPLICATE'
@@ -37,7 +37,9 @@ export class Smorekopp<ValidCodes extends ErrorCodes> extends Error {
 }
 
 export class ServerError extends Smorekopp<ServerErrorCode> {
-    constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[]) {
+    public serviceCausedError: string | undefined
+    constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[], serviceCausedError?: string) {
         super(errorCode, errors)
+        this.serviceCausedError = serviceCausedError
     }
 }

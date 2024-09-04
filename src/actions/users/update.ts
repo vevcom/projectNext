@@ -11,12 +11,12 @@ import {
 import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
 import { ServerError } from '@/services/error'
 import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
-import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
-import type { ActionReturn } from '@/actions/Types'
-import type { User as UserT} from '@prisma/client'
-import type { UpdateUserTypes, RegisterUserTypes } from '@/services/users/validation'
 import { User } from '@/services/users'
 import { Session } from '@/auth/Session'
+import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { User as UserT } from '@prisma/client'
+import type { UpdateUserTypes, RegisterUserTypes } from '@/services/users/validation'
 
 export async function updateUserAction(
     id: number,
@@ -28,7 +28,7 @@ export async function updateUserAction(
     const data = parse.data
 
     return await safeServerCall(async () => User.update.client('NEW').execute({
-        params: { id }, 
+        params: { id },
         data,
         session: await Session.fromNextAuth(),
     }, { withAuth: true }))

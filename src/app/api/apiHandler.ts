@@ -1,8 +1,9 @@
 import 'server-only'
-import { Session, SessionNoUser } from '@/auth/Session'
+import { Session } from '@/auth/Session'
+import { ServerError, Smorekopp } from '@/services/error'
+import type { ActionErrorCode } from '@/actions/Types'
+import type { SessionNoUser } from '@/auth/Session'
 import type { ServiceMethod } from '@/services/ServiceTypes'
-import { ErrorCodes, ServerError, Smorekopp } from '@/services/error'
-import { ActionErrorCode } from '@/actions/Types'
 
 type APIHandler<
     WithValidation extends boolean,
@@ -13,7 +14,9 @@ type APIHandler<
     Params,
     WantsToOpenTransaction extends boolean,
 > = {
-    serviceMethod: ServiceMethod<WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction>
+    serviceMethod: ServiceMethod<
+        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction
+    >
     params: (rawparams: RawParams) => Params
 }
 
@@ -30,7 +33,7 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         if (error instanceof Error) {
             return createApiErrorRespone('UNKNOWN ERROR', error.message)
         }
-    } 
+    }
     return createApiErrorRespone('SERVER ERROR', 'Noe veldig uventet skjedde')
 }
 
@@ -39,7 +42,9 @@ export function apiHandler<
     RawParams,
     Params,
     WantsToOpenTransaction extends boolean,
->(config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>) : (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+>(
+    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>
+): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
 
 export function apiHandler<
     Return,
@@ -51,7 +56,15 @@ export function apiHandler<
 >({
     serviceMethod,
     params
-}: APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction>) : (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+}: APIHandler<
+    true,
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction
+>): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
 
 export function apiHandler<
     Return,
@@ -67,26 +80,25 @@ export function apiHandler<
     | APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>
 
 ) {
-    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) => {
-        return await apiHandlerGeneric<Return>(req, async session => {
+    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>
+        await apiHandlerGeneric<Return>(req, async session => {
             const rawdata = await req.json().catch(console.log)
             const parse = serviceMethod.typeValidate(rawdata)
             if (!parse.success) throw new ServerError('BAD PARAMETERS', 'Dårlig data')
             const data = parse.data
-            
-            return serviceMethod.client('NEW').execute({ 
-                params: params(rawParams), 
-                data, 
+
+            return serviceMethod.client('NEW').execute({
+                params: params(rawParams),
+                data,
                 session,
-            }, { withAuth: true } )
-        })
-    } : async (req: Request, { params: rawParams }: { params: RawParams }) => {
-        return await apiHandlerGeneric(req, session => {
-            return serviceMethod.client('NEW').execute({ 
-                params: params(rawParams), 
-            session }, { withAuth: true })
-        })
-    }
+            }, { withAuth: true })
+        }) : async (req: Request, { params: rawParams }: { params: RawParams }) =>
+        await apiHandlerGeneric(req, session =>
+            serviceMethod.client('NEW').execute({
+                params: params(rawParams),
+                session }, { withAuth: true }
+            )
+        )
 }
 
 function createApiErrorRespone(errorCode: ActionErrorCode, message: string) {
@@ -94,7 +106,7 @@ function createApiErrorRespone(errorCode: ActionErrorCode, message: string) {
         errorCode,
         message
     }), {
-        status: 500 //TODO: 
+        status: 500 //TODO:
     })
 }
 
