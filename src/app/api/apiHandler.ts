@@ -13,9 +13,10 @@ type APIHandler<
     RawParams,
     Params,
     WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
 > = {
     serviceMethod: ServiceMethod<
-        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction
+        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction, NoAuther
     >
     params: (rawparams: RawParams) => Params
 }
@@ -42,8 +43,9 @@ export function apiHandler<
     RawParams,
     Params,
     WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
 >(
-    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>
+    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
 ): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
 
 export function apiHandler<
@@ -53,6 +55,7 @@ export function apiHandler<
     RawParams,
     Params,
     WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
 >({
     serviceMethod,
     params
@@ -63,7 +66,8 @@ export function apiHandler<
     DetailedValidationType,
     RawParams,
     Params,
-    WantsToOpenTransaction
+    WantsToOpenTransaction, 
+    NoAuther
 >): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
 
 export function apiHandler<
@@ -73,11 +77,12 @@ export function apiHandler<
     RawParams,
     Params,
     WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
 >({
     serviceMethod,
     params
-}: | APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction>
-    | APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>
+}: | APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther>
+    | APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
 
 ) {
     return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>
