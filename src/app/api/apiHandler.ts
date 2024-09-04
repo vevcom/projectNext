@@ -1,8 +1,7 @@
 import 'server-only'
 import { Session, SessionNoUser } from '@/auth/Session'
-import type { ServiceMethod } from '@/services/ServiceMethod'
-import type { Auther } from '@/auth/auther/Auther'
-import { ServerError } from '@/services/error'
+import type { ServiceMethod } from '@/services/ServiceTypes'
+import { ErrorCodes, ServerError, Smorekopp } from '@/services/error'
 import { ActionErrorCode } from '@/actions/Types'
 
 type APIHandler<
@@ -12,12 +11,9 @@ type APIHandler<
     DetailedValidationType,
     RawParams,
     Params,
-    DynamicFields,
-    DynamicFieldsGetter extends DynamicFields
+    WantsToOpenTransaction extends boolean,
 > = {
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
-    serviceMethod: ServiceMethod<WithValidation, TypeValidationType, DetailedValidationType, Params, Return>
-    dynamicFields: (dataParams: {params: Params, data: DetailedValidationType}) => DynamicFieldsGetter,
+    serviceMethod: ServiceMethod<WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction>
     params: (rawparams: RawParams) => Params
 }
 
@@ -28,7 +24,7 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         const result = await handle(session)
         return createApiResponse(result)
     } catch (error: unknown) {
-        if (error instanceof ServerError) {
+        if (error instanceof Smorekopp) {
             return createApiErrorRespone(error.errorCode, error.errors.length ? error.errors[0].message : error.errorCode)
         }
         if (error instanceof Error) {
@@ -40,50 +36,55 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
 
 export function apiHandler<
     Return,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+>(config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>) : (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+
+export function apiHandler<
+    Return,
     TypeValidationType,
     DetailedValidationType,
     RawParams,
     Params,
-    DynamicFields,
-    DynamicFieldsGetter extends DynamicFields
+    WantsToOpenTransaction extends boolean,
 >({
-    auther,
     serviceMethod,
-    dynamicFields,
     params
-}: APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, DynamicFields, DynamicFieldsGetter>) {
-    return async function handler(req: Request, { params: rawParams }: { params: RawParams }) {
+}: APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction>) : (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+
+export function apiHandler<
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+>({
+    serviceMethod,
+    params
+}: | APIHandler<true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction>
+    | APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction>
+
+) {
+    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) => {
         return await apiHandlerGeneric<Return>(req, async session => {
             const rawdata = await req.json().catch(console.log)
             const parse = serviceMethod.typeValidate(rawdata)
             if (!parse.success) throw new ServerError('BAD PARAMETERS', 'Dårlig data')
             const data = parse.data
-
-            const authRes = auther.auth({ session, dynamicFields: dynamicFields({params: params(rawParams), data}) })
-            if (!authRes.authorized) throw new Error('ikke autorisert') //TODO: Error handling
             
-            return serviceMethod.transaction('NEW_TRANSACTION').execute({ params: params(rawParams), data })
+            return serviceMethod.client('NEW').execute({ 
+                params: params(rawParams), 
+                data, 
+                session,
+            }, { withAuth: true } )
         })
-    }
-}
-
-export function apiHandlerNoData<
-    Return,
-    RawParams,
-    Params,
-    DynamicFields,
-    DynamicFieldsGetter extends DynamicFields
->({
-    auther,
-    serviceMethod,
-    dynamicFields,
-    params
-}: APIHandler<false, Return, void, void, RawParams, Params, DynamicFields, DynamicFieldsGetter>) {
-    return async function handler(req: Request, { params: rawParams }: { params: RawParams }) {
+    } : async (req: Request, { params: rawParams }: { params: RawParams }) => {
         return await apiHandlerGeneric(req, session => {
-            const authRes = auther.auth({ session, dynamicFields: dynamicFields({ params: params(rawParams), data: undefined }) })
-            if (!authRes.authorized) throw new Error('ikke autorisert')
-            return serviceMethod.transaction('NEW_TRANSACTION').execute({ params: params(rawParams) })
+            return serviceMethod.client('NEW').execute({ 
+                params: params(rawParams), 
+            session }, { withAuth: true })
         })
     }
 }

@@ -44,7 +44,7 @@ export function ServiceMethodHandler<
                 data: rawdata,
             }) => {
                 const data = config.validation.detailedValidate(rawdata)
-                if (prisma === 'GLOBAL') {
+                if (prisma === 'NEW') {
                     return prismaErrorWrapper(() => config.handler(globalPrisma, params, data))
                 }
                 return prismaErrorWrapper(() => config.handler(prisma, params, data))
@@ -67,7 +67,7 @@ function ServiceMethodHandlerNoData<
     return {
         client: (prisma) => ({
             execute: ({ params }) => {
-                if (prisma === 'GLOBAL') {
+                if (prisma === 'NEW') {
                     return prismaErrorWrapper(() => handler(globalPrisma, params))
                 }
                 return prismaErrorWrapper(() => handler(prisma, params))

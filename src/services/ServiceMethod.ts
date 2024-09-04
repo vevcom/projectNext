@@ -38,7 +38,7 @@ export function ServiceMethod<
         withData: true,
         client: (prisma) => ({
             execute: ({ data, params, session }, authRunConfig) => {
-                if (authRunConfig.authConfig.withAut) {
+                if (authRunConfig.withAuth) {
                     const authRes = config.auther.auth({ session, dynamicFields: config.dynamicFields({ params, data })})
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
@@ -50,7 +50,7 @@ export function ServiceMethod<
         withData: false,
         client: (prisma) => ({
             execute: ({ params, session }, authRunConfig) => {
-                if (authRunConfig.authConfig.withAut) {
+                if (authRunConfig.withAuth) {
                     const authRes = config.auther.auth({ session, dynamicFields: config.dynamicFields({ params }) })
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }

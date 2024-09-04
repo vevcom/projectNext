@@ -1,19 +1,14 @@
 import { ReadUserAuther } from "@/actions/users/Authers"
-import { apiHandler, apiHandlerNoData } from "@/api/apiHandler"
-import { ReadUserProfile } from "@/services/users/read"
-import { UpdateUser } from "@/services/users/update"
+import { apiHandler } from "@/api/apiHandler"
+import { User } from "@/services/users"
 import { UpdateUserAuther } from "@/actions/users/Authers"
 
-export const GET = apiHandlerNoData({
-    serviceMethod: ReadUserProfile,
-    auther: ReadUserAuther,
-    dynamicFields: ({ params }) => ({ username: params.username }),
+export const GET = apiHandler({
+    serviceMethod: User.readProfile,
     params: (rawparams: {username: string}) => ({ username: rawparams.username })
 })
 
 export const PATCH = apiHandler({
-    serviceMethod: UpdateUser,
-    auther: UpdateUserAuther,
-    dynamicFields: () => undefined,
+    serviceMethod: User.update,
     params: (rawparams: { username: string }) => ({ username: rawparams.username })
 })

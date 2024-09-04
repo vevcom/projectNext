@@ -11,7 +11,7 @@ import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershi
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
 import { ServerError } from '@/services/error'
-import { prismaCall, PrismaTransaction } from '@/services/prismaCall'
+import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'

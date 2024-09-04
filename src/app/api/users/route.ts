@@ -1,11 +1,8 @@
 import 'server-only'
 import { apiHandler } from '@/api/apiHandler'
-import { CreateUserAuther } from '@/actions/users/Authers'
-import { CreateUser } from '@/services/users/create'
+import { User } from '@/services/users'
 
 export const POST = apiHandler({
-    serviceMethod: CreateUser,
-    auther: CreateUserAuther,
-    dynamicFields: () => undefined,
-    params: () => ({})
+    serviceMethod: User.create,
+    params: () => undefined
 })

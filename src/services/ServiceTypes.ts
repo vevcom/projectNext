@@ -22,13 +22,11 @@ export type PrismaPossibleTransaction<
 
 export type PrismaTransactionOrNew<
     WantsToOpenTransaction extends boolean
-> = PrismaPossibleTransaction<WantsToOpenTransaction> | 'GLOBAL'
+> = PrismaPossibleTransaction<WantsToOpenTransaction> | 'NEW'
 
 
 export type AuthRunConfig = {
-    authConfig: {
-        withAut: boolean,
-    }
+    withAuth: boolean,
 }
 
 export type Execute<WithValidation extends boolean, DetailedType, Params, Return, WithAuthParam extends boolean> = WithAuthParam extends true ? {
