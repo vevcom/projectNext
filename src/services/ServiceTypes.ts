@@ -1,7 +1,10 @@
-import type { PrismaTransaction } from './prismaCall'
 import type { SessionMaybeUser } from '@/auth/Session'
 import { Auther } from "@/auth/auther/Auther";
+import { PrismaClient } from '@prisma/client';
 import { z } from 'zod'
+import prisma from '@/prisma'
+
+export type PrismaTransaction = Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
 
 export type TypeValidateReturn<
     DetailedType
@@ -13,7 +16,14 @@ export type TypeValidateReturn<
     error: z.ZodError,
 }
 
-export type PrismaTransactionOrNew = PrismaTransaction | 'NEW_TRANSACTION'
+export type PrismaPossibleTransaction<
+    WantsToOpenTransaction extends boolean
+> = WantsToOpenTransaction extends true ? PrismaClient : PrismaTransaction
+
+export type PrismaTransactionOrNew<
+    WantsToOpenTransaction extends boolean
+> = PrismaPossibleTransaction<WantsToOpenTransaction> | 'GLOBAL'
+
 
 export type AuthRunConfig = {
     authConfig: {
@@ -21,14 +31,14 @@ export type AuthRunConfig = {
     }
 }
 
-export type Execute<WithValidation extends boolean, DetailedType, Params extends object, Return extends object | void, WithAuthParam extends boolean> = WithAuthParam extends true ? {
+export type Execute<WithValidation extends boolean, DetailedType, Params, Return, WithAuthParam extends boolean> = WithAuthParam extends true ? {
     execute: (config: WithValidation extends true ? { data: DetailedType, params: Params, session: SessionMaybeUser } : { params: Params, session: SessionMaybeUser }, authRunConfig: AuthRunConfig) => Promise<Return>
 } : {
     execute: (config: WithValidation extends true ? { data: DetailedType, params: Params, session: SessionMaybeUser } : { params: Params, session: SessionMaybeUser }) => Promise<Return>
 }
 
-export type Transaction<WithValidation extends boolean, DetailedType, Params extends object, Return extends object | void, WithAuthParam extends boolean> = {
-    transaction: (prisma: PrismaTransactionOrNew) => Execute<WithValidation, DetailedType, Params, Return, WithAuthParam>
+export type Client<WithValidation extends boolean, DetailedType, Params, Return, WithAuthParam extends boolean, WantsToOpenTransaction extends boolean> = {
+    client: (prisma: PrismaTransactionOrNew<WantsToOpenTransaction>) => Execute<WithValidation, DetailedType, Params, Return, WithAuthParam>
 }
 
 
@@ -40,10 +50,11 @@ type ServiceMethodOrHandler<
     WithValidation extends boolean,
     TypeType,
     DetailedType,
-    Params extends object,
+    Params,
     WithAuthParam extends boolean,
-    Return extends object | void,
-> = Transaction<WithValidation, DetailedType, Params, Return, WithAuthParam> & (WithValidation extends true ? typeValidate<TypeType, DetailedType> : {}) & {
+    Return,
+    WantsToOpenTransaction extends boolean,
+> = Client<WithValidation, DetailedType, Params, Return, WithAuthParam, WantsToOpenTransaction> & (WithValidation extends true ? typeValidate<TypeType, DetailedType> : {}) & {
     withData: WithValidation,
 }
 
@@ -51,46 +62,50 @@ export type ServiceMethodHandler<
     WithValidation extends boolean,
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void = void,
-> = ServiceMethodOrHandler<WithValidation, TypeType, DetailedType, Params, false, Return>
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
+> = ServiceMethodOrHandler<WithValidation, TypeType, DetailedType, Params, false, Return, WantsToOpenTransaction>
 
 export type ServiceMethod<
     WithValidation extends boolean,
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void = void,    
-> = ServiceMethodOrHandler<WithValidation, TypeType, DetailedType, Params, true, Return>
+    Params,
+    Return,    
+    WantsToOpenTransaction extends boolean,
+> = ServiceMethodOrHandler<WithValidation, TypeType, DetailedType, Params, true, Return, WantsToOpenTransaction>
 
 export type ServiceMethodHandlerConfig<
     WithValidation extends boolean,
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void = void,
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
 > = WithValidation extends true ? {
     withData: true,
+    wantsToOpenTransaction?: WantsToOpenTransaction,
     validation: {
         detailedValidate: (data: DetailedType) => DetailedType,
         typeValidate: (data: unknown | FormData | TypeType) => TypeValidateReturn<DetailedType>,
     },
     handler: (
-        prisma: PrismaTransaction,
+        prisma: PrismaPossibleTransaction<WantsToOpenTransaction>,
         params: Params,
         data: DetailedType
     ) => Promise<Return>,
 } : {
     withData: false,
     handler: (
-        prisma: PrismaTransaction, 
+        prisma: PrismaPossibleTransaction<WantsToOpenTransaction>, 
         params: Params
     ) => Promise<Return>
 }
 
 type DynamicFieldsInput<
     WithValidation extends boolean,
-    Params extends object,
+    Params,
     DetailedType
 > = WithValidation extends true ? {
     params: Params,
@@ -103,16 +118,16 @@ export type ServiceMethodConfig<
     WithValidation extends boolean,
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void,
-    DynamicFields extends object | undefined,
-    DynamicFieldsGetter extends DynamicFields
+    Params,
+    Return,
+    DynamicFields,
+    WantsToOpenTransaction extends boolean,
 > =  { withData: WithValidation } & (WithValidation extends true ? {
-    serviceMethodHandler: ServiceMethodHandler<true, TypeType, DetailedType, Params, Return>
+    serviceMethodHandler: ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
     auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
-    dynamicFields: (dataParams: DynamicFieldsInput<true, Params, DetailedType>) => DynamicFieldsGetter
+    dynamicFields: (dataParams: DynamicFieldsInput<true, Params, DetailedType>) => DynamicFields
 } : {
-    serviceMethodHandler: ServiceMethodHandler<false, void, void, Params, Return> & { withData: false }
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', object | undefined>
-    dynamicFields: (dataParams: DynamicFieldsInput<false, Params, DetailedType>) => DynamicFieldsGetter
+    serviceMethodHandler: ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> & { withData: false }
+    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
+    dynamicFields: (dataParams: DynamicFieldsInput<false, Params, DetailedType>) => DynamicFields
 })

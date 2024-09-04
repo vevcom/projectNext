@@ -1,46 +1,53 @@
 import 'server-only'
-import { prismaTransactionWithErrorConvertion, type PrismaTransaction } from './prismaCall'
-import type { ServiceMethodHandlerConfig, ServiceMethodHandler } from './ServiceTypes'
+import { prismaErrorWrapper } from './prismaCall'
+import type { 
+    PrismaTransaction, 
+    ServiceMethodHandlerConfig, 
+    ServiceMethodHandler, 
+    PrismaPossibleTransaction 
+} from './ServiceTypes'
+import { default as globalPrisma } from '@/prisma'
 
 export function ServiceMethodHandler<
-    Params extends object,
-    Return extends object | void,
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
 >({
     handler,
-}: ServiceMethodHandlerConfig<false, void, void, Params, Return>): ServiceMethodHandler<false, void, void, Params, Return>
+}: ServiceMethodHandlerConfig<false, void, void, Params, Return, WantsToOpenTransaction>): ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction>
 
 export function ServiceMethodHandler<
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void,
->(config: ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return>): ServiceMethodHandler<true, TypeType, DetailedType, Params, Return>
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
+>(config: ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>): ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
 
 export function ServiceMethodHandler<
     TypeType,
     DetailedType,
-    Params extends object,
-    Return extends object | void,
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
 >(
     config: 
-    | ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return>
-    | ServiceMethodHandlerConfig<false, void, void, Params, Return>
-) : ServiceMethodHandler<true, TypeType, DetailedType, Params, Return> | 
-    ServiceMethodHandler<false, void, void, Params, Return> 
+    | ServiceMethodHandlerConfig<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+    | ServiceMethodHandlerConfig<false, void, void, Params, Return, WantsToOpenTransaction>
+) : | ServiceMethodHandler<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+    | ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> 
 {
     return config.withData ? {
-        transaction: (prisma) => ({
+        client: (prisma) => ({
             execute: ({
                 params,
                 data: rawdata,
             }) => {
                 const data = config.validation.detailedValidate(rawdata)
-                if (prisma === 'NEW_TRANSACTION') {
-                    return prismaTransactionWithErrorConvertion(
-                        newprisma => config.handler(newprisma, params, data)
-                    )
+                if (prisma === 'GLOBAL') {
+                    return prismaErrorWrapper(() => config.handler(globalPrisma, params, data))
                 }
-                return config.handler(prisma, params, data)
+                return prismaErrorWrapper(() => config.handler(prisma, params, data))
             },
         }),
         typeValidate: config.validation.typeValidate,
@@ -49,22 +56,21 @@ export function ServiceMethodHandler<
 }
 
 function ServiceMethodHandlerNoData<
-    Params extends object,
-    Return extends object | void,
+    Params,
+    Return,
+    WantsToOpenTransaction extends boolean,
 >({
     handler,
 }: {
-    handler: (prisma: PrismaTransaction, params: Params) => Promise<Return>
-}): ServiceMethodHandler<false, void, void, Params, Return> {
+    handler: (prisma: PrismaPossibleTransaction<WantsToOpenTransaction>, params: Params) => Promise<Return>
+}): ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> {
     return {
-        transaction: (prisma) => ({
+        client: (prisma) => ({
             execute: ({ params }) => {
-                if (prisma === 'NEW_TRANSACTION') {
-                    return prismaTransactionWithErrorConvertion(
-                        newprisma => handler(newprisma, params)
-                    )
+                if (prisma === 'GLOBAL') {
+                    return prismaErrorWrapper(() => handler(globalPrisma, params))
                 }
-                return handler(prisma, params)
+                return prismaErrorWrapper(() => handler(prisma, params))
             },
         }),
         withData: false,

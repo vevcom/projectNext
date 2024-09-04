@@ -24,9 +24,8 @@ export type CheckReturn<
 })
 
 export abstract class Auther<
-    const UserRequieredOut
-    extends UserRequieredOutOpt,
-    const DynamicFields extends object | undefined
+    const UserRequieredOut extends UserRequieredOutOpt,
+    DynamicFields,
 > {
     private redirectConfig: AutherRedirectConfig
 

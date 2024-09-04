@@ -4,8 +4,8 @@ import type { SessionMaybeUser } from '@/auth/Session'
 
 export function AutherFactory<
     UserRequieredOut extends UserRequieredOutOpt,
-    DynamicFields extends object | undefined,
-    StaticFields extends object | undefined
+    DynamicFields,
+    StaticFields,
 >(
     checker: (
         session: SessionMaybeUser,

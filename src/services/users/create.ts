@@ -1,11 +1,10 @@
 import 'server-only'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createUserValidation } from '@/services/users/validation'
 import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
-export const CreateUser = ServiceMethodHandler({
+export const create = ServiceMethodHandler({
     withData: true,
     validation: createUserValidation,
     handler: async (prisma, _, data) => {

@@ -11,7 +11,7 @@ import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershi
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
 import { ServerError } from '@/services/error'
-import { prismaCall } from '@/services/prismaCall'
+import { prismaCall, PrismaTransaction } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
@@ -19,7 +19,7 @@ import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from
 import type { RegisterNewEmailType, UserFiltered } from './Types'
 import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
-export const UpdateUser = ServiceMethodHandler({
+export const update = ServiceMethodHandler({
     withData: true,
     validation: updateUserValidation,
     handler: (prisma_, params: { id: number } | { username: string }, data) => prisma_.user.update({

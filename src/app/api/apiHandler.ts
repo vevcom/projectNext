@@ -7,12 +7,12 @@ import { ActionErrorCode } from '@/actions/Types'
 
 type APIHandler<
     WithValidation extends boolean,
-    Return extends object,
+    Return,
     TypeValidationType,
     DetailedValidationType,
     RawParams,
-    Params extends object,
-    DynamicFields extends object | undefined,
+    Params,
+    DynamicFields,
     DynamicFieldsGetter extends DynamicFields
 > = {
     auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED', DynamicFields>,
@@ -21,7 +21,7 @@ type APIHandler<
     params: (rawparams: RawParams) => Params
 }
 
-async function apiHandlerGeneric<Return extends object>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
+async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
     try {
         const authorization = req.headers.get('authorization')
         const session = await Session.fromApiKey(authorization)
@@ -39,12 +39,12 @@ async function apiHandlerGeneric<Return extends object>(req: Request, handle: (s
 }
 
 export function apiHandler<
-    Return extends object,
+    Return,
     TypeValidationType,
     DetailedValidationType,
     RawParams,
-    Params extends object,
-    DynamicFields extends object | undefined,
+    Params,
+    DynamicFields,
     DynamicFieldsGetter extends DynamicFields
 >({
     auther,
@@ -68,10 +68,10 @@ export function apiHandler<
 }
 
 export function apiHandlerNoData<
-    Return extends object,
+    Return,
     RawParams,
-    Params extends object,
-    DynamicFields extends object | undefined,
+    Params,
+    DynamicFields,
     DynamicFieldsGetter extends DynamicFields
 >({
     auther,

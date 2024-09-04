@@ -154,7 +154,7 @@ export async function readUserProfile(username: string): Promise<Profile> {
     return { user, memberships, permissions }
 }
 
-export const ReadUserProfile = ServiceMethodHandler({
+export const readProfile = ServiceMethodHandler({
     withData: false,
     handler: async (prisma_, params: {username: string}) => {
         const user = await prisma_.user.findUniqueOrThrow({
