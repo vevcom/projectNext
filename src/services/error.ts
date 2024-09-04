@@ -1,3 +1,5 @@
+import type { AuthStatus } from "@/auth/getUser"
+
 export type ServerErrorCode =
     | 'DUPLICATE'
     | 'NOT FOUND'
@@ -10,16 +12,18 @@ export type ServerErrorCode =
     | 'NOT IMPLEMENTED'
     | 'INVALID API KEY'
 
+export type ErrorCodes = ServerErrorCode | AuthStatus
+
 export type ErrorMessage = {
     path?: (number | string)[],
     message: string,
 }
 
-export class ServerError extends Error {
-    errorCode: ServerErrorCode
+export class Smorekopp<ValidCodes extends ErrorCodes> extends Error {
+    errorCode: ValidCodes
     errors: ErrorMessage[]
 
-    constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[]) {
+    constructor(errorCode: ValidCodes, errors?: string | ErrorMessage[]) {
         const parsedErrors = typeof errors === 'string'
             ? [{ message: errors }]
             : errors
@@ -27,7 +31,13 @@ export class ServerError extends Error {
         super(errorCode)
 
         this.errorCode = errorCode
-        this.errors = parsedErrors
+        this.errors = parsedErrors ?? []
         this.name = 'ServerError'
+    }
+}
+
+export class ServerError extends Smorekopp<ServerErrorCode> {
+    constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[]) {
+        super(errorCode, errors)
     }
 }

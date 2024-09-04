@@ -1,117 +1,60 @@
-import 'server-only'
-import { prismaTransactionWithErrorConvertion, type PrismaTransaction } from './prismaCall'
-import type { z } from 'zod'
-
-type TypeValidateReturn<
-    DetailedType
-> = {
-    success: true,
-    data: DetailedType,
-} | {
-    success: false,
-    error: z.ZodError,
-}
-
-type Transaction<WithValidation extends boolean, DetailedType, Params extends object, Return extends object | void> = {
-    transaction: (prisma: PrismaTransaction | 'NEW_TRANSACTION') => {
-        execute: (config: WithValidation extends true ? { data: DetailedType, params: Params } : { params: Params }) => Promise<Return>
-    }
-}
-
-type typeValidate<TypeType, DetailedType> = {
-    typeValidate: (data: unknown | FormData | TypeType) => TypeValidateReturn<DetailedType>
-}
-
-export type ServiceMethod<
-    WithValidation extends boolean,
-    TypeType,
-    DetailedType,
-    Params extends object,
-    Return extends object | void = void,
-> = Transaction<WithValidation, DetailedType, Params, Return> & (WithValidation extends true ? typeValidate<TypeType, DetailedType> : {})
-
-type Config<
-    WithValidation extends boolean,
-    TypeType,
-    DetailedType,
-    Params extends object,
-    Return extends object | void = void,
-> = WithValidation extends true ? {
-    data: true,
-    validation: {
-        detailedValidate: (data: DetailedType) => DetailedType,
-        typeValidate: (data: unknown | FormData | TypeType) => TypeValidateReturn<DetailedType>,
-    },
-    handler: (
-        prisma: PrismaTransaction,
-        params: Params,
-        data: DetailedType
-    ) => Promise<Return>,
-} : {
-    data: false,
-    handler: (
-        prisma: PrismaTransaction, 
-        params: Params
-    ) => Promise<Return>
-}
-
-export function ServiceMethod<
-    Params extends object,
-    Return extends object | void,
->({
-    handler,
-}: Config<false, void, void, Params, Return>): ServiceMethod<false, void, void, Params, Return>
+import { Smorekopp } from "./error";
+import type { ServiceMethod, ServiceMethodConfig } from "./ServiceTypes";
 
 export function ServiceMethod<
     TypeType,
     DetailedType,
     Params extends object,
     Return extends object | void,
->(config: Config<true, TypeType, DetailedType, Params, Return>): ServiceMethod<true, TypeType, DetailedType, Params, Return>
+    DynamicFields extends object | undefined,
+    DynamicFieldsGetter extends DynamicFields
+>(
+    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, DynamicFieldsGetter>
+) : ServiceMethod<true, TypeType, DetailedType, Params, Return>
 
 export function ServiceMethod<
     TypeType,
     DetailedType,
     Params extends object,
     Return extends object | void,
->(config: Config<true, TypeType, DetailedType, Params, Return> | Config<false, void, void, Params, Return>): ServiceMethod<true, TypeType, DetailedType, Params, Return> | ServiceMethod<false, void, void, Params, Return> {
-    return config.data ? {
+    DynamicFields extends object | undefined,
+    DynamicFieldsGetter extends DynamicFields
+>(config: ServiceMethodConfig<false, TypeType, DetailedType, Params, Return, DynamicFields, DynamicFieldsGetter>) : ServiceMethod<false, void, void, Params, Return>
+
+export function ServiceMethod<
+    TypeType,
+    DetailedType,
+    Params extends object,
+    Return extends object | void,
+    DynamicFields extends object | undefined,
+    DynamicFieldsGetter extends DynamicFields
+>(
+    config: 
+        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, DynamicFieldsGetter> 
+        | ServiceMethodConfig<false, TypeType, DetailedType, Params, Return, DynamicFields, DynamicFieldsGetter>
+) : ServiceMethod<true, TypeType, DetailedType, Params, Return> | ServiceMethod<false, void, void, Params, Return> {
+    return config.withData ? {
+        withData: true,
         transaction: (prisma) => ({
-            execute: ({
-                params,
-                data: rawdata,
-            }) => {
-                const data = config.validation.detailedValidate(rawdata)
-                if (prisma === 'NEW_TRANSACTION') {
-                    return prismaTransactionWithErrorConvertion(
-                        newprisma => config.handler(newprisma, params, data)
-                    )
+            execute: ({ data, params, session }, authRunConfig) => {
+                if (authRunConfig.authConfig.withAut) {
+                    const authRes = config.auther.auth({session, dynamicFields: config.dynamicFields({params, data})})
+                    if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
-                return config.handler(prisma, params, data)
+                return config.serviceMethodHandler.transaction(prisma).execute({data, params, session})
             },
         }),
-        typeValidate: config.validation.typeValidate,
-    } : ServiceMethodNoData(config)
-}
-
-function ServiceMethodNoData<
-    Params extends object,
-    Return extends object | void,
->({
-    handler,
-}: {
-    handler: (prisma: PrismaTransaction, params: Params) => Promise<Return>
-}): ServiceMethod<false, void, void, Params, Return> {
-    return {
+        typeValidate: config.serviceMethodHandler.typeValidate,
+    } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return> : {
+        withData: false,
         transaction: (prisma) => ({
-            execute: ({ params }) => {
-                if (prisma === 'NEW_TRANSACTION') {
-                    return prismaTransactionWithErrorConvertion(
-                        newprisma => handler(newprisma, params)
-                    )
+            execute: ({ params, session }, authRunConfig) => {
+                if (authRunConfig.authConfig.withAut) {
+                    const authRes = config.auther.auth({session, dynamicFields: config.dynamicFields({ params })})
+                    if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
-                return handler(prisma, params)
+                return config.serviceMethodHandler.transaction(prisma).execute({ params, session })
             },
         }),
-    }
+    } satisfies ServiceMethod<false, void, void, Params, Return>
 }

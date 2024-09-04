@@ -1,5 +1,4 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -10,6 +9,7 @@ import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { User } from '@prisma/client'
+import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -154,8 +154,8 @@ export async function readUserProfile(username: string): Promise<Profile> {
     return { user, memberships, permissions }
 }
 
-export const ReadUserProfile = ServiceMethod({
-    data: false,
+export const ReadUserProfile = ServiceMethodHandler({
+    withData: false,
     handler: async (prisma_, params: {username: string}) => {
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username },
