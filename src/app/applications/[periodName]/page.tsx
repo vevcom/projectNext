@@ -1,9 +1,15 @@
 import PageWrapper from "@/components/PageWrapper/PageWrapper"
 
-export async function ApplicationPeriod() {
+export type PropTypes = {
+    params: {
+        periodName: string
+    }
+}
+
+export async function ApplicationPeriod({ params }: PropTypes) {
     return (
         <PageWrapper title="Søknad">
-            Søknad
+            Søknad til {params.periodName}
         </PageWrapper>
     )
 }

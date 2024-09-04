@@ -1,11 +1,11 @@
 model ApplicationPeriod {
-  id                         Int                          @id @default(autoincrement())
-  name                       String
-  endDate                    DateTime
-  ApplicationPeriodCommittee ApplicationPeriodCommittee[]
+  id                      Int                                         @id @default(autoincrement())
+  name                    String
+  endDate                 DateTime
+  committeesParticipating CommitteeParticipationInApplicationPeriod[]
 }
 
-model ApplicationPeriodCommittee {
+model CommitteeParticipationInApplicationPeriod {
   id                  Int               @id @default(autoincrement())
   committee           Committee         @relation(fields: [committeeId], references: [id])
   committeeId         Int               @unique
@@ -15,10 +15,10 @@ model ApplicationPeriodCommittee {
 }
 
 model Application {
-  id                          Int                        @id @default(autoincrement())
-  user                        User                       @relation(fields: [userId], references: [id])
+  id                          Int                                       @id @default(autoincrement())
+  user                        User                                      @relation(fields: [userId], references: [id])
   userId                      Int
-  applicationPeriodCommitee   ApplicationPeriodCommittee @relation(fields: [applicationPeriodCommiteeId], references: [id])
+  applicationPeriodCommitee   CommitteeParticipationInApplicationPeriod @relation(fields: [applicationPeriodCommiteeId], references: [id])
   applicationPeriodCommiteeId Int
 
   @@unique([userId, applicationPeriodCommiteeId])
