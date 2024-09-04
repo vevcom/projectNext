@@ -114,8 +114,9 @@ export type ServiceMethod<
     Params,
     Return,
     WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
 > = ServiceMethodOrHandler<
-    WithValidation, TypeType, DetailedType, Params, true, Return, WantsToOpenTransaction
+    WithValidation, TypeType, DetailedType, Params, NoAuther extends true ? false : true, Return, WantsToOpenTransaction
 >
 
 export type ServiceMethodHandlerConfig<
@@ -158,6 +159,16 @@ type DynamicFieldsInput<
     params: Params,
 }
 
+type ServiceMethodHandlerAuthConfig<
+    WithValidation extends boolean,
+    DetailedType,
+    Params,
+    DynamicFields,
+> = {
+    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
+    dynamicFields: (dataParams: DynamicFieldsInput<WithValidation, Params, DetailedType>) => DynamicFields
+} 
+
 export type ServiceMethodConfig<
     WithValidation extends boolean,
     TypeType,
@@ -166,16 +177,35 @@ export type ServiceMethodConfig<
     Return,
     DynamicFields,
     WantsToOpenTransaction extends boolean,
-> = { withData: WithValidation } & (WithValidation extends true ? {
-    serviceMethodHandler: ServiceMethodHandler<
-        true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction
-    >
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
-    dynamicFields: (dataParams: DynamicFieldsInput<true, Params, DetailedType>) => DynamicFields
-} : {
-    serviceMethodHandler: ServiceMethodHandler<
-        false, void, void, Params, Return, WantsToOpenTransaction
-    > & { withData: false }
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
-    dynamicFields: (dataParams: DynamicFieldsInput<false, Params, DetailedType>) => DynamicFields
-})
+    NoAuther extends boolean
+> = { withData: WithValidation } & (NoAuther extends true ? ({
+    hasAuther: false,
+    serviceMethodHandler: WithValidation extends true ? (
+        ServiceMethodHandler<
+            true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction
+        >
+    ) : (
+        ServiceMethodHandler<
+            false, void, void, Params, Return, WantsToOpenTransaction
+        >
+    )
+}):({ hasAuther: true } & (
+    WithValidation extends true ? (
+        {
+            serviceMethodHandler: ServiceMethodHandler<
+                true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction
+            >
+        } & ServiceMethodHandlerAuthConfig<
+            true, DetailedType, Params, DynamicFields
+        >
+    ) : (
+        {
+            serviceMethodHandler: ServiceMethodHandler<
+                false, void, void, Params, Return, WantsToOpenTransaction
+            > & { withData: false } 
+        } & ServiceMethodHandlerAuthConfig<
+            false, void, Params, DynamicFields
+        >
+    )
+)))
+

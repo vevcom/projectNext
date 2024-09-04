@@ -9,19 +9,19 @@ export function ServiceMethod<
     DynamicFields,
     WantsToOpenTransaction extends boolean,
 >(
-    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction>
-): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction>
+    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, true>
+): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true>
 
 export function ServiceMethod<
     Params,
     Return,
     DynamicFields,
-    WantsToOpenTransaction extends boolean
+    WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<
-        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction
+        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, true
     >
-): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction>
+): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, true>
 
 export function ServiceMethod<
     TypeType,
@@ -29,13 +29,46 @@ export function ServiceMethod<
     Params,
     Return,
     DynamicFields,
-    WantsToOpenTransaction extends boolean
+    WantsToOpenTransaction extends boolean,
+>(
+    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
+): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false>
+
+export function ServiceMethod<
+    Params,
+    Return,
+    DynamicFields,
+    WantsToOpenTransaction extends boolean,
+>(
+    config: ServiceMethodConfig<
+        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, false
+    >
+): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
+
+export function ServiceMethod<
+    TypeType,
+    DetailedType,
+    Params,
+    Return,
+    DynamicFields,
+    WantsToOpenTransaction extends boolean,
 >(
     config:
-        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction>
-        | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction>
-): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction> |
-    ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction> {
+        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, true>
+        | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, true>
+        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
+        | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, false>
+): (
+    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true> 
+    | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, true>
+    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> 
+    | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
+) {       
+    if (!config.hasAuther) {
+        return config.withData ? { 
+            withData: true, client: config.serviceMethodHandler.client, typeValidate: config.serviceMethodHandler.typeValidate 
+        } : { withData: false, client: config.serviceMethodHandler.client }
+    }
     return config.withData ? {
         withData: true,
         client: (prisma) => ({
@@ -50,7 +83,7 @@ export function ServiceMethod<
             },
         }),
         typeValidate: config.serviceMethodHandler.typeValidate,
-    } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction> : {
+    } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> : {
         withData: false,
         client: (prisma) => ({
             execute: ({ params, session }, authRunConfig) => {
@@ -63,5 +96,5 @@ export function ServiceMethod<
                 return config.serviceMethodHandler.client(prisma).execute({ params, session })
             },
         }),
-    } satisfies ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction>
+    } satisfies ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
 }

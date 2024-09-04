@@ -7,18 +7,21 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 export const User = {
     readProfile: ServiceMethod({
         serviceMethodHandler: readProfile,
+        hasAuther: true,
         auther: ReadUserAuther,
         withData: false,
         dynamicFields: ({ params }) => ({ username: params.username })
     }),
     update: ServiceMethod({
         serviceMethodHandler: update,
+        hasAuther: true,
         auther: UpdateUserAuther,
         withData: true,
         dynamicFields: () => undefined
     }),
     create: ServiceMethod({
         serviceMethodHandler: create,
+        hasAuther: true,
         auther: CreateUserAuther,
         withData: true,
         dynamicFields: () => undefined
