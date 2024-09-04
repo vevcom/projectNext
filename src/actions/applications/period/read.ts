@@ -1,3 +1,4 @@
+'use server'
 import { safeServerCall } from "@/actions/safeServerCall";
 import { ActionReturn } from "@/actions/Types";
 import { readPeriodCountdown } from "@/services/applications/period/read";

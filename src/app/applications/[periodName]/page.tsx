@@ -6,7 +6,7 @@ export type PropTypes = {
     }
 }
 
-export async function ApplicationPeriod({ params }: PropTypes) {
+export default async function ApplicationPeriod({ params }: PropTypes) {
     return (
         <PageWrapper title="Søknad">
             Søknad til {params.periodName}
