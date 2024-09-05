@@ -9,7 +9,7 @@ export async function readPeriodCountdown({ periodName }: { periodName: string }
     const standardLogo = await readSpecialImage('DAFAULT_COMMITTEE_LOGO')
     return {
         //Time should be 6th sept 2024 00:00:00
-        endTime: new Date(2024, 8, 5, 22, 0, 0),
+        endTime: new Date(2024, 8, 5, 11, 37, 0),
         commiteesParticipating: committees.map(committee => ({
             shortname: committee.shortName,
             logo: committee.logoImage.image ?? standardLogo,

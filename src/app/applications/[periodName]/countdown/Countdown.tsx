@@ -1,53 +1,46 @@
 'use client'
-import { displayDate } from "@/dates/displayDate"
-import { getTimeNow } from "@/dates/getTimeNow"
-import useInterval from "@/hooks/useInterval"
-import { useMemo, useState } from "react"
-import styles from './Countdown.module.scss'
+import styles from './Countdown.module.scss';
+import TimeLeft from './TimeLeft'
+import CommitteeLogoRoll from './CommitteeLogoRoll';
+import Speedlines from './Speedlines';
+import { CountdownInfo } from '@/services/applications/period/Types';
+import useInterval from '@/hooks/useInterval';
+import { useState } from 'react';
+import FinalCountdown from './FinalCountdown';
 
 type PropTypes = {
-    end: Date
+    info: CountdownInfo
 }
 
-const getTimeLeftGen = (end: Date) => () => {
-    const seconds = Math.round((end.getTime() - getTimeNow().getTime()) / 1000)
-    const days = Math.floor(seconds / 86400)
-    const hours = Math.floor((seconds % 86400) / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    return { days, hours, minutes, secs }
-}
+export default function Countdown({ info }: PropTypes) {
+    const [showCommitteeRoll, setShowComitteeRoll] = useState(true)
+    const [finalCountdown, setFinalCountdown] = useState(false)
 
-export default function Countdown({ end }: PropTypes) {
-    const getTimeLeft = useMemo(() => getTimeLeftGen(end), [end])
-    const [timeLeft, setTimeLeft] = useState<ReturnType<typeof getTimeLeft> | null>(null)
     useInterval(() => {
-        setTimeLeft(getTimeLeft())
-    }, 100)
+        if (new Date().getTime() + 30_000 > info.endTime.getTime()) {
+            setShowComitteeRoll(false)
+            setTimeout(() => {
+                setFinalCountdown(true);
+            }, Math.max(0, info.endTime.getTime() - new Date().getTime() - 12_000));
+        }
+    }, 10_000)
 
-    if (!timeLeft) return null
-    if (timeLeft.secs < 0) return null
     return (
         <div className={styles.Countdown}>
-            {timeLeft.days > 0 && (
-                <>
-                    <div>{String(timeLeft.days).padStart(2, '0')}</div>
-                    <span>:</span>
-                </>
-            )}
-            {timeLeft.hours > 0 && (
-                <>
-                    <div>{String(timeLeft.hours).padStart(2, '0')}</div>
-                    <span>:</span>
-                </>
-            )}
-            {timeLeft.minutes > 0 && (
-                <>
-                    <div>{String(timeLeft.minutes).padStart(2, '0')}</div>
-                    <span>:</span>
-                </>
-            )}
-            <div>{String(timeLeft.secs).padStart(2, '0')}</div>
+            <div className={styles.top}>
+                {!finalCountdown && (
+                    <TimeLeft end={info.endTime} />
+                )}
+            </div>
+            <div className={styles.under}>
+                <Speedlines />
+                {showCommitteeRoll && (
+                    <CommitteeLogoRoll committees={info.commiteesParticipating} />
+                )}
+                {finalCountdown && (
+                    <FinalCountdown />
+                )}
+            </div>
         </div>
     )
 }

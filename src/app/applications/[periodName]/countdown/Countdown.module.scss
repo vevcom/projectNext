@@ -1,24 +1,26 @@
 @use '@/styles/ohma';
 
 .Countdown {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    font-family: 'Arial', sans-serif;
-    font-size: 11rem;
-    color: ohma.$colors-red;
-}
-
-.Countdown div {
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-align: center;
-    min-width: 60px;
-}
-
-.Countdown span {
-    font-size: 13rem;
-    color: ohma.$colors-gray-200;
-    transform: translateY(-5%);
+    z-index: 10;
+    background-color: ohma.$colors-black;
+    isolation: isolate;
+    > .top {
+        z-index: 2;
+    }
+    > .under {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        top: 0;
+        left: 0;
+    }
 }

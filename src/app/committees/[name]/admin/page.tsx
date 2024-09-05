@@ -1,7 +1,7 @@
 import getCommittee from '@/app/committees/[name]/getCommittee'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import type { PropTypes } from '@/app/committees/[name]/page'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 
 export default async function ComitteeAdmin({ params }: PropTypes) {

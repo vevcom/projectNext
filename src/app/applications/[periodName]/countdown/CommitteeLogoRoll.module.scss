@@ -12,7 +12,7 @@
     scale: 0;
     &.animate {
         // animation goes fast - slow - fast
-        animation: scale-in 8s forwards cubic-bezier(0.90, 0.05, 0.90, 0.05), fade 6s 2s forwards;
+        animation: scale-in 10s forwards cubic-bezier(0.90, 0.05, 0.90, 0.05), fade 5s 1s forwards;
     }
     img {
         width: 50vw !important;
@@ -20,6 +20,16 @@
     span {
         color: ohma.$colors-gray-200;
         font-size: 15rem;
+    }
+
+    h1 {
+        &:first-child {
+            font-size: 10rem;
+        }
+        &:nth-child(2) {
+            font-size: 16rem;
+        }
+        color: ohma.$colors-gray-200;
     }
 }
 
@@ -31,7 +41,7 @@
         scale: 20;
     }
     100% {
-        scale: 200;
+        scale: 300;
     }
 }
 
