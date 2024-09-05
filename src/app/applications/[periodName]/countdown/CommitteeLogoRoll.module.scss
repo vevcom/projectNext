@@ -1,0 +1,45 @@
+@use '@/styles/ohma'; 
+
+.display {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    scale: 0;
+    &.animate {
+        // animation goes fast - slow - fast
+        animation: scale-in 8s forwards cubic-bezier(0.90, 0.05, 0.90, 0.05), fade 6s 2s forwards;
+    }
+    img {
+        width: 50vw !important;
+    }
+    span {
+        color: ohma.$colors-gray-200;
+        font-size: 15rem;
+    }
+}
+
+@keyframes scale-in {
+    0% {
+        scale: 0;
+    }
+    40% {
+        scale: 20;
+    }
+    100% {
+        scale: 200;
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
