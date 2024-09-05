@@ -1,9 +1,10 @@
 'use server'
-import { createActionError, createZodActionError } from "@/actions/error";
-import { safeServerCall } from "@/actions/safeServerCall";
-import { getUser } from "@/auth/getUser";
-import { updateCommittee } from "@/services/groups/committees/update";
-import { UpdateCommitteeTypes, updateCommitteeValidation } from "@/services/groups/committees/validation";
+import { createActionError, createZodActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
+import { getUser } from '@/auth/getUser'
+import { updateCommittee } from '@/services/groups/committees/update'
+import { updateCommitteeValidation } from '@/services/groups/committees/validation'
+import type { UpdateCommitteeTypes } from '@/services/groups/committees/validation'
 
 
 export async function updateCommitteeAction(

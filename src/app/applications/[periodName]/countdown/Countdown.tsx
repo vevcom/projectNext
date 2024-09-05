@@ -1,12 +1,12 @@
 'use client'
-import styles from './Countdown.module.scss';
+import styles from './Countdown.module.scss'
 import TimeLeft from './TimeLeft'
-import CommitteeLogoRoll from './CommitteeLogoRoll';
-import Speedlines from './Speedlines';
-import { CountdownInfo } from '@/services/applications/period/Types';
-import useInterval from '@/hooks/useInterval';
-import { useState } from 'react';
-import FinalCountdown from './FinalCountdown';
+import CommitteeLogoRoll from './CommitteeLogoRoll'
+import Speedlines from './Speedlines'
+import FinalCountdown from './FinalCountdown'
+import useInterval from '@/hooks/useInterval'
+import { useState } from 'react'
+import type { CountdownInfo } from '@/services/applications/period/Types'
 
 type PropTypes = {
     info: CountdownInfo
@@ -20,8 +20,8 @@ export default function Countdown({ info }: PropTypes) {
         if (new Date().getTime() + 20_000 > info.endTime.getTime()) {
             setShowComitteeRoll(false)
             setTimeout(() => {
-                setFinalCountdown(true);
-            }, Math.max(0, info.endTime.getTime() - new Date().getTime() - 12_000));
+                setFinalCountdown(true)
+            }, Math.max(0, info.endTime.getTime() - new Date().getTime() - 12_000))
         }
     }, 10_000)
 

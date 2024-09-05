@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import styles from './FinalCountdown.module.scss';
-import useInterval from '@/hooks/useInterval';
-import { set } from 'zod';
+import styles from './FinalCountdown.module.scss'
+import useInterval from '@/hooks/useInterval'
+import { useEffect, useRef, useState } from 'react'
 
 export default function FinalCountdown() {
     const [timeLeft, setTimeLeft] = useState<number | null>(11)
@@ -27,7 +26,7 @@ export default function FinalCountdown() {
             { timeLeft === null ? <h1 className={styles.applicants}>
                 {applicants} <br /> søkere
             </h1> : <h1>{timeLeft}</h1> }
-            
+
         </div>
     )
 }

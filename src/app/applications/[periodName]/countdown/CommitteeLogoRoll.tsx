@@ -1,9 +1,9 @@
 'use client'
-import Image from "@/app/_components/Image/Image"
-import useInterval from "@/hooks/useInterval"
-import { Image as ImageT } from "@prisma/client"
-import { useRef, useState } from "react"
 import styles from './CommitteeLogoRoll.module.scss'
+import Image from '@/app/_components/Image/Image'
+import useInterval from '@/hooks/useInterval'
+import { useRef, useState } from 'react'
+import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     committees: {
@@ -12,7 +12,7 @@ type PropTypes = {
     }[]
 }
 
-export default function CommitteeLogoRoll({ committees } : PropTypes) {
+export default function CommitteeLogoRoll({ committees }: PropTypes) {
     const [currentCommitteeIndexes, setCurrentCommitteeIndexes] = useState<
         {
             display1: number | 'Søkere',
@@ -23,68 +23,70 @@ export default function CommitteeLogoRoll({ committees } : PropTypes) {
         display1: 0,
         display2: 1,
         display3: 2,
-    });
+    })
 
-    const sokere = useRef(0);
+    const sokere = useRef(0)
 
     useInterval(() => {
         fetch('https://omega.ntnu.no/api/applications/applicants').then(res => res.json()).then(data => {
-            console.log(data);
-            sokere.current = data as number;
+            console.log(data)
+            sokere.current = data as number
         }).catch(console.log)
     }, 2000)
 
-    const display1Ref = useRef<HTMLDivElement>(null);
-    const display2Ref = useRef<HTMLDivElement>(null);
-    const display3Ref = useRef<HTMLDivElement>(null);
+    const display1Ref = useRef<HTMLDivElement>(null)
+    const display2Ref = useRef<HTMLDivElement>(null)
+    const display3Ref = useRef<HTMLDivElement>(null)
 
-    const currentIndex = useRef<number | 'Søkere'>(0);
+    const currentIndex = useRef<number | 'Søkere'>(0)
 
-    const [toggle, setToggle] = useState<1 | 2 | 3>(1);
+    const [toggle, setToggle] = useState<1 | 2 | 3>(1)
 
     useInterval(() => {
-        if (!committees.length) return;
+        if (!committees.length) return
 
-        let nextIndex: number | 'Søkere' = 0;
+        let nextIndex: number | 'Søkere' = 0
         if (currentIndex.current === committees.length - 1) {
-            nextIndex = 'Søkere';
+            nextIndex = 'Søkere'
         } else if (currentIndex.current === 'Søkere') {
-            nextIndex = 0;
+            nextIndex = 0
         } else {
-            nextIndex = currentIndex.current + 1;
+            nextIndex = currentIndex.current + 1
         }
 
-        let display : keyof typeof currentCommitteeIndexes = 'display1'
-        let nextToggle = toggle;
+        let display: keyof typeof currentCommitteeIndexes = 'display1'
+        let nextToggle = toggle
         switch (toggle) {
             case 1:
-                display = 'display1';
-                nextToggle = 2;
-                display1Ref.current?.classList.remove(styles.animate);
-                setTimeout(() => display1Ref.current?.classList.add(styles.animate), 50);
-                break;
+                display = 'display1'
+                nextToggle = 2
+                display1Ref.current?.classList.remove(styles.animate)
+                setTimeout(() => display1Ref.current?.classList.add(styles.animate), 50)
+                break
             case 2:
-                display = 'display2';
-                nextToggle = 3;
-                display2Ref.current?.classList.remove(styles.animate);
-                setTimeout(() => display2Ref.current?.classList.add(styles.animate), 50);
-                break;
+                display = 'display2'
+                nextToggle = 3
+                display2Ref.current?.classList.remove(styles.animate)
+                setTimeout(() => display2Ref.current?.classList.add(styles.animate), 50)
+                break
             case 3:
-                display = 'display3';
-                nextToggle = 1;
-                display3Ref.current?.classList.remove(styles.animate);
-                setTimeout(() => display3Ref.current?.classList.add(styles.animate), 50);
-                break;
+                display = 'display3'
+                nextToggle = 1
+                display3Ref.current?.classList.remove(styles.animate)
+                setTimeout(() => display3Ref.current?.classList.add(styles.animate), 50)
+                break
+            default:
+                break
         }
-        
+
         setCurrentCommitteeIndexes({
             ...currentCommitteeIndexes,
             [display]: nextIndex,
         })
 
-        currentIndex.current = nextIndex;
-        setToggle(nextToggle);
-    }, 2500);
+        currentIndex.current = nextIndex
+        setToggle(nextToggle)
+    }, 2500)
 
     return (
         <div className={styles.CommitteeLogoRoll}>
@@ -95,7 +97,10 @@ export default function CommitteeLogoRoll({ committees } : PropTypes) {
                             <h1>Søknader Hittil</h1>
                             <h1>{sokere.current}</h1>
                         </>) : (
-                            <Display image={committees[currentCommitteeIndexes.display1].logo} shortname={committees[currentCommitteeIndexes.display1].shortname} />
+                            <Display
+                                image={committees[currentCommitteeIndexes.display1].logo}
+                                shortname={committees[currentCommitteeIndexes.display1].shortname}
+                            />
                         )
                     }
                 </div>
@@ -107,7 +112,10 @@ export default function CommitteeLogoRoll({ committees } : PropTypes) {
                             <h1>Søknader Hittil</h1>
                             <h1>{sokere.current}</h1>
                         </>) : (
-                            <Display image={committees[currentCommitteeIndexes.display2].logo} shortname={committees[currentCommitteeIndexes.display2].shortname} />
+                            <Display
+                                image={committees[currentCommitteeIndexes.display2].logo}
+                                shortname={committees[currentCommitteeIndexes.display2].shortname}
+                            />
                         )
                     }
                 </div>
@@ -119,17 +127,20 @@ export default function CommitteeLogoRoll({ committees } : PropTypes) {
                             <h1>Søkere</h1>
                             <h1>{sokere.current}</h1>
                         </>) : (
-                            <Display image={committees[currentCommitteeIndexes.display3].logo} shortname={committees[currentCommitteeIndexes.display3].shortname} />
+                            <Display
+                                image={committees[currentCommitteeIndexes.display3].logo}
+                                shortname={committees[currentCommitteeIndexes.display3].shortname}
+                            />
                         )
                     }
                 </div>
             )}
         </div>
-    );
+    )
 }
 
 
-function Display({ image, shortname } : { image: ImageT, shortname: string }) {
+function Display({ image, shortname }: { image: ImageT, shortname: string }) {
     return (
         <>
             <Image width={600} image={image} />

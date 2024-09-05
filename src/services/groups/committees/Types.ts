@@ -1,4 +1,4 @@
-import { ExpandedArticle } from '@/services/cms/articles/Types'
+import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 import type { Committee } from '@prisma/client'
 

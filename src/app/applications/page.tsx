@@ -1,5 +1,5 @@
-import PageWrapper from "@/components/PageWrapper/PageWrapper";
-import styles from './page.module.scss';
+import styles from './page.module.scss'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default async function Apllications() {
     return (

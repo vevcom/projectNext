@@ -3,9 +3,9 @@ import prisma from '@/prisma'
 import { readSpecialImage } from '@/services/images/read'
 import { prismaCall } from '@/services/prismaCall'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { createArticle } from '@/services/cms/articles/create'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
-import { createArticle } from '@/services/cms/articles/create'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)

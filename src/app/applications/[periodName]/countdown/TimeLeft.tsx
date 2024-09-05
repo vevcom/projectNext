@@ -1,8 +1,8 @@
 'use client'
-import { getTimeNow } from "@/dates/getTimeNow"
-import useInterval from "@/hooks/useInterval"
-import { useMemo, useState } from "react"
 import styles from './TimeLeft.module.scss'
+import { getTimeNow } from '@/dates/getTimeNow'
+import useInterval from '@/hooks/useInterval'
+import { useMemo, useState } from 'react'
 
 type PropTypes = {
     end: Date

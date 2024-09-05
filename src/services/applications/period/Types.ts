@@ -1,4 +1,4 @@
-import { Image } from "@prisma/client"
+import type { Image } from '@prisma/client'
 
 export type CountdownInfo = {
     endTime: Date,

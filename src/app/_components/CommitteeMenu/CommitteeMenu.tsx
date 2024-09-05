@@ -1,4 +1,4 @@
-import styles from './CommitteeCard.module.scss'
+import styles from './CommitteeMenu.module.scss'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 
@@ -8,7 +8,7 @@ type PropTypes = {
     href: string
 }
 
-export default function CommitteeCard({title, children, href }: PropTypes) {
+export default function CommitteeCard({ title, children, href }: PropTypes) {
     return (
         <Link href={href} className={styles.CommitteeMeny}>
             <div className={styles.content}>
