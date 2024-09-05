@@ -17,7 +17,7 @@ export default function Countdown({ info }: PropTypes) {
     const [finalCountdown, setFinalCountdown] = useState(false)
 
     useInterval(() => {
-        if (new Date().getTime() + 30_000 > info.endTime.getTime()) {
+        if (new Date().getTime() + 20_000 > info.endTime.getTime()) {
             setShowComitteeRoll(false)
             setTimeout(() => {
                 setFinalCountdown(true);
