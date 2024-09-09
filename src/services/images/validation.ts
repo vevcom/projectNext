@@ -1,5 +1,5 @@
 import { ValidationBase } from '@/services/Validation'
-import { maxFileSize } from '@/services/images/ConfigVars'
+import { maxFileSize, maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { ValidationTypes } from '@/services/Validation'
@@ -34,8 +34,8 @@ export const createImagesValidation = baseImageValidation.createValidation({
     keys: ['files'],
     transformer: data => data,
     refiner: {
-        fcn: data => data.files.length < 100 && data.files.length > 0,
-        message: 'Du kan bare laste opp mellom 1 og 100 bilder'
+        fcn: data => data.files.length < maxNumberOfImagesInOneBatch && data.files.length > 0,
+        message: `Du kan bare laste opp mellom 1 og ${maxNumberOfImagesInOneBatch} bilder av gangen`
     }
 })
 export type CreateImagesTypes = ValidationTypes<typeof createImagesValidation>
