@@ -29,7 +29,7 @@ const byteToUnderstandable = (bytes: number): string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-const Dropzone = ({ label, name, ...props }: PropTypes) => {
+function Dropzone({ label, name, ...props }: PropTypes) {
     const [files, setFiles] = useState<File[]>([])
     const input = useRef<HTMLInputElement>(null)
 
