@@ -3,12 +3,11 @@
 import styles from './Dropzone.module.scss'
 import React, {
     useCallback,
-    useState,
     useRef,
     useEffect,
 } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload, faTrash, faCheck, faSpinner, faExclamation, faFile } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTrash, faCheck, faSpinner, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import type {
     InputHTMLAttributes,
     ChangeEvent,
@@ -35,7 +34,7 @@ const byteToUnderstandable = (bytes: number): string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-export default function Dropzone({ label, name, files, setFiles, ...props}: PropTypes) {
+export default function Dropzone({ label, name, files, setFiles, ...props }: PropTypes) {
     const input = useRef<HTMLInputElement>(null)
 
     //Databindes the file state to the input value
@@ -47,9 +46,11 @@ export default function Dropzone({ label, name, files, setFiles, ...props}: Prop
         }
     }, [files])
 
+    const getFiles = (files: FileList | null) => Array.from(files ?? []).map(file => ({ ...file, uploadStatus: 'pending' as const }))
+
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
-        const droppedFiles = Array.from(event.dataTransfer.files).map(file => ({ ...file, uploadStatus: 'pending' as const }))
+        const droppedFiles = getFiles(event.dataTransfer.files)
         setFiles(prev => [...prev, ...droppedFiles])
 
         if (input.current) {
@@ -58,7 +59,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props}: Prop
     }, [])
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
-        const newFiles = Array.from(event.target.files ?? []).map(file => ({ ...file, uploadStatus: 'pending' as const }))
+        const newFiles = getFiles(event.target.files)
         setFiles(prev => [...prev, ...newFiles])
         if (input.current) {
             input.current.blur()
