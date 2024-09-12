@@ -6,6 +6,8 @@ import type { ValidationTypes } from '@/services/Validation'
 
 export const imageFileSchema = z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb')
 
+const maxFileSizeMb = Math.round(maxFileSize / 1024 / 1024)
+
 export const baseImageValidation = new ValidationBase({
     type: {
         file: z.instanceof(File),
@@ -19,7 +21,7 @@ export const baseImageValidation = new ValidationBase({
         alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
         files: zfd.repeatable(z.array(z.instanceof(File)).refine(
             files => files.every(file => file.size < maxFileSize),
-            'File size must be less than 10mb'
+            `File size must be less than ${maxFileSizeMb}mb`
         ))
     }
 })
