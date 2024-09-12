@@ -13,7 +13,8 @@ import type {
     ChangeEvent,
     DragEvent } from 'react'
 
-export type FileWithStatus = File & {
+export type FileWithStatus = {
+    file: File
     uploadStatus: 'pending' | 'uploading' | 'done' | 'error'
 }
 
@@ -41,12 +42,14 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
     useEffect(() => {
         if (input.current) {
             const dataTransfer = new DataTransfer()
-            files.forEach(file => dataTransfer.items.add(file))
+            files.forEach(file => dataTransfer.items.add(file.file))
             input.current.files = dataTransfer.files
         }
     }, [files])
 
-    const getFiles = (files: FileList | null) => Array.from(files ?? []).map(file => ({ ...file, uploadStatus: 'pending' as const }))
+    const getFiles = (files_: FileList | null) => Array.from(files_ ?? []).map(
+        file => ({ file, uploadStatus: 'pending' as const })
+    )
 
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
@@ -80,7 +83,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
-        setFiles(prev => prev.filter(f => f !== file))
+        setFiles(prev => prev.filter(f => f.file !== file))
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
@@ -97,7 +100,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
             <span>
                 <div className={styles.general}>
                     <p>Til opplastning: {files.length} {files.length === 1 ? 'fil' : 'filer'}</p>
-                    <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
+                    <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.file.size, 0))}</p>
                     <p>
                         <button className={styles.trash} onClick={handleRemoveAll}>
                             <FontAwesomeIcon icon={faTrash} />
@@ -106,12 +109,12 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
                 </div>
                 <ul>
                     {files.map((file, index) => (
-                        <li key={index}>
-                            <img src={URL.createObjectURL(file)} alt={file.name} />
-                            <p>{file.name}</p>
-                            <p>{byteToUnderstandable(file.size)}</p>
+                        <li key={"fileInfo" + index}>
+                            <img src={URL.createObjectURL(file.file)} alt={file.file.name} />
+                            <p>{file.file.name}</p>
+                            <p>{byteToUnderstandable(file.file.size)}</p>
                             <UploadStatusIcon status={file.uploadStatus} />
-                            <button className={styles.trash} onClick={(e) => handleRemove(e, file)}>
+                            <button className={styles.trash} onClick={(e) => handleRemove(e, file.file)}>
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
                         </li>
