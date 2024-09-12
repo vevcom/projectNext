@@ -8,7 +8,6 @@ export function generateOmegaId(user: OmegaId): string {
     const payload = {
         sub: user.id,
     }
-    console.log(payload)
 
     return generateJWT('omegaid', payload, OmegaIdExpiryTime, true)
 }
