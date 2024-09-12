@@ -8,15 +8,21 @@ import React, {
     useEffect,
 } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTrash, faCheck, faSpinner, faExclamation, faFile } from '@fortawesome/free-solid-svg-icons'
 import type {
     InputHTMLAttributes,
     ChangeEvent,
     DragEvent } from 'react'
 
+export type FileWithStatus = File & {
+    uploadStatus: 'pending' | 'uploading' | 'done' | 'error'
+}
+
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'multiple'> & {
     label: string,
     name: string,
+    files: FileWithStatus[]
+    setFiles: React.Dispatch<React.SetStateAction<FileWithStatus[]>>
 }
 
 const byteToUnderstandable = (bytes: number): string => {
@@ -29,10 +35,8 @@ const byteToUnderstandable = (bytes: number): string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-function Dropzone({ label, name, ...props }: PropTypes) {
-    const [files, setFiles] = useState<File[]>([])
+export default function Dropzone({ label, name, files, setFiles, ...props}: PropTypes) {
     const input = useRef<HTMLInputElement>(null)
-
 
     //Databindes the file state to the input value
     useEffect(() => {
@@ -45,7 +49,7 @@ function Dropzone({ label, name, ...props }: PropTypes) {
 
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
-        const droppedFiles = Array.from(event.dataTransfer.files)
+        const droppedFiles = Array.from(event.dataTransfer.files).map(file => ({ ...file, uploadStatus: 'pending' as const }))
         setFiles(prev => [...prev, ...droppedFiles])
 
         if (input.current) {
@@ -54,7 +58,7 @@ function Dropzone({ label, name, ...props }: PropTypes) {
     }, [])
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
-        const newFiles = Array.from(event.target.files ?? [])
+        const newFiles = Array.from(event.target.files ?? []).map(file => ({ ...file, uploadStatus: 'pending' as const }))
         setFiles(prev => [...prev, ...newFiles])
         if (input.current) {
             input.current.blur()
@@ -105,6 +109,7 @@ function Dropzone({ label, name, ...props }: PropTypes) {
                             <img src={URL.createObjectURL(file)} alt={file.name} />
                             <p>{file.name}</p>
                             <p>{byteToUnderstandable(file.size)}</p>
+                            <UploadStatusIcon status={file.uploadStatus} />
                             <button className={styles.trash} onClick={(e) => handleRemove(e, file)}>
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
@@ -116,4 +121,15 @@ function Dropzone({ label, name, ...props }: PropTypes) {
     )
 }
 
-export default Dropzone
+function UploadStatusIcon({ status }: { status: FileWithStatus['uploadStatus'] }) {
+    switch (status) {
+        case 'done':
+            return <FontAwesomeIcon icon={faCheck} />
+        case 'uploading':
+            return <FontAwesomeIcon icon={faSpinner} spin />
+        case 'error':
+            return <FontAwesomeIcon icon={faExclamation} />
+        default:
+            return <></>
+    }
+}
