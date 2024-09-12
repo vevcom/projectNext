@@ -2,6 +2,7 @@
 import { QRCodeReaderConfig } from './ConfigVars'
 import styles from './OmegaIdReader.module.scss'
 import { parseJWT } from '@/jwt/parseJWTClient'
+import { decomporessOmegaId } from '@/services/omegaid/compression'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
@@ -52,10 +53,9 @@ export default function OmegaIdReader({
         let lastReadUserId = -1
 
         html5QrcodeScanner.render(async (token) => {
-            const parse = await parseJWT(token, publicKey, expiryOffset ?? 100)
+            const decomporessedToken = decomporessOmegaId(token)
+            const parse = await parseJWT(decomporessedToken, publicKey, expiryOffset ?? 100)
             if (!parse.success) {
-                console.log(parse)
-
                 const msg = parse.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
 
                 setFeedBack({
@@ -77,7 +77,7 @@ export default function OmegaIdReader({
                 text: '...',
             })
 
-            const results = await successCallback(parse.data, token)
+            const results = await successCallback(parse.data, decomporessedToken)
 
             if (results.success && (singleRead ?? false)) {
                 html5QrcodeScanner.clear()

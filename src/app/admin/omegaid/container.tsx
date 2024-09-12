@@ -11,7 +11,7 @@ export default function OmegaIdContainer({
         publicKey={publicKey}
         successCallback={async (user) => ({
             success: true,
-            text: `${user.firstname} ${user.lastname}`,
+            text: `User ${user.id} scanned.`,
         })}
     />
 }

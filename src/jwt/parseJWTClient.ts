@@ -74,9 +74,6 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
         const payload = readJWTPayload(token)
 
         if (!(
-            typeof payload.usrnm === 'string' &&
-            typeof payload.gn === 'string' &&
-            typeof payload.sn === 'string' &&
             typeof payload.sub === 'number'
         )) {
             return invalidJWT('Invalid fields')
@@ -98,9 +95,6 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
             success: true,
             data: {
                 id: payload.sub,
-                username: payload.usrnm,
-                firstname: payload.gn,
-                lastname: payload.sn,
             }
         }
     } catch (error) {
