@@ -4,7 +4,7 @@ import { createImagesAction } from '@/actions/images/create'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import Dropzone from '@/components/UI/Dropzone'
+import Dropzone, { FileWithStatus } from '@/components/UI/Dropzone'
 import PopUp from '@/components/PopUp/PopUp'
 import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
@@ -16,10 +16,12 @@ import VisibilityAdmin from '@/components/VisiblityAdmin/VisibilityAdmin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { VisibilityCollapsed } from '@/services/visibility/Types'
 import type { ExpandedImageCollection } from '@/services/images/collections/Types'
+import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
+import { ActionReturn } from '@/actions/Types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -28,6 +30,7 @@ type PropTypes = {
 
 export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const { id: collectionId, coverImage } = collection
+    const [files, setFiles] = useState<FileWithStatus[]>([])
     const router = useRouter()
     const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
@@ -43,6 +46,49 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
         } else {
             router.refresh()
         }
+    }
+
+    const handleBatchedUpload = async () => {
+        // split files into batches of maxNumberOfImagesInOneBatch
+        const batches = files.reduce((acc, file, index) => {
+            if (index % maxNumberOfImagesInOneBatch === 0) {
+                acc.push([])
+            }
+            acc[acc.length - 1].push(file)
+            return acc
+        }, [] as FileWithStatus[][])
+
+        let res: ActionReturn<void> = { success: true, data: undefined }
+        for (const batch of batches) {
+            const formData = new FormData()
+            batch.forEach(file => {
+                formData.append('files', file)
+            })
+            setFiles(prev => prev.map(file => {
+                if (batch.includes(file)) {
+                    return { ...file, uploadStatus: 'uploading' }
+                }
+                return file
+            }))
+            res = await createImagesAction.bind(null, collectionId)(formData)
+            if (res.success) {
+                setFiles(prev => prev.map(file => {
+                    if (batch.includes(file)) {
+                        return { ...file, uploadStatus: 'done' }
+                    }
+                    return file
+                }))
+            } else {
+                setFiles(prev => prev.map(file => {
+                    if (batch.includes(file)) {
+                        return { ...file, uploadStatus: 'error' }
+                    }
+                    return file
+                }))
+                return res
+            }
+        }
+        return res
     }
 
     return (
@@ -61,9 +107,9 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                             successCallback={refreshImages}
                             title="last opp bilder"
                             submitText="last opp"
-                            action={createImagesAction.bind(null, collectionId)}
+                            action={handleBatchedUpload}
                         >
-                            <Dropzone label="last opp" name="files"/>
+                            <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
                         </Form>
                     </PopUp>
                 </div>
