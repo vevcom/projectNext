@@ -54,7 +54,16 @@ export default function OmegaIdReader({
 
         html5QrcodeScanner.render(async (token) => {
             const decomporessedToken = decomporessOmegaId(token)
-            const parse = await parseJWT(decomporessedToken, publicKey, expiryOffset ?? 100)
+            if (!decomporessedToken.success) {
+                const msg = decomporessedToken.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
+                setFeedBack({
+                    status: 'ERROR',
+                    text: msg
+                })
+                return
+            }
+
+            const parse = await parseJWT(decomporessedToken.data, publicKey, expiryOffset ?? 100)
             if (!parse.success) {
                 const msg = parse.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
 

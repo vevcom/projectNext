@@ -1,3 +1,4 @@
+import { ActionReturn, ActionReturnError } from '@/actions/Types'
 import type { OmegaIdJWT } from '@/services/omegaid/Types'
 
 
@@ -69,7 +70,7 @@ function decompressPayload(rawdata: string): string {
     return encodeBase64Url(payloadString)
 }
 
-export function decomporessOmegaId(rawdata: string): string {
+export function decomporessOmegaId(rawdata: string): ActionReturn<string> {
     const header = {
         alg: 'ES256',
         typ: 'JWT'
@@ -77,12 +78,31 @@ export function decomporessOmegaId(rawdata: string): string {
     const headerJSONString = JSON.stringify(header)
     const headerB64String = encodeBase64Url(headerJSONString)
 
+    const errorReturn: ActionReturnError = {
+        success: false,
+        errorCode: 'JWT INVALID',
+        error: [{
+            message: 'QR code is not an OmegaId',
+        }]
+    }
+
     const rawDataSplit = rawdata.split('.')
+    if (rawDataSplit.length !== 2) {
+        return errorReturn
+    }
 
-    const payload = decompressPayload(rawDataSplit[0])
+    try {
+        const payload = decompressPayload(rawDataSplit[0])
 
-    const signature = bigIntToBase64(rawDataSplit[1])
+        const signature = bigIntToBase64(rawDataSplit[1])
 
-    return `${headerB64String}.${payload}.${signature}`
+        return {
+            success: true,
+            data: `${headerB64String}.${payload}.${signature}`,
+        }
+    } catch (e) {
+        console.error(e)
+        return errorReturn
+    }
 }
 
