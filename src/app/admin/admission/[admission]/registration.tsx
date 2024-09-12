@@ -23,15 +23,13 @@ export default function RegisterAdmissiontrial({
                 const results = await createAdmissionTrialAction(admission, user.id)
 
                 let msg = results.success ?
-                    `${user.firstname} er registrert` :
+                    `${results.data.user.firstname} ${results.data.user.lastname} er registrert` :
                     'Kunne ikke regisrere bruker grunnet en ukjent feil.'
 
                 if (!results.success && results.error) {
-                    msg = `${user.firstname}: ${
-                        results.error
-                            .map(e => e.message)
-                            .reduce((acc, val) => `${acc}\n${val}`, '')
-                    }`
+                    msg = results.error
+                        .map(e => e.message)
+                        .reduce((acc, val) => `${acc}\n${val}`, '')
                 }
 
                 return {
