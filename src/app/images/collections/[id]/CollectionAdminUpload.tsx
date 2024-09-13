@@ -8,9 +8,10 @@ import Form from '@/components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
+import Slider from '@/app/_components/UI/Slider'
 
 type PropTypes = {
     collectionId: number
@@ -20,7 +21,7 @@ type PropTypes = {
 export default function CollectionAdminUpload({ collectionId, refreshImages }: PropTypes) {
     const [files, setFiles] = useState<FileWithStatus[]>([])
 
-    const handleBatchedUpload = async (data: FormData) => {
+    const handleBatchedUpload = useCallback(async (data: FormData) => {
         // split files into batches of maxNumberOfImagesInOneBatch
         const batches = files.reduce((acc, file, index) => {
             if (index % maxNumberOfImagesInOneBatch === 0) {
@@ -33,6 +34,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         const useFileName = data.get('useFileName') === 'on'
 
         let res: ActionReturn<void> = { success: true, data: undefined }
+
         for (const batch of batches) {
             const formData = new FormData()
             batch.forEach(file => {
@@ -46,17 +48,15 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
             }))
             res = await createImagesAction.bind(null, useFileName).bind(null, collectionId)(formData)
             if (res.success) {
-                setFiles(prev => prev.map(file => {
+                console.log('Marking batch as done', batch)
+                setFiles(files.map(file => {
                     if (batch.includes(file)) {
                         return { ...file, uploadStatus: 'done' }
                     }
                     return file
                 }))
-                setTimeout(() => {
-                    setFiles(prev => prev.filter(file => !batch.includes(file)))
-                }, 2000)
             } else {
-                setFiles(prev => prev.map(file => {
+                setFiles(files.map(file => {
                     if (batch.includes(file)) {
                         return { ...file, uploadStatus: 'error' }
                     }
@@ -67,7 +67,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         }
         setFiles([])
         return res
-    }
+    }, [files])
 
     return (
         <PopUp PopUpKey="UploadImages" showButtonContent={
@@ -85,7 +85,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 action={handleBatchedUpload}
             >
                 <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
-                <Checkbox label="Bruk filnavn som navn" name="useFileName" />
+                <Slider label="Bruk filnavn som navn" name="useFileName" />
             </Form>
         </PopUp>
     )
