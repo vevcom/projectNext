@@ -1,13 +1,5 @@
 @use '@/styles/ohma';
 
-.uploadMany {
-    min-width: 50vw;
-    button[type = "submit"] {
-        width: 150px;
-        margin-left: 0;
-    }
-}
-
 .visibility {
     margin: 1em 0;
     grid-column: 1/3;
