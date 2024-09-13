@@ -109,7 +109,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
                 </div>
                 <ul>
                     {files.map((file, index) => (
-                        <li key={"fileInfo" + index}>
+                        <li key={`fileInfo${index}`}>
                             <img src={URL.createObjectURL(file.file)} alt={file.file.name} />
                             <p>{file.file.name}</p>
                             <p>{byteToUnderstandable(file.file.size)}</p>

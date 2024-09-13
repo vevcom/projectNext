@@ -1,5 +1,6 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
+import CollectionAdminUpload from './CollectionAdminUpload'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
@@ -16,7 +17,6 @@ import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import type { VisibilityCollapsed } from '@/services/visibility/Types'
 import type { ExpandedImageCollection } from '@/services/images/collections/Types'
-import CollectionAdminUpload from './CollectionAdminUpload'
 
 type PropTypes = {
     collection: ExpandedImageCollection

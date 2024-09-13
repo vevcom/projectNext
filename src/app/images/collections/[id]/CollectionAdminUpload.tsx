@@ -1,16 +1,16 @@
 'use client'
+import styles from './CollectionAdminUpload.module.scss'
 import Dropzone from '@/components/UI/Dropzone'
 import PopUp from '@/components/PopUp/PopUp'
-import styles from './CollectionAdminUpload.module.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
 import { createImagesAction } from '@/actions/images/create'
 import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
+import Checkbox from '@/app/_components/UI/Checkbox'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUpload } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
-import Checkbox from '@/app/_components/UI/Checkbox'
 
 type PropTypes = {
     collectionId: number
