@@ -1,4 +1,5 @@
 import { ActionReturn, ActionReturnError } from '@/actions/Types'
+import { JWT_ISSUER } from '@/auth/ConfigVars'
 import type { OmegaIdJWT } from '@/services/omegaid/Types'
 
 
@@ -63,7 +64,7 @@ function decompressPayload(rawdata: string): string {
         iat: Number(dataString[1]),
         exp: Number(dataString[2]),
         aud: 'omegaid',
-        iss: 'omegaveven',
+        iss: JWT_ISSUER,
     }
     const payloadString = JSON.stringify(payload)
 
