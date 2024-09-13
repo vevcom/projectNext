@@ -5,14 +5,13 @@ import PopUp from '@/components/PopUp/PopUp'
 import { createImagesAction } from '@/actions/images/create'
 import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
-import Checkbox from '@/app/_components/UI/Checkbox'
+import Slider from '@/components/UI/Slider'
+import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
-import Slider from '@/app/_components/UI/Slider'
-import ProgressBar from '@/app/_components/ProgressBar/ProgressBar'
 
 type PropTypes = {
     collectionId: number
@@ -32,7 +31,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
             acc[acc.length - 1].push(file)
             return acc
         }, [] as FileWithStatus[][])
-        const doneFiles : FileWithStatus[] = []
+        const doneFiles: FileWithStatus[] = []
 
         const useFileName = data.get('useFileName') === 'on'
 

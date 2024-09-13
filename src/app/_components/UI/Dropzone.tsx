@@ -11,9 +11,8 @@ import { faUpload, faTrash, faCheck, faSpinner, faExclamation } from '@fortaweso
 import type {
     InputHTMLAttributes,
     ChangeEvent,
-    DragEvent } from 'react'
-import { v4 as uuid } from 'uuid'
-import { info } from 'console'
+    DragEvent
+} from 'react'
 
 export type FileWithStatus = {
     file: File
