@@ -12,6 +12,7 @@ import type {
     InputHTMLAttributes,
     ChangeEvent,
     DragEvent } from 'react'
+import { v4 as uuid } from 'uuid'
 
 export type FileWithStatus = {
     file: File
@@ -108,8 +109,8 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
                     </p>
                 </div>
                 <ul>
-                    {files.map((file, index) => (
-                        <li key={`fileInfo${index}`}>
+                    {files.map((file) => (
+                        <li key={uuid()}>
                             <img src={URL.createObjectURL(file.file)} alt={file.file.name} />
                             <p>{file.file.name}</p>
                             <p>{byteToUnderstandable(file.file.size)}</p>
