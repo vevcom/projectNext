@@ -19,11 +19,10 @@ export async function readImagesPage<const PageSize extends number>(
     }))
 }
 
-export async function readImage(idOrName: number | string): Promise<Image> {
+export async function readImage(id: number): Promise<Image> {
     const image = await prismaCall(() => prisma.image.findUnique({
         where: {
-            id: typeof idOrName === 'number' ? idOrName : undefined,
-            name: typeof idOrName === 'string' ? idOrName : undefined,
+            id,
         },
     }))
 
