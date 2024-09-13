@@ -1,5 +1,5 @@
-import { ActionReturn, ActionReturnError } from '@/actions/Types'
 import { JWT_ISSUER } from '@/auth/ConfigVars'
+import type { ActionReturn, ActionReturnError } from '@/actions/Types'
 import type { OmegaIdJWT } from '@/services/omegaid/Types'
 
 
