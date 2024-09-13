@@ -1,9 +1,11 @@
 @use '@/styles/ohma';
 
+$slider-width: 60px;
+
 .Slider {
     position: relative;
     display: inline-block;
-    width: 60px;
+    width: $slider-width;
     height: 34px;
     margin-top: calc(ohma.$fonts-m + .2em);
 
@@ -14,6 +16,7 @@
     }
 
     .slider {
+        width: $slider-width;
         position: absolute;
         cursor: pointer;
         top: 0;
