@@ -13,6 +13,7 @@ import type {
     ChangeEvent,
     DragEvent } from 'react'
 import { v4 as uuid } from 'uuid'
+import { info } from 'console'
 
 export type FileWithStatus = {
     file: File
@@ -38,6 +39,7 @@ const byteToUnderstandable = (bytes: number): string => {
 
 export default function Dropzone({ label, name, files, setFiles, ...props }: PropTypes) {
     const input = useRef<HTMLInputElement>(null)
+    const infoContainerRef = useRef<HTMLUListElement>(null)
 
     //Databindes the file state to the input value
     useEffect(() => {
@@ -46,6 +48,12 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
             files.forEach(file => dataTransfer.items.add(file.file))
             input.current.files = dataTransfer.files
         }
+    }, [files])
+
+    useEffect(() => {
+        if (!infoContainerRef.current) return
+        const uploadingIndex = files.findIndex(file => file.uploadStatus === 'uploading')
+        infoContainerRef.current.children[uploadingIndex]?.scrollIntoView({ behavior: 'smooth' })
     }, [files])
 
     const getFiles = (files_: FileList | null) => Array.from(files_ ?? []).map(
@@ -108,9 +116,9 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
                         </button>
                     </p>
                 </div>
-                <ul>
-                    {files.map((file) => (
-                        <li key={uuid()}>
+                <ul ref={infoContainerRef}>
+                    {files.map((file, index) => (
+                        <li id={`fileInfo${index}`} key={`fileInfo${index}`}>
                             <img src={URL.createObjectURL(file.file)} alt={file.file.name} />
                             <p>{file.file.name}</p>
                             <p>{byteToUnderstandable(file.file.size)}</p>
