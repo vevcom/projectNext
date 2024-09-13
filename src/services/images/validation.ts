@@ -11,13 +11,13 @@ const maxFileSizeMb = Math.round(maxFileSize / 1024 / 1024)
 export const baseImageValidation = new ValidationBase({
     type: {
         file: z.instanceof(File),
-        name: z.string(),
+        name: z.string().optional(),
         alt: z.string(),
         files: zfd.repeatable(z.array(z.instanceof(File))),
     },
     details: {
         file: imageFileSchema,
-        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2'),
+        name: z.string().max(50, 'max length in 50').min(2, 'min length is 2').optional(),
         alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
         files: zfd.repeatable(z.array(z.instanceof(File)).refine(
             files => files.every(file => file.size < maxFileSize),

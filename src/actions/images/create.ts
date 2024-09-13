@@ -21,6 +21,7 @@ export async function createImageAction(
 }
 
 export async function createImagesAction(
+    useFileName: boolean,
     collectionId: number,
     rawdata: FormData | CreateImagesTypes['Type']
 ): Promise<ActionReturn<void>> {
@@ -34,8 +35,9 @@ export async function createImagesAction(
 
     let finalReturn: ActionReturn<void> = { success: true, data: undefined }
     for (const file of data.files) {
+        const name = useFileName ? file.name.split('.')[0] : undefined
         const ret = await safeServerCall(
-            () => createImage({ file, name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+            () => createImage({ file, name, alt: file.name.split('.')[0], collectionId })
         )
         if (!ret.success) return ret
         finalReturn = {

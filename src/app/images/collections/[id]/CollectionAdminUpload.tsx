@@ -10,6 +10,7 @@ import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
+import Checkbox from '@/app/_components/UI/Checkbox'
 
 type PropTypes = {
     collectionId: number
@@ -19,7 +20,7 @@ type PropTypes = {
 export default function CollectionAdminUpload({ collectionId, refreshImages }: PropTypes) {
     const [files, setFiles] = useState<FileWithStatus[]>([])
 
-    const handleBatchedUpload = async () => {
+    const handleBatchedUpload = async (data: FormData) => {
         // split files into batches of maxNumberOfImagesInOneBatch
         const batches = files.reduce((acc, file, index) => {
             if (index % maxNumberOfImagesInOneBatch === 0) {
@@ -28,6 +29,8 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
             acc[acc.length - 1].push(file)
             return acc
         }, [] as FileWithStatus[][])
+
+        const useFileName = data.get('useFileName') === 'on'
 
         let res: ActionReturn<void> = { success: true, data: undefined }
         for (const batch of batches) {
@@ -41,7 +44,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 }
                 return file
             }))
-            res = await createImagesAction.bind(null, collectionId)(formData)
+            res = await createImagesAction.bind(null, useFileName).bind(null, collectionId)(formData)
             if (res.success) {
                 setFiles(prev => prev.map(file => {
                     if (batch.includes(file)) {
@@ -49,6 +52,9 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                     }
                     return file
                 }))
+                setTimeout(() => {
+                    setFiles(prev => prev.filter(file => !batch.includes(file)))
+                }, 2000)
             } else {
                 setFiles(prev => prev.map(file => {
                     if (batch.includes(file)) {
@@ -79,6 +85,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 action={handleBatchedUpload}
             >
                 <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
+                <Checkbox label="Bruk filnavn som navn" name="useFileName" />
             </Form>
         </PopUp>
     )
