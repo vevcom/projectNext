@@ -86,7 +86,7 @@ export default function OmegaIdReader({
                 text: '...',
             })
 
-            const results = await successCallback(parse.data, decomporessedToken)
+            const results = await successCallback(parse.data, decomporessedToken.data)
 
             if (results.success && (singleRead ?? false)) {
                 html5QrcodeScanner.clear()
