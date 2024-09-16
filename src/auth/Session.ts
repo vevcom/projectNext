@@ -56,7 +56,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
     }
 
     /**
-     * This function generates a Session from an api-key. If the kwy is bad
+     * This function generates a Session from an api-key. If the key is bad
      * an error will be thrown.
      * @param key - The key provided by client in the `id=keyId&key=key` format
      * If the key is null, the session will be cratedwith only default permissios
