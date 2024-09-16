@@ -1,5 +1,8 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    font-size: ohma.$fonts-xl;
+    padding: 1em ohma.$minimalPagePadding;
+    h1 {
+        font-size: ohma.$fonts-xxl;
+    }
 }
