@@ -7,7 +7,6 @@ import LockerPagingProvider from '@/contexts/paging/LockerPaging'
 
 export default async function Lockers() {
     await getUser({
-        userRequired: true,
         shouldRedirect: true,
         requiredPermissions: [['LOCKER_READ']],
     })
