@@ -40,15 +40,9 @@ export async function createLockerReservationAction(
 
     // Verify that user is in group
     if (data.groupId) {
-        let userInGroup = false
         const groupUsers = await readUsersOfGroups([{ groupId: data.groupId, admin: false }])
 
-        for (const groupUser of groupUsers) {
-            if (user.id === groupUser.id) {
-                userInGroup = true
-                break
-            }
-        }
+        const userInGroup = groupUsers.some(groupUser => user.id === groupUser.id)
 
         if (!userInGroup) {
             return createActionError('UNAUTHORIZED')
