@@ -7,21 +7,20 @@ import jsQR from 'jsqr'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CameraState } from '@/app/_components/Camera/Types'
 
+const WIDTH = 400
+const HEIGHT = 400
+
 export default function Scanner() {
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const [cameraState, setCameraState] = useState<CameraState>('Off')
     const [hasAsked, setHasAsked] = useState<boolean>(false)
     const router = useRouter()
 
-    const width = 400
-    const height = 400
-
-
     const constraints = {
         video: {
             facingMode: { ideal: 'environment' },
-            width,
-            height
+            width: WIDTH,
+            height: HEIGHT
         }
     }
 
@@ -63,8 +62,8 @@ export default function Scanner() {
                     cameraState={cameraState}
                     setCameraState={setCameraState}
                     constraints={constraints}
-                    width={width}
-                    height={height}
+                    width={WIDTH}
+                    height={HEIGHT}
                     callbackFunction={callBackFunction}
                 />
 
