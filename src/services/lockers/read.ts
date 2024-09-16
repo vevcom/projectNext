@@ -41,14 +41,14 @@ export async function updateLockerReservationIfExpired(locker: LockerWithReserva
     if (reservation.endDate === null) return
 
     if (reservation.endDate.getTime() < Date.now()) {
-        const updateResult = await prisma.lockerReservation.update({
+        const updateResult = await prismaCall(() => prisma.lockerReservation.update({
             where: {
                 id: locker.LockerReservation[0].id
             },
             data: {
                 active: false
             }
-        })
+        }))
         if (!updateResult) {
             throw new ServerError('NOT FOUND', 'lockerReservation not found while updating')
         }
