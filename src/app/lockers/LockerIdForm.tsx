@@ -1,6 +1,7 @@
 'use client'
 import styles from './LockerIdForm.module.scss'
 import NumberInput from '@/components/UI/NumberInput'
+import Button from '../_components/UI/Button'
 import React, { useState } from 'react'
 import Link from 'next/link'
 
@@ -19,12 +20,22 @@ export default function LockerIdForm() {
                 value={lockerId}
                 onChange={handleLockerIdChange}
             />
-            <Link
-                href={`/lockers/${lockerId}`}
-                className={styles.goToLockerButton}
+            <Button
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    const child = event.currentTarget.firstChild as HTMLElement
+                    if (child) {
+                        child.click()
+                    }
+                }}
             >
-                Gå til skap
-            </Link>
+                <Link
+                    href={`/lockers/${lockerId}`}
+                    className={styles.goToLockerLink}
+                >
+                    Gå til skap
+                </Link>
+            </Button>
+            
         </>
     )
 }
