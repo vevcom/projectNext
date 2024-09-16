@@ -1,7 +1,7 @@
 'use client'
 import styles from './LockerIdForm.module.scss'
+import Button from '@/components/UI/Button'
 import NumberInput from '@/components/UI/NumberInput'
-import Button from '../_components/UI/Button'
 import React, { useState } from 'react'
 import Link from 'next/link'
 
@@ -35,7 +35,7 @@ export default function LockerIdForm() {
                     Gå til skap
                 </Link>
             </Button>
-            
+
         </>
     )
 }
