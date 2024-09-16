@@ -40,25 +40,19 @@ export async function updateLockerReservationIfExpired(locker: LockerWithReserva
     const reservation = locker.LockerReservation[0]
 
     if (reservation.endDate === null) return
+
     if (reservation.endDate.getTime() < Date.now()) {
-        try {
-            const updateResult = await prisma.lockerReservation.update({
-                where: {
-                    id: locker.LockerReservation[0].id
-                },
-                data: {
-                    active: false
-                }
-            })
-            if (!updateResult) {
-                createActionError('NOT FOUND', 'lockerReservation not found while updating')
+        const updateResult = await prisma.lockerReservation.update({
+            where: {
+                id: locker.LockerReservation[0].id
+            },
+            data: {
+                active: false
             }
-            locker.LockerReservation = []
-        } catch (error) {
-            if (error instanceof ServerError) {
-                createActionError(error.errorCode, error.errors)
-            }
-            createActionError('UNKNOWN ERROR', 'unknown error while updating expired locker')
+        })
+        if (!updateResult) {
+            throw new ServerError('NOT FOUND', 'lockerReservation not found while updating')
         }
+        locker.LockerReservation = []
     }
 }
