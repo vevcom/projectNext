@@ -83,5 +83,5 @@ $textBoxBackgroundColor: ohma.$colors-white;
         }
     }
 
-    box-shadow: ohma.$colors-gray-700 0 0 10px;
+    @include ohma.boxShadow();
 }

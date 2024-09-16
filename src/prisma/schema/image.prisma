@@ -7,6 +7,8 @@ enum SpecialImage {
   LOGO_WHITE
   LOGO_WHITE_TEXT
   MAGISK_HATT
+  HOVEDBYGGNINGEN
+  R1
 }
 
 model Image {
@@ -14,7 +16,7 @@ model Image {
   fsLocation              String           @unique
   fsLocationSmallSize     String?          @unique
   fsLocationMediumSize    String?          @unique
-  name                    String           @unique
+  name                    String           @default("Bilde")
   ext                     String
   alt                     String
   collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)

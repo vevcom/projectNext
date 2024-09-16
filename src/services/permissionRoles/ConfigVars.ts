@@ -392,6 +392,26 @@ export const PermissionConfig = {
         description: 'kan lese skjermer',
         category: 'skjermer',
     },
+    SCHOOLS_READ: {
+        name: 'Les skoler',
+        description: 'kan lese skoler',
+        category: 'brukere',
+    },
+    SCHOOLS_ADMIN: {
+        name: 'Skoleadministrator',
+        description: 'kan administrere skoler',
+        category: 'brukere',
+    },
+    COURSES_READ: {
+        name: 'Les emner',
+        description: 'kan lese emner',
+        category: 'brukere',
+    },
+    COURSES_ADMIN: {
+        name: 'Emneadministrator',
+        description: 'kan administrere emner',
+        category: 'brukere',
+    },
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {

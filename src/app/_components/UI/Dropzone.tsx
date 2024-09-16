@@ -3,20 +3,27 @@
 import styles from './Dropzone.module.scss'
 import React, {
     useCallback,
-    useState,
     useRef,
     useEffect,
 } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faUpload, faTrash, faCheck, faSpinner, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import type {
     InputHTMLAttributes,
     ChangeEvent,
-    DragEvent } from 'react'
+    DragEvent
+} from 'react'
+
+export type FileWithStatus = {
+    file: File
+    uploadStatus: 'pending' | 'uploading' | 'done' | 'error'
+}
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'multiple'> & {
     label: string,
     name: string,
+    files: FileWithStatus[]
+    setFiles: React.Dispatch<React.SetStateAction<FileWithStatus[]>>
 }
 
 const byteToUnderstandable = (bytes: number): string => {
@@ -29,23 +36,32 @@ const byteToUnderstandable = (bytes: number): string => {
     return `${(bytes / 1024 ** 2).toFixed(2)} MB`
 }
 
-const Dropzone = ({ label, name, ...props }: PropTypes) => {
-    const [files, setFiles] = useState<File[]>([])
+export default function Dropzone({ label, name, files, setFiles, ...props }: PropTypes) {
     const input = useRef<HTMLInputElement>(null)
-
+    const infoContainerRef = useRef<HTMLUListElement>(null)
 
     //Databindes the file state to the input value
     useEffect(() => {
         if (input.current) {
             const dataTransfer = new DataTransfer()
-            files.forEach(file => dataTransfer.items.add(file))
+            files.forEach(file => dataTransfer.items.add(file.file))
             input.current.files = dataTransfer.files
         }
     }, [files])
 
+    useEffect(() => {
+        if (!infoContainerRef.current) return
+        const uploadingIndex = files.findIndex(file => file.uploadStatus === 'uploading')
+        infoContainerRef.current.children[uploadingIndex]?.scrollIntoView({ behavior: 'smooth' })
+    }, [files])
+
+    const getFiles = (files_: FileList | null) => Array.from(files_ ?? []).map(
+        file => ({ file, uploadStatus: 'pending' as const })
+    )
+
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
-        const droppedFiles = Array.from(event.dataTransfer.files)
+        const droppedFiles = getFiles(event.dataTransfer.files)
         setFiles(prev => [...prev, ...droppedFiles])
 
         if (input.current) {
@@ -54,7 +70,7 @@ const Dropzone = ({ label, name, ...props }: PropTypes) => {
     }, [])
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
-        const newFiles = Array.from(event.target.files ?? [])
+        const newFiles = getFiles(event.target.files)
         setFiles(prev => [...prev, ...newFiles])
         if (input.current) {
             input.current.blur()
@@ -75,7 +91,7 @@ const Dropzone = ({ label, name, ...props }: PropTypes) => {
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
-        setFiles(prev => prev.filter(f => f !== file))
+        setFiles(prev => prev.filter(f => f.file !== file))
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()
@@ -92,20 +108,21 @@ const Dropzone = ({ label, name, ...props }: PropTypes) => {
             <span>
                 <div className={styles.general}>
                     <p>Til opplastning: {files.length} {files.length === 1 ? 'fil' : 'filer'}</p>
-                    <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.size, 0))}</p>
+                    <p>Total størrelse: {byteToUnderstandable(files.reduce((acc, file) => acc + file.file.size, 0))}</p>
                     <p>
                         <button className={styles.trash} onClick={handleRemoveAll}>
                             <FontAwesomeIcon icon={faTrash} />
                         </button>
                     </p>
                 </div>
-                <ul>
+                <ul ref={infoContainerRef}>
                     {files.map((file, index) => (
-                        <li key={index}>
-                            <img src={URL.createObjectURL(file)} alt={file.name} />
-                            <p>{file.name}</p>
-                            <p>{byteToUnderstandable(file.size)}</p>
-                            <button className={styles.trash} onClick={(e) => handleRemove(e, file)}>
+                        <li id={`fileInfo${index}`} key={`fileInfo${index}`}>
+                            <img src={URL.createObjectURL(file.file)} alt={file.file.name} />
+                            <p>{file.file.name}</p>
+                            <p>{byteToUnderstandable(file.file.size)}</p>
+                            <UploadStatusIcon status={file.uploadStatus} />
+                            <button className={styles.trash} onClick={(e) => handleRemove(e, file.file)}>
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
                         </li>
@@ -116,4 +133,15 @@ const Dropzone = ({ label, name, ...props }: PropTypes) => {
     )
 }
 
-export default Dropzone
+function UploadStatusIcon({ status }: { status: FileWithStatus['uploadStatus'] }) {
+    switch (status) {
+        case 'done':
+            return <FontAwesomeIcon icon={faCheck} />
+        case 'uploading':
+            return <FontAwesomeIcon icon={faSpinner} spin />
+        case 'error':
+            return <FontAwesomeIcon icon={faExclamation} />
+        default:
+            return <></>
+    }
+}
