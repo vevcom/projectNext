@@ -1,0 +1,35 @@
+enum EventCanView {
+  CAN_JOIN
+  ALL
+}
+
+model Event {
+  id                 Int          @id @default(autoincrement())
+  name               String
+  omegaOrder         OmegaOrder   @relation(fields: [order], references: [order])
+  order              Int
+  paragraph          CmsParagraph @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId     Int          @unique
+  reigistrationStart DateTime
+  reigistrationEnd   DateTime
+  places             Int
+  canBeViewdBy       EventCanView
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  EventRegistration EventRegistration[]
+
+  @@unique([order, name])
+}
+
+model EventRegistration {
+  id        Int      @id @default(autoincrement())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, userId])
+}

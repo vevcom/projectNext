@@ -4,7 +4,8 @@ model OmegaOrder {
   updatedAt DateTime @updatedAt
 
   newsArticles NewsArticle[]
-  membership   Membership[]
-  JobAd        JobAd[]
-  Group        Group[]
+  memberships  Membership[]
+  jobAds       JobAd[]
+  groups       Group[]
+  events       Event[]
 }
