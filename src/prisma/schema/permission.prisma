@@ -63,7 +63,6 @@ enum Permission {
   LOCKER_CREATE
   LOCKERRESERVATION_CREATE
   LOCKERRESERVATION_UPDATE
-  LOCKERRESERVATION_DESTROY
 
   // CMS permissions - it overrides the visibility of things
   CMS_ADMIN

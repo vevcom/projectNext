@@ -412,6 +412,26 @@ export const PermissionConfig = {
         description: 'kan administrere emner',
         category: 'brukere',
     },
+    LOCKER_READ: {
+        name: 'Les skap',
+        description: 'kan lese skapdata',
+        category: 'brukere'
+    },
+    LOCKER_CREATE: {
+        name: 'Lag skap',
+        description: 'kan lage skap',
+        category: 'diverse admin'
+    },
+    LOCKERRESERVATION_CREATE: {
+        name: 'Lag skapreservasjon',
+        description: 'kan lage skapreservasjoner',
+        category: 'brukere'
+    },
+    LOCKERRESERVATION_UPDATE: {
+        name: 'Oppdatere skapreservasjoner',
+        description: 'kan oppdatere skapreservasjoner',
+        category: 'brukere'
+    }
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {
