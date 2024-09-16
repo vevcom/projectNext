@@ -3,6 +3,7 @@ import seedDevUsers from './development/seedDevUsers'
 import seedDevPermissions from './development/seedDevPermissions'
 import seedDevImages from './development/seedDevImages'
 import seedDevNews from './development/seedDevNews'
+import seedDevLockers from './development/seedDevLockers'
 import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
@@ -46,6 +47,7 @@ async function seed() {
     await seedDevPermissions(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)
+    await seedDevLockers(prisma)
     await seedDevSchools(prisma)
     console.log('seed dev done')
 }

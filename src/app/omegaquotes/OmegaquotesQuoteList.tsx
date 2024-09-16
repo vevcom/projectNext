@@ -1,6 +1,6 @@
 'use client'
 
-import OmegaquoteQuote from './omegaquotesQuote'
+import OmegaquoteQuote from './OmegaquotesQuote'
 import { OmegaquotePagingContext } from '@/contexts/paging/OmegaquotesPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import React, { useContext } from 'react'
