@@ -1,11 +1,9 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
-import { createImagesAction } from '@/actions/images/create'
+import CollectionAdminUpload from './CollectionAdminUpload'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import Dropzone from '@/components/UI/Dropzone'
-import PopUp from '@/components/PopUp/PopUp'
 import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
@@ -14,10 +12,9 @@ import ImageUploader from '@/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
 import VisibilityAdmin from '@/components/VisiblityAdmin/VisibilityAdmin'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQuestion, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faQuestion, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import { v4 as uuid } from 'uuid'
 import type { VisibilityCollapsed } from '@/services/visibility/Types'
 import type { ExpandedImageCollection } from '@/services/images/collections/Types'
 
@@ -50,22 +47,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
             <aside className={styles.CollectionAdmin}>
                 <div className={styles.upload}>
                     <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
-                    <PopUp PopUpKey={uuid()} showButtonContent={
-                        <>
-                        Last opp mange
-                            <FontAwesomeIcon icon={faUpload} />
-                        </>
-                    }>
-                        <Form
-                            className={styles.uploadMany}
-                            successCallback={refreshImages}
-                            title="last opp bilder"
-                            submitText="last opp"
-                            action={createImagesAction.bind(null, collectionId)}
-                        >
-                            <Dropzone label="last opp" name="files"/>
-                        </Form>
-                    </PopUp>
+                    <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
                 </div>
                 <Form
                     successCallback={() => {

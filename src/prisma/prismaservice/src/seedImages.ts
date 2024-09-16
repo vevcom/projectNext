@@ -73,12 +73,15 @@ export default async function seedImages(prisma: PrismaClient) {
             withoutEnlargement: true
         }).toFile(mediumPath)
 
-        await prisma.image.upsert({
+        //Delete all images with image.name
+        await prisma.image.deleteMany({
             where: {
                 name: image.name
-            },
-            update: {},
-            create: {
+            }
+        })
+
+        await prisma.image.create({
+            data: {
                 name: image.name,
                 alt: image.alt,
                 fsLocation,
