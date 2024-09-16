@@ -10,8 +10,14 @@
         box-shadow: rgba(0, 0, 0, 0.35) 0px 25px 25px;
         @include ohma.card;
         z-index: 9;
-
+        max-height: 95svh;
         background-color: ohma.$colors-white;
+        > .overflow {
+            overflow-y: scroll;
+            margin: 0;
+            padding: 0;
+            max-height: calc(95svh - ohma.$cardPadding * 2);
+        }
     }
 }
 

@@ -53,11 +53,13 @@ export default function PopUp({
         contentRef.current = (
             <div className={styles.PopUp}>
                 <div className={styles.main} ref={ref}>
-                    <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-                        <FontAwesomeIcon icon={faX} />
-                    </Button>
-                    <div className={styles.content}>
-                        { children }
+                    <div className={styles.overflow}>
+                        <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
+                            <FontAwesomeIcon icon={faX} />
+                        </Button>
+                        <div className={styles.content}>
+                            { children }
+                        </div>
                     </div>
                 </div>
             </div>
