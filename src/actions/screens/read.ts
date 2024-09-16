@@ -8,14 +8,14 @@ import type { Screen } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function readScreenAction(id: number): Promise<ActionReturn<Screen>> {
-    const authRes = ReadScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = ReadScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => readScreen(id))
 }
 
 export async function readScreensAction(): Promise<ActionReturn<Screen[]>> {
-    const authRes = ReadScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = ReadScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => readScreens())

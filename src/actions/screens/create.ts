@@ -9,7 +9,7 @@ import type { Screen } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function createScreenAction(formdata: CreateScreenTypes['Type']): Promise<ActionReturn<Screen>> {
-    const authRes = AdminScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     const parse = createScreenValidation.typeValidate(formdata)

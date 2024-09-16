@@ -17,13 +17,13 @@ export const User = {
         hasAuther: true,
         auther: UpdateUserAuther,
         withData: true,
-        dynamicFields: () => undefined
+        dynamicFields: () => ({})
     }),
     create: ServiceMethod({
         serviceMethodHandler: create,
         hasAuther: true,
         auther: CreateUserAuther,
         withData: true,
-        dynamicFields: () => undefined
+        dynamicFields: () => ({}),
     })
 } as const

@@ -7,7 +7,7 @@ export function ServiceMethod<
     DetailedType,
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, true>
@@ -16,7 +16,7 @@ export function ServiceMethod<
 export function ServiceMethod<
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<
@@ -29,7 +29,7 @@ export function ServiceMethod<
     DetailedType,
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
@@ -38,7 +38,7 @@ export function ServiceMethod<
 export function ServiceMethod<
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
 >(
     config: ServiceMethodConfig<
@@ -51,7 +51,7 @@ export function ServiceMethod<
     DetailedType,
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
 >(
     config:
@@ -80,9 +80,14 @@ export function ServiceMethod<
         client: (prisma) => ({
             execute: ({ data, params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
-                    const authRes = config.auther.auth({
-                        session: session ?? Session.empty(), dynamicFields: config.dynamicFields({ params, data })
-                    })
+                    const authRes = config.auther.dynamicFields(
+                        config.dynamicFields({
+                            params,
+                            data
+                        })
+                    ).auth(
+                        session ?? Session.empty()
+                    )
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
                 return config.serviceMethodHandler.client(prisma).execute({ data, params, session })
@@ -94,9 +99,13 @@ export function ServiceMethod<
         client: (prisma) => ({
             execute: ({ params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
-                    const authRes = config.auther.auth({
-                        session: session ?? Session.empty(), dynamicFields: config.dynamicFields({ params })
-                    })
+                    const authRes = config.auther.dynamicFields(
+                        config.dynamicFields({
+                            params
+                        })
+                    ).auth(
+                        session ?? Session.empty()
+                    )
                     if (!authRes.authorized) throw new Smorekopp(authRes.status)
                 }
                 return config.serviceMethodHandler.client(prisma).execute({ params, session })

@@ -1,4 +1,4 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 
-export const AdminScreenAuther = RequirePermission({ permission: 'SCREEN_ADMIN' })
-export const ReadScreenAuther = RequirePermission({ permission: 'SCREEN_READ' })
+export const AdminScreenAuther = RequirePermission.staticFields({ permission: 'SCREEN_ADMIN' })
+export const ReadScreenAuther = RequirePermission.staticFields({ permission: 'SCREEN_READ' })

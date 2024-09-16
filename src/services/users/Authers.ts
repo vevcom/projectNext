@@ -1,12 +1,8 @@
-import { AutherOr } from '@/auth/auther/AutherOr'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequireUsername } from '@/auth/auther/RequireUsername'
+import { RequireUsernameOrPermission } from '@/auth/auther/RequireUsernameOrPermission'
 
-export const ReadUserAuther = AutherOr([
-    RequirePermission({ permission: 'USERS_READ' }),
-    RequireUsername(undefined)
-])
+export const ReadUserAuther = RequireUsernameOrPermission.staticFields({ permission: 'USERS_READ' })
 
-export const CreateUserAuther = RequirePermission({ permission: 'USERS_CREATE' })
+export const CreateUserAuther = RequirePermission.staticFields({ permission: 'USERS_CREATE' })
 
-export const UpdateUserAuther = RequirePermission({ permission: 'USERS_UPDATE' })
+export const UpdateUserAuther = RequirePermission.staticFields({ permission: 'USERS_UPDATE' })

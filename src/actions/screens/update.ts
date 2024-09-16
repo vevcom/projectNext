@@ -10,7 +10,7 @@ import type { ActionReturn } from '@/actions/Types'
 import type { ScreenPageMoveDirection } from '@/services/screens/Types'
 
 export async function updateScreenAction(id: number, formdata: UpdateScreenTypes['Type']): Promise<ActionReturn<Screen>> {
-    const authRes = AdminScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     const parse = updateScreenValidation.typeValidate(formdata)
@@ -24,7 +24,7 @@ export async function movePageInScreenAction(
     id: {screen: number, page: number},
     direction: ScreenPageMoveDirection
 ): Promise<ActionReturn<void>> {
-    const authRes = AdminScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => movePageInScreen(id, direction))

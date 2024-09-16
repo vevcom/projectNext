@@ -14,7 +14,7 @@ export async function createAdmissionTrialAction(
     userId: FormData | number
 ): Promise<ActionReturn<AdmissionTrial>> {
     const session = await Session.fromNextAuth()
-    const authRes = CreateAdmissionTrialAuther.auth({ session, dynamicFields: undefined })
+    const authRes = CreateAdmissionTrialAuther.dynamicFields({}).auth(session)
 
     if (!authRes.authorized) return createActionError(authRes.status)
 

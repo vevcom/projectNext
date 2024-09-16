@@ -1,14 +1,7 @@
-import { AutherFactory } from './AutherFactory'
+import { AutherFactory } from './Auther'
 
 export const RequireUser = AutherFactory<
-    'USER_REQUIERED_FOR_AUTHORIZED',
-    undefined,
-    undefined
->(
-    session => {
-        if (session.user) {
-            return { success: true, session }
-        }
-        return { success: false as const, session }
-    }
-)
+    Record<string, never>,
+    Record<string, never>,
+    'USER_REQUIERED_FOR_AUTHORIZED'
+>(({ session }) => (session.user ? { success: true, session } : { success: false, session }))

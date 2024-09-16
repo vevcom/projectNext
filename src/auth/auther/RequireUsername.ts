@@ -1,10 +1,18 @@
-import { AutherFactory } from './AutherFactory'
+import { AutherFactory } from './Auther'
 
 export const RequireUsername = AutherFactory<
-    'USER_NOT_REQUIERED_FOR_AUTHORIZED',
+    Record<string, never>,
     { username: string },
-    undefined
->((session, _: undefined, { username }) => ({
-    success: session.user?.username === username,
-    session
-}))
+    'USER_REQUIERED_FOR_AUTHORIZED'
+>(({ session, dynamicFields }) => {
+    if (!session.user) {
+        return {
+            success: false,
+            session,
+        }
+    }
+    return {
+        success: session.user?.username === dynamicFields.username,
+        session,
+    }
+})

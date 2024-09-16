@@ -1,11 +1,11 @@
-import { AutherFactory } from './AutherFactory'
+import { AutherFactory } from './Auther'
 import type { Permission } from '@prisma/client'
 
 export const RequirePermission = AutherFactory<
-    'USER_NOT_REQUIERED_FOR_AUTHORIZED',
-    undefined,
-    { permission: Permission }
->((session, { permission }) => ({
-    success: session.permissions.includes(permission),
+    { permission: Permission },
+    Record<string, never>,
+    'USER_NOT_REQUIERED_FOR_AUTHORIZED'
+>(({ session, staticFields }) => ({
+    success: session.permissions.includes(staticFields.permission),
     session
 }))

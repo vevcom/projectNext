@@ -1,7 +1,7 @@
 import type { default as prismaGlobal } from '@/prisma'
 import type { z } from 'zod'
 import type { PrismaClient } from '@prisma/client'
-import type { Auther } from '@/auth/auther/Auther'
+import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
 import type { SessionMaybeUser } from '@/auth/Session'
 
 export type PrismaTransaction = Parameters<Parameters<typeof prismaGlobal.$transaction>[0]>[0]
@@ -163,9 +163,9 @@ type ServiceMethodHandlerAuthConfig<
     WithValidation extends boolean,
     DetailedType,
     Params,
-    DynamicFields,
+    DynamicFields extends object,
 > = {
-    auther: Auther<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', DynamicFields>
+    auther: AutherStaticFieldsBound<DynamicFields, 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'>
     dynamicFields: (dataParams: DynamicFieldsInput<WithValidation, Params, DetailedType>) => DynamicFields
 }
 
@@ -175,7 +175,7 @@ export type ServiceMethodConfig<
     DetailedType,
     Params,
     Return,
-    DynamicFields,
+    DynamicFields extends object,
     WantsToOpenTransaction extends boolean,
     NoAuther extends boolean
 > = { withData: WithValidation } & (NoAuther extends true ? ({

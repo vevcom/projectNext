@@ -7,7 +7,7 @@ import { Session } from '@/auth/Session'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function destroyScreenAction(id: number): Promise<ActionReturn<void>> {
-    const authRes = AdminScreenAuther.auth({ session: await Session.fromNextAuth(), dynamicFields: undefined })
+    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => destroyScreen(id))
