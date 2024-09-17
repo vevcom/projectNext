@@ -55,7 +55,7 @@ export function ServiceMethodHandler<
                 return prismaErrorWrapper(() => config.handler(prisma, params, data))
             },
         }),
-        typeValidate: config.validation.typeValidate,
+        typeValidate: config.validation.typeValidate.bind(config.validation),
         withData: true,
     } : ServiceMethodHandlerNoData(config)
 }
