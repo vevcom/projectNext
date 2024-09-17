@@ -2,8 +2,33 @@
 
 .wrapper {
     padding: 1em ohma.$minimalPagePadding;
-    h1 {
-        font-size: ohma.$fonts-xxl;
+    .top {
+        h1 {
+            font-size: ohma.$fonts-xxl;
+        }
+        display: flex;
+        justify-content: space-between;
+        .navButtons {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            a {
+                color: ohma.$colors-gray-800;
+                svg {
+                    width: 2.1em;
+                    height: 2.1em;
+                }
+            }
+        }
+    }
+    main {
+        margin: 2em 0;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 3em;
+        > * {
+            flex: 1 1 100%;
+        }
     }
 }
 .createEvent {
