@@ -138,13 +138,15 @@ export type ServiceMethodHandlerConfig<
     handler: (
         prisma: PrismaPossibleTransaction<WantsToOpenTransaction>,
         params: Params,
-        data: DetailedType
+        data: DetailedType,
+        session: SessionMaybeUser,
     ) => Promise<Return>,
 } : {
     withData: false,
     handler: (
         prisma: PrismaPossibleTransaction<WantsToOpenTransaction>,
-        params: Params
+        params: Params,
+        session: SessionMaybeUser,
     ) => Promise<Return>
 }
 

@@ -1,6 +1,8 @@
 import 'server-only'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
+import { Session } from '@/auth/Session'
+import type { SessionMaybeUser } from '@/auth/Session'
 import type {
     ServiceMethodHandlerConfig,
     ServiceMethodHandler,
@@ -46,13 +48,14 @@ export function ServiceMethodHandler<
         client: (prisma) => ({
             execute: ({
                 params,
+                session,
                 data: rawdata,
             }) => {
                 const data = config.validation.detailedValidate(rawdata)
                 if (prisma === 'NEW') {
-                    return prismaErrorWrapper(() => config.handler(globalPrisma, params, data))
+                    return prismaErrorWrapper(() => config.handler(globalPrisma, params, data, session ?? Session.empty()))
                 }
-                return prismaErrorWrapper(() => config.handler(prisma, params, data))
+                return prismaErrorWrapper(() => config.handler(prisma, params, data, session ?? Session.empty()))
             },
         }),
         typeValidate: config.validation.typeValidate.bind(config.validation),
@@ -67,15 +70,19 @@ function ServiceMethodHandlerNoData<
 >({
     handler,
 }: {
-    handler: (prisma: PrismaPossibleTransaction<WantsToOpenTransaction>, params: Params) => Promise<Return>
+    handler: (
+        prisma: PrismaPossibleTransaction<WantsToOpenTransaction>,
+        params: Params,
+        session: SessionMaybeUser
+    ) => Promise<Return>
 }): ServiceMethodHandler<false, void, void, Params, Return, WantsToOpenTransaction> {
     return {
         client: (prisma) => ({
-            execute: ({ params }) => {
+            execute: ({ params, session }) => {
                 if (prisma === 'NEW') {
-                    return prismaErrorWrapper(() => handler(globalPrisma, params))
+                    return prismaErrorWrapper(() => handler(globalPrisma, params, session ?? Session.empty()))
                 }
-                return prismaErrorWrapper(() => handler(prisma, params))
+                return prismaErrorWrapper(() => handler(prisma, params, session ?? Session.empty()))
             },
         }),
         withData: false,
