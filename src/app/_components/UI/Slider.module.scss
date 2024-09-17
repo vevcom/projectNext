@@ -49,6 +49,7 @@ $slider-width: 60px;
     }
 
     .label {
+        white-space: nowrap;
         font-size: ohma.$fonts-m;
         position: absolute;
         top: calc(-1 * ohma.$fonts-m - .2em);

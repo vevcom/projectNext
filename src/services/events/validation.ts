@@ -8,14 +8,14 @@ export const baseEventValidation = new ValidationBase({
     type: {
         name: z.string(),
         order: z.number().int().optional(),
-        eventStart: z.date(),
-        eventEnd: z.date(),
+        eventStart: z.string(),
+        eventEnd: z.string(),
         canBeViewdBy: z.nativeEnum(EventCanView),
 
-        takesRegistration: z.boolean(),
-        places: z.number().optional(),
-        registrationStart: z.date().optional(),
-        registrationEnd: z.date().optional(),
+        takesRegistration: z.string().optional(),
+        places: z.coerce.number().optional(),
+        registrationStart: z.string().optional(),
+        registrationEnd: z.string().optional(),
 
         tags: zfd.repeatable(z.string().array())
     },
@@ -48,5 +48,12 @@ export const createEventValidation = baseEventValidation.createValidation({
         'tags',
         'canBeViewdBy',
     ],
-    transformer: data => data
+    transformer: data => ({
+        ...data,
+        takesRegistration: data.takesRegistration ? data.takesRegistration === 'on' : false,
+        eventStart: new Date(data.eventStart),
+        eventEnd: new Date(data.eventEnd),
+        registrationStart: data.registrationStart ? new Date(data.registrationStart) : undefined,
+        registrationEnd: data.registrationEnd ? new Date(data.registrationEnd) : undefined,
+    })
 })

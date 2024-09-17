@@ -21,7 +21,7 @@ export const create = ServiceMethodHandler({
                 takesRegistration: data.takesRegistration,
                 places: data.places,
                 registrationStart: data.registrationStart ?? new Date(),
-                registrationEnd: data.registrationEnd ?? new Date(),
+                registrationEnd: data.registrationEnd ?? new Date(data.eventStart.getTime() + 1000 * 60 * 60 * 24),
                 canBeViewdBy: data.canBeViewdBy,
 
                 omegaOrder: {
