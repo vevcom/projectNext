@@ -1,24 +1,31 @@
 enum EventCanView {
-  CAN_JOIN
+  CAN_REGISTER
   ALL
 }
 
 model Event {
-  id                 Int          @id @default(autoincrement())
-  name               String
-  omegaOrder         OmegaOrder   @relation(fields: [order], references: [order])
-  order              Int
-  paragraph          CmsParagraph @relation(fields: [cmsParagraphId], references: [id])
-  cmsParagraphId     Int          @unique
-  reigistrationStart DateTime
-  reigistrationEnd   DateTime
-  places             Int
-  canBeViewdBy       EventCanView
+  id             Int             @id @default(autoincrement())
+  name           String
+  omegaOrder     OmegaOrder      @relation(fields: [order], references: [order])
+  order          Int
+  paragraph      CmsParagraph    @relation(fields: [cmsParagraphId], references: [id])
+  cmsParagraphId Int             @unique
+  coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
+  coverImageId   Int
+  EventTagEvent  EventTagEvent[]
 
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  EventRegistration EventRegistration[]
-  EventTagEvent     EventTagEvent[]
+  eventStart   DateTime
+  eventEnd     DateTime
+  canBeViewdBy EventCanView
+
+  takesRegistration  Boolean
+  places             Int                 @default(0)
+  registrationStart DateTime
+  registrationEnd   DateTime
+  EventRegistration  EventRegistration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([order, name])
 }
