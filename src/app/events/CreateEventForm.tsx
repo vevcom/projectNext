@@ -27,16 +27,16 @@ export default function CreateEventForm() {
                 name="canBeViewdBy"
                 options={CanBeViewdByOptions}
             />
-            <DateInput label="Start" name="eventStart" />
-            <DateInput label="Slutt" name="eventEnd" />
+            <DateInput label="Start" name="eventStart" includeTime/>
+            <DateInput label="Slutt" name="eventEnd" includeTime/>
 
             <Slider label="Med registrering" name="takesRegistration" onChange={handleShowRegistration}/>
             {
                 showRegistrationOptions ? (
                     <>
                         <NumberInput label="plasser" name="places" />
-                        <DateInput label="Registrering Start" name="registrationStart" />
-                        <DateInput label="Registrering Slutt" name="registrationEnd" />
+                        <DateInput label="Registrering Start" name="registrationStart" includeTime/>
+                        <DateInput label="Registrering Slutt" name="registrationEnd" includeTime/>
                     </>
                 ) : <></>
             }

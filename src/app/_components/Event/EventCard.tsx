@@ -4,9 +4,10 @@ import { Event } from '@prisma/client'
 import { ExpandedCmsImage } from '@/services/cms/images/Types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { EventFiltered } from '@/services/events/Types'
 
 type PropTypes = {
-    event: Event & {
+    event: EventFiltered & {
         coverImage: Pick<ExpandedCmsImage, 'image'>
     }
 }
