@@ -1,10 +1,10 @@
 import 'server-only'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
 import { createEventValidation } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import { v4 as uuid } from 'uuid'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
+import { v4 as uuid } from 'uuid'
 
 export const create = ServiceMethodHandler({
     withData: true,

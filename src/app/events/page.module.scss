@@ -6,3 +6,8 @@
         font-size: ohma.$fonts-xxl;
     }
 }
+.createEvent {
+    min-width: 50vw;
+    display: grid;
+    place-content: center;
+}

@@ -1,7 +1,7 @@
 'use server'
-import { Events } from "@/services/events";
-import { createZodActionError } from "../error";
-import { safeServerCall } from "@/actions/safeServerCall";
+import { createZodActionError } from '@/actions/error'
+import { Events } from '@/services/events'
+import { safeServerCall } from '@/actions/safeServerCall'
 import { Session } from '@/auth/Session'
 
 export async function createEventAction(rawData: FormData) {

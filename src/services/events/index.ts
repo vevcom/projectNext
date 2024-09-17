@@ -1,7 +1,7 @@
 import 'server-only'
-import { ServiceMethod } from "../ServiceMethod";
-import { CreateEventAuther } from "./Authers";
-import { create } from "./create";
+import { CreateEventAuther } from './Authers'
+import { create } from './create'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Events = {
     create: ServiceMethod({
