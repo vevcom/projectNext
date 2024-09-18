@@ -2,6 +2,7 @@
 
 $width: calc(290px + 5vw);
 $height: 480px;
+$imgHeight: $height / 2.5;
 
 .EventCard {
     width: $width;
@@ -9,10 +10,29 @@ $height: 480px;
     height: 480px;
     text-decoration: none;
     display: block;
+    color: inherit;
     .coverImage {
-        height: $height / 2;
-        img {
-            height: $height / 2;
+        height: $imgHeight;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        border-radius: calc(ohma.$rounding);
+        img, svg {
+            height: $imgHeight;
         }
+        img {
+            object-fit: cover;
+        }
+        svg {
+            color: ohma.$colors-gray-800
+        }
+    }
+    background-color: lighten(ohma.$colors-secondary, 40%);
+    border-radius: ohma.$cardRounding;
+    padding: 3em;
+    h2 {
+        font-size: ohma.$fonts-xl;
+        margin: 0.5em 0;
     }
 }

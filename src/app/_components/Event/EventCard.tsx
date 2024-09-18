@@ -25,9 +25,10 @@ export default function EventCard({ event }: PropTypes) {
                 event.coverImage.image ? <Image 
                     image={event.coverImage.image} 
                     width={300} 
-                /> : <></>
+                /> : <FontAwesomeIcon icon={faCalendar} />
             }
             </div>
+            <h2>{event.name}</h2>
             <ul>
                 <li>
                     <FontAwesomeIcon icon={faCalendar} />

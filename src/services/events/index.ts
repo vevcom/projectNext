@@ -2,7 +2,7 @@ import 'server-only'
 import { CreateEventAuther } from './Authers'
 import { create } from './create'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { readCurrent } from './read'
+import { readCurrent, read } from './read'
 
 export const Events = {
     create: ServiceMethod({
@@ -16,5 +16,10 @@ export const Events = {
         withData: false,
         serviceMethodHandler: readCurrent,
         hasAuther: false,
-    }) 
+    }),
+    read: ServiceMethod({
+        withData: false,
+        serviceMethodHandler: read,
+        hasAuther: false, //TODO: Visibility auth bypass event
+    })
 } as const

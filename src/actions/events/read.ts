@@ -10,3 +10,8 @@ export async function readCurrentEvents() {
         params: { tags: null, visibilityFilter: {} }, session,
     }))
 }
+
+export async function readEvent(params: {order: number, name: string}) {
+    const session = await Session.fromNextAuth()
+    return await safeServerCall(() => Events.read.client('NEW').execute({ params, session }))
+}
