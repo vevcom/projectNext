@@ -1,6 +1,7 @@
 import { readEvent } from '@/actions/events/read'
 import styles from './page.module.scss'
 import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
+import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 
 type PropTypes = {
     params: {
@@ -22,8 +23,19 @@ export default async function Event({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <span className={styles.coverImage}>
-                <CmsImage cmsImage={event.coverImage} width={700} />
+                <CmsImage cmsImage={event.coverImage} width={900} />
+                <div className={styles.infoInImage}>
+                    <h1>{event.name}</h1>
+                </div>
             </span>
+            <aside>
+                <p>
+                    {event.eventStart.toDateString()}
+                </p>
+            </aside>
+            <main>
+                <CmsParagraph cmsParagraph={event.paragraph} />
+            </main>
         </div>
     )
 }

@@ -17,7 +17,8 @@ export const read = ServiceMethodHandler({
                     include: {
                         image: true
                     }
-                }
+                },
+                paragraph: true
             }
         })
     }

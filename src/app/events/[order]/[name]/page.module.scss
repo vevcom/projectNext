@@ -1,5 +1,55 @@
 @use '@/styles/ohma';
 
+$padding: ohma.$minimalPagePadding;
+
 .wrapper {
-    
+    padding: 1em $padding;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    .coverImage {
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border-radius: ohma.$cardRounding;
+        overflow: hidden;
+        *:not(.infoInImage) {
+            width: calc(100vw - 2 * $padding) !important;
+            height: 40vh;
+        }
+        img {
+            object-fit: cover;
+        }
+        .infoInImage {
+            position: absolute;
+            width: 100%;
+            height: 10em;
+            left: 0;
+            bottom: 0;
+            background-color: rgba(ohma.$colors-secondary, 0.90);
+            padding: 1em;
+            h1 {
+                font-size: ohma.$fonts-xxl;
+                color: ohma.$colors-white;
+            }
+        }
+    }
+    > aside {
+        grid-column: 1 / 2;
+        grid-row: 2 / 3;
+        min-width: 200px;
+        background-color: ohma.$colors-secondary;
+        margin-top: 1em;
+        border-radius: ohma.$cardRounding;
+        padding: ohma.$cardRounding;
+        min-height: 300px;
+    }
+    > main {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+        margin: 1em;
+    }
 }
