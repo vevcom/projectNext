@@ -26,6 +26,7 @@
         display: flex;
         flex-flow: row wrap;
         gap: 3em;
+        justify-content: space-between;
         > * {
             flex: 1 1 100%;
         }

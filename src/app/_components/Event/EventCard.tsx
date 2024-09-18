@@ -1,10 +1,10 @@
 import React from 'react'
 import ImageCard from '../ImageCard/ImageCard'
-import { Event } from '@prisma/client'
 import { ExpandedCmsImage } from '@/services/cms/images/Types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
-import { EventFiltered } from '@/services/events/Types'
+import styles from './EventCard.module.scss'
+import type { EventFiltered } from '@/services/events/Types'
 
 type PropTypes = {
     event: EventFiltered & {
@@ -14,7 +14,12 @@ type PropTypes = {
 
 export default function EventCard({ event }: PropTypes) {
     return (
-        <ImageCard title={event.name} href={`/events/${event.order}/${event.name}`} image={event.coverImage.image}>
+        <ImageCard 
+            className={styles.EventCard}
+            title={event.name} 
+            href={`/events/${event.order}/${event.name}`} 
+            image={event.coverImage.image}
+        >
             <ul>
                 <li>
                     <FontAwesomeIcon icon={faCalendar} />
