@@ -1,9 +1,18 @@
 @use '@/styles/ohma';
 
 $width: calc(290px + 5vw);
+$height: 480px;
 
 .EventCard {
-    max-width: $width;
     width: $width;
+    max-width: $width;
     height: 480px;
+    text-decoration: none;
+    display: block;
+    .coverImage {
+        height: $height / 2;
+        img {
+            height: $height / 2;
+        }
+    }
 }
