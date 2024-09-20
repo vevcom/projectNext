@@ -9,6 +9,7 @@ import { displayDate } from '@/dates/displayDate'
 import Form from '@/app/_components/Form/Form'
 import { destroyEvent } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
+import CreateOrUpdateEventForm from '../../CreateOrUpdateEventForm'
 
 type PropTypes = {
     params: {
@@ -36,6 +37,7 @@ export default async function Event({ params }: PropTypes) {
                 </div>
                 <div className={styles.settings}>
                     <SettingsHeaderItemPopUp PopUpKey="EditEvent">
+                        <CreateOrUpdateEventForm event={event} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
                         <Form 
                             action={destroyEvent.bind(null, { id: event.id })}

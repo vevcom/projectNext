@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import CreateEventForm from './CreateEventForm'
+import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
@@ -27,7 +27,7 @@ export default async function Events() {
                     </Link>
                     <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                         <div className={styles.createEvent}>
-                            <CreateEventForm />
+                            <CreateOrUpdateEventForm />
                         </div>
                     </AddHeaderItemPopUp>
                 </div>
