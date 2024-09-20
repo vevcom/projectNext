@@ -1,5 +1,4 @@
 'use server'
-
 import { Session } from "@/auth/Session"
 import { Events } from "@/services/events"
 import { safeServerCall } from "../safeServerCall"

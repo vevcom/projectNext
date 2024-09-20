@@ -35,6 +35,10 @@ export const baseEventValidation = new ValidationBase({
     }
 })
 
+
+
+const dateTransformer = (date: string | undefined) => date ? new Date(date) : undefined
+
 export const createEventValidation = baseEventValidation.createValidation({
     keys: [
         'name',
@@ -53,7 +57,30 @@ export const createEventValidation = baseEventValidation.createValidation({
         takesRegistration: data.takesRegistration ? data.takesRegistration === 'on' : false,
         eventStart: new Date(data.eventStart),
         eventEnd: new Date(data.eventEnd),
-        registrationStart: data.registrationStart ? new Date(data.registrationStart) : undefined,
-        registrationEnd: data.registrationEnd ? new Date(data.registrationEnd) : undefined,
+        registrationStart: dateTransformer(data.registrationStart),
+        registrationEnd: dateTransformer(data.registrationEnd),
+    })
+})
+
+export const updateEventValidation = baseEventValidation.createValidationPartial({
+    keys: [
+        'name',
+        'order',
+        'eventStart',
+        'eventEnd',
+        'takesRegistration',
+        'places',
+        'registrationStart',
+        'registrationEnd',
+        'tags',
+        'canBeViewdBy',
+    ],
+    transformer: data => ({
+        ...data,
+        takesRegistration: data.takesRegistration ? data.takesRegistration === 'on' : false,
+        eventStart: dateTransformer(data.eventStart),
+        eventEnd: dateTransformer(data.eventEnd),
+        registrationStart: dateTransformer(data.registrationStart),
+        registrationEnd: dateTransformer(data.registrationEnd),
     })
 })
