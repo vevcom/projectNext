@@ -1,6 +1,7 @@
 import 'server-only'
 import { ServiceMethodHandler } from '../ServiceMethodHandler'
 import { eventFilterSeletion } from './ConfigVars'
+import { getOsloTime } from '@/dates/getOsloTime'
 
 export const read = ServiceMethodHandler({
     withData: false,
@@ -38,7 +39,7 @@ export const readCurrent = ServiceMethodHandler({
             },
             where: {
                 eventEnd: {
-                    gte: new Date()
+                    gte: getOsloTime()
                 },
                 ...params.visibilityFilter,
                 EventTagEvent: params.tags ? {

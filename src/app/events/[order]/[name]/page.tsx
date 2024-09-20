@@ -5,6 +5,7 @@ import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ShowAndEditName from './ShowAndEditName'
+import { displayDate } from '@/dates/displayDate'
 
 type PropTypes = {
     params: {
@@ -34,7 +35,7 @@ export default async function Event({ params }: PropTypes) {
             <aside>
                 <p>
                     <FontAwesomeIcon icon={faCalendar} />
-                    {event.eventStart.toDateString()} - {event.eventEnd.toDateString()}
+                    {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
                 </p>
             {
                 event.takesRegistration ? (
