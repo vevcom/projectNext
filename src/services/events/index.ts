@@ -4,6 +4,7 @@ import { create } from './create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readCurrent, read } from './read'
 import { update } from './update'
+import { destroy } from './destroy'
 
 export const Events = {
     create: ServiceMethod({
@@ -26,6 +27,11 @@ export const Events = {
     update: ServiceMethod({
         withData: true,
         serviceMethodHandler: update,
+        hasAuther: false, // TODO: Visibility auth bypass event
+    }),
+    destroy: ServiceMethod({
+        withData: false,
+        serviceMethodHandler: destroy,
         hasAuther: false, // TODO: Visibility auth bypass event
     })
 } as const

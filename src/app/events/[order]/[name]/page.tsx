@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import ShowAndEditName from './ShowAndEditName'
 import { displayDate } from '@/dates/displayDate'
+import Form from '@/app/_components/Form/Form'
+import { destroyEvent } from '@/actions/events/destroy'
+import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 
 type PropTypes = {
     params: {
@@ -30,6 +33,23 @@ export default async function Event({ params }: PropTypes) {
                 <CmsImage cmsImage={event.coverImage} width={900} />
                 <div className={styles.infoInImage}>
                     <ShowAndEditName event={event} />
+                </div>
+                <div className={styles.settings}>
+                    <SettingsHeaderItemPopUp PopUpKey="EditEvent">
+                        {/*TODO: Use auther to only display if it can be destroyd*/}
+                        <Form 
+                            action={destroyEvent.bind(null, { id: event.id })}
+                            navigateOnSuccess="/events"
+                            className={styles.destroyForm}
+                            buttonClassName={styles.destroyButton}
+                            submitText='Slett'
+                            submitColor='red'
+                            confirmation={{
+                                confirm: true,
+                                text: 'Er du sikker på at du vil slette dette arrangementet?'
+                            }}
+                        />
+                    </SettingsHeaderItemPopUp>
                 </div>
             </span>
             <aside>
