@@ -20,6 +20,9 @@ export default function CreateEventForm() {
     return (
         <Form
             action={createEventAction}
+            navigateOnSuccess={
+                data => data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events'
+            }
         >
             <TextInput label="Navn" name="name" />
             <SelectString

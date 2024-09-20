@@ -16,7 +16,7 @@ $padding: ohma.$minimalPagePadding;
         position: relative;
         border-radius: ohma.$cardRounding;
         overflow: hidden;
-        *:not(.infoInImage) {
+        *:not(.infoInImage *, .infoInImage) {
             width: calc(100vw - 2 * $padding) !important;
             height: 40vh;
         }
@@ -31,6 +31,8 @@ $padding: ohma.$minimalPagePadding;
             bottom: 0;
             background-color: rgba(ohma.$colors-secondary, 0.90);
             padding: 1em;
+            display: flex;
+            flex-direction: column;
             h1 {
                 font-size: ohma.$fonts-xxl;
                 color: ohma.$colors-white;

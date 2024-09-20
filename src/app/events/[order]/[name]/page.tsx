@@ -4,6 +4,7 @@ import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation } from '@fortawesome/free-solid-svg-icons'
+import ShowAndEditName from './ShowAndEditName'
 
 type PropTypes = {
     params: {
@@ -27,7 +28,7 @@ export default async function Event({ params }: PropTypes) {
             <span className={styles.coverImage}>
                 <CmsImage cmsImage={event.coverImage} width={900} />
                 <div className={styles.infoInImage}>
-                    <h1>{event.name}</h1>
+                    <ShowAndEditName event={event} />
                 </div>
             </span>
             <aside>
