@@ -38,18 +38,32 @@ $padding: ohma.$minimalPagePadding;
         }
     }
     > aside {
+        color: ohma.$colors-gray-800;
         grid-column: 1 / 2;
         grid-row: 2 / 3;
-        min-width: 200px;
+        min-width: 350px;
         background-color: ohma.$colors-secondary;
         margin-top: 1em;
         border-radius: ohma.$cardRounding;
         padding: ohma.$cardRounding;
         min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+        > p {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            font-size: ohma.$fonts-l;
+            svg {
+                width: 1.5em;
+                height: 1.5em;
+            }
+        }
     }
     > main {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
-        margin: 1em;
+        margin: 1em 3em;
     }
 }

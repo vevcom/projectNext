@@ -2,6 +2,8 @@ import { readEvent } from '@/actions/events/read'
 import styles from './page.module.scss'
 import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendar, faExclamation } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     params: {
@@ -30,8 +32,22 @@ export default async function Event({ params }: PropTypes) {
             </span>
             <aside>
                 <p>
-                    {event.eventStart.toDateString()}
+                    <FontAwesomeIcon icon={faCalendar} />
+                    {event.eventStart.toDateString()} - {event.eventEnd.toDateString()}
                 </p>
+            {
+                event.takesRegistration ? (
+                    <p>
+                        {event.places}
+                    </p>
+                ) : (
+                    <p>
+                        <FontAwesomeIcon icon={faExclamation} />
+                        Dette arrangementet tar ikke påmeldinger
+                    </p>
+                )
+            }
+                
             </aside>
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />
