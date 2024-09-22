@@ -35,6 +35,7 @@ export default function CreateOrUpdateEventForm({ event }: PropTypes) {
             closePopUpOnSuccess="EditEvent"
             action={action}
             submitText={event ? 'Oppdater' : 'Opprett'}
+            refreshOnSuccess
             navigateOnSuccess={
                 data => data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events'
             }

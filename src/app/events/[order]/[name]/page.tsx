@@ -3,7 +3,7 @@ import styles from './page.module.scss'
 import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import ShowAndEditName from './ShowAndEditName'
 import { displayDate } from '@/dates/displayDate'
 import Form from '@/app/_components/Form/Form'
@@ -62,6 +62,7 @@ export default async function Event({ params }: PropTypes) {
             {
                 event.takesRegistration ? (
                     <p>
+                        <FontAwesomeIcon icon={faUsers} />
                         {event.places}
                     </p>
                 ) : (
