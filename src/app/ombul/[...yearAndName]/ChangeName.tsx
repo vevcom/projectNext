@@ -40,7 +40,7 @@ export default function ChangeName({ children, editable, ombulId }: PropTypes) {
                 action: changeName,
                 successCallback: handleChange
             }}
-            inputName='name'
+            inputName="name"
             submitButton={{
                 text: 'Endre',
                 className: styles.changeNameButton

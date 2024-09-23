@@ -1,5 +1,6 @@
-import { Event, EventCanView } from '@prisma/client'
-import { createSelection } from '../createSelection'
+import { createSelection } from '@/services/createSelection'
+import { EventCanView } from '@prisma/client'
+import type { Event } from '@prisma/client'
 
 export const CanBeViewdByConfig = {
     ALL: { label: 'Alle' },

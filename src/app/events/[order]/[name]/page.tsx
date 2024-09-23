@@ -1,15 +1,15 @@
-import { readEvent } from '@/actions/events/read'
 import styles from './page.module.scss'
+import ShowAndEditName from './ShowAndEditName'
+import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
+import { readEvent } from '@/actions/events/read'
 import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
-import ShowAndEditName from './ShowAndEditName'
 import { displayDate } from '@/dates/displayDate'
 import Form from '@/app/_components/Form/Form'
 import { destroyEvent } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
-import CreateOrUpdateEventForm from '../../CreateOrUpdateEventForm'
+import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type PropTypes = {
     params: {
@@ -21,7 +21,7 @@ type PropTypes = {
 export default async function Event({ params }: PropTypes) {
     const res = await readEvent({
         name: decodeURIComponent(params.name),
-        order: parseInt(params.order)
+        order: parseInt(params.order, 10)
     })
     if (!res.success) {
         throw new Error('Failed to read event')
@@ -39,13 +39,13 @@ export default async function Event({ params }: PropTypes) {
                     <SettingsHeaderItemPopUp PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
-                        <Form 
+                        <Form
                             action={destroyEvent.bind(null, { id: event.id })}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}
-                            submitText='Slett'
-                            submitColor='red'
+                            submitText="Slett"
+                            submitColor="red"
                             confirmation={{
                                 confirm: true,
                                 text: 'Er du sikker på at du vil slette dette arrangementet?'
@@ -59,20 +59,20 @@ export default async function Event({ params }: PropTypes) {
                     <FontAwesomeIcon icon={faCalendar} />
                     {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
                 </p>
-            {
-                event.takesRegistration ? (
-                    <p>
-                        <FontAwesomeIcon icon={faUsers} />
-                        {event.places}
-                    </p>
-                ) : (
-                    <p>
-                        <FontAwesomeIcon icon={faExclamation} />
+                {
+                    event.takesRegistration ? (
+                        <p>
+                            <FontAwesomeIcon icon={faUsers} />
+                            {event.places}
+                        </p>
+                    ) : (
+                        <p>
+                            <FontAwesomeIcon icon={faExclamation} />
                         Dette arrangementet tar ikke påmeldinger
-                    </p>
-                )
-            }
-                
+                        </p>
+                    )
+                }
+
             </aside>
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />

@@ -1,88 +1,82 @@
 import 'server-only'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
 import { eventFilterSeletion } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
 import { getOsloTime } from '@/dates/getOsloTime'
-import { ReadPageInput } from '../paging/Types'
-import { EventArchiveCursor, EventArchiveDetails } from './Types'
-import { cursorPageingSelection } from '../paging/cursorPageingSelection'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { EventArchiveCursor, EventArchiveDetails } from './Types'
 
 export const read = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: {order: number, name: string}) => {
-        return await prisma.event.findUniqueOrThrow({
-            where: {
-                order_name: {
-                    order: params.order,
-                    name: params.name
+    handler: async (prisma, params: {order: number, name: string}) => await prisma.event.findUniqueOrThrow({
+        where: {
+            order_name: {
+                order: params.order,
+                name: params.name
+            }
+        },
+        include: {
+            coverImage: {
+                include: {
+                    image: true
                 }
             },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                },
-                paragraph: true
-            }
-        })
-    }
+            paragraph: true
+        }
+    })
 })
 
 export const readCurrent = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: { tags: string[] | null, visibilityFilter: object }) => {
-        return await prisma.event.findMany({
-            select: {
-                ...eventFilterSeletion,
-                coverImage: {
-                    include: {
-                        image: true
-                    }
+    handler: async (prisma, params: { tags: string[] | null, visibilityFilter: object }) => await prisma.event.findMany({
+        select: {
+            ...eventFilterSeletion,
+            coverImage: {
+                include: {
+                    image: true
                 }
+            }
+        },
+        where: {
+            eventEnd: {
+                gte: getOsloTime()
             },
-            where: {
-                eventEnd: {
-                    gte: getOsloTime()
-                },
-                ...params.visibilityFilter,
-                EventTagEvent: params.tags ? {
-                    some: {
-                        tag: {
-                            name: {
-                                in: params.tags
-                            }
+            ...params.visibilityFilter,
+            EventTagEvent: params.tags ? {
+                some: {
+                    tag: {
+                        name: {
+                            in: params.tags
                         }
                     }
-                } : undefined
-            }
-        })
-    }
+                }
+            } : undefined
+        }
+    })
 })
 
 export const readArchivedPage = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: {
         paging: ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-    }) => {
-        return await prisma.event.findMany({
-            ...cursorPageingSelection(params.paging.page),
-            where: {
-                eventEnd: {
-                    lt: getOsloTime()
-                },
-                name: {
-                    contains: params.paging.details.name,
-                    mode: 'insensitive'
-                }
+    }) => await prisma.event.findMany({
+        ...cursorPageingSelection(params.paging.page),
+        where: {
+            eventEnd: {
+                lt: getOsloTime()
             },
-            select: {
-                ...eventFilterSeletion,
-                coverImage: {
-                    include: {
-                        image: true
-                    }
+            name: {
+                contains: params.paging.details.name,
+                mode: 'insensitive'
+            }
+        },
+        select: {
+            ...eventFilterSeletion,
+            coverImage: {
+                include: {
+                    image: true
                 }
-            },
-        })
-    }
+            }
+        },
+    })
 })

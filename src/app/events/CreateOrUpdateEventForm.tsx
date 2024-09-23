@@ -6,11 +6,11 @@ import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
-import { useState } from 'react'
-import type { ChangeEvent } from 'react'
-import { Event } from '@prisma/client'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
+import { useState } from 'react'
+import type { Event } from '@prisma/client'
+import type { ChangeEvent } from 'react'
 
 type PropTypes = {
     event?: Event
@@ -20,14 +20,14 @@ type PropTypes = {
  * If an event is provided, the form will update the event.
  * If no event is provided, the form will create a new event.
  * @param event - The event to update
- * @returns 
+ * @returns
  */
 export default function CreateOrUpdateEventForm({ event }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
     const action = event ? updateEventAction.bind(null, { id: event.id }) : createEventAction
 
-    const handleShowRegistration = (event: ChangeEvent<HTMLInputElement>) => {
-        setShowRegistrationOptions(event.target.checked)
+    const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
+        setShowRegistrationOptions(changeEvent.target.checked)
     }
 
     return (
@@ -37,7 +37,7 @@ export default function CreateOrUpdateEventForm({ event }: PropTypes) {
             submitText={event ? 'Oppdater' : 'Opprett'}
             refreshOnSuccess
             navigateOnSuccess={
-                data => data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events'
+                data => (data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events')
             }
         >
             <TextInput label="Navn" name="name" defaultValue={event?.name} />
@@ -50,29 +50,29 @@ export default function CreateOrUpdateEventForm({ event }: PropTypes) {
             <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
             <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
 
-            <Slider 
-                label="Med registrering" 
-                name="takesRegistration" 
-                onChange={handleShowRegistration} 
+            <Slider
+                label="Med registrering"
+                name="takesRegistration"
+                onChange={handleShowRegistration}
                 defaultChecked={event?.takesRegistration}
             />
             {
                 showRegistrationOptions ? (
                     <>
-                        <NumberInput 
-                            label="plasser" 
-                            name="places" 
-                            defaultValue={event?.places} 
+                        <NumberInput
+                            label="plasser"
+                            name="places"
+                            defaultValue={event?.places}
                         />
-                        <DateInput 
-                            label="Registrering Start" 
-                            name="registrationStart" 
+                        <DateInput
+                            label="Registrering Start"
+                            name="registrationStart"
                             defaultValue={event?.registrationStart}
                             includeTime
                         />
-                        <DateInput 
-                            label="Registrering Slutt" 
-                            name="registrationEnd" 
+                        <DateInput
+                            label="Registrering Slutt"
+                            name="registrationEnd"
                             defaultValue={event?.registrationEnd}
                             includeTime
                         />

@@ -1,7 +1,7 @@
 import 'server-only'
 import { updateEventValidation } from './validation'
+import { ServerError } from '@/services/error'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { ServerError } from '../error'
 
 export const update = ServiceMethodHandler({
     withData: true,
@@ -10,7 +10,7 @@ export const update = ServiceMethodHandler({
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }
         })
-        
+
         if ((data.eventStart ?? event?.eventStart) > (data.eventEnd ?? event?.eventEnd)) {
             throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')
         }

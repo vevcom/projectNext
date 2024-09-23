@@ -1,5 +1,5 @@
 import 'server-only'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 export const destroy = ServiceMethodHandler({
     withData: false,

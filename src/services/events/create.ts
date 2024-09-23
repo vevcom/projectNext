@@ -4,9 +4,9 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
-import { v4 as uuid } from 'uuid'
 import { getOsloTime } from '@/dates/getOsloTime'
 import { ServerError } from '@/services/error'
+import { v4 as uuid } from 'uuid'
 
 export const create = ServiceMethodHandler({
     withData: true,

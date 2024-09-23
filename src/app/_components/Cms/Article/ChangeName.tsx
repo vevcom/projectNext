@@ -31,7 +31,7 @@ export default function ChangeName({ article }: PropTypes) {
                     successCallback
                 }
             }
-            inputName='name'
+            inputName="name"
             submitButton={{
                 text: 'lagre',
                 className: styles.submitNameButton

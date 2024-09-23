@@ -1,9 +1,9 @@
 'use server'
 
-import { Session } from "@/auth/Session"
-import { safeServerCall } from "../safeServerCall"
-import { Events } from "@/services/events"
-import { createZodActionError } from "../error"
+import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError } from '@/actions/error'
+import { Session } from '@/auth/Session'
+import { Events } from '@/services/events'
 
 export async function updateEventAction(params: { id: number }, rawData: FormData) {
     const session = await Session.fromNextAuth()

@@ -1,8 +1,8 @@
 'use server'
 
-import { Session } from "@/auth/Session"
-import { safeServerCall } from "../safeServerCall"
-import { Events } from "@/services/events"
+import { safeServerCall } from '@/actions/safeServerCall'
+import { Session } from '@/auth/Session'
+import { Events } from '@/services/events'
 
 export async function destroyEvent(params: { id: number }) {
     const session = await Session.fromNextAuth()

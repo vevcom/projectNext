@@ -1,7 +1,7 @@
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import EventArchiveList from './EventArchiveList'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
-import EventArchiveList from './EventArchiveList'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 export default async function EventArchive() {
     return (

@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
+import EventsLandingLayout from './EventsLandingLayout'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import { faArchive, faTag } from '@fortawesome/free-solid-svg-icons'
-import EventsLandingLayout from './EventsLandingLayout'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
@@ -14,7 +14,7 @@ export default async function Events() {
     const currentEvents = currentEventsResponse.data
 
     return (
-        <EventsLandingLayout title='Hvad Der Hender' headerLinks={[
+        <EventsLandingLayout title="Hvad Der Hender" headerLinks={[
             {
                 href: '/admin/eventtags',
                 icon: faTag
@@ -24,17 +24,17 @@ export default async function Events() {
                 icon: faArchive
             }
         ]}
-            headerItem={
-                <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
-                    <div className={styles.createEvent}>
-                        <CreateOrUpdateEventForm />
-                    </div>
-                </AddHeaderItemPopUp>
-            }
-        >   
+        headerItem={
+            <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
+                <div className={styles.createEvent}>
+                    <CreateOrUpdateEventForm />
+                </div>
+            </AddHeaderItemPopUp>
+        }
+        >
             {
-                currentEvents.map(event => 
-                    <EventCard event={event} />
+                currentEvents.map(event =>
+                    <EventCard event={event} key={event.id} />
                 )
             }
         </EventsLandingLayout>

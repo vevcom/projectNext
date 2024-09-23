@@ -1,8 +1,8 @@
 'use client'
+import styles from './ShowAndEditName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateEventAction } from '@/actions/events/update'
-import { Event } from '@prisma/client'
-import styles from './ShowAndEditName.module.scss'
+import type { Event } from '@prisma/client'
 
 type PropTypes = {
     event: Event
@@ -10,17 +10,17 @@ type PropTypes = {
 
 export default function ShowAndEditName({ event }: PropTypes) {
     const updateAction = updateEventAction.bind(null, { id: event.id })
-    
+
     return (
-        <EditableTextField 
+        <EditableTextField
             formProps={{
                 action: updateAction,
-                navigateOnSuccess: data => data?.name
+                navigateOnSuccess: data => (data?.name
                     ? `/events/${event.order}/${encodeURIComponent(data.name)}`
-                    : '/events',
+                    : '/events'),
             }}
             editable={true} //TODO: auther
-            inputName='name'
+            inputName="name"
             submitButton={{
                 text: 'Lagre',
                 className: styles.submitButton

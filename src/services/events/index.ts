@@ -1,10 +1,10 @@
 import 'server-only'
 import { CreateEventAuther } from './Authers'
 import { create } from './create'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { readCurrent, read, readArchivedPage } from './read'
 import { update } from './update'
 import { destroy } from './destroy'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Events = {
     create: ServiceMethod({

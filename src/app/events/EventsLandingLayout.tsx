@@ -1,8 +1,8 @@
-import type { ReactNode } from "react"
 import styles from './EventsLandingLayout.module.scss'
-import type { IconDefinition } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import Link from "next/link"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     headerLinks: {
@@ -26,7 +26,7 @@ export default function EventsLandingLayout({
                 <h1>{title}</h1>
                 <div className={styles.navButtons}>
                     {
-                        headerLinks.map(item => 
+                        headerLinks.map(item =>
                             <Link href={item.href} key={item.href}>
                                 <FontAwesomeIcon icon={item.icon} />
                             </Link>

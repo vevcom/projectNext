@@ -36,8 +36,7 @@ export const baseEventValidation = new ValidationBase({
 })
 
 
-
-const dateTransformer = (date: string | undefined) => date ? new Date(date) : undefined
+const dateTransformer = (date: string | undefined) => (date ? new Date(date) : undefined)
 
 export const createEventValidation = baseEventValidation.createValidation({
     keys: [
