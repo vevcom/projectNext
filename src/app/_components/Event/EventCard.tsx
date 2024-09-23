@@ -1,16 +1,13 @@
 import React from 'react'
-import { ExpandedCmsImage } from '@/services/cms/images/Types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
 import styles from './EventCard.module.scss'
-import type { EventFiltered } from '@/services/events/Types'
+import type { EventFilteredWithImage } from '@/services/events/Types'
 import Link from 'next/link'
 import Image from '@/components/Image/Image'
 
 type PropTypes = {
-    event: EventFiltered & {
-        coverImage: Pick<ExpandedCmsImage, 'image'>
-    }
+    event: EventFilteredWithImage
 }
 
 export default function EventCard({ event }: PropTypes) {

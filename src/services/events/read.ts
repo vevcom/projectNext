@@ -2,6 +2,8 @@ import 'server-only'
 import { ServiceMethodHandler } from '../ServiceMethodHandler'
 import { eventFilterSeletion } from './ConfigVars'
 import { getOsloTime } from '@/dates/getOsloTime'
+import { ReadPageInput } from '../paging/Types'
+import { EventArchiveCursor, EventArchiveDetails } from './Types'
 
 export const read = ServiceMethodHandler({
     withData: false,
@@ -52,6 +54,33 @@ export const readCurrent = ServiceMethodHandler({
                     }
                 } : undefined
             }
+        })
+    }
+})
+
+export const readArchivedPage = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, params: {
+        paging: ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+    }) => {
+        return await prisma.event.findMany({
+            where: {
+                eventEnd: {
+                    lt: getOsloTime()
+                },
+                name: {
+                    contains: params.paging.details.name,
+                    mode: 'insensitive'
+                }
+            },
+            select: {
+                ...eventFilterSeletion,
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            },
         })
     }
 })

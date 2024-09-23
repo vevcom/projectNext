@@ -2,6 +2,8 @@
 import { Session } from "@/auth/Session"
 import { Events } from "@/services/events"
 import { safeServerCall } from "../safeServerCall"
+import { ReadPageInput } from "@/services/paging/Types"
+import { EventArchiveCursor, EventArchiveDetails } from "@/services/events/Types"
 
 export async function readCurrentEvents() {
     const session = await Session.fromNextAuth()
@@ -13,4 +15,9 @@ export async function readCurrentEvents() {
 export async function readEvent(params: {order: number, name: string}) {
     const session = await Session.fromNextAuth()
     return await safeServerCall(() => Events.read.client('NEW').execute({ params, session }))
+}
+
+export async function readArchivedEventsPage<const PageSize extends number>(paging: ReadPageInput<PageSize, EventArchiveCursor, EventArchiveDetails>) {
+    const session = await Session.fromNextAuth()
+    return await safeServerCall(() => Events.readArchivedPage.client('NEW').execute({ session, params: { paging: paging } }))
 }

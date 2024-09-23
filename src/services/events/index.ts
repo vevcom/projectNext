@@ -2,7 +2,7 @@ import 'server-only'
 import { CreateEventAuther } from './Authers'
 import { create } from './create'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { readCurrent, read } from './read'
+import { readCurrent, read, readArchivedPage } from './read'
 import { update } from './update'
 import { destroy } from './destroy'
 
@@ -17,6 +17,11 @@ export const Events = {
     readCurrent: ServiceMethod({
         withData: false,
         serviceMethodHandler: readCurrent,
+        hasAuther: false,
+    }),
+    readArchivedPage: ServiceMethod({
+        withData: false,
+        serviceMethodHandler: readArchivedPage,
         hasAuther: false,
     }),
     read: ServiceMethod({
