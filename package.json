@@ -25,6 +25,7 @@
     "eslint-config-next": "^14.2.5",
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.2",
+    "jsqr": "^1.4.0",
     "luxon": "^3.5.0",
     "next": "^14.2.5",
     "next-auth": "^4.24.7",

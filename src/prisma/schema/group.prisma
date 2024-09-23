@@ -44,9 +44,10 @@ model Group {
   manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
+  LockerReservation    LockerReservation[]
+  mailingLists         MailingListGroup[]
 
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
-  mailingLists               MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain

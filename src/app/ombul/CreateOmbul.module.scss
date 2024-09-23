@@ -3,6 +3,9 @@
 .CreateOmbul {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    @include ohma.screenMobile {
+        grid-template-columns: 1fr;
+    }
     grid-template-rows: auto auto;
     gap: ohma.$gap;
     h1 {

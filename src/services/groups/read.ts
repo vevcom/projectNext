@@ -268,6 +268,27 @@ export function checkGroupValidity<
     }
 }
 
+export async function readGroupsOfUser(id: number) {
+    const memberships = await prisma.membership.findMany({
+        where: { userId: id },
+        include: {
+            group: {
+                include: {
+                    class: true,
+                    committee: true,
+                    interestGroup: true,
+                    manualGroup: true,
+                    omegaMembershipGroup: true,
+                    studyProgramme: true,
+                }
+            }
+        }
+    })
+
+    const groups = memberships.map(item => checkGroupValidity(item.group))
+    return groups
+}
+
 /**
  * This function tries to give a name to a group based on the group type and the group data.
  * @param group - The group to infer the name of
