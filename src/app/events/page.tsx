@@ -3,9 +3,8 @@ import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArchive, faTag } from '@fortawesome/free-solid-svg-icons'
-import Link from 'next/link'
+import EventsLandingLayout from './EventsLandingLayout'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
@@ -15,31 +14,29 @@ export default async function Events() {
     const currentEvents = currentEventsResponse.data
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.top}>
-                <h1>Hvad Der Hender</h1>
-                <div className={styles.navButtons}>
-                    <Link href="/admin/eventtags">
-                        <FontAwesomeIcon icon={faTag} />
-                    </Link>
-                    <Link href="/events/archive">
-                        <FontAwesomeIcon icon={faArchive} />
-                    </Link>
-                    <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
-                        <div className={styles.createEvent}>
-                            <CreateOrUpdateEventForm />
-                        </div>
-                    </AddHeaderItemPopUp>
-                </div>
-            </div>
-            
-            <main>
+        <EventsLandingLayout title='Hvad Der Hender' headerLinks={[
+            {
+                href: '/admin/eventtags',
+                icon: faTag
+            },
+            {
+                href: '/events/archive',
+                icon: faArchive
+            }
+        ]}
+            headerItem={
+                <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
+                    <div className={styles.createEvent}>
+                        <CreateOrUpdateEventForm />
+                    </div>
+                </AddHeaderItemPopUp>
+            }
+        >   
             {
                 currentEvents.map(event => 
                     <EventCard event={event} />
                 )
             }
-            </main>
-        </div>
+        </EventsLandingLayout>
     )
 }
