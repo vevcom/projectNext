@@ -12,4 +12,4 @@ export type ExpandedEvent = EventFiltered
 
 export type EventArchiveCursor = { id: number }
 
-export type EventArchiveDetails = { name: string }
+export type EventArchiveDetails = { name?: string }

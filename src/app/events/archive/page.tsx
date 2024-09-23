@@ -1,5 +1,7 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import EventsLandingLayout from '../EventsLandingLayout'
+import EventsLandingLayout from '@/app/events/EventsLandingLayout'
+import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
+import EventArchiveList from './EventArchiveList'
 
 export default async function EventArchive() {
     return (
@@ -9,7 +11,12 @@ export default async function EventArchive() {
                 icon: faArrowLeft
             }
         ]} headerItem={<></>}>
-            <></>
+            <EventArchivePagingProvider serverRenderedData={[]} startPage={{
+                page: 0,
+                pageSize: 12
+            }} details={{}}>
+                <EventArchiveList />
+            </EventArchivePagingProvider>
         </EventsLandingLayout>
     )
 }

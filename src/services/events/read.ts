@@ -4,6 +4,7 @@ import { eventFilterSeletion } from './ConfigVars'
 import { getOsloTime } from '@/dates/getOsloTime'
 import { ReadPageInput } from '../paging/Types'
 import { EventArchiveCursor, EventArchiveDetails } from './Types'
+import { cursorPageingSelection } from '../paging/cursorPageingSelection'
 
 export const read = ServiceMethodHandler({
     withData: false,
@@ -64,6 +65,7 @@ export const readArchivedPage = ServiceMethodHandler({
         paging: ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
     }) => {
         return await prisma.event.findMany({
+            ...cursorPageingSelection(params.paging.page),
             where: {
                 eventEnd: {
                     lt: getOsloTime()
