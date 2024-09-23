@@ -55,6 +55,7 @@ export default async function migrateImages(
         include: {
             Ombul: true,
             Articles: true,
+            Events: true,
         }
     })
 
@@ -74,6 +75,7 @@ export default async function migrateImages(
         if (!limits.numberOffFullImageCollections) return true
         if (image.Ombul.length) return true
         if (image.Articles.length) return true
+        if (image.Events.length) return true
         if (image.collectionId === ombulCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false

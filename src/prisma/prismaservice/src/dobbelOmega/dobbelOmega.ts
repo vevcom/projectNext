@@ -27,7 +27,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateOmegaquotes(pnPrisma, vevenPrisma, limits)
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, vevenPrisma, limits)
-    await migrateEvents(pnPrisma, vevenPrisma, limits)
+    await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, limits)
 
     vevenPrisma.$disconnect()
     console.log('=======Dobbel Omega ferdig, dagen derpå=======')

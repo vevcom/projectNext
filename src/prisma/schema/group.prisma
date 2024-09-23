@@ -70,6 +70,7 @@ model Committee {
   shortName   String   @unique
   logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId Int      @unique
+  Event       Event[]
 }
 
 model InterestGroup {
