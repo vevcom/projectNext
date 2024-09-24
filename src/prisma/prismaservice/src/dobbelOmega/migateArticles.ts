@@ -1,9 +1,9 @@
 import { vevenIdToPnId } from './IdMapper'
+import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
-import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 
 /**
  * WARNING: This function is not complete, it does not migrate the InfoPages, only the articles (news)

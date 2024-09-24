@@ -1,8 +1,8 @@
+import { vevenIdToPnId, type IdMapper } from './IdMapper'
+import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import { vevenIdToPnId, type IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
-import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 
 export default async function migrateEvents(
     pnPrisma: PrismaClientPn,
@@ -10,8 +10,8 @@ export default async function migrateEvents(
     imageIdMap: IdMapper,
     limits: Limits
 ) {
-    const events = await vevenPrisma.events.findMany({ 
-        take: limits.events ? limits.events : undefined, 
+    const events = await vevenPrisma.events.findMany({
+        take: limits.events ? limits.events : undefined,
         include: {
             Images: true,
             Committees: true,
@@ -36,7 +36,7 @@ export default async function migrateEvents(
                 updatedAt: event.updatedAt,
             }
         })
-        
+
         await pnPrisma.event.create({
             data: {
                 name: event.title,

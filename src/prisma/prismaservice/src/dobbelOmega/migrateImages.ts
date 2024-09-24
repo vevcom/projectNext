@@ -37,8 +37,12 @@ export default async function migrateImages(
                 create: {
                     purpose: 'IMAGE',
                     published: true,
-                    regularLevel: {},
-                    adminLevel: {},
+                    regularLevel: {
+                        create: {}
+                    },
+                    adminLevel: {
+                        create: {}
+                    },
                 }
             }
         },
