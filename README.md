@@ -1,9 +1,9 @@
-## Config
+# Project Next
+Project Next is the new webpage for Sanctus Omega Broderskab.
 
-You need a .env file (this file is gitignored). You can find default values in default.env.
-Either copy theese to ./.env file or use the --env-file default.env flag when building
+## Getting started
 
-You will also need to copy next-env.default.d.ts into a new file next-env.d.ts (gitignored)
+For getting started please refer to our [Getting Started Guide](https://github.com/vevcom/projectNext/wiki/Getting_Started).
 
 ## Development
 
@@ -15,7 +15,7 @@ docker compose -f docker-compose.dev.yml up --build
 
 #### DevContainer
 
-To streamline development in VSCode you can use a devContainer. First download the [devContainer extension](vscode:extension/ms-vscode-remote.remote-containers). Then open the project inside the container. In the container you should have all the tools you need for development.
+To setup the development container see [this guide](https://github.com/vevcom/projectNext/wiki/Getting_Started#development-container).
 
 If you want to have access to the container outside vscode, use the command bellow.
 ```bash
