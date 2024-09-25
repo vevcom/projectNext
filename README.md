@@ -1,5 +1,5 @@
 # Project Next
-Project Next is the new webpage for Sanctus Omega Broderskab.
+Project Next is the new website for Sanctus Omega Broderskab.
 
 ## Getting started
 
