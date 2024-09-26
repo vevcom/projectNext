@@ -18,7 +18,17 @@ export default async function migrateEvents(
             EventRegistrations: true,
         }
     })
-    Promise.all(events.map(async event => {
+    //Make sure no events have same title and order
+    events.forEach((event) => {
+        const sameTitle = events.filter(e => e.title === event.title)
+        if (sameTitle.length > 1) {
+            sameTitle.forEach((e, i) => {
+                e.title = `${e.title} (${i + 1})`
+            })
+        }
+    })
+
+    await Promise.all(events.map(async event => {
         const coverId = vevenIdToPnId(imageIdMap, event.ImageId)
         const coverIage = await pnPrisma.cmsImage.create({
             data: {
@@ -37,10 +47,12 @@ export default async function migrateEvents(
             }
         })
 
+        const order = await upsertOrderBasedOnDate(pnPrisma, event.createdAt)
+
         await pnPrisma.event.create({
             data: {
                 name: event.title,
-                order: await upsertOrderBasedOnDate(pnPrisma, event.createdAt),
+                order,
                 createdAt: event.createdAt,
                 updatedAt: event.updatedAt,
                 canBeViewdBy: 'ALL',
@@ -62,8 +74,17 @@ export default async function migrateEvents(
             Committees: true,
         }
     })
+    //Make sure no events have same title and order
+    simpleEvents.forEach((event) => {
+        const sameTitle = simpleEvents.filter(e => e.title === event.title)
+        if (sameTitle.length > 1) {
+            sameTitle.forEach((e, i) => {
+                e.title = `${e.title} (${i + 1})`
+            })
+        }
+    })
 
-    Promise.all(simpleEvents.map(async simpleEvent => {
+    await Promise.all(simpleEvents.map(async simpleEvent => {
         const coverIage = await pnPrisma.cmsImage.create({
             data: {
                 image: undefined
@@ -76,10 +97,13 @@ export default async function migrateEvents(
                 updatedAt: simpleEvent.updatedAt,
             }
         })
+
+        const order = await upsertOrderBasedOnDate(pnPrisma, simpleEvent.createdAt)
+
         await pnPrisma.event.create({
             data: {
                 name: simpleEvent.title,
-                order: await upsertOrderBasedOnDate(pnPrisma, simpleEvent.createdAt),
+                order,
                 createdAt: simpleEvent.createdAt,
                 updatedAt: simpleEvent.updatedAt,
                 canBeViewdBy: 'ALL',
