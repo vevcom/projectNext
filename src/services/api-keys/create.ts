@@ -2,6 +2,7 @@ import 'server-only'
 import { createApiKeyValidation } from './validation'
 import { apiKeyFilterSelection, KeyLength } from './ConfigVars'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
+import { encodeApiKey } from './apiKeyEncoder'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import crypto from 'crypto'
@@ -14,7 +15,7 @@ export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Prom
     const NODE_ENV = process.env.NODE_ENV
     const prepend = NODE_ENV === 'production' ? 'prod' : 'dev'
 
-    const key = prepend + crypto.randomBytes(KeyLength - prepend.length).toString('base64')
+    const key = prepend + crypto.randomBytes(KeyLength - prepend.length).toString('hex')
     const keyHashEncrypted = await apiKeyHashAndEncrypt(key)
 
     const apiKey = await prismaCall(() => prisma.apiKey.create({
@@ -25,5 +26,5 @@ export async function createApiKey(rawdata: CreateApiKeyTypes['Detailed']): Prom
         },
         select: apiKeyFilterSelection
     }))
-    return { ...apiKey, key }
+    return { ...apiKey, key: encodeApiKey({ key, id: apiKey.id }) }
 }
