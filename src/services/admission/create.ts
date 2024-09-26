@@ -1,15 +1,17 @@
 import 'server-only'
 import { createAdmissionTrialValidation } from './validation'
 import { readUserAdmissionTrials } from './read'
+import { userFilterSelection } from '@/services/users/ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import prisma from '@/prisma'
-import { Admission, type AdmissionTrial } from '@prisma/client'
+import { Admission } from '@prisma/client'
 import type { CreateAdmissionTrialType } from './validation'
+import type { ExpandedAdmissionTrial } from './Types'
 
 export async function createAdmissionTrial(
     data: CreateAdmissionTrialType['Detailed']
-): Promise<AdmissionTrial> {
+): Promise<ExpandedAdmissionTrial> {
     const parse = createAdmissionTrialValidation.detailedValidate(data)
 
     const results = await prismaCall(() => prisma.admissionTrial.create({
@@ -25,6 +27,11 @@ export async function createAdmissionTrial(
                 },
             },
             admission: parse.admission,
+        },
+        include: {
+            user: {
+                select: userFilterSelection
+            }
         }
     }))
 

@@ -21,8 +21,6 @@ export function readJWTPayload<T = Record<string, unknown>>(jwtString: string): 
         throw new Error('Invalid JWT string')
     }
 
-    console.log(payload)
-
     return payload
 }
 

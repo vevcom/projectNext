@@ -22,6 +22,22 @@ If you want to have access to the container outside vscode, use the command bell
 docker exec -it -w /workspaces/projectNext pn-dev /bin/bash
 ```
 
+If you want to start the container standalone then you first need to build the docker image. Use this command for building.
+```bash
+docker build -t pn-dev .devcontainer/
+```
+
+Then use this command to start a new container
+```bash
+docker run -it --rm \
+    -w /workspaces/projectNext \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ./:/workspaces/projectNext \
+    -e PROJECT_ROOT="$(pwd)" \
+    --name pn-dev \
+    pn-dev /bin/bash
+```
+
 #### Working with the DB
 
 To remigrate the db, just rerun the prisma container
