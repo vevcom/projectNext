@@ -1,23 +1,18 @@
 'use client'
-
 import { resetPasswordAction } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { useRouter } from 'next/navigation'
 
-
-export default function ResetPasswordForm({
-    token,
-}: {
+type PropTypes = {
     token: string
-}) {
-    const { push } = useRouter()
+}
 
+export default function ResetPasswordForm({ token }: PropTypes) {
     return <Form
         title="Nullstill passord"
         submitText="Endre passord"
         action={resetPasswordAction.bind(null, token)}
-        successCallback={() => push('/login')}
+        navigateOnSuccess="/login"
     >
         <TextInput name="password" type="password" label="Passord" />
         <TextInput name="confirmPassword" type="password" label="Bekreft passord" />

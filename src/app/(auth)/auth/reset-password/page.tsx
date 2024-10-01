@@ -1,23 +1,18 @@
-'use server'
-
 import ResetPasswordForm from './resetpasswordForm'
-import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { ServerError } from '@/services/error'
+import { verifyResetPasswordTokenAction } from '@/actions/auth/resetPassword'
 
+type PropTypes = {
+    searchParams: Record<string, string | string[] | undefined>
+}
 
-export default async function ResetPassword({
-    searchParams,
-}: {
-    searchParams: Record<string, string | string[] | undefined>,
-}) {
-    const verify = await safeServerCall(async () => {
-        if (typeof searchParams.token !== 'string') {
-            throw new ServerError('JWT INVALID', 'JWT er formatert feil')
-        }
-
-        return await verifyResetPasswordToken(searchParams.token)
-    })
+export default async function ResetPassword({ searchParams }: PropTypes) {
+    if (!searchParams.token || typeof searchParams.token !== 'string') {
+        return <>
+            <h1>Ops</h1>
+            <p>Token mangler</p>
+        </>
+    }
+    const verify = await verifyResetPasswordTokenAction(searchParams.token)
 
     if (!verify.success) {
         const errorMessage = verify.error?.map(e => e.message).join('\n') ?? 'JWT er ugyldig'
@@ -28,5 +23,5 @@ export default async function ResetPassword({
         </>
     }
 
-    return <ResetPasswordForm token={searchParams.token as string} />
+    return <ResetPasswordForm token={searchParams.token} />
 }
