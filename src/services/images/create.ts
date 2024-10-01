@@ -8,6 +8,7 @@ import logger from '@/logger'
 import sharp from 'sharp'
 import type { CreateImageTypes } from './validation'
 import type { Image, SpecialImage } from '@prisma/client'
+import { imageSizes } from './ConfigVars'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -23,24 +24,27 @@ export async function createImage({
     const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
 
     const uploadPromises = [
-        createOneInStore(file, allowedExt, 250),
-        createOneInStore(file, allowedExt, 600),
+        createOneInStore(file, allowedExt, imageSizes.small),
+        createOneInStore(file, allowedExt, imageSizes.medium),
+        createOneInStore(file, allowedExt, imageSizes.large),
         createFile(file, 'images', allowedExt),
     ]
 
-    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+    const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
     const fsLocationSmallSize = smallSize.fsLocation
     const fsLocationMediumSize = mediumSize.fsLocation
-    const fsLocation = original.fsLocation
-    const ext = original.ext
+    const fsLocationLargeSize = largeSize.fsLocation
+    const fsLocationOriginal = original.fsLocation
+    const extOriginal = original.ext
     return await prismaCall(() => prisma.image.create({
         data: {
             name: meta.name,
             alt: meta.alt,
-            fsLocation,
+            fsLocationOriginal,
             fsLocationSmallSize,
             fsLocationMediumSize,
-            ext,
+            fsLocationLargeSize,
+            extOriginal,
             collection: {
                 connect: {
                     id: collectionId,
@@ -81,10 +85,11 @@ export async function createBadImage(name: string, config: {
         data: {
             name,
             special: config.special,
-            fsLocation: 'not_found',
+            fsLocationOriginal: 'not_found',
             fsLocationMediumSize: 'not_found',
             fsLocationSmallSize: 'not_found',
-            ext: 'jpg',
+            fsLocationLargeSize: 'not_found',
+            extOriginal: 'jpg',
             alt: 'not found',
             collection: {
                 connect: {
