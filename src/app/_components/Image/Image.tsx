@@ -10,7 +10,7 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
-    | { imageSize?: ImageSize, smallSize?: never, largeSize?: never }
+    | { imageSize?: ImageSize | 'ORIGINAL', smallSize?: never, largeSize?: never }
 );
 
 /**
@@ -34,14 +34,17 @@ export default function Image({ alt, image, width, smallSize, largeSize, imageSi
                 url = `/store/images/${image.fsLocationMediumSize}`
                 break
             case 'LARGE':
-                url = `/store/images/${image.fsLocation}`
+                url = `/store/images/${image.fsLocationLargeSize}`
+                break
+            case 'ORIGINAL':
+                url = `/store/images/${image.fsLocationOriginal}`
                 break
             default:
                 break
         }
     } else {
         if (smallSize) url = `/store/images/${image.fsLocationSmallSize}`
-        if (largeSize) url = `/store/images/${image.fsLocation}`
+        if (largeSize) url = `/store/images/${image.fsLocationLargeSize}`
     }
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>
