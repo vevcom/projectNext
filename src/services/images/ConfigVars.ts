@@ -7,3 +7,5 @@ export const imageSizes = {
     medium: 360,
     large: 720,
 }
+
+export const allowedExtImageUpload = ['png', 'jpg', 'jpeg', 'heic']
