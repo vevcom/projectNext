@@ -1,10 +1,14 @@
 import { ValidationBase } from '@/services/Validation'
-import { maxFileSize, maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
+import { allowedExtImageUpload, maxFileSize, maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { ValidationTypes } from '@/services/Validation'
 
-export const imageFileSchema = z.instanceof(File).refine(file => file.size < maxFileSize, 'File size must be less than 10mb')
+export const imageFileSchema = z.instanceof(File).refine(
+    file => file.size < maxFileSize, 'File size must be less than 10mb'
+).refine(
+    file => allowedExtImageUpload.includes(file.type.split('/')[1]), 'File type must be one of ' + allowedExtImageUpload.join(', ')
+)
 
 const maxFileSizeMb = Math.round(maxFileSize / 1024 / 1024)
 
@@ -22,7 +26,10 @@ export const baseImageValidation = new ValidationBase({
         files: zfd.repeatable(z.array(z.instanceof(File)).refine(
             files => files.every(file => file.size < maxFileSize),
             `File size must be less than ${maxFileSizeMb}mb`
-        ))
+        )).refine(
+            files => files.every(file => allowedExtImageUpload.includes(file.type.split('/')[1])),
+            'File type must be one of ' + allowedExtImageUpload.join(', ')
+        ),
     }
 })
 

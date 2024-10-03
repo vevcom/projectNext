@@ -8,7 +8,7 @@ import logger from '@/logger'
 import sharp from 'sharp'
 import type { CreateImageTypes } from './validation'
 import type { Image, SpecialImage } from '@prisma/client'
-import { imageSizes } from './ConfigVars'
+import { allowedExtImageUpload, imageSizes } from './ConfigVars'
 
 /**
  * Creates one image from a file (creates all the types of resolutions and stores them)
@@ -21,13 +21,16 @@ export async function createImage({
     ...rawdata
 }: CreateImageTypes['Detailed'] & { collectionId: number }): Promise<Image> {
     const { file, ...meta } = createImageValidation.detailedValidate(rawdata)
-    const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const avifBuffer = await sharp(buffer).toFormat('avif').toBuffer()
+    const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' });
 
     const uploadPromises = [
-        createOneInStore(file, allowedExt, imageSizes.small),
-        createOneInStore(file, allowedExt, imageSizes.medium),
-        createOneInStore(file, allowedExt, imageSizes.large),
-        createFile(file, 'images', allowedExt),
+        createOneInStore(avifFile, ['avif'], imageSizes.small),
+        createOneInStore(file, ['avif'], imageSizes.medium),
+        createOneInStore(file, ['avif'], imageSizes.large),
+        createFile(file, 'images', allowedExtImageUpload),
     ]
 
     const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
