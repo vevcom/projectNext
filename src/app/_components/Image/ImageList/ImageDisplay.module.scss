@@ -1,6 +1,16 @@
 @use "@/styles/ohma";
 
 .ImageDisplay > div {
+    z-index: 5;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95vw;
+    height: 95vh;
+    @include ohma.round();
+    background-color: ohma.$colors-gray-300;
+
     > .currentImage {
         padding: 0;
         width: 50vw;
