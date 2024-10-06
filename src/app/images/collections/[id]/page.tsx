@@ -9,6 +9,7 @@ import PopUpProvider from '@/contexts/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
+import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
 
 type PropTypes = {
     params: {
@@ -40,7 +41,7 @@ export default async function Collection({ params }: PropTypes) {
                 details={{ collectionId: collection.id }}
                 serverRenderedData={images}
             >
-                <PopUpProvider>
+                <ImageDisplayProvider>
                     <div className={styles.wrapper}>
                         <CollectionAdmin visibility={collection.visibility} collection={collection} />
                         <div className={styles.images}>
@@ -53,7 +54,7 @@ export default async function Collection({ params }: PropTypes) {
                             </main>
                         </div>
                     </div>
-                </PopUpProvider>
+                </ImageDisplayProvider>
             </ImagePagingProvider>
         </ImageSelectionProvider>
     )

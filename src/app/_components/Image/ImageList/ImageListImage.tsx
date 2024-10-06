@@ -1,9 +1,8 @@
 import styles from './ImageListImage.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
-import ImageDisplay from './ImageDisplay'
 import { default as ImageComponent } from '@/components/Image/Image'
-import PopUp from '@/components/PopUp/PopUp'
 import type { Image } from '@prisma/client'
+import SelectImageDisplay from './SelectImageDisplay'
 
 type PropTypes = {
     image: Image
@@ -14,9 +13,7 @@ export default function ImageListImage({ image, disableEditing }: PropTypes) {
     return (
         <div className={styles.ImageListImage}>
             <ImageComponent smallSize width={200} image={image} />
-            <PopUp PopUpKey={image.id} showButtonContent={<></>}>
-                <ImageDisplay startImageName={image.name} disableEditing={disableEditing} />
-            </PopUp>
+            <SelectImageDisplay image={image} />
             <ImageSelectionButton image={image} />
         </div>
     )

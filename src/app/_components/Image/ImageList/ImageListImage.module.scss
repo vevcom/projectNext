@@ -37,6 +37,9 @@ $image-size: 150px;
         }
     }
     > button {
+        &:hover {
+            cursor: pointer;
+        }
         z-index: 1;
         position: absolute;
         top: 0;

@@ -11,54 +11,52 @@ import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext, useState, useEffect, useRef } from 'react'
-import type { Image as ImageT } from '@prisma/client'
+import { useContext } from 'react'
+import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 
 type PropTypes = {
-    startImageName?: string,
     disableEditing?: boolean,
 }
 
-export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
-    const context = useContext(ImagePagingContext)
+export default function ImageDisplay({ disableEditing = false }: PropTypes) {
+    const pagingContext = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
-    const canEdit = useEditing({}) //TODO: authe
+    const displayContext = useContext(ImageDisplayContext)
+    const canEdit = useEditing({}) //TODO: auth
 
-    //This component must be rendered inside a ImagePagingContextProvider
-    if (!context) throw new Error('No context')
-
-    const images = useRef<ImageT[]>(context?.state.data || [])
-    const startIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
-    const currentImage = useRef<ImageT>(images.current[startIndex])
-    const [currentIndex, setcurrentIndex] = useState(
-        () => images.current.findIndex(image => image.name === startImageName) || 0
-    )
-
-    useEffect(() => {
-        images.current = context?.state.data || []
-    }, [context.state.data])
-    useEffect(() => {
-        currentImage.current = images.current[currentIndex]
-    }, [currentIndex])
-
-
+    if (!pagingContext || !displayContext) throw new Error('No context')
+    
+    const getCurrentIndex = () => {
+        return pagingContext.state.data.findIndex(x => x.id === displayContext.currentImage?.id)
+    }
+    
     const goLeft = () => {
-        setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? images.current.length - 1 : prevIndex - 1))
+        const currentIndex = getCurrentIndex()
+        const nextIndex = currentIndex === 0 ? pagingContext.state.data.length - 1 : currentIndex - 1
+        displayContext.setImage(pagingContext.state.data[nextIndex])
     }
 
     const naiveGoRight = () => {
-        setcurrentIndex(prevIndex => (prevIndex + 1 === images.current.length ? 0 : prevIndex + 1))
+        const currentIndex = getCurrentIndex()
+        const nextIndex = currentIndex === pagingContext.state.data.length - 1 ? 0 : currentIndex + 1
+        displayContext.setImage(pagingContext.state.data[nextIndex])
     }
 
     const goRight = async () => {
-        if (currentImage.current.id !== images.current[images.current.length - 1].id) return naiveGoRight()
-        if (context?.state.allLoaded) return naiveGoRight()
-        const newImages = await context.loadMore()
+        if (!pagingContext.state.data.length) return
+        if (!displayContext.currentImage) {
+            pagingContext.state.data.length ?? displayContext.setImage(pagingContext.state.data[0])
+            return
+        }
+        if (displayContext.currentImage.id !== pagingContext.state.data[pagingContext.state.data.length - 1].id) {
+            return naiveGoRight()
+        }
+        if (pagingContext.state.allLoaded) return naiveGoRight()
+        const newImages = await pagingContext.loadMore()
         if (!newImages.length) return naiveGoRight()
-        currentImage.current = newImages[0]
-        return setcurrentIndex(x => x + 1)
+        displayContext.setImage(newImages[0])
     }
 
     useKeyPress('ArrowRight', goRight)
@@ -67,28 +65,38 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
     const { refresh } = useRouter()
 
     const reload = async () => {
-        images.current = await context.refetch()
+        pagingContext.refetch()
         refresh()
     }
 
+    const image = displayContext.currentImage
+
+    const close = () => {
+        displayContext.setImage(null)
+    }
+
+    if (!image) return <></>
     return (
         <div className={styles.ImageDisplay}>
             <div>
+                <button onClick={close} className={styles.close}>
+                    <FontAwesomeIcon icon={faX}/>
+                </button>
                 <div className={styles.currentImage}>
                     <div className={styles.select}>
                         {
                             selection?.selectionMode && (
-                                <ImageSelectionButton image={currentImage.current} />
+                                <ImageSelectionButton image={image} />
                             )
                         }
                     </div>
-                    <h2>{currentImage.current.name}</h2>
-                    <i>{currentImage.current.alt}</i>
+                    <h2>{image.name}</h2>
+                    <i>{image.alt}</i>
                     {
-                        context?.loading ? (
+                        pagingContext.loading ? (
                             <div className={styles.loading}></div>
                         ) : (
-                            <Image width={200} image={currentImage.current} />
+                            <Image width={200} imageSize='MEDIUM' image={image} />
                         )
                     }
                 </div>
@@ -109,14 +117,14 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
                             title="Rediger metadata"
                             successCallback={reload}
                             submitText="oppdater"
-                            action={updateImageAction.bind(null, currentImage.current.id)}
+                            action={updateImageAction.bind(null, image.id)}
                         >
                             <TextInput name="name" label="navn" />
                             <TextInput name="alt" label="alt" />
                         </Form>
                         <Form
                             successCallback={reload}
-                            action={destroyImageAction.bind(null, currentImage.current.id)}
+                            action={destroyImageAction.bind(null, image.id)}
                             submitText="slett"
                             submitColor="red"
                             confirmation={{
