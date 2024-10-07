@@ -6,10 +6,9 @@ import SelectImageDisplay from './SelectImageDisplay'
 
 type PropTypes = {
     image: Image
-    disableEditing?: boolean
 }
 
-export default function ImageListImage({ image, disableEditing }: PropTypes) {
+export default function ImageListImage({ image }: PropTypes) {
     return (
         <div className={styles.ImageListImage}>
             <ImageComponent smallSize width={200} image={image} />
