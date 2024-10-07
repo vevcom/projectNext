@@ -1,7 +1,7 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
-import Image from '@/components/Image/Image'
+import Image, { ImageSizeOptions } from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
@@ -12,10 +12,46 @@ import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext } from 'react'
+import { ReactEventHandler, useContext } from 'react'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { SelectString } from '../../UI/Select'
 import PopUp from '../../PopUp/PopUp'
+import { updateImageCollectionAction } from '@/actions/images/collections/update'
+import { Image as ImageT } from '@prisma/client'
+
+const mimeTypes: { [key: string]: string } = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    bmp: 'image/bmp',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    tiff: 'image/tiff',
+    svg: 'image/svg+xml',
+};
+const getCurrentType = (image: ImageT, size: ImageSizeOptions) => {
+    let src = image.fsLocationOriginal
+    switch (size) {
+        case 'SMALL':
+            src = image.fsLocationSmallSize
+            break
+        case 'MEDIUM':
+            src = image.fsLocationMediumSize
+            break
+        case 'LARGE':
+            src = image.fsLocationLargeSize
+            break
+        case 'ORIGINAL':
+            src = image.fsLocationOriginal
+            break
+        default:
+            return 'unknown'
+    }
+    const ext = src.split('.').pop()
+    if (!ext) return 'unknown'
+    return mimeTypes[ext]
+} 
 
 export default function ImageDisplay() {
     const pagingContext = useContext(ImagePagingContext)
@@ -88,11 +124,12 @@ export default function ImageDisplay() {
                 displayContext.setImageSize('ORIGINAL')
                 break
             default:
-                throw new Error('Invalid size')
+                break;
         }
     }
 
     if (!image) return <></>
+    console.log(image)
 
     return (
         <div className={styles.ImageDisplay}>
@@ -135,6 +172,7 @@ export default function ImageDisplay() {
                 </div>
                 <h1>{image.name}</h1>
                 <i>{image.alt}</i>
+                <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
                 {
                     pagingContext.loading ? (
                         <div className={styles.loading}></div>
@@ -175,6 +213,7 @@ export default function ImageDisplay() {
                             <TextInput name="alt" label="alt" defaultValue={image.alt} />
                         </Form>
                         <Form
+                            className={styles.deleteImage}
                             successCallback={reload}
                             action={destroyImageAction.bind(null, image.id)}
                             submitText="slett"
@@ -185,6 +224,13 @@ export default function ImageDisplay() {
                             }}
                         >
                         </Form>
+                        <Form
+                            className={styles.makeCover}
+                            refreshOnSuccess
+                            submitText="Gjør til cover"
+                            closePopUpOnSuccess="Edit"
+                            action={updateImageCollectionAction.bind(null, image.collectionId).bind(null, image.id)}
+                        />
                     </div>
                 </PopUp>
                 )

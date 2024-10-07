@@ -115,6 +115,10 @@
     }
 }
 
+.makeCover, .deleteImage {
+    border-top: 1px solid ohma.$colors-black;
+    padding-top: 3px;
+}
 
 @keyframes rotate {
     0% {

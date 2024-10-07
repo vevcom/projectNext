@@ -68,7 +68,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                 />
                             </div>
                             <div className={styles.selectImage}>
-                                <ImageList disableEditing={true}/>
+                                <ImageList/>
                             </div>
                             <div className={styles.selectCollection}>
                                 <ImageCollectionPagingProvider

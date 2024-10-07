@@ -76,26 +76,19 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
     }, [files, progress, collectionId])
 
     return (
-        <PopUp PopUpKey="UploadImages" showButtonContent={
-            <>
-            Last opp mange
-                <FontAwesomeIcon icon={faUpload} />
-            </>
-        }>
-            <Form
-                className={styles.uploadMany}
-                successCallback={refreshImages}
-                closePopUpOnSuccess="UploadImages"
-                title="last opp bilder"
-                submitText="last opp"
-                action={handleBatchedUpload}
-            >
-                <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
-                <Slider label="Bruk filnavn som navn" name="useFileName" />
-                {
-                    progress ? <ProgressBar progress={progress} /> : <></>
-                }
-            </Form>
-        </PopUp>
+        <Form
+            className={styles.uploadMany}
+            successCallback={refreshImages}
+            closePopUpOnSuccess="UploadImages"
+            title="last opp bilder"
+            submitText="last opp"
+            action={handleBatchedUpload}
+        >
+            <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
+            <Slider label="Bruk filnavn som navn" name="useFileName" />
+            {
+                progress ? <ProgressBar progress={progress} /> : <></>
+            }
+        </Form>
     )
 }
