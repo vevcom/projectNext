@@ -8,6 +8,7 @@ import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
+import ImageSelectionProvider from '@/contexts/ImageSelection'
 
 type PropTypes = {
     params: {

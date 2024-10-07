@@ -1,5 +1,6 @@
 'use client'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
+import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import type { Image } from '@prisma/client'
 import { useContext } from 'react'
 
@@ -8,13 +9,23 @@ type PropTypes = {
 }
 
 /**
- * Sets a image to display in the ImageDisplayContext
+ * Sets a image to display in the ImageDisplayContext. If this component is not rendered in a ImageDisplayProvider,
+ * it will intead use the imageSelectionContext.
  * @param image - the image to display
  * @returns 
  */
 export default function SelectImageDisplay({ image }: PropTypes) {
     const imageDisplayContext = useContext(ImageDisplayContext)
-    if (!imageDisplayContext) return <></>
+    const imageSelectionContext = useContext(ImageSelectionContext)
+    if (!imageDisplayContext) {
+        if (!imageSelectionContext) return <></>
+        return (
+            <button onClick={() => {
+                console.log('Setting image to display')
+                imageSelectionContext.setSelectedImage(image)
+            }} />
+        )
+    }
     
     return (
         <button onClick={() => {
