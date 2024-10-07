@@ -1,6 +1,6 @@
 @use "@/styles/ohma";
 
-.ImageDisplay > div {
+.ImageDisplay {
     z-index: 5;
     position: fixed;
     top: 50%;
@@ -10,20 +10,28 @@
     height: 95vh;
     @include ohma.round();
     background-color: ohma.$colors-gray-300;
+    .openImageAdmin {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        svg {
+            color: ohma.$colors-black;
+            width: 35px;
+            height: 35px;
+            margin: 1em;
+        }
+    }
 
     .selectImageSize {
         position: absolute;
-        top: 0;
-        right: 2em;
-        margin: 2em;
-        @include ohma.screenMobile {
-            bottom: 0;
-            top: auto;
-            right: 0;
-            > * {
-                display: flex;
-                flex-direction: column;
-            }
+        bottom: 0;
+        top: auto;
+        right: 0;
+        margin: 1em;
+        > * {
+            display: flex;
+            flex-direction: column;
         }
     }
 
@@ -73,16 +81,15 @@
         }
         img {
             position: absolute;
-            width: auto;
-            height: auto;
+            width: 100% !important;
+            height: 100% !important;
             max-width: 100%;
             max-height: 100%;
-            width: 100% !important;
-            object-fit: contain;
+            border-radius: ohma.$rounding;
             top: 50%;
             left: 50%;
+            object-fit: contain;
             transform: translate(-50%, -50%);
-            @include ohma.round;
             padding: 0;
         }
     }
@@ -90,6 +97,7 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        margin-top: 1em;
         > button {
             width: 30px;
             height: 30px;
@@ -104,20 +112,6 @@
                 height: 100%;
             }
         }
-    }
-}
-
-.ImageDisplay {
-    position: relative;
-    .admin {
-        @include ohma.card;
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-height: 100%;
-        background-color: ohma.$colors-secondary;
-        translate: 100%;
-        width: 300px;
     }
 }
 

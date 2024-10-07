@@ -11,6 +11,9 @@
         width: 100%;
         grid-column: 2/3;
         grid-row: 1/2;
+        > h1 {
+            font-size: ohma.$fonts-xxl;
+        }
         > main {
             margin-top: ohma.$gap;
             width: 100%;
