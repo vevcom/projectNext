@@ -9,11 +9,12 @@ import ImageList from '@/components/Image/ImageList/ImageList'
 import ImageCollectionPagingProvider, { ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
 import ImagePagingProvider from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
-import ImageSelectionProvider from '@/contexts/ImageSelection'
+import ImageSelectionProvider, { ImageSelectionContext } from '@/contexts/ImageSelection'
 import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
+import ChangeImageForm from './ChangeImageForm'
 
 type PropTypes = {
     cmsImage: CmsImage & {
@@ -36,7 +37,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
 
     return canEdit && (
         <PopUp
-            PopUpKey={cmsImage.id}
+            PopUpKey={"EditCmsImage" + cmsImage.id}
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >
@@ -67,6 +68,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                     cmsImageId={cmsImage.id}
                                 />
                             </div>
+                            <ChangeImageForm className={styles.changeImageMobile} cmsImageId={cmsImage.id} />
                             <div className={styles.selectImage}>
                                 <ImageList/>
                             </div>
