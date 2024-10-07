@@ -9,23 +9,19 @@ import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
-import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { use, useContext } from 'react'
+import { useContext } from 'react'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { SelectString } from '../../UI/Select'
+import PopUp from '../../PopUp/PopUp'
 
-type PropTypes = {
-    disableEditing?: boolean,
-}
-
-export default function ImageDisplay({ disableEditing = false }: PropTypes) {
+export default function ImageDisplay() {
     const pagingContext = useContext(ImagePagingContext)
     const selection = useContext(ImageSelectionContext)
     const displayContext = useContext(ImageDisplayContext)
-    const canEdit = useEditing({}) //TODO: auth
+    const canEdit = true //TODO: Auth
 
     if (!pagingContext || !displayContext) throw new Error('No context')
     
@@ -100,75 +96,83 @@ export default function ImageDisplay({ disableEditing = false }: PropTypes) {
 
     return (
         <div className={styles.ImageDisplay}>
-            <div>
-                <div className={styles.selectImageSize}>
-                    <SelectString 
-                        defaultValue={displayContext.imageSize} 
-                        value={displayContext.imageSize}
-                        onChange={handleSizeChange} 
-                        name="imageSize" 
-                        label="Oppløsning" 
-                        options={[
-                            {
-                                label: 'Liten',
-                                value: 'SMALL'
-                            },
-                            {
-                                label: 'Middels',
-                                value: 'MEDIUM'
-                            },
-                            {
-                                label: 'Stor',
-                                value: 'LARGE'
-                            },
-                            {
-                                label: 'Original',
-                                value: 'ORIGINAL'
-                            }
-                    ]}/>
-                </div>
-                <button onClick={close} className={styles.close}>
-                    <FontAwesomeIcon icon={faX}/>
-                </button>
-                <div className={styles.currentImage}>
-                    <div className={styles.select}>
+            <div className={styles.selectImageSize}>
+                <SelectString 
+                    defaultValue={displayContext.imageSize} 
+                    value={displayContext.imageSize}
+                    onChange={handleSizeChange} 
+                    name="imageSize" 
+                    label="Oppløsning" 
+                    options={[
                         {
-                            selection?.selectionMode && (
-                                <ImageSelectionButton image={image} />
-                            )
+                            label: 'Liten',
+                            value: 'SMALL'
+                        },
+                        {
+                            label: 'Middels',
+                            value: 'MEDIUM'
+                        },
+                        {
+                            label: 'Stor',
+                            value: 'LARGE'
+                        },
+                        {
+                            label: 'Original',
+                            value: 'ORIGINAL'
                         }
-                    </div>
-                    <h1>{image.name}</h1>
-                    <i>{image.alt}</i>
+                ]}/>
+            </div>
+            <button onClick={close} className={styles.close}>
+                <FontAwesomeIcon icon={faX}/>
+            </button>
+            <div className={styles.currentImage}>
+                <div className={styles.select}>
                     {
-                        pagingContext.loading ? (
-                            <div className={styles.loading}></div>
-                        ) : (
-                            <Image width={200} imageSize={displayContext.imageSize} image={image} />
+                        selection?.selectionMode && (
+                            <ImageSelectionButton image={image} />
                         )
                     }
                 </div>
+                <h1>{image.name}</h1>
+                <i>{image.alt}</i>
+                {
+                    pagingContext.loading ? (
+                        <div className={styles.loading}></div>
+                    ) : (
+                        <Image 
+                            width={200}
+                            imageSize={displayContext.imageSize}
+                            image={image} 
+                        /> 
+                    )
+                }
+            </div>
 
-                <div className={styles.controls}>
-                    <button onClick={goLeft}>
-                        <FontAwesomeIcon icon={faChevronLeft}/>
-                    </button>
-                    <button onClick={goRight}>
-                        <FontAwesomeIcon icon={faChevronRight}/>
-                    </button>
-                </div>
+            <div className={styles.controls}>
+                <button onClick={goLeft}>
+                    <FontAwesomeIcon icon={faChevronLeft}/>
+                </button>
+                <button onClick={goRight}>
+                    <FontAwesomeIcon icon={faChevronRight}/>
+                </button>
             </div>
             {
-                (canEdit && !disableEditing) && (
-                    <aside className={styles.admin}>
+            canEdit && (
+                <PopUp PopUpKey="EditImage" showButtonContent={
+                    <div className={styles.openImageAdmin}>
+                        <FontAwesomeIcon icon={faCog}/>
+                    </div>
+                }>
+                    <div className={styles.admin}>
                         <Form
                             title="Rediger metadata"
                             successCallback={reload}
                             submitText="oppdater"
                             action={updateImageAction.bind(null, image.id)}
+                            closePopUpOnSuccess="EditImage"
                         >
-                            <TextInput name="name" label="navn" />
-                            <TextInput name="alt" label="alt" />
+                            <TextInput name="name" label="navn" defaultValue={image.name} />
+                            <TextInput name="alt" label="alt" defaultValue={image.alt} />
                         </Form>
                         <Form
                             successCallback={reload}
@@ -181,7 +185,8 @@ export default function ImageDisplay({ disableEditing = false }: PropTypes) {
                             }}
                         >
                         </Form>
-                    </aside>
+                    </div>
+                </PopUp>
                 )
             }
         </div>
