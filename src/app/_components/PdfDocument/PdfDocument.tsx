@@ -97,10 +97,10 @@ export default function PdfDocument({ src, className }: PropTypes) {
     if (typeof window !== 'undefined' && !window.Promise.withResolvers) {
         return (
             <>
-            <p className={styles.fallbackWarning}>
+                <p className={styles.fallbackWarning}>
                 Din nettleser støtter ikke vevens fantastiske PDF-løsning. Bruker alternativ løsning.
-            </p>
-            <embed className={styles.fallback} src={src} type="application/pdf" />
+                </p>
+                <embed className={styles.fallback} src={src} type="application/pdf" />
             </>
         )
     }
