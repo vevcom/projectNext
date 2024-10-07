@@ -1,5 +1,6 @@
 'use client'
 import styles from './ChangeImage.module.scss'
+import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
@@ -8,7 +9,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
-import ChangeImageForm from './ChangeImageForm'
 
 type PropTypes = {
     currentImage: ImageT,

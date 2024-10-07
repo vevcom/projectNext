@@ -5,21 +5,18 @@ import { updateImageCollectionAction } from '@/actions/images/collections/update
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
-import Image from '@/components/Image/Image'
 import ImageUploader from '@/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
 import VisibilityAdmin from '@/components/VisiblityAdmin/VisibilityAdmin'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faEye, faImage, faQuestion, faTrash, faUpDown, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import type { VisibilityCollapsed } from '@/services/visibility/Types'
 import type { ExpandedImageCollection } from '@/services/images/collections/Types'
-import PopUp from '@/app/_components/PopUp/PopUp'
-import Button from '@/app/_components/UI/Button'
-import ImageList from '@/app/_components/Image/ImageList/ImageList'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -53,27 +50,27 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     <div className={styles.upload}>
                         {
                             uploadOption === 'MANY' ? (
-                            <>
-                                <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
-                                <Button 
-                                    className={styles.toggleUploadStyle} 
-                                    onClick={() => setUploadOption('ONE')}
-                                    color='secondary'
-                                >
+                                <>
+                                    <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
+                                    <Button
+                                        className={styles.toggleUploadStyle}
+                                        onClick={() => setUploadOption('ONE')}
+                                        color="secondary"
+                                    >
                                     Last opp ett bilde
-                                </Button>
-                            </>
+                                    </Button>
+                                </>
                             ) : (
-                            <>
-                                <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
-                                <Button 
-                                    className={styles.toggleUploadStyle} 
-                                    onClick={() => setUploadOption('MANY')}
-                                    color='secondary'
-                                >
+                                <>
+                                    <ImageUploader collectionId={collectionId} successCallback={refreshImages} />
+                                    <Button
+                                        className={styles.toggleUploadStyle}
+                                        onClick={() => setUploadOption('MANY')}
+                                        color="secondary"
+                                    >
                                     Last opp mange
-                                </Button>
-                            </>
+                                    </Button>
+                                </>
                             )
                         }
                     </div>

@@ -17,7 +17,7 @@ export default function ChangeImageForm({ cmsImageId, className }: PropTypes) {
     return (
         <Form
             className={className}
-            closePopUpOnSuccess={"EditCmsImage" + cmsImageId}
+            closePopUpOnSuccess={`EditCmsImage${cmsImageId}`}
             action={updateCmsImageAction.bind(null, cmsImageId).bind(null, selection?.selectedImage?.id)}
             submitText="change"
             refreshOnSuccess
