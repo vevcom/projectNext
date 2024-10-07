@@ -29,14 +29,12 @@ type PropTypes = {
 export default function CollectionAdmin({ collection, visibility }: PropTypes) {
     const { id: collectionId } = collection
     const router = useRouter()
-    const selection = useContext(ImageSelectionContext)
     const pagingContext = useContext(ImagePagingContext)
     const canEdit = useEditing({
         requiredVisibility: visibility,
     })
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
     if (!canEdit) return null
-    if (!selection) throw new Error('No context')
 
     const refreshImages = () => {
         if (pagingContext && pagingContext?.startPage.pageSize > pagingContext.state.data.length) {
@@ -88,7 +86,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                         title="Rediger samling"
                         submitText="oppdater"
                         closePopUpOnSuccess="Edit"
-                        action={updateImageCollectionAction.bind(null, collectionId).bind(null, selection.selectedImage?.id)}
+                        action={updateImageCollectionAction.bind(null, collectionId).bind(null, undefined)}
                     >
                         <TextInput
                             defaultValue={collection.name}

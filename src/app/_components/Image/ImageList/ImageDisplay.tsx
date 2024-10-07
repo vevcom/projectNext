@@ -1,6 +1,5 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
-import ImageSelectionButton from './ImageSelectionButton'
 import Image, { ImageSizeOptions } from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/components/Form/Form'
@@ -8,11 +7,10 @@ import TextInput from '@/components/UI/TextInput'
 import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { ReactEventHandler, useContext } from 'react'
+import { useContext } from 'react'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { SelectString } from '../../UI/Select'
 import PopUp from '../../PopUp/PopUp'
@@ -55,7 +53,6 @@ const getCurrentType = (image: ImageT, size: ImageSizeOptions) => {
 
 export default function ImageDisplay() {
     const pagingContext = useContext(ImagePagingContext)
-    const selection = useContext(ImageSelectionContext)
     const displayContext = useContext(ImageDisplayContext)
     const canEdit = true //TODO: Auth
 
@@ -163,13 +160,6 @@ export default function ImageDisplay() {
                 <FontAwesomeIcon icon={faX}/>
             </button>
             <div className={styles.currentImage}>
-                <div className={styles.select}>
-                    {
-                        selection?.selectionMode && (
-                            <ImageSelectionButton image={image} />
-                        )
-                    }
-                </div>
                 <h1>{image.name}</h1>
                 <i>{image.alt}</i>
                 <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
