@@ -15,8 +15,9 @@ $collectionSize: calc(14vmin + 70px);
     @include ohma.screenMobile {
         width: 100%;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-        height: 80svh
+        grid-template-rows: 1fr auto auto;
+        height: 75svh;
+        overflow-y: hidden;
     }
     .linkToImages {
         position: absolute;
@@ -40,6 +41,12 @@ $collectionSize: calc(14vmin + 70px);
         > .info {
             max-width: 150px;
             overflow: hidden;
+        }
+    }
+    > .changeImageMobile {
+        grid-row: 3 / 4;
+        @include ohma.screenLg {
+            display: none;
         }
     }
     > .selectImage {
