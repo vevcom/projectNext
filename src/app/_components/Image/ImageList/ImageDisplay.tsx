@@ -13,8 +13,9 @@ import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext } from 'react'
+import { use, useContext } from 'react'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
+import { SelectString } from '../../UI/Select'
 
 type PropTypes = {
     disableEditing?: boolean,
@@ -74,11 +75,58 @@ export default function ImageDisplay({ disableEditing = false }: PropTypes) {
     const close = () => {
         displayContext.setImage(null)
     }
+    useKeyPress('Escape', close)
+
+    const handleSizeChange = (size: string) => {
+        switch (size) {
+            case 'SMALL':
+                displayContext.setImageSize('SMALL')
+                break
+            case 'MEDIUM':
+                displayContext.setImageSize('MEDIUM')
+                break
+            case 'LARGE':
+                displayContext.setImageSize('LARGE')
+                break
+            case 'ORIGINAL':
+                displayContext.setImageSize('ORIGINAL')
+                break
+            default:
+                throw new Error('Invalid size')
+        }
+    }
 
     if (!image) return <></>
+
     return (
         <div className={styles.ImageDisplay}>
             <div>
+                <div className={styles.selectImageSize}>
+                    <SelectString 
+                        defaultValue={displayContext.imageSize} 
+                        value={displayContext.imageSize}
+                        onChange={handleSizeChange} 
+                        name="imageSize" 
+                        label="Oppløsning" 
+                        options={[
+                            {
+                                label: 'Liten',
+                                value: 'SMALL'
+                            },
+                            {
+                                label: 'Middels',
+                                value: 'MEDIUM'
+                            },
+                            {
+                                label: 'Stor',
+                                value: 'LARGE'
+                            },
+                            {
+                                label: 'Original',
+                                value: 'ORIGINAL'
+                            }
+                    ]}/>
+                </div>
                 <button onClick={close} className={styles.close}>
                     <FontAwesomeIcon icon={faX}/>
                 </button>
@@ -90,13 +138,13 @@ export default function ImageDisplay({ disableEditing = false }: PropTypes) {
                             )
                         }
                     </div>
-                    <h2>{image.name}</h2>
+                    <h1>{image.name}</h1>
                     <i>{image.alt}</i>
                     {
                         pagingContext.loading ? (
                             <div className={styles.loading}></div>
                         ) : (
-                            <Image width={200} imageSize='MEDIUM' image={image} />
+                            <Image width={200} imageSize={displayContext.imageSize} image={image} />
                         )
                     }
                 </div>
