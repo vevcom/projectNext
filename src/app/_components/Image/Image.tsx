@@ -25,14 +25,14 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
  * @param imageSize - (optional) the size of the image
  * @param props - the rest of the props to pass to the img tag
  */
-export default function Image({ 
-    alt, 
-    image, 
-    width, 
-    smallSize, 
-    largeSize, 
-    imageSize, 
-    ...props 
+export default function Image({
+    alt,
+    image,
+    width,
+    smallSize,
+    largeSize,
+    imageSize,
+    ...props
 }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
     if (imageSize) {

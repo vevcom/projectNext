@@ -1,6 +1,7 @@
 'use client'
 import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
+import ChangeImageForm from './ChangeImageForm'
 import EditOverlay from '@/cms/EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
@@ -14,7 +15,6 @@ import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
-import ChangeImageForm from './ChangeImageForm'
 
 type PropTypes = {
     cmsImage: CmsImage & {
@@ -37,7 +37,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
 
     return canEdit && (
         <PopUp
-            PopUpKey={"EditCmsImage" + cmsImage.id}
+            PopUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >

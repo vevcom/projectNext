@@ -5,10 +5,9 @@ import { readImageCollectionAction } from '@/actions/images/collections/read'
 import ImageList from '@/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/contexts/paging/ImagePaging'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
+import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
-import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
-import ImageSelectionProvider from '@/contexts/ImageSelection'
 
 type PropTypes = {
     params: {
