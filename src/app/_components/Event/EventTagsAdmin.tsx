@@ -1,13 +1,13 @@
-import type { EventTag as EventTagT } from '@prisma/client'
 import EventTag from './EventTag'
 import styles from './EventTagsAdmin.module.scss'
-import Form from '../Form/Form'
+import Form from '@/components/Form/Form'
+import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { createEventTagAction } from '@/actions/events/tags/create'
 import TextInput from '@/UI/TextInput'
 import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
-import { HelpHeaderItemPopUp, SettingsHeaderItemPopUp } from '../HeaderItems/HeaderItemPopUp'
+import type { EventTag as EventTagT } from '@prisma/client'
 
 type PropTypes = {
     eventTags: EventTagT[]
@@ -20,12 +20,12 @@ type PropTypes = {
  * @param eventTags - the tags to display
  * @param canUpdate - if the user can update the tags
  * @param canCreate - if the user can create new tags
- * @returns 
+ * @returns
  */
-export default function EventTagsAdmin({ 
-    eventTags, 
-    canUpdate = false, 
-    canCreate = false 
+export default function EventTagsAdmin({
+    eventTags,
+    canUpdate = false,
+    canCreate = false
 }: PropTypes) {
     return (
         <div className={styles.EventTagsAdmin}>
@@ -33,7 +33,7 @@ export default function EventTagsAdmin({
             {
                 canCreate && (
                     <span className={styles.create}>
-                        <Form refreshOnSuccess action={createEventTagAction.bind(null, {})} submitText='Lag'>
+                        <Form refreshOnSuccess action={createEventTagAction.bind(null, {})} submitText="Lag">
                             <TextInput name="name" label="Navn" />
                             <Textarea name="description" label="Beskrivelse" />
                             <ColorInput name="color" label="Farge"/>
@@ -42,27 +42,42 @@ export default function EventTagsAdmin({
                 )
             }
             <ul>
-            {
-                eventTags.map((tag, index) => (
-                    <li key={index} >
-                        <EventTag eventTag={tag} />
-                        {
-                            canUpdate && (
-                                <SettingsHeaderItemPopUp PopUpKey={`EventTagPopUp${tag.id}`}>
-                                    <span className={styles.update}>
-                                        <Form refreshOnSuccess action={updateEventTagAction.bind(null, { id: tag.id })} submitText='Oppdater'>
-                                            <TextInput name="name" label="Navn" defaultValue={tag.name} />
-                                            <Textarea name="description" label="Beskrivelse" defaultValue={tag.description} />
-                                            <ColorInput name="color" label="Farge"  />
-                                        </Form>
-                                    </span>
-                                </SettingsHeaderItemPopUp>
-                            )
-                        }
-                    </li>
-                ))
-            }
+                {
+                    eventTags.map((tag, index) => (
+                        <li key={index} >
+                            <EventTag eventTag={tag} />
+                            {
+                                canUpdate && (
+                                    <SettingsHeaderItemPopUp PopUpKey={`EventTagPopUp${tag.id}`}>
+                                        <span className={styles.update}>
+                                            <Form
+                                                refreshOnSuccess
+                                                action={updateEventTagAction.bind(null, { id: tag.id })}
+                                                submitText="Oppdater"
+                                            >
+                                                <TextInput
+                                                    name="name"
+                                                    label="Navn"
+                                                    defaultValue={tag.name}
+                                                />
+                                                <Textarea
+                                                    name="description"
+                                                    label="Beskrivelse"
+                                                    defaultValue={tag.description}
+                                                />
+                                                <ColorInput
+                                                    name="color"
+                                                    label="Farge"
+                                                />
+                                            </Form>
+                                        </span>
+                                    </SettingsHeaderItemPopUp>
+                                )
+                            }
+                        </li>
+                    ))
+                }
             </ul>
-        </div>   
+        </div>
     )
 }

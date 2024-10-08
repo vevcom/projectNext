@@ -1,9 +1,9 @@
 import 'server-only'
-import { ServiceMethod } from "@/services/ServiceMethod"
-import { create } from "./create"
-import { CreateEventTagAuther, UpdateEventTagAuther } from "./Authers"
+import { create } from './create'
+import { CreateEventTagAuther, UpdateEventTagAuther } from './Authers'
 import { read, readAll } from './read'
 import { update } from './update'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const EventTags = {
     create: ServiceMethod({

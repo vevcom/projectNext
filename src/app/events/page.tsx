@@ -5,10 +5,10 @@ import { AddHeaderItemPopUp, TagHeasderItemPopUp } from '@/components/HeaderItem
 import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
-import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import PopUpProvider from '@/contexts/PopUp'
+import { faArchive } from '@fortawesome/free-solid-svg-icons'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
@@ -16,8 +16,8 @@ export default async function Events() {
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
-    const {data: currentEvents} = currentEventsResponse
-    const {data: eventTags, session } = eventTagsResponse
+    const { data: currentEvents } = currentEventsResponse
+    const { data: eventTags, session } = eventTagsResponse
 
     const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
     const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)
@@ -31,20 +31,20 @@ export default async function Events() {
         ]}
         headerItem={
             <>
-            <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
-                <PopUpProvider>
-                    <EventTagsAdmin 
-                        canCreate={canCreate.authorized} 
-                        canUpdate={canUpdate.authorized} 
-                        eventTags={eventTags} 
-                    />
-                </PopUpProvider>
-            </TagHeasderItemPopUp>
-            <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
-                <div className={styles.createEvent}>
-                    <CreateOrUpdateEventForm />
-                </div>
-            </AddHeaderItemPopUp>
+                <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
+                    <PopUpProvider>
+                        <EventTagsAdmin
+                            canCreate={canCreate.authorized}
+                            canUpdate={canUpdate.authorized}
+                            eventTags={eventTags}
+                        />
+                    </PopUpProvider>
+                </TagHeasderItemPopUp>
+                <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
+                    <div className={styles.createEvent}>
+                        <CreateOrUpdateEventForm />
+                    </div>
+                </AddHeaderItemPopUp>
             </>
         }
         >

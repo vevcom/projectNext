@@ -1,8 +1,8 @@
-import { ServiceMethod } from "@/services/ServiceTypes";
-import { createZodActionError } from "./error";
-import { Session, SessionMaybeUser } from "@/auth/Session";
-import { safeServerCall } from "./safeServerCall";
-import { ActionReturn } from "./Types";
+import { createZodActionError } from './error'
+import { safeServerCall } from './safeServerCall'
+import { Session } from '@/auth/Session'
+import type { SessionMaybeUser } from '@/auth/Session'
+import type { ServiceMethod } from '@/services/ServiceTypes'
 
 export function Action<
     TypeType,
@@ -10,7 +10,7 @@ export function Action<
     Params,
     Return,
     WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean    
+    NoAuther extends boolean
 >(serviceMethod: ServiceMethod<
     true,
     TypeType,
@@ -25,9 +25,9 @@ export function Action<
         const parse = serviceMethod.typeValidate(rawData)
         if (!parse.success) return createZodActionError(parse)
         const data = parse.data
-        const config : { session: SessionMaybeUser, params: Params, data: DetailedType } = { session, params, data }
+        const config: { session: SessionMaybeUser, params: Params, data: DetailedType } = { session, params, data }
         return {
-            ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
+            ...(await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))),
             session: session.toJsObject()
         }
     }
@@ -49,9 +49,9 @@ export function ActionNoData<
 >) {
     return async (params: Params) => {
         const session = await Session.fromNextAuth()
-        const config : { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
+        const config: { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
         return {
-            ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
+            ...(await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))),
             session: session.toJsObject()
         }
     }

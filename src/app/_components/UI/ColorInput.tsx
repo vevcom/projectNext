@@ -1,5 +1,5 @@
-import { InputHTMLAttributes } from 'react'
 import styles from './ColorInput.module.scss'
+import type { InputHTMLAttributes } from 'react'
 
 export type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     label: string,

@@ -1,5 +1,5 @@
-import type { EventTag } from "@prisma/client"
 import styles from './EventTag.module.scss'
+import type { EventTag } from '@prisma/client'
 
 type PropTypes = {
     eventTag: EventTag
