@@ -9,8 +9,16 @@ import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import PopUpProvider from '@/contexts/PopUp'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
+import { SearchParamsServerSide } from '@/lib/query-params/Types'
+import { QueryParams } from '@/lib/query-params/queryParams'
 
-export default async function Events() {
+type PropTypes = SearchParamsServerSide
+
+export default async function Events({
+    searchParams
+}: PropTypes) {
+    const tags = QueryParams.eventTags.decode(searchParams)
+
     const currentEventsResponse = await readCurrentEvents()
     const eventTagsResponse = await readEventTagsAction.bind(null, {})()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {

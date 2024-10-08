@@ -14,7 +14,7 @@ export default function EventTag({ eventTag }: PropTypes) {
         <Link className={styles.EventTag} style={{
             color: textColor,
             backgroundColor: `rgb(${eventTag.colorR}, ${eventTag.colorG}, ${eventTag.colorB})`
-        }} href={QueryParams.eventTags.navigateTo([eventTag.name])}>
+        }} href={'/events' + QueryParams.eventTags.encodeUrl([eventTag.name])}>
             <p className={styles.name}>{eventTag.name}</p>
             <p className={styles.description}>
                 {eventTag.description}
