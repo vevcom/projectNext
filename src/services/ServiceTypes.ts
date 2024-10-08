@@ -130,7 +130,7 @@ export type ServiceMethodHandlerConfig<
     withData: true,
     wantsToOpenTransaction?: WantsToOpenTransaction,
     validation: {
-        detailedValidate: (data: DetailedType) => DetailedType,
+        detailedValidate: (data: DetailedType | unknown) => DetailedType,
         typeValidate: (
             data: unknown | FormData | TypeType
         ) => TypeValidateReturn<DetailedType>,

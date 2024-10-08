@@ -80,10 +80,12 @@ export function ServiceMethod<
         client: (prisma) => ({
             execute: ({ data, params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
+                    const parse = config.serviceMethodHandler.typeValidate(data)
+                    if (!parse.success) throw new Smorekopp('BAD PARAMETERS')
                     const authRes = config.auther.dynamicFields(
                         config.dynamicFields({
                             params,
-                            data
+                            data: parse.data
                         })
                     ).auth(
                         session ?? Session.empty()
