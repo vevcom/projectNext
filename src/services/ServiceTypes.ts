@@ -35,7 +35,7 @@ type ConfigType<Params> = {
 }
 
 type ConfigTypeData<DetailedType, Params> = ConfigType<Params> & {
-    data: DetailedType,
+    data: DetailedType | unknown,
 }
 
 export type Execute<

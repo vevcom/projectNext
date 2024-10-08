@@ -1,5 +1,5 @@
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import 'server-only'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createEventTagValidation } from './validation'
 
 export const create = ServiceMethodHandler({
