@@ -7,6 +7,7 @@ import EventCard from '@/components/Event/EventCard'
 import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import { readEventTags } from '@/actions/events/tags/read'
+import { CreateEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
@@ -14,8 +15,11 @@ export default async function Events() {
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
-    const currentEvents = currentEventsResponse.data
-    const eventTags = eventTagsResponse.data
+    const {data: currentEvents} = currentEventsResponse
+    const {data: eventTags, session } = eventTagsResponse
+    
+    const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
+    const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout title="Hvad Der Hender" headerLinks={[
@@ -27,7 +31,7 @@ export default async function Events() {
         headerItem={
             <>
             <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
-                <EventTagsAdmin eventTags={eventTags} />
+                <EventTagsAdmin canCreate={canCreate.authorized} canUpdate={canUpdate.authorized} eventTags={eventTags} />
             </TagHeasderItemPopUp>
             <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                 <div className={styles.createEvent}>

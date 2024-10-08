@@ -2,6 +2,7 @@ import { ServiceMethod } from "@/services/ServiceTypes";
 import { createZodActionError } from "./error";
 import { Session, SessionMaybeUser } from "@/auth/Session";
 import { safeServerCall } from "./safeServerCall";
+import { ActionReturn } from "./Types";
 
 export function Action<
     TypeType,
@@ -25,7 +26,10 @@ export function Action<
         if (!parse.success) return createZodActionError(parse)
         const data = parse.data
         const config : { session: SessionMaybeUser, params: Params, data: DetailedType } = { session, params, data }
-        return await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))
+        return {
+            ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
+            session: session,
+        }
     }
 }
 
@@ -46,6 +50,9 @@ export function ActionNoData<
     return async (params: Params) => {
         const session = await Session.fromNextAuth()
         const config : { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
-        return await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))
+        return {
+            ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
+            session: session,
+        }
     }
 }
