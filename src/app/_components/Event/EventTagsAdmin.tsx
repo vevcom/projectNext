@@ -48,7 +48,7 @@ export default function EventTagsAdmin({
                             <EventTag eventTag={tag} />
                             {
                                 canUpdate && (
-                                    <SettingsHeaderItemPopUp PopUpKey={`EventTagPopUp${tag.id}`}>
+                                    <SettingsHeaderItemPopUp scale={25} PopUpKey={`EventTagPopUp${tag.id}`}>
                                         <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess
@@ -68,6 +68,11 @@ export default function EventTagsAdmin({
                                                 <ColorInput
                                                     name="color"
                                                     label="Farge"
+                                                    defaultValueRGB={{
+                                                        r: tag.colorR,
+                                                        g: tag.colorG,
+                                                        b: tag.colorB
+                                                    }}
                                                 />
                                             </Form>
                                         </span>

@@ -8,9 +8,14 @@
         form {
             display: flex;
             flex-direction: row wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 1em;
+            @include ohma.screenLg {
+                align-items: center;
+                justify-content: center;
+                gap: 1em;
+            }
+            @include ohma.screenMobile {
+                flex-direction: column;
+            }
         }
     }
     ul {
@@ -23,6 +28,8 @@
         isolation: isolate;
         padding-bottom: 5em;
         li {
+            display: flex;
+            align-items: center;
             z-index: 1;
         }
         li:hover {

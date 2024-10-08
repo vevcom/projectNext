@@ -31,7 +31,7 @@ export default async function Events() {
         ]}
         headerItem={
             <>
-                <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
+                <TagHeasderItemPopUp scale={35} PopUpKey="TagEventPopUp">
                     <PopUpProvider>
                         <EventTagsAdmin
                             canCreate={canCreate.authorized}

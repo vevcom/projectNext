@@ -15,15 +15,16 @@ function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
             showButtonContent = {
                 <FontAwesomeIcon
                     style={{
-                        '--scale': overrideScale ?? scale,
-                    } as React.CSSProperties}
-                    className={styles.addIcon}
+                        width: `${overrideScale ?? scale}px`,
+                        height: `${overrideScale ?? scale}px`,
+                    }}
                     icon={icon}
                 />
             }
             showButtonStyle={{
-                '--scale': scale,
-            } as React.CSSProperties}
+                width: `${overrideScale ?? scale}px`,
+                height: `${overrideScale ?? scale}px`,
+            }}
             showButtonClass={styles.addBtn}
         >
             { children }
