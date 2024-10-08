@@ -1,0 +1,15 @@
+@use '@/styles/ohma';
+
+.EventTagsAdmin {
+    .create {
+        display: flex;
+        align-items: center;
+        form {
+            display: flex;
+            flex-direction: row wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 1em;
+        }
+    }
+}

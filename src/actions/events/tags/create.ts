@@ -4,7 +4,7 @@ import { EventTags } from '@/services/events/tags'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { Session } from '@/auth/Session'
 
-export async function createEventAction(rawData: FormData) {
+export async function createEventTagAction(rawData: FormData) {
     const parse = EventTags.create.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
