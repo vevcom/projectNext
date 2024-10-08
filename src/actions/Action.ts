@@ -43,7 +43,7 @@ export function ActionNoData<
     WantsToOpenTransaction,
     NoAuther
 >) {
-    return async (params: Params, rawData: FormData) => {
+    return async (params: Params) => {
         const session = await Session.fromNextAuth()
         const config : { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
         return await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))

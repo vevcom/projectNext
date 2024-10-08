@@ -1,6 +1,7 @@
 @use '@/styles/ohma';
 
 .EventTagsAdmin {
+    max-height: 80svh;
     .create {
         display: flex;
         align-items: center;
@@ -10,6 +11,21 @@
             align-items: center;
             justify-content: center;
             gap: 1em;
+        }
+    }
+    ul {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 2em;
+        overflow-y: auto;
+        list-style-type: none;
+        isolation: isolate;
+        padding-bottom: 5em;
+        li {
+            z-index: 1;
+        }
+        li:hover {
+            z-index: 2;
         }
     }
 }

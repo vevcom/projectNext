@@ -20,7 +20,7 @@ export default function EventTagsAdmin({ eventTags }: PropTypes) {
     return (
         <div className={styles.EventTagsAdmin}>
             <span className={styles.create}>
-                <Form action={createEventTagAction.bind(null, {})} submitText='Lag'>
+                <Form refreshOnSuccess action={createEventTagAction.bind(null, {})} submitText='Lag'>
                     <TextInput name="name" label="Navn" />
                     <Textarea name="description" label="Beskrivelse" />
                     <ColorInput name="color" label="Farge"/>

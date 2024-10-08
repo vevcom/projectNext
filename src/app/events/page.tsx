@@ -6,13 +6,16 @@ import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
+import { readEventTags } from '@/actions/events/tags/read'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
-    if (!currentEventsResponse.success) {
+    const eventTagsResponse = await readEventTags.bind(null, {})()
+    if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
     const currentEvents = currentEventsResponse.data
+    const eventTags = eventTagsResponse.data
 
     return (
         <EventsLandingLayout title="Hvad Der Hender" headerLinks={[
@@ -24,7 +27,7 @@ export default async function Events() {
         headerItem={
             <>
             <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
-                <EventTagsAdmin eventTags={[]} />
+                <EventTagsAdmin eventTags={eventTags} />
             </TagHeasderItemPopUp>
             <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                 <div className={styles.createEvent}>

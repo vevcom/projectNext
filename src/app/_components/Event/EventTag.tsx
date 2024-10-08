@@ -6,14 +6,17 @@ type PropTypes = {
 }
 
 export default function EventTag({ eventTag }: PropTypes) {
+    // if background color is too dark color of text should be white
+    const textColor = (eventTag.colorR * 0.299 + eventTag.colorG * 0.587 + eventTag.colorB * 0.114) > 100 ? 'black' : 'white'
     return (
         <div className={styles.EventTag} style={{
-            color: `rgb(${eventTag.colorR}, ${eventTag.colorG}, ${eventTag.colorB})`
+            color: textColor,
+            backgroundColor: `rgb(${eventTag.colorR}, ${eventTag.colorG}, ${eventTag.colorB})`
         }}>
-            {eventTag.name}
-            <div className={styles.description}>
+            <p className={styles.name}>{eventTag.name}</p>
+            <p className={styles.description}>
                 {eventTag.description}
-            </div>
+            </p>
         </div>
     )
 }
