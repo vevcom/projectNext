@@ -3,8 +3,13 @@
 .EventsLandingLayout {
     padding: 1em ohma.$minimalPagePadding;
     .top {
-        h1 {
-            font-size: ohma.$fonts-xxl;
+        > .titleAndTags {
+            h1 {
+                font-size: ohma.$fonts-xxl;
+            }
+            display: flex;
+            align-items: center;
+            gap: 1em;
         }
         display: flex;
         justify-content: space-between;

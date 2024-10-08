@@ -17,15 +17,17 @@ type PropTypes = SearchParamsServerSide
 export default async function Events({
     searchParams
 }: PropTypes) {
-    const tags = QueryParams.eventTags.decode(searchParams)
+    const tagNames = QueryParams.eventTags.decode(searchParams)
 
-    const currentEventsResponse = await readCurrentEventsAction.bind(null, { tags })()
+    const currentEventsResponse = await readCurrentEventsAction.bind(null, { tags: tagNames })()
     const eventTagsResponse = await readEventTagsAction.bind(null, {})()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
     const { data: currentEvents } = currentEventsResponse
     const { data: eventTags, session } = eventTagsResponse
+
+    const currentTags = tagNames ? eventTags.filter(tag => tagNames.includes(tag.name)) : []
 
     const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
     const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)
@@ -37,6 +39,7 @@ export default async function Events({
                 icon: faArchive
             },
         ]}
+        selectedTags={currentTags}
         headerItem={
             <>
                 <TagHeasderItemPopUp scale={35} PopUpKey="TagEventPopUp">
