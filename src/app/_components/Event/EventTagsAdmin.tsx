@@ -1,7 +1,8 @@
-import { EventTag } from '@prisma/client'
+import type { EventTag as EventTagT } from '@prisma/client'
+import EventTag from './EventTag'
 
 type PropTypes = {
-    eventTags: EventTag[]
+    eventTags: EventTagT[]
 }
 
 /**
@@ -11,14 +12,14 @@ type PropTypes = {
  */
 export default function EventTagsAdmin({ eventTags }: PropTypes) {
     return (
-        <div>
+        <ul>
             {
                 eventTags.map((tag, index) => (
-                    <div key={index}>
-                        {tag.name}
-                    </div>
+                    <li key={index} >
+                        <EventTag eventTag={tag} />
+                    </li>
                 ))
             }
-        </div>
+        </ul>
     )
 }
