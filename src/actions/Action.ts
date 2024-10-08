@@ -28,7 +28,7 @@ export function Action<
         const config : { session: SessionMaybeUser, params: Params, data: DetailedType } = { session, params, data }
         return {
             ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
-            session: session,
+            session: session.toJsObject()
         }
     }
 }
@@ -52,7 +52,7 @@ export function ActionNoData<
         const config : { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
         return {
             ...( await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true })) ),
-            session: session,
+            session: session.toJsObject()
         }
     }
 }

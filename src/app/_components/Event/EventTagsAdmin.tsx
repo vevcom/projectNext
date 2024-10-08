@@ -6,6 +6,8 @@ import { createEventTagAction } from '@/actions/events/tags/create'
 import TextInput from '@/UI/TextInput'
 import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
+import { updateEventTagAction } from '@/actions/events/tags/update'
+import { HelpHeaderItemPopUp, SettingsHeaderItemPopUp } from '../HeaderItems/HeaderItemPopUp'
 
 type PropTypes = {
     eventTags: EventTagT[]
@@ -46,13 +48,15 @@ export default function EventTagsAdmin({
                         <EventTag eventTag={tag} />
                         {
                             canUpdate && (
-                                <span className={styles.update}>
-                                    <Form refreshOnSuccess action={createEventTagAction.bind(null, tag)} submitText='Oppdater'>
-                                        <TextInput name="name" label="Navn" defaultValue={tag.name} />
-                                        <Textarea name="description" label="Beskrivelse" defaultValue={tag.description} />
-                                        <ColorInput name="color" label="Farge" defaultValue={`rgb(${tag.colorR}, ${tag.colorG}, ${tag.colorB})`} />
-                                    </Form>
-                                </span>
+                                <SettingsHeaderItemPopUp PopUpKey={`EventTagPopUp${tag.id}`}>
+                                    <span className={styles.update}>
+                                        <Form refreshOnSuccess action={updateEventTagAction.bind(null, { id: tag.id })} submitText='Oppdater'>
+                                            <TextInput name="name" label="Navn" defaultValue={tag.name} />
+                                            <Textarea name="description" label="Beskrivelse" defaultValue={tag.description} />
+                                            <ColorInput name="color" label="Farge"  />
+                                        </Form>
+                                    </span>
+                                </SettingsHeaderItemPopUp>
                             )
                         }
                     </li>

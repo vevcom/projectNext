@@ -1,8 +1,9 @@
 import 'server-only'
 import { ServiceMethod } from "@/services/ServiceMethod"
 import { create } from "./create"
-import { CreateEventTagAuther } from "./Authers"
+import { CreateEventTagAuther, UpdateEventTagAuther } from "./Authers"
 import { read, readAll } from './read'
+import { update } from './update'
 
 export const EventTags = {
     create: ServiceMethod({
@@ -11,6 +12,13 @@ export const EventTags = {
         dynamicFields: () => ({}),
         withData: true,
         serviceMethodHandler: create,
+    }),
+    update: ServiceMethod({
+        hasAuther: true,
+        auther: UpdateEventTagAuther,
+        dynamicFields: () => ({}),
+        withData: true,
+        serviceMethodHandler: update,
     }),
     read: ServiceMethod({
         hasAuther: false,
@@ -22,4 +30,4 @@ export const EventTags = {
         withData: false,
         serviceMethodHandler: readAll,
     }),
-}
+} as const
