@@ -1,10 +1,11 @@
 import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import EventsLandingLayout from './EventsLandingLayout'
-import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import { AddHeaderItemPopUp, TagHeasderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEvents } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
-import { faArchive, faTag } from '@fortawesome/free-solid-svg-icons'
+import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
+import { faArchive } from '@fortawesome/free-solid-svg-icons'
 
 export default async function Events() {
     const currentEventsResponse = await readCurrentEvents()
@@ -16,20 +17,21 @@ export default async function Events() {
     return (
         <EventsLandingLayout title="Hvad Der Hender" headerLinks={[
             {
-                href: '/admin/eventtags',
-                icon: faTag
-            },
-            {
                 href: '/events/archive',
                 icon: faArchive
-            }
+            },
         ]}
         headerItem={
+            <>
+            <TagHeasderItemPopUp PopUpKey="TagEventPopUp">
+                <EventTagsAdmin eventTags={[]} />
+            </TagHeasderItemPopUp>
             <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                 <div className={styles.createEvent}>
                     <CreateOrUpdateEventForm />
                 </div>
             </AddHeaderItemPopUp>
+            </>
         }
         >
             {
