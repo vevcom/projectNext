@@ -18,14 +18,15 @@ model Event {
   eventEnd     DateTime
   canBeViewdBy EventCanView
 
-  takesRegistration  Boolean
-  places             Int                 @default(0)
+  takesRegistration Boolean
+  places            Int                 @default(0)
   registrationStart DateTime
   registrationEnd   DateTime
-  EventRegistration  EventRegistration[]
+  EventRegistration EventRegistration[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  ScreenPage ScreenPage[]
 
   @@unique([order, name])
 }
@@ -47,6 +48,7 @@ model EventTag {
   colorG        Int
   colorB        Int
   EventTagEvent EventTagEvent[]
+  ScreenPage    ScreenPage[]
 }
 
 model EventRegistration {

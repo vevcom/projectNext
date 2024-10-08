@@ -8,6 +8,9 @@ model Screen {
   name             String             @unique
   orientation      ScreenOrientation
   screenPageScreen ScreenPageScreen[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ScreenPageScreen {
@@ -17,6 +20,9 @@ model ScreenPageScreen {
   screenId     Int
   order        Int
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@id([screenPageId, screenId])
   @@unique([order, screenId])
 }
@@ -25,6 +31,8 @@ enum ScreenPageType {
   IMAGE
   TEXT_AND_IMAGE
   JOBAD
+  EVENT
+  EVENT_TAG
 }
 
 model ScreenPage {
@@ -38,4 +46,11 @@ model ScreenPage {
   cmsParagraph     CmsParagraph       @relation(fields: [cmsParagraphId], references: [id])
   cmsParagraphId   Int
   screenPageScreen ScreenPageScreen[]
+  event            Event?             @relation(fields: [eventId], references: [id])
+  eventId          Int?
+  eventTag         EventTag?          @relation(fields: [eventTagId], references: [id])
+  eventTagId       Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
