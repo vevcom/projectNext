@@ -28,7 +28,7 @@ export const read = ServiceMethodHandler({
 
 export const readCurrent = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: { tags: string[] | null, visibilityFilter: object }) => await prisma.event.findMany({
+    handler: async (prisma, params: { tags: string[] | null }) => await prisma.event.findMany({
         select: {
             ...eventFilterSeletion,
             coverImage: {
@@ -41,7 +41,6 @@ export const readCurrent = ServiceMethodHandler({
             eventEnd: {
                 gte: getOsloTime()
             },
-            ...params.visibilityFilter,
             EventTagEvent: params.tags ? {
                 some: {
                     tag: {

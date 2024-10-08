@@ -12,6 +12,8 @@ export const create = ServiceMethodHandler({
     withData: true,
     validation: createEventValidation,
     handler: async (prisma, _, data) => {
+        console.log('create event')
+        console.log('data', data)
         const cmsParagraph = await createCmsParagraph({ name: uuid() })
         const cmsImage = await createCmsImage({ name: uuid() })
 

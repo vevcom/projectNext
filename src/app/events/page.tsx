@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import EventsLandingLayout from './EventsLandingLayout'
 import { AddHeaderItemPopUp, TagHeasderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { readCurrentEvents } from '@/actions/events/read'
+import { readCurrentEventsAction } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
 import { readEventTagsAction } from '@/actions/events/tags/read'
@@ -19,7 +19,7 @@ export default async function Events({
 }: PropTypes) {
     const tags = QueryParams.eventTags.decode(searchParams)
 
-    const currentEventsResponse = await readCurrentEvents()
+    const currentEventsResponse = await readCurrentEventsAction.bind(null, { tags })()
     const eventTagsResponse = await readEventTagsAction.bind(null, {})()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
