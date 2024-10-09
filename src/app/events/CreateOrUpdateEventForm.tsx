@@ -37,70 +37,72 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
 
     return (
         <div className={styles.CreateOrUpdateEventForm}>
-        <Form
-            closePopUpOnSuccess="EditEvent"
-            action={action}
-            submitText={event ? 'Oppdater' : 'Opprett'}
-            refreshOnSuccess
-            navigateOnSuccess={
-                data => (data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events')
-            }
-        >
-            <TextInput label="Navn" name="name" defaultValue={event?.name} />
-            <SelectString
-                className={styles.canBeViewdBy}
-                label="Hvem kan se"
-                name="canBeViewdBy"
-                options={CanBeViewdByOptions}
-                defaultValue={event?.canBeViewdBy}
-            />
-            <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
-            <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
-            <ul className={styles.tags}>
-            {
-                eventTags.map(tag => (
-                    <li key={tag.id}>
-                        <Checkbox
-                            name="tagIds"
-                            value={tag.id}
-                            defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
-                        >
-                            <EventTag eventTag={tag} />
-                        </Checkbox>
-                    </li>
-                ))
-            }
-            </ul>
-            <Slider
-                label="Med registrering"
-                name="takesRegistration"
-                onChange={handleShowRegistration}
-                defaultChecked={event?.takesRegistration}
-            />
-            {
-                showRegistrationOptions ? (
-                    <>
-                        <NumberInput
-                            label="plasser"
-                            name="places"
-                            defaultValue={event?.places}
-                        />
-                        <DateInput
-                            label="Registrering Start"
-                            name="registrationStart"
-                            defaultValue={event?.registrationStart}
-                            includeTime
-                        />
-                        <DateInput
-                            label="Registrering Slutt"
-                            name="registrationEnd"
-                            defaultValue={event?.registrationEnd}
-                            includeTime
-                        />
-                    </>
-                ) : <></>
-            }
-        </Form>
+            <h1>Oppdater Hendelse</h1>
+            <Form
+                closePopUpOnSuccess="EditEvent"
+                action={action}
+                submitText={event ? 'Oppdater' : 'Opprett'}
+                refreshOnSuccess
+                navigateOnSuccess={
+                    data => (data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events')
+                }
+            >
+                <TextInput label="Navn" name="name" defaultValue={event?.name} />
+                <SelectString
+                    className={styles.canBeViewdBy}
+                    label="Hvem kan se"
+                    name="canBeViewdBy"
+                    options={CanBeViewdByOptions}
+                    defaultValue={event?.canBeViewdBy}
+                />
+                <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
+                <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
+                <ul className={styles.tags}>
+                <h2>Tags</h2>
+                {
+                    eventTags.map(tag => (
+                        <li key={tag.id}>
+                            <Checkbox
+                                name="tagIds"
+                                value={tag.id}
+                                defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
+                            >
+                                <EventTag eventTag={tag} />
+                            </Checkbox>
+                        </li>
+                    ))
+                }
+                </ul>
+                <Slider
+                    label="Med registrering"
+                    name="takesRegistration"
+                    onChange={handleShowRegistration}
+                    defaultChecked={event?.takesRegistration}
+                />
+                {
+                    showRegistrationOptions ? (
+                        <>
+                            <NumberInput
+                                label="plasser"
+                                name="places"
+                                defaultValue={event?.places}
+                            />
+                            <DateInput
+                                label="Registrering Start"
+                                name="registrationStart"
+                                defaultValue={event?.registrationStart}
+                                includeTime
+                            />
+                            <DateInput
+                                label="Registrering Slutt"
+                                name="registrationEnd"
+                                defaultValue={event?.registrationEnd}
+                                includeTime
+                            />
+                        </>
+                    ) : <></>
+                }
+            </Form>
         </div>
     )
 }

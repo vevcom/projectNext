@@ -44,7 +44,8 @@ export const update = ServiceMethodHandler({
             data: tagIds.map(tagId => ({
                 eventId: params.id,
                 tagId
-            }))
+            })),
+            skipDuplicates: true
         })
         return eventUpdate
     }

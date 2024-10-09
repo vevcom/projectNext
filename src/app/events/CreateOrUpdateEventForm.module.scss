@@ -6,10 +6,13 @@
         max-width: 300px;
     }
     .tags {
+        h2 {
+            flex: 1 1 100%;
+        }
         margin-top: 1em;
         display: flex;
         flex-flow: row wrap;
-        gap: 2em;
+        gap: 0 2em;
         overflow-y: visible;
         overflow-x: visible;
         list-style-type: none;
