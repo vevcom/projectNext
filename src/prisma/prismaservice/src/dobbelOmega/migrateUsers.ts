@@ -39,6 +39,23 @@ export default async function migrateUsers(
             group: true
         }
     })
+    const { order: currentOrder } = await pnPrisma.omegaOrder.findFirstOrThrow({
+        orderBy: {
+            order: 'desc'
+        }
+    })
+
+    const classes = await pnPrisma.class.findMany({
+        include: {
+            group: true
+        }
+    })
+
+    const yearIdMap = classes.reduce((acc, cur) => {
+        acc[cur.year] = cur.id
+        return acc
+    }, {} as Record<number, number>)
+
     Promise.all(users.map(async user => {
         const sexMap = {
             m: "MALE",
@@ -95,7 +112,28 @@ export default async function migrateUsers(
                 }
             })
         }
-
+        
         // connect to correct class (year)
+        if (user.yearOfStudy in [1, 2, 3, 4, 5]) {
+            let year = user.yearOfStudy
+            let order = currentOrder
+            while (year > 0) {
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: soelleGroup.id,
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: order,
+                    }
+                })
+                year--
+                order--
+            }
+        } else {
+            if (user.yearOfStudy !== 6) {
+                console.error(`${user.id} (vevvenId) had bad yearOfStudy`)
+            }
+        }
     }))
 }

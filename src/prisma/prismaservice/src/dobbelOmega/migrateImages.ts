@@ -55,6 +55,13 @@ export default async function migrateImages(
     })
     if (!ombulCollection) throw new Error('No ombul collection found for seeding images')
 
+    const profileCollection = await pnPrisma.imageCollection.findUnique({
+        where: {
+            special: 'PROFILEIMAGES',
+        },
+    })
+    if (!profileCollection) throw new Error('No profile collection found for seeding images')
+
     const images = await vevenPrisma.images.findMany({
         include: {
             Ombul: true,
@@ -67,6 +74,8 @@ export default async function migrateImages(
         let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
+        } else if (image.UserId) {
+            collectionId = profileCollection.id
         } else if (!collectionId) {
             collectionId = garbageCollection.id
         }
@@ -81,6 +90,7 @@ export default async function migrateImages(
         if (image.Articles.length) return true
         if (image.Events.length) return true
         if (image.collectionId === ombulCollection.id) return true
+        if (image.collectionId = profileCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false
     })
