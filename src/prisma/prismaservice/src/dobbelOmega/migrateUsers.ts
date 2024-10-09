@@ -70,7 +70,7 @@ export default async function migrateUsers(
             data: {
                 id: user.id,
                 username: user.username,
-                email: user.email ?? "dobbel@omega..no",
+                email: user.email ?? `dobbel@omega.${user.id}.no`,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 bio: user.bio ?? "",
