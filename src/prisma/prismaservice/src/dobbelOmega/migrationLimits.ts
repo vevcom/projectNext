@@ -10,6 +10,7 @@ export function getLimits() {
         articles: 300,
         mailaliases: null,
         users: 1000,
+        events: null,
     }
     const nullObj: { [key in keyof typeof limits]: null } = {
         ombul: null,
@@ -18,6 +19,7 @@ export function getLimits() {
         articles: null,
         mailaliases: null,
         users: null,
+        events: null,
     }
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'

@@ -14,15 +14,17 @@ model Event {
   coverImageId   Int
   EventTagEvent  EventTagEvent[]
 
-  eventStart   DateTime
-  eventEnd     DateTime
-  canBeViewdBy EventCanView
+  eventStart         DateTime
+  eventEnd           DateTime
+  canBeViewdBy       EventCanView
+  hostedByCommitee   Committee?   @relation(fields: [hostedByCommiteeId], references: [id])
+  hostedByCommiteeId Int?
 
-  takesRegistration  Boolean
-  places             Int                 @default(0)
+  takesRegistration Boolean
+  places            Int                 @default(0)
   registrationStart DateTime
   registrationEnd   DateTime
-  EventRegistration  EventRegistration[]
+  EventRegistration EventRegistration[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
