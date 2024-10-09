@@ -48,6 +48,7 @@ export default async function Events({
                             canCreate={canCreate.authorized}
                             canUpdate={canUpdate.authorized}
                             eventTags={eventTags}
+                            selectedTags={currentTags}
                         />
                     </PopUpProvider>
                 </TagHeasderItemPopUp>

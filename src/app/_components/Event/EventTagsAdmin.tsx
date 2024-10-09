@@ -15,6 +15,7 @@ type PropTypes = {
     eventTags: EventTagT[]
     canUpdate?: boolean
     canCreate?: boolean
+    selectedTags: EventTagT[]
 }
 
 /**
@@ -26,8 +27,9 @@ type PropTypes = {
  */
 export default function EventTagsAdmin({
     eventTags,
+    selectedTags,
     canUpdate = false,
-    canCreate = false
+    canCreate = false,
 }: PropTypes) {
     return (
         <div className={styles.EventTagsAdmin}>
@@ -47,7 +49,18 @@ export default function EventTagsAdmin({
                 {
                     eventTags.map((tag, index) => (
                         <li key={index} >
-                            <Link href={'/events' + QueryParams.eventTags.encodeUrl([tag.name])}>
+                            <Link 
+                                className={selectedTags.map(tag => tag.name).includes(tag.name) ? styles.selected : ''}
+                                href={
+                                    selectedTags.map(tag => tag.name).includes(tag.name) ? 
+                                    '/events' + QueryParams.eventTags.encodeUrl(
+                                        selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
+                                    ) :
+                                    '/events' + QueryParams.eventTags.encodeUrl(
+                                        [...selectedTags.map(tag => tag.name), tag.name]
+                                    )
+                                }
+                            >
                                 <EventTag eventTag={tag} />
                             </Link>
                             {

@@ -30,6 +30,20 @@
         padding-bottom: 5em;
         a {
             text-decoration: none;
+            &.selected {
+                position: relative;
+                &:hover {
+                    &::after {
+                        content: '✖';
+                        font-size: 4em;
+                        color: ohma.$colors-black;
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
         }
         li {
             display: flex;
