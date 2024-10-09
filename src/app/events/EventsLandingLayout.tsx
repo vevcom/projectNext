@@ -5,6 +5,7 @@ import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
 import { EventTag as EventTagT } from '@prisma/client'
 import EventTag from '@/components/Event/EventTag'
+import { QueryParams } from '@/lib/query-params/queryParams'
 
 type PropTypes = {
     headerLinks: {
@@ -31,7 +32,13 @@ export default function EventsLandingLayout({
                     <h1>{title}</h1>
                     {
                         selectedTags?.map(tag =>
-                            <EventTag key={tag.name} eventTag={tag} />
+                            <Link href={selectedTags.length === 1 ? '/events' : 
+                                `/events/${QueryParams.eventTags.encodeUrl(
+                                    selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
+                                )}`
+                            }>
+                                <EventTag key={tag.name} eventTag={tag} />
+                            </Link>
                         )
                     }
                 </div>
