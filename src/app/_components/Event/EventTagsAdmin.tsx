@@ -7,10 +7,10 @@ import TextInput from '@/UI/TextInput'
 import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
-import type { EventTag as EventTagT } from '@prisma/client'
-import Link from 'next/link'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { destroyEventTagAction } from '@/actions/events/tags/destroy'
+import Link from 'next/link'
+import type { EventTag as EventTagT } from '@prisma/client'
 
 type PropTypes = {
     eventTags: EventTagT[]
@@ -38,18 +38,14 @@ export default function EventTagsAdmin({
 }: PropTypes) {
     const baseUrl = page === 'EVENT' ? '/events' : '/events/archive'
 
-    const removeFromUrl = (tag: string) => {
-        return selectedTags.length === 1 ? 
-            baseUrl : 
-            baseUrl + QueryParams.eventTags.encodeUrl(
-                selectedTags.filter(t => t.name !== tag).map(t => t.name)
-            )
-    }
-    const addToUrl = (tag: string) => {
-        return baseUrl + QueryParams.eventTags.encodeUrl(
-            [...selectedTags.map(t => t.name), tag]
-        )
-    }
+    const removeFromUrl = (tag: string) => (selectedTags.length === 1 ?
+        baseUrl :
+        baseUrl + QueryParams.eventTags.encodeUrl(
+            selectedTags.filter(t => t.name !== tag).map(t => t.name)
+        ))
+    const addToUrl = (tag: string) => baseUrl + QueryParams.eventTags.encodeUrl(
+        [...selectedTags.map(t => t.name), tag]
+    )
     return (
         <div className={styles.EventTagsAdmin}>
             <h1>Tagger</h1>
@@ -68,17 +64,17 @@ export default function EventTagsAdmin({
                 {
                     eventTags.map((tag, index) => (
                         <li key={index} >
-                            <Link 
-                                className={selectedTags.map(tag => tag.name).includes(tag.name) ? styles.selected : ''}
+                            <Link
+                                className={selectedTags.map(t => t.name).includes(tag.name) ? styles.selected : ''}
                                 href={
-                                    selectedTags.map(tag => tag.name).includes(tag.name) ? 
-                                    removeFromUrl(tag.name) : addToUrl(tag.name)
+                                    selectedTags.map(t => t.name).includes(tag.name) ?
+                                        removeFromUrl(tag.name) : addToUrl(tag.name)
                                 }
                             >
                                 <EventTag eventTag={tag} />
                             </Link>
                             {
-                                canUpdate || canDestroy  ? (
+                                canUpdate || canDestroy ? (
                                     <SettingsHeaderItemPopUp scale={25} PopUpKey={`EventTagPopUp${tag.id}`}>
                                         {canUpdate && <span className={styles.update}>
                                             <Form
@@ -112,12 +108,12 @@ export default function EventTagsAdmin({
                                             <Form
                                                 refreshOnSuccess
                                                 action={destroyEventTagAction.bind(null, { id: tag.id })}
-                                                submitColor='red'
+                                                submitColor="red"
                                                 confirmation={{
                                                     confirm: true,
                                                     text: 'Er du sikker på at du vil slette denne taggen?'
                                                 }}
-                                                submitText='Slett'
+                                                submitText="Slett"
                                             />
                                         </span>
                                         }

@@ -6,7 +6,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 export const update = ServiceMethodHandler({
     withData: true,
     validation: updateEventValidation,
-    handler: async (prisma, params: { id: number }, {tagIds, ...data}) => {
+    handler: async (prisma, params: { id: number }, { tagIds, ...data }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }
         })

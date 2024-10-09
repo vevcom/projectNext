@@ -9,11 +9,10 @@ import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
 import { destroyEvent } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
-import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { readEventTagsAction } from '@/actions/events/tags/read'
-import { QueryParam } from '@/lib/query-params/QueryParam'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
@@ -44,7 +43,7 @@ export default async function Event({ params }: PropTypes) {
                     <ul className={styles.tags}>
                         {event.tags.map(tag => (
                             <li key={tag.id}>
-                                <Link href={'/events' + QueryParams.eventTags.encodeUrl([tag.name])}>
+                                <Link href={`/events${QueryParams.eventTags.encodeUrl([tag.name])}`}>
                                     <EventTag eventTag={tag} />
                                 </Link>
                             </li>

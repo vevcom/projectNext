@@ -1,15 +1,15 @@
 import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import EventsLandingLayout from './EventsLandingLayout'
+import TagHeaderItem from './TagHeaderItem'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEventsAction } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
-import { faArchive } from '@fortawesome/free-solid-svg-icons'
-import { SearchParamsServerSide } from '@/lib/query-params/Types'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import TagHeaderItem from './TagHeaderItem'
+import { faArchive } from '@fortawesome/free-solid-svg-icons'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
 type PropTypes = SearchParamsServerSide
 
@@ -42,13 +42,13 @@ export default async function Events({
         selectedTags={currentTags}
         headerItem={
             <>
-                <TagHeaderItem 
-                    eventTags={eventTags} 
-                    currentTags={currentTags} 
-                    canUpdate={canUpdate.authorized} 
-                    canCreate={canCreate.authorized} 
+                <TagHeaderItem
+                    eventTags={eventTags}
+                    currentTags={currentTags}
+                    canUpdate={canUpdate.authorized}
+                    canCreate={canCreate.authorized}
                     canDestroy={canDestroy.authorized}
-                    page='EVENT'
+                    page="EVENT"
                 />
                 <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                     <div className={styles.createEvent}>

@@ -1,7 +1,7 @@
-import { faTag } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { EventTag } from "@prisma/client"
 import styles from './SmallEventTag.module.scss'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { EventTag } from '@prisma/client'
 
 type PropTypes = {
     eventTag: EventTag

@@ -9,10 +9,10 @@ type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
 }
 
 /**
- * 
+ *
  * @param label - The label shown to user (optional)
  * @param children - If given, the children will be clickable as part of checkbox
- * @returns 
+ * @returns
  */
 function Checkbox({ label, children, ...props }: PropTypes) {
     props.id ??= `id_input_${uuid()}`
@@ -26,7 +26,7 @@ function Checkbox({ label, children, ...props }: PropTypes) {
                         { children }
                         {label ? label : <></>}
                     </label>
-                ) :  (
+                ) : (
                     <>
                         <input type="checkbox" {...props} />
                         {label && <label htmlFor={props.id}>{ label }</label>}

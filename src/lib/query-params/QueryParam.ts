@@ -1,4 +1,4 @@
-import { SearchParamsServerSide } from "./Types"
+import type { SearchParamsServerSide } from './Types'
 
 export abstract class QueryParam<Type> {
     public name: string

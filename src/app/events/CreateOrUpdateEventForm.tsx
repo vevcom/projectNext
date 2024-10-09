@@ -1,4 +1,6 @@
 'use client'
+import styles from './CreateOrUpdateEventForm.module.scss'
+import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Slider from '@/components/UI/Slider'
@@ -8,12 +10,10 @@ import TextInput from '@/components/UI/TextInput'
 import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
+import EventTag from '@/components/Event/EventTag'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
-import EventTag from '@/components/Event/EventTag'
-import styles from './CreateOrUpdateEventForm.module.scss'
-import Checkbox from '../_components/UI/Checkbox'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }
@@ -58,20 +58,20 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
                 <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
                 <ul className={styles.tags}>
-                <h2>Tags</h2>
-                {
-                    eventTags.map(tag => (
-                        <li key={tag.id}>
-                            <Checkbox
-                                name="tagIds"
-                                value={tag.id}
-                                defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
-                            >
-                                <EventTag eventTag={tag} />
-                            </Checkbox>
-                        </li>
-                    ))
-                }
+                    <h2>Tags</h2>
+                    {
+                        eventTags.map(tag => (
+                            <li key={tag.id}>
+                                <Checkbox
+                                    name="tagIds"
+                                    value={tag.id}
+                                    defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false}
+                                >
+                                    <EventTag eventTag={tag} />
+                                </Checkbox>
+                            </li>
+                        ))
+                    }
                 </ul>
                 <Slider
                     label="Med registrering"

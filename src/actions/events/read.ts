@@ -1,10 +1,8 @@
 'use server'
+import { ActionNoData } from '@/actions/Action'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { Session } from '@/auth/Session'
 import { Events } from '@/services/events'
-import type { ReadPageInput } from '@/services/paging/Types'
-import type { EventArchiveCursor, EventArchiveDetails } from '@/services/events/Types'
-import { ActionNoData } from '../Action'
 
 export const readCurrentEventsAction = ActionNoData(Events.readCurrent)
 

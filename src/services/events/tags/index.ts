@@ -3,8 +3,8 @@ import { create } from './create'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from './Authers'
 import { read, readAll } from './read'
 import { update } from './update'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { destroy } from './destroy'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const EventTags = {
     create: ServiceMethod({

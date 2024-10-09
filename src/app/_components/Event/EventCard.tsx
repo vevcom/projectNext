@@ -1,11 +1,11 @@
 import styles from './EventCard.module.scss'
+import SmallEventTag from './SmallEventTag'
 import Image from '@/components/Image/Image'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import type { EventExpanded } from '@/services/events/Types'
-import SmallEventTag from './SmallEventTag'
 
 type PropTypes = {
     event: EventExpanded

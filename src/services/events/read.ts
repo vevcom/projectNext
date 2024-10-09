@@ -37,7 +37,7 @@ export const read = ServiceMethodHandler({
     }
 })
 
-const eventTagSelector = (tags: string[] | null) => tags ? {
+const eventTagSelector = (tags: string[] | null) => (tags ? {
     some: {
         tag: {
             name: {
@@ -45,7 +45,7 @@ const eventTagSelector = (tags: string[] | null) => tags ? {
             }
         }
     }
-} : undefined
+} : undefined)
 
 export const readCurrent = ServiceMethodHandler({
     withData: false,
