@@ -28,6 +28,9 @@
         list-style-type: none;
         isolation: isolate;
         padding-bottom: 5em;
+        a {
+            text-decoration: none;
+        }
         li {
             display: flex;
             align-items: center;

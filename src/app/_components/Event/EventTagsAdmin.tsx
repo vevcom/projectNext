@@ -8,6 +8,8 @@ import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
 import type { EventTag as EventTagT } from '@prisma/client'
+import Link from 'next/link'
+import { QueryParams } from '@/lib/query-params/queryParams'
 
 type PropTypes = {
     eventTags: EventTagT[]
@@ -45,7 +47,9 @@ export default function EventTagsAdmin({
                 {
                     eventTags.map((tag, index) => (
                         <li key={index} >
-                            <EventTag eventTag={tag} />
+                            <Link href={'/events' + QueryParams.eventTags.encodeUrl([tag.name])}>
+                                <EventTag eventTag={tag} />
+                            </Link>
                             {
                                 canUpdate && (
                                     <SettingsHeaderItemPopUp scale={25} PopUpKey={`EventTagPopUp${tag.id}`}>

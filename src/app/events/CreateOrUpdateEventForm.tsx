@@ -36,6 +36,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
     }
 
     return (
+        <div className={styles.CreateOrUpdateEventForm}>
         <Form
             closePopUpOnSuccess="EditEvent"
             action={action}
@@ -47,6 +48,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
         >
             <TextInput label="Navn" name="name" defaultValue={event?.name} />
             <SelectString
+                className={styles.canBeViewdBy}
                 label="Hvem kan se"
                 name="canBeViewdBy"
                 options={CanBeViewdByOptions}
@@ -54,27 +56,27 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
             />
             <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
             <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
-
+            <ul className={styles.tags}>
+            {
+                eventTags.map(tag => (
+                    <li key={tag.id}>
+                        <Checkbox
+                            name="tagIds"
+                            value={tag.id}
+                            defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
+                        >
+                            <EventTag eventTag={tag} />
+                        </Checkbox>
+                    </li>
+                ))
+            }
+            </ul>
             <Slider
                 label="Med registrering"
                 name="takesRegistration"
                 onChange={handleShowRegistration}
                 defaultChecked={event?.takesRegistration}
             />
-            <ul className={styles.tags}>
-            {
-                eventTags.map(tag => (
-                    <li key={tag.id}>
-                        <EventTag eventTag={tag} />
-                        <Checkbox 
-                            name="tagIds"
-                            value={tag.name}
-                            defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
-                        />
-                    </li>
-                ))
-            }
-            </ul>
             {
                 showRegistrationOptions ? (
                     <>
@@ -99,5 +101,6 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 ) : <></>
             }
         </Form>
+        </div>
     )
 }
