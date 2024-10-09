@@ -11,6 +11,7 @@ model User {
   firstname         String              @default("[Fjernet]")
   lastname          String              @default("[Fjernet]")
   bio               String              @default("")
+  archived          Boolean             @default(false)
   acceptedTerms     DateTime?
   sex               SEX?
   allergies         String?

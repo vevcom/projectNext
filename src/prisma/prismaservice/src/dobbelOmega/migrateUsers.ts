@@ -5,7 +5,12 @@ import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, vevenIdToPnId } from './IdMapper'
 
 /**
- * This function migrates users from Veven to PN
+ * TODO: Need migrate reservations (mail reservations) ?, and flairs 
+ * This function migrates users from Veven to PN. It only migrates to theUser model, not FeideAccounts
+ * or Credentials. These should be linked when people log in for the first time.
+ * If a user has the soelle field true on veven it will get a relation to the soelle group 
+ * - else it is assumed to be a member and an inactive relation to the soelle group. 
+ * i.e. no users are assumed to be external.
  * @param pnPrisma - PrismaClientPn
  * @param vevenPrisma - PrismaClientVeven
  * @param limits - Limits - used to limit the number of users to migrate
@@ -15,7 +20,7 @@ export default async function migrateUsers(
     vevenPrisma: PrismaClientVeven,
     limits: Limits,
     imageIdMap: IdMapper
-) {
+): Promise<IdMapper> {
     const users = await vevenPrisma.users.findMany({
         take: limits.users ? limits.users : undefined,
         include: {
@@ -42,11 +47,6 @@ export default async function migrateUsers(
             group: true
         }
     })
-    const { order: currentOrder } = await pnPrisma.omegaOrder.findFirstOrThrow({
-        orderBy: {
-            order: 'desc'
-        }
-    })
 
     const classes = await pnPrisma.class.findMany({
         include: {
@@ -59,7 +59,8 @@ export default async function migrateUsers(
         return acc
     }, {} as Record<number, number>)
 
-    Promise.all(users.map(async user => {
+    const userIdMap: IdMapper = []
+    await Promise.all(users.map(async user => {
         const sexMap = {
             m: "MALE",
             f: "FEMALE",
@@ -81,9 +82,11 @@ export default async function migrateUsers(
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
                 imageId: vevenIdToPnId(imageIdMap, user.ImageId),
-
+                archived: user.archived,
             }
         })
+
+        userIdMap.push({ vevenId: user.id, pnId: pnUser.id })
         
         // Connect to correct membership group
         const membershipOrder = await pnPrisma.omegaOrder.upsert({
@@ -297,4 +300,5 @@ export default async function migrateUsers(
             }
         }
     }))
+    return userIdMap
 }
