@@ -9,7 +9,7 @@ export function getLimits() {
         omegaquotes: null,
         articles: 300,
         mailaliases: 0,
-        events: null,
+        events: 100,
         users: 100,
     }
     const nullObj: { [key in keyof typeof limits]: null } = {

@@ -82,6 +82,7 @@ services:
             API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
         volumes:
             - store:/usr/src/app/prismaservice/store
+            - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
         depends_on:
             db:
                 condition: service_healthy
@@ -144,4 +145,6 @@ volumes:
     store:
         driver: local
     logs:
+        driver: local
+    dobbelOmegaManifest:
         driver: local
