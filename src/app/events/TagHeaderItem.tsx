@@ -9,6 +9,7 @@ type PropTypes = {
     currentTags: EventTag[]
     canCreate: boolean
     canUpdate: boolean
+    canDestroy: boolean
     page: 'EVENT' | 'EVENT_ARCHIVE'
 }
 
@@ -17,6 +18,7 @@ export default function TagHeaderItem({
     currentTags,
     canCreate,
     canUpdate,
+    canDestroy,
     page
 }: PropTypes) {
     return (
@@ -25,6 +27,7 @@ export default function TagHeaderItem({
                 <EventTagsAdmin
                     canCreate={canCreate}
                     canUpdate={canUpdate}
+                    canDestroy={canDestroy}
                     eventTags={eventTags}
                     selectedTags={currentTags}
                     page={page}

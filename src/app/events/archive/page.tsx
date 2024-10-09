@@ -5,7 +5,7 @@ import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { SearchParamsServerSide } from '@/lib/query-params/Types'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { CreateEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
+import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import TagHeaderItem from '../TagHeaderItem'
 
 type PropTypes = SearchParamsServerSide
@@ -23,6 +23,7 @@ export default async function EventArchive({
 
     const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
     const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)
+    const canDestroy = DestroyEventTagAuther.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout title="Hvad Der Har Hendt" headerLinks={[
@@ -34,6 +35,7 @@ export default async function EventArchive({
             <TagHeaderItem 
                 canCreate={canCreate.authorized} 
                 canUpdate={canUpdate.authorized} 
+                canDestroy={canDestroy.authorized}
                 currentTags={selectedTags} 
                 eventTags={eventTags}
                 page='EVENT_ARCHIVE'

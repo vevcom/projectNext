@@ -10,11 +10,13 @@ import { updateEventTagAction } from '@/actions/events/tags/update'
 import type { EventTag as EventTagT } from '@prisma/client'
 import Link from 'next/link'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { destroyEventTagAction } from '@/actions/events/tags/destroy'
 
 type PropTypes = {
     eventTags: EventTagT[]
     canUpdate?: boolean
     canCreate?: boolean
+    canDestroy?: boolean
     selectedTags: EventTagT[]
     page: 'EVENT' | 'EVENT_ARCHIVE'
 }
@@ -31,6 +33,7 @@ export default function EventTagsAdmin({
     selectedTags,
     canUpdate = false,
     canCreate = false,
+    canDestroy = false,
     page
 }: PropTypes) {
     const baseUrl = page === 'EVENT' ? '/events' : '/events/archive'
@@ -75,9 +78,9 @@ export default function EventTagsAdmin({
                                 <EventTag eventTag={tag} />
                             </Link>
                             {
-                                canUpdate && (
+                                canUpdate || canDestroy  ? (
                                     <SettingsHeaderItemPopUp scale={25} PopUpKey={`EventTagPopUp${tag.id}`}>
-                                        <span className={styles.update}>
+                                        {canUpdate && <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess
                                                 action={updateEventTagAction.bind(null, { id: tag.id })}
@@ -104,8 +107,22 @@ export default function EventTagsAdmin({
                                                 />
                                             </Form>
                                         </span>
+                                        }
+                                        {canDestroy && <span className={styles.destroy}>
+                                            <Form
+                                                refreshOnSuccess
+                                                action={destroyEventTagAction.bind(null, { id: tag.id })}
+                                                submitColor='red'
+                                                confirmation={{
+                                                    confirm: true,
+                                                    text: 'Er du sikker på at du vil slette denne taggen?'
+                                                }}
+                                                submitText='Slett'
+                                            />
+                                        </span>
+                                        }
                                     </SettingsHeaderItemPopUp>
-                                )
+                                ) : <></>
                             }
                         </li>
                     ))
