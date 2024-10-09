@@ -18,6 +18,13 @@ export default async function migrateUsers(
 ) {
     const users = await vevenPrisma.users.findMany({
         take: limits.users ? limits.users : undefined,
+        include: {
+            StudyProgrammes: {
+                select: {
+                    years: true
+                }
+            }
+        }
     })
     const soelleGroup = await pnPrisma.omegaMembershipGroup.findUniqueOrThrow({
         where: {
@@ -110,25 +117,183 @@ export default async function migrateUsers(
         }
         
         // connect to correct class (year)
-        if (user.yearOfStudy in [1, 2, 3, 4, 5]) {
-            let year = user.yearOfStudy
-            let order = currentOrder
-            while (year > 0) {
+        const yearsInProgramme = Math.min(user.StudyProgrammes?.years ?? 0, 5)
+        switch (yearsInProgramme) {
+        case 0:
+            console.error(`User ${user.id} has no years in programme or no programme`)
+            break
+        case 2:
+            //ASSUME 2 years masters. The user can be member of 4 5 and 6 (siving)
+            if (user.yearOfStudy === 6) {
+                const orderBecameSiving = user.order + 2
                 await pnPrisma.membership.create({
                     data: {
-                        groupId: soelleGroup.id,
+                        groupId: yearIdMap[6],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: orderBecameSiving,
+                    }
+                })
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[5],
                         userId: pnUser.id,
                         active: false,
                         admin: false,
-                        order: order,
+                        order: orderBecameSiving - 1,
                     }
                 })
-                year--
-                order--
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[4],
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: orderBecameSiving - 2,
+                    }
+                })
+            } else if (user.yearOfStudy == 5) {
+                const orderBecame5 = user.order + 1
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[5],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: orderBecame5,
+                    }
+                })
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[4],
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: orderBecame5 - 1,
+                    }
+                })
+            } else if (user.yearOfStudy == 4) {
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[4],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: user.order,
+                    }
+                })
+            } else {
+                console.error(`User ${user.id} is in a 2 year programme but not in year 4, 5 or 6`)
             }
-        } else {
-            if (user.yearOfStudy !== 6) {
-                console.error(`${user.id} (vevvenId) had bad yearOfStudy`)
+            break
+        case 3:
+            //ASSUME 3 years bachelors. The user can be member of 1 2 and 3, and cannot be siving.
+            if (!(user.yearOfStudy in [1, 2, 3])) {
+                console.error(`User ${user.id} is in a 3 year programme but not in year 1, 2 or 3`)
+                break
+            }
+            if (user.yearOfStudy === 1) {
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[1],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: user.order,
+                    }
+                })
+            } else if (user.yearOfStudy === 2) {
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[2],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: user.order,
+                    }
+                })
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[1],
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: user.order - 1,
+                    }
+                })
+            } else if (user.yearOfStudy === 3) {
+                // This is a nut - it is hard to say if the user still is in 3. grade.
+                // We will assume that the user is in 3. grade if the order is gte 103
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[3],
+                        userId: pnUser.id,
+                        active: user.order >= 103,
+                        admin: false,
+                        order: user.order,
+                    }
+                })
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[2],
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: user.order - 1,
+                    }
+                })
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[1],
+                        userId: pnUser.id,
+                        active: false,
+                        admin: false,
+                        order: user.order - 2,
+                    }
+                })
+            }
+            break
+        case 5:
+            // Assuming 5 year masters. The user can be member of 1 2 3 4 5 and 6 (siving)
+            if (user.yearOfStudy === 6) {
+                const orderBecameSiving = user.order + 5 // Assume the user used 5 years to get to sivin
+                await pnPrisma.membership.create({
+                    data: {
+                        groupId: yearIdMap[6],
+                        userId: pnUser.id,
+                        active: true,
+                        admin: false,
+                        order: orderBecameSiving,
+                    }
+                })
+                for (let i = 5; i >= 1; i--) {
+                    await pnPrisma.membership.create({
+                        data: {
+                            groupId: yearIdMap[i],
+                            userId: pnUser.id,
+                            active: false,
+                            admin: false,
+                            order: orderBecameSiving - i,
+                        }
+                    })
+                }
+            } else {
+                if (!(user.yearOfStudy in [1, 2, 3, 4, 5])) {
+                    console.error(`User ${user.id} is in a 5 year programme but not in year 1, 2, 3, 4 or 5`)
+                    break
+                }
+                for (let year=1; year <= user.yearOfStudy; year++) {
+                    await pnPrisma.membership.create({
+                        data: {
+                            groupId: yearIdMap[year],
+                            userId: pnUser.id,
+                            active: year === user.yearOfStudy,
+                            admin: false,
+                            order: user.order + year - 1,
+                        }
+                    })
+                }
             }
         }
     }))
