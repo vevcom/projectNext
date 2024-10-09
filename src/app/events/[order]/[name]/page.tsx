@@ -5,12 +5,16 @@ import { readEvent } from '@/actions/events/read'
 import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 import { displayDate } from '@/dates/displayDate'
-import Form from '@/app/_components/Form/Form'
+import Form from '@/components/Form/Form'
+import EventTag from '@/components/Event/EventTag'
 import { destroyEvent } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { readEventTagsAction } from '@/actions/events/tags/read'
+import { QueryParam } from '@/lib/query-params/QueryParam'
+import { QueryParams } from '@/lib/query-params/queryParams'
+import Link from 'next/link'
 
 type PropTypes = {
     params: {
@@ -37,6 +41,15 @@ export default async function Event({ params }: PropTypes) {
                 <CmsImage cmsImage={event.coverImage} width={900} />
                 <div className={styles.infoInImage}>
                     <ShowAndEditName event={event} />
+                    <ul className={styles.tags}>
+                        {event.tags.map(tag => (
+                            <li key={tag.id}>
+                                <Link href={'/events' + QueryParams.eventTags.encodeUrl([tag.name])}>
+                                    <EventTag eventTag={tag} />
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className={styles.settings}>
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">

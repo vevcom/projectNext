@@ -39,30 +39,41 @@ export const read = ServiceMethodHandler({
 
 export const readCurrent = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: { tags: string[] | null }) => await prisma.event.findMany({
-        select: {
-            ...eventFilterSeletion,
-            coverImage: {
-                include: {
-                    image: true
-                }
-            }
-        },
-        where: {
-            eventEnd: {
-                gte: getOsloTime()
-            },
-            eventTagEvents: params.tags ? {
-                some: {
-                    tag: {
-                        name: {
-                            in: params.tags
-                        }
+    handler: async (prisma, params: { tags: string[] | null }) => {
+        const events = await prisma.event.findMany({
+            select: {
+                ...eventFilterSeletion,
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                },
+                eventTagEvents: {
+                    include: {
+                        tag: true
                     }
                 }
-            } : undefined
-        }
-    })
+            },
+            where: {
+                eventEnd: {
+                    gte: getOsloTime()
+                },
+                eventTagEvents: params.tags ? {
+                    some: {
+                        tag: {
+                            name: {
+                                in: params.tags
+                            }
+                        }
+                    }
+                } : undefined
+            }
+        })
+        return events.map(event => ({
+            ...event,
+            tags: event.eventTagEvents.map(ete => ete.tag)
+        }))
+    }
 })
 
 export const readArchivedPage = ServiceMethodHandler({
