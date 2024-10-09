@@ -17,7 +17,7 @@ export const baseEventValidation = new ValidationBase({
         registrationStart: z.string().optional(),
         registrationEnd: z.string().optional(),
 
-        tags: zfd.repeatable(z.string().array())
+        tagIds: zfd.repeatable(z.coerce.number().array())
     },
     details: {
         name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),
@@ -31,7 +31,7 @@ export const baseEventValidation = new ValidationBase({
         registrationStart: z.date().optional(),
         registrationEnd: z.date().optional(),
 
-        tags: zfd.repeatable(z.string().array())
+        tagIds: zfd.repeatable(z.coerce.number().array())
     }
 })
 
@@ -48,7 +48,7 @@ export const createEventValidation = baseEventValidation.createValidation({
         'places',
         'registrationStart',
         'registrationEnd',
-        'tags',
+        'tagIds',
         'canBeViewdBy',
     ],
     transformer: data => ({
@@ -71,7 +71,7 @@ export const updateEventValidation = baseEventValidation.createValidationPartial
         'places',
         'registrationStart',
         'registrationEnd',
-        'tags',
+        'tagIds',
         'canBeViewdBy',
     ],
     transformer: data => ({

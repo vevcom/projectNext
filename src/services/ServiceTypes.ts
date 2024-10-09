@@ -35,7 +35,7 @@ type ConfigType<Params> = {
 }
 
 type ConfigTypeData<DetailedType, Params> = ConfigType<Params> & {
-    data: DetailedType,
+    data: DetailedType | unknown,
 }
 
 export type Execute<
@@ -75,6 +75,10 @@ export type typeValidate<TypeType, DetailedType> = {
     ) => TypeValidateReturn<DetailedType>
 }
 
+export type detailedValidate<DetailedType> = {
+    detailedValidate: (data: DetailedType | unknown) => DetailedType
+}
+
 type ServiceMethodOrHandler<
     WithValidation extends boolean,
     TypeType,
@@ -90,7 +94,7 @@ type ServiceMethodOrHandler<
     Return,
     WithAuthParam,
     WantsToOpenTransaction
-> & (WithValidation extends true ? (typeValidate<TypeType, DetailedType> & {
+> & (WithValidation extends true ? (typeValidate<TypeType, DetailedType> & detailedValidate<DetailedType> & {
     withData: WithValidation
 }) : {
     withData: WithValidation,
@@ -130,7 +134,7 @@ export type ServiceMethodHandlerConfig<
     withData: true,
     wantsToOpenTransaction?: WantsToOpenTransaction,
     validation: {
-        detailedValidate: (data: DetailedType) => DetailedType,
+        detailedValidate: (data: DetailedType | unknown) => DetailedType,
         typeValidate: (
             data: unknown | FormData | TypeType
         ) => TypeValidateReturn<DetailedType>,

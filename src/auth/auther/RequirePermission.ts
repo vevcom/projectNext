@@ -7,5 +7,5 @@ export const RequirePermission = AutherFactory<
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'
 >(({ session, staticFields }) => ({
     success: session.permissions.includes(staticFields.permission),
-    session
+    session,
 }))

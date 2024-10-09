@@ -6,7 +6,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 export const update = ServiceMethodHandler({
     withData: true,
     validation: updateEventValidation,
-    handler: async (prisma, params: { id: number }, data) => {
+    handler: async (prisma, params: { id: number }, { tagIds, ...data }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }
         })
@@ -23,9 +23,30 @@ export const update = ServiceMethodHandler({
             throw new ServerError('BAD PARAMETERS', 'Begge registreringsdatoer må være satt eller ingen')
         }
 
-        return await prisma.event.update({
+        const eventUpdate = await prisma.event.update({
             where: { id: params.id },
-            data
+            data,
         })
+        if (!tagIds) return eventUpdate
+
+        await prisma.eventTagEvent.deleteMany({
+            where: {
+                eventId: params.id,
+                NOT: {
+                    tagId: {
+                        in: tagIds
+                    }
+                }
+            }
+        })
+
+        await prisma.eventTagEvent.createMany({
+            data: tagIds.map(tagId => ({
+                eventId: params.id,
+                tagId
+            })),
+            skipDuplicates: true
+        })
+        return eventUpdate
     }
 })

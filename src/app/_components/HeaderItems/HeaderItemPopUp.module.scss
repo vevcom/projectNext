@@ -1,14 +1,6 @@
 @use '@/styles/ohma';
 
-.addIcon {
-    --scale: 1;
-    width: calc(var(--scale) * 1px);
-    height: calc(var(--scale) * 1px);
-}
 .addBtn {
-    --scale: 1;
-    width: calc(var(--scale) * 1px);
-    height: calc(var(--scale) * 1px);
     background: transparent;
     border: none;
 }

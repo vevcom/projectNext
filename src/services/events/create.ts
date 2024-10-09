@@ -27,7 +27,7 @@ export const create = ServiceMethodHandler({
             throw new ServerError('BAD PARAMETERS', 'Begge registreringsdatoer må være satt eller ingen')
         }
 
-        return await prisma.event.create({
+        const event = await prisma.event.create({
             data: {
                 name: data.name,
                 eventStart: data.eventStart,
@@ -55,5 +55,12 @@ export const create = ServiceMethodHandler({
                 }
             }
         })
+        await prisma.eventTagEvent.createMany({
+            data: data.tagIds.map(tagId => ({
+                eventId: event.id,
+                tagId
+            }))
+        })
+        return event
     }
 })

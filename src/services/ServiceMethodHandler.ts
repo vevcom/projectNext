@@ -59,6 +59,7 @@ export function ServiceMethodHandler<
             },
         }),
         typeValidate: config.validation.typeValidate.bind(config.validation),
+        detailedValidate: config.validation.detailedValidate.bind(config.validation),
         withData: true,
     } : ServiceMethodHandlerNoData(config)
 }

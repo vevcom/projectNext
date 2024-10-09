@@ -162,7 +162,7 @@ export class Validation<
         }
     }
 
-    detailedValidate(data: PureTsTypeOfSchema<Detailed>) {
+    detailedValidate(data: PureTsTypeOfSchema<Detailed> | unknown) {
         const parse = this.detailedSchema.refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
@@ -218,7 +218,7 @@ export class ValidationPartial<
         }
     }
 
-    detailedValidate(data: PureTsTypeOfSchema<Detailed, true>) {
+    detailedValidate(data: PureTsTypeOfSchema<Detailed, true> | unknown) {
         const parse = this.detailedSchema.partial().refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)

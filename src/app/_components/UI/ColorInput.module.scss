@@ -1,0 +1,10 @@
+@use '@/styles/ohma';
+
+.ColorInput {
+    display: flex;
+    flex-direction: column;
+    input {
+        width: 3em;
+        height: 3em;
+    }
+}

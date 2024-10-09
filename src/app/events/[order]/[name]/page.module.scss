@@ -41,10 +41,19 @@ $padding: ohma.$minimalPagePadding;
             background-color: rgba(ohma.$colors-secondary, 0.90);
             padding: 1em 2em;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            gap: 0 1em;
             h1 {
                 font-size: ohma.$fonts-xxl;
                 color: ohma.$colors-white;
+            }
+            .tags {
+                list-style-type: none;
+                display: flex;
+                gap: 0 1em;
+                a {
+                    text-decoration: none;
+                }
             }
         }
     }
