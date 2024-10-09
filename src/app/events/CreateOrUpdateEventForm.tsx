@@ -9,20 +9,25 @@ import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
 import { useState } from 'react'
-import type { Event } from '@prisma/client'
+import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
+import EventTag from '@/components/Event/EventTag'
+import styles from './CreateOrUpdateEventForm.module.scss'
+import Checkbox from '../_components/UI/Checkbox'
 
 type PropTypes = {
-    event?: Event
+    event?: Event & { tags: EventTagT[] }
+    eventTags: EventTagT[]
 }
 
 /**
  * If an event is provided, the form will update the event.
  * If no event is provided, the form will create a new event.
  * @param event - The event to update
+ * @param eventTags - The tags to choose from
  * @returns
  */
-export default function CreateOrUpdateEventForm({ event }: PropTypes) {
+export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
     const action = event ? updateEventAction.bind(null, { id: event.id }) : createEventAction
 
@@ -56,6 +61,20 @@ export default function CreateOrUpdateEventForm({ event }: PropTypes) {
                 onChange={handleShowRegistration}
                 defaultChecked={event?.takesRegistration}
             />
+            <ul className={styles.tags}>
+            {
+                eventTags.map(tag => (
+                    <li key={tag.id}>
+                        <EventTag eventTag={tag} />
+                        <Checkbox 
+                            name="tagIds"
+                            value={tag.name}
+                            defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false} 
+                        />
+                    </li>
+                ))
+            }
+            </ul>
             {
                 showRegistrationOptions ? (
                     <>

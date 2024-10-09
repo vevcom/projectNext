@@ -1,0 +1,23 @@
+@use '@/styles/ohma';
+
+.CreateOrUpdateEvent {
+    .tags {
+        margin-top: 1em;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 2em;
+        overflow-y: auto;
+        overflow-x: visible;
+        list-style-type: none;
+        isolation: isolate;
+        padding-bottom: 5em;
+        li {
+            display: flex;
+            align-items: center;
+            z-index: 1;
+        }
+        li:hover {
+            z-index: 2;
+        }
+    }
+}

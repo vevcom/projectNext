@@ -12,8 +12,6 @@ export const create = ServiceMethodHandler({
     withData: true,
     validation: createEventValidation,
     handler: async (prisma, _, data) => {
-        console.log('create event')
-        console.log('data', data)
         const cmsParagraph = await createCmsParagraph({ name: uuid() })
         const cmsImage = await createCmsImage({ name: uuid() })
 
@@ -29,7 +27,7 @@ export const create = ServiceMethodHandler({
             throw new ServerError('BAD PARAMETERS', 'Begge registreringsdatoer må være satt eller ingen')
         }
 
-        return await prisma.event.create({
+        const event = await prisma.event.create({
             data: {
                 name: data.name,
                 eventStart: data.eventStart,
@@ -57,5 +55,12 @@ export const create = ServiceMethodHandler({
                 }
             }
         })
+        await prisma.eventTagEvent.createMany({
+            data: data.tagIds.map(tagId => ({
+                eventId: event.id,
+                tagId
+            }))
+        })
+        return event
     }
 })

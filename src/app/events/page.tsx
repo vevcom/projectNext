@@ -53,7 +53,7 @@ export default async function Events({
                 </TagHeasderItemPopUp>
                 <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                     <div className={styles.createEvent}>
-                        <CreateOrUpdateEventForm />
+                        <CreateOrUpdateEventForm eventTags={eventTags} />
                     </div>
                 </AddHeaderItemPopUp>
             </>

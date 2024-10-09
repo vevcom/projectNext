@@ -8,22 +8,33 @@ import type { EventArchiveCursor, EventArchiveDetails } from './Types'
 
 export const read = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: {order: number, name: string}) => await prisma.event.findUniqueOrThrow({
-        where: {
-            order_name: {
-                order: params.order,
-                name: params.name
-            }
-        },
-        include: {
-            coverImage: {
-                include: {
-                    image: true
+    handler: async (prisma, params: {order: number, name: string}) => {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: {
+                order_name: {
+                    order: params.order,
+                    name: params.name
                 }
             },
-            paragraph: true
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                },
+                paragraph: true,
+                eventTagEvents: {
+                    include: {
+                        tag: true
+                    }
+                }
+            }
+        })
+        return {
+            ...event,
+            tags: event.eventTagEvents.map(ete => ete.tag)
         }
-    })
+    }
 })
 
 export const readCurrent = ServiceMethodHandler({
@@ -41,7 +52,7 @@ export const readCurrent = ServiceMethodHandler({
             eventEnd: {
                 gte: getOsloTime()
             },
-            EventTagEvent: params.tags ? {
+            eventTagEvents: params.tags ? {
                 some: {
                     tag: {
                         name: {

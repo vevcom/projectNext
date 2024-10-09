@@ -10,6 +10,7 @@ import { destroyEvent } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { readEventTagsAction } from '@/actions/events/tags/read'
 
 type PropTypes = {
     params: {
@@ -19,14 +20,16 @@ type PropTypes = {
 }
 
 export default async function Event({ params }: PropTypes) {
-    const res = await readEvent({
+    const eventRes = await readEvent({
         name: decodeURIComponent(params.name),
         order: parseInt(params.order, 10)
     })
-    if (!res.success) {
+    const tagsRes = await readEventTagsAction.bind(null, {})()
+    if (!eventRes.success || !tagsRes.success) {
         throw new Error('Failed to read event')
     }
-    const event = res.data
+    const event = eventRes.data
+    const tags = tagsRes.data
 
     return (
         <div className={styles.wrapper}>
@@ -36,8 +39,8 @@ export default async function Event({ params }: PropTypes) {
                     <ShowAndEditName event={event} />
                 </div>
                 <div className={styles.settings}>
-                    <SettingsHeaderItemPopUp PopUpKey="EditEvent">
-                        <CreateOrUpdateEventForm event={event} />
+                    <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
+                        <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
                         <Form
                             action={destroyEvent.bind(null, { id: event.id })}
