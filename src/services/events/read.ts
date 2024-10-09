@@ -37,6 +37,16 @@ export const read = ServiceMethodHandler({
     }
 })
 
+const eventTagSelector = (tags: string[] | null) => tags ? {
+    some: {
+        tag: {
+            name: {
+                in: tags
+            }
+        }
+    }
+} : undefined
+
 export const readCurrent = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: { tags: string[] | null }) => {
@@ -58,15 +68,7 @@ export const readCurrent = ServiceMethodHandler({
                 eventEnd: {
                     gte: getOsloTime()
                 },
-                eventTagEvents: params.tags ? {
-                    some: {
-                        tag: {
-                            name: {
-                                in: params.tags
-                            }
-                        }
-                    }
-                } : undefined
+                eventTagEvents: eventTagSelector(params.tags)
             }
         })
         return events.map(event => ({
@@ -80,24 +82,36 @@ export const readArchivedPage = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: {
         paging: ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-    }) => await prisma.event.findMany({
-        ...cursorPageingSelection(params.paging.page),
-        where: {
-            eventEnd: {
-                lt: getOsloTime()
+    }) => {
+        const events = await prisma.event.findMany({
+            ...cursorPageingSelection(params.paging.page),
+            where: {
+                eventEnd: {
+                    lt: getOsloTime()
+                },
+                name: {
+                    contains: params.paging.details.name,
+                    mode: 'insensitive'
+                },
+                eventTagEvents: eventTagSelector(params.paging.details.tags)
             },
-            name: {
-                contains: params.paging.details.name,
-                mode: 'insensitive'
-            }
-        },
-        select: {
-            ...eventFilterSeletion,
-            coverImage: {
-                include: {
-                    image: true
+            select: {
+                ...eventFilterSeletion,
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                },
+                eventTagEvents: {
+                    include: {
+                        tag: true
+                    }
                 }
-            }
-        },
-    })
+            },
+        })
+        return events.map(event => ({
+            ...event,
+            tags: event.eventTagEvents.map(ete => ete.tag)
+        }))
+    }
 })

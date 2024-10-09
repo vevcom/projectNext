@@ -13,9 +13,4 @@ export async function readEvent(params: {order: number, name: string}) {
     return await safeServerCall(() => Events.read.client('NEW').execute({ params, session }))
 }
 
-export async function readArchivedEventsPage<const PageSize extends number>(
-    paging: ReadPageInput<PageSize, EventArchiveCursor, EventArchiveDetails>
-) {
-    const session = await Session.fromNextAuth()
-    return await safeServerCall(() => Events.readArchivedPage.client('NEW').execute({ session, params: { paging } }))
-}
+export const readArchivedEventsPage = ActionNoData(Events.readArchivedPage)

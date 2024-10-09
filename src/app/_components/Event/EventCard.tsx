@@ -4,12 +4,11 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import type { EventFilteredWithImage } from '@/services/events/Types'
-import { EventTag } from '@prisma/client'
+import type { EventExpanded } from '@/services/events/Types'
 import SmallEventTag from './SmallEventTag'
 
 type PropTypes = {
-    event: EventFilteredWithImage & { tags: EventTag[] }
+    event: EventExpanded
 }
 
 export default function EventCard({ event }: PropTypes) {

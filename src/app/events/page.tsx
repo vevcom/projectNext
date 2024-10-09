@@ -1,16 +1,15 @@
 import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
 import EventsLandingLayout from './EventsLandingLayout'
-import { AddHeaderItemPopUp, TagHeasderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEventsAction } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
-import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
-import PopUpProvider from '@/contexts/PopUp'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import { SearchParamsServerSide } from '@/lib/query-params/Types'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import TagHeaderItem from './TagHeaderItem'
 
 type PropTypes = SearchParamsServerSide
 
@@ -35,23 +34,20 @@ export default async function Events({
     return (
         <EventsLandingLayout title="Hvad Der Hender" headerLinks={[
             {
-                href: '/events/archive',
+                href: tagNames?.length ? `/events/archive${QueryParams.eventTags.encodeUrl(tagNames)}` : '/events/archive',
                 icon: faArchive
             },
         ]}
         selectedTags={currentTags}
         headerItem={
             <>
-                <TagHeasderItemPopUp scale={35} PopUpKey="TagEventPopUp">
-                    <PopUpProvider>
-                        <EventTagsAdmin
-                            canCreate={canCreate.authorized}
-                            canUpdate={canUpdate.authorized}
-                            eventTags={eventTags}
-                            selectedTags={currentTags}
-                        />
-                    </PopUpProvider>
-                </TagHeasderItemPopUp>
+                <TagHeaderItem 
+                    eventTags={eventTags} 
+                    currentTags={currentTags} 
+                    canUpdate={canUpdate.authorized} 
+                    canCreate={canCreate.authorized} 
+                    page='EVENT'
+                />
                 <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
                     <div className={styles.createEvent}>
                         <CreateOrUpdateEventForm eventTags={eventTags} />

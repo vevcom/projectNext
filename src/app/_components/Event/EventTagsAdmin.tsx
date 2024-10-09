@@ -16,6 +16,7 @@ type PropTypes = {
     canUpdate?: boolean
     canCreate?: boolean
     selectedTags: EventTagT[]
+    page: 'EVENT' | 'EVENT_ARCHIVE'
 }
 
 /**
@@ -30,7 +31,22 @@ export default function EventTagsAdmin({
     selectedTags,
     canUpdate = false,
     canCreate = false,
+    page
 }: PropTypes) {
+    const baseUrl = page === 'EVENT' ? '/events' : '/events/archive'
+
+    const removeFromUrl = (tag: string) => {
+        return selectedTags.length === 1 ? 
+            baseUrl : 
+            baseUrl + QueryParams.eventTags.encodeUrl(
+                selectedTags.filter(t => t.name !== tag).map(t => t.name)
+            )
+    }
+    const addToUrl = (tag: string) => {
+        return baseUrl + QueryParams.eventTags.encodeUrl(
+            [...selectedTags.map(t => t.name), tag]
+        )
+    }
     return (
         <div className={styles.EventTagsAdmin}>
             <h1>Tagger</h1>
@@ -53,12 +69,7 @@ export default function EventTagsAdmin({
                                 className={selectedTags.map(tag => tag.name).includes(tag.name) ? styles.selected : ''}
                                 href={
                                     selectedTags.map(tag => tag.name).includes(tag.name) ? 
-                                    '/events' + QueryParams.eventTags.encodeUrl(
-                                        selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
-                                    ) :
-                                    '/events' + QueryParams.eventTags.encodeUrl(
-                                        [...selectedTags.map(tag => tag.name), tag.name]
-                                    )
+                                    removeFromUrl(tag.name) : addToUrl(tag.name)
                                 }
                             >
                                 <EventTag eventTag={tag} />
