@@ -5,6 +5,7 @@ import { IdMapper, vevenIdToPnId } from './IdMapper'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 
 /**
+ * TODO: Need migrate reservations (mail reservations) ?, and flairs 
  * This function migrates users from Veven to PN. It only migrates to theUser model, not FeideAccounts
  * or Credentials. These should be linked when people log in for the first time.
  * If a user has the soelle field true on veven it will get a relation to the soelle group 
@@ -19,7 +20,7 @@ export default async function migrateUsers(
     vevenPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
     limits: Limits,
-) {
+): Promise<IdMapper> {
     const users = await vevenPrisma.users.findMany({
         take: limits.users ? limits.users : undefined,
         include: {
@@ -46,11 +47,6 @@ export default async function migrateUsers(
             group: true
         }
     })
-    const { order: currentOrder } = await pnPrisma.omegaOrder.findFirstOrThrow({
-        orderBy: {
-            order: 'desc'
-        }
-    })
 
     const classes = await pnPrisma.class.findMany({
         include: {
@@ -63,7 +59,8 @@ export default async function migrateUsers(
         return acc
     }, {} as Record<number, number>)
 
-    Promise.all(users.map(async user => {
+    const userIdMap: IdMapper = []
+    await Promise.all(users.map(async user => {
         const sexMap = {
             m: "MALE",
             f: "FEMALE",
@@ -85,9 +82,11 @@ export default async function migrateUsers(
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,
                 imageId: vevenIdToPnId(imageIdMap, user.ImageId),
-
+                archived: user.archived,
             }
         })
+
+        userIdMap.push({ vevenId: user.id, pnId: pnUser.id })
         
         // Connect to correct membership group
         const membershipOrder = await pnPrisma.omegaOrder.upsert({
@@ -301,4 +300,5 @@ export default async function migrateUsers(
             }
         }
     }))
+    return userIdMap
 }
