@@ -8,7 +8,7 @@ import { ServerError } from '@/services/error'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
-export default async function () {
+export default async function NotificationChannels() {
     const channels = await readNotificationChannelsAction()
 
     if (!channels.success) {

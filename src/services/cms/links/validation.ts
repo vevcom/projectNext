@@ -21,7 +21,7 @@ const cmsLinkRefiner = {
         try {
             const urlObject = new URL(url)
             return Boolean(urlObject)
-        } catch (_) {
+        } catch {
             return url.startsWith('/') || url.includes('.')
         }
     },
