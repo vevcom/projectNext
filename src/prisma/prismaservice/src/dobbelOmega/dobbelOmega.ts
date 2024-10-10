@@ -24,9 +24,9 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
 
     const imageCollectionIdMap = await migrateImageCollections(pnPrisma, vevenPrisma)
     const imageIdMap = await migrateImages(pnPrisma, vevenPrisma, imageCollectionIdMap, limits)
-    await migrateUsers(pnPrisma, vevenPrisma, limits, imageIdMap)
+    const userIdMap = await migrateUsers(pnPrisma, vevenPrisma, limits, imageIdMap)
     await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap, limits)
-    await migrateOmegaquotes(pnPrisma, vevenPrisma, limits)
+    await migrateOmegaquotes(pnPrisma, vevenPrisma, userIdMap, limits)
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, vevenPrisma, limits)
     await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, limits)

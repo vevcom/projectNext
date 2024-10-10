@@ -3,6 +3,41 @@ import type { PrismaClient as PrismaClientVeven, enum_Users_sex } from '@/genera
 import type { Limits } from './migrationLimits'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, vevenIdToPnId } from './IdMapper'
+import logger from '@/src/logger'
+
+function makeEmailUnique<X extends { email: string | null, id: number }>(
+    users: X[]
+) : (X & { email: string })[] {
+    return users.map(user => {
+        let email = user.email ?? `dobbel@omega.${user.id}.no`
+        if (!user.email) {
+            logger.error(`User ${user.id} has no email`)
+        } else {
+            // Find users with same email if the email in null it is not a duplicate
+            const duplicates = users.filter(u => u.email === user.email)
+            if (duplicates.length > 1) {
+                logger.error(`User ${user.id} has duplicate email ${user.email}`)
+                email = `dobbel@omega.${user.id}.no`
+            }
+        }
+        return { ...user, email }
+    })
+}
+
+function makeUsernameUnique<X extends { username: string, id: number }>(
+    users: X[]
+) : (X & { username: string })[] {
+    return users.map(user => {
+        let username = user.username
+        // Find users with same email if the email in null it is not a duplicate
+        const duplicates = users.filter(u => u.username === user.username)
+        if (duplicates.length > 1) {
+            logger.error(`User ${user.id} has duplicate username ${user.username}`)
+            username = username + user.id
+        }
+        return { ...user, username }
+    })
+}
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs 
@@ -21,7 +56,7 @@ export default async function migrateUsers(
     limits: Limits,
     imageIdMap: IdMapper
 ): Promise<IdMapper> {
-    const users = await vevenPrisma.users.findMany({
+    const users_ = await vevenPrisma.users.findMany({
         take: limits.users ? limits.users : undefined,
         include: {
             StudyProgrammes: {
@@ -31,6 +66,8 @@ export default async function migrateUsers(
             }
         }
     })
+    const users = makeUsernameUnique(makeEmailUnique(users_))
+
     const soelleGroup = await pnPrisma.omegaMembershipGroup.findUniqueOrThrow({
         where: {
             omegaMembershipLevel: 'SOELLE' //Avsky!
@@ -70,7 +107,7 @@ export default async function migrateUsers(
             data: {
                 id: user.id,
                 username: user.username,
-                email: user.email ?? `dobbel@omega.${user.id}.no`,
+                email: user.email,
                 firstname: user.firstname,
                 lastname: user.lastname,
                 bio: user.bio ?? "",
@@ -123,7 +160,7 @@ export default async function migrateUsers(
         const yearsInProgramme = Math.min(user.StudyProgrammes?.years ?? 0, 5)
         switch (yearsInProgramme) {
         case 0:
-            console.error(`User ${user.id} has no years in programme or no programme`)
+            logger.error(`User ${user.id} has no years in programme or no programme`)
             break
         case 2:
             //ASSUME 2 years masters. The user can be member of 4 5 and 6 (siving)
@@ -187,13 +224,13 @@ export default async function migrateUsers(
                     }
                 })
             } else {
-                console.error(`User ${user.id} is in a 2 year programme but not in year 4, 5 or 6`)
+                logger.error(`User ${user.id} is in a 2 year programme but not in year 4, 5 or 6`)
             }
             break
         case 3:
             //ASSUME 3 years bachelors. The user can be member of 1 2 and 3, and cannot be siving.
             if (!(user.yearOfStudy in [1, 2, 3])) {
-                console.error(`User ${user.id} is in a 3 year programme but not in year 1, 2 or 3`)
+                logger.error(`User ${user.id} is in a 3 year programme but not in year 1, 2 or 3`)
                 break
             }
             if (user.yearOfStudy === 1) {
@@ -283,7 +320,7 @@ export default async function migrateUsers(
                 }
             } else {
                 if (!(user.yearOfStudy in [1, 2, 3, 4, 5])) {
-                    console.error(`User ${user.id} is in a 5 year programme but not in year 1, 2, 3, 4 or 5`)
+                    logger.error(`User ${user.id} is in a 5 year programme but not in year 1, 2, 3, 4 or 5`)
                     break
                 }
                 for (let year=1; year <= user.yearOfStudy; year++) {
