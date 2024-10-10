@@ -164,7 +164,16 @@ export default async function migrateUsers(
             break
         case 2:
             //ASSUME 2 years masters. The user can be member of 4 5 and 6 (siving)
-            if (user.yearOfStudy === 6) {
+            let yearOfStudy2 = user.yearOfStudy
+            if (yearOfStudy2 < 4) {
+                logger.error(`User ${user.id} is in 2 year programme but has year of study less than 4 - setting to 4`)
+                yearOfStudy2 = 4
+            }
+            if (yearOfStudy2 > 6) {
+                logger.error(`User ${user.id} is in 2 year programme but has year of study greater than 6 - setting to 6`)
+                yearOfStudy2 = 6
+            }
+            if (yearOfStudy2 === 6) {
                 const orderBecameSiving = user.order + 2
                 await pnPrisma.membership.create({
                     data: {
@@ -193,7 +202,7 @@ export default async function migrateUsers(
                         order: orderBecameSiving - 2,
                     }
                 })
-            } else if (user.yearOfStudy == 5) {
+            } else if (yearOfStudy2 == 5) {
                 const orderBecame5 = user.order + 1
                 await pnPrisma.membership.create({
                     data: {
@@ -213,7 +222,7 @@ export default async function migrateUsers(
                         order: orderBecame5 - 1,
                     }
                 })
-            } else if (user.yearOfStudy == 4) {
+            } else if (yearOfStudy2 == 4) {
                 await pnPrisma.membership.create({
                     data: {
                         groupId: yearIdMap[4],
@@ -229,11 +238,16 @@ export default async function migrateUsers(
             break
         case 3:
             //ASSUME 3 years bachelors. The user can be member of 1 2 and 3, and cannot be siving.
-            if (!(user.yearOfStudy in [1, 2, 3])) {
-                logger.error(`User ${user.id} is in a 3 year programme but not in year 1, 2 or 3`)
-                break
+            let yearOfStudy3 = user.yearOfStudy
+            if (yearOfStudy3 < 1) {
+                logger.error(`User ${user.id} has year of study less than 1 - setting to 1`)
+                yearOfStudy3 = 1
             }
-            if (user.yearOfStudy === 1) {
+            if (yearOfStudy3 > 3) {
+                logger.error(`User ${user.id} has year of study greater than 3 - setting to 3`)
+                yearOfStudy3 = 3
+            }
+            if (yearOfStudy3 === 1) {
                 await pnPrisma.membership.create({
                     data: {
                         groupId: yearIdMap[1],
@@ -243,7 +257,7 @@ export default async function migrateUsers(
                         order: user.order,
                     }
                 })
-            } else if (user.yearOfStudy === 2) {
+            } else if (yearOfStudy3 === 2) {
                 await pnPrisma.membership.create({
                     data: {
                         groupId: yearIdMap[2],
@@ -262,7 +276,7 @@ export default async function migrateUsers(
                         order: user.order - 1,
                     }
                 })
-            } else if (user.yearOfStudy === 3) {
+            } else if (yearOfStudy3 === 3) {
                 // This is a nut - it is hard to say if the user still is in 3. grade.
                 // We will assume that the user is in 3. grade if the order is gte 103
                 await pnPrisma.membership.create({
@@ -296,7 +310,16 @@ export default async function migrateUsers(
             break
         case 5:
             // Assuming 5 year masters. The user can be member of 1 2 3 4 5 and 6 (siving)
-            if (user.yearOfStudy === 6) {
+            let yearOfStudy5 = user.yearOfStudy
+            if (yearOfStudy5 < 1) {
+                logger.error(`User ${user.id} is in 5 year programme but has year of study less than 1 - setting to 1`)
+                yearOfStudy5 = 1
+            }
+            if (yearOfStudy5 > 6) {
+                logger.error(`User ${user.id} is in 5 year programme but has year of study greater than 6 - setting to 6`)
+                yearOfStudy5 = 6
+            }
+            if (yearOfStudy5 === 6) {
                 const orderBecameSiving = user.order + 5 // Assume the user used 5 years to get to sivin
                 await pnPrisma.membership.create({
                     data: {
@@ -319,11 +342,7 @@ export default async function migrateUsers(
                     })
                 }
             } else {
-                if (!(user.yearOfStudy in [1, 2, 3, 4, 5])) {
-                    logger.error(`User ${user.id} is in a 5 year programme but not in year 1, 2, 3, 4 or 5`)
-                    break
-                }
-                for (let year=1; year <= user.yearOfStudy; year++) {
+                for (let year=1; year <= yearOfStudy5; year++) {
                     await pnPrisma.membership.create({
                         data: {
                             groupId: yearIdMap[year],
