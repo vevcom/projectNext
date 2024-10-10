@@ -6,7 +6,6 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
 import type { ExpandedArticle } from '@/cms/articles/Types'
-import { faSleigh } from '@fortawesome/free-solid-svg-icons'
 
 export type PropTypes = {
     article: ExpandedArticle,
@@ -14,17 +13,17 @@ export type PropTypes = {
     hideCoverImage?: boolean
 }
 
-export default function Article({ article, coverImageClass, hideCoverImage=false }: PropTypes) {
+export default function Article({ article, coverImageClass, hideCoverImage = false }: PropTypes) {
     return (
         <span className={styles.Article}>
-            {hideCoverImage?<></>:(
-            <span className={`${coverImageClass} ${styles.coverImage}`}>
-                <CmsImage width={500} cmsImage={article.coverImage} />
-                <SlideInOnView direction="bottom">
-                    <ChangeName article={article} />
-                </SlideInOnView>
-            </span> 
-        )}
+            {hideCoverImage ? <></> : (
+                <span className={`${coverImageClass} ${styles.coverImage}`}>
+                    <CmsImage width={500} cmsImage={article.coverImage} />
+                    <SlideInOnView direction="bottom">
+                        <ChangeName article={article} />
+                    </SlideInOnView>
+                </span>
+            )}
             <article>
                 {
                     article.articleSections.length ? (

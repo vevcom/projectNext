@@ -50,7 +50,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             shortName: `${user.username.slice(0, 3)}com`,
             committeeArticle: {
                 create: {
-                    name:`${user.firstname}'s komité`,
+                    name: `${user.firstname}'s komité`,
                     coverImage: {
                         create: {
                             name: `${user.firstname}'s bilde`

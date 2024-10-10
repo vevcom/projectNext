@@ -1,9 +1,9 @@
 import styles from './CommitteeImage.module.scss'
+import CmsImage from '../Cms/CmsImage/CmsImage'
 import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
-import CmsImage from '../Cms/CmsImage/CmsImage'
-import { ExpandedCmsImage } from '@/server/cms/images/Types'
+import type { ExpandedCmsImage } from '@/server/cms/images/Types'
 
 type PropTypes = {
     children: ReactNode
@@ -25,11 +25,11 @@ export default function CommitteeImage({ children, logoImage, committeeImage, gr
             </div>
             <div className={styles.images}>
                 <div className={styles.image}>
-                <Image
-                    className={grayScale ? styles.gray : ''}
-                    image={logoImage}
-                    width={350}
-                />
+                    <Image
+                        className={grayScale ? styles.gray : ''}
+                        image={logoImage}
+                        width={350}
+                    />
                 </div>
                 <CmsImage
                     className={styles.committeeImage}

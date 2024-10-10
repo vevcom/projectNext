@@ -1,9 +1,9 @@
-import { readCommitteesAction } from '@/actions/groups/committees/read'
-import Link from 'next/link'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
 import styles from './page.module.scss'
 import CommitteeCard from '../components/CommitteeCard/CommitteeCard'
 import BackdropImage from '../components/BackdropImage/BackdropImage'
+import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import { readCommitteesAction } from '@/actions/groups/committees/read'
+import Link from 'next/link'
 
 export default async function Committees() {
     const res = await readCommitteesAction()
@@ -12,15 +12,15 @@ export default async function Committees() {
 
     return (
         <div className={styles.CommitteeWrapper}>
-        <PageWrapper title="Komiteer">
-            {
-                committees.map(committee => (
-                    <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
-                        {}
-                    </Link>
-                ))
-            }
-        </PageWrapper>
+            <PageWrapper title="Komiteer">
+                {
+                    committees.map(committee => (
+                        <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
+                            {}
+                        </Link>
+                    ))
+                }
+            </PageWrapper>
             <main className={styles.test}> {
                 committees.length ? (
                     committees.map((committee) => (
@@ -33,12 +33,12 @@ export default async function Committees() {
                             {committee.description}
                         </CommitteeCard>
                     )
-                )
-                ) : (
-                        <i>
-                            Ingen kategorier å vise
-                        </i>
                     )
+                ) : (
+                    <i>
+                            Ingen kategorier å vise
+                    </i>
+                )
 
             }
             </main>
