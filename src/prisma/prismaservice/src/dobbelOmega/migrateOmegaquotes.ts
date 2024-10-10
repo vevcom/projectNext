@@ -1,8 +1,9 @@
+import { vevenIdToPnId } from './IdMapper'
+import logger from '@/src/logger'
+import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven, Quotes } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
-import { IdMapper, vevenIdToPnId } from './IdMapper'
-import logger from '@/src/logger'
 
 /**
  * This function migrates omegaquotes from Veven to PN
@@ -41,14 +42,12 @@ export default async function migrateOmegaquotes(
     }, [] as (Quotes & { PosterId: number })[])
 
     await pnPrisma.omegaQuote.createMany({
-        data: omegaquoteFiltered.map(quote => {
-            return {
-                quote: quote.quote,
-                author: quote.author,
-                timestamp: quote.timestamp || new Date(),
-                userPosterId: quote.PosterId,
-            }
-        }),
+        data: omegaquoteFiltered.map(quote => ({
+            quote: quote.quote,
+            author: quote.author,
+            timestamp: quote.timestamp || new Date(),
+            userPosterId: quote.PosterId,
+        })),
     })
 
     //TODO: also seed bulshit into omegaquote

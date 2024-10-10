@@ -36,7 +36,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         await Promise.all(ln.map(async (l, j) => {
             await prisma.user.upsert({
                 where: {
-                    email: `${f}.${l}@${f}${l}.io`
+                    username: `${f}${i}${j}`
                 },
                 update: {
 

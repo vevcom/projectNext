@@ -9,7 +9,7 @@ export default async function seedClasses(prisma: PrismaClient) {
     if (!omegaOrder) throw new Error('No omega order found')
     const order = omegaOrder.order
 
-    await Promise.all([0, 1, 2, 3, 4, 5, 6].map(i => prisma.class.create({
+    await Promise.all([1, 2, 3, 4, 5, 6].map(i => prisma.class.create({
         data: {
             year: i,
             group: {

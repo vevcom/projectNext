@@ -86,6 +86,7 @@ services:
         volumes:
             - ${PROJECT_ROOT:-.}/src/prisma/schema:/usr/src/app/schema
             - devstore:/usr/src/app/prismaservice/store
+            - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
         depends_on:
             db:
                 condition: service_healthy
@@ -110,4 +111,6 @@ volumes:
     devstore:
         driver: local
     dotnext:
+        driver: local
+    dobbelOmegaManifest:
         driver: local
