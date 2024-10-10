@@ -8,7 +8,7 @@ export function getLimits() {
         numberOffFullImageCollections: 3,
         omegaquotes: null,
         articles: 300,
-        mailaliases: null,
+        mailaliases: 0,
         users: null,
         events: 100,
     }
