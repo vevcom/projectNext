@@ -22,6 +22,7 @@
 }
 
 .closeBtn {
+    background-color: ohma.$colors-red;
     @include ohma.roundBtn(ohma.$colors-red);
 }
 

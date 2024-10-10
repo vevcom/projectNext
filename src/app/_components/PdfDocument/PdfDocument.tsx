@@ -12,7 +12,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import 'react-pdf/dist/esm/Page/TextLayer.css'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 type PropTypes = {
     src: string
@@ -92,6 +92,17 @@ export default function PdfDocument({ src, className }: PropTypes) {
         if (leftPage) return `Side ${leftPage} av ${numPages}`
         if (rightPage) return `Side ${rightPage} av ${numPages}`
         return ''
+    }
+
+    if (typeof window !== 'undefined' && !window.Promise.withResolvers) {
+        return (
+            <>
+                <p className={styles.fallbackWarning}>
+                Din nettleser støtter ikke vevens fantastiske PDF-løsning. Bruker alternativ løsning.
+                </p>
+                <embed className={styles.fallback} src={src} type="application/pdf" />
+            </>
+        )
     }
 
     return (
