@@ -15,4 +15,4 @@ export const avifOptions = {
     chromaSubsampling: '4:2:0',
 }
 
-export const allowedExtImageUpload = ['png', 'jpg', 'jpeg', 'heic']
+export const allowedExtImageUpload = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp']
