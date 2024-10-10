@@ -1,14 +1,17 @@
 import winston from 'winston'
 
-const logger = winston.createLogger({
+/**
+ * Logger for the manifest the dobbelOmega migration
+ */
+const manifest = winston.createLogger({
     level: 'silly',
 })
 
-logger.add(new winston.transports.Console())
+manifest.add(new winston.transports.Console())
 
-logger.add(new winston.transports.File({
+manifest.add(new winston.transports.File({
     filename: 'manifest.log',
     dirname: 'dobbelOmegaManifest',
 }))
 
-export default logger
+export default manifest

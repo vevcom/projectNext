@@ -6,9 +6,10 @@ import migrateOmegaquotes from './migrateOmegaquotes'
 import migrateArticles from './migateArticles'
 import migrateMailAliases from './migrateMailAlias'
 import migrateEvents from './migrateEvents'
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import migrateUsers from './migrateUsers'
+import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import manifest from '@/src/logger'
+import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 
 /**
  * !DobbelOmega!
@@ -16,8 +17,8 @@ import migrateUsers from './migrateUsers'
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
-    console.log('============================================')
-    console.log('==========!!!Dobbel Omega!!!================')
+    manifest.info('============================================')
+    manifest.info('==========!!!Dobbel Omega!!!================')
     const vevenPrisma = new PrismaClientVeven()
 
     const limits = getLimits()
@@ -32,5 +33,5 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, limits)
 
     vevenPrisma.$disconnect()
-    console.log('=======Dobbel Omega ferdig, dagen derpå=======')
+    manifest.info('=======Dobbel Omega ferdig, dagen derpå=======')
 }
