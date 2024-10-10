@@ -43,7 +43,7 @@ export default async function seedImages(prisma: PrismaClient) {
         if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
 
         const ext = file.split('.')[1]
-        if (!['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+        if (!['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
             console.log(`skipping image ${file}`)
             return
         }
@@ -73,12 +73,15 @@ export default async function seedImages(prisma: PrismaClient) {
             withoutEnlargement: true
         }).toFile(mediumPath)
 
-        await prisma.image.upsert({
+        //Delete all images with image.name
+        await prisma.image.deleteMany({
             where: {
                 name: image.name
-            },
-            update: {},
-            create: {
+            }
+        })
+
+        await prisma.image.create({
+            data: {
                 name: image.name,
                 alt: image.alt,
                 fsLocation,

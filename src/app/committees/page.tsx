@@ -1,7 +1,6 @@
 import styles from './page.module.scss'
-import CommitteeCard from '../components/CommitteeCard/CommitteeCard'
-import BackdropImage from '../components/BackdropImage/BackdropImage'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
+import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
 import Link from 'next/link'
 
@@ -30,7 +29,7 @@ export default async function Committees() {
                             href={`/committees/${committee.shortName}`}
                             image={committee.logoImage.image}
                         >
-                            {committee.description}
+                            description
                         </CommitteeCard>
                     )
                     )

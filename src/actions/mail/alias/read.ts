@@ -2,7 +2,7 @@
 
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readMailAliases } from '@/server/mail/alias/read'
+import { readMailAliases } from '@/services/mail/alias/read'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions/Types'
 import type { MailAlias } from '@prisma/client'

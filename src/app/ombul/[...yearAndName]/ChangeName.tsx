@@ -4,7 +4,7 @@ import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/actions/ombul/update'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/server/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/Types'
 
 type PropTypes = {
     children: ReactNode
@@ -40,8 +40,8 @@ export default function ChangeName({ children, editable, ombulId }: PropTypes) {
                 action: changeName,
                 successCallback: handleChange
             }}
+            inputName="name"
             submitButton={{
-                name: 'name',
                 text: 'Endre',
                 className: styles.changeNameButton
             }}

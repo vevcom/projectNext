@@ -1,5 +1,5 @@
 'use server'
-import { updateCmsImage, updateCmsImageConfig } from '@/server/cms/images/update'
+import { updateCmsImage, updateCmsImageConfig } from '@/services/cms/images/update'
 import { safeServerCall } from '@/actions/safeServerCall'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage, ImageSize } from '@prisma/client'

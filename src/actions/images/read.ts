@@ -1,13 +1,13 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import { readImage, readImagesPage, readSpecialImage } from '@/server/images/read'
-import { createBadImage } from '@/server/images/create'
+import { readImage, readImagesPage, readSpecialImage } from '@/services/images/read'
+import { createBadImage } from '@/services/images/create'
 import { SpecialImage } from '@prisma/client'
 import type { Image } from '@prisma/client'
-import type { ReadPageInput } from '@/server/paging/Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ImageDetails, ImageCursor } from '@/server/images/Types'
+import type { ImageDetails, ImageCursor } from '@/services/images/Types'
 
 /**
  * Read one page of images.
@@ -26,9 +26,9 @@ export async function readImagesPageAction<const PageSize extends number>(
  * @param nameOrId - the name or id of the image to read
  * @returns
  */
-export async function readImageAction(nameOrId: string | number): Promise<ActionReturn<Image>> {
+export async function readImageAction(id: number): Promise<ActionReturn<Image>> {
     //TODO: auth route based on collection
-    return await safeServerCall(() => readImage(nameOrId))
+    return await safeServerCall(() => readImage(id))
 }
 
 /**

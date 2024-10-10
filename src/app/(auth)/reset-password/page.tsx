@@ -1,8 +1,8 @@
 'use client'
 
 import { resetPasswordAction } from '@/actions/auth/resetPassword'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import { useState } from 'react'
 
 

@@ -1,9 +1,9 @@
 'use server'
-import { createCmsLink } from '@/server/cms/links/create'
+import { createCmsLink } from '@/services/cms/links/create'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { createCmsLinkValidation } from '@/server/cms/links/validation'
+import { createCmsLinkValidation } from '@/services/cms/links/validation'
 import { createZodActionError } from '@/actions/error'
-import type { CreateCmsLinkTypes } from '@/server/cms/links/validation'
+import type { CreateCmsLinkTypes } from '@/services/cms/links/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { CmsLink } from '@prisma/client'
 

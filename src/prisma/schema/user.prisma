@@ -5,27 +5,32 @@ enum SEX {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  username      String        @unique
-  email         String        @unique
-  firstname     String        @default("[Fjernet]")
-  lastname      String        @default("[Fjernet]")
-  acceptedTerms DateTime?
-  sex           SEX?
-  allergies     String?
-  mobile        String?
-  emailVerified DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt // is also updated manually
-  omegaQuote    OmegaQuote[]
-  memberships   Membership[]
-  credentials   Credentials?
-  feideAccount  FeideAccount?
+  id                Int                 @id @default(autoincrement())
+  username          String              @unique
+  email             String              @unique
+  firstname         String              @default("[Fjernet]")
+  lastname          String              @default("[Fjernet]")
+  bio               String              @default("")
+  acceptedTerms     DateTime?
+  sex               SEX?
+  allergies         String?
+  mobile            String?
+  emailVerified     DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt // is also updated manually
+  image             Image?              @relation(fields: [imageId], references: [id])
+  imageId           Int?
+  LockerReservation LockerReservation[]
+  omegaQuote        OmegaQuote[]
+  memberships       Membership[]
+  credentials       Credentials?
+  feideAccount      FeideAccount?
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
   admissionTrials           AdmissionTrial[]           @relation(name: "user")
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
+  EventRegistration         EventRegistration[]
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.

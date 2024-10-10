@@ -1,11 +1,11 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
-import { createImage } from '@/server/images/create'
-import { createImagesValidation, createImageValidation } from '@/server/images/validation'
+import { createImage } from '@/services/images/create'
+import { createImagesValidation, createImageValidation } from '@/services/images/validation'
 import type { ActionReturn } from '@/actions/Types'
 import type { Image } from '@prisma/client'
-import type { CreateImageTypes, CreateImagesTypes } from '@/server/images/validation'
+import type { CreateImageTypes, CreateImagesTypes } from '@/services/images/validation'
 
 export async function createImageAction(
     collectionId: number,
@@ -21,9 +21,10 @@ export async function createImageAction(
 }
 
 export async function createImagesAction(
+    useFileName: boolean,
     collectionId: number,
     rawdata: FormData | CreateImagesTypes['Type']
-): Promise<ActionReturn<Image[]>> {
+): Promise<ActionReturn<void>> {
     //TODO: add auth
 
     const parse = createImagesValidation.typeValidate(rawdata)
@@ -32,17 +33,17 @@ export async function createImagesAction(
 
     const data = parse.data
 
-    let finalReturn: ActionReturn<Image[]> = { success: true, data: [] }
+    let finalReturn: ActionReturn<void> = { success: true, data: undefined }
     for (const file of data.files) {
+        const name = useFileName ? file.name.split('.')[0] : undefined
         const ret = await safeServerCall(
-            () => createImage({ file, name: file.name.split('.')[0], alt: file.name.split('.')[0], collectionId })
+            () => createImage({ file, name, alt: file.name.split('.')[0], collectionId })
         )
         if (!ret.success) return ret
         finalReturn = {
             ...finalReturn,
             success: ret.success,
         }
-        finalReturn.data.push(ret.data)
     }
     return finalReturn
 }

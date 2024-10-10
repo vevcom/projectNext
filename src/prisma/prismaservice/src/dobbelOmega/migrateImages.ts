@@ -33,6 +33,14 @@ export default async function migrateImages(
         create: {
             name: 'Søppel fra Veven',
             description: 'Denne samlingen inneholder bilder som ikke tilhører noen samling',
+            visibility: {
+                create: {
+                    purpose: 'IMAGE',
+                    published: true,
+                    regularLevel: {},
+                    adminLevel: {},
+                }
+            }
         },
     })
 
@@ -127,7 +135,7 @@ export default async function migrateImages(
         if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const { id: pnId } = await pnPrisma.image.upsert({
             where: {
-                name: image.name
+                id: image.id
             },
             update: {},
             create: {

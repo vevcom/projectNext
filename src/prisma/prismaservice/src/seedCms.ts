@@ -73,7 +73,7 @@ async function seedCmsImage(
     cmsimage: SeedCmsImage & { special?: SpecialCmsImage | null },
     prisma: PrismaClient
 ) {
-    const image = await prisma.image.findUnique({
+    const image = await prisma.image.findFirst({
         where: {
             name: cmsimage.imageName
         }

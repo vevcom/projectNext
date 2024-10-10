@@ -1,13 +1,12 @@
 import 'server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
-import { createFeideAccount } from '@/server/auth/feideAccounts/create'
-import { createUser } from '@/server/users/create'
-import { readUserOrNullOfFeideAccount } from '@/server/auth/feideAccounts/read'
-import { updateUser } from '@/server/users/update'
-import { readUserOrNull } from '@/server/users/read'
-import type { UserFiltered } from '@/server/users/Types'
+import { createFeideAccount } from '@/services/auth/feideAccounts/create'
+import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
+import { User } from '@/services/users'
+import { readUserOrNull } from '@/services/users/read'
+import type { UserFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
-import type { Adapter, AdapterUser } from 'next-auth/adapters'
+import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 
 /**
  * Utility function for converting a user object to
@@ -79,20 +78,24 @@ async function generateUsername(prisma: PrismaClient, preferredUsername: string,
 
 export default function VevenAdapter(prisma: PrismaClient): Adapter {
     return {
-        async createUser(user) {
+        async createUser(user: AdapterUser) {
             if (!user.username || !user.firstname || !user.lastname) {
                 throw new Error()
             }
 
             const username = await generateUsername(prisma, user.username, user.lastname)
 
-            const createdUser = await createUser({
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                username,
-                emailVerified: null, //(new Date()).toISOString(),
-            })
+            const createdUser = await User.create.client('NEW').execute({
+                data: {
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    username,
+                    emailVerified: null, //(new Date()).toISOString(),
+                },
+                params: undefined,
+                session: null
+            }, { withAuth: false })
 
             return convertToAdapterUser(createdUser)
         },
@@ -129,17 +132,21 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async updateUser(user) {
             console.log('update u')
 
-            const updatedUser = await updateUser(Number(user.id), {
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                username: user.username,
-            })
+            const updatedUser = await User.update.client('NEW').execute({
+                params: { id: Number(user.id) },
+                data: {
+                    email: user.email,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    username: user.username,
+                },
+                session: null
+            }, { withAuth: false })
 
             return convertToAdapterUser(updatedUser)
         },
 
-        async linkAccount(account) {
+        async linkAccount(account: AdapterAccount) {
             console.log('link acc')
 
             if (!account.access_token || !account.expires_at || !account.id_token) {

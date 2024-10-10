@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import getCommitee from './getCommittee'
 import { readSpecialImageAction } from '@/actions/images/read'
-import BackdropImage from '@/app/components/BackdropImage/BackdropImage'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import CommitteeImage from '@/app/components/CommitteeImage/CommitteeImage'
-import Article from '@/app/components/Cms/Article/Article'
+import BackdropImage from '@/components/BackdropImage/BackdropImage'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import Article from '@/components/Cms/Article/Article'
 import Link from 'next/link'
 
 export type PropTypes = {

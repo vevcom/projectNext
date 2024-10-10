@@ -1,0 +1,11 @@
+.uploadMany {
+    min-width: 50vw;
+    button[type = "submit"] {
+        width: 150px;
+        margin-left: 0;
+    }
+    label {
+        display: block;
+        width: 100%;
+    }
+}

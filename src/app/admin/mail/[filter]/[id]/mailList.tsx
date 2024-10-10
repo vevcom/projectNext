@@ -5,9 +5,9 @@ import styles from './mailList.module.scss'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
-import type { MailListTypes, ViaArrayType } from '@/server/mail/Types'
+import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
-import type { UserFiltered } from '@/server/users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 const typeDisplayName: Record<MailListTypes, string> = {
     alias: 'Alias',

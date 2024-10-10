@@ -3,11 +3,11 @@ import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
 import { readOmbulAction } from '@/actions/ombul/read'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
-import SlideInOnView from '@/app/components/SlideInOnView/SlideInOnView'
-import EditableTextField from '@/app/components/EditableTextField/EditableTextField'
+import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
+import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/actions/ombul/update'
 import { getUser } from '@/auth/getUser'
-import CmsImage from '@/app/components/Cms/CmsImage/CmsImage'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -51,8 +51,8 @@ export default async function Ombul({ params }: PropTypes) {
                     formProps={{
                         action: changeDescription
                     }}
+                    inputName="description"
                     submitButton={{
-                        name: 'description',
                         text: 'Endre',
                         className: styles.changeDescriptionButton,
                     }}

@@ -2,7 +2,7 @@
 
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { generateOmegaId } from '@/server/omegaid/generate'
+import { generateOmegaId } from '@/services/omegaid/generate'
 import type { ActionReturn } from '@/actions/Types'
 
 

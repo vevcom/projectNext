@@ -1,0 +1,27 @@
+@use '@/styles/ohma';
+
+@include ohma.screenMobile {
+    .wrapper {
+        max-width: 80vw;
+        overflow-y: scroll;
+    }
+}
+
+.ApiKeysList {    
+    @include ohma.table();
+    a {
+        display: contents;
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.activated {
+    background-color: lighten(ohma.$colors-green, 50%);
+    color: ohma.$colors-green;
+}
+
+.deactivated {
+    background-color: lighten(ohma.$colors-red, 50%);
+    color: ohma.$colors-red;
+}

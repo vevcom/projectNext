@@ -1,32 +1,37 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { updateUser, registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/server/users/update'
+import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
-    updateUserValidation,
     registerUserValidation,
     updateUserPasswordValidation,
     verifyEmailValidation
-} from '@/server/users/validation'
-import { verifyResetPasswordToken } from '@/server/auth/resetPassword'
-import { ServerError } from '@/server/error'
-import { verifyVerifyEmailToken } from '@/server/auth/verifyEmail'
-import type { RegisterNewEmailType, UserFiltered } from '@/server/users/Types'
+} from '@/services/users/validation'
+import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
+import { ServerError } from '@/services/error'
+import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
+import { User } from '@/services/users'
+import { Session } from '@/auth/Session'
+import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { User } from '@prisma/client'
-import type { UpdateUserTypes, RegisterUserTypes } from '@/server/users/validation'
+import type { User as UserT } from '@prisma/client'
+import type { UpdateUserTypes, RegisterUserTypes } from '@/services/users/validation'
 
 export async function updateUserAction(
     id: number,
     rawdata: FormData | UpdateUserTypes['Type']
-): Promise<ActionReturn<User>> {
+): Promise<ActionReturn<UserT>> {
     //TODO: Permission check
-    const parse = updateUserValidation.typeValidate(rawdata)
+    const parse = User.update.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
 
-    return await safeServerCall(() => updateUser(id, data))
+    return await safeServerCall(async () => User.update.client('NEW').execute({
+        params: { id },
+        data,
+        session: await Session.fromNextAuth(),
+    }, { withAuth: true }))
 }
 
 export async function registerNewEmailAction(rawdata: FormData): Promise<ActionReturn<RegisterNewEmailType>> {

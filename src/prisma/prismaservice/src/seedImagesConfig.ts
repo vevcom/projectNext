@@ -68,6 +68,12 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'pwa.png',
         collection: defaultCollection,
     },
+    {
+        name: 'Harambe104',
+        alt: 'Harambe',
+        fsLocation: 'harambe.jpg',
+        collection: 'PROFILEIMAGES'
+    }
 ]
 
 /**
@@ -121,6 +127,18 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         name: 'magisk_hatt',
         alt: 'Magisk hatt',
         fsLocation: 'magisk_hatt.png',
+        collection: defaultCollection,
+    },
+    HOVEDBYGGNINGEN: {
+        name: 'hovedbygningen',
+        alt: 'Hovedbygningen',
+        fsLocation: 'hovedbygningen.webp',
+        collection: defaultCollection,
+    },
+    R1: {
+        name: 'R1 NTNU',
+        alt: 'R1 på NTNU',
+        fsLocation: 'R1NTNU.jpeg',
         collection: defaultCollection,
     },
 } as const

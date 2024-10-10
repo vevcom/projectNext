@@ -2,14 +2,14 @@
 
 import styles from './channelSettings.module.scss'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
-import TextInput from '@/app/components/UI/TextInput'
-import Select from '@/app/components/UI/Select'
-import Form from '@/app/components/Form/Form'
-import PageWrapper from '@/app/components/PageWrapper/PageWrapper'
-import { findValidParents } from '@/server/notifications/channel/validation'
+import TextInput from '@/components/UI/TextInput'
+import { SelectNumber } from '@/components/UI/Select'
+import Form from '@/components/Form/Form'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { findValidParents } from '@/services/notifications/channel/validation'
 import { updateNotificationChannelAction } from '@/actions/notifications/channel/update'
 import { useState } from 'react'
-import type { ExpandedNotificationChannel } from '@/server/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { MailAlias } from '@prisma/client'
 
 export default function ChannelSettings({
@@ -54,12 +54,12 @@ export default function ChannelSettings({
 
                 <div className={styles.widerDiv}>
                     {currentChannelState.special !== 'ROOT' ?
-                        <Select
+                        <SelectNumber
                             label="Forelder"
                             name="parentId"
-                            options={selectOptions.map(c => ({ value: c.id, label: c.name }))}
+                            options={selectOptions.map(channel => ({ value: channel.id, label: channel.name }))}
                             value={currentChannelState.parentId}
-                            onChange={(v) => setCurrentChannel({ ...currentChannelState, parentId: v })}
+                            onChange={id => setCurrentChannel({ ...currentChannelState, parentId: id })}
                         />
                         :
                         <input type="hidden" name="parentId" value={currentChannelState.parentId} />
@@ -67,12 +67,12 @@ export default function ChannelSettings({
                 </div>
 
                 <div className={styles.widerDiv}>
-                    <Select
+                    <SelectNumber
                         label="Alias"
                         name="mailAliasId"
-                        options={mailAliases.map(a => ({ value: a.id, label: a.address }))}
+                        options={mailAliases.map(alias => ({ value: alias.id, label: alias.address }))}
                         value={currentChannelState.mailAliasId}
-                        onChange={(v) => setCurrentChannel({ ...currentChannelState, mailAliasId: v })}
+                        onChange={id => setCurrentChannel({ ...currentChannelState, mailAliasId: id })}
                     />
                 </div>
 

@@ -3,7 +3,7 @@
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
-import { readStudyProgrammes } from '@/server/groups/studyProgrammes/read'
+import { readStudyProgrammes } from '@/services/groups/studyProgrammes/read'
 import type { ActionReturn } from '@/actions/Types'
 import type { StudyProgramme } from '@prisma/client'
 

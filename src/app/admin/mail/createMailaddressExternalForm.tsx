@@ -1,7 +1,7 @@
 'use client'
 import { createMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/create'
-import Form from '@/app/components/Form/Form'
-import TextInput from '@/app/components/UI/TextInput'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 
 

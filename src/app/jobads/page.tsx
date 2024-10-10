@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import CreateJobAdForm from './CreateJobAdForm'
 import CurrentJobAds from './currentJobAds'
-import { AddHeaderItemPopUp } from '@/app/components/HeaderItems/HeaderItemPopUp'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default async function JobAds() {
