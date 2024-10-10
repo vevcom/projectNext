@@ -51,6 +51,7 @@ model EventRegistration {
   event     Event    @relation(fields: [eventId], references: [id])
   eventId   Int
   user      User     @relation(fields: [userId], references: [id])
+  comments  String?
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
