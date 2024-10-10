@@ -1,30 +1,8 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    padding: ohma.$gap;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    position: relative;
-    > .images {
-        padding: 3*ohma.$gap;
-        width: 100%;
-        grid-column: 2/3;
-        grid-row: 1/2;
-        > main {
-            margin-top: ohma.$gap;
-            width: 100%;
-        }
-    }
-}
-
-@media screen and (max-width: ohma.$mobileBreakpoint) {
-    .wrapper {
-        grid-template-columns: auto;
-        grid-template-rows: auto auto;
-        .admin {
-            align-self: flex-end;
-            grid-row: 2/3;
-        }
+    padding: 2em ohma.$minimalPagePadding;
+    > h1 {
+        font-size: ohma.$fonts-xxl;
     }
 }

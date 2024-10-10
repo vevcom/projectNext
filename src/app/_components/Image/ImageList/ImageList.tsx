@@ -11,7 +11,6 @@ import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     serverRendered?: React.ReactNode,
-    disableEditing?: boolean,
     withUpload?: boolean,
 }
 
@@ -28,7 +27,6 @@ type PropTypes = {
  */
 export default function ImageList({
     serverRendered,
-    disableEditing,
     withUpload = false
 }: PropTypes) {
     const context = useContext(ImagePagingContext)
@@ -62,7 +60,7 @@ export default function ImageList({
             {serverRendered} {/* Rendered on server homefully in the right way*/}
             <EndlessScroll
                 pagingContext={ImagePagingContext}
-                renderer={image => <ImageListImage key={image.id} image={image} disableEditing={disableEditing}/>}
+                renderer={image => <ImageListImage key={image.id} image={image}/>}
             />
         </div>
     )

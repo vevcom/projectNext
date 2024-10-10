@@ -1,6 +1,7 @@
 'use client'
 import styles from './ImageDisplay.module.scss'
-import ImageSelectionButton from './ImageSelectionButton'
+import { SelectString } from '@/components/UI/Select'
+import PopUp from '@/components/PopUp/PopUp'
 import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/components/Form/Form'
@@ -8,57 +9,90 @@ import TextInput from '@/components/UI/TextInput'
 import { updateImageAction } from '@/actions/images/update'
 import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
-import useEditing from '@/hooks/useEditing'
+import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
+import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import { useRouter } from 'next/navigation'
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useContext, useState, useEffect, useRef } from 'react'
+import { useContext } from 'react'
+import type { ImageSizeOptions } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
 
-type PropTypes = {
-    startImageName?: string,
-    disableEditing?: boolean,
+const mimeTypes: { [key: string]: string } = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    bmp: 'image/bmp',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    tiff: 'image/tiff',
+    svg: 'image/svg+xml',
+}
+const getCurrentType = (image: ImageT, size: ImageSizeOptions) => {
+    let src = image.fsLocationOriginal
+    switch (size) {
+        case 'SMALL':
+            src = image.fsLocationSmallSize
+            break
+        case 'MEDIUM':
+            src = image.fsLocationMediumSize
+            break
+        case 'LARGE':
+            src = image.fsLocationLargeSize
+            break
+        case 'ORIGINAL':
+            src = image.fsLocationOriginal
+            break
+        default:
+            return 'unknown'
+    }
+    const ext = src.split('.').pop()
+    if (!ext) return 'unknown'
+    return mimeTypes[ext]
 }
 
-export default function ImageDisplay({ startImageName, disableEditing = false }: PropTypes) {
-    const context = useContext(ImagePagingContext)
-    const selection = useContext(ImageSelectionContext)
-    const canEdit = useEditing({}) //TODO: authe
+export default function ImageDisplay() {
+    const pagingContext = useContext(ImagePagingContext)
+    const displayContext = useContext(ImageDisplayContext)
+    const canEdit = true //TODO: Auth
 
-    //This component must be rendered inside a ImagePagingContextProvider
-    if (!context) throw new Error('No context')
+    if (!pagingContext || !displayContext) throw new Error('No context')
 
-    const images = useRef<ImageT[]>(context?.state.data || [])
-    const startIndex = startImageName ? images.current.findIndex(image => image.name === startImageName) : 0
-    const currentImage = useRef<ImageT>(images.current[startIndex])
-    const [currentIndex, setcurrentIndex] = useState(
-        () => images.current.findIndex(image => image.name === startImageName) || 0
-    )
-
-    useEffect(() => {
-        images.current = context?.state.data || []
-    }, [context.state.data])
-    useEffect(() => {
-        currentImage.current = images.current[currentIndex]
-    }, [currentIndex])
-
+    const getCurrentIndex = () => pagingContext.state.data.findIndex(x => x.id === displayContext.currentImage?.id)
 
     const goLeft = () => {
-        setcurrentIndex(prevIndex => (prevIndex - 1 === -1 ? images.current.length - 1 : prevIndex - 1))
+        const currentIndex = getCurrentIndex()
+        const nextIndex = currentIndex === 0 ? pagingContext.state.data.length - 1 : currentIndex - 1
+        displayContext.setImage(pagingContext.state.data[nextIndex])
     }
 
     const naiveGoRight = () => {
-        setcurrentIndex(prevIndex => (prevIndex + 1 === images.current.length ? 0 : prevIndex + 1))
+        const currentIndex = getCurrentIndex()
+        const nextIndex = currentIndex === pagingContext.state.data.length - 1 ? 0 : currentIndex + 1
+        displayContext.setImage(pagingContext.state.data[nextIndex])
     }
 
     const goRight = async () => {
-        if (currentImage.current.id !== images.current[images.current.length - 1].id) return naiveGoRight()
-        if (context?.state.allLoaded) return naiveGoRight()
-        const newImages = await context.loadMore()
-        if (!newImages.length) return naiveGoRight()
-        currentImage.current = newImages[0]
-        return setcurrentIndex(x => x + 1)
+        if (!pagingContext.state.data.length) return
+        if (!displayContext.currentImage) {
+            if (pagingContext.state.data.length) displayContext.setImage(pagingContext.state.data[0])
+            return
+        }
+        if (displayContext.currentImage.id !== pagingContext.state.data[pagingContext.state.data.length - 1].id) {
+            naiveGoRight()
+            return
+        }
+        if (pagingContext.state.allLoaded) {
+            naiveGoRight()
+            return
+        }
+        const newImages = await pagingContext.loadMore()
+        if (!newImages.length) {
+            naiveGoRight()
+            return
+        }
+        displayContext.setImage(newImages[0])
     }
 
     useKeyPress('ArrowRight', goRight)
@@ -67,65 +101,134 @@ export default function ImageDisplay({ startImageName, disableEditing = false }:
     const { refresh } = useRouter()
 
     const reload = async () => {
-        images.current = await context.refetch()
+        pagingContext.refetch()
         refresh()
     }
 
+    const image = displayContext.currentImage
+
+    const close = () => {
+        displayContext.setImage(null)
+    }
+    useKeyPress('Escape', close)
+
+    const handleSizeChange = (size: string) => {
+        switch (size) {
+            case 'SMALL':
+                displayContext.setImageSize('SMALL')
+                break
+            case 'MEDIUM':
+                displayContext.setImageSize('MEDIUM')
+                break
+            case 'LARGE':
+                displayContext.setImageSize('LARGE')
+                break
+            case 'ORIGINAL':
+                displayContext.setImageSize('ORIGINAL')
+                break
+            default:
+                break
+        }
+    }
+
+    if (!image) return <></>
+    console.log(image)
+
     return (
         <div className={styles.ImageDisplay}>
-            <div>
-                <div className={styles.currentImage}>
-                    <div className={styles.select}>
+            <div className={styles.selectImageSize}>
+                <SelectString
+                    defaultValue={displayContext.imageSize}
+                    value={displayContext.imageSize}
+                    onChange={handleSizeChange}
+                    name="imageSize"
+                    label="Oppløsning"
+                    options={[
                         {
-                            selection?.selectionMode && (
-                                <ImageSelectionButton image={currentImage.current} />
-                            )
+                            label: 'Liten',
+                            value: 'SMALL'
+                        },
+                        {
+                            label: 'Middels',
+                            value: 'MEDIUM'
+                        },
+                        {
+                            label: 'Stor',
+                            value: 'LARGE'
+                        },
+                        {
+                            label: 'Original',
+                            value: 'ORIGINAL'
                         }
-                    </div>
-                    <h2>{currentImage.current.name}</h2>
-                    <i>{currentImage.current.alt}</i>
-                    {
-                        context?.loading ? (
-                            <div className={styles.loading}></div>
-                        ) : (
-                            <Image width={200} image={currentImage.current} />
-                        )
-                    }
-                </div>
+                    ]}/>
+            </div>
+            <button onClick={close} className={styles.close}>
+                <FontAwesomeIcon icon={faX}/>
+            </button>
+            <div className={styles.currentImage}>
+                <h1>{image.name}</h1>
+                <i>{image.alt}</i>
+                <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
+                {
+                    pagingContext.loading ? (
+                        <div className={styles.loading}></div>
+                    ) : (
+                        <Image
+                            width={200}
+                            imageSize={displayContext.imageSize}
+                            image={image}
+                        />
+                    )
+                }
+            </div>
 
-                <div className={styles.controls}>
-                    <button onClick={goLeft}>
-                        <FontAwesomeIcon icon={faChevronLeft}/>
-                    </button>
-                    <button onClick={goRight}>
-                        <FontAwesomeIcon icon={faChevronRight}/>
-                    </button>
-                </div>
+            <div className={styles.controls}>
+                <button onClick={goLeft}>
+                    <FontAwesomeIcon icon={faChevronLeft}/>
+                </button>
+                <button onClick={goRight}>
+                    <FontAwesomeIcon icon={faChevronRight}/>
+                </button>
             </div>
             {
-                (canEdit && !disableEditing) && (
-                    <aside className={styles.admin}>
-                        <Form
-                            title="Rediger metadata"
-                            successCallback={reload}
-                            submitText="oppdater"
-                            action={updateImageAction.bind(null, currentImage.current.id)}
-                        >
-                            <TextInput name="name" label="navn" />
-                            <TextInput name="alt" label="alt" />
-                        </Form>
-                        <Form
-                            successCallback={reload}
-                            action={destroyImageAction.bind(null, currentImage.current.id)}
-                            submitText="slett"
-                            submitColor="red"
-                            confirmation={{
-                                confirm: true,
-                                text: 'Er du sikker på at du vil slette bildet?'
-                            }}
-                        >
-                        </Form>
-                    </aside>
+                canEdit && (
+                    <PopUp PopUpKey="EditImage" showButtonContent={
+                        <div className={styles.openImageAdmin}>
+                            <FontAwesomeIcon icon={faCog}/>
+                        </div>
+                    }>
+                        <div className={styles.admin}>
+                            <Form
+                                title="Rediger metadata"
+                                successCallback={reload}
+                                submitText="oppdater"
+                                action={updateImageAction.bind(null, image.id)}
+                                closePopUpOnSuccess="EditImage"
+                            >
+                                <TextInput name="name" label="navn" defaultValue={image.name} />
+                                <TextInput name="alt" label="alt" defaultValue={image.alt} />
+                            </Form>
+                            <Form
+                                className={styles.deleteImage}
+                                successCallback={reload}
+                                action={destroyImageAction.bind(null, image.id)}
+                                submitText="slett"
+                                submitColor="red"
+                                confirmation={{
+                                    confirm: true,
+                                    text: 'Er du sikker på at du vil slette bildet?'
+                                }}
+                            >
+                            </Form>
+                            <Form
+                                className={styles.makeCover}
+                                refreshOnSuccess
+                                submitText="Gjør til cover"
+                                closePopUpOnSuccess="Edit"
+                                action={updateImageCollectionAction.bind(null, image.collectionId).bind(null, image.id)}
+                            />
+                        </div>
+                    </PopUp>
                 )
             }
         </div>
