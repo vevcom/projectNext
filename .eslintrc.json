@@ -8,7 +8,8 @@
     },
     "extends": [
         "next/core-web-vitals",
-        "eslint:recommended",
+        "next/typescript",
+        // "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
@@ -19,12 +20,12 @@
     "root": true,
     "rules": {
         "indent": [
-        "error",
-        4,
-        {
-            "SwitchCase": 1,
-            "VariableDeclarator": 1
-        }
+            "error",
+            4,
+            {
+                "SwitchCase": 1,
+                "VariableDeclarator": 1
+            }
         ],
         // require function expressions to have a name
         "func-names": "warn",
@@ -32,8 +33,8 @@
         "eol-last": "error",  
         // disallow padding inside computed properties, ie. obj[ "fjie"] not allowed
         "computed-property-spacing": [ 
-        "error",
-        "never"
+            "error",
+            "never"
         ],
         // suggest using arrow functions as callbacks
         "prefer-arrow-callback": "error",
@@ -110,17 +111,17 @@
         }
         ],
         "quotes": [
-        "error",
-        "single",
-        "avoid-escape"
+            "error",
+            "single",
+            "avoid-escape"
         ],
         "jsx-quotes": ["error", "prefer-double"],
         // require camel case names
         "camelcase": [
-        "error",
-        { 
-            "properties": "never" 
-        }
+            "error",
+            { 
+                "properties": "never" 
+            }
         ],
         // enforce spacing before and after comma
         "comma-spacing": [
@@ -493,18 +494,17 @@
             "warn",
             {
                 "groups": [
-                "index",
-                "sibling",
-                "parent",
-                "internal",
-                "external",
-                "builtin",
-                "object",
-                "type"
+                    "index",
+                    "sibling",
+                    "parent",
+                    "internal",
+                    "external",
+                    "builtin",
+                    "object",
+                    "type"
                 ]
             }
         ],
-        "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/consistent-type-imports": [
             "error",
             {
