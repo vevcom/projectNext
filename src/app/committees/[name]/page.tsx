@@ -33,7 +33,7 @@ export default async function Committee({ params }: PropTypes) {
                 </CommitteeImage>
                     <PageWrapper title={committee.name}>
                     <div className={styles.wrapper}>
-                        <p>{committee.name}</p>
+                        <p>{}</p>
                         <Article article={committee.committeeArticle} hideCoverImage>
                         </Article>
                         <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>

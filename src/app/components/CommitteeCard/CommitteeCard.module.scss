@@ -6,7 +6,6 @@ $contentHeight: 50px;
 $height: $imageHeight + $contentHeight;
 
 $background: lighten(ohma.$colors-secondary, 15%);
-
 $textBoxTransparency: 60%;
 $textColor: ohma.$colors-gray-900;
 $textUnderlineColor: ohma.$colors-secondary;
@@ -25,22 +24,42 @@ $textBoxBackgroundColor: ohma.$colors-white;
     background-color: $background;
     isolation: isolate;
     overflow: hidden;
+    box-shadow: ohma.$colors-gray-800 0 0 10px;
+
     &:hover {
+        @media (max-width: ohma.$mobileBreakpoint) {
+            scale: 1;
+        }
         scale: 1.1;
         transition-duration: 0.3s;
+
         > .image {
+            @media (max-width: ohma.$mobileBreakpoint) {
+                scale: 1;
+            }
             scale: 1.1;
+            transition: scale 0.3s;
         }
+
         > .content {
+            @media (max-width: ohma.$mobileBreakpoint) {
+                background-color: rgba($textBoxBackgroundColor, 60%);
+                box-shadow: ohma.$colors-secondary 0 0 40px;
+                padding-top: $padding
+            }
             background-color: rgba($textBoxBackgroundColor, 0%);
             box-shadow: ohma.$colors-secondary 0 0 0px;
             padding-top: 10px;
-            transition-duration: 0.3s;
+
             > h2 {
+                @media (max-width: ohma.$mobileBreakpoint) {
+                    opacity: 100%;
+                }
                 opacity: 0%;
             }
         }
     }
+
     > .image {
         position: absolute;
         top: 0;
@@ -49,16 +68,19 @@ $textBoxBackgroundColor: ohma.$colors-white;
         height: $height;
         z-index: 1;
         transition: scale 0.3s;
+
         > * {
             width: 100% !important;
             height: 100%;
             object-fit: cover;
+
             img {
                 width: 100% !important;
                 height: 100%;
                 object-fit: cover;
             }
-        } 
+        }
+
         &::after {
             content: '';
             position: absolute;
@@ -71,6 +93,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
             z-index: 0;
         }
     }
+
     > .content {
         z-index: 2;
         position: absolute;
@@ -84,6 +107,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
         color: $textColor;
         transition: 0.3s;
         overflow: hidden;
+
         > h2 {
             opacity: 100%;
             text-align: center;
@@ -94,6 +118,4 @@ $textBoxBackgroundColor: ohma.$colors-white;
             margin-bottom: ohma.$gap;
         }
     }
-
-    box-shadow: ohma.$colors-gray-800 0 0 10px;
 }
