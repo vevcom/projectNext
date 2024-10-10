@@ -30,6 +30,6 @@ export async function sendSystemMail(
         to,
         subject,
         from: `noreply@${process.env.DOMAIN}`,
-        html: render(body),
+        html: await render(body),
     })
 }

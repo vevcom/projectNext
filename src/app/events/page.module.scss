@@ -1,5 +1,7 @@
 @use "@/styles/ohma";
 
-.wrapper {
-    font-size: ohma.$fonts-xl;
+.createEvent {
+    min-width: 50vw;
+    display: grid;
+    place-content: center;
 }

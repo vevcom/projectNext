@@ -34,6 +34,7 @@ model CmsImage {
   special              SpecialCmsImage? @unique
   ScreenPage           ScreenPage[]
   School               School[]
+  Event                Event[]
 }
 
 enum SpecialCmsParagraph {
@@ -56,6 +57,7 @@ model CmsParagraph {
   ScreenPage       ScreenPage[]
   Course           Course[]
   School           School[]
+  Event            Event[]
 }
 
 model CmsLink {

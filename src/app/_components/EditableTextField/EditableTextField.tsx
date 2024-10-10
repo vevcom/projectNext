@@ -13,9 +13,9 @@ type PropTypes<ReturnType, DataGuaratee extends boolean> = {
     editable: boolean,
     children: React.ReactNode,
     formProps: Omit<FormPropTypes<ReturnType, DataGuaratee>, 'title' | 'children' | 'submitText'>
+    inputName: string,
     submitButton: {
-        text?: string,
-        name: string,
+        text: string,
         className?: string,
     }
 }
@@ -33,6 +33,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
     children,
     formProps,
     submitButton,
+    inputName,
     ...props
 }: PropTypes<ReturnType, DataGuaratee>
 ) {
@@ -86,7 +87,7 @@ export default function EditableTextField<ReturnType, DataGuaratee extends boole
                     formProps.successCallback?.(data)
                 }}
             >
-                <input className={styles.hiddenInput} ref={ref} name={submitButton.name} />
+                <input className={styles.hiddenInput} ref={ref} name={inputName} />
                 <button className={styles.hiddenInput} ref={submitRef} type="submit"></button>
             </Form>
         </div>

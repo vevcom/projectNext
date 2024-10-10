@@ -7,6 +7,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -15,20 +16,17 @@ import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
-import type { RegisterUserTypes, UpdateUserPasswordTypes, UpdateUserTypes, VerifyEmailType } from './validation'
-import type { User } from '@prisma/client'
+import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
 
-export async function updateUser(id: number, rawdata: UpdateUserTypes['Detailed']): Promise<User> {
-    const data = updateUserValidation.detailedValidate(rawdata)
-
-    return await prismaCall(() => prisma.user.update({
-        where: {
-            id,
-        },
+export const update = ServiceMethodHandler({
+    withData: true,
+    validation: updateUserValidation,
+    handler: (prisma_, params: { id: number } | { username: string }, data) => prisma_.user.update({
+        where: params,
         data
-    }))
-}
+    })
+})
 
 export async function registerNewEmail(id: number, rawdata: VerifyEmailType['Detailed']): Promise<RegisterNewEmailType> {
     const { email } = verifyEmailValidation.detailedValidate(rawdata)

@@ -6,6 +6,12 @@ import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'
 
 declare module 'next-auth' {
+    // Normally we dissallow typing with empty objects, but in this case we
+    // need to extend the User object with additional properties. The User
+    // object is defined in next-auth, and we need to extend it with the
+    // properties from UserFiltered. So for this case we allow it.
+    //
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface User extends Partial<UserFiltered> {}
 
     interface Session {

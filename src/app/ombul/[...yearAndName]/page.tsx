@@ -51,8 +51,8 @@ export default async function Ombul({ params }: PropTypes) {
                     formProps={{
                         action: changeDescription
                     }}
+                    inputName="description"
                     submitButton={{
-                        name: 'description',
                         text: 'Endre',
                         className: styles.changeDescriptionButton,
                     }}

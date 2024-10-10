@@ -2,6 +2,8 @@
 
 pncli-config.json
 
+.rest
+
 # logs
 /logs
 
