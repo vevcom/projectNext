@@ -90,7 +90,7 @@ export default async function migrateImages(
         if (image.Articles.length) return true
         if (image.Events.length) return true
         if (image.collectionId === ombulCollection.id) return true
-        if (image.collectionId = profileCollection.id) return true
+        if (image.collectionId === profileCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false
     })
