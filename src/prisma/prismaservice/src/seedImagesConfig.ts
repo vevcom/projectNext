@@ -69,7 +69,7 @@ export const seedImageConfig: ImageSeedConfig = [
         collection: defaultCollection,
     },
     {
-        name: 'Harambe104',
+        name: 'harambe',
         alt: 'Harambe',
         fsLocation: 'harambe.jpg',
         collection: 'PROFILEIMAGES'

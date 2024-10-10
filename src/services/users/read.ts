@@ -140,7 +140,7 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
 
 export async function readUserProfile(username: string): Promise<Profile> {
     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
-        where: { username },
+        where: { username: username.toLowerCase() },
         select: {
             ...userFilterSelection,
             bio: true,
@@ -158,7 +158,7 @@ export const readProfile = ServiceMethodHandler({
     withData: false,
     handler: async (prisma_, params: {username: string}) => {
         const user = await prisma_.user.findUniqueOrThrow({
-            where: { username: params.username },
+            where: { username: params.username.toLowerCase() },
             select: {
                 ...userFilterSelection,
                 bio: true,

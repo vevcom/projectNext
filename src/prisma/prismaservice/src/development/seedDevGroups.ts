@@ -3,7 +3,7 @@ import type { PrismaClient } from '@/generated/pn'
 export default async function seedDevGroups(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({
         where: {
-            username: 'Harambe104'
+            username: 'harambe'
         }
     })
 
