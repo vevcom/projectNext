@@ -1,7 +1,8 @@
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import type { ExpandedCommittee } from './Types'
+import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
+import type { ExpandedCommittee, ExpandedCommitteeWithArticle } from './Types'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -21,7 +22,7 @@ type ReadCommitteeArgs = {
     shortName?: string,
 }
 
-export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedCommittee> {
+export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedCommitteeWithArticle> {
     if (!where) throw new ServerError('BAD PARAMETERS', 'Navn eller id må være spesifisert for å finne en komité.')
 
     return await prismaCall(() => prisma.committee.findUniqueOrThrow({
@@ -35,6 +36,9 @@ export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedC
                     image: true,
                 },
             },
+            committeeArticle: {
+                include: articleRealtionsIncluder
+            }
         },
     }))
 }

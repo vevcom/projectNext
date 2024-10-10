@@ -2,6 +2,9 @@ import styles from './page.module.scss'
 import getCommitee from './getCommittee'
 import { readSpecialImageAction } from '@/actions/images/read'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import Article from '@/components/Cms/Article/Article'
 import Link from 'next/link'
 
 export type PropTypes = {
@@ -22,10 +25,17 @@ export default async function Committee({ params }: PropTypes) {
 
     return (
         <BackdropImage image={committeeLogo}>
-            <div className={styles.wrapper}>
-                <h1>{committee.name}</h1>
-                <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
-            </div>
+            <CommitteeImage logoImage={committeeLogo} committeeImage={committee.committeeArticle.coverImage}>
+                <div></div>
+            </CommitteeImage>
+            <PageWrapper title={committee.name}>
+                <div className={styles.wrapper}>
+                    <p>{}</p>
+                    <Article article={committee.committeeArticle} hideCoverImage>
+                    </Article>
+                    <Link href={`/committees/${committee.shortName}/admin`}> Admin </Link>
+                </div>
+            </PageWrapper>
         </BackdropImage>
     )
 }

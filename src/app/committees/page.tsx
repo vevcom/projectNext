@@ -1,3 +1,6 @@
+import styles from './page.module.scss'
+import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
 import Link from 'next/link'
 
@@ -5,16 +8,39 @@ export default async function Committees() {
     const res = await readCommitteesAction()
     if (!res.success) throw new Error(`Kunne ikke hente komiteer - ${res.errorCode}`)
     const committees = res.data
+
     return (
-        <div>
-            <h1>Komiteer</h1>
-            {
-                committees.map(committee => (
-                    <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
-                        {committee.name}
-                    </Link>
-                ))
+        <div className={styles.CommitteeWrapper}>
+            <PageWrapper title="Komiteer">
+                {
+                    committees.map(committee => (
+                        <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
+                            {}
+                        </Link>
+                    ))
+                }
+            </PageWrapper>
+            <main className={styles.test}> {
+                committees.length ? (
+                    committees.map((committee) => (
+                        <CommitteeCard
+                            key={committee.id}
+                            title={committee.name}
+                            href={`/committees/${committee.shortName}`}
+                            image={committee.logoImage.image}
+                        >
+                            description
+                        </CommitteeCard>
+                    )
+                    )
+                ) : (
+                    <i>
+                            Ingen kategorier å vise
+                    </i>
+                )
+
             }
+            </main>
         </div>
     )
 }
