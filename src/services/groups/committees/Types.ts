@@ -6,6 +6,10 @@ export type ExpandedCommittee = Committee & {
     logoImage: ExpandedCmsImage
 }
 
+export type ExpandedCommitteeWithCover = ExpandedCommittee & {
+    coverImage: ExpandedCmsImage
+}
+
 export type ExpandedCommitteeWithArticle = ExpandedCommittee & {
     committeeArticle: ExpandedArticle
 }
