@@ -7,7 +7,7 @@ import { ReactNode } from 'react'
 
 export type PropTypes = {
     params: {
-        name: string
+        shortName: string
     },
     children: ReactNode
 }

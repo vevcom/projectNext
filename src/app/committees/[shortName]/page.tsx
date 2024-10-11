@@ -4,12 +4,12 @@ import Article from '@/components/Cms/Article/Article'
 
 export type PropTypes = {
     params: {
-        name: string
+        shortName: string
     }
 }
 
 export default async function Committee({ params }: PropTypes) {
-    const committeeArticleRes = await readCommitteeArticleAction(params.name)
+    const committeeArticleRes = await readCommitteeArticleAction(params.shortName)
     if (!committeeArticleRes.success) throw new Error('Kunne ikke hente komitéartikkel')
     const article = committeeArticleRes.data
 
