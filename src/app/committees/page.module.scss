@@ -6,29 +6,7 @@
 
 $max-width: 1200px;
 
-//.main {
-
-//}
-
-.test {
-    margin: 1em 0;
-    display: grid;
-    grid-template-columns: repeat(4, calc((100% - 2em) / 4));
-    grid-gap: 1em;
-    overflow: visible;
-    @media screen and (max-width: variables.$mobileBreakpoint) {
-        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
-    }
-    @media screen and (max-width: 300px) {
-        grid-template-columns: 1fr;
-        place-items: center;
-        > * {
-            width: 100%;
-        }
-    }
-}
-
-.CommitteeWrapper {
+.wrapper {
     $width: 100%;
 
     width: $width;
@@ -55,4 +33,20 @@ $max-width: 1200px;
     }
 }
 
-//finn ut hvordan man kan få bruke mer av siden!! imagecardlistlayout kanskje
+.committeeList {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(4, calc((100% - 2em) / 4));
+    grid-gap: 1em;
+    overflow: visible;
+    @media screen and (max-width: variables.$mobileBreakpoint) {
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    }
+    @media screen and (max-width: 300px) {
+        grid-template-columns: 1fr;
+        place-items: center;
+        > * {
+            width: 100%;
+        }
+    }
+}

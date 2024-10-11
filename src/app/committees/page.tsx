@@ -10,37 +10,29 @@ export default async function Committees() {
     const committees = res.data
 
     return (
-        <div className={styles.CommitteeWrapper}>
-            <PageWrapper title="Komiteer">
-                {
-                    committees.map(committee => (
-                        <Link href={`/committees/${committee.shortName}`} key={committee.shortName}>
-                            {}
-                        </Link>
-                    ))
-                }
-            </PageWrapper>
-            <main className={styles.test}> {
+        <div className={styles.wrapper}>
+            <h1>Komitéer</h1>
+            {
                 committees.length ? (
-                    committees.map((committee) => (
-                        <CommitteeCard
-                            key={committee.id}
-                            title={committee.name}
-                            href={`/committees/${committee.shortName}`}
-                            image={committee.logoImage.image}
-                        >
-                            description
-                        </CommitteeCard>
-                    )
-                    )
+                    <div className={styles.committeeList}>
+                    {
+                        committees.map((committee) => (
+                            <CommitteeCard
+                                key={committee.id}
+                                title={committee.name}
+                                href={`/committees/${committee.shortName}`}
+                                image={committee.logoImage.image}
+                            />
+                        ))
+                    }
+                    </div>
+
                 ) : (
                     <i>
-                            Ingen kategorier å vise
+                        Ingen komiteer å vise
                     </i>
                 )
-
             }
-            </main>
         </div>
     )
 }

@@ -111,9 +111,6 @@ $textBoxBackgroundColor: ohma.$colors-white;
         > h2 {
             opacity: 100%;
             text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 0.1em;
-            text-decoration-thickness: 2px;
             text-decoration-color: $textUnderlineColor;
             margin-bottom: ohma.$gap;
         }
