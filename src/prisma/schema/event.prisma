@@ -12,20 +12,21 @@ model Event {
   cmsParagraphId Int             @unique
   coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
   coverImageId   Int
-  EventTagEvent  EventTagEvent[]
+  eventTagEvents EventTagEvent[]
 
   eventStart   DateTime
   eventEnd     DateTime
   canBeViewdBy EventCanView
 
-  takesRegistration Boolean
-  places            Int                 @default(0)
-  registrationStart DateTime
-  registrationEnd   DateTime
-  EventRegistration EventRegistration[]
+  takesRegistration  Boolean
+  places             Int                 @default(0)
+  registrationStart  DateTime
+  registrationEnd    DateTime
+  eventRegistrations EventRegistration[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  ScreenPage ScreenPage[]
 
   @@unique([order, name])
 }
@@ -43,7 +44,14 @@ model EventTag {
   id            Int             @id @default(autoincrement())
   name          String          @unique
   description   String
+  colorR        Int
+  colorG        Int
+  colorB        Int
   EventTagEvent EventTagEvent[]
+  ScreenPage    ScreenPage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model EventRegistration {
