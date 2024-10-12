@@ -1,11 +1,11 @@
 import getCommitee from './getCommittee'
+import Nav from './Nav'
+import styles from './layout.module.scss'
 import { readSpecialImageAction } from '@/actions/images/read'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
-import { ReactNode } from 'react'
-import Nav from './Nav'
-import styles from './layout.module.scss'
+import type { ReactNode } from 'react'
 
 export type PropTypes = {
     params: {

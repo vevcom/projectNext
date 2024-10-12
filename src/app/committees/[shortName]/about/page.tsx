@@ -1,5 +1,5 @@
-import { readCommitteeArticleAction } from '@/actions/groups/committees/read'
 import styles from './page.module.scss'
+import { readCommitteeArticleAction } from '@/actions/groups/committees/read'
 import Article from '@/components/Cms/Article/Article'
 
 export type PropTypes = {

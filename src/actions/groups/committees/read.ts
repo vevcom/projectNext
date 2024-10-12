@@ -1,12 +1,17 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readCommittee, readCommitteeArticle, readCommitteeParagraph, readCommittees } from '@/services/groups/committees/read'
+import {
+    readCommittee,
+    readCommitteeArticle,
+    readCommitteeParagraph,
+    readCommittees
+} from '@/services/groups/committees/read'
 import { safeServerCall } from '@/actions/safeServerCall'
+import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { ExpandedCommittee, ExpandedCommitteeWithCover } from '@/services/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
-import { ExpandedArticle } from '@/services/cms/articles/Types'
-import { CmsParagraph } from '@prisma/client'
+import type { CmsParagraph } from '@prisma/client'
 
 /**
  * Reads all committees

@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import styles from './Nav.module.scss'
+import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faCog, faInfo, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { usePathname } from 'next/navigation'

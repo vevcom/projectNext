@@ -25,7 +25,7 @@ export default function Article({ article, coverImageClass, hideCoverImage = fal
                     </SlideInOnView>
                 </span>
             )}
-            <article className={noMargin ? styles.noMargin: undefined}>
+            <article className={noMargin ? styles.noMargin : undefined}>
                 {
                     article.articleSections.length ? (
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (

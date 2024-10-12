@@ -4,9 +4,9 @@ import { readSpecialImage } from '@/services/images/read'
 import { prismaCall } from '@/services/prismaCall'
 import { createArticle } from '@/services/cms/articles/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
-import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
@@ -16,7 +16,7 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
     }
     const article = await createArticle({})
 
-    const paragraph = await createCmsParagraph({name: `Paragraph for ${name}`})
+    const paragraph = await createCmsParagraph({ name: `Paragraph for ${name}` })
 
     const order = (await readCurrentOmegaOrder()).order
 

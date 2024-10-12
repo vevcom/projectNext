@@ -1,5 +1,5 @@
 export default function CommiteeMembers() {
-  return (
-    <div>Comm</div>
-  )
+    return (
+        <div>Comm</div>
+    )
 }

@@ -1,8 +1,6 @@
 import styles from './page.module.scss'
 import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
-import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
-import Link from 'next/link'
 import { readSpecialImageAction } from '@/actions/images/read'
 
 export default async function Committees() {
@@ -19,16 +17,16 @@ export default async function Committees() {
             {
                 committees.length ? (
                     <div className={styles.committeeList}>
-                    {
-                        committees.map((committee) => (
-                            <CommitteeCard
-                                key={committee.id}
-                                title={committee.name}
-                                href={`/committees/${committee.shortName}`}
-                                image={committee.logoImage.image || standardCommitteeLogo}
-                            />
-                        ))
-                    }
+                        {
+                            committees.map((committee) => (
+                                <CommitteeCard
+                                    key={committee.id}
+                                    title={committee.name}
+                                    href={`/committees/${committee.shortName}`}
+                                    image={committee.logoImage.image || standardCommitteeLogo}
+                                />
+                            ))
+                        }
                     </div>
 
                 ) : (

@@ -1,5 +1,5 @@
-import { readCommitteeArticleAction, readCommitteeParagraphAction } from '@/actions/groups/committees/read'
 import styles from './page.module.scss'
+import { readCommitteeParagraphAction } from '@/actions/groups/committees/read'
 import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 
 export type PropTypes = {
