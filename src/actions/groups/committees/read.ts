@@ -1,11 +1,12 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import { readCommittee, readCommitteeArticle, readCommittees } from '@/services/groups/committees/read'
+import { readCommittee, readCommitteeArticle, readCommitteeParagraph, readCommittees } from '@/services/groups/committees/read'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ExpandedCommittee, ExpandedCommitteeWithArticle, ExpandedCommitteeWithCover } from '@/services/groups/committees/Types'
+import type { ExpandedCommittee, ExpandedCommitteeWithCover } from '@/services/groups/committees/Types'
 import type { ActionReturn } from '@/actions/Types'
 import { ExpandedArticle } from '@/services/cms/articles/Types'
+import { CmsParagraph } from '@prisma/client'
 
 /**
  * Reads all committees
@@ -42,4 +43,14 @@ export async function readCommitteeArticleAction(shortName: string): Promise<Act
     if (!authorized) return createActionError(status)
 
     return await safeServerCall(() => readCommitteeArticle(shortName))
+}
+
+export async function readCommitteeParagraphAction(shortName: string): Promise<ActionReturn<CmsParagraph>> {
+    const { authorized, status } = await getUser({
+        requiredPermissions: [['COMMITTEE_READ']]
+    })
+
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readCommitteeParagraph(shortName))
 }

@@ -36,17 +36,11 @@ $max-width: 1200px;
 .committeeList {
     margin: 1em 0;
     display: grid;
-    grid-template-columns: repeat(4, calc((100% - 2em) / 4));
-    grid-gap: 1em;
+    grid-template-columns: repeat(auto-fill, 225px);
+    gap: 2em;
+    justify-content: space-between;
+    @include ohma.screenMobile {
+        grid-template-columns: repeat(auto-fill, 200px);
+    }
     overflow: visible;
-    @media screen and (max-width: variables.$mobileBreakpoint) {
-        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
-    }
-    @media screen and (max-width: 300px) {
-        grid-template-columns: 1fr;
-        place-items: center;
-        > * {
-            width: 100%;
-        }
-    }
 }

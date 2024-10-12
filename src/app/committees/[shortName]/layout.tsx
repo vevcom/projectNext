@@ -29,7 +29,9 @@ export default async function Committee({ params, children }: PropTypes) {
             <CommitteeImage logoImage={committeeLogo} coverImage={committee.coverImage} />
             <PageWrapper title={committee.name}>
                 <div className={styles.layout}>
-                    { children }
+                    <div className={styles.content}>
+                        { children }
+                    </div>
                     <aside className={styles.navContainer}>
                         <Nav shortName={params.shortName} />
                     </aside>

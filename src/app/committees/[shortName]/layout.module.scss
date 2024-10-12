@@ -9,9 +9,12 @@
         position: absolute;
         top: 3em;
         right: 0;
-        translate: transformX(100%);
     }
     @include ohma.screenMobile {
         z-index: 5;
     }
+}
+
+.content {
+    margin-right: 2em;
 }

@@ -4,6 +4,7 @@ import { ServerError } from '@/services/error'
 import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
 import type { ExpandedCommittee, ExpandedCommitteeWithArticle, ExpandedCommitteeWithCover } from './Types'
 import { ExpandedArticle } from '@/services/cms/articles/Types'
+import { CmsImage, CmsParagraph } from '@prisma/client'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -73,4 +74,14 @@ export async function readCommitteesFromIds(ids: number[]) {
             }
         }
     }))
+}
+
+export async function readCommitteeParagraph(shortName: string) : Promise<CmsParagraph> {
+    const article = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+        where: { shortName },
+        select: {
+            paragraph: true
+        }
+    }))
+    return article.paragraph
 }

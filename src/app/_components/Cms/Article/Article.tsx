@@ -11,9 +11,10 @@ export type PropTypes = {
     article: ExpandedArticle,
     coverImageClass?: string,
     hideCoverImage?: boolean
+    noMargin?: boolean
 }
 
-export default function Article({ article, coverImageClass, hideCoverImage = false }: PropTypes) {
+export default function Article({ article, coverImageClass, hideCoverImage = false, noMargin = false }: PropTypes) {
     return (
         <span className={styles.Article}>
             {hideCoverImage ? <></> : (
@@ -24,7 +25,7 @@ export default function Article({ article, coverImageClass, hideCoverImage = fal
                     </SlideInOnView>
                 </span>
             )}
-            <article>
+            <article className={noMargin ? styles.noMargin: undefined}>
                 {
                     article.articleSections.length ? (
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (

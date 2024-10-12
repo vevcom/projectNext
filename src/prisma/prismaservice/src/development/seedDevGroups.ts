@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@/generated/pn'
+import { create } from 'domain'
 
 export default async function seedDevGroups(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({
@@ -59,6 +60,9 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                     }
                 }
             },
+            paragraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -100,6 +104,9 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                         }
                     }
                 }
+            },
+            paragraph: {
+                create: {}
             },
             group: {
                 create: {

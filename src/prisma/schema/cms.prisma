@@ -58,6 +58,7 @@ model CmsParagraph {
   Course           Course[]
   School           School[]
   Event            Event[]
+  Committee        Committee?
 }
 
 model CmsLink {

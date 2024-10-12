@@ -12,29 +12,31 @@ $textUnderlineColor: ohma.$colors-secondary;
 $textBoxBackgroundColor: ohma.$colors-white;
 
 .CommitteeCard {
-    min-width: 225px; 
-    max-width: 225px;
+    width: 100%;
+    aspect-ratio: 1/1;
     border-radius: 50%;
     padding: 0px;
     position: relative;
     color: inherit;
     text-decoration: none;
     display: block;
-    height: $height;
     background-color: $background;
     isolation: isolate;
     overflow: hidden;
     box-shadow: ohma.$colors-gray-800 0 0 10px;
+    @include ohma.screenMobile {
+        width: 100%;
+    }
 
     &:hover {
-        @media (max-width: ohma.$mobileBreakpoint) {
+        @include ohma.screenMobile {
             scale: 1;
         }
         scale: 1.1;
         transition-duration: 0.3s;
 
         > .image {
-            @media (max-width: ohma.$mobileBreakpoint) {
+            @include ohma.screenMobile {
                 scale: 1;
             }
             scale: 1.1;
@@ -42,7 +44,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
         }
 
         > .content {
-            @media (max-width: ohma.$mobileBreakpoint) {
+            @include ohma.screenMobile {
                 background-color: rgba($textBoxBackgroundColor, 60%);
                 box-shadow: ohma.$colors-secondary 0 0 40px;
                 padding-top: $padding
@@ -52,7 +54,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
             padding-top: 10px;
 
             > h2 {
-                @media (max-width: ohma.$mobileBreakpoint) {
+                @include ohma.screenMobile {
                     opacity: 100%;
                 }
                 opacity: 0%;
@@ -65,7 +67,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
         top: 0;
         left: 0;
         width: 100%;
-        height: $height;
+        height: 100%;
         z-index: 1;
         transition: scale 0.3s;
 
@@ -101,7 +103,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
         background-color: rgba($textBoxBackgroundColor, $textBoxTransparency);
         width: 100%;
         padding: $padding;
-        top: calc($imageHeight - $padding);
+        bottom: 5%;
         height: $contentHeight;
         box-shadow: ohma.$colors-secondary 0 0 40px;
         color: $textColor;

@@ -9,7 +9,7 @@ $background: lighten(ohma.$colors-secondary, 15%);
   overflow: hidden;
   box-shadow: ohma.$colors-secondary 0 0 75px;
   margin-bottom: 3rem;
-  @media (max-width: ohma.$mobileBreakpoint) {
+  @include ohma.screenMobile {
       height: 150px;
       animation: none;
     }
@@ -28,7 +28,7 @@ $background: lighten(ohma.$colors-secondary, 15%);
     animation-delay: 1s;
     pointer-events: none;
 
-    @media (max-width: ohma.$mobileBreakpoint) {
+    @include ohma.screenMobile {
       transform: scale(0.4);
       animation: none;
       animation: loadingMobile 1s ease-in-out forwards;
@@ -46,13 +46,19 @@ $background: lighten(ohma.$colors-secondary, 15%);
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 300px;
-    object-fit: cover;
-    background-size: cover;
     z-index: 0;
-    overflow: hidden;
-    @media (max-width: ohma.$mobileBreakpoint) {
+    > * {
+      width: 100vw !important;
+      img {
+        width: 100vw !important;
+        height: 300px;
+        object-fit: cover;
+        object-position: center;
+        background-size: cover;
+      }
+    }
+
+    @include ohma.screenMobile {
       height: 150px;
       animation: none;
     }

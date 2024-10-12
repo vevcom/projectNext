@@ -1,6 +1,6 @@
-import { readCommitteeArticleAction } from '@/actions/groups/committees/read'
+import { readCommitteeArticleAction, readCommitteeParagraphAction } from '@/actions/groups/committees/read'
 import styles from './page.module.scss'
-import Article from '@/components/Cms/Article/Article'
+import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
 
 export type PropTypes = {
     params: {
@@ -9,13 +9,13 @@ export type PropTypes = {
 }
 
 export default async function Committee({ params }: PropTypes) {
-    const committeeArticleRes = await readCommitteeArticleAction(params.shortName)
-    if (!committeeArticleRes.success) throw new Error('Kunne ikke hente komitéartikkel')
-    const article = committeeArticleRes.data
+    const paragraphRes = await readCommitteeParagraphAction(params.shortName)
+    if (!paragraphRes.success) throw new Error('Kunne ikke hente komitéparagraph')
+    const paragraph = paragraphRes.data
 
     return (
         <div className={styles.wrapper}>
-            <Article article={article} hideCoverImage />
+            <CmsParagraph cmsParagraph={paragraph} />
         </div>
     )
 }
