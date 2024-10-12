@@ -1,3 +1,4 @@
+import 'server-only'
 import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from './Authers'
 import { readProfile } from './read'
 import { update } from './update'

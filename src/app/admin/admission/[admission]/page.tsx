@@ -14,6 +14,7 @@ type PropTypes = {
 }
 
 export default async function AdmissionTrials({ params }: PropTypes) {
+    console.log(params)
     if (!AdmissionsArray.includes(params.admission)) {
         notFound()
     }

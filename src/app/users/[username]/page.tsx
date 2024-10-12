@@ -9,7 +9,7 @@ import { sexConfig } from '@/services/users/ConfigVars'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
@@ -43,6 +43,10 @@ export default async function User({ params }: PropTypes) {
         returnUrl: `/users/${params.username}`,
         userRequired: params.username === 'me'
     })
+
+    if (params.username === 'me' && user) {
+        redirect(user.username)
+    }
     const { profile, me } = await getProfile(user, params.username)
 
     // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
@@ -71,7 +75,7 @@ export default async function User({ params }: PropTypes) {
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
-                            <PopUp
+                            {me && <PopUp
                                 showButtonClass={styles.omegaIdOpen}
                                 showButtonContent={
                                     <FontAwesomeIcon icon={faQrcode} />
@@ -81,7 +85,7 @@ export default async function User({ params }: PropTypes) {
                                 <div className={styles.omegaId}>
                                     <OmegaId />
                                 </div>
-                            </PopUp>
+                            </PopUp> }
                         </div>
                         {
                             studyProgramme && (

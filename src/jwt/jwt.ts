@@ -29,7 +29,7 @@ export function generateJWT<T extends object>(
         throw new ServerError('INVALID CONFIGURATION', 'Missing secret for JWT generation')
     }
 
-    return sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.NEXTAUTH_SECRET, {
+    return sign(payload, Buffer.from(asymetric ? process.env.JWT_PRIVATE_KEY : process.env.NEXTAUTH_SECRET), {
         audience: aud,
         algorithm: asymetric ? 'ES256' : 'HS256',
         issuer: JWT_ISSUER,
