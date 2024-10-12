@@ -13,11 +13,12 @@ enum SpecialImage {
 
 model Image {
   id                      Int              @id @default(autoincrement())
-  fsLocation              String           @unique
-  fsLocationSmallSize     String?          @unique
-  fsLocationMediumSize    String?          @unique
-  name                    String           @unique
-  ext                     String
+  fsLocationOriginal      String           @unique
+  fsLocationSmallSize     String           @unique
+  fsLocationMediumSize    String           @unique
+  fsLocationLargeSize     String           @unique
+  name                    String           @default("Bilde")
+  extOriginal             String
   alt                     String
   collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")

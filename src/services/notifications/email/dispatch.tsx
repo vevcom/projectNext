@@ -35,7 +35,7 @@ export async function dispatchEmailNotifications(
 
     const senderAlias = results.mailAlias ? results.mailAlias.address : DEFAULT_NOTIFICATION_ALIAS
 
-    const mails = users.map(u => {
+    const mails = await Promise.all(users.map(async u => {
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
             to: u.email,
@@ -47,7 +47,7 @@ export async function dispatchEmailNotifications(
             from: parsed.from,
             to: parsed.to,
             subject: parsed.subject,
-            html: wrapInHTML(u, parsed.text),
+            html: await wrapInHTML(u, parsed.text),
             list: {
                 unsubscribe: {
                     url: `https://${process.env.DOMAIN}/users/${u.username}/unsubscribe`,
@@ -55,13 +55,13 @@ export async function dispatchEmailNotifications(
                 },
             }
         }
-    })
+    }))
 
     console.log(mails)
 
     await sendBulkMail(mails)
 }
 
-function wrapInHTML(user: UserFiltered, text: string): string {
+async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
     return render(<DefaultEmailTemplate user={user} text={text} />)
 }

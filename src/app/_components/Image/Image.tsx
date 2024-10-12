@@ -1,16 +1,18 @@
 import styles from './Image.module.scss'
 import type { ImageProps } from 'next/image'
-import type { ImageSize, Image as ImageT } from '@prisma/client'
+import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
+
+export type ImageSizeOptions = ImageSize | 'ORIGINAL'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     image: ImageT,
     width: number,
-    alt?: string
-    smallSize?: boolean
+    alt?: string,
+    smallSize?: boolean,
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
-    | { imageSize?: ImageSize, smallSize?: never, largeSize?: never }
+    | { imageSize?: ImageSizeOptions, smallSize?: never, largeSize?: never }
 );
 
 /**
@@ -23,7 +25,15 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
  * @param imageSize - (optional) the size of the image
  * @param props - the rest of the props to pass to the img tag
  */
-export default function Image({ alt, image, width, smallSize, largeSize, imageSize, ...props }: PropTypes) {
+export default function Image({
+    alt,
+    image,
+    width,
+    smallSize,
+    largeSize,
+    imageSize,
+    ...props
+}: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
     if (imageSize) {
         switch (imageSize) {
@@ -34,14 +44,17 @@ export default function Image({ alt, image, width, smallSize, largeSize, imageSi
                 url = `/store/images/${image.fsLocationMediumSize}`
                 break
             case 'LARGE':
-                url = `/store/images/${image.fsLocation}`
+                url = `/store/images/${image.fsLocationLargeSize}`
+                break
+            case 'ORIGINAL':
+                url = `/store/images/${image.fsLocationOriginal}`
                 break
             default:
                 break
         }
     } else {
         if (smallSize) url = `/store/images/${image.fsLocationSmallSize}`
-        if (largeSize) url = `/store/images/${image.fsLocation}`
+        if (largeSize) url = `/store/images/${image.fsLocationLargeSize}`
     }
     return (
         <div style={{ width: `${width}px` }} className={styles.Image}>

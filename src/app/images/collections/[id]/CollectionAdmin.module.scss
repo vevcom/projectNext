@@ -1,144 +1,34 @@
 @use '@/styles/ohma';
 
-.uploadMany {
-    min-width: 50vw;
-    button[type = "submit"] {
-        width: 150px;
-        margin-left: 0;
-    }
-}
-
-.visibility {
-    margin: 1em 0;
-    grid-column: 1/3;
-}
-
 .CollectionAdmin {
-    @include ohma.card;
-    width: min(400px, 90vw);
-    background-color: ohma.$colors-secondary;
-    > *:not(:last-child) {
-        border-bottom: solid 5px ohma.$colors-gray-800;
-        margin-bottom: 1em;
-    }
-    .upload {
-        > button {
-            background-color: transparent;
-            border: none;
+    position: fixed;
+    top: 100px;
+    right: 3em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    .adminOption {
+        display: grid;
+        place-content: center;
+        background-color: ohma.$colors-primary;
+        border-radius: 50%;
+        border: none;
+        width: 50px;
+        height: 50px;
+        svg {
             color: ohma.$colors-black;
-            margin-bottom: 1em;
-            > svg {
-                width: 1.5em;
-                height: 1.5em;
-                margin: 0 .2em;
-            }
+            width: 30px;
+            height: 30px;
         }
     }
+}
 
-    .coverImage {
-        padding: 0 -2em;
-        p, i, button {
-            font-size: ohma.$fonts-s;
-        }
+.upload {
+    min-width: 300px;
+}
 
-        >*:first-child {
-            display: flex;
-            flex-flow: row wrap;
-            .showCurrentCover {
-                margin: 0 1em;
-                position: relative;
-                $showIconSize: 1em;
-                width: $showIconSize;
-                height: $showIconSize;
-                background: ohma.$colors-gray-300;
-                border-radius: 50%;
-                padding: 3px;
-                svg {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: $showIconSize;
-                    height: $showIconSize;
-                }
-                > .currentCover {
-                    background-color: ohma.$colors-gray-100;
-                    display: none;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    transform: translate($showIconSize, $showIconSize);
-                    @include ohma.round;
-                    overflow: hidden;
-                    z-index: 1;
-                    > div {
-                        @include ohma.round; 
-                        padding: 0;
-                        overflow: hidden;
-                        margin: ohma.$gap;
-                    }
-                }
-                &:hover {
-                    cursor: pointer;
-                    > .currentCover {
-                        display: block;
-                    }
-                }
-            }
-        }
-
-        .chosenImage {
-            @include ohma.round();
-            background-color: lighten(ohma.$colors-secondary, 20%);
-            padding: .7em 0;
-            > span {
-                $selected-image-size: 5em;
-                height: $selected-image-size;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                > div {
-                    width: $selected-image-size !important;
-                    height: 100%;
-                    overflow: hidden;
-                    @include ohma.round; 
-                    padding: 0;
-                    overflow: hidden;
-                    position: relative;
-                    img {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-                }
-                > button {
-                    background-color: transparent;
-                    border: none;
-                    color: ohma.$colors-black;
-                    &:hover {
-                        cursor: pointer;
-                        > svg {
-                            color: darken(ohma.$colors-red, 20%);
-                        }
-                    }
-                    > svg {
-                        width: 1.5em;
-                        height: 1.5em;
-                        margin: 0 .2em;
-                        color: ohma.$colors-red;
-                    }
-                }
-            }
-
-            > button {
-                margin-top: 3px;
-                @include ohma.roundBtn(ohma.$colors-primary);
-                width: auto;
-                @include ohma.round;
-            }
-        }
-    }
+.toggleUploadStyle {
+    position: absolute;
+    top: 2em;
+    right: 2em;
 }

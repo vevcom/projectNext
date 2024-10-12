@@ -37,6 +37,15 @@ type Refiner<
     message: string
 }
 
+/*
+* A monadic type that is returned from the typeValidate method in Validation.
+*/
+export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends boolean> = {
+    success: true, data: PureTsTypeOfSchema<T, Partialized>
+} | {
+    success: false, error: z.ZodError
+}
+
 /**
  * A validatiorBase is meant to create Validators that wrapps zod functionality.
  * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
@@ -111,7 +120,7 @@ export class ValidationBase<
  * @method typeValidate validates the type schema
  * @method detailedValidate validates the detailed schema
  */
-class Validation<
+export class Validation<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -138,8 +147,8 @@ class Validation<
     }
 
     typeValidate(
-        data: FormData | PureTsTypeOfSchema<Type>
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
+        data: FormData | PureTsTypeOfSchema<Type> | unknown
+    ): SafeValidationReturn<Detailed, false> {
         const parse = zfd.formData(this.typeSchema).safeParse(data)
         if (!parse.success) {
             return {
@@ -167,7 +176,7 @@ class Validation<
  * @method typeValidate validates the type schema (in a partial way)
  * @method detailedValidate validates the detailed schema (in a partial way
  */
-class ValidationPartial<
+export class ValidationPartial<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -194,8 +203,8 @@ class ValidationPartial<
     }
 
     typeValidate(
-        data: FormData | Partial<PureTsTypeOfSchema<Type, true>>
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
+        data: unknown | FormData | Partial<PureTsTypeOfSchema<Type, true>>
+    ): SafeValidationReturn<Detailed, true> {
         const parse = zfd.formData(this.typeSchema.partial()).safeParse(data)
         if (!parse.success) {
             return {

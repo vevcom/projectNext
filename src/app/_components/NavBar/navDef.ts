@@ -35,12 +35,6 @@ export type NavItem = {
 
 export const itemsForMenu: NavItem[] = [
     {
-        name: 'Hvad der hender',
-        href: '/events',
-        show: 'loggedIn',
-        icon: faCalendar,
-    },
-    {
         name: 'Komitéer',
         href: '/committees',
         show: 'all',
@@ -69,6 +63,12 @@ export const itemsForMenu: NavItem[] = [
         href: '/articles',
         show: 'loggedOut',
         icon: faGraduationCap,
+    },
+    {
+        name: 'Hvad der hender',
+        href: '/events',
+        show: 'all',
+        icon: faCalendar,
     },
     {
         name: 'Ombul',

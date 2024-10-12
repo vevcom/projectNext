@@ -1,5 +1,5 @@
-import OmegaquoteList from './omegaquotesQuoteList'
-import OmegaquoteQuote from './omegaquotesQuote'
+import OmegaquoteList from './OmegaquotesQuoteList'
+import OmegaquoteQuote from './OmegaquotesQuote'
 import CreateOmegaquoteForm from './CreateOmegaquoteForm'
 import OmegaquotePagingProvider from '@/contexts/paging/OmegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'

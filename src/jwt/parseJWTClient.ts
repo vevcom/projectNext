@@ -98,7 +98,7 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
                 id: payload.sub,
             }
         }
-    } catch (error) {
+    } catch {
         return invalidJWT('An unexpected error occured')
     }
 }

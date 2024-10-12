@@ -1,61 +1,124 @@
 import 'server-only'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { Session } from '@/auth/Session'
+import { ServerError, Smorekopp } from '@/services/error'
+import type { ActionErrorCode } from '@/actions/Types'
+import type { SessionNoUser } from '@/auth/Session'
+import type { ServiceMethod } from '@/services/ServiceTypes'
 
-type APIHandlerFunction<Return> = (req: NextRequest) => Promise<Return>
-type Auther = { auth: (x: string) => boolean }
-type APIHandler<Return> = {
-    permission: Auther,
-    handler: APIHandlerFunction<Return>
+type APIHandler<
+    WithValidation extends boolean,
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
+> = {
+    serviceMethod: ServiceMethod<
+        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction, NoAuther
+    >
+    params: (rawparams: RawParams) => Params
 }
 
-export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>({
-    GET,
-    POST,
-    PUT,
-    DELETE
-}: {
-    GET?: APIHandler<GETReturn>,
-    POST?: APIHandler<POSTReturn>,
-    PUT?: APIHandler<PUTReturn>,
-    DELETE?: APIHandler<DELETEReturn>
-}) {
-    return async function handler(req: NextRequest) {
-        switch (req.method) {
-            case 'GET':
-                if (GET) {
-                    const data = await GET.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'POST':
-                if (POST) {
-                    const data = await POST.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'PUT':
-                if (PUT) {
-                    const data = await PUT.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'DELETE':
-                if (DELETE) {
-                    const data = await DELETE.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            default:
-                NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
+async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
+    try {
+        const authorization = req.headers.get('authorization')
+        const session = await Session.fromApiKey(authorization)
+        const result = await handle(session)
+        return createApiResponse(result)
+    } catch (error: unknown) {
+        if (error instanceof Smorekopp) {
+            return createApiErrorRespone(error.errorCode, error.errors.length ? error.errors[0].message : error.errorCode)
+        }
+        if (error instanceof Error) {
+            return createApiErrorRespone('UNKNOWN ERROR', error.message)
         }
     }
+    return createApiErrorRespone('SERVER ERROR', 'Noe veldig uventet skjedde')
+}
+
+export function apiHandler<
+    Return,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
+>(
+    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
+): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+
+export function apiHandler<
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
+>({
+    serviceMethod,
+    params
+}: APIHandler<
+    true,
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction,
+    NoAuther
+>): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
+
+export function apiHandler<
+    Return,
+    TypeValidationType,
+    DetailedValidationType,
+    RawParams,
+    Params,
+    WantsToOpenTransaction extends boolean,
+    NoAuther extends boolean
+>({
+    serviceMethod,
+    params
+}: | APIHandler<
+    true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther
+    >
+    | APIHandler<
+    false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther
+    >
+
+) {
+    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>
+        await apiHandlerGeneric<Return>(req, async session => {
+            const rawdata = await req.json().catch(console.log)
+            const parse = serviceMethod.typeValidate(rawdata)
+            if (!parse.success) throw new ServerError('BAD PARAMETERS', 'Dårlig data')
+            const data = parse.data
+
+            return serviceMethod.client('NEW').execute({
+                params: params(rawParams),
+                data,
+                session,
+            }, { withAuth: true })
+        }) : async (req: Request, { params: rawParams }: { params: RawParams }) =>
+        await apiHandlerGeneric(req, session =>
+            serviceMethod.client('NEW').execute({
+                params: params(rawParams),
+                session }, { withAuth: true }
+            )
+        )
+}
+
+function createApiErrorRespone(errorCode: ActionErrorCode, message: string) {
+    return new Response(JSON.stringify({
+        errorCode,
+        message
+    }), {
+        status: 500 //TODO:
+    })
+}
+
+function createApiResponse<Return>(res: Return) {
+    return Response.json(JSON.stringify(res), { status: 200 })
 }

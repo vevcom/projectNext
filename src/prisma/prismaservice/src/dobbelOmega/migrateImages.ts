@@ -87,12 +87,15 @@ export default async function migrateImages(
             + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
         const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
             + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const [fsLocationSmallSize, fsLocationMediumSize, fsLocation] = await Promise.all([
+        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
+            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const [fsLocationSmallSize, fsLocationMediumSize, fsLocationLargeSize, fsLocationOriginal] = await Promise.all([
             fetchImageAndUploadToStore(fsLocationSmallOldVev),
             fetchImageAndUploadToStore(fsLocationMediumOldVev),
-            fetchImageAndUploadToStore(fsLocationDefaultOldVev)
+            fetchImageAndUploadToStore(fsLocationLargeOldVev),
+            fetchImageAndUploadToStore(fsLocationDefaultOldVev),
         ])
-        if (!fsLocation || !fsLocationMediumSize || !fsLocationSmallSize) {
+        if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
             console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
             return null
         }
@@ -101,7 +104,8 @@ export default async function migrateImages(
             ...image,
             fsLocationSmallSize,
             fsLocationMediumSize,
-            fsLocation
+            fsLocationLargeSize,
+            fsLocationOriginal,
         }
     }))
 
@@ -135,16 +139,17 @@ export default async function migrateImages(
         if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
         const { id: pnId } = await pnPrisma.image.upsert({
             where: {
-                name: image.name
+                id: image.id
             },
             update: {},
             create: {
                 name: image.name,
                 alt: image.name.split('_').join(' '),
-                fsLocation: image.fsLocation,
+                fsLocationOriginal: image.fsLocationOriginal,
+                fsLocationLargeSize: image.fsLocationLargeSize,
                 fsLocationSmallSize: image.fsLocationSmallSize,
                 fsLocationMediumSize: image.fsLocationMediumSize,
-                ext: image.ext,
+                extOriginal: image.ext,
                 collection: {
                     connect: {
                         id: image.collectionId
