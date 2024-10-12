@@ -12,10 +12,11 @@ import type { OmegaId } from '@/services/omegaid/Types'
  * @param token - The JWT to parse and verify.
  * @param publicKey - The public key used to verify the JWT signature.
  * @param timeOffset - The time offset in milliseconds to account for clock differences.
+ * @param audience - Optional check that he audience is correct
  * @returns A promise that resolves to an `ActionReturn` object containing the parsed JWT payload if the JWT is valid,
  * or an error object if the JWT is invalid.
  */
-export async function parseJWT(token: string, publicKey: string, timeOffset: number): Promise<ActionReturn<OmegaId>> {
+export async function parseJWT(token: string, publicKey: string, timeOffset: number, audience?: OmegaJWTAudience): Promise<ActionReturn<OmegaId>> {
     // TODO: This only works in safari and firefox :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {
@@ -80,14 +81,14 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
         }
 
         if (new Date(payload.exp * 1000 + timeOffset) < new Date()) {
-            return invalidJWT('QR koden er utløpt')
+            return invalidJWT('The JWT is expired')
         }
 
         if (payload.iss !== JWT_ISSUER) {
             return invalidJWT('Invalid issuer')
         }
 
-        if (payload.aud !== 'omegaid' satisfies OmegaJWTAudience) {
+        if (audience && payload.aud !== audience) {
             return invalidJWT('Invalid audience')
         }
 
