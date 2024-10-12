@@ -6,13 +6,14 @@ import { createAdmissionTrial } from '@/services/admission/create'
 import { createAdmissionTrialValidation } from '@/services/admission/validation'
 import { Session } from '@/auth/Session'
 import type { ActionReturn } from '@/actions/Types'
-import type { Admission, AdmissionTrial } from '@prisma/client'
+import type { Admission } from '@prisma/client'
+import type { ExpandedAdmissionTrial } from '@/services/admission/Types'
 
 
 export async function createAdmissionTrialAction(
     admission: Admission,
     userId: FormData | number
-): Promise<ActionReturn<AdmissionTrial>> {
+): Promise<ActionReturn<ExpandedAdmissionTrial>> {
     const session = await Session.fromNextAuth()
     const authRes = CreateAdmissionTrialAuther.dynamicFields({}).auth(session)
 
