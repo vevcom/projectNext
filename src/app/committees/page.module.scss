@@ -1,5 +1,46 @@
 @use '@/styles/ohma';
+@use "_mixins";
+@use "_colors";
+@use "_variables";
+@use "_fonts";
 
-.test {
-    min-height: 600px;
+$max-width: 1200px;
+
+.wrapper {
+    $width: 100%;
+
+    width: $width;
+    max-width: $max-width;
+    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
+    position: relative;
+    overflow-y: hidden;
+
+    align-self: flex-start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0 2em;
+    h1 {
+        font-family: ohma.$fonts-secondary;
+        font-size: ohma.$fonts-xxl;
+        text-transform: capitalize;
+    }
+
+    .inlineHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.committeeList {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 225px);
+    gap: 2em;
+    justify-content: space-between;
+    @include ohma.screenMobile {
+        grid-template-columns: repeat(auto-fill, 200px);
+    }
+    overflow: visible;
 }

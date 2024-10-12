@@ -9,19 +9,23 @@ import type { ExpandedArticle } from '@/cms/articles/Types'
 
 export type PropTypes = {
     article: ExpandedArticle,
-    coverImageClass?: string
+    coverImageClass?: string,
+    hideCoverImage?: boolean
+    noMargin?: boolean
 }
 
-export default function Article({ article, coverImageClass }: PropTypes) {
+export default function Article({ article, coverImageClass, hideCoverImage = false, noMargin = false }: PropTypes) {
     return (
         <span className={styles.Article}>
-            <span className={`${coverImageClass} ${styles.coverImage}`}>
-                <CmsImage width={500} cmsImage={article.coverImage} />
-                <SlideInOnView direction="bottom">
-                    <ChangeName article={article} />
-                </SlideInOnView>
-            </span>
-            <article>
+            {hideCoverImage ? <></> : (
+                <span className={`${coverImageClass} ${styles.coverImage}`}>
+                    <CmsImage width={500} cmsImage={article.coverImage} />
+                    <SlideInOnView direction="bottom">
+                        <ChangeName article={article} />
+                    </SlideInOnView>
+                </span>
+            )}
+            <article className={noMargin ? styles.noMargin : undefined}>
                 {
                     article.articleSections.length ? (
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (

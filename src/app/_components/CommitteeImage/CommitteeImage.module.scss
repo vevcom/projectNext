@@ -1,0 +1,97 @@
+@use "@/styles/ohma";
+
+$background: lighten(ohma.$colors-secondary, 15%);
+
+.CommitteeImage {
+  position: relative;
+  width: 100vw;
+  height: 300px;
+  overflow: hidden;
+  box-shadow: ohma.$colors-secondary 0 0 75px;
+  margin-bottom: 3rem;
+  @include ohma.screenMobile {
+      height: 150px;
+      animation: none;
+    }
+
+  .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 275px;
+    object-fit: cover;
+    z-index: 1;
+    transform: scale(0.9);
+    transform-origin: top left;
+    animation: loading 1s ease-in-out forwards;
+    animation-delay: 1s;
+    pointer-events: none;
+
+    @include ohma.screenMobile {
+      transform: scale(0.4);
+      animation: none;
+      animation: loadingMobile 1s ease-in-out forwards;
+      animation-delay: 1s;
+    }
+  }
+
+  .images {
+    position: relative;
+    width: auto;
+    height: auto;
+  }
+
+  .committeeImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    > * {
+      width: 100vw !important;
+      img {
+        width: 100vw !important;
+        height: 300px;
+        object-fit: cover;
+        object-position: center;
+        background-size: cover;
+      }
+    }
+
+    @include ohma.screenMobile {
+      height: 150px;
+      animation: none;
+    }
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+}
+
+.image-container {
+  width: 100vw;
+  max-width: 100%;
+  height: 100%;
+}
+
+@keyframes loading {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1.0);
+  }
+}
+
+@keyframes loadingMobile {
+  0% {
+    transform: scale(0.4);
+  }
+  100% {
+    transform: scale(0.5);
+  }
+}
