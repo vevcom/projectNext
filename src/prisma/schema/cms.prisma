@@ -58,6 +58,7 @@ model CmsParagraph {
   Course           Course[]
   School           School[]
   Event            Event[]
+  Committee        Committee?
 }
 
 model CmsLink {
@@ -111,6 +112,7 @@ model Article {
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
   JobAd               JobAd?
+  Committee           Committee?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])

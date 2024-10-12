@@ -49,6 +49,19 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `${user.firstname}'s komité`,
             shortName: `${user.username.slice(0, 3)}com`,
+            committeeArticle: {
+                create: {
+                    name: `${user.firstname}'s komité`,
+                    coverImage: {
+                        create: {
+                            name: `${user.firstname}'s bilde`
+                        }
+                    }
+                }
+            },
+            paragraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -81,6 +94,19 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `Testkomité ${i}`,
             shortName: `TK${i}`,
+            committeeArticle: {
+                create: {
+                    name: `Testkomité ${i}`,
+                    coverImage: {
+                        create: {
+                            name: `Bilde for testkomité ${i}`
+                        }
+                    }
+                }
+            },
+            paragraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',

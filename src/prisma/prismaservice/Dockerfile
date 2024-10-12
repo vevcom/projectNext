@@ -1,5 +1,5 @@
 #This container is responisble for running migrations and seeding the database.
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 WORKDIR /usr/src/app
 COPY ./schema ./schema
@@ -28,7 +28,7 @@ COPY /prismaservice/src ./src
 RUN npm run build
 
 ########################################################
-FROM node:20-alpine AS prod
+FROM node:22-alpine AS prod
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 WORKDIR /usr/src/app/prismaservice
@@ -37,7 +37,7 @@ WORKDIR /usr/src/app/prismaservice
 CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npm run seed"]
 
 ########################################################
-FROM node:20-alpine AS dev
+FROM node:22-alpine AS dev
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 WORKDIR /usr/src/app/prismaservice

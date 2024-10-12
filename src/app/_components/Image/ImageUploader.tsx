@@ -23,6 +23,7 @@ export default function ImageUploader({ collectionId, ...formProps }: PropTypes)
             title="last opp bilde"
             submitText="last opp"
             action={createImageAction.bind(null, collectionId)}
+            closePopUpOnSuccess="UploadImages"
             {...formProps}
         >
             <TextInput color="black" label="navn" name="name" />
