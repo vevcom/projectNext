@@ -4,6 +4,8 @@ import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
 import { ReactNode } from 'react'
+import Nav from './Nav'
+import styles from './layout.module.scss'
 
 export type PropTypes = {
     params: {
@@ -26,7 +28,12 @@ export default async function Committee({ params, children }: PropTypes) {
         <BackdropImage image={committeeLogo}>
             <CommitteeImage logoImage={committeeLogo} coverImage={committee.coverImage} />
             <PageWrapper title={committee.name}>
-                { children }
+                <div className={styles.layout}>
+                    { children }
+                    <aside className={styles.navContainer}>
+                        <Nav shortName={params.shortName} />
+                    </aside>
+                </div>
             </PageWrapper>
         </BackdropImage>
     )

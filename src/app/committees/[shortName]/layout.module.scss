@@ -1,0 +1,17 @@
+@use '@/styles/ohma';
+
+.layout {
+    min-height: 50vh;
+}
+
+.navContainer {
+    @include ohma.screenLg {
+        position: absolute;
+        top: 3em;
+        right: 0;
+        translate: transformX(100%);
+    }
+    @include ohma.screenMobile {
+        z-index: 5;
+    }
+}
