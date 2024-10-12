@@ -1,0 +1,11 @@
+model Badge {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  colorR     Int
+  colorB     Int
+  colorG     Int
+  cmsImage   CmsImage @relation(fields: [cmsImageId], references: [id])
+  cmsImageId Int      @unique
+}

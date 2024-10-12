@@ -35,6 +35,7 @@ model CmsImage {
   ScreenPage           ScreenPage[]
   School               School[]
   Event                Event[]
+  Badge                Badge?
 }
 
 enum SpecialCmsParagraph {

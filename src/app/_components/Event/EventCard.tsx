@@ -1,13 +1,14 @@
 import styles from './EventCard.module.scss'
+import SmallEventTag from './SmallEventTag'
 import Image from '@/components/Image/Image'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import type { EventFilteredWithImage } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/Types'
 
 type PropTypes = {
-    event: EventFilteredWithImage
+    event: EventExpanded
 }
 
 export default function EventCard({ event }: PropTypes) {
@@ -25,7 +26,16 @@ export default function EventCard({ event }: PropTypes) {
                     /> : <FontAwesomeIcon icon={faCalendar} />
                 }
             </div>
-            <h2>{event.name}</h2>
+            <div className={styles.topInfo}>
+                <h2>{event.name}</h2>
+                <ul className={styles.tags}>
+                    {event.tags.map(tag => (
+                        <li key={tag.id}>
+                            <SmallEventTag eventTag={tag} />
+                        </li>
+                    ))}
+                </ul>
+            </div>
             <ul>
                 <li>
                     <FontAwesomeIcon icon={faCalendar} />

@@ -17,7 +17,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.20.0",
     "@react-email/components": "^0.0.22",
     "@react-email/render": "^0.0.17",
     "bcrypt": "^5.1.1",
@@ -64,7 +64,7 @@
     "@typescript-eslint/parser": "^7.14.1",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "prisma": "^5.18.0",
+    "prisma": "^5.20.0",
     "typescript": "^5.5.4"
   }
 }

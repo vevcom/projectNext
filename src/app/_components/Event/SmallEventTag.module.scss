@@ -1,0 +1,21 @@
+@use '@/styles/ohma';
+
+.SmallEventTag {
+    position: relative;
+    svg {
+        width: 1.5em;
+        height: 1.5em;
+    }
+    p {
+        position: absolute; 
+        right: 0;
+        top: 50%;
+        transform: translate(100%, 20%);
+        display: none;
+    }
+    &:hover {
+        p {
+            display: block;
+        }
+    }
+}
