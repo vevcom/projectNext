@@ -13,7 +13,8 @@ import {
     faUserGroup,
     faArrowLeft,
     faPaperPlane,
-    faSchool
+    faSchool,
+    faPaintbrush
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -92,6 +93,18 @@ const navigations = [
                 title: 'Klasser',
                 href: '/admin/classes'
             }
+        ],
+    },
+    {
+        header: {
+            icon: faPaintbrush,
+            title: 'Temaer'
+        },
+        links: [
+            {
+                title: 'Temaer',
+                href: '/admin/themes'
+            },
         ],
     },
     {

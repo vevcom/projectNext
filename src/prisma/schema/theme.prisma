@@ -1,0 +1,18 @@
+model Theme {
+  id              Int @id @default(autoincrement())
+  primaryLightR   Int
+  primaryLightG   Int
+  primaryLightB   Int
+  primaryDarkR    Int
+  primaryDarkG    Int
+  primaryDarkB    Int
+  secondaryLightR Int
+  secondaryLightG Int
+  secondaryLightB Int
+  secondaryDarkR  Int
+  secondaryDarkG  Int
+  secondaryDarkB  Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
