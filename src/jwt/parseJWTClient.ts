@@ -16,7 +16,12 @@ import type { OmegaId } from '@/services/omegaid/Types'
  * @returns A promise that resolves to an `ActionReturn` object containing the parsed JWT payload if the JWT is valid,
  * or an error object if the JWT is invalid.
  */
-export async function parseJWT(token: string, publicKey: string, timeOffset: number, audience?: OmegaJWTAudience): Promise<ActionReturn<OmegaId>> {
+export async function parseJWT(
+    token: string,
+    publicKey: string,
+    timeOffset: number,
+    audience?: OmegaJWTAudience
+): Promise<ActionReturn<OmegaId>> {
     // TODO: This only works in safari and firefox :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {

@@ -104,7 +104,7 @@ export function decomporessOmegaId(rawdata: string): ActionReturn<string> {
             success: true,
             data: `${headerB64String}.${payload}.${signature}`,
         }
-    } catch (e) {
+    } catch {
         return errorReturn
     }
 }
