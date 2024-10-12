@@ -26,6 +26,7 @@
                 "VariableDeclarator": 1
             }
         ],
+        "import/no-cycle": [2, { "maxDepth": 5 }],
         // require function expressions to have a name
         "func-names": "warn",
         // enforce newline at the end of file, with no multiple empty lines
