@@ -4,7 +4,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import logger from '@/lib/logger'
-import { getOsloTime } from '@/dates/getOsloTime'
+import { getOsloTime } from '@/lib/dates/getOsloTime'
 import type { ApiKey } from '@prisma/client'
 import type { UpdateApiKeyTypes } from './validation'
 

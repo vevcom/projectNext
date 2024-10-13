@@ -4,7 +4,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
-import { getOsloTime } from '@/dates/getOsloTime'
+import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 
