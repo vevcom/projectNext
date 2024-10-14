@@ -6,7 +6,7 @@ model Dot {
   reason     String
   accuser    User     @relation(name: "dot_accuser", fields: [accuserId], references: [id])
   accuserId  Int
-  expieresAt DateTime
+  expiresAt DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

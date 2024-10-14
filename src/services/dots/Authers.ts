@@ -1,7 +1,8 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequirePermissionAndUserId } from '@/auth/auther/RequirePermissionAndUserId'
 import { RequireUsernameOrPermission } from '@/auth/auther/RequireUsernameOrPermission'
 
-export const CreateDotAuther = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
+export const CreateDotAuther = RequirePermissionAndUserId.staticFields({ permission: 'DOTS_ADMIN' })
 
 export const UpdateDotAuther = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
 
