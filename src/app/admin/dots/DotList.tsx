@@ -3,9 +3,57 @@ import EndlessScroll from '@/app/_components/PagingWrappers/EndlessScroll'
 import { DotPagingContext } from '@/contexts/paging/DotPaging'
 import styles from './DotList.module.scss'
 import { displayDate } from '@/dates/displayDate'
+import { useContext } from 'react'
+import { UserSelectionContext } from '@/contexts/UserSelection'
+import Link from 'next/link'
+import { QueryParams } from '@/lib/query-params/queryParams'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import UserList from '@/app/_components/User/UserList/UserList'
+import { useRouter } from 'next/navigation'
+import { PopUpContext } from '@/contexts/PopUp'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faX } from '@fortawesome/free-solid-svg-icons'
 
-export default function DotList() {
+type PropTypes = {
+    onlyActive: boolean
+}
+
+export default function DotList({ onlyActive }: PropTypes) {
+    const userSelection = useContext(UserSelectionContext)
+    const popUpContext = useContext(PopUpContext)
+    const { push } = useRouter()
+    if (!userSelection) return <></>
+    userSelection.onSelection(
+        user => {
+            popUpContext?.remove('selectUser')
+            push(`/admin/dots/${user ? QueryParams.userId.encodeUrl(user.id) : ''}`)
+        }
+    )
+
     return (
+        <>
+        <span className={styles.selection}>
+            <PopUp PopUpKey="selectUser" showButtonClass={styles.openUserList} showButtonContent={
+                <>Velg Bruker</>
+            }>
+                <UserList />
+            </PopUp>
+            {
+                userSelection.user ? 
+                <div className={styles.userSelected}>
+                    <p>{userSelection.user.firstname} {userSelection.user.lastname}</p>
+                    <button onClick={() => userSelection.setUser(null)}>
+                        <FontAwesomeIcon icon={faX} />
+                    </button>
+                </div> :
+                <div className={styles.userSelected}>
+                    <p>Viser prikker for alle brukere</p>
+                </div>
+            }
+            <Link href={`/admin/dots/${QueryParams.onlyActive.encodeUrl(!onlyActive)}`}>
+                {onlyActive ? 'Vis alle prikker' : 'Vis aktive prikker'}
+            </Link>
+        </span>
         <table className={styles.DotList}>
             <thead>
                 <tr>
@@ -34,5 +82,6 @@ export default function DotList() {
                 } />
             </tbody>
         </table>
+        </>
     )
 }

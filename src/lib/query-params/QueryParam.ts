@@ -52,3 +52,29 @@ export class StringArrayQueryParam extends QueryParam<string[]> {
         return null
     }
 }
+
+export class BooleanQueryParam extends QueryParam<boolean> {
+    encode(value: boolean): string {
+        return value ? 'true' : 'false'
+    }
+
+    decodeValue(value: string | string[] | undefined): boolean | null {
+        if (typeof value === 'string') {
+            return value === 'true'
+        }
+        return null
+    }
+}
+
+export class NumberQueryParam extends QueryParam<number> {
+    encode(value: number): string {
+        return value.toString()
+    }
+
+    decodeValue(value: string | string[] | undefined): number | null {
+        if (typeof value === 'string') {
+            return parseInt(value, 10)
+        }
+        return null
+    }
+}

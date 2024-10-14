@@ -5,8 +5,15 @@ import CreateDotForm from './CreateDotForm'
 import PopUpProvider from '@/contexts/PopUp'
 import DotPagingProvider from '@/contexts/paging/DotPaging'
 import DotList from './DotList'
+import { SearchParamsServerSide } from '@/lib/query-params/Types'
+import { QueryParams } from '@/lib/query-params/queryParams'
 
-export default async function Dots() {
+type PropTypes = SearchParamsServerSide
+
+export default async function Dots({ searchParams }: PropTypes) {
+    const onlyActive = QueryParams.onlyActive.decode(searchParams) ?? false
+    const userId = QueryParams.userId.decode(searchParams)
+
     return (
         <div className={styles.wrapper}>
             <h1>Prikker</h1>
@@ -27,9 +34,19 @@ export default async function Dots() {
                 <DotPagingProvider 
                     startPage={{ page: 0, pageSize: 30 }} 
                     serverRenderedData={[]} 
-                    details={{ userId: null, onlyActive: false }}
+                    details={{ userId, onlyActive }}
                 >
-                    <DotList />
+                    <UserSelectionProvider>
+                        <UserPagingProvider 
+                            startPage={{ page: 0, pageSize: 50 }} 
+                            serverRenderedData={[]} 
+                            details={{ partOfName: '', groups: [] }}
+                        >
+                            <PopUpProvider>
+                                <DotList onlyActive={onlyActive} />
+                            </PopUpProvider>
+                        </UserPagingProvider>
+                    </UserSelectionProvider>
                 </DotPagingProvider>
             </main>
         </div>
