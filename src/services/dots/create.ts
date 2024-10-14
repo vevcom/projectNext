@@ -18,6 +18,7 @@ export const create = ServiceMethodHandler({
         for (let i = 0; i < value; i++) {
             const expiresAt = new Date(prevExpiresAt.getTime() + DOT_BASE_DURATION)
             dotData.push({ expiresAt })
+            prevExpiresAt = expiresAt
         }
         await prisma.$transaction(async tx => {
             const wrapper = await tx.dotWrapper.create({
