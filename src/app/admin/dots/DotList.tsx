@@ -3,7 +3,6 @@ import EndlessScroll from '@/app/_components/PagingWrappers/EndlessScroll'
 import { DotPagingContext } from '@/contexts/paging/DotPaging'
 import styles from './DotList.module.scss'
 import { displayDate } from '@/dates/displayDate'
-import { UtcToOslo } from '@/dates/UtcToOslo'
 
 export default function DotList() {
     return (
