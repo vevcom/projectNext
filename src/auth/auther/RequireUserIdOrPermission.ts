@@ -1,0 +1,19 @@
+import { AutherFactory } from './Auther'
+import type { Permission } from '@prisma/client'
+
+export const RequireUserIdOrPermission = AutherFactory<
+    { permission: Permission },
+    { userId: number },
+    'USER_NOT_REQUIERED_FOR_AUTHORIZED'
+>(({ session, staticFields, dynamicFields }) => {
+    if (session.permissions.includes(staticFields.permission)) {
+        return {
+            success: true,
+            session
+        }
+    }
+    return {
+        success: session.user !== null && session.user.id === dynamicFields.userId,
+        session
+    }
+})
