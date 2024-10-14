@@ -32,6 +32,9 @@ model User {
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
   EventRegistration         EventRegistration[]
 
+  dots        Dot[] @relation(name: "dot_user")
+  dotsAccused Dot[] @relation(name: "dot_accuser")
+
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
   @@unique([id, username, email])
