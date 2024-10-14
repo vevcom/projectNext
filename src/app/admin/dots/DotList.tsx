@@ -26,7 +26,8 @@ export default function DotList({ onlyActive }: PropTypes) {
     userSelection.onSelection(
         user => {
             popUpContext?.remove('selectUser')
-            push(`/admin/dots/${user ? QueryParams.userId.encodeUrl(user.id) : ''}`)
+            push(`/admin/dots/?${QueryParams.onlyActive.encodeUrl(onlyActive)}`+
+            `&${user ? QueryParams.userId.encodeUrl(user.id) : ''}`)
         }
     )
 
@@ -50,7 +51,11 @@ export default function DotList({ onlyActive }: PropTypes) {
                     <p>Viser prikker for alle brukere</p>
                 </div>
             }
-            <Link href={`/admin/dots/${QueryParams.onlyActive.encodeUrl(!onlyActive)}`}>
+            <Link href={
+                `/admin/dots/`+
+                `?${QueryParams.onlyActive.encodeUrl(!onlyActive)}`+
+                `&${userSelection.user ? QueryParams.userId.encodeUrl(userSelection.user?.id) : ''}`
+                }>
                 {onlyActive ? 'Vis alle prikker' : 'Vis aktive prikker'}
             </Link>
         </span>
