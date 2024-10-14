@@ -28,7 +28,7 @@ export default function CreateDotForm() {
         <div className={styles.CreateDotForm}>
             <FontAwesomeIcon icon={faPlus} />
             <h2>
-                Lag ny prikk
+                Gi ny prikk
             </h2>
             <div className={styles.userSelected}>
                 <p>
