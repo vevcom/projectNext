@@ -163,7 +163,11 @@ const navigations = [
             {
                 title: 'Prikker',
                 href: '/admin/dots'
-            }
+            },
+            {
+                title: 'Frysperioder',
+                href: '/admin/dots-freeze-periods'
+            },
         ]
     }
 ] satisfies {
