@@ -4,7 +4,7 @@ import { readDotPage } from '@/actions/dots/read'
 import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/Types'
 import { ReadPageInput } from '@/services/paging/Types'
 
-export type PageSizeDots = 12
+export type PageSizeDots = 30
 const fetcher = async (x: ReadPageInput<PageSizeDots, DotCursor, DotDetails>) => {
     const ret = await readDotPage.bind(null, { paging: x })()
     return ret

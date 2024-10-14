@@ -31,7 +31,7 @@ export const readForUser = ServiceMethodHandler({
 export const readPage = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: { paging: ReadPageInput<number, DotCursor, DotDetails> }) => {
-        return (await prisma.dotWrapper.findMany({
+        return await prisma.dotWrapper.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
                 userId: params.paging.details.userId ?? undefined,
@@ -49,8 +49,22 @@ export const readPage = ServiceMethodHandler({
                 }
             },
             include: {
-                dots: true
+                dots: true,
+                user: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                        username: true
+                    }
+                },
+                accuser: {
+                    select: {
+                        firstname: true,
+                        lastname: true,
+                        username: true
+                    }
+                }
             }
-        }))
+        })
     }
 })

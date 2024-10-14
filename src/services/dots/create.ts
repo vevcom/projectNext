@@ -10,7 +10,7 @@ export const create = ServiceMethodHandler({
     wantsToOpenTransaction: true,
     handler: async (prisma, params: { accuserId: number }, { value, ...data }, session) => {
         const activeDots = await Dots.readForUser.client(prisma).execute(
-            { params: { userId: params.accuserId, onlyActive: true }, session }, { withAuth: true }
+            { params: { userId: data.userId, onlyActive: true }, session }, { withAuth: true }
         )
         
         const dotData : { expiresAt: Date }[] = []

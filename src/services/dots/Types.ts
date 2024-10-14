@@ -1,4 +1,4 @@
-import { Dot, DotWrapper } from "@prisma/client"
+import { Dot, DotWrapper, User } from "@prisma/client"
 
 export type DotDetails = {
     userId: number | null,
@@ -10,5 +10,7 @@ export type DotCursor = {
 }
 
 export type DotWrapperWithDots = DotWrapper & {
-    dots: Dot[]
+    dots: Dot[],
+    user: Pick<User, 'firstname' | 'lastname' | 'username'>,
+    accuser: Pick<User, 'firstname' | 'lastname' | 'username'>,
 }

@@ -3,6 +3,8 @@ import UserSelectionProvider from '@/contexts/UserSelection'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
 import CreateDotForm from './CreateDotForm'
 import PopUpProvider from '@/contexts/PopUp'
+import DotPagingProvider from '@/contexts/paging/DotPaging'
+import DotList from './DotList'
 
 export default async function Dots() {
     return (
@@ -22,9 +24,13 @@ export default async function Dots() {
                 </UserSelectionProvider>
             </div>
             <main>
-                <ul>
-                    
-                </ul>
+                <DotPagingProvider 
+                    startPage={{ page: 0, pageSize: 30 }} 
+                    serverRenderedData={[]} 
+                    details={{ userId: null, onlyActive: false }}
+                >
+                    <DotList />
+                </DotPagingProvider>
             </main>
         </div>
     )

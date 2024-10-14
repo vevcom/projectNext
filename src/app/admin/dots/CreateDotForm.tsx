@@ -47,6 +47,7 @@ export default function CreateDotForm() {
             <Form
                 action={createDotAction.bind(null, { accuserId: session.user.id })}
                 submitText='Lag prikk'
+                refreshOnSuccess
             >
                 <TextInput name="reason" label="Grunn" />
                 <NumberInput name="value" label="Antall prikker" />
