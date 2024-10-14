@@ -8,4 +8,6 @@ export const UpdateDotAuther = RequirePermission.staticFields({ permission: 'DOT
 
 export const DestroyDotAuther = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
 
-export const ReadDotAuther = RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' })
+export const ReadDotForUserAuther = RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' })
+
+export const ReadDotAuther = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })

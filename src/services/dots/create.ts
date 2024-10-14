@@ -9,8 +9,8 @@ export const create = ServiceMethodHandler({
     validation: createDotValidation,
     wantsToOpenTransaction: true,
     handler: async (prisma, params: { accuserId: number }, { value, ...data }, session) => {
-        const activeDots = await Dots.readActive.client(prisma).execute(
-            { params: { userId: params.accuserId }, session }, { withAuth: true }
+        const activeDots = await Dots.readForUser.client(prisma).execute(
+            { params: { userId: params.accuserId, onlyActive: true }, session }, { withAuth: true }
         )
         
         const dotData : { expiresAt: Date }[] = []

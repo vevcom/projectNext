@@ -8,7 +8,7 @@ model DotWrapper {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Dot       Dot[]
+  dots      Dot[]
 }
 
 model Dot {
