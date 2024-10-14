@@ -1,5 +1,27 @@
 @use '@/styles/ohma';
 
 .CreateDotForm {
-    
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2em; 
+    > svg {
+        color: ohma.$colors-gray-900;
+        width: 3em; 
+        height: 3em;
+    }
+    form, .userSelected {
+        gap: 1em;
+        align-items: center;
+        display: flex;
+    }
+    form {
+        width: auto;
+        button[type="submit"] {
+            transform: translateY(10px);
+        }
+    }
+    .openUserList {
+        @include ohma.btn(ohma.$colors-primary);
+    }
 }

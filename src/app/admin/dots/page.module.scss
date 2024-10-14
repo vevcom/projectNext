@@ -2,4 +2,9 @@
 
 .wrapper {
     padding: 1em;
+    .createNew {
+        background-color: ohma.$colors-gray-500;
+        @include ohma.round();
+        min-height: 100px;
+    }
 }

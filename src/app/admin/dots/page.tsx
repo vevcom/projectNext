@@ -8,17 +8,24 @@ export default async function Dots() {
     return (
         <div className={styles.wrapper}>
             <h1>Prikker</h1>
-            <UserSelectionProvider>
-                <UserPagingProvider 
-                    startPage={{ page: 0, pageSize: 50 }} 
-                    serverRenderedData={[]} 
-                    details={{ partOfName: '', groups: [] }}
-                >
-                    <PopUpProvider>
-                        <CreateDotForm />
-                    </PopUpProvider>
-                </UserPagingProvider>
-            </UserSelectionProvider>
+            <div className={styles.createNew}>
+                <UserSelectionProvider>
+                    <UserPagingProvider 
+                        startPage={{ page: 0, pageSize: 50 }} 
+                        serverRenderedData={[]} 
+                        details={{ partOfName: '', groups: [] }}
+                    >
+                        <PopUpProvider>
+                            <CreateDotForm />
+                        </PopUpProvider>
+                    </UserPagingProvider>
+                </UserSelectionProvider>
+            </div>
+            <main>
+                <ul>
+                    
+                </ul>
+            </main>
         </div>
     )
 }
