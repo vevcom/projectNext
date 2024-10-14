@@ -34,11 +34,6 @@ export default function DotList({ onlyActive }: PropTypes) {
     return (
         <>
         <span className={styles.selection}>
-            <PopUp PopUpKey="selectUser" showButtonClass={styles.openUserList} showButtonContent={
-                <>Velg Bruker</>
-            }>
-                <UserList />
-            </PopUp>
             {
                 userSelection.user ? 
                 <div className={styles.userSelected}>
@@ -51,7 +46,12 @@ export default function DotList({ onlyActive }: PropTypes) {
                     <p>Viser prikker for alle brukere</p>
                 </div>
             }
-            <Link href={
+            <PopUp PopUpKey="selectUser" showButtonClass={styles.openUserList} showButtonContent={
+                <>Velg Bruker</>
+            }>
+                <UserList />
+            </PopUp>
+            <Link className={styles.selectActive} href={
                 `/admin/dots/`+
                 `?${QueryParams.onlyActive.encodeUrl(!onlyActive)}`+
                 `&${userSelection.user ? QueryParams.userId.encodeUrl(userSelection.user?.id) : ''}`

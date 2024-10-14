@@ -5,6 +5,7 @@ import type { UserFiltered } from '@/services/users/Types'
 
 type PropTypes = {
     children: ReactNode
+    initialUser?: UserFiltered | null
 }
 
 /**
@@ -17,8 +18,8 @@ export const UserSelectionContext = createContext<{
     onSelection: (handler: (user: UserFiltered | null) => void) => void
         } | null>(null)
 
-export default function UserSelectionProvider({ children }: PropTypes) {
-    const [user, setUser] = useState<UserFiltered | null>(null)
+export default function UserSelectionProvider({ children, initialUser }: PropTypes) {
+    const [user, setUser] = useState<UserFiltered | null>(initialUser ? initialUser : null)
     const onSelection = useRef<(user: UserFiltered | null) => void>(() => {})
     useEffect(() => {
         onSelection.current(user)
