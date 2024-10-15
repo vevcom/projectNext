@@ -1,10 +1,12 @@
 import styles from './page.module.scss'
-import { getProfile } from '@/app/users/[username]/page'
 import { getUser } from '@/auth/getUser'
 import Permission from '@/components/Permission/Permission'
 import { v4 as uuid } from 'uuid'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import { Session } from '@/auth/Session'
+import { readUserProfileAction } from '@/actions/users/read'
+import { UserProfileUpdateAuther } from '@/services/users/Authers'
 
 type PropTypes = {
     params: {
@@ -13,15 +15,18 @@ type PropTypes = {
 }
 
 export default async function UserSettings({ params }: PropTypes) {
-    const { user, permissions } = await getUser({
-        shouldRedirect: true,
-        returnUrl: `/users/${params.username}/settings`,
-        userRequired: params.username === 'me'
-    })
-
-    const { profile, me } = await getProfile(user, params.username)
-
-    if (!me && !permissions.includes('USERS_UPDATE')) return notFound()
+    const session = await Session.fromNextAuth()
+    if (params.username === 'me') {
+        if (!session.user) return notFound()
+        redirect(`/users/${session.user.username}/settings`) //This throws.
+    }
+    UserProfileUpdateAuther
+        .dynamicFields({ username: params.username })
+        .auth(session)
+        .requireAuthorized({ returnUrlIfFail: `/users/${params.username}/settings` })
+    const profileRes = await readUserProfileAction(params.username)
+    if (!profileRes.success) return notFound()
+    const profile = profileRes.data
 
     return (
         <div className={styles.wrapper}>

@@ -9,11 +9,12 @@ import PopUpProvider from '@/contexts/PopUp'
 import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { Inter } from 'next/font/google'
-import React from 'react'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
+import { ReactNode } from 'react'
+import { readUserProfileAction } from '@/actions/users/read'
 
 config.autoAddCss = false
 
@@ -26,13 +27,14 @@ export const metadata = {
 }
 
 type PropTypes = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
+    const profile = session?.user ? await readUserProfileAction(session?.user.username) : null
 
     return (
         <html lang="en">
