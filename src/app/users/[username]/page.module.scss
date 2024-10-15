@@ -93,19 +93,6 @@
 
     gap: 0.5em;
     
-    .imageWrapper {
-        display: flex;
-        justify-content: center;
-
-        .profilePicture {
-            border-radius: 50%;
-            border: 3px solid ohma.$colors-white;
-            background-color: ohma.$colors-white;
-            aspect-ratio: 1;
-            object-fit: cover;
-        }
-    }
-    
     .header {
         display: flex;
         flex-direction: column;

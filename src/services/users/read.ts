@@ -10,6 +10,7 @@ import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { User } from '@prisma/client'
+import { readSpecialImage } from '../images/read'
 
 /**
  * A function to read a page of users with the given details (filtering)
@@ -139,6 +140,7 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
 }
 
 export async function readUserProfile(username: string): Promise<Profile> {
+    const defaultProfileImage = await readSpecialImage('DEFAULT_PROFILE_IMAGE')
     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
         where: { username },
         select: {
@@ -146,8 +148,10 @@ export async function readUserProfile(username: string): Promise<Profile> {
             bio: true,
             image: true,
         },
+    })).then(user => ({
+        ...user,
+        image: user.image || defaultProfileImage
     }))
-
     const memberships = await readMembershipsOfUser(user.id)
     const permissions = await readPermissionsOfUser(user.id)
 
@@ -164,7 +168,10 @@ export const readProfile = ServiceMethodHandler({
                 bio: true,
                 image: true,
             },
-        })
+        }).then(async user => ({
+            ...user,
+            image: user.image || await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+        }))
 
         const memberships = await readMembershipsOfUser(user.id)
         const permissions = await readPermissionsOfUser(user.id)

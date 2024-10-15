@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 import { Session } from '@/auth/Session'
 import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import ProfilePicture from '@/app/_components/User/ProfilePicture'
 
 type PropTypes = {
     params: {
@@ -53,9 +54,7 @@ export default async function User({ params }: PropTypes) {
                 <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
 
                 <div className={styles.profileContent}>
-                    <div className={styles.imageWrapper}>
-                        <Image className={styles.profilePicture} image={profileImage} width={240}/>
-                    </div>
+                    <ProfilePicture width={240} profileImage={profileImage} />
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>

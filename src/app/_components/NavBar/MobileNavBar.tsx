@@ -3,13 +3,14 @@ import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import { getUser } from '@/auth/getUser'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import UserNavigation from './UserNavigation'
+import { PropTypes } from './NavBar'
 
-export default async function MobileNavBar() {
-    const { user } = await getUser()
+export default async function MobileNavBar({ profile }: PropTypes) {
+    const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false //TODO
     const isAdmin = true //TODO
@@ -35,7 +36,7 @@ export default async function MobileNavBar() {
             </div>
             <div className={styles.magicHat}>
                 <SpecialCmsImage special="MOBILE_NAV_LOGIN_BUTTON" width={25} height={25} alt="log in button">
-                    <Link className={styles.imagelink} href={isLoggedIn ? '/users/me' : '/login'} />
+                    <UserNavigation profile={profile} />
                 </SpecialCmsImage>
             </div>
             <Menu items={itemsForMenu} openBtnContent={

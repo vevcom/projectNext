@@ -30,9 +30,9 @@ export function unwrapActionReturn<
 export function unwrapActionReturn<
     Data,
     const DataGuarantee extends boolean,
->(actionReturn: ActionReturn<Data, DataGuarantee>) {
+>(actionReturn: ActionReturn<Data, DataGuarantee>): Data | undefined {
     if (!actionReturn.success) {
         redirectToErrorPage(actionReturn.errorCode, actionReturn.error?.length ? actionReturn.error[0].message : undefined)
     }
-    actionReturn.data
+    return actionReturn.data
 }
