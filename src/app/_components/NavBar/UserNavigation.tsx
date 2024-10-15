@@ -30,7 +30,7 @@ export default function UserNavigation({ profile }: PropTypes) {
     }
 
     if (!isMenuOpen) {
-        return <button className={styles.hidden} onClick={() => setIsMenuOpen(true)} />
+        return <button className={styles.hidden} onClick={() => setIsMenuOpen(!isMenuOpen)} />
     }
 
     return (
@@ -47,15 +47,19 @@ export default function UserNavigation({ profile }: PropTypes) {
             <div className={styles.navs}>
                 <Link href="/users/me">
                     <FontAwesomeIcon icon={faUser} />
+                    <p>Profil</p>
                 </Link>
                 <Link href="/users/me/dots">
                     <FontAwesomeIcon icon={faDotCircle} />
+                    <p>Prikker</p>
                 </Link>
                 <Link href="/users/me/money">
                     <FontAwesomeIcon icon={faMoneyBill} />
+                    <p>Konto</p>
                 </Link>
                 <Link href="/users/me/settings">
                     <FontAwesomeIcon icon={faCog} />
+                    <p>Instillinger</p>
                 </Link>
             </div>
         </div>

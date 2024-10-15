@@ -1,18 +1,31 @@
 @use '@/styles/ohma';
 
 .UserNavigation {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    transform: translateY(calc(100% + .5em));
-    min-width: 300px;
-    max-height: 90vh;
+    @include ohma.screenLg {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transform: translateY(calc(100% + .5em));
+        min-width: 300px;
+        max-height: 90vh;
+        @include ohma.boxShadow();
+        @include ohma.round();
+    }
+    @include ohma.screenMobile {
+        z-index: -1;
+        padding: 1em;
+        padding-top: 3em;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 50px);
+    }
     background-color: ohma.$colors-gray-200;
     h2 {
+        color: ohma.$colors-black;
         font-size: ohma.$fonts-xl;
     }
-    @include ohma.boxShadow();
-    @include ohma.round();
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,12 +48,24 @@
             flex: 1 1 calc(50% - 1em);
             @include ohma.round();
             background-color: ohma.$colors-secondary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: ohma.$colors-white;
+            transition: color .6s;
             svg {
+                width: 20px;
+                height: 20px;
                 color: ohma.$colors-white;
                 transition: color .6s;
+                margin: .3em;
             }
-            &:hover svg {
+            &:hover {
                 color: ohma.$colors-black;
+                svg {
+                    color: ohma.$colors-black;
+                }
             }
         }
     }

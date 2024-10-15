@@ -35,9 +35,8 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                 </SpecialCmsImage>
             </div>
             <div className={styles.magicHat}>
-                <SpecialCmsImage special="MOBILE_NAV_LOGIN_BUTTON" width={25} height={25} alt="log in button">
-                    <UserNavigation profile={profile} />
-                </SpecialCmsImage>
+                <SpecialCmsImage special="MOBILE_NAV_LOGIN_BUTTON" width={25} height={25} alt="log in button" className={styles.image} />
+                <UserNavigation profile={profile} />
             </div>
             <Menu items={itemsForMenu} openBtnContent={
                 <div className={styles.menuBtn}>
