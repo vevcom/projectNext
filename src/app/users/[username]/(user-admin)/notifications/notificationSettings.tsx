@@ -7,7 +7,6 @@ import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVa
 import { notificationMethods } from '@/services/notifications/Types'
 import SubmitButton from '@/components/UI/SubmitButton'
 import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
-import { useUser } from '@/auth/useUser'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
@@ -19,6 +18,7 @@ import type {
     NotificationMethodGeneral,
     NotificationMethods
 } from '@/services/notifications/Types'
+import { UserFiltered } from '@/services/users/Types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')
@@ -131,13 +131,17 @@ function prepareDataForDelivery(tree: NotificationBranch) {
     return ret
 }
 
+type PropTypes = {
+    channels: ExpandedNotificationChannel[],
+    subscriptions: Subscription[],
+    user: UserFiltered
+}
+
 export default function NotificationSettings({
     channels,
     subscriptions,
-}: {
-    channels: ExpandedNotificationChannel[],
-    subscriptions: Subscription[],
-}) {
+    user
+}: PropTypes) {
     const [channelTree, setChannelTree] = useState(
         generateChannelTree(channels, subscriptions)
     )
@@ -152,9 +156,6 @@ export default function NotificationSettings({
         pending: false,
         success: false,
     })
-
-    const { user } = useUser()
-
 
     function handleChange(branchId: number, method: NotificationMethodGeneral) {
         const branch = findBranchInTree(channelTree, branchId)

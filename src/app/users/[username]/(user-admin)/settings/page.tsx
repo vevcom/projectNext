@@ -1,32 +1,11 @@
 import styles from './page.module.scss'
-import { getUser } from '@/auth/getUser'
 import Permission from '@/components/Permission/Permission'
 import { v4 as uuid } from 'uuid'
-import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Session } from '@/auth/Session'
-import { readUserProfileAction } from '@/actions/users/read'
-import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import { getProfileForAdmin, type PropTypes } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 
-type PropTypes = {
-    params: {
-        username: string
-    },
-}
-
-export default async function UserSettings({ params }: PropTypes) {
-    const session = await Session.fromNextAuth()
-    if (params.username === 'me') {
-        if (!session.user) return notFound()
-        redirect(`/users/${session.user.username}/settings`) //This throws.
-    }
-    UserProfileUpdateAuther
-        .dynamicFields({ username: params.username })
-        .auth(session)
-        .requireAuthorized({ returnUrlIfFail: `/users/${params.username}/settings` })
-    const profileRes = await readUserProfileAction(params.username)
-    if (!profileRes.success) return notFound()
-    const profile = profileRes.data
+export default async function UserSettings(props: PropTypes) {
+    const { profile } = await getProfileForAdmin(props, 'settings')
 
     return (
         <div className={styles.wrapper}>
