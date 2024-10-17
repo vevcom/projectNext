@@ -18,9 +18,10 @@ export default async function Notififcations(props: PropTypes) {
         throw new Error('Failed to load channels or subscriptions')
     }
 
-    return <PageWrapper
-        title="Varslinger"
-    >
+    return (
+    <div>
+        <h2>Notifikasjoner</h2>
         <NotificationSettings user={profile.user} channels={channels.data} subscriptions={subscriptions.data} />
-    </PageWrapper>
+    </div>
+    )
 }

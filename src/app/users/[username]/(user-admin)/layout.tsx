@@ -4,10 +4,11 @@ import { Session } from "@/auth/Session"
 import { readUserProfileAction } from "@/actions/users/read"
 import { unwrapActionReturn } from "@/app/redirectToErrorPage"
 import styles from './layout.module.scss'
-import Link from "next/link"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleDot, faCog, faKey, faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 import { ReactNode } from "react"
+import PageWrapper from "@/app/_components/PageWrapper/PageWrapper"
+import Nav from "./Nav"
+import BorderButton from "@/app/_components/UI/BorderButton"
+import Link from "next/link"
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
     const session = await Session.fromNextAuth()
@@ -18,23 +19,18 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
     }
     const { user } = unwrapActionReturn(await readUserProfileAction(username))
     return (
-        <div className={styles.userAdminLayout}>
-            <h1>{user.firstname} {user.lastname} Admin</h1>
-            {children}
-            <aside>
-                <Link href={`/users/${username}/dots`}>
-                    <FontAwesomeIcon icon={faCircleDot} />
-                </Link>
-                <Link href={`/users/${username}/notifications`}>
-                    <FontAwesomeIcon icon={faPaperPlane} />
-                </Link>
-                <Link href={`/users/${username}/permissions`}>
-                    <FontAwesomeIcon icon={faKey} />
-                </Link>
-                <Link href={`/users/${username}/settings`}>
-                    <FontAwesomeIcon icon={faCog} />
-                </Link>
-            </aside>
-        </div>
+        <PageWrapper title={`${user.firstname} ${user.lastname} Admin`}>
+            <Link href={`/users/${username}`} className={styles.toProfile}>
+                Til Profilsiden
+            </Link>
+            <div className={styles.userAdminLayout}>
+                <i>Bruker Id: {user.id}</i> <br />
+                <i>Brukernavn: {user.username}</i>
+                <main>
+                    {children}
+                </main>
+                <Nav username={username} />
+            </div>
+        </PageWrapper>
     )
 }
