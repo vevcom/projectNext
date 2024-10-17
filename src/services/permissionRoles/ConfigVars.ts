@@ -14,9 +14,24 @@ export const permissionCategories = [
     'notifikasjoner',
     'mail',
     'skjermer',
+    'badges',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
+
+    BADGE_READ: {
+        name: 'Lese badge',
+        description: 'Kan lese badge',
+        category: 'badges',
+    },
+
+
+    BADGE_ADMIN: {
+        name: 'badge admin',
+        description: 'Kan fikse badge',
+        category: 'badges',
+    },
+
     OMEGAQUOTES_READ: {
         name: 'Les OmegaQuotes',
         description: 'kan lese OmegaQuotes',

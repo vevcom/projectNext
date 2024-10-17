@@ -15,6 +15,11 @@ enum Permission {
   OMBUL_UPDATE
   OMBUL_DESTROY
 
+  //badges
+  BADGE_READ
+  BADGE_ADMIN
+
+
   // Groups - Generic
   GROUP_READ
   GROUP_DESTROY

@@ -6,6 +6,7 @@ model Badge {
   colorR     Int
   colorB     Int
   colorG     Int
+  description String
   cmsImage   CmsImage @relation(fields: [cmsImageId], references: [id])
   cmsImageId Int      @unique
 }
