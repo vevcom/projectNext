@@ -9,8 +9,12 @@ export type DotCursor = {
     id: number
 }
 
+export type DotWithActive = Dot & {
+    active: boolean
+}
+
 export type DotWrapperWithDots = DotWrapper & {
-    dots: Dot[],
+    dots: DotWithActive[],
     user: Pick<User, 'firstname' | 'lastname' | 'username'>,
     accuser: Pick<User, 'firstname' | 'lastname' | 'username'>,
 }

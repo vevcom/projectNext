@@ -3,6 +3,10 @@
 .DotList {
     @include ohma.table();
     margin-top: 0;
+    .inactive {
+        text-decoration: line-through;
+        color: ohma.$colors-red;
+    }
 }
 
 .selection {

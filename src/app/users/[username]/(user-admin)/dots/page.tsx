@@ -30,7 +30,7 @@ export default async function UserDotAdmin(params: PropTypes) {
                             <td>
                             {
                                 dotWrapper.dots.map(dot => (
-                                    <div key={dot.id}>
+                                    <div className={dot.active ? '' : styles.inactive} key={dot.id}>
                                         <Date date={dot.expiresAt} />
                                     </div>
                                 ))

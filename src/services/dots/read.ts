@@ -43,14 +43,17 @@ export const readWrappersForUser = ServiceMethodHandler({
             const latestA = Math.max(...a.dots.map(dot => new Date(dot.expiresAt).getTime()));
             const latestB = Math.max(...b.dots.map(dot => new Date(dot.expiresAt).getTime()));
             return latestB - latestA;
-        });
+        }).map(wrapper => ({
+            ...wrapper,
+            dots: extendWithActive(wrapper.dots)
+        }));
     }
 })
 
 export const readPage = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: { paging: ReadPageInput<number, DotCursor, DotDetails> }) => {
-        return await prisma.dotWrapper.findMany({
+        return (await prisma.dotWrapper.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
                 userId: params.paging.details.userId ?? undefined,
@@ -68,6 +71,16 @@ export const readPage = ServiceMethodHandler({
                 }
             },
             include: DotWrapperWithDotsIncluder,
-        })
+        })).map(wrapper => ({
+            ...wrapper,
+            dots: extendWithActive(wrapper.dots)
+        }))
     }
 })
+
+function extendWithActive<T extends { expiresAt: Date }>(dots: T[]) {
+    return dots.map(dot => ({
+        ...dot,
+        active: dot.expiresAt > new Date()
+    }))
+}
