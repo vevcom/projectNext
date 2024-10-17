@@ -1,8 +1,7 @@
 'use client'
-import EndlessScroll from '@/app/_components/PagingWrappers/EndlessScroll'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import { DotPagingContext } from '@/contexts/paging/DotPaging'
 import styles from './DotList.module.scss'
-import { displayDate } from '@/dates/displayDate'
 import { useContext } from 'react'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import Link from 'next/link'
@@ -13,6 +12,7 @@ import { useRouter } from 'next/navigation'
 import { PopUpContext } from '@/contexts/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
+import Date from '@/app/_components/Date/Date'
 
 type PropTypes = {
     onlyActive: boolean
@@ -78,7 +78,7 @@ export default function DotList({ onlyActive }: PropTypes) {
                         {
                             dotWrapper.dots.map(dot => (
                                 <div key={dot.id}>
-                                    {displayDate(dot.expiresAt)}
+                                    <Date date={dot.expiresAt} />
                                 </div>
                             ))
                         }

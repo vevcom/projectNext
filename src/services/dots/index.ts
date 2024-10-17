@@ -2,7 +2,7 @@ import 'server-only'
 import { ServiceMethod } from "../ServiceMethod";
 import { CreateDotAuther, ReadDotAuther, ReadDotForUserAuther } from "./Authers";
 import { create } from "./create";
-import { readForUser } from './read';
+import { readForUser, readWrappersForUser } from './read';
 import { readPage } from './read';
 
 export const Dots = {
@@ -19,6 +19,13 @@ export const Dots = {
         auther: ReadDotForUserAuther,
         dynamicFields: ({ params }) => ({ userId: params.userId }),
         serviceMethodHandler: readForUser,
+    }),
+    readWrapperForUser: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: ReadDotForUserAuther,
+        dynamicFields: ({ params }) => ({ userId: params.userId }),
+        serviceMethodHandler: readWrappersForUser,
     }),
     readPage: ServiceMethod({
         withData: false,

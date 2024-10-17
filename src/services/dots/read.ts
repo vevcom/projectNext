@@ -3,6 +3,7 @@ import { ServiceMethodHandler } from '../ServiceMethodHandler'
 import { ReadPageInput } from '../paging/Types'
 import { DotCursor, DotDetails } from './Types'
 import { cursorPageingSelection } from '../paging/cursorPageingSelection'
+import { DotWrapperWithDotsIncluder } from './ConfigVars'
 
 /**
  * This method reads all dots for a user
@@ -28,6 +29,24 @@ export const readForUser = ServiceMethodHandler({
     }
 })
 
+export const readWrappersForUser = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, { userId }: { userId: number }) => {
+        const wrappers = await prisma.dotWrapper.findMany({
+            where: {
+                userId
+            },
+            include: DotWrapperWithDotsIncluder,
+        })
+
+        return wrappers.sort((a, b) => {
+            const latestA = Math.max(...a.dots.map(dot => new Date(dot.expiresAt).getTime()));
+            const latestB = Math.max(...b.dots.map(dot => new Date(dot.expiresAt).getTime()));
+            return latestB - latestA;
+        });
+    }
+})
+
 export const readPage = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, params: { paging: ReadPageInput<number, DotCursor, DotDetails> }) => {
@@ -48,23 +67,7 @@ export const readPage = ServiceMethodHandler({
                     username: 'asc'
                 }
             },
-            include: {
-                dots: true,
-                user: {
-                    select: {
-                        firstname: true,
-                        lastname: true,
-                        username: true
-                    }
-                },
-                accuser: {
-                    select: {
-                        firstname: true,
-                        lastname: true,
-                        username: true
-                    }
-                }
-            }
+            include: DotWrapperWithDotsIncluder,
         })
     }
 })
