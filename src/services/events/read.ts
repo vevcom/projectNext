@@ -2,7 +2,7 @@ import 'server-only'
 import { eventFilterSeletion } from './ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
-import { getOsloTime } from '@/dates/getOsloTime'
+import { getOsloTime } from '@/lib/dates/getOsloTime'
 import type { ReadPageInput } from '@/services/paging/Types'
 import type { EventArchiveCursor, EventArchiveDetails } from './Types'
 

@@ -117,7 +117,7 @@ services:
         restart: always
 
     postfix:
-        build: ./postfix/
+        build: ./containers/postfix/
         ports:
             - '587:587'
             - '25:25'
