@@ -12,3 +12,14 @@ model JobAd {
   @@unique([articleId, articleName])
   @@unique([articleName, orderPublished])
 }
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  logo        CmsImage @relation(fields: [logoId], references: [id])
+  logoId      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
