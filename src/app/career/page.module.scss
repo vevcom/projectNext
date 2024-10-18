@@ -1,0 +1,38 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    .info {
+        margin-top: 1em;
+    }
+    .links {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        > a {
+            @include ohma.card;
+            background: linear-gradient(
+                to top right,
+                ohma.$colors-secondary,
+                rgba(red(ohma.$colors-secondary), green(ohma.$colors-secondary), blue(ohma.$colors-secondary), 0.1)
+            );
+            transition: box-shadow 0.3s;
+            &:hover {
+                @include ohma.boxShadow;
+            }
+            text-decoration: none;
+            color: ohma.$colors-gray-800;
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            > h2 {
+                flex: 1;
+                text-align: center;
+                font-size: ohma.$fonts-xl;
+            }
+            > .linkImage {
+                border-radius: ohma.$rounding;
+                overflow: hidden;
+            }
+        }
+    }
+}
