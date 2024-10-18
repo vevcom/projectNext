@@ -1,6 +1,12 @@
 @use '@/styles/ohma';
 
+.conactorLink {
+    width: 170px;
+    height: 35px;
+}
+
 .wrapper {
+    position: relative;
     .info {
         margin-top: 1em;
     }
