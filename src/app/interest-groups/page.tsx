@@ -6,6 +6,7 @@ import styles from './page.module.scss'
 import { AddHeaderItemPopUp } from "@/components/HeaderItems/HeaderItemPopUp";
 import CreateInterestGroupForm from "./CreateInterestGroupForm";
 import { CreateInterestGroupAuther } from "@/services/groups/interestGroups/Auther";
+import InterestGroup from "./InterestGroup";
 
 export default async function InterestGroups() {
     const { session, ...interestGroupsRes } = await readInterestGroupsAction.bind(null, {})()
@@ -26,10 +27,7 @@ export default async function InterestGroups() {
             <main>
             {
                 interestGroups.map(interestGroup => (
-                    <div className={styles.interestGroup}>
-                        <h2>{interestGroup.name}</h2>
-                        <ArticleSection key={interestGroup.id} articleSection={interestGroup.articleSection} />
-                    </div>
+                    <InterestGroup key={interestGroup.id} interestGroup={interestGroup} />
                 ))
             }
             </main>
