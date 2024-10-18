@@ -27,7 +27,7 @@ export default async function InterestGroups() {
             <main>
             {
                 interestGroups.map(interestGroup => (
-                    <InterestGroup key={interestGroup.id} interestGroup={interestGroup} />
+                    <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
                 ))
             }
             </main>
