@@ -1,7 +1,7 @@
-import { readUserProfileAction } from "@/actions/users/read"
-import { Session } from "@/auth/Session"
-import { UserProfileUpdateAuther } from "@/services/users/Authers"
-import { notFound, redirect } from "next/navigation"
+import { readUserProfileAction } from '@/actions/users/read'
+import { Session } from '@/auth/Session'
+import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import { notFound, redirect } from 'next/navigation'
 
 export type PropTypes = {
     params: {
@@ -9,9 +9,10 @@ export type PropTypes = {
     }
 }
 
-/** 
+/**
  * Wrapper used on all user-admin pages to auth the route and get the profile of the user.
- * @param params - The username of the user to get the profile of. if 'me' is passed, the profile of the current user is returned.
+ * @param params - The username of the user to get the profile of. if 'me' is passed,
+ * the profile of the current user is returned.
  * @param adminPage - The page that the user is being seen on. Used to rediret if the user is not authorized currently.
  * @returns - The profile being seen and the session of the current user.
 */

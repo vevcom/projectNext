@@ -1,17 +1,17 @@
 'use client'
-import { createDotAction } from "@/actions/dots/create"
-import Form from "@/app/_components/Form/Form"
-import PopUp from "@/app/_components/PopUp/PopUp"
-import NumberInput from "@/app/_components/UI/NumberInput"
-import TextInput from "@/app/_components/UI/TextInput"
-import UserList from "@/app/_components/User/UserList/UserList"
-import { useUser } from "@/auth/useUser"
-import { PopUpContext } from "@/contexts/PopUp"
-import { UserSelectionContext } from "@/contexts/UserSelection"
-import { useContext } from "react"
 import styles from './CreateDotForm.module.scss'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import { createDotAction } from '@/actions/dots/create'
+import Form from '@/app/_components/Form/Form'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import NumberInput from '@/app/_components/UI/NumberInput'
+import TextInput from '@/app/_components/UI/TextInput'
+import UserList from '@/app/_components/User/UserList/UserList'
+import { useUser } from '@/auth/useUser'
+import { PopUpContext } from '@/contexts/PopUp'
+import { UserSelectionContext } from '@/contexts/UserSelection'
+import { useContext } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default function CreateDotForm() {
     const session = useUser()
@@ -32,11 +32,11 @@ export default function CreateDotForm() {
             </h2>
             <div className={styles.userSelected}>
                 <p>
-                {
-                    userSelectionContext.user ? 
-                    `${userSelectionContext.user.firstname} ${userSelectionContext.user.lastname}` : 
-                    'ingen bruker valgt'
-                }
+                    {
+                        userSelectionContext.user ?
+                            `${userSelectionContext.user.firstname} ${userSelectionContext.user.lastname}` :
+                            'ingen bruker valgt'
+                    }
                 </p>
                 <PopUp PopUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
                     <>Velg Bruker</>
@@ -46,7 +46,7 @@ export default function CreateDotForm() {
             </div>
             <Form
                 action={createDotAction.bind(null, { accuserId: session.user.id })}
-                submitText='Lag prikk'
+                submitText="Lag prikk"
                 refreshOnSuccess
             >
                 <TextInput name="reason" label="Grunn" />

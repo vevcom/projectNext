@@ -1,12 +1,13 @@
-import { ActionReturn } from "@/actions/Types"
-import { ErrorCode, errorCodes } from "@/services/error"
+import { errorCodes } from '@/services/error'
+import type { ActionReturn } from '@/actions/Types'
+import type { ErrorCode } from '@/services/error'
 
 /**
  * Function that when thrown ON RENDER will redirect to the error page (error.tsx)
  * The error must be encoded in regular Error object as the custom error type is not supported by Next.js
  * (next.js will convert custom error types to regular Error objects)
  * Thus the error must be encoded in a regular Error object in one string
- * @param 
+ * @param
  */
 export function redirectToErrorPage(code: ErrorCode, message?: string | undefined): never {
     const defaultMessage = errorCodes.find((error) => error.name === code)?.defaultMessage ?? 'Ukjent feil'

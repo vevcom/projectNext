@@ -1,4 +1,4 @@
-import { AuthStatus } from "@/auth/getUser"
+import type { AuthStatus } from '@/auth/getUser'
 
 export const errorCodes = [
     {

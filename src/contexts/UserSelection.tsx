@@ -18,19 +18,21 @@ export const UserSelectionContext = createContext<{
     onSelection: (handler: (user: UserFiltered | null) => void) => void
         } | null>(null)
 
+type Handler = (user: UserFiltered | null) => void
+
 export default function UserSelectionProvider({ children, initialUser }: PropTypes) {
     const [user, setUser] = useState<UserFiltered | null>(initialUser ? initialUser : null)
-    const onSelection = useRef<(user: UserFiltered | null) => void>(() => {})
+    const onSelection = useRef<Handler>(() => {})
     useEffect(() => {
         onSelection.current(user)
     }, [user])
 
-    return <UserSelectionContext.Provider value={{ 
-        user, 
-        setUser, 
-        onSelection: (handler: (user: UserFiltered | null) => void) => {
+    return <UserSelectionContext.Provider value={{
+        user,
+        setUser,
+        onSelection: (handler: Handler) => {
             onSelection.current = handler
-        } 
+        }
     }}>
         {children}
     </UserSelectionContext.Provider>

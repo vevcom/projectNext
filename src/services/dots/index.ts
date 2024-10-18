@@ -1,9 +1,8 @@
 import 'server-only'
-import { ServiceMethod } from "../ServiceMethod";
-import { CreateDotAuther, ReadDotAuther, ReadDotForUserAuther } from "./Authers";
-import { create } from "./create";
-import { readForUser, readWrappersForUser } from './read';
-import { readPage } from './read';
+import { CreateDotAuther, ReadDotAuther, ReadDotForUserAuther } from './Authers'
+import { create } from './create'
+import { readForUser, readWrappersForUser, readPage } from './read'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Dots = {
     create: ServiceMethod({

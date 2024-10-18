@@ -1,9 +1,9 @@
 import 'server-only'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
-import { ReadPageInput } from '../paging/Types'
-import { DotCursor, DotDetails } from './Types'
-import { cursorPageingSelection } from '../paging/cursorPageingSelection'
 import { DotWrapperWithDotsIncluder } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import type { ReadPageInput } from '@/services/paging/Types'
+import type { DotCursor, DotDetails } from './Types'
 
 /**
  * This method reads all dots for a user
@@ -12,21 +12,19 @@ import { DotWrapperWithDotsIncluder } from './ConfigVars'
  */
 export const readForUser = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, { userId, onlyActive }: { userId: number, onlyActive: boolean }) => {
-        return prisma.dot.findMany({
-            where: {
-                wrapper: {
-                    userId,
-                },
-                expiresAt: onlyActive ? {
-                    gt: new Date()
-                } : undefined,
+    handler: async (prisma, { userId, onlyActive }: { userId: number, onlyActive: boolean }) => prisma.dot.findMany({
+        where: {
+            wrapper: {
+                userId,
             },
-            orderBy: {
-                expiresAt: 'asc'
-            }
-        })
-    }
+            expiresAt: onlyActive ? {
+                gt: new Date()
+            } : undefined,
+        },
+        orderBy: {
+            expiresAt: 'asc'
+        }
+    })
 })
 
 export const readWrappersForUser = ServiceMethodHandler({
@@ -40,42 +38,42 @@ export const readWrappersForUser = ServiceMethodHandler({
         })
 
         return wrappers.sort((a, b) => {
-            const latestA = Math.max(...a.dots.map(dot => new Date(dot.expiresAt).getTime()));
-            const latestB = Math.max(...b.dots.map(dot => new Date(dot.expiresAt).getTime()));
-            return latestB - latestA;
+            const latestA = Math.max(...a.dots.map(dot => new Date(dot.expiresAt).getTime()))
+            const latestB = Math.max(...b.dots.map(dot => new Date(dot.expiresAt).getTime()))
+            return latestB - latestA
         }).map(wrapper => ({
             ...wrapper,
             dots: extendWithActive(wrapper.dots)
-        }));
+        }))
     }
 })
 
 export const readPage = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, params: { paging: ReadPageInput<number, DotCursor, DotDetails> }) => {
-        return (await prisma.dotWrapper.findMany({
-            ...cursorPageingSelection(params.paging.page),
-            where: {
-                userId: params.paging.details.userId ?? undefined,
-                dots: params.paging.details.onlyActive ? {
-                    some: {
-                        expiresAt: {
-                            gt: new Date()
-                        }
+    handler: async (prisma, params: {
+        paging: ReadPageInput<number, DotCursor, DotDetails>
+    }) => (await prisma.dotWrapper.findMany({
+        ...cursorPageingSelection(params.paging.page),
+        where: {
+            userId: params.paging.details.userId ?? undefined,
+            dots: params.paging.details.onlyActive ? {
+                some: {
+                    expiresAt: {
+                        gt: new Date()
                     }
-                } : undefined
-            },
-            orderBy: {
-                user: {
-                    username: 'asc'
                 }
-            },
-            include: DotWrapperWithDotsIncluder,
-        })).map(wrapper => ({
-            ...wrapper,
-            dots: extendWithActive(wrapper.dots)
-        }))
-    }
+            } : undefined
+        },
+        orderBy: {
+            user: {
+                username: 'asc'
+            }
+        },
+        include: DotWrapperWithDotsIncluder,
+    })).map(wrapper => ({
+        ...wrapper,
+        dots: extendWithActive(wrapper.dots)
+    }))
 })
 
 function extendWithActive<T extends { expiresAt: Date }>(dots: T[]) {

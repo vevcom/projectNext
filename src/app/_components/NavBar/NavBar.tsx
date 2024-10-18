@@ -2,11 +2,11 @@ import Item from './Item'
 import styles from './NavBar.module.scss'
 import Menu from './Menu'
 import getNavItems from './navDef'
+import UserNavigation from './UserNavigation'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import Link from 'next/link'
-import { Profile } from '@/services/users/Types'
-import UserNavigation from './UserNavigation'
+import type { Profile } from '@/services/users/Types'
 
 export type PropTypes = {
     profile: Profile | null

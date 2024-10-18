@@ -1,6 +1,6 @@
 'use server'
-import { Dots } from "@/services/dots"
-import { ActionNoData } from "../Action"
+import { ActionNoData } from '@/actions/Action'
+import { Dots } from '@/services/dots'
 
 export const readDotPage = ActionNoData(Dots.readPage)
 

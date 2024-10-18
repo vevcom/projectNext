@@ -2,7 +2,6 @@
 import NotificationSettings from './notificationSettings'
 import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
 import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
-import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { getProfileForAdmin, type PropTypes } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 
 export default async function Notififcations(props: PropTypes) {
@@ -19,9 +18,9 @@ export default async function Notififcations(props: PropTypes) {
     }
 
     return (
-    <div>
-        <h2>Notifikasjoner</h2>
-        <NotificationSettings user={profile.user} channels={channels.data} subscriptions={subscriptions.data} />
-    </div>
+        <div>
+            <h2>Notifikasjoner</h2>
+            <NotificationSettings user={profile.user} channels={channels.data} subscriptions={subscriptions.data} />
+        </div>
     )
 }

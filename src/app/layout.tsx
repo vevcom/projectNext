@@ -13,7 +13,7 @@ import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { readUserProfileAction } from '@/actions/users/read'
 import { unwrapActionReturn } from './redirectToErrorPage'
 
@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
-    const profile = session?.user ? 
+    const profile = session?.user ?
         unwrapActionReturn(await readUserProfileAction(session?.user.username)) : null
 
     return (

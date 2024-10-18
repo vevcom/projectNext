@@ -1,7 +1,7 @@
 import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
+import type { AuthStatus } from '@/auth/getUser'
 import type { SafeParseError } from 'zod'
 import type { ActionReturnError } from './Types'
-import { AuthStatus } from '@/auth/getUser'
 
 export function createActionError(errorCode: ErrorCode | AuthStatus, error?: string | ErrorMessage[]): ActionReturnError {
     if (errorCode === 'AUTHORIZED' || errorCode === 'AUTHORIZED_NO_USER') {

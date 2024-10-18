@@ -1,6 +1,6 @@
 import { redirectToErrorPage } from '@/app/redirectToErrorPage'
-import type { SessionType, UserGuaranteeOption } from '@/auth/Session'
 import { redirect } from 'next/navigation'
+import type { SessionType, UserGuaranteeOption } from '@/auth/Session'
 
 export type AuthStatus = 'AUTHORIZED' | 'UNAUTHORIZED' | 'AUTHORIZED_NO_USER' | 'UNAUTHENTICATED'
 

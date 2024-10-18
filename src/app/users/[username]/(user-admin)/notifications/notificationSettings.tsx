@@ -10,6 +10,7 @@ import { updateSubscriptionsAction } from '@/actions/notifications/subscription/
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
+import type { UserFiltered } from '@/services/users/Types'
 import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
 import type { NotificationBranch } from './Types'
 import type { ErrorMessage } from '@/services/error'
@@ -18,7 +19,6 @@ import type {
     NotificationMethodGeneral,
     NotificationMethods
 } from '@/services/notifications/Types'
-import { UserFiltered } from '@/services/users/Types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(c => c.special === 'ROOT')

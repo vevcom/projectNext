@@ -1,9 +1,13 @@
-import { Prisma } from "@prisma/client"
+import type { Prisma } from '@prisma/client'
 
 export const DOT_BASE_DURATION = 1000 * 60 * 60 * 24 * 14 // 14 days
 
 export const DotWrapperWithDotsIncluder = {
-    dots: true,
+    dots: {
+        orderBy: {
+            expiresAt: 'desc'
+        }
+    },
     user: {
         select: {
             firstname: true,

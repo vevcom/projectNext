@@ -40,12 +40,12 @@ export default function EventTagsAdmin({
 
     const removeFromUrl = (tag: string) => (selectedTags.length === 1 ?
         baseUrl :
-        baseUrl + '?' + QueryParams.eventTags.encodeUrl(
+        `${baseUrl}?${QueryParams.eventTags.encodeUrl(
             selectedTags.filter(t => t.name !== tag).map(t => t.name)
-        ))
-    const addToUrl = (tag: string) => baseUrl + '?' + QueryParams.eventTags.encodeUrl(
+        )}`)
+    const addToUrl = (tag: string) => `${baseUrl}?${QueryParams.eventTags.encodeUrl(
         [...selectedTags.map(t => t.name), tag]
-    )
+    )}`
     return (
         <div className={styles.EventTagsAdmin}>
             <h1>Tagger</h1>

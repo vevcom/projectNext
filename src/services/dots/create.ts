@@ -1,8 +1,8 @@
 import 'server-only'
-import { ServiceMethodHandler } from "../ServiceMethodHandler";
-import { DOT_BASE_DURATION } from "./ConfigVars";
-import { createDotValidation } from "./validation";
-import { Dots } from '.';
+import { Dots } from '.'
+import { DOT_BASE_DURATION } from './ConfigVars'
+import { createDotValidation } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 export const create = ServiceMethodHandler({
     withData: true,
@@ -12,10 +12,11 @@ export const create = ServiceMethodHandler({
         const activeDots = await Dots.readForUser.client(prisma).execute(
             { params: { userId: data.userId, onlyActive: true }, session }, { withAuth: true }
         )
-        
+
         const dotData : { expiresAt: Date }[] = []
         let prevExpiresAt = activeDots.length > 0 ? activeDots[activeDots.length - 1].expiresAt : new Date()
         for (let i = 0; i < value; i++) {
+            //TODO: Take freezes into account
             const expiresAt = new Date(prevExpiresAt.getTime() + DOT_BASE_DURATION)
             dotData.push({ expiresAt })
             prevExpiresAt = expiresAt
@@ -28,8 +29,8 @@ export const create = ServiceMethodHandler({
                 }
             })
             await tx.dot.createMany({
-                data: dotData.map(data => ({
-                    ...data,
+                data: dotData.map(dd => ({
+                    ...dd,
                     dotWrapperId: wrapper.id
                 }))
             })

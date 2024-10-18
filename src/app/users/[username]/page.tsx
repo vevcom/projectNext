@@ -1,5 +1,4 @@
 import styles from './page.module.scss'
-import Image from '@/components/Image/Image'
 import { readSpecialImage } from '@/services/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/services/groups/committees/read'
@@ -7,14 +6,14 @@ import { readUserProfileAction } from '@/actions/users/read'
 import { sexConfig } from '@/services/users/ConfigVars'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
+import { Session } from '@/auth/Session'
+import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import ProfilePicture from '@/app/_components/User/ProfilePicture'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
-import { Session } from '@/auth/Session'
-import { UserProfileUpdateAuther } from '@/services/users/Authers'
-import ProfilePicture from '@/app/_components/User/ProfilePicture'
 
 type PropTypes = {
     params: {

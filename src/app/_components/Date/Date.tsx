@@ -1,5 +1,5 @@
 'use client'
-import { displayDate } from "@/dates/displayDate"
+import { displayDate } from '@/dates/displayDate'
 
 type PropTypes = {
     date: Date

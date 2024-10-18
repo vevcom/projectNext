@@ -1,14 +1,14 @@
 'use client'
-import useClickOutsideRef from "@/hooks/useClickOutsideRef"
-import { Profile } from "@/services/users/Types"
-import { faCog, faDotCircle, faMoneyBill, faSignOut, faUser } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import Link from "next/link"
-import { useState } from "react"
-import styles from "./UserNavigation.module.scss"
-import ProfilePicture from "../User/ProfilePicture"
-import BorderButton from "../UI/BorderButton"
-import useOnNavigation from "@/hooks/useOnNavigation"
+import styles from './UserNavigation.module.scss'
+import ProfilePicture from '@/components/User/ProfilePicture'
+import BorderButton from '@/UI/BorderButton'
+import useClickOutsideRef from '@/hooks/useClickOutsideRef'
+import useOnNavigation from '@/hooks/useOnNavigation'
+import { faCog, faDotCircle, faMoneyBill, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
+import { useState } from 'react'
+import type { Profile } from '@/services/users/Types'
 
 type PropTypes = {
     profile: Profile | null
@@ -18,7 +18,7 @@ type PropTypes = {
  * This component either renders an empty link with a href to /login page if there is no profile
  * Else it renders a usefull component for a logged in user.
  * @param profile - The profile of the user
- * @returns 
+ * @returns
  */
 export default function UserNavigation({ profile }: PropTypes) {
     const [isMenuOpen, setIsMenuOpen] = useState(false)

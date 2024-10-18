@@ -1,14 +1,13 @@
-import { notFound } from "next/navigation"
-import { PropTypes } from "./getProfileForAdmin"
-import { Session } from "@/auth/Session"
-import { readUserProfileAction } from "@/actions/users/read"
-import { unwrapActionReturn } from "@/app/redirectToErrorPage"
 import styles from './layout.module.scss'
-import { ReactNode } from "react"
-import PageWrapper from "@/app/_components/PageWrapper/PageWrapper"
-import Nav from "./Nav"
-import BorderButton from "@/app/_components/UI/BorderButton"
-import Link from "next/link"
+import Nav from './Nav'
+import { Session } from '@/auth/Session'
+import { readUserProfileAction } from '@/actions/users/read'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import type { ReactNode } from 'react'
+import type { PropTypes } from './getProfileForAdmin'
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
     const session = await Session.fromNextAuth()

@@ -8,7 +8,7 @@ import SpecialCmsImageClient from '@/components/Cms/CmsImage/SpecialCmsImageClie
  * thus the error is encoded in a normal Error object
  * Look at redirectToErrorPage to how it is implemented.
 */
-export default function ErrorBoundary({ error, reset }: {error: unknown, reset: () => void}) {        
+export default function ErrorBoundary({ error, reset }: {error: unknown, reset: () => void}) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.info}>
