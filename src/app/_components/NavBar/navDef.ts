@@ -54,7 +54,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'For Bedrifter',
-        href: '/contactor',
+        href: '/career',
         show: 'loggedOut',
         icon: faSuitcase,
     },
@@ -75,6 +75,12 @@ export const itemsForMenu: NavItem[] = [
         href: '/ombul',
         show: 'all',
         icon: faBook,
+    },
+    {
+        name: 'Karriere',
+        href: '/career',
+        show: 'loggedIn',
+        icon: faSuitcase,
     },
     {
         name: 'Nyheter',
