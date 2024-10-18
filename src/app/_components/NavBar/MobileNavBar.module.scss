@@ -23,7 +23,8 @@
             height: 25px;
         }
         &.magicHat {
-            > * {
+            position: relative;
+            > .image {
                 filter: invert(1);
             }
         }

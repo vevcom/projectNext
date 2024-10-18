@@ -3,7 +3,7 @@ import styles from './AddUsersToGroup.module.scss'
 import UserList from '@/components/User/UserList/UserList'
 import Form from '@/components/Form/Form'
 import { createMembershipsForGroupAction } from '@/actions/groups/memberships/create'
-import { UserSelectionContext } from '@/contexts/UserSelection'
+import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/contexts/PopUp'
@@ -15,7 +15,7 @@ type PropTypes = {
 
 export default function AddUsersToGroup({ groupId, closePopUpOnSuccess }: PropTypes) {
     const { refresh } = useRouter()
-    const selectedUsersCtx = useContext(UserSelectionContext)
+    const selectedUsersCtx = useContext(UsersSelectionContext)
     const users = selectedUsersCtx?.users || []
 
     return (

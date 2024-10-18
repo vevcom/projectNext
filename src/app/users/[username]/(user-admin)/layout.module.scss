@@ -1,0 +1,15 @@
+@use '@/styles/ohma';
+
+.userAdminLayout {
+    position: relative;
+    main {
+        margin-top: 1em;
+    }
+}
+
+.toProfile {
+    position: fixed;
+    top: 100px;
+    left: 50px;
+    @include ohma.borderBtn(ohma.$colors-secondary);
+}

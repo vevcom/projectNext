@@ -1,0 +1,84 @@
+@use '@/styles/ohma';
+
+.UserNavigation {
+    @include ohma.screenLg {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transform: translateY(calc(100% + .5em));
+        min-width: 300px;
+        max-height: 90vh;
+        @include ohma.boxShadow();
+        @include ohma.round();
+    }
+    @include ohma.screenMobile {
+        z-index: -1;
+        padding: 1em;
+        padding-top: 3em;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 50px);
+    }
+    background-color: ohma.$colors-gray-200;
+    h2 {
+        color: ohma.$colors-black;
+        font-size: ohma.$fonts-xl;
+    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .logout {
+        margin-top: .5em;
+        width: 100%;
+        > button {
+            width: 100%;
+            margin: 0;
+        }
+    }
+
+    .navs {
+        margin-top: 1em;
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        gap: 1em;
+        > * {
+            flex: 1 1 calc(50% - 1em);
+            @include ohma.round();
+            background-color: ohma.$colors-secondary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: ohma.$colors-white;
+            transition: color .6s;
+            svg {
+                width: 20px;
+                height: 20px;
+                color: ohma.$colors-white;
+                transition: color .6s;
+                margin: .3em;
+            }
+            &:hover {
+                color: ohma.$colors-black;
+                svg {
+                    color: ohma.$colors-black;
+                }
+            }
+        }
+    }
+}
+
+.hidden {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    &:hover {
+        cursor: pointer;
+    }
+}

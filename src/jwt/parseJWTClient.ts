@@ -5,6 +5,7 @@ import { JWT_ISSUER } from '@/auth/ConfigVars'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaId } from '@/services/omegaid/Types'
+import { createActionError } from '@/actions/error'
 
 /**
  * Parses a JSON Web Token (JWT) and verifies its signature using the provided public key.
@@ -19,13 +20,7 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
     // TODO: This only works in safari and firefox :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {
-        return {
-            success: false,
-            errorCode: 'JWT INVALID',
-            error: message ? [{
-                message
-            }] : []
-        }
+        return createActionError('JWT INVALID', message || 'Ugyldig QR kode')
     }
 
     if (timeOffset < 0) {

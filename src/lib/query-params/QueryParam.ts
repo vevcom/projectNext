@@ -9,7 +9,7 @@ export abstract class QueryParam<Type> {
 
     abstract encode(value: Type): string
     public encodeUrl(value: Type): string {
-        return `?${this.name}=${encodeURIComponent(this.encode(value))}`
+        return `${this.name}=${encodeURIComponent(this.encode(value))}`
     }
     abstract decodeValue(value: string | string[] | undefined): Type | null
     public decode(searchParams: SearchParamsServerSide['searchParams']): Type | null {
@@ -48,6 +48,32 @@ export class StringArrayQueryParam extends QueryParam<string[]> {
         }
         if (typeof value === 'string') {
             return value.split(',')
+        }
+        return null
+    }
+}
+
+export class BooleanQueryParam extends QueryParam<boolean> {
+    encode(value: boolean): string {
+        return value ? 'true' : 'false'
+    }
+
+    decodeValue(value: string | string[] | undefined): boolean | null {
+        if (typeof value === 'string') {
+            return value === 'true'
+        }
+        return null
+    }
+}
+
+export class NumberQueryParam extends QueryParam<number> {
+    encode(value: number): string {
+        return value.toString()
+    }
+
+    decodeValue(value: string | string[] | undefined): number | null {
+        if (typeof value === 'string') {
+            return parseInt(value, 10)
         }
         return null
     }

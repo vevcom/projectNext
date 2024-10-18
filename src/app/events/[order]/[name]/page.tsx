@@ -43,7 +43,7 @@ export default async function Event({ params }: PropTypes) {
                     <ul className={styles.tags}>
                         {event.tags.map(tag => (
                             <li key={tag.id}>
-                                <Link href={`/events${QueryParams.eventTags.encodeUrl([tag.name])}`}>
+                                <Link href={`/events?${QueryParams.eventTags.encodeUrl([tag.name])}`}>
                                     <EventTag eventTag={tag} />
                                 </Link>
                             </li>

@@ -4,7 +4,7 @@ import GroupMembers from './GroupMembers'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
 import { CanEasilyManageMembership } from '@/services/groups/memberships/ConfigVars'
 import PopUp from '@/components/PopUp/PopUp'
-import UserSelectionProvider from '@/contexts/UserSelection'
+import UsersSelectionProvider from '@/contexts/UsersSelection'
 import { readGroupExpandedAction } from '@/actions/groups/read'
 import Link from 'next/link'
 
@@ -60,9 +60,9 @@ export default async function GroupAdmin({ params }: PropTypes) {
                                     partOfName: ''
                                 }}
                             >
-                                <UserSelectionProvider>
+                                <UsersSelectionProvider>
                                     <AddUsersToGroup groupId={group.id} closePopUpOnSuccess={`Add user ${group.id}`} />
-                                </UserSelectionProvider>
+                                </UsersSelectionProvider>
                             </UserPagingProvider>
                         </PopUp>
                     ) : (

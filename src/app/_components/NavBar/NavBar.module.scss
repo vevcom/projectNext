@@ -30,15 +30,7 @@
             }
         }
         .magicHat {
-            a {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: calc(-1*ohma.$rounding);
-                left: calc(-1*ohma.$rounding);
-                width: calc(100% + 2*ohma.$rounding);
-                height: calc(100% + 2*ohma.$rounding);
-            }
+            position: relative;
             @include ohma.btn(ohma.$colors-primary);
         }
     }
