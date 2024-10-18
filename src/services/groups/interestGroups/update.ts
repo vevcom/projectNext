@@ -1,17 +1,12 @@
-import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
-import type { ExpandedInterestGroup } from './Types'
+import 'server-only'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { updateInterestGroupValidation } from './validation'
 
-type CreateInterestGroupArgs = {
-    name: string,
-    shortName: string,
-}
-
-export async function updateInterestGroup(id: number, data: CreateInterestGroupArgs): Promise<ExpandedInterestGroup> {
-    return await prismaCall(() => prisma.interestGroup.update({
-        where: {
-            id,
-        },
+export const update = ServiceMethodHandler({
+    withData: true,
+    validation: updateInterestGroupValidation,
+    handler: async (prisma, { id }: { id: number }, data) => prisma.interestGroup.update({
+        where: { id },
         data,
-    }))
-}
+    })
+})

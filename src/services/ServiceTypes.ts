@@ -172,8 +172,13 @@ type ServiceMethodHandlerAuthConfig<
     DynamicFields extends object,
 > = {
     auther: AutherStaticFieldsBound<DynamicFields, 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'>
+} & ({
     dynamicFields: (dataParams: DynamicFieldsInput<WithValidation, Params, DetailedType>) => DynamicFields
-}
+    dynamicFieldsAsync?: never
+} | {
+    dynamicFieldsAsync: (dataParams: DynamicFieldsInput<WithValidation, Params, DetailedType>) => Promise<DynamicFields>
+    dynamicFields?: never
+})
 
 export type ServiceMethodConfig<
     WithValidation extends boolean,
