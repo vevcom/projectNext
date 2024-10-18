@@ -43,6 +43,8 @@ enum SpecialCmsParagraph {
   FRONTPAGE_2
   FRONTPAGE_3
   FRONTPAGE_4
+
+  CAREER_INFO
 }
 
 model CmsParagraph {
