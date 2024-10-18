@@ -5,8 +5,8 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
-import type { ExpandedMembership } from './Types'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
+import type { ExpandedMembership } from './Types'
 
 export async function createMembershipForUser(
     groupId: number,

@@ -1,7 +1,7 @@
 import 'server-only'
-import type { ExpandedInterestGroup } from './Types'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import type { ExpandedInterestGroup } from './Types'
 
 type ReadInterestGroupArgs = {
     id?: number,
@@ -25,17 +25,15 @@ export const readAll = ServiceMethodHandler({
 
 export const read = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, { id, shortName }: ReadInterestGroupArgs) => {
-        return await prisma.interestGroup.findUniqueOrThrow({
-            where: {
-                id,
-                shortName,
+    handler: async (prisma, { id, shortName }: ReadInterestGroupArgs) => await prisma.interestGroup.findUniqueOrThrow({
+        where: {
+            id,
+            shortName,
+        },
+        include: {
+            articleSection: {
+                include: articleSectionsRealtionsIncluder,
             },
-            include: {
-                articleSection: {
-                    include: articleSectionsRealtionsIncluder,
-                },
-            }
-        })
-    }
+        }
+    })
 })

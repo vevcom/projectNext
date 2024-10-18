@@ -1,6 +1,6 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { updateInterestGroupValidation } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 export const update = ServiceMethodHandler({
     withData: true,

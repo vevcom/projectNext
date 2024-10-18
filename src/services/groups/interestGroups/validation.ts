@@ -1,5 +1,5 @@
-import { ValidationBase } from "@/services/Validation";
-import { z } from "zod";
+import { ValidationBase } from '@/services/Validation'
+import { z } from 'zod'
 
 const baseInterestGroupValidation = new ValidationBase({
     type: {

@@ -1,12 +1,10 @@
-import { readInterestGroupsAction } from "@/actions/groups/interestGroups/read";
-import SpecialCmsParagraph from "@/cms/CmsParagraph/SpecialCmsParagraph";
-import PageWrapper from "@/components/PageWrapper/PageWrapper";
-import ArticleSection from "@/components/Cms/ArticleSection/ArticleSection";
-import styles from './page.module.scss'
-import { AddHeaderItemPopUp } from "@/components/HeaderItems/HeaderItemPopUp";
-import CreateInterestGroupForm from "./CreateInterestGroupForm";
-import { CreateInterestGroupAuther } from "@/services/groups/interestGroups/Auther";
-import InterestGroup from "./InterestGroup";
+import CreateInterestGroupForm from './CreateInterestGroupForm'
+import InterestGroup from './InterestGroup'
+import { readInterestGroupsAction } from '@/actions/groups/interestGroups/read'
+import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import { CreateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 
 export default async function InterestGroups() {
     const { session, ...interestGroupsRes } = await readInterestGroupsAction.bind(null, {})()
@@ -25,11 +23,11 @@ export default async function InterestGroups() {
         }>
             <SpecialCmsParagraph special="INTEREST_GROUP_GENERAL_INFO" />
             <main>
-            {
-                interestGroups.map(interestGroup => (
-                    <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
-                ))
-            }
+                {
+                    interestGroups.map(interestGroup => (
+                        <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
+                    ))
+                }
             </main>
         </PageWrapper>
     )
