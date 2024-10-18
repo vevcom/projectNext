@@ -160,6 +160,10 @@ export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
         name: 'frontpage_4_paragraph',
         file: 'frontpage/frontpage_4.md'
     },
+    INTEREST_GROUP_GENERAL_INFO: {
+        name: 'interest_group_general_info',
+        file: 'interest_groups/general_info.md'
+    }
 }
 
 
