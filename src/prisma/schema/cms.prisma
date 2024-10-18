@@ -64,6 +64,10 @@ model CmsParagraph {
   Committee        Committee?
 }
 
+enum SpecialCmsLink {
+  CAREER_LINK_TO_CONTACTOR
+}
+
 model CmsLink {
   id               Int             @id @default(autoincrement())
   name             String          @unique @default(cuid())
@@ -71,6 +75,7 @@ model CmsLink {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   text             String          @default("Link")
+  special          SpecialCmsLink? @unique
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
   School           School[]
