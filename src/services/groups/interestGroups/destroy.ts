@@ -1,10 +1,11 @@
-import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import 'server-only'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
-export async function destroyInterestGroup(id: number): Promise<void> {
-    await prismaCall(() => prisma.interestGroup.delete({
-        where: {
-            id,
-        },
-    }))
-}
+export const destroy = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, { id }: { id: number }) => {
+        await prisma.interestGroup.delete({
+            where: { id }
+        })
+    }
+})

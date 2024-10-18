@@ -7,4 +7,4 @@ export const CreateInterestGroupAuther = RequirePermission.staticFields({ permis
 
 export const UpdateInterestGroupAuther = RequirePermissionOrGroupAdmin.staticFields({ permission: 'INTEREST_GROUP_ADMIN' })
 
-export const DestroyInterestGroupAuther = RequirePermissionOrGroupAdmin.staticFields({ permission: 'INTEREST_GROUP_ADMIN' })
+export const DestroyInterestGroupAuther = RequirePermission.staticFields({ permission: 'INTEREST_GROUP_ADMIN' })
