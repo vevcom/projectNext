@@ -3,6 +3,7 @@ import { readCurrentGroupOrder } from '@/services/groups/read'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedMembership } from './Types'
+import { invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 
 export async function updateMembership({
     groupId,
@@ -18,7 +19,7 @@ export async function updateMembership({
 }): Promise<ExpandedMembership> {
     const order = (orderArg && typeof orderArg === 'number') ? orderArg : await readCurrentGroupOrder(groupId)
 
-    return await prismaCall(() => prisma.membership.update({
+    const membership = await prismaCall(() => prisma.membership.update({
         where: {
             userId_groupId_order: {
                 groupId,
@@ -28,4 +29,6 @@ export async function updateMembership({
         },
         data
     }))
+    invalidateOneUserSessionData(userId)
+    return membership
 }

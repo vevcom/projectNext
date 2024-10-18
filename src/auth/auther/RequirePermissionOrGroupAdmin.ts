@@ -6,6 +6,7 @@ export const RequirePermissionOrGroupAdmin = AutherFactory<
     { groupId: number },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'
 >(({ session, staticFields, dynamicFields }) => {
+    console.log('RequirePermissionOrGroupAdmin', session, staticFields, dynamicFields)
     return {
         success: session.permissions.includes(staticFields.permission) || session.memberships.some(
             membersip => membersip.groupId === dynamicFields.groupId && membersip.admin
