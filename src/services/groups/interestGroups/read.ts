@@ -15,7 +15,11 @@ export const readAll = ServiceMethodHandler({
             articleSection: {
                 include: articleSectionsRealtionsIncluder,
             },
-        }
+        },
+        orderBy: [
+            { name: 'asc' },
+            { id: 'asc' },
+        ]
     })
 })
 

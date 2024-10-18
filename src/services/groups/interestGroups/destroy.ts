@@ -1,9 +1,8 @@
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import type { ExpandedInterestGroup } from './Types'
 
-export async function destroyInterestGroup(id: number): Promise<ExpandedInterestGroup> {
-    return await prismaCall(() => prisma.interestGroup.delete({
+export async function destroyInterestGroup(id: number): Promise<void> {
+    await prismaCall(() => prisma.interestGroup.delete({
         where: {
             id,
         },
