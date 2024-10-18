@@ -1,0 +1,8 @@
+@use '@/styles/ohma';
+
+.interestGroup {
+    margin-top: 2rem;
+    h2 {
+        font-size: ohma.$fonts-xl;
+    }
+}

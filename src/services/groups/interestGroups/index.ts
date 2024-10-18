@@ -1,3 +1,4 @@
+import 'server-only'
 import { ServiceMethod } from "@/services/ServiceMethod";
 import { ReadInterestGroupAuther } from "./Auther";
 import { read, readAll } from "./read";

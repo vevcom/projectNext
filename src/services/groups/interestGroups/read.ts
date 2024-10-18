@@ -1,4 +1,4 @@
-import { prismaCall } from '@/services/prismaCall'
+import 'server-only'
 import type { ExpandedInterestGroup } from './Types'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
