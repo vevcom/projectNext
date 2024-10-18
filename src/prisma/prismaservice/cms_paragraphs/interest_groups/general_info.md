@@ -1,4 +1,3 @@
-# Hva er interessegrupper?
 Har du en interesse du har lyst til å dele med andre? Interessegrupper er noe vi har startet for at det skal være lettere for deg å samle folk rundt en felles interesse.
 
 **Hva er en interessegruppe?** En interessegruppe er en gruppe med studenter som møtes for å snakke om eller dyrke en interesse. En interessegruppe kan omhandle akkurat det du interesserer deg for som du ønsker å dele med andre. Er det noe du føler mangler av tilbud i studenttilværelsen, er det godt mulig at interessegrupper er noe for deg!
