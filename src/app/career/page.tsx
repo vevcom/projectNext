@@ -8,9 +8,9 @@ import { readSpecialImageAction } from '@/actions/images/read'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction('HOVEDBYGGNINGEN')
-    const eventImageRes = await readSpecialImageAction('HOVEDBYGGNINGEN')
-    const comanyImageRes = await readSpecialImageAction('HOVEDBYGGNINGEN')
+    const jobAdImageRes = await readSpecialImageAction('ENGINEER')
+    const eventImageRes = await readSpecialImageAction('FAIR')
+    const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null
     const companyImage = comanyImageRes.success ? comanyImageRes.data : null
