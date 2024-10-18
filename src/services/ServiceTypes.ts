@@ -147,6 +147,7 @@ export type ServiceMethodHandlerConfig<
     ) => Promise<Return>,
 } : {
     withData: false,
+    wantsToOpenTransaction?: WantsToOpenTransaction,
     handler: (
         prisma: PrismaPossibleTransaction<WantsToOpenTransaction>,
         params: Params,
