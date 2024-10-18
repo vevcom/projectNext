@@ -1,21 +1,37 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
 import type { ExpandedInterestGroup } from './Types'
-
-export async function readInterestGroups(): Promise<ExpandedInterestGroup[]> {
-    return await prismaCall(() => prisma.interestGroup.findMany())
-}
+import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 type ReadInterestGroupArgs = {
     id?: number,
     shortName?: string,
 }
 
-export async function readInterestGroup({ id, shortName }: ReadInterestGroupArgs): Promise<ExpandedInterestGroup> {
-    return await prismaCall(() => prisma.interestGroup.findUniqueOrThrow({
-        where: {
-            id,
-            shortName,
+export const readAll = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
+        include: {
+            articleSection: {
+                include: articleSectionsRealtionsIncluder,
+            },
         }
-    }))
-}
+    })
+})
+
+export const read = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, { id, shortName }: ReadInterestGroupArgs) => {
+        return await prisma.interestGroup.findUniqueOrThrow({
+            where: {
+                id,
+                shortName,
+            },
+            include: {
+                articleSection: {
+                    include: articleSectionsRealtionsIncluder,
+                },
+            }
+        })
+    }
+})
