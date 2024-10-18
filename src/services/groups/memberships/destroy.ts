@@ -4,6 +4,7 @@ import { readCurrentGroupOrder } from '@/services/groups/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
+import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import type { ExpandedMembership } from './Types'
 
 export async function destoryMembershipOfUser({
@@ -20,7 +21,7 @@ export async function destoryMembershipOfUser({
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
-    return await prismaCall(() => prisma.membership.delete({
+    const membership = await prismaCall(() => prisma.membership.delete({
         where: {
             userId_groupId_order: {
                 groupId,
@@ -29,6 +30,8 @@ export async function destoryMembershipOfUser({
             }
         },
     }))
+    await invalidateOneUserSessionData(userId)
+    return membership
 }
 
 export async function destroyMembershipOfUsers(
@@ -50,4 +53,5 @@ export async function destroyMembershipOfUsers(
             order,
         },
     }))
+    invalidateManyUserSessionData(userIds)
 }
