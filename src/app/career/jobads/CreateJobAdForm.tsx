@@ -14,7 +14,7 @@ export default function CreateJobAdForm() {
         <div className={`${styles.CreateJobAdForm}`}>
             <Form
                 title="Lag en ny stillingsannonse"
-                submitText="Create job ad"
+                submitText="Opprett"
                 action={createJobAdAction}
                 successCallback={refresh}
             >
