@@ -1,7 +1,7 @@
 
 import styles from './page.module.scss'
 import EditJobAd from './EditJobAd'
-import { readJobAdAction } from '@/actions/jobAds/read'
+import { readJobAdAction } from '@/actions/career/jobAds/read'
 import Article from '@/components/Cms/Article/Article'
 import { notFound } from 'next/navigation'
 

@@ -1,13 +1,13 @@
 'use client'
 import styles from './EditJobAd.module.scss'
 import Form from '@/components/Form/Form'
-import { updateJobAdAction } from '@/actions/jobAds/update'
-import { destroyJobAdAction } from '@/actions/jobAds/destroy'
+import { updateJobAdAction } from '@/actions/career/jobAds/update'
+import { destroyJobAdAction } from '@/actions/career/jobAds/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import type { ExpandedJobAd } from '@/services/jobAds/Types'
+import type { ExpandedJobAd } from '@/services/career/jobAds/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

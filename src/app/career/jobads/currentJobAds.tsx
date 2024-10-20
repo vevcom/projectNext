@@ -1,5 +1,5 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readJobAdsCurrentAction } from '@/actions/jobAds/read'
+import { readJobAdsCurrentAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {
     not?: number

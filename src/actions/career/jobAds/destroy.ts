@@ -1,9 +1,9 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { destroyJobAd } from '@/services/jobAds/destroy'
+import { destroyJobAd } from '@/services/career/jobAds/destroy'
 import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
-import type { SimpleJobAd } from '@/services/jobAds/Types'
+import type { SimpleJobAd } from '@/services/career/jobAds/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function destroyJobAdAction(id: number): Promise<ActionReturn<Omit<SimpleJobAd, 'coverImage'>>> {
