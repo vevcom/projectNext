@@ -1,6 +1,6 @@
 import 'server-only'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { readSpecial } from './read'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const CmsLinks = {
     readSpacial: ServiceMethod({

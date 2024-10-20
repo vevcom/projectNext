@@ -1,4 +1,4 @@
-import { SpecialEventTags } from "@prisma/client";
+import type { SpecialEventTags } from '@prisma/client'
 
 export const SpecialEventTagsConfig = {
     COMPANY_PRESENTATION: {
@@ -8,8 +8,8 @@ export const SpecialEventTagsConfig = {
         colorG: 0,
         colorB: 0
     }
-} satisfies Record<SpecialEventTags, { 
-    name: string; 
+} satisfies Record<SpecialEventTags, {
+    name: string;
     description: string;
     colorR: number;
     colorG: number;

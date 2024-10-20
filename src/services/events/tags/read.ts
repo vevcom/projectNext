@@ -1,10 +1,8 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { SpecialEventTags } from '@prisma/client'
-import logger from '@/logger'
-import EventTagsAdmin from '@/app/_components/Event/EventTagsAdmin'
-import { EventTags } from '.'
 import { SpecialEventTagsConfig } from './ConfigVars'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import logger from '@/logger'
+import type { SpecialEventTags } from '@prisma/client'
 
 export const read = ServiceMethodHandler({
     withData: false,
@@ -32,6 +30,7 @@ export const readSpecial = ServiceMethodHandler({
                 }
             })
         }
+        return tag
     }
 })
 

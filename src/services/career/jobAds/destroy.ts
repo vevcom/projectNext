@@ -15,5 +15,5 @@ export const destroy = ServiceMethodHandler({
             where: { id },
         })
         await destroyArticle(jobAd.articleId)
-    } 
+    }
 })

@@ -1,10 +1,10 @@
 import 'server-only'
-import { ServiceMethod } from "@/services/ServiceMethod";
-import { CreateJobAdAuther, DestroyJobAdAuther, ReadJobAdAuther, UpdateJobAdAuther } from "./Authers";
-import { read, readCurrent } from "./read";
-import { create } from './create';
-import { update } from './update';
-import { destroy } from './destroy';
+import { CreateJobAdAuther, DestroyJobAdAuther, ReadJobAdAuther, UpdateJobAdAuther } from './Authers'
+import { read, readCurrent } from './read'
+import { create } from './create'
+import { update } from './update'
+import { destroy } from './destroy'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const JobAds = {
     read: ServiceMethod({

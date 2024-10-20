@@ -1,4 +1,4 @@
-import { RequirePermission } from "@/auth/auther/RequirePermission";
+import { RequirePermission } from '@/auth/auther/RequirePermission'
 
 export const CreateJobAdAuther = RequirePermission.staticFields({ permission: 'JOBAD_CREATE' })
 export const ReadJobAdAuther = RequirePermission.staticFields({ permission: 'JOBAD_READ' })

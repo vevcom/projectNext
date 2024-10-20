@@ -1,8 +1,8 @@
 import 'server-only'
 import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
 import { ServerError } from '@/services/error'
-import type { ExpandedJobAd, SimpleJobAd } from './Types'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import type { ExpandedJobAd, SimpleJobAd } from './Types'
 
 /**
  * This handler reads a jobAd by id or articleName and order
@@ -51,5 +51,5 @@ export const readCurrent = ServiceMethodHandler({
             ...ad,
             coverImage: ad.article.coverImage.image
         }))
-    } 
+    }
 })

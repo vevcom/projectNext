@@ -5,10 +5,8 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 export const update = ServiceMethodHandler({
     withData: true,
     validation: updateJobAdValidation,
-    handler: async (prisma, { id }: { id: number }, data) => {
-        return await prisma.jobAd.update({
-            where: { id },
-            data,
-        })
-    }
+    handler: async (prisma, { id }: { id: number }, data) => await prisma.jobAd.update({
+        where: { id },
+        data,
+    })
 })
