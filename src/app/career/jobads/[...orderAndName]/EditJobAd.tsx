@@ -45,7 +45,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     <Textarea defaultValue={jobAd.description || ''} label="beskrivelse" name="description" />
                 </Form>
                 <Form
-                    action={destroyJobAdAction.bind(null, jobAd.id)}
+                    action={destroyJobAdAction.bind(null, { id: jobAd.id })}
                     navigateOnSuccess="/career/jobads"
                     submitText="slett annonse"
                     confirmation={{

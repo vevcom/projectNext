@@ -4,6 +4,11 @@ import { ServerError } from '@/services/error'
 import type { ExpandedJobAd, SimpleJobAd } from './Types'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
+/**
+ * This handler reads a jobAd by id or articleName and order
+ * @param idOrName - id or articleName and order of jobAd to read (id or {articleName: string, order: number})
+ * @returns ExpandedJobAd - the jobAd and its article
+ */
 export const read = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, { idOrName }: { idOrName: number | {
@@ -26,16 +31,20 @@ export const read = ServiceMethodHandler({
     }
 })
 
+/**
+ * This handler reads all current jobAds
+ * @returns SimpleJobAd[] - all jobAds with coverImage
+ */
 export const readCurrent = ServiceMethodHandler({
     withData: false,
     handler: async (prisma): Promise<SimpleJobAd[]> => {
-        console.log('readCurrent')
         const jobAds = await prisma.jobAd.findMany({
             orderBy: {
                 article: {
                     createdAt: 'desc',
                 },
             },
+            //TODO: only "current"
             include: simpleJobAdArticleRealtionsIncluder,
         })
         return jobAds.map(ad => ({

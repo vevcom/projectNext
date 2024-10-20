@@ -1,17 +1,5 @@
 'use server'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { destroyJobAd } from '@/services/career/jobAds/destroy'
-import { createActionError } from '@/actions/error'
-import { getUser } from '@/auth/getUser'
-import type { SimpleJobAd } from '@/services/career/jobAds/Types'
-import type { ActionReturn } from '@/actions/Types'
+import { ActionNoData } from "@/actions/Action"
+import { JobAds } from "@/services/career/jobAds"
 
-export async function destroyJobAdAction(id: number): Promise<ActionReturn<Omit<SimpleJobAd, 'coverImage'>>> {
-    //Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['JOBAD_DESTROY']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => destroyJobAd(id))
-}
+export const destroyJobAdAction = ActionNoData(JobAds.destroy)

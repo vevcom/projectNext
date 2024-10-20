@@ -1,9 +1,10 @@
 import 'server-only'
 import { ServiceMethod } from "@/services/ServiceMethod";
-import { CreateJobAdAuther, ReadJobAdAuther, UpdateJobAdAuther } from "./Authers";
+import { CreateJobAdAuther, DestroyJobAdAuther, ReadJobAdAuther, UpdateJobAdAuther } from "./Authers";
 import { read, readCurrent } from "./read";
 import { create } from './create';
 import { update } from './update';
+import { destroy } from './destroy';
 
 export const JobAds = {
     read: ServiceMethod({
@@ -33,5 +34,12 @@ export const JobAds = {
         auther: UpdateJobAdAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: update,
+    }),
+    destroy: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: DestroyJobAdAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: destroy,
     }),
 } as const
