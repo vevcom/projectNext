@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from '@/components/Image/Image'
 import { readSpecialImageAction } from '@/actions/images/read'
 import { readSpecialCmsLinkAction } from '@/actions/cms/links/read'
-import CmsLink from '../_components/Cms/CmsLink/CmsLink'
+import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()

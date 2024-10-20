@@ -11,8 +11,9 @@
         margin-top: 1em;
     }
     .links {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
         gap: 1em;
         > a {
             @include ohma.card;

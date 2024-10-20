@@ -42,7 +42,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Jobbannonser',
-        href: '/jobads',
+        href: '/career/jobads',
         show: 'loggedIn',
         icon: faBriefcase,
     },

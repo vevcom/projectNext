@@ -13,14 +13,14 @@ export default function CreateJobAdForm() {
     return (
         <div className={`${styles.CreateJobAdForm}`}>
             <Form
-                title="Create a job ad"
+                title="Lag en ny stillingsannonse"
                 submitText="Create job ad"
                 action={createJobAdAction}
                 successCallback={refresh}
             >
-                <TextInput label="title" name="articleName" key={uuid()}/>
-                <TextInput label="company" name="company" key={uuid()}/>
-                <TextInput label="description" name="description" key={uuid()}/>
+                <TextInput label="Tittel" name="articleName" key={uuid()}/>
+                <TextInput label="Bedrift" name="company" key={uuid()}/>
+                <TextInput label="Beskrivelse" name="description" key={uuid()}/>
             </Form>
         </div>
     )
