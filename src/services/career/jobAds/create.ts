@@ -1,34 +1,30 @@
 import 'server-only'
 import { createJobAdValidation } from './validation'
-import { jobAdArticleRealtionsIncluder } from './ConfigVars'
-import { prismaCall } from '@/services/prismaCall'
 import { createArticle } from '@/services/cms/articles/create'
-import prisma from '@/prisma'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import type { ExpandedJobAd } from './Types'
-import type { CreateJobAdTypes } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
-export async function createJobAd(rawdata: CreateJobAdTypes['Detailed']): Promise<ExpandedJobAd> {
-    const { articleName, company, description } = createJobAdValidation.detailedValidate(rawdata)
+export const create = ServiceMethodHandler({
+    withData: true,
+    validation: createJobAdValidation,
+    handler: async (prisma, _, { articleName, company, description }) => {
+        const article = await createArticle({ name: articleName })
 
-    const article = await createArticle({ name: articleName })
+        const currentOrder = await readCurrentOmegaOrder()
 
-    const currentOrder = await readCurrentOmegaOrder()
-
-    const jobAd = await prismaCall(() => prisma.jobAd.create({
-        data: {
-            company,
-            description,
-            article: {
-                connect: {
-                    id: article.id
+        return await prisma.jobAd.create({
+            data: {
+                company,
+                description,
+                article: {
+                    connect: {
+                        id: article.id
+                    }
+                },
+                omegaOrder: {
+                    connect: currentOrder,
                 }
             },
-            omegaOrder: {
-                connect: currentOrder,
-            }
-        },
-        include: jobAdArticleRealtionsIncluder,
-    }))
-    return jobAd
-}
+        })
+    }
+})

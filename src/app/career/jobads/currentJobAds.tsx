@@ -28,7 +28,8 @@ export default async function CurrentJobAds({ not }: PropTypes) {
                     image={ad.coverImage}
                     key={ad.id}
                 >
-                    <p>{ad.description}</p>
+                    <p>{ad.articleName}</p>
+                    <i>{ad.description}</i>
                 </ImageCard>
             )
         ) : (
