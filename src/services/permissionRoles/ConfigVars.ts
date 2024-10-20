@@ -441,6 +441,11 @@ export const PermissionConfig = {
         name: 'Les bedrifter',
         description: 'kan lese bedrifter',
         category: 'brukere'
+    },
+    DOTS_ADMIN: {
+        name: 'Prikkadministrator',
+        description: 'kan administrere prikker',
+        category: 'brukere'
     }
 } satisfies Record<Permission, PermissionInfo>
 

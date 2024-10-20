@@ -7,6 +7,8 @@ import Image from '@/components/Image/Image'
 import { readSpecialImageAction } from '@/actions/images/read'
 import { readSpecialCmsLinkAction } from '@/actions/cms/links/read'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
+import { readSpecialEventTagAction } from '@/actions/events/tags/read'
+import { QueryParams } from '@/lib/query-params/queryParams'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
@@ -16,10 +18,14 @@ export default async function CareerLandingPage() {
     const conactorCmsLinkRes = await readSpecialCmsLinkAction.bind(
         null, { special: 'CAREER_LINK_TO_CONTACTOR' }
     )()
+    const companyPresentationEventTagRes = await readSpecialEventTagAction.bind(
+        null, { special: 'COMPANY_PRESENTATION' }
+    )()
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null
     const companyImage = comanyImageRes.success ? comanyImageRes.data : null
     const contactorCmsLink = conactorCmsLinkRes.success ? conactorCmsLinkRes.data : null
+    const companyPresentationEventTag = companyPresentationEventTagRes.success ? companyPresentationEventTagRes.data : null
 
     return (
         <PageWrapper title={session.user ? 'Karriere' : 'For bedrifter'} headerItem={ 
@@ -35,7 +41,9 @@ export default async function CareerLandingPage() {
                             width={300} image={jobAdImage} /> : <></> }
                         <h2>Jobbanonser</h2>
                     </Link>
-                    <Link href="/career/events">
+                    <Link href={`/events?${QueryParams.eventTags.encodeUrl(
+                        companyPresentationEventTag ? [companyPresentationEventTag.name] : []
+                        )}`}>
                         { eventImage ? <Image 
                             imageContainerClassName={styles.linkImage} 
                             width={300} image={eventImage} /> : <></> }

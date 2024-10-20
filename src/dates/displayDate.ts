@@ -4,7 +4,10 @@
  * @returns
  */
 export function displayDate(date: Date): string {
-    return date.toLocaleString('nb-NO', {
+    const offset = date.getTimezoneOffset()
+    const clientOffset = new Date().getTimezoneOffset()
+    const diff = offset - clientOffset
+    return new Date(date.getTime() + diff * 60 * 1000).toLocaleString('nb-NO', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',

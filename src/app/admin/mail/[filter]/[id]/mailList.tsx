@@ -8,6 +8,7 @@ import type { ActionReturn } from '@/actions/Types'
 import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'
+import { createActionError } from '@/actions/error'
 
 const typeDisplayName: Record<MailListTypes, string> = {
     alias: 'Alias',
@@ -49,11 +50,7 @@ export default function MailList<T extends MailListTypes>({
 
                 setItemsState(itemsState.filter(i => i.id !== id))
             }
-            return {
-                success: false,
-                errorCode: 'BAD PARAMETERS',
-                error: [{ message: 'Destory function is not set' }],
-            }
+            return createActionError('BAD PARAMETERS', 'No destroy function')
         }
     }
 

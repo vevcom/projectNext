@@ -1,0 +1,31 @@
+model DotWrapper {
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(name: "dot_user", fields: [userId], references: [id])
+  userId    Int
+  reason    String
+  accuser   User   @relation(name: "dot_accuser", fields: [accuserId], references: [id])
+  accuserId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dots      Dot[]
+}
+
+model Dot {
+  id        Int        @id @default(autoincrement())
+  wrapper   DotWrapper @relation(fields: [dotWrapperId], references: [id])
+  expiresAt DateTime
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  dotWrapperId Int
+}
+
+model DotFreezePeriod {
+  id        Int      @id @default(autoincrement())
+  start     DateTime
+  end       DateTime
+  reason    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
