@@ -27,16 +27,14 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
     const canEdit = useEditing({})
     if (!canEdit) return children
 
-    const updateAction = updateJobAdAction.bind(null, jobAd.id)
+    const updateAction = updateJobAdAction.bind(null, {id: jobAd.id})
 
     return (
         <div className={styles.EditJobAd}>
             <div className={styles.update}>
                 <Form
                     action={updateAction}
-                    successCallback={(data) => {
-                        push(`/jobads/${data?.orderPublished}/${data?.articleName}`)
-                    }}
+                    navigateOnSuccess={(data) => `/career/jobads/${data?.orderPublished}/${data?.articleName}`}
                     submitText="oppdater"
                 >
                     <TextInput
@@ -48,9 +46,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                 </Form>
                 <Form
                     action={destroyJobAdAction.bind(null, jobAd.id)}
-                    successCallback={() => {
-                        push('/jobads')
-                    }}
+                    navigateOnSuccess="/career/jobads"
                     submitText="slett annonse"
                     confirmation={{
                         confirm: true,
