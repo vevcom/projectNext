@@ -17,7 +17,9 @@ export default async function JobAd({ params }: PropTypes) {
     const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
     const name = decodeURIComponent(params.orderAndName[1])
 
-    const jobAdRes = await readJobAdAction({ articleName: name, order })
+    const jobAdRes = await readJobAdAction.bind(null, ({
+        idOrName: { articleName: name, order }
+    }))()
     if (!jobAdRes.success) {
         if (jobAdRes.errorCode === 'NOT FOUND') notFound()
         throw new Error('Failed to read jobAd')

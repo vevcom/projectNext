@@ -1,5 +1,5 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readJobAdsCurrentAction } from '@/actions/career/jobAds/read'
+import { readCurrentJobAdsAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {
     not?: number
@@ -9,7 +9,8 @@ type PropTypes = {
  * @param not - pass it not: a id of a jobad to exclude from the list
  */
 export default async function CurrentJobAds({ not }: PropTypes) {
-    const res = await readJobAdsCurrentAction()
+    const res = await readCurrentJobAdsAction.bind(null, {})()
+    console.log(res)
     if (!res.success) {
         throw res.error ?
             new Error(res.error[0].message) :
@@ -22,7 +23,7 @@ export default async function CurrentJobAds({ not }: PropTypes) {
         jobAds.length ? (
             jobAds.map(ad =>
                 <ImageCard
-                    href={`/jobads/${ad.orderPublished}/${ad.articleName}`}
+                    href={`/career/jobads/${ad.orderPublished}/${ad.articleName}`}
                     title={ad.company}
                     image={ad.coverImage}
                     key={ad.id}
