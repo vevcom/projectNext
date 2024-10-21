@@ -63,6 +63,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         label="Aktiv"
                         name="active"
                         defaultChecked={jobAd.active}
+                        color='primary'
                     />
                 </Form>
                 <Form

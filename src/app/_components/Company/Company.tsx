@@ -9,6 +9,7 @@ import Form from "@/components/Form/Form"
 import { updateComanyAction } from "@/actions/career/companies/update"
 import TextInput from "../UI/TextInput"
 import { destroyCompanyAction } from "@/actions/career/companies/destroy"
+import SelectCompany from "./SelectCompany"
 
 type PropTypes = {
     company: CompanyExpanded,
@@ -56,6 +57,7 @@ export default function Company({ company, asClient, session }: PropTypes) {
                     ) : <></>
                 }
             </div>
+            <SelectCompany company={company} />
         </div>
     )
 }

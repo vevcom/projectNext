@@ -9,7 +9,7 @@ export const baseJobAdValidation = new ValidationBase({
         articleName: z.string(),
         description: z.string().or(z.literal('')),
         type: z.nativeEnum(JobType),
-        applicationDeadline: z.date().or(z.literal('')).optional(),
+        applicationDeadline: z.string().optional(),
         active: z.literal('on').optional(),
     },
     details: {
@@ -32,7 +32,7 @@ export const createJobAdValidation = baseJobAdValidation.createValidation({
     ],
     transformer: data => ({
         ...data,
-        applicationDeadline: data.applicationDeadline || undefined,
+        applicationDeadline: data.applicationDeadline ? new Date(data.applicationDeadline) : undefined,
     })
 
 })
@@ -48,7 +48,7 @@ export const updateJobAdValidation = baseJobAdValidation.createValidation({
     ],
     transformer: data => ({
         ...data,
-        applicationDeadline: data.applicationDeadline || undefined,
+        applicationDeadline: data.applicationDeadline ? new Date(data.applicationDeadline) : undefined,
         active: data.active === 'on',
     })
 })
