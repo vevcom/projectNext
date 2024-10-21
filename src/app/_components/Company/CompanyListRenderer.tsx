@@ -12,8 +12,10 @@ import { SessionMaybeUser } from '@/auth/Session'
 export const companyListRenderer = ({
     asClient, 
     session,
+    disableEditing = false
 }: {
     asClient: boolean,
-    session: SessionMaybeUser
+    session: SessionMaybeUser,
+    disableEditing?: boolean
 }) => (company: CompanyExpanded) =>
-    <Company session={session} key={company.id} company={company} asClient={asClient} />
+    <Company disableEdit={disableEditing} session={session} key={company.id} company={company} asClient={asClient} />

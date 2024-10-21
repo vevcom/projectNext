@@ -13,21 +13,6 @@
             overflow-y: scroll;
         }
     }
-    .companyList {
-        padding-top: 3em;
-        position: relative;
-        a {
-            @include ohma.borderBtn(ohma.$colors-secondary);
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        .filter {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    }
     @include ohma.screenMobile {
         form {
             max-width: 230px;

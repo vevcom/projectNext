@@ -7,12 +7,15 @@ import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
 import type { ExpandedJobAd } from '@/services/career/jobAds/Types'
-import type { ReactNode } from 'react'
+import { useContext, type ReactNode } from 'react'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import Slider from '@/app/_components/UI/Slider'
+import { CompanySelectionContext } from '@/contexts/CompanySelection'
+import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
+import CompanyChooser from '../CompanyChooser'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -28,7 +31,12 @@ type PropTypes = {
 export default function EditJobAd({ jobAd, children }: PropTypes) {
     //TODO: chack visibility
     const canEdit = useEditing({})
+    const companyCtx = useContext(CompanySelectionContext)
+    const companyPagingCtx = useContext(CompanyPagingContext)
     if (!canEdit) return children
+    if (!companyCtx || !companyPagingCtx) {
+        throw new Error('CompanySelectionContext or companyPaging is not defined')
+    }
 
     const updateAction = updateJobAdAction.bind(null, { id: jobAd.id })
 
@@ -41,11 +49,22 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     submitText="oppdater"
                 >
                     <TextInput
-                        color="white"
                         defaultValue={jobAd.company.name}
                         label="Bedrift"
                         name="company"/>
-                    <Textarea defaultValue={jobAd.description || ''} label="beskrivelse" name="description" />
+                    <Textarea
+                        defaultValue={jobAd.description || ''} 
+                        label="beskrivelse" 
+                        name="description"
+                    />
+                    { companyCtx.selectedCompany ? (
+                        <>
+                            <div>{companyCtx.selectedCompany.name}</div>
+                            <input name="companyId" type="hidden" value={companyCtx.selectedCompany.id} /> 
+                        </>
+                    ) : (
+                        <div>Velg en bedrift</div>
+                    ) }
                     <SelectString 
                         options={JobTypeOptions} 
                         label="Type" 
@@ -78,6 +97,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                 >
                 </Form>
             </div>
+            <CompanyChooser className={styles.companyChooser} />
         </div>
     )
 }

@@ -4,6 +4,8 @@ import EditJobAd from './EditJobAd'
 import { readJobAdAction } from '@/actions/career/jobAds/read'
 import Article from '@/components/Cms/Article/Article'
 import { notFound } from 'next/navigation'
+import CompanySelectionProvider from '@/contexts/CompanySelection'
+import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
 
 type PropTypes = {
     params: {
@@ -28,7 +30,18 @@ export default async function JobAd({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <Article article={jobAd.article} />
-            <EditJobAd jobAd={jobAd}/>
+            <CompanyPagingProvider
+                serverRenderedData={[]}
+                startPage={{
+                    page: 0,
+                    pageSize: 10
+                }}
+                details={{ name: undefined }}
+            >
+                <CompanySelectionProvider company={jobAd.company}>
+                    <EditJobAd jobAd={jobAd}/>
+                </CompanySelectionProvider>
+            </CompanyPagingProvider>
         </div>
 
     )

@@ -22,6 +22,7 @@ export default function CmsImageClient({
     children,
     className = '',
     classNameImage,
+    disableEditor = false,
     ...props
 }: PropTypes) {
     const [image, setCmsImage] = useState<ImageT | null>(cmsImage.image || null)
@@ -37,7 +38,7 @@ export default function CmsImageClient({
 
     return (
         <div className={`${styles.CmsImage} ${className}`}>
-            {image && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
+            {(image && !disableEditor ) && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
             <div className={styles.children}>{children}</div>
             {image &&
                 <Image

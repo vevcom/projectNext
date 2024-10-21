@@ -13,24 +13,25 @@ import SelectCompany from "./SelectCompany"
 
 type PropTypes = {
     company: CompanyExpanded,
-    asClient: boolean
-    session: SessionMaybeUser
+    asClient: boolean,
+    session: SessionMaybeUser,
+    disableEdit?: boolean,
 }
 
-export default function Company({ company, asClient, session }: PropTypes) {
+export default function Company({ company, asClient, session, disableEdit = false }: PropTypes) {
     const canUpdate = UpdateCompanyAuther.dynamicFields({}).auth(session)
     const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             { asClient ? 
-                <CmsImageClient className={styles.logo} cmsImage={company.logo} width={300} /> : 
-                <CmsImage className={styles.logo} cmsImage={company.logo} width={300} />
+                <CmsImageClient disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={300} /> : 
+                <CmsImage disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={300} />
             }
             <div className={styles.info}>
                 <h2>{company.name}</h2>
                 <p>{company.description}</p>
                 {
-                    canUpdate.authorized || canDestroy.authorized ? (
+                    !disableEdit && (canUpdate.authorized || canDestroy.authorized) ? (
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"

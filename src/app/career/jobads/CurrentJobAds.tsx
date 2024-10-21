@@ -11,7 +11,6 @@ type PropTypes = {
  */
 export default async function CurrentJobAds({ not }: PropTypes) {
     const res = await readCurrentJobAdsAction.bind(null, {})()
-    console.log(res)
     if (!res.success) {
         throw res.error ?
             new Error(res.error[0].message) :

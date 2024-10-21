@@ -10,23 +10,15 @@ import { SelectString } from '@/components/UI/Select'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import DateInput from '@/components/UI/DateInput'
 import { CompanySelectionContext } from '@/contexts/CompanySelection'
-import CompanyList from '@/app/_components/Company/CompanyList'
-import Link from 'next/link'
-import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
+import CompanyChooser from './CompanyChooser'
 
 export default function CreateJobAdForm() {
     const { refresh } = useRouter()
     const companyCtx = useContext(CompanySelectionContext)
-    const companyPagingCtx = useContext(CompanyPagingContext)
 
-    if (!companyCtx || !companyPagingCtx) {
+    if (!companyCtx) {
         throw new Error('CompanySelectionContext or companyPaging is not defined')
     }
-
-    const handleNameFilter = (e: ChangeEvent<HTMLInputElement>) => {
-        companyPagingCtx.setDetails({ name: e.target.value })
-    }
-
     return (
         <div className={styles.CreateJobAdForm}>
             <Form
@@ -49,11 +41,7 @@ export default function CreateJobAdForm() {
                 <SelectString options={JobTypeOptions} label="Type" name="type" key={uuid()}/>
                 <DateInput label="Søknadsfrist" name="applicationDeadline"/>
             </Form>
-            <div className={styles.companyList}>
-                <TextInput className={styles.filter} label='Søk Navn' name='name' onChange={handleNameFilter} />
-                <Link href="/career/companies">Administrer bedrifter</Link>
-                <CompanyList serverRenderedData={[]} />
-            </div>
+            <CompanyChooser className={styles.companyList} />
         </div>
     )
 }

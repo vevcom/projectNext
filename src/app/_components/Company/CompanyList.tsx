@@ -9,9 +9,10 @@ import { permission } from 'process'
 
 type PropTypes = {
     serverRenderedData: ReactNode,
+    disableEditing?: boolean,
 }
 
-export default function CompanyList({ serverRenderedData }: PropTypes) {
+export default function CompanyList({ serverRenderedData, disableEditing }: PropTypes) {
     const ses = useUser()
     const session = {
         user: ses.user ?? null,
@@ -23,7 +24,7 @@ export default function CompanyList({ serverRenderedData }: PropTypes) {
             {serverRenderedData}
             <EndlessScroll 
                 pagingContext={CompanyPagingContext} 
-                renderer={data => companyListRenderer({ asClient: true, session })(data)} 
+                renderer={data => companyListRenderer({ asClient: true, session, disableEditing })(data)} 
             />
         </div>
     )

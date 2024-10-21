@@ -1,0 +1,17 @@
+@use '@/styles/ohma';
+
+.CompanyChooser {
+    padding-top: 3em;
+    position: relative;
+    a {
+        @include ohma.borderBtn(ohma.$colors-secondary);
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .filter {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
