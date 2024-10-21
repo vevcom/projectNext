@@ -8,6 +8,7 @@ import { SettingsHeaderItemPopUp } from "../HeaderItems/HeaderItemPopUp"
 import Form from "@/components/Form/Form"
 import { updateComanyAction } from "@/actions/career/companies/update"
 import TextInput from "../UI/TextInput"
+import { destroyCompanyAction } from "@/actions/career/companies/destroy"
 
 type PropTypes = {
     company: CompanyExpanded,
@@ -40,6 +41,17 @@ export default function Company({ company, asClient, session }: PropTypes) {
                                 <TextInput name="name" label="Navn" defaultValue={company.name} />
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
+                            <Form 
+                                action={destroyCompanyAction.bind(null, { id: company.id })}
+                                refreshOnSuccess
+                                closePopUpOnSuccess={`Edit ${company.id}`}
+                                submitText="Slett"
+                                submitColor="red"
+                                confirmation={{
+                                    confirm: true,
+                                    text: 'Er du sikker på at du vil slette denne bedriften?'
+                                }}
+                            />
                         </SettingsHeaderItemPopUp>
                     ) : <></>
                 }

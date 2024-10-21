@@ -4,6 +4,7 @@ import { CreateCompanyAuther, ReadCompanyAuther, UpdateCompanyAuther } from "./A
 import { create } from "./create";
 import { readPage } from './read'
 import { update } from './update';
+import { destroy } from './destroy';
 
 export const Companies = {
     create: ServiceMethod({
@@ -26,5 +27,12 @@ export const Companies = {
         auther: UpdateCompanyAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: update,
+    }),
+    destory: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: UpdateCompanyAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: destroy
     })
 } as const
