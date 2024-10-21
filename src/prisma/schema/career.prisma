@@ -1,13 +1,27 @@
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  INTERNSHIP
+  CONTRACT
+  OTHER
+}
+
 model JobAd {
-  id             Int          @id @default(autoincrement())
-  company        String
-  article        Article      @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
-  articleId      Int
-  articleName    String
-  description    String?
-  omegaOrder     OmegaOrder   @relation(fields: [orderPublished], references: [order])
-  orderPublished Int
-  ScreenPage     ScreenPage[]
+  id                  Int          @id @default(autoincrement())
+  article             Article      @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade)
+  articleId           Int
+  articleName         String
+  description         String?
+  omegaOrder          OmegaOrder   @relation(fields: [orderPublished], references: [order])
+  orderPublished      Int
+  ScreenPage          ScreenPage[]
+  company             Company      @relation(fields: [companyId], references: [id])
+  companyId           Int
+  type                JobType
+  applicationDeadline DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([articleId, articleName])
   @@unique([articleName, orderPublished])
@@ -22,4 +36,5 @@ model Company {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  JobAd     JobAd[]
 }

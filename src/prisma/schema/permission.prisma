@@ -139,7 +139,7 @@ enum Permission {
 
   COMPANY_READ
   COMPANY_ADMIN
-  
+
   DOTS_ADMIN
 }
 
