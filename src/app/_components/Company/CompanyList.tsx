@@ -4,18 +4,26 @@ import type { ReactNode } from 'react'
 import { companyListRenderer } from './CompanyListRenderer'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import styles from './CompanyList.module.scss'
+import { useUser } from '@/auth/useUser'
+import { permission } from 'process'
 
 type PropTypes = {
     serverRenderedData: ReactNode,
 }
 
 export default function CompanyList({ serverRenderedData }: PropTypes) {
+    const ses = useUser()
+    const session = {
+        user: ses.user ?? null,
+        permissions: ses.permissions ?? [],
+        memberships: ses.memberships ?? [],
+    }
     return (
         <div className={styles.CompanyList}>
             {serverRenderedData}
             <EndlessScroll 
                 pagingContext={CompanyPagingContext} 
-                renderer={data => companyListRenderer(true)(data)} 
+                renderer={data => companyListRenderer({ asClient: true, session })(data)} 
             />
         </div>
     )

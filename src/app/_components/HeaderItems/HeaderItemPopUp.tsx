@@ -6,10 +6,10 @@ import { FontAwesomeIcon, type FontAwesomeIconProps } from '@fortawesome/react-f
 import { faCog, faPlus, faQuestionCircle, faTag } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as PopUpProps } from '@/components/PopUp/PopUp'
 
-type PropTypes = Omit<PopUpProps, 'showButtonContent' | 'showButtonClass'> & { scale?: number }
+type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number }
 
 function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
-    return function HeadItemPopUp({ children, scale: overrideScale, ...props }: PropTypes) {
+    return function HeadItemPopUp({ showButtonClass ,children, scale: overrideScale, ...props }: PropTypes) {
         return <PopUp
             {...props}
             showButtonContent = {
@@ -25,7 +25,7 @@ function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
                 width: `${overrideScale ?? scale}px`,
                 height: `${overrideScale ?? scale}px`,
             }}
-            showButtonClass={styles.addBtn}
+            showButtonClass={`${styles.addBtn} ${showButtonClass}`}
         >
             { children }
         </PopUp>

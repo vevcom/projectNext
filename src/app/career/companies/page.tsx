@@ -16,7 +16,7 @@ type PropTypes = SearchParamsServerSide
 export default async function page({ searchParams }: PropTypes) {
     const pageSize = 10 satisfies PageSizeCompany
     const name = QueryParams.companyName.decode(searchParams) ?? undefined
-    const res = await readCompanyPageAction.bind(null, { 
+    const { session, ...res } = await readCompanyPageAction.bind(null, { 
         paging: { 
             page: {
                 page: 0,
@@ -56,7 +56,12 @@ export default async function page({ searchParams }: PropTypes) {
                 }}
             >
                 <CompanyListFilter currentName={name ?? ''} />
-                <CompanyList serverRenderedData={serverRenderedData.map(companyListRenderer(false))} />
+                <CompanyList serverRenderedData={serverRenderedData.map(
+                    companyListRenderer({
+                        session,
+                        asClient: false,
+                    })
+                )} />
             </CompanyPagingProvider>
         </PageWrapper>
     )
