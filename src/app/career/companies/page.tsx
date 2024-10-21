@@ -9,6 +9,7 @@ import { readCompanyPageAction } from '@/actions/career/companies/read';
 import CompanyList from '@/components/Company/CompanyList';
 import { companyListRenderer } from '@/components/Company/CompanyListRenderer';
 import { QueryParams } from '@/lib/query-params/queryParams';
+import CompanyListFilter from '@/app/_components/Company/CompanyListFilter';
 
 type PropTypes = SearchParamsServerSide
 
@@ -54,6 +55,7 @@ export default async function page({ searchParams }: PropTypes) {
                     name
                 }}
             >
+                <CompanyListFilter currentName={name ?? ''} />
                 <CompanyList serverRenderedData={serverRenderedData.map(companyListRenderer(false))} />
             </CompanyPagingProvider>
         </PageWrapper>
