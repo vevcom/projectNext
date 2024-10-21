@@ -6,8 +6,8 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper';
 import CompanyPagingProvider, { PageSizeCompany } from '@/contexts/paging/CompanyPaging';
 import { SearchParamsServerSide } from '@/lib/query-params/Types';
 import { readCompanyPageAction } from '@/actions/career/companies/read';
-import CompanyList from '@/app/_components/Company/CompanyList';
-import { companyListRenderer } from '@/app/_components/Company/CompanyListRenderer';
+import CompanyList from '@/components/Company/CompanyList';
+import { companyListRenderer } from '@/components/Company/CompanyListRenderer';
 import { QueryParams } from '@/lib/query-params/queryParams';
 
 type PropTypes = SearchParamsServerSide
