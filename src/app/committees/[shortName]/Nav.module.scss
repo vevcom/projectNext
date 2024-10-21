@@ -8,20 +8,9 @@
     }
     gap: 1em;
     a {
-        text-decoration: none;
-        color: ohma.$colors-black;
-        background-color: ohma.$colors-primary;
+        @include ohma.roundAdminSvgBtn();
         &.selected {
             background-color: ohma.$colors-secondary;
-        }
-        width: 3em;
-        height: 3em;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        svg {
-            width: 2.3em;
-            height: 2.3em;
         }
     }
 }

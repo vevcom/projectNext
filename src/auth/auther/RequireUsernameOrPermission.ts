@@ -13,7 +13,7 @@ export const RequireUsernameOrPermission = AutherFactory<
         }
     }
     return {
-        success: session.user?.username === dynamicFields.username,
+        success: session.user !== null && session.user.username === dynamicFields.username,
         session
     }
 })

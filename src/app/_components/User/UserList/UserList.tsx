@@ -6,6 +6,7 @@ import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
 import useActionCall from '@/hooks/useActionCall'
 import { readGroupsForPageFiteringAction } from '@/actions/users/read'
+import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -82,6 +83,7 @@ export default function UserList({
     }
 }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
+    const usersSelection = useContext(UsersSelectionContext)
     const userSelection = useContext(UserSelectionContext)
 
     const groupSelected = !!userPaging?.deatils.selectedGroup
@@ -157,7 +159,7 @@ export default function UserList({
 
     return (
         <div className={`${styles.UserList} ${className}`}>
-            <div className={userSelection ? `${styles.filters} ${styles.adjust}` : styles.filters}>
+            <div className={usersSelection || userSelection ? `${styles.filters} ${styles.adjust}` : styles.filters}>
                 {
                     !disableFilters.name && (
                         <div className={styles.group}>
@@ -242,7 +244,7 @@ export default function UserList({
             <div className={styles.list}>
                 <span className={
                     `${styles.head} ${
-                        userSelection || displayForUser ? `${styles.adjust} ` : ' '
+                        usersSelection || userSelection || displayForUser ? `${styles.adjust} ` : ' '
                     }${groupSelected ? styles.extraInfo : ''}`
                 }>
                     <h3>Navn</h3>
@@ -261,10 +263,17 @@ export default function UserList({
 
                 <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
                     <span className={styles.row} key={user.id}>
+                        { usersSelection &&
+                            <button
+                                className={usersSelection.includes(user) ? styles.selected : ''}
+                                onClick={() => usersSelection.toggle(user)}>
+                                <FontAwesomeIcon icon={faCheck} />
+                            </button>
+                        }
                         { userSelection &&
                             <button
-                                className={userSelection.includes(user) ? styles.selected : ''}
-                                onClick={() => userSelection.toggle(user)}>
+                                className={userSelection.user?.id === user.id ? styles.selected : ''}
+                                onClick={() => userSelection.setUser(user)}>
                                 <FontAwesomeIcon icon={faCheck} />
                             </button>
                         }

@@ -16,6 +16,7 @@ type PropTypes = {
     title: string,
     children: ReactNode
     selectedTags?: EventTagT[]
+    page: 'EVENT' | 'EVENT_ARCHIVE'
 }
 
 export default function EventsLandingLayout({
@@ -23,8 +24,10 @@ export default function EventsLandingLayout({
     headerLinks,
     title,
     selectedTags,
+    page,
     children
 }: PropTypes) {
+    const baseUrl = page === 'EVENT' ? '/events' : '/events/archive'
     return (
         <div className={styles.EventsLandingLayout}>
             <div className={styles.top}>
@@ -32,8 +35,8 @@ export default function EventsLandingLayout({
                     <h1>{title}</h1>
                     {
                         selectedTags?.map(tag =>
-                            <Link key={tag.name} href={selectedTags.length === 1 ? '/events' :
-                                `/events/${QueryParams.eventTags.encodeUrl(
+                            <Link key={tag.name} href={selectedTags.length === 1 ? baseUrl :
+                                `${baseUrl}?${QueryParams.eventTags.encodeUrl(
                                     selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
                                 )}`
                             }>

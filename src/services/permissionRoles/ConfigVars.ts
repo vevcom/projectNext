@@ -431,6 +431,11 @@ export const PermissionConfig = {
         name: 'Oppdatere skapreservasjoner',
         description: 'kan oppdatere skapreservasjoner',
         category: 'brukere'
+    },
+    DOTS_ADMIN: {
+        name: 'Prikkadministrator',
+        description: 'kan administrere prikker',
+        category: 'brukere'
     }
 } satisfies Record<Permission, PermissionInfo>
 

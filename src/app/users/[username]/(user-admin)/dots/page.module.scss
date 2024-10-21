@@ -1,0 +1,9 @@
+@use '@/styles/ohma';
+
+.dotList {
+    @include ohma.table();
+    .inactive {
+        text-decoration: line-through;
+        color: ohma.$colors-red;
+    }
+}

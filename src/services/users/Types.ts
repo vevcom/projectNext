@@ -45,7 +45,7 @@ export type UserCursor = {
 }
 
 export type Profile = {
-    user: UserFiltered & { image: Image | null, bio: string },
+    user: UserFiltered & { image: Image, bio: string },
     memberships: MembershipFiltered[],
     permissions: Permission[],
 }
