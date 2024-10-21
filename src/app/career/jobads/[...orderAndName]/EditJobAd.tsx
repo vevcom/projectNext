@@ -8,6 +8,11 @@ import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
 import type { ExpandedJobAd } from '@/services/career/jobAds/Types'
 import type { ReactNode } from 'react'
+import { SelectString } from '@/components/UI/Select'
+import DateInput from '@/components/UI/DateInput'
+import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
+import { v4 as uuid } from 'uuid'
+import Slider from '@/app/_components/UI/Slider'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -37,10 +42,28 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                 >
                     <TextInput
                         color="white"
-                        defaultValue={jobAd.company}
+                        defaultValue={jobAd.company.name}
                         label="Bedrift"
                         name="company"/>
                     <Textarea defaultValue={jobAd.description || ''} label="beskrivelse" name="description" />
+                    <SelectString 
+                        options={JobTypeOptions} 
+                        label="Type" 
+                        name="type" 
+                        key={uuid()}
+                        defaultValue={jobAd.type}
+                    />
+                    <DateInput 
+                        label="Søknadsfrist" 
+                        name="applicationDeadline" 
+                        key={uuid()}
+                        defaultValue={jobAd.applicationDeadline || ''}
+                    />
+                    <Slider
+                        label="Aktiv"
+                        name="active"
+                        defaultChecked={jobAd.active}
+                    />
                 </Form>
                 <Form
                     action={destroyJobAdAction.bind(null, { id: jobAd.id })}

@@ -49,7 +49,8 @@ export const readCurrent = ServiceMethodHandler({
         })
         return jobAds.map(ad => ({
             ...ad,
-            coverImage: ad.article.coverImage.image
+            coverImage: ad.article.coverImage.image,
+            companyName: ad.company.name,
         }))
     }
 })

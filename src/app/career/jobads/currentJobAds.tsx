@@ -24,7 +24,7 @@ export default async function CurrentJobAds({ not }: PropTypes) {
             jobAds.map(ad =>
                 <ImageCard
                     href={`/career/jobads/${ad.orderPublished}/${ad.articleName}`}
-                    title={ad.company}
+                    title={ad.companyName}
                     image={ad.coverImage}
                     key={ad.id}
                 >
