@@ -7,15 +7,13 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 export const create = ServiceMethodHandler({
     withData: true,
     validation: createJobAdValidation,
-    handler: async (prisma, _, { articleName, company, description }) => {
+    handler: async (prisma, _, { articleName, companyId, ...data }) => {
         const article = await createArticle({ name: articleName })
 
         const currentOrder = await readCurrentOmegaOrder()
 
         return await prisma.jobAd.create({
             data: {
-                company,
-                description,
                 article: {
                     connect: {
                         id: article.id
@@ -23,7 +21,13 @@ export const create = ServiceMethodHandler({
                 },
                 omegaOrder: {
                     connect: currentOrder,
-                }
+                },
+                company: {
+                    connect: {
+                        id: companyId
+                    }
+                },
+                ...data,
             },
         })
     }

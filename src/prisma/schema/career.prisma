@@ -18,7 +18,8 @@ model JobAd {
   company             Company      @relation(fields: [companyId], references: [id])
   companyId           Int
   type                JobType
-  applicationDeadline DateTime
+  applicationDeadline DateTime?
+  active              Boolean      @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
