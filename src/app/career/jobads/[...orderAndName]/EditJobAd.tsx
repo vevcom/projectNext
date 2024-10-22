@@ -53,6 +53,13 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         label="beskrivelse" 
                         name="description"
                     />
+                    <TextInput 
+                        defaultValue={jobAd.location || ''}
+                        label="Sted" 
+                        name="location" 
+                        key={uuid()}
+                    />
+
                     { companyCtx.selectedCompany ? (
                         <>
                             <div>{companyCtx.selectedCompany.name}</div>

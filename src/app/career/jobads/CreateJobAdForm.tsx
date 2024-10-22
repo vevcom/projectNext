@@ -29,6 +29,7 @@ export default function CreateJobAdForm() {
             >
                 <TextInput label="Tittel" name="articleName" key={uuid()}/>
                 <TextInput label="Beskrivelse" name="description" key={uuid()}/>
+                <TextInput label="Sted" name="location" key={uuid()}/>
                 { companyCtx.selectedCompany ? (
                     <>
                         <div>{companyCtx.selectedCompany.name}</div>

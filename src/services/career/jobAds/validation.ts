@@ -11,6 +11,7 @@ export const baseJobAdValidation = new ValidationBase({
         type: z.nativeEnum(JobType),
         applicationDeadline: z.string().optional(),
         active: z.literal('on').optional(),
+        location: z.string().optional(),
     },
     details: {
         companyId: z.number().int().positive().int(),
@@ -19,6 +20,7 @@ export const baseJobAdValidation = new ValidationBase({
         type: z.nativeEnum(JobType),
         applicationDeadline: z.date().optional(),
         active: z.boolean(),
+        location: z.string().optional(),
     }
 })
 
@@ -29,6 +31,7 @@ export const createJobAdValidation = baseJobAdValidation.createValidation({
         'description',
         'type',
         'applicationDeadline',
+        'location',
     ],
     transformer: data => ({
         ...data,
@@ -45,6 +48,7 @@ export const updateJobAdValidation = baseJobAdValidation.createValidation({
         'type',
         'applicationDeadline',
         'active',
+        'location',
     ],
     transformer: data => ({
         ...data,
