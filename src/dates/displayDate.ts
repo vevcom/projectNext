@@ -5,7 +5,13 @@ import { toLocalDate } from "./toLocal";
  * @param date - The date to display
  * @returns
  */
-export function displayDate(date: Date): string {
+export function displayDate(date: Date, includeTime: boolean = true): string {
+    if (!includeTime) return toLocalDate(date).toLocaleString('nb-NO', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    })
+
     return toLocalDate(date).toLocaleString('nb-NO', {
         year: 'numeric',
         month: '2-digit',
