@@ -1,8 +1,9 @@
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { JobAd, Image, Company } from '@prisma/client'
+import { CompanyExpanded } from '../companies/Types'
 export type ExpandedJobAd = JobAd & {
     article: ExpandedArticle,
-    company: Company,
+    company: CompanyExpanded,
 }
 
 //used for read many actions

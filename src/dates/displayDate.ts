@@ -1,13 +1,12 @@
+import { toLocalDate } from "./toLocal";
+
 /**
  * Displays date and time in norwegian format
  * @param date - The date to display
  * @returns
  */
 export function displayDate(date: Date): string {
-    const offset = date.getTimezoneOffset()
-    const clientOffset = new Date().getTimezoneOffset()
-    const diff = offset - clientOffset
-    return new Date(date.getTime() + diff * 60 * 1000).toLocaleString('nb-NO', {
+    return toLocalDate(date).toLocaleString('nb-NO', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',

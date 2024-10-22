@@ -3,6 +3,7 @@ import { ReadPageInput } from '@/services/paging/Types'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { CompanyCursor, CompanyDetails, CompanyExpanded } from './Types'
 import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { CompanyRelationIncluder } from './ConfigVars'
 
 export const readPage = ServiceMethodHandler({
     withData: false,
@@ -17,13 +18,7 @@ export const readPage = ServiceMethodHandler({
                     mode: 'insensitive'
                 }
             },
-            include: {
-                logo: {
-                    include: {
-                        image: true
-                    } 
-                }
-            }
+            include: CompanyRelationIncluder
         })
     }
 })

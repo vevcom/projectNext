@@ -3,6 +3,7 @@ import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } fr
 import { ServerError } from '@/services/error'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import type { ExpandedJobAd, SimpleJobAd } from './Types'
+import { CompanyRelationIncluder } from '../companies/ConfigVars'
 
 /**
  * This handler reads a jobAd by id or articleName and order
@@ -24,7 +25,12 @@ export const read = ServiceMethodHandler({
                     orderPublished: idOrName.order
                 }
             },
-            include: jobAdArticleRealtionsIncluder
+            include: {
+                ...jobAdArticleRealtionsIncluder,
+                company: {
+                    include: CompanyRelationIncluder,
+                }
+            }
         })
         if (!jobAd) throw new ServerError('NOT FOUND', `job ad ${idOrName} not found`)
         return jobAd

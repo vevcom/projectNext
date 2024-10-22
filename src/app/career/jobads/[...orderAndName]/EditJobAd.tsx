@@ -48,10 +48,6 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     navigateOnSuccess={(data) => `/career/jobads/${data?.orderPublished}/${data?.articleName}`}
                     submitText="oppdater"
                 >
-                    <TextInput
-                        defaultValue={jobAd.company.name}
-                        label="Bedrift"
-                        name="company"/>
                     <Textarea
                         defaultValue={jobAd.description || ''} 
                         label="beskrivelse" 
@@ -73,6 +69,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         defaultValue={jobAd.type}
                     />
                     <DateInput 
+                        includeTime
                         label="Søknadsfrist" 
                         name="applicationDeadline" 
                         key={uuid()}

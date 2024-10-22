@@ -4,7 +4,16 @@ $cover-height: min(300px, 40vh);
 $padding: ohma.$minimalPagePadding;
 
 .Article {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 
+        "coverImage coverImage"
+        "article sideBar"
+        "addSection addSection"
+    ;
     .coverImage {
+        grid-area: coverImage;
         overflow: hidden;
         isolation: isolate;
         display: block;
@@ -50,6 +59,7 @@ $padding: ohma.$minimalPagePadding;
         
     }
     article {
+        grid-area: article;
         isolation: isolate;  
         > * {
             margin: 2em $padding;
@@ -85,11 +95,15 @@ $padding: ohma.$minimalPagePadding;
         }
     }
     .addSection {
+        grid-area: addSection;
         margin: 0 $padding;
     }
     .empty {
         display: flex;
         height: 2em;
+    }
+    .sideBar {
+        grid-area: sideBar;
     }
 }   
 

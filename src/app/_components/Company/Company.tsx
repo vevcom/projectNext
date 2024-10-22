@@ -16,16 +16,23 @@ type PropTypes = {
     asClient: boolean,
     session: SessionMaybeUser,
     disableEdit?: boolean,
+    logoWidth?: number,
 }
 
-export default function Company({ company, asClient, session, disableEdit = false }: PropTypes) {
+export default function Company({ 
+    company, 
+    asClient, 
+    session, 
+    disableEdit = false, 
+    logoWidth = 300 
+}: PropTypes) {
     const canUpdate = UpdateCompanyAuther.dynamicFields({}).auth(session)
     const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             { asClient ? 
-                <CmsImageClient disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={300} /> : 
-                <CmsImage disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={300} />
+                <CmsImageClient disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={logoWidth} /> : 
+                <CmsImage disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={logoWidth} />
             }
             <div className={styles.info}>
                 <h2>{company.name}</h2>

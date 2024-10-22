@@ -28,7 +28,6 @@ export default function CreateJobAdForm() {
                 successCallback={refresh}
             >
                 <TextInput label="Tittel" name="articleName" key={uuid()}/>
-                <TextInput label="Bedrift" name="company" key={uuid()}/>
                 <TextInput label="Beskrivelse" name="description" key={uuid()}/>
                 { companyCtx.selectedCompany ? (
                     <>
@@ -39,7 +38,7 @@ export default function CreateJobAdForm() {
                     <div>Velg en bedrift</div>
                 ) }
                 <SelectString options={JobTypeOptions} label="Type" name="type" key={uuid()}/>
-                <DateInput label="Søknadsfrist" name="applicationDeadline"/>
+                <DateInput includeTime label="Søknadsfrist" name="applicationDeadline"/>
             </Form>
             <CompanyChooser className={styles.companyList} />
         </div>

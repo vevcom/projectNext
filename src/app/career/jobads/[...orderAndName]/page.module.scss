@@ -1,1 +1,9 @@
 @use '@/styles/ohma';
+
+.sideBar {
+    @include ohma.round;
+    padding: 1em;
+    border-radius: 1em;
+    margin: 1em .3em;
+    background-color: ohma.$colors-gray-300;
+}
