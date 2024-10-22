@@ -9,6 +9,8 @@ import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
 import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
 import { JobTypeConfig } from '@/services/career/jobAds/ConfigVars'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheckCircle, faClock, faLocationDot, faMapLocation, faNewspaper, faSuitcase, faXmarkCircle } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
     params: {
@@ -32,21 +34,50 @@ export default async function JobAd({ params }: PropTypes) {
     const jobAd = jobAdRes.data
     return (
         <div className={styles.wrapper}>
-            <Article article={jobAd.article} sideBarClassName={styles.sideBar} sideBarContent={
-            <>
-                <Company company={jobAd.company} asClient={false} session={session} />
-                {
-                    jobAd.applicationDeadline ? (
-                        <p>Søknadsfrist: <Date date={jobAd.applicationDeadline} /> </p>
-                    ) : (
-                        <p>Søknadsfrist: Ikke satt</p>
-                    )
-
-                }
-                <p>Stillingstype: {JobTypeConfig[jobAd.type].label}</p>
-                <p>{jobAd.active ? 'Denne jobbanonsen er aktiv': 'Denne jobbanonsen er arkivert'}</p>
-            </>
-            } />
+            <main>
+                <Article article={jobAd.article} sideBarClassName={styles.sideBar} sideBarContent={
+                <>
+                    <ul className={styles.metInfo}>
+                        <li>
+                            <FontAwesomeIcon icon={faSuitcase} />
+                            <h3>Stillingstype</h3> 
+                            <p>{JobTypeConfig[jobAd.type].label}</p>
+                        </li>
+                        <li>
+                            <FontAwesomeIcon icon={jobAd.active ?faCheckCircle : faXmarkCircle} />
+                            <h3>Status</h3>
+                            <p>{jobAd.active ? 'Denne jobbanonsen er aktiv': 'Denne jobbanonsen er arkivert'}</p>
+                        </li>
+                        <li>
+                            <FontAwesomeIcon icon={faClock} />
+                            <h3>Søknadsfrist</h3>
+                            <p>
+                            { jobAd.applicationDeadline ? 
+                                    <Date date={jobAd.applicationDeadline} /> :
+                                    'Ingen søknadsfrist satt' 
+                            }
+                            </p>
+                        </li>
+                        <li>
+                            <FontAwesomeIcon icon={faNewspaper} />
+                            <h3>Publisert</h3>
+                            <p>
+                                <Date date={jobAd.createdAt} />
+                            </p>
+                        </li>
+                        <li>
+                            <FontAwesomeIcon icon={faLocationDot} />
+                            <h3>Sted</h3>
+                            <p>{jobAd.location}</p>
+                        </li>
+                    </ul>
+                    <div className={styles.company}>
+                        <h2>Arbeidsgiver</h2>
+                        <Company company={jobAd.company} asClient={false} session={session} />
+                    </div>
+                </>
+                } />
+            </main>
             <CompanyPagingProvider
                 serverRenderedData={[]}
                 startPage={{
