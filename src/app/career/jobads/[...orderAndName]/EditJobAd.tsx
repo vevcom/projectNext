@@ -13,9 +13,9 @@ import DateInput from '@/components/UI/DateInput'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import Slider from '@/app/_components/UI/Slider'
-import { CompanySelectionContext } from '@/contexts/CompanySelection'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
-import CompanyChooser from '../CompanyChooser'
+import CompanyChooser from '@/app/career/jobads/CompanyChooser'
+import SelectedCompany from '../SelectedCompany'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -31,10 +31,9 @@ type PropTypes = {
 export default function EditJobAd({ jobAd, children }: PropTypes) {
     //TODO: chack visibility
     const canEdit = useEditing({})
-    const companyCtx = useContext(CompanySelectionContext)
     const companyPagingCtx = useContext(CompanyPagingContext)
     if (!canEdit) return children
-    if (!companyCtx || !companyPagingCtx) {
+    if (!companyPagingCtx) {
         throw new Error('CompanySelectionContext or companyPaging is not defined')
     }
 
@@ -58,16 +57,8 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         label="Sted" 
                         name="location" 
                         key={uuid()}
-                    />
-
-                    { companyCtx.selectedCompany ? (
-                        <>
-                            <div>{companyCtx.selectedCompany.name}</div>
-                            <input name="companyId" type="hidden" value={companyCtx.selectedCompany.id} /> 
-                        </>
-                    ) : (
-                        <div>Velg en bedrift</div>
-                    ) }
+                    />  
+                    <SelectedCompany />
                     <SelectString 
                         options={JobTypeOptions} 
                         label="Type" 
