@@ -5,13 +5,15 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    .logo {
-        aspect-ratio: 1/1;
+    .logo, .logoSq {
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-bottom: 1em;
+        margin-bottom: 1em; 
+    }
+    .logoSq {
+        aspect-ratio: 1/1;
     }
     .info {
         position: relative;

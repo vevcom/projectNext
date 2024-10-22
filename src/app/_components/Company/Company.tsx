@@ -17,22 +17,44 @@ type PropTypes = {
     session: SessionMaybeUser,
     disableEdit?: boolean,
     logoWidth?: number,
+    squareLogo?: boolean
 }
 
+/**
+ * 
+ * @param company - The company to display
+ * @param asClient - If the component is rendered clinet side (uses CmsImageClient)
+ * @param session - The session of the user
+ * @param disableEdit - If the edit buttons should be disabled even if the user has the rights
+ * @param logoWidth - The width of the logo
+ * @param squareLogo - If the logo should be square (contained in center of square frame)
+ * @returns 
+ */
 export default function Company({ 
     company, 
     asClient, 
     session, 
     disableEdit = false, 
-    logoWidth = 300 
+    logoWidth = 300,
+    squareLogo = true,
 }: PropTypes) {
     const canUpdate = UpdateCompanyAuther.dynamicFields({}).auth(session)
     const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             { asClient ? 
-                <CmsImageClient disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={logoWidth} /> : 
-                <CmsImage disableEditor={disableEdit} className={styles.logo} cmsImage={company.logo} width={logoWidth} />
+                <CmsImageClient 
+                    disableEditor={disableEdit} 
+                    className={squareLogo ? styles.logoSq : styles.logo} 
+                    cmsImage={company.logo} 
+                    width={logoWidth} 
+                /> : 
+                <CmsImage 
+                    disableEditor={disableEdit} 
+                    className={squareLogo ? styles.logoSq : styles.logo} 
+                    cmsImage={company.logo} 
+                    width={logoWidth} 
+                />
             }
             <div className={styles.info}>
                 <h2>{company.name}</h2>

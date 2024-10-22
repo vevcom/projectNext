@@ -73,7 +73,12 @@ export default async function JobAd({ params }: PropTypes) {
                     </ul>
                     <div className={styles.company}>
                         <h2>Arbeidsgiver</h2>
-                        <Company company={jobAd.company} asClient={false} session={session} />
+                        <Company 
+                            squareLogo={false} 
+                            company={jobAd.company} 
+                            asClient={false} 
+                            session={session} 
+                        />
                     </div>
                 </>
                 } />
