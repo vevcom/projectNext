@@ -84,7 +84,7 @@ export const readInactivePage = ServiceMethodHandler({
                         mode: 'insensitive',
                     }
                 },
-                type: params.paging.details.type,
+                type: params.paging.details.type || undefined,
             },
             include: simpleJobAdArticleRealtionsIncluder
         })

@@ -20,6 +20,6 @@ export type JobAdInactiveCursor = {
 }
 
 export type JobAdInactiveDetails = {
-    name: string
-    type: JobType
+    name: string | null
+    type: JobType | null
 }
