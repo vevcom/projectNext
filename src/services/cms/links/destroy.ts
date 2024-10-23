@@ -1,10 +1,16 @@
 import 'server-only'
-import prisma from '@/prisma'
-import { prismaCall } from '@/services/prismaCall'
-import type { CmsLink } from '@prisma/client'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServerError } from '@/services/error'
 
-export async function destroyCmsLink(id: number): Promise<CmsLink> {
-    return await prismaCall(() => prisma.cmsLink.delete({
-        where: { id },
-    }))
-}
+export const destroy = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, { id }: { id: number }) => {
+        const cmsLink = await prisma.cmsLink.findUniqueOrThrow({
+            where: { id }
+        })
+        if (cmsLink.special) throw new ServerError('BAD PARAMETERS', 'Kan ikke slette spesial link')
+        return prisma.cmsLink.delete({
+            where: { id }
+        })
+    }
+})
