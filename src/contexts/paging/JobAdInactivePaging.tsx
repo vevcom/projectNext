@@ -1,13 +1,12 @@
 'use client'
-import { readInactiveJobAdsPageAction } from '@/actions/career/jobAds/read'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
+import { readInactiveJobAdsPageAction } from '@/actions/career/jobAds/read'
 import type { ReadPageInput } from '@/services/paging/Types'
-import { JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from '@/services/career/jobAds/Types'
+import type { JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from '@/services/career/jobAds/Types'
 
 export type PageSizeJobAdInactive = 12
-const fetcher = async (x: ReadPageInput<PageSizeJobAdInactive, JobAdInactiveCursor, JobAdInactiveDetails>) => {
-    return await readInactiveJobAdsPageAction.bind(null, { paging: x })()
-}
+const fetcher = async (x: ReadPageInput<PageSizeJobAdInactive, JobAdInactiveCursor, JobAdInactiveDetails>) =>
+    await readInactiveJobAdsPageAction.bind(null, { paging: x })()
 
 export const JobAdInactivePagingContext = generatePagingContext<
     SimpleJobAd,

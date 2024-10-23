@@ -1,7 +1,7 @@
 import 'server-only'
-import { ServiceMethodHandler } from "@/services/ServiceMethodHandler";
-import { createCompanyValidation } from "./validation";
-import { createCmsImage } from "@/services/cms/images/create";
+import { createCompanyValidation } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createCmsImage } from '@/services/cms/images/create'
 import { v4 as uuid } from 'uuid'
 
 export const create = ServiceMethodHandler({

@@ -1,5 +1,5 @@
-import { readActiveJobAdsAction } from '@/actions/career/jobAds/read'
 import JobAd from './JobAd'
+import { readActiveJobAdsAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {
     not?: number

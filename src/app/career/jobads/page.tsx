@@ -14,23 +14,23 @@ export default async function JobAds() {
         <PageWrapper title="jobbannonser"
             headerItem={
                 <>
-                <AddHeaderItemPopUp PopUpKey={'jobAdForm'}>
-                    <CompanyPagingProvider
-                        serverRenderedData={[]}
-                        startPage={{
-                            page: 0,
-                            pageSize: 10
-                        }}
-                        details={{ name: undefined }}
-                    >
-                        <CompanySelectionProvider company={null}>
-                            <CreateJobAdForm/>
-                        </CompanySelectionProvider>
-                    </CompanyPagingProvider>
-                </AddHeaderItemPopUp>
-                <Link href="/career/jobads/archive" className={styles.archiveLink} >
-                    <FontAwesomeIcon icon={faArchive} />
-                </Link>
+                    <AddHeaderItemPopUp PopUpKey={'jobAdForm'}>
+                        <CompanyPagingProvider
+                            serverRenderedData={[]}
+                            startPage={{
+                                page: 0,
+                                pageSize: 10
+                            }}
+                            details={{ name: undefined }}
+                        >
+                            <CompanySelectionProvider company={null}>
+                                <CreateJobAdForm/>
+                            </CompanySelectionProvider>
+                        </CompanyPagingProvider>
+                    </AddHeaderItemPopUp>
+                    <Link href="/career/jobads/archive" className={styles.archiveLink} >
+                        <FontAwesomeIcon icon={faArchive} />
+                    </Link>
                 </>
             }>
             <div className={styles.wrapper}>

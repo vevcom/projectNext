@@ -1,5 +1,5 @@
-import type { ExpandedCmsImage } from "@/services/cms/images/Types"
-import type { Company } from "@prisma/client"
+import type { ExpandedCmsImage } from '@/services/cms/images/Types'
+import type { Company } from '@prisma/client'
 
 export type CompanyCursor = { id: number }
 

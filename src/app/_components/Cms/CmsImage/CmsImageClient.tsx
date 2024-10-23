@@ -38,7 +38,7 @@ export default function CmsImageClient({
 
     return (
         <div className={`${styles.CmsImage} ${className}`}>
-            {(image && !disableEditor ) && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
+            {(image && !disableEditor) && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>}
             <div className={styles.children}>{children}</div>
             {image &&
                 <Image

@@ -1,15 +1,15 @@
-import { CompanyExpanded } from "@/services/career/companies/Types"
-import CmsImage from "@/cms/CmsImage/CmsImage"
-import CmsImageClient from "@/cms/CmsImage/CmsImageClient"
 import styles from './Company.module.scss'
-import { SessionMaybeUser } from "@/auth/Session"
-import { DestroyCompanyAuther, UpdateCompanyAuther } from "@/services/career/companies/Authers"
-import { SettingsHeaderItemPopUp } from "../HeaderItems/HeaderItemPopUp"
-import Form from "@/components/Form/Form"
-import { updateComanyAction } from "@/actions/career/companies/update"
-import TextInput from "../UI/TextInput"
-import { destroyCompanyAction } from "@/actions/career/companies/destroy"
-import SelectCompany from "./SelectCompany"
+import SelectCompany from './SelectCompany'
+import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import TextInput from '@/UI/TextInput'
+import CmsImage from '@/cms/CmsImage/CmsImage'
+import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
+import { DestroyCompanyAuther, UpdateCompanyAuther } from '@/services/career/companies/Authers'
+import Form from '@/components/Form/Form'
+import { updateComanyAction } from '@/actions/career/companies/update'
+import { destroyCompanyAction } from '@/actions/career/companies/destroy'
+import type { CompanyExpanded } from '@/services/career/companies/Types'
+import type { SessionMaybeUser } from '@/auth/Session'
 
 type PropTypes = {
     company: CompanyExpanded,
@@ -21,20 +21,20 @@ type PropTypes = {
 }
 
 /**
- * 
+ *
  * @param company - The company to display
  * @param asClient - If the component is rendered clinet side (uses CmsImageClient)
  * @param session - The session of the user
  * @param disableEdit - If the edit buttons should be disabled even if the user has the rights
  * @param logoWidth - The width of the logo
  * @param squareLogo - If the logo should be square (contained in center of square frame)
- * @returns 
+ * @returns
  */
-export default function Company({ 
-    company, 
-    asClient, 
-    session, 
-    disableEdit = false, 
+export default function Company({
+    company,
+    asClient,
+    session,
+    disableEdit = false,
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
@@ -42,18 +42,18 @@ export default function Company({
     const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
-            { asClient ? 
-                <CmsImageClient 
-                    disableEditor={disableEdit} 
-                    className={squareLogo ? styles.logoSq : styles.logo} 
-                    cmsImage={company.logo} 
-                    width={logoWidth} 
-                /> : 
-                <CmsImage 
-                    disableEditor={disableEdit} 
-                    className={squareLogo ? styles.logoSq : styles.logo} 
-                    cmsImage={company.logo} 
-                    width={logoWidth} 
+            { asClient ?
+                <CmsImageClient
+                    disableEditor={disableEdit}
+                    className={squareLogo ? styles.logoSq : styles.logo}
+                    cmsImage={company.logo}
+                    width={logoWidth}
+                /> :
+                <CmsImage
+                    disableEditor={disableEdit}
+                    className={squareLogo ? styles.logoSq : styles.logo}
+                    cmsImage={company.logo}
+                    width={logoWidth}
                 />
             }
             <div className={styles.info}>
@@ -72,7 +72,7 @@ export default function Company({
                                 <TextInput name="name" label="Navn" defaultValue={company.name} />
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
-                            <Form 
+                            <Form
                                 action={destroyCompanyAction.bind(null, { id: company.id })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}

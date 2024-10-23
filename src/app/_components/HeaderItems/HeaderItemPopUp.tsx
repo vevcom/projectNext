@@ -9,7 +9,7 @@ import type { PropTypes as PopUpProps } from '@/components/PopUp/PopUp'
 type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number }
 
 function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
-    return function HeadItemPopUp({ showButtonClass ,children, scale: overrideScale, ...props }: PropTypes) {
+    return function HeadItemPopUp({ showButtonClass, children, scale: overrideScale, ...props }: PropTypes) {
         return <PopUp
             {...props}
             showButtonContent = {

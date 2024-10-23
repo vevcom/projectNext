@@ -1,10 +1,10 @@
 import 'server-only'
-import { ServiceMethod } from "@/services/ServiceMethod";
-import { CreateCompanyAuther, ReadCompanyAuther, UpdateCompanyAuther } from "./Authers";
-import { create } from "./create";
+import { CreateCompanyAuther, ReadCompanyAuther, UpdateCompanyAuther } from './Authers'
+import { create } from './create'
 import { readPage } from './read'
-import { update } from './update';
-import { destroy } from './destroy';
+import { update } from './update'
+import { destroy } from './destroy'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Companies = {
     create: ServiceMethod({

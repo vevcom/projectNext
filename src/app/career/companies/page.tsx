@@ -1,28 +1,29 @@
-import { createCompanyAction } from '@/actions/career/companies/create';
-import Form from '@/components/Form/Form';
-import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp';
-import TextInput from '@/components/UI/TextInput';
-import PageWrapper from '@/components/PageWrapper/PageWrapper';
-import CompanyPagingProvider, { PageSizeCompany } from '@/contexts/paging/CompanyPaging';
-import { SearchParamsServerSide } from '@/lib/query-params/Types';
-import { readCompanyPageAction } from '@/actions/career/companies/read';
-import CompanyList from '@/components/Company/CompanyList';
-import { companyListRenderer } from '@/components/Company/CompanyListRenderer';
-import { QueryParams } from '@/lib/query-params/queryParams';
-import CompanyListFilter from '@/app/_components/Company/CompanyListFilter';
+import { createCompanyAction } from '@/actions/career/companies/create'
+import Form from '@/components/Form/Form'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import TextInput from '@/components/UI/TextInput'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
+import { readCompanyPageAction } from '@/actions/career/companies/read'
+import CompanyList from '@/components/Company/CompanyList'
+import { companyListRenderer } from '@/components/Company/CompanyListRenderer'
+import { QueryParams } from '@/lib/query-params/queryParams'
+import CompanyListFilter from '@/app/_components/Company/CompanyListFilter'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 
 type PropTypes = SearchParamsServerSide
 
 export default async function page({ searchParams }: PropTypes) {
     const pageSize = 10 satisfies PageSizeCompany
     const name = QueryParams.companyName.decode(searchParams) ?? undefined
-    const { session, ...res } = await readCompanyPageAction.bind(null, { 
-        paging: { 
+    const { session, ...res } = await readCompanyPageAction.bind(null, {
+        paging: {
             page: {
                 page: 0,
                 pageSize,
                 cursor: null
-            }, 
+            },
             details: {
                 name
             },

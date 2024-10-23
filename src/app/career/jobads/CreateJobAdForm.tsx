@@ -1,14 +1,14 @@
 'use client'
 import styles from './CreateJobAdForm.module.scss'
+import CompanyChooser from './CompanyChooser'
+import SelectedCompany from './SelectedCompany'
 import { createJobAdAction } from '@/actions/career/jobAds/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
-import { v4 as uuid } from 'uuid'
 import { SelectString } from '@/components/UI/Select'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import DateInput from '@/components/UI/DateInput'
-import CompanyChooser from './CompanyChooser'
-import SelectedCompany from './SelectedCompany'
+import { v4 as uuid } from 'uuid'
 
 export default function CreateJobAdForm() {
     return (

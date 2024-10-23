@@ -1,6 +1,6 @@
 'use client'
-import { CompanySelectionContext } from "@/contexts/CompanySelection"
-import { useContext } from "react"
+import { CompanySelectionContext } from '@/contexts/CompanySelection'
+import { useContext } from 'react'
 
 /**
  * Component for displaying the selected company in the CompanySelectionContext
@@ -16,7 +16,7 @@ export default function SelectedCompany() {
         companyCtx.selectedCompany ? (
             <>
                 <div>{companyCtx.selectedCompany.name}</div>
-                <input name="companyId" type="hidden" value={companyCtx.selectedCompany.id} /> 
+                <input name="companyId" type="hidden" value={companyCtx.selectedCompany.id} />
             </>
         ) : (
             <div>Velg en bedrift</div>

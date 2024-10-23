@@ -1,7 +1,7 @@
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/services/Validation'
 import { JobType } from '@prisma/client'
+import type { ValidationTypes } from '@/services/Validation'
 
 export const baseJobAdValidation = new ValidationBase({
     type: {

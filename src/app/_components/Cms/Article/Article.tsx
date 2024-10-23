@@ -5,8 +5,8 @@ import ChangeName from './ChangeName'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
+import type { ReactNode } from 'react'
 import type { ExpandedArticle } from '@/cms/articles/Types'
-import { ReactNode } from 'react'
 
 export type PropTypes = {
     article: ExpandedArticle,
@@ -17,10 +17,10 @@ export type PropTypes = {
     sideBarClassName?: string
 }
 
-export default function Article({ 
-    article, 
-    coverImageClass, 
-    hideCoverImage = false, 
+export default function Article({
+    article,
+    coverImageClass,
+    hideCoverImage = false,
     noMargin = false,
     sideBarContent,
     sideBarClassName,

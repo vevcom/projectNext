@@ -1,21 +1,21 @@
 'use client'
 import styles from './EditJobAd.module.scss'
+import SelectedCompany from '@/career/jobads/SelectedCompany'
 import Form from '@/components/Form/Form'
-import { updateJobAdAction } from '@/actions/career/jobAds/update'
-import { destroyJobAdAction } from '@/actions/career/jobAds/destroy'
+import { updateJobAdAction } from '@/career/jobAds/update'
+import { destroyJobAdAction } from '@/career/jobAds/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
-import type { ExpandedJobAd } from '@/services/career/jobAds/Types'
-import { useContext, type ReactNode } from 'react'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
-import { v4 as uuid } from 'uuid'
 import Slider from '@/app/_components/UI/Slider'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
-import SelectedCompany from '../SelectedCompany'
+import { v4 as uuid } from 'uuid'
+import { useContext, type ReactNode } from 'react'
+import type { ExpandedJobAd } from '@/career/jobAds/Types'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -48,28 +48,28 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     submitText="oppdater"
                 >
                     <Textarea
-                        defaultValue={jobAd.description || ''} 
-                        label="beskrivelse" 
+                        defaultValue={jobAd.description || ''}
+                        label="beskrivelse"
                         name="description"
                     />
-                    <TextInput 
+                    <TextInput
                         defaultValue={jobAd.location || ''}
-                        label="Sted" 
-                        name="location" 
+                        label="Sted"
+                        name="location"
                         key={uuid()}
-                    />  
+                    />
                     <SelectedCompany />
-                    <SelectString 
-                        options={JobTypeOptions} 
-                        label="Type" 
-                        name="type" 
+                    <SelectString
+                        options={JobTypeOptions}
+                        label="Type"
+                        name="type"
                         key={uuid()}
                         defaultValue={jobAd.type}
                     />
-                    <DateInput 
+                    <DateInput
                         includeTime
-                        label="Søknadsfrist" 
-                        name="applicationDeadline" 
+                        label="Søknadsfrist"
+                        name="applicationDeadline"
                         key={uuid()}
                         defaultValue={jobAd.applicationDeadline || ''}
                     />
@@ -77,7 +77,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                         label="Aktiv"
                         name="active"
                         defaultChecked={jobAd.active}
-                        color='primary'
+                        color="primary"
                     />
                 </Form>
                 <Form

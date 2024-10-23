@@ -1,11 +1,11 @@
 'use client'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import TextInput from '@/UI/TextInput'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import styles from './CompanyListFilter.module.scss'
+import TextInput from '@/UI/TextInput'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useRouter } from 'next/navigation'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'next/navigation'
 
 type PropTypes = {
     currentName: string

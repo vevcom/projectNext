@@ -1,11 +1,11 @@
 import 'server-only'
 import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
+import { CompanyRelationIncluder } from '@/career/companies/ConfigVars'
 import { ServerError } from '@/services/error'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import type { ExpandedJobAd, JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from './Types'
-import { CompanyRelationIncluder } from '../companies/ConfigVars'
-import { ReadPageInput } from '@/services/paging/Types'
 import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import type { ExpandedJobAd, JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from './Types'
+import type { ReadPageInput } from '@/services/paging/Types'
 
 /**
  * This handler reads a jobAd by id or articleName and order

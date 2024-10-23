@@ -1,6 +1,6 @@
+import type { CompanyExpanded } from '@/career/companies/Types'
 import type { ExpandedArticle } from '@/cms/articles/Types'
-import type { JobAd, Image, Company, JobType } from '@prisma/client'
-import { CompanyExpanded } from '../companies/Types'
+import type { JobAd, Image, JobType } from '@prisma/client'
 export type ExpandedJobAd = JobAd & {
     article: ExpandedArticle,
     company: CompanyExpanded,

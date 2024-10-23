@@ -1,4 +1,4 @@
-import { toLocalDate } from "./toLocal";
+import { toLocalDate } from './toLocal'
 
 /**
  * Displays date and time in norwegian format
@@ -6,11 +6,13 @@ import { toLocalDate } from "./toLocal";
  * @returns
  */
 export function displayDate(date: Date, includeTime: boolean = true): string {
-    if (!includeTime) return toLocalDate(date).toLocaleString('nb-NO', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-    })
+    if (!includeTime) {
+        return toLocalDate(date).toLocaleString('nb-NO', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        })
+    }
 
     return toLocalDate(date).toLocaleString('nb-NO', {
         year: 'numeric',

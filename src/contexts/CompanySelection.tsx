@@ -5,7 +5,7 @@ import type { Company } from '@prisma/client'
 export const CompanySelectionContext = createContext<{
     selectedCompany: Company | null,
     setSelectedCompany: (company: Company | null) => void,
-} | null>(null)
+        } | null>(null)
 
 type PropTypes = {
     children: ReactNode,

@@ -1,5 +1,6 @@
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
-import { JobType, Prisma } from '@prisma/client'
+import { JobType } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 export const jobAdArticleRealtionsIncluder = {
     article: {
