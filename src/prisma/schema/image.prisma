@@ -52,6 +52,7 @@ model ImageCollection {
   updatedAt    DateTime           @updatedAt
   visibility   Visibility         @relation(fields: [visibilityId], references: [id])
   visibilityId Int                @unique
+  CmsLink      CmsLink[]
 }
 
 enum ImageSize {

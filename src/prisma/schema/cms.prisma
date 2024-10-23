@@ -64,17 +64,39 @@ model CmsParagraph {
   Committee        Committee?
 }
 
+enum LinkType {
+  URL
+  NEWS
+  ARTICLE_CATEGORY_ARTICLE
+  IMAGE_COLLECTION
+}
+
 enum SpecialCmsLink {
   CAREER_LINK_TO_CONTACTOR
 }
 
 model CmsLink {
-  id               Int             @id @default(autoincrement())
-  name             String          @unique @default(cuid())
-  url              String          @default("/")
+  id   Int    @id @default(autoincrement())
+  name String @unique @default(cuid())
+
+  type                       LinkType         @default(URL)
+  // FOR URL
+  url                        String?          @default("/")
+  urlText                    String?          @default("Link")
+  // FOR NEWS
+  newsArticle                NewsArticle?     @relation(fields: [newsArticleId, newsArticleName], references: [id, articleName], onDelete: SetNull)
+  newsArticleId              Int?
+  newsArticleName            String?
+  // FOR ARTICLE CATEGORY
+  articleCategoryArticle     Article?         @relation(fields: [articleCategoryArticleId, articleCategoryArticleName], references: [id, name], onDelete: SetNull)
+  articleCategoryArticleId   Int?
+  articleCategoryArticleName String?
+  // FOR IMAGE COLLECTION
+  imageCollection            ImageCollection? @relation(fields: [imageCollectionId], references: [id], onDelete: SetNull)
+  imageCollectionId          Int?
+
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  text             String          @default("Link")
   special          SpecialCmsLink? @unique
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
@@ -121,6 +143,7 @@ model Article {
   coverImageId        Int              @unique
   JobAd               JobAd?
   Committee           Committee?
+  CmsLink             CmsLink[]
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
@@ -135,7 +158,9 @@ model NewsArticle {
   articleName    String
   omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order], onDelete: Restrict)
   orderPublished Int
+  CmsLink        CmsLink[]
 
+  @@unique([id, articleName])
   @@unique([articleId, articleName])
   @@unique([articleName, orderPublished])
 }
