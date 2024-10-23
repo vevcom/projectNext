@@ -74,6 +74,7 @@ export default async function JobAd({ params }: PropTypes) {
                     <div className={styles.company}>
                         <h2>Arbeidsgiver</h2>
                         <Company 
+                            disableEdit
                             squareLogo={false} 
                             company={jobAd.company} 
                             asClient={false} 

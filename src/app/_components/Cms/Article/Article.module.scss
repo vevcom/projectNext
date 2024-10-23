@@ -10,8 +10,18 @@ $padding: ohma.$minimalPagePadding;
     grid-template-areas: 
         "coverImage coverImage"
         "article sideBar"
-        "addSection addSection"
+        "addSection sideBar"
     ;
+    @include ohma.screenMobile {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+        grid-template-areas: 
+            "coverImage"
+            "article"
+            "addSection"
+            "sideBar"
+        ;
+    }
     .coverImage {
         grid-area: coverImage;
         overflow: hidden;
