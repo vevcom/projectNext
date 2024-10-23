@@ -1,14 +1,53 @@
 import 'server-only'
 import { createCmsLinkValidation } from './validation'
-import prisma from '@/prisma'
-import { prismaCall } from '@/services/prismaCall'
-import type { CreateCmsLinkTypes } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServerError } from '@/services/error'
 import type { CmsLink } from '@prisma/client'
 
-export async function createCmsLink(rawData: CreateCmsLinkTypes['Detailed']): Promise<CmsLink> {
-    const data = createCmsLinkValidation.detailedValidate(rawData)
-
-    return await prismaCall(() => prisma.cmsLink.create({
-        data,
-    }))
-}
+export const create = ServiceMethodHandler({
+    withData: true,
+    validation: createCmsLinkValidation,
+    handler: async (prisma, _, data): Promise<CmsLink> => {
+        switch (data.type) {
+            case 'RAW_URL':
+                const rawUrl = data.rawUrl || '/'
+                return prisma.cmsLink.create({
+                    data: {
+                        name: data.name,
+                        type: data.type,
+                        rawUrl,
+                        rawUrlText: data.rawUrlText || 'Link',
+                    }
+                })
+            case 'NEWS':
+                if (!data.newsArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler newsArticleId')
+                return prisma.cmsLink.create({
+                    data: {
+                        name: data.name,
+                        type: data.type,
+                        newsArticleId: data.newsArticleId
+                    }
+                })
+            case 'ARTICLE_CATEGORY_ARTICLE':
+                if (!data.articleCategoryArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler articleCategoryArticleId')
+                return prisma.cmsLink.create({
+                    data: {
+                        name: data.name,
+                        type: data.type,
+                        articleCategoryArticleId: data.articleCategoryArticleId
+                    }
+                })
+            case 'IMAGE_COLLECTION':
+                if (!data.imageCollectionId) throw new ServerError('BAD PARAMETERS', 'Mangler imageCollectionId')
+                return prisma.cmsLink.create({
+                    data: {
+                        name: data.name,
+                        type: data.type,
+                        imageCollectionId: data.imageCollectionId
+                    }
+                })
+            default:
+                throw new ServerError('BAD PARAMETERS', 'Ukjent link type')
+        }
+    }
+})
