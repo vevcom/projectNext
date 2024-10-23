@@ -64,8 +64,8 @@ model CmsParagraph {
   Committee        Committee?
 }
 
-enum LinkType {
-  URL
+enum CmsLinkType {
+  RAW_URL
   NEWS
   ARTICLE_CATEGORY_ARTICLE
   IMAGE_COLLECTION
@@ -79,10 +79,10 @@ model CmsLink {
   id   Int    @id @default(autoincrement())
   name String @unique @default(cuid())
 
-  type                       LinkType         @default(URL)
-  // FOR URL
-  url                        String?          @default("/")
-  urlText                    String?          @default("Link")
+  type                       CmsLinkType      @default(RAW_URL)
+  // FOR RAW URL
+  rawUrl                     String?          @default("/")
+  rawUrlText                 String?          @default("Link")
   // FOR NEWS
   newsArticle                NewsArticle?     @relation(fields: [newsArticleId, newsArticleName], references: [id, articleName], onDelete: SetNull)
   newsArticleId              Int?
