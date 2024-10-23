@@ -104,22 +104,24 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
                     PopUpCtx?.remove(closePopUpOnSuccess)
                 }, 2000)
             }
-            return setTimeout(() => {
+            setTimeout(() => {
                 setSuccess(false)
                 if (refreshOnSuccess) refresh()
                 if (navigateOnSuccess) {
                     push(typeof navigateOnSuccess === 'string' ? navigateOnSuccess : navigateOnSuccess(res.data))
                 }
             }, SUCCESS_FEEDBACK_TIME)
+            return
         }
         //No error provided
         if (!res.error) {
-            return setGeneralErrors([
+            setGeneralErrors([
                 {
                     path: [],
                     message: 'error with input'
                 }
             ])
+            return
         }
 
         //sort errors
@@ -129,7 +131,8 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
             if (inputWithError) return inputWithError.errors.push(error)
             return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
         })
-        return setInputs(inputs_)
+        setInputs(inputs_)
+        return
     }
 
     return (
