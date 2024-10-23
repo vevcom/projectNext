@@ -1,6 +1,6 @@
 import 'server-only'
 import { CreateJobAdAuther, DestroyJobAdAuther, ReadJobAdAuther, UpdateJobAdAuther } from './Authers'
-import { read, readActive } from './read'
+import { read, readActive, readInactivePage } from './read'
 import { create } from './create'
 import { update } from './update'
 import { destroy } from './destroy'
@@ -20,6 +20,13 @@ export const JobAds = {
         auther: ReadJobAdAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: readActive,
+    }),
+    readInactivePage: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: ReadJobAdAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: readInactivePage,
     }),
     create: ServiceMethod({
         withData: true,
