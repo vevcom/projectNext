@@ -12,7 +12,7 @@ export default async function AdmissionTrials() {
             <ul>
                 {AdmissionsArray.map(trial =>
                     <li key={uuid()}>
-                        <Link href={`admissiontrials/${trial}`}>{AdmissionDisplayNames[trial]}</Link>
+                        <Link href={`admission/${trial}`}>{AdmissionDisplayNames[trial]}</Link>
                     </li>
                 )}
             </ul>
