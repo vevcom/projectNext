@@ -79,21 +79,19 @@ model CmsLink {
   id   Int    @id @default(autoincrement())
   name String @unique @default(cuid())
 
-  type                       CmsLinkType      @default(RAW_URL)
+  type                     CmsLinkType      @default(RAW_URL)
   // FOR RAW URL
-  rawUrl                     String?          @default("/")
-  rawUrlText                 String?          @default("Link")
+  rawUrl                   String?          @default("/")
+  rawUrlText               String?          @default("Link")
   // FOR NEWS
-  newsArticle                NewsArticle?     @relation(fields: [newsArticleId, newsArticleName], references: [id, articleName], onDelete: SetNull)
-  newsArticleId              Int?
-  newsArticleName            String?
+  newsArticle              NewsArticle?     @relation(fields: [newsArticleId], references: [id], onDelete: SetNull)
+  newsArticleId            Int?
   // FOR ARTICLE CATEGORY
-  articleCategoryArticle     Article?         @relation(fields: [articleCategoryArticleId, articleCategoryArticleName], references: [id, name], onDelete: SetNull)
-  articleCategoryArticleId   Int?
-  articleCategoryArticleName String?
+  articleCategoryArticle   Article?         @relation(fields: [articleCategoryArticleId], references: [id], onDelete: SetNull)
+  articleCategoryArticleId Int?
   // FOR IMAGE COLLECTION
-  imageCollection            ImageCollection? @relation(fields: [imageCollectionId], references: [id], onDelete: SetNull)
-  imageCollectionId          Int?
+  imageCollection          ImageCollection? @relation(fields: [imageCollectionId], references: [id], onDelete: SetNull)
+  imageCollectionId        Int?
 
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
@@ -160,7 +158,6 @@ model NewsArticle {
   orderPublished Int
   CmsLink        CmsLink[]
 
-  @@unique([id, articleName])
   @@unique([articleId, articleName])
   @@unique([articleName, orderPublished])
 }
