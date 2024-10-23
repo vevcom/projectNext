@@ -86,7 +86,9 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     submitText="slett annonse"
                     confirmation={{
                         confirm: true,
-                        text: 'Er du sikker på at du vil slette denne annonsen? Dette kan ikke angres.'
+                        text: 'Er du sikker på at du vil slette denne annonsen?' +
+                        'Dette kan ikke angres. Vi anbefaler å sette annonsen' +
+                        'til inaktiv i stedet.'
                     }}
                     submitColor="red"
                 >

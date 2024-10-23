@@ -1,11 +1,6 @@
 @use '@/styles/ohma';
 
-.wrapper {
-    margin: 1em 0;
-    @include ohma.ImageCardListLayout;
-}
-
-.archiveLink {
+.backLink {
     color: ohma.$colors-black;
     svg {
         width: 30px;
