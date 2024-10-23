@@ -38,10 +38,10 @@ export const read = ServiceMethodHandler({
 })
 
 /**
- * This handler reads all current jobAds
+ * This handler reads all active jobAds
  * @returns SimpleJobAd[] - all jobAds with coverImage
  */
-export const readCurrent = ServiceMethodHandler({
+export const readActive = ServiceMethodHandler({
     withData: false,
     handler: async (prisma): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
@@ -50,7 +50,9 @@ export const readCurrent = ServiceMethodHandler({
                     createdAt: 'desc',
                 },
             },
-            //TODO: only "current"
+            where: {
+                active: true,
+            },
             include: simpleJobAdArticleRealtionsIncluder,
         })
         return jobAds.map(ad => ({
