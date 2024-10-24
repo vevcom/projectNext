@@ -431,6 +431,11 @@ export const PermissionConfig = {
         name: 'Oppdatere skapreservasjoner',
         description: 'kan oppdatere skapreservasjoner',
         category: 'brukere'
+    },
+    THEME_ADMIN: {
+        name: 'Tema admin',
+        description: 'kan opprette, redigere og gjerne temaer',
+        category: 'diverse admin'
     }
 } satisfies Record<Permission, PermissionInfo>
 
