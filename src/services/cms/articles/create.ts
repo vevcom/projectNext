@@ -1,10 +1,9 @@
 import 'server-only'
-import { articleRealtionsIncluder } from './ConfigVars'
 import { createArticleValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleTypes } from './validation'
-import type { ExpandedArticle } from './Types'
+import { Article } from '@prisma/client'
 
 /**
  * A function to create a new article. It will have no content (sections) and cover image will relate
@@ -16,7 +15,7 @@ import type { ExpandedArticle } from './Types'
 export async function createArticle(
     rawData: CreateArticleTypes['Detailed'],
     categoryId?: number,
-): Promise<ExpandedArticle> {
+): Promise<Article> {
     const { name } = createArticleValidation.detailedValidate(rawData)
 
     // if name not given, create a unique new name
@@ -42,6 +41,5 @@ export async function createArticle(
                 },
             } : undefined,
         },
-        include: articleRealtionsIncluder,
     }))
 }

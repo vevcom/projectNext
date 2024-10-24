@@ -4,6 +4,7 @@ import prisma from '@/prisma'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticle } from './Types'
+import { CmsLinks } from '../links'
 
 /**
  * A function that reads an article with all the neccessary data included like paragraphs, images, etc...
@@ -26,10 +27,13 @@ export async function readArticle(idOrName: number | {
         include: articleRealtionsIncluder,
     }))
     if (!article) throw new ServerError('NOT FOUND', `Article ${idOrName} not found`)
-    if (!article.coverImage) throw new ServerError('BAD PARAMETERS', `Article ${idOrName} has no cover image`)
-    const ret: ExpandedArticle = {
+    return {
         ...article,
-        coverImage: article.coverImage
+        articleSections: await Promise.all(article.articleSections.map(async section => ({
+            ...section,
+            cmsLink: section.cmsLink ? await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({
+                params: section.cmsLink, session: null
+            }) : null
+        })))
     }
-    return ret
 }

@@ -1,14 +1,13 @@
 import 'server-only'
 import { updateArticleValidation } from './validation'
-import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
+import { maxSections } from '@/cms/articles/ConfigVars'
 import prisma from '@/prisma'
 import { addArticleSectionPart } from '@/services/cms/articleSections/update'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { UpdateArticleTypes } from './validation'
 import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
-import type { ArticleSection } from '@prisma/client'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { Article, ArticleSection } from '@prisma/client'
 
 /**
  * A function to update metadata of an article. This includes for ex. name.
@@ -19,13 +18,12 @@ import type { ExpandedArticle } from '@/cms/articles/Types'
 export async function updateArticle(
     id: number,
     rawData: UpdateArticleTypes['Detailed'],
-): Promise<ExpandedArticle> {
+): Promise<Article> {
     const data = updateArticleValidation.detailedValidate(rawData)
 
     return await prismaCall(() => prisma.article.update({
         where: { id },
         data,
-        include: articleRealtionsIncluder,
     }))
 }
 
@@ -38,7 +36,7 @@ export async function updateArticle(
 export async function addSectionToArticle(
     id: number,
     include: Partial<Record<ArticleSectionPart, boolean>>,
-): Promise<ExpandedArticle> {
+): Promise<Article> {
     const article = await prisma.article.findUnique({
         where: {
             id,
@@ -84,7 +82,6 @@ export async function addSectionToArticle(
                 },
             },
         },
-        include: articleRealtionsIncluder,
     }))
 
     for (const part of ['cmsParagraph', 'cmsLink', 'cmsImage'] satisfies ArticleSectionPart[]) {

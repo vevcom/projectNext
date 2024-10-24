@@ -6,13 +6,12 @@ import { updateArticleValidation } from '@/services/cms/articles/validation'
 import type { UpdateArticleTypes } from '@/services/cms/articles/validation'
 import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ArticleSection } from '@prisma/client'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { Article, ArticleSection } from '@prisma/client'
 
 export async function updateArticleAction(
     id: number,
     rawData: FormData | UpdateArticleTypes['Type']
-): Promise<ActionReturn<ExpandedArticle>> {
+): Promise<ActionReturn<Article>> {
     //TODO: auth on visability
     const parse = updateArticleValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)
@@ -24,7 +23,7 @@ export async function updateArticleAction(
 export async function addSectionToArticleAction(
     id: number,
     include: Partial<Record<ArticleSectionPart, boolean>>
-): Promise<ActionReturn<ExpandedArticle>> {
+): Promise<ActionReturn<Article>> {
     //TODO: auth on visability
     return await safeServerCall(() => addSectionToArticle(id, include))
 }
