@@ -1,7 +1,7 @@
 import styles from './CmsLink.module.scss'
 import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
-import { CmsLinkCollapsed } from '@/services/cms/links/Types'
+import type { CmsLinkCollapsed } from '@/services/cms/links/Types'
 
 type PropTypes = {
     cmsLink: CmsLinkCollapsed

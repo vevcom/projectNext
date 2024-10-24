@@ -1,7 +1,7 @@
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import type { ValidationTypes } from '@/services/Validation'
 import { CmsLinkType } from '@prisma/client'
+import type { ValidationTypes } from '@/services/Validation'
 
 export const baseCmsLinkValidation = new ValidationBase({
     type: {

@@ -6,7 +6,7 @@ import Form from '@/components/Form/Form'
 import { updateCmsLinkAction } from '@/cms/links/update'
 import PopUp from '@/components/PopUp/PopUp'
 import useEditing from '@/hooks/useEditing'
-import { CmsLinkCollapsed } from '@/services/cms/links/Types'
+import type { CmsLinkCollapsed } from '@/services/cms/links/Types'
 
 type PropTypes = {
     cmsLink: CmsLinkCollapsed

@@ -1,4 +1,4 @@
-import type { CmsLink, Prisma } from "@prisma/client"
+import type { CmsLink } from '@prisma/client'
 
 /**
  * Type with necessary information to create a cms link (CmsLinkCollapsed) of any type.

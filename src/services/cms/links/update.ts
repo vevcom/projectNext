@@ -12,8 +12,10 @@ export const update = ServiceMethodHandler({
         })
         const type = data.type || cmsLink.type
         switch (type) {
-            case 'RAW_URL': 
-                if (!data.rawUrl && !data.rawUrlText) throw new ServerError('BAD PARAMETERS', 'Mangler rawUrl eller rawUrlText')
+            case 'RAW_URL':
+                if (!data.rawUrl && !data.rawUrlText) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler rawUrl eller rawUrlText')
+                }
                 await prisma.cmsLink.update({
                     where: { id },
                     data: {
@@ -21,11 +23,13 @@ export const update = ServiceMethodHandler({
                         type,
                         rawUrl: data.rawUrl,
                         rawUrlText: data.rawUrlText,
-                    } 
+                    }
                 })
                 return
             case 'NEWS':
-                if (!data.newsArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler newsArticleId')
+                if (!data.newsArticleId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler newsArticleId')
+                }
                 await prisma.cmsLink.update({
                     where: { id },
                     data: {
@@ -36,7 +40,9 @@ export const update = ServiceMethodHandler({
                 })
                 return
             case 'ARTICLE_CATEGORY_ARTICLE':
-                if (!data.articleCategoryArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler articleCategoryArticleId')
+                if (!data.articleCategoryArticleId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler articleCategoryArticleId')
+                }
                 await prisma.cmsLink.update({
                     where: { id },
                     data: {
@@ -47,7 +53,9 @@ export const update = ServiceMethodHandler({
                 })
                 return
             case 'IMAGE_COLLECTION':
-                if (!data.imageCollectionId) throw new ServerError('BAD PARAMETERS', 'Mangler imageCollectionId')
+                if (!data.imageCollectionId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler imageCollectionId')
+                }
                 await prisma.cmsLink.update({
                     where: { id },
                     data: {
@@ -59,6 +67,6 @@ export const update = ServiceMethodHandler({
                 return
             default:
                 throw new ServerError('BAD PARAMETERS', 'Ukjent link type')
-        }   
+        }
     },
 })

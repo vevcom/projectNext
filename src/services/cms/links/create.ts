@@ -10,17 +10,18 @@ export const create = ServiceMethodHandler({
     handler: async (prisma, _, data): Promise<CmsLink> => {
         switch (data.type) {
             case 'RAW_URL':
-                const rawUrl = data.rawUrl || '/'
                 return prisma.cmsLink.create({
                     data: {
                         name: data.name,
                         type: data.type,
-                        rawUrl,
+                        rawUrl: data.rawUrl || '/',
                         rawUrlText: data.rawUrlText || 'Link',
                     }
                 })
             case 'NEWS':
-                if (!data.newsArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler newsArticleId')
+                if (!data.newsArticleId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler newsArticleId')
+                }
                 return prisma.cmsLink.create({
                     data: {
                         name: data.name,
@@ -29,7 +30,9 @@ export const create = ServiceMethodHandler({
                     }
                 })
             case 'ARTICLE_CATEGORY_ARTICLE':
-                if (!data.articleCategoryArticleId) throw new ServerError('BAD PARAMETERS', 'Mangler articleCategoryArticleId')
+                if (!data.articleCategoryArticleId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler articleCategoryArticleId')
+                }
                 return prisma.cmsLink.create({
                     data: {
                         name: data.name,
@@ -38,7 +41,9 @@ export const create = ServiceMethodHandler({
                     }
                 })
             case 'IMAGE_COLLECTION':
-                if (!data.imageCollectionId) throw new ServerError('BAD PARAMETERS', 'Mangler imageCollectionId')
+                if (!data.imageCollectionId) {
+                    throw new ServerError('BAD PARAMETERS', 'Mangler imageCollectionId')
+                }
                 return prisma.cmsLink.create({
                     data: {
                         name: data.name,

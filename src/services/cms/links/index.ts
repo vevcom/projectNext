@@ -1,9 +1,9 @@
 import 'server-only'
 import { readSpecial, validateAndCollapseCmsLink } from './read'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { create } from './create'
 import { destroy } from './destroy'
 import { update } from './update'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const CmsLinks = {
     readSpacial: ServiceMethod({
