@@ -10,6 +10,6 @@ export type ExpandedCommitteeWithCover = ExpandedCommittee & {
     coverImage: ExpandedCmsImage
 }
 
-export type ExpandedCommitteeWithArticle = ExpandedCommittee & {
-    committeeArticle: ExpandedArticle
+export type ExpandedCommitteeWithArticle<CmsLinkIsCollapsed extends boolean> = ExpandedCommittee & {
+    committeeArticle: ExpandedArticle<CmsLinkIsCollapsed>
 }

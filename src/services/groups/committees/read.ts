@@ -5,6 +5,7 @@ import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
 import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { CmsParagraph } from '@prisma/client'
 import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
+import { Articles } from '@/services/cms/articles'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -54,8 +55,8 @@ export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedC
     }))
 }
 
-export async function readCommitteeArticle(shortName: string) : Promise<ExpandedArticle> {
-    const article = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+export async function readCommitteeArticle(shortName: string) : Promise<ExpandedArticle<true>> {
+    const committee = await prismaCall(() => prisma.committee.findUniqueOrThrow({
         where: { shortName },
         select: {
             committeeArticle: {
@@ -63,7 +64,9 @@ export async function readCommitteeArticle(shortName: string) : Promise<Expanded
             }
         }
     }))
-    return article.committeeArticle
+    return Articles.validateAndCollapseCmsLinksInArticle.client(prisma).execute({
+        params: committee.committeeArticle, session: null,
+    })
 }
 
 export async function readCommitteesFromIds(ids: number[]) {
