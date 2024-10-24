@@ -2,8 +2,8 @@ import 'server-only'
 import { createArticleSectionValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
+import type { ArticleSection } from '@prisma/client'
 import type { CreateArticleSectionTypes } from './validation'
-import { ArticleSection } from '@prisma/client'
 
 /**
  * A function to create a new articleSection

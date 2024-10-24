@@ -1,13 +1,13 @@
 import 'server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import { createNewsArticleValidation } from './validation'
+import { Articles } from '@/cms/articles'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
 import type { ExpandedNewsArticle } from './Types'
-import { Articles } from '../cms/articles'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to

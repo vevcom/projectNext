@@ -1,6 +1,6 @@
 import 'server-only'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { validateAndCollapseCmsLinkInArticleSection } from './read'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const ArticleSections = {
     validateAndCollapseCmsLinkInArticleSection: ServiceMethod({

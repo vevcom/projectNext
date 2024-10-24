@@ -2,8 +2,8 @@ import 'server-only'
 import { createArticleValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
+import type { Article } from '@prisma/client'
 import type { CreateArticleTypes } from './validation'
-import { Article } from '@prisma/client'
 
 /**
  * A function to create a new article. It will have no content (sections) and cover image will relate

@@ -1,11 +1,11 @@
 import 'server-only'
+import { CmsLinks } from '@/cms/links'
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
-import prisma from '@/prisma'
+import { default as prisma_ } from '@/prisma'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
-import { CmsLinks } from '../links'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
 
 /**
  * Validates and collapses an article section. This means changing the cmsLink to a valid cmsLink
@@ -14,13 +14,14 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 export const validateAndCollapseCmsLinkInArticleSection = ServiceMethodHandler({
     withData: false,
     handler: async (
-        prisma, 
+        prisma,
         articleSection: ExpandedArticleSection<false>
     ) : Promise<ExpandedArticleSection<true>> => ({
         ...articleSection,
-        cmsLink: articleSection.cmsLink ? 
-            await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({ params: articleSection.cmsLink, session: null }) :
-            null
+        cmsLink: articleSection.cmsLink ?
+            await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({
+                params: articleSection.cmsLink, session: null
+            }) : null
     })
 })
 
@@ -30,7 +31,7 @@ export const validateAndCollapseCmsLinkInArticleSection = ServiceMethodHandler({
  * @returns
  */
 export async function readArticleSection(nameOrId: string | number): Promise<ExpandedArticleSection<true>> {
-    const articleSection = await prismaCall(() => prisma.articleSection.findUnique({
+    const articleSection = await prismaCall(() => prisma_.articleSection.findUnique({
         where: {
             name: typeof nameOrId === 'string' ? nameOrId : undefined,
             id: typeof nameOrId === 'number' ? nameOrId : undefined
@@ -38,7 +39,7 @@ export async function readArticleSection(nameOrId: string | number): Promise<Exp
         include: articleSectionsRealtionsIncluder
     }))
     if (!articleSection) throw new ServerError('NOT FOUND', 'Article section not found')
-    return validateAndCollapseCmsLinkInArticleSection.client(prisma).execute(
+    return validateAndCollapseCmsLinkInArticleSection.client(prisma_).execute(
         { params: articleSection, session: null }
     )
 }

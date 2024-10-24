@@ -4,9 +4,9 @@ import { CompanyRelationIncluder } from '@/career/companies/ConfigVars'
 import { ServerError } from '@/services/error'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { Articles } from '@/services/cms/articles'
 import type { ExpandedJobAd, JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
-import { Articles } from '@/services/cms/articles'
 
 /**
  * This handler reads a jobAd by id or articleName and order

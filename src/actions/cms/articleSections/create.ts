@@ -3,9 +3,9 @@ import { createArticleSection } from '@/services/cms/articleSections/create'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError } from '@/actions/error'
 import { createArticleSectionValidation } from '@/services/cms/articleSections/validation'
+import type { ArticleSection } from '@prisma/client'
 import type { CreateArticleSectionTypes } from '@/services/cms/articleSections/validation'
 import type { ActionReturn } from '@/actions/Types'
-import { ArticleSection } from '@prisma/client'
 
 export async function createArticleSectionAction(
     rawData: FormData | CreateArticleSectionTypes['Type'],

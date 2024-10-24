@@ -2,10 +2,10 @@ import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
+import { Articles } from '@/services/cms/articles'
 import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { CmsParagraph } from '@prisma/client'
 import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
-import { Articles } from '@/services/cms/articles'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({

@@ -1,5 +1,5 @@
+import { CmsLinkRelationsIncluder } from '@/cms/links/ConfigVars'
 import type { Prisma } from '@prisma/client'
-import { CmsLinkRelationsIncluder } from '../links/ConfigVars'
 
 export const maxImageSize = 540
 export const minImageSize = 130
