@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.themeList {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: theme.primaryColor;
+    color: theme.secondaryColor;
+}
+
+.themeUl {
+    background: linear-gradient(theme.primaryColor, theme.secondaryColor);
+}
