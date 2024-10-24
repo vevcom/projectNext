@@ -2,13 +2,18 @@ import Item from './Item'
 import styles from './NavBar.module.scss'
 import Menu from './Menu'
 import getNavItems from './navDef'
+import UserNavigation from './UserNavigation'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { getUser } from '@/auth/getUser'
 import Link from 'next/link'
+import type { Profile } from '@/services/users/Types'
 
-export default async function NavBar() {
-    const { user } = await getUser()
+export type PropTypes = {
+    profile: Profile | null
+}
+
+export default async function NavBar({ profile }: PropTypes) {
+    const user = profile?.user ?? null
     const isLoggedIn = user !== null
 
     //temporary
@@ -51,9 +56,8 @@ export default async function NavBar() {
                             width={25}
                             height={25}
                             alt="log in button"
-                        >
-                            <Link href={isLoggedIn ? '/users/me' : '/login'} />
-                        </SpecialCmsImage>
+                        />
+                        <UserNavigation profile={profile} />
                     </div>
                 </li>
             </ul>

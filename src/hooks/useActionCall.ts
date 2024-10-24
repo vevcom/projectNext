@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import type { ActionReturn, ActionReturnError } from '@/actions/Types'
+import { createActionError } from '@/actions/error'
 
 /**
  * You sometimes want to call a server action that reads from the client. This hook helps with that.
@@ -32,7 +33,7 @@ export default function useActionCall<
                 setRes({ data: null, error: result })
             }
         }).catch(() => {
-            setRes({ data: null, error: { success: false, errorCode: 'UNKNOWN ERROR' } })
+            setRes({ data: null, error: createActionError('UNKNOWN ERROR', 'An unknown error occured') })
         })
     }, [action])
 
