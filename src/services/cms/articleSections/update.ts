@@ -1,17 +1,16 @@
 import 'server-only'
 import { destroyArticleSection } from './destroy'
 import { destroyCmsImage } from '@/services/cms/images/destoy'
-import { destroyCmsLink } from '@/services/cms/links/destroy'
 import { destroyCmsParagraph } from '@/services/cms/paragraphs/destroy'
 import { maxImageSize, minImageSize, articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
 import prisma from '@/prisma'
 import { createCmsImage } from '@/services/cms/images/create'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import { createCmsLink } from '@/services/cms/links/create'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { ImageSize, ArticleSection, Position, Prisma } from '@prisma/client'
 import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
+import { CmsLinks } from '../links'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
@@ -109,7 +108,9 @@ export async function addArticleSectionPart(
         }
         case 'cmsLink':
         {
-            const cmsLink = await createCmsLink({ name: `${nameOrId}_link` })
+            const cmsLink = await CmsLinks.create.client(prisma).execute({ 
+                data: {name: `${nameOrId}_link`}, params: {}, session: null,
+            })
             return await prismaCall(() => prisma.articleSection.update({
                 where,
                 data: { cmsLink: { connect: { id: cmsLink.id } } },
@@ -151,7 +152,9 @@ export async function removeArticleSectionPart(
 
     switch (part) {
         case 'cmsLink':
-            if (articleSection.cmsLink) await destroyCmsLink(articleSection.cmsLink.id)
+            if (articleSection.cmsLink) await CmsLinks.destroy.client(prisma).execute({ 
+                params: { id: articleSection.cmsLink.id }, session: null 
+            })
             break
         case 'cmsParagraph':
             if (articleSection.cmsParagraph) await destroyCmsParagraph(articleSection.cmsParagraph.id)
