@@ -10,7 +10,7 @@ type PropTypes = {
     },
 }
 
-export default async function ArticleCategorArticley({ params }: PropTypes) {
+export default async function ArticleCategorArticle({ params }: PropTypes) {
     //This fixes æ, ø, å and spaces in the url
     const name = decodeURIComponent(params.name)
     const category = decodeURIComponent(params.category)

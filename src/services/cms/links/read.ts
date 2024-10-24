@@ -4,7 +4,6 @@ import logger from '@/logger'
 import type { SpecialCmsLink } from '@prisma/client'
 import { CmsLinkCollapsed, CmsLinkExpanded } from './Types'
 import { CmsLinkRelationsIncluder } from './ConfigVars'
-import { preloadStyle } from 'next/dist/server/app-render/entry-base'
 
 export const readSpecial = ServiceMethodHandler({
     withData: false,

@@ -20,6 +20,11 @@ export const CmsLinks = {
         hasAuther: false, //TODO: Auth
         serviceMethodHandler: create
     }),
+    update: ServiceMethod({
+        withData: true,
+        hasAuther: false, //TODO: Auth
+        serviceMethodHandler: create
+    }),
     destroy: ServiceMethod({
         withData: false,
         hasAuther: false, //TODO: Auth
