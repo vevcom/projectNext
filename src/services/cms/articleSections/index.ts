@@ -1,11 +1,11 @@
 import 'server-only'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { validateAndCollapseArticleSection } from './read'
+import { validateAndCollapseCmsLinkInArticleSection } from './read'
 
 export const ArticleSections = {
-    validateAndCollapseArticleSection: ServiceMethod({
+    validateAndCollapseCmsLinkInArticleSection: ServiceMethod({
         withData: false,
         hasAuther: false,
-        serviceMethodHandler: validateAndCollapseArticleSection
+        serviceMethodHandler: validateAndCollapseCmsLinkInArticleSection
     })
-}
+} as const

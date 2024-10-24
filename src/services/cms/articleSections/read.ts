@@ -11,7 +11,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
  * Validates and collapses an article section. This means changing the cmsLink to a valid cmsLink
  * by collapsing the cmsLink
  */
-export const validateAndCollapseArticleSection = ServiceMethodHandler({
+export const validateAndCollapseCmsLinkInArticleSection = ServiceMethodHandler({
     withData: false,
     handler: async (
         prisma, 
@@ -38,5 +38,7 @@ export async function readArticleSection(nameOrId: string | number): Promise<Exp
         include: articleSectionsRealtionsIncluder
     }))
     if (!articleSection) throw new ServerError('NOT FOUND', 'Article section not found')
-    return validateAndCollapseArticleSection.client(prisma).execute({ params: articleSection, session: null })
+    return validateAndCollapseCmsLinkInArticleSection.client(prisma).execute(
+        { params: articleSection, session: null }
+    )
 }
