@@ -34,8 +34,8 @@ type ConfigType<Params> = {
     session: SessionMaybeUser | null
 }
 
-type ConfigTypeData<DetailedType, Params> = ConfigType<Params> & {
-    data: DetailedType | unknown,
+type ConfigTypeData<DetailedType, Params, CanBeUnknown extends boolean> = ConfigType<Params> & {
+    data: DetailedType | (CanBeUnknown extends true ? unknown : never)
 }
 
 export type Execute<
@@ -43,15 +43,22 @@ export type Execute<
     DetailedType,
     Params,
     Return,
-    WithAuthParam extends boolean
+    WithAuthParam extends boolean,
 > = WithAuthParam extends true ? {
     execute: (config: WithValidation extends true
-        ? ConfigTypeData<DetailedType, Params>
+        ? ConfigTypeData<DetailedType, Params, false>
         : ConfigType<Params>,
-        authRunConfig: AuthRunConfig) => Promise<Return>
+        authRunConfig: AuthRunConfig) => Promise<Return>,
+    executeRaw: (config: WithValidation extends true
+            ? ConfigTypeData<DetailedType, Params, true>
+            : ConfigType<Params>,
+            authRunConfig: AuthRunConfig) => Promise<Return>,
 } : {
     execute: (config: WithValidation extends true
-        ? ConfigTypeData<DetailedType, Params>
+        ? ConfigTypeData<DetailedType, Params, false>
+        : ConfigType<Params>) => Promise<Return>,
+    executeRaw: (config: WithValidation extends true
+        ? ConfigTypeData<DetailedType, Params, true>
         : ConfigType<Params>) => Promise<Return>
 }
 

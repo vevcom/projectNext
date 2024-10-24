@@ -18,7 +18,7 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Prom
     const cmsImage = await createCmsImage({ name: uuid() })
     const cmsParagraph = await createCmsParagraph({ name: uuid() })
     const cmsLink = await CmsLinks.create.client(prisma).execute(
-        { data: { name: uuid() }, params: {}, session: null }
+        { data: { name: uuid(), type: 'RAW_URL' }, params: {}, session: null }
     )
 
     return await prismaCall(() => prisma.school.create({

@@ -109,7 +109,7 @@ export async function addArticleSectionPart(
         case 'cmsLink':
         {
             const cmsLink = await CmsLinks.create.client(prisma).execute({
-                data: { name: `${nameOrId}_link` }, params: {}, session: null,
+                data: { name: `${nameOrId}_link`, type: 'RAW_URL' }, params: {}, session: null,
             })
             return await prismaCall(() => prisma.articleSection.update({
                 where,

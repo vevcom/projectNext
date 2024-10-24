@@ -6,7 +6,7 @@ import type { SessionMaybeUser } from '@/auth/Session'
 import type {
     ServiceMethodHandlerConfig,
     ServiceMethodHandler,
-    PrismaPossibleTransaction
+    PrismaPossibleTransaction,
 } from './ServiceTypes'
 
 export function ServiceMethodHandler<
@@ -57,6 +57,17 @@ export function ServiceMethodHandler<
                 }
                 return prismaErrorWrapper(() => config.handler(prisma, params, data, session ?? Session.empty()))
             },
+            executeRaw: ({
+                params,
+                session,
+                data: rawdata,
+            }) => {
+                const data = config.validation.detailedValidate(rawdata)
+                if (prisma === 'NEW') {
+                    return prismaErrorWrapper(() => config.handler(globalPrisma, params, data, session ?? Session.empty()))
+                }
+                return prismaErrorWrapper(() => config.handler(prisma, params, data, session ?? Session.empty()))
+            },
         }),
         typeValidate: config.validation.typeValidate.bind(config.validation),
         detailedValidate: config.validation.detailedValidate.bind(config.validation),
@@ -80,6 +91,12 @@ function ServiceMethodHandlerNoData<
     return {
         client: (prisma) => ({
             execute: ({ params, session }) => {
+                if (prisma === 'NEW') {
+                    return prismaErrorWrapper(() => handler(globalPrisma, params, session ?? Session.empty()))
+                }
+                return prismaErrorWrapper(() => handler(prisma, params, session ?? Session.empty()))
+            },
+            executeRaw: ({ params, session }) => {
                 if (prisma === 'NEW') {
                     return prismaErrorWrapper(() => handler(globalPrisma, params, session ?? Session.empty()))
                 }
