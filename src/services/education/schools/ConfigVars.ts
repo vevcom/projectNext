@@ -1,6 +1,7 @@
 import { createSelection } from '@/services/createSelection'
 import type { CreateSchoolTypes } from './validation'
 import type { Prisma, School, StandardSchool } from '@prisma/client'
+import { CmsLinkRelationsIncluder } from '@/services/cms/links/ConfigVars'
 
 export const StandardSchoolsConfig = {
     NTNU: {
@@ -25,5 +26,7 @@ export const SchoolRelationIncluder = {
         }
     },
     cmsParagraph: true,
-    cmsLink: true,
+    cmsLink: {
+        include: CmsLinkRelationsIncluder,
+    },
 } satisfies Prisma.SchoolInclude

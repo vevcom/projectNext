@@ -6,6 +6,7 @@ import { newsArticleRealtionsIncluder, simpleNewsArticleRealtionsIncluder } from
 import prisma from '@/prisma'
 import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 import type { ReadPageInput } from '@/services/paging/Types'
+import { Articles } from '../cms/articles'
 
 export async function readOldNewsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, NewsCursor>
@@ -53,7 +54,7 @@ export async function readNewsCurrent(): Promise<SimpleNewsArticle[]> {
 export async function readNews(idOrName: number | {
     articleName: string
     order: number
-}): Promise<ExpandedNewsArticle> {
+}): Promise<ExpandedNewsArticle<true>> {
     const news = await prismaCall(() => prisma.newsArticle.findUnique({
         where: typeof idOrName === 'number' ? {
             id: idOrName
@@ -66,5 +67,10 @@ export async function readNews(idOrName: number | {
         include: newsArticleRealtionsIncluder
     }))
     if (!news) throw new ServerError('NOT FOUND', `article ${idOrName} not found`)
-    return news
+    return {
+        ...news,
+        article: await Articles.validateAndCollapseCmsLinksInArticle.client(prisma).execute({
+            params: news.article, session: null
+        })
+    }
 }

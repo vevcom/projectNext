@@ -8,7 +8,7 @@ import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
 import type { ExpandedArticleSection } from '@/services/cms/articleSections/Types'
 
 type PropTypes = {
-    articleSection: ExpandedArticleSection
+    articleSection: ExpandedArticleSection<true>
 }
 
 export default function ArticleSection({ articleSection }: PropTypes) {

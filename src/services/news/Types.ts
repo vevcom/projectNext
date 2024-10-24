@@ -1,11 +1,13 @@
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { NewsArticle, Image } from '@prisma/client'
 
-export type ExpandedNewsArticle = NewsArticle & {
-    article: ExpandedArticle
+export type ExpandedNewsArticle<CmsLinkIsCollapsed extends boolean> = NewsArticle & {
+    article: ExpandedArticle<CmsLinkIsCollapsed>
 }
 
-//used for read many actions
+/**
+ * Type used for the read many articles methods.
+ */
 export type SimpleNewsArticle = NewsArticle & {
     coverImage: Image | null
 }

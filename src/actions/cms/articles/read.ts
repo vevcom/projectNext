@@ -7,7 +7,7 @@ import type { ActionReturn } from '@/actions/Types'
 export async function readArticleAction(idOrName: number | {
     name: string,
     category: string
-}): Promise<ActionReturn<ExpandedArticle>> {
+}): Promise<ActionReturn<ExpandedArticle<true>>> {
     //TODO: auth
     return await safeServerCall(() => readArticle(idOrName))
 }

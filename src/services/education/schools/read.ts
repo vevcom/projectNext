@@ -8,11 +8,12 @@ import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection
 import { StandardSchool } from '@prisma/client'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
+import { CmsLinks } from '@/services/cms/links'
 
 export async function readSchoolsPage<const PageSize extends number>({
     page,
-}: ReadPageInput<PageSize, SchoolCursor>): Promise<ExpandedSchool[]> {
-    return await prismaCall(() => prisma.school.findMany({
+}: ReadPageInput<PageSize, SchoolCursor>): Promise<ExpandedSchool<true>[]> {
+    const schools = await prismaCall(() => prisma.school.findMany({
         select: {
             ...SchoolFilteredSelection,
             ...SchoolRelationIncluder,
@@ -24,6 +25,12 @@ export async function readSchoolsPage<const PageSize extends number>({
         ],
         ...cursorPageingSelection(page),
     }))
+    return Promise.all(schools.map(async school => ({
+        ...school,
+        cmsLink: await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({
+            params: school.cmsLink, session: null,
+        })
+    })))
 }
 
 export async function readSchools({ onlyNonStandard }: {onlyNonStandard: boolean}): Promise<SchoolFiltered[]> {
@@ -51,7 +58,7 @@ export async function readStandardSchools(): Promise<SchoolFiltered[]> {
     }))
 }
 
-export async function readSchool(shortname: string): Promise<ExpandedSchool> {
+export async function readSchool(shortname: string): Promise<ExpandedSchool<true>> {
     return await prismaCall(() => prisma.school.findUniqueOrThrow({
         where: {
             shortname,
@@ -60,5 +67,10 @@ export async function readSchool(shortname: string): Promise<ExpandedSchool> {
             ...SchoolFilteredSelection,
             ...SchoolRelationIncluder,
         },
+    })).then(async school => ({
+        ...school,
+        cmsLink: await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({
+            params: school.cmsLink, session: null,
+        })
     }))
 }

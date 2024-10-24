@@ -6,7 +6,7 @@ import { ServerError } from '@/services/error'
 import { createCmsImage } from '@/services/cms/images/create'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import prisma from '@/prisma'
-import { createCmsLink } from '@/services/cms/links/create'
+import { CmsLinks } from '@/services/cms/links'
 import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
 import type { SchoolFiltered } from './Types'
@@ -17,7 +17,9 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Prom
 
     const cmsImage = await createCmsImage({ name: uuid() })
     const cmsParagraph = await createCmsParagraph({ name: uuid() })
-    const cmsLink = await createCmsLink({ name: uuid() })
+    const cmsLink = await CmsLinks.create.client(prisma).execute(
+        { data: { name: uuid() }, params: {}, session: null }
+    )
 
     return await prismaCall(() => prisma.school.create({
         data: {

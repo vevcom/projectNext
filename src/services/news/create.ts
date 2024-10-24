@@ -7,6 +7,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
 import type { ExpandedNewsArticle } from './Types'
+import { Articles } from '../cms/articles'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to
@@ -17,7 +18,7 @@ import type { ExpandedNewsArticle } from './Types'
  * @param rawdata.name - The name of the news article (and article)
  * @returns
  */
-export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): Promise<ExpandedNewsArticle> {
+export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): Promise<ExpandedNewsArticle<true>> {
     const { name, description, endDateTime } = createNewsArticleValidation.detailedValidate(rawdata)
 
     const backupEndDateTime = new Date()
@@ -42,5 +43,10 @@ export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): P
         },
         include: newsArticleRealtionsIncluder,
     }))
-    return news
+    return {
+        ...news,
+        article: await Articles.validateAndCollapseCmsLinksInArticle.client(prisma).execute({
+            params: news.article, session: null
+        })
+    }
 }
