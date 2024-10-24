@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client'
+import { CmsLinkRelationsIncluder } from '../links/ConfigVars'
 
 export const maxImageSize = 540
 export const minImageSize = 130
@@ -11,5 +12,7 @@ export const articleSectionsRealtionsIncluder = {
         }
     },
     cmsParagraph: true,
-    cmsLink: true,
+    cmsLink: {
+        include: CmsLinkRelationsIncluder
+    },
 } as const satisfies Prisma.ArticleSectionInclude

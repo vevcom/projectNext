@@ -4,7 +4,7 @@ import { createArticleSectionValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleSectionTypes } from './validation'
-import type { ExpandedArticleSection } from './Types'
+import { ArticleSection } from '@prisma/client'
 
 /**
  * A function to create a new articleSection
@@ -13,11 +13,10 @@ import type { ExpandedArticleSection } from './Types'
  */
 export async function createArticleSection(
     rawData: CreateArticleSectionTypes['Detailed']
-): Promise<ExpandedArticleSection> {
+): Promise<ArticleSection> {
     const data = createArticleSectionValidation.detailedValidate(rawData)
 
     return await prismaCall(() => prisma.articleSection.create({
         data,
-        include: articleSectionsRealtionsIncluder,
     }))
 }

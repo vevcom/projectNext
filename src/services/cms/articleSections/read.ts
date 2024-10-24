@@ -4,6 +4,7 @@ import prisma from '@/prisma'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
+import { CmsLinks } from '../links'
 
 /**
  * Reads an article section
@@ -19,5 +20,10 @@ export async function readArticleSection(nameOrId: string | number): Promise<Exp
         include: articleSectionsRealtionsIncluder
     }))
     if (!articleSection) throw new ServerError('NOT FOUND', 'Article section not found')
-    return articleSection
+    return {
+        ...articleSection,
+        cmsLink: articleSection.cmsLink ? 
+            await CmsLinks.validateAndCollapseCmsLink.client(prisma).execute({ params: articleSection.cmsLink, session: null }) :
+            null
+    }
 }

@@ -10,7 +10,7 @@ import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { ImageSize, ArticleSection, Position, Prisma } from '@prisma/client'
-import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/Types'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed
@@ -24,7 +24,7 @@ import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSe
 export async function updateArticleSection(nameOrId: string | number, changes: {
     imageSize?: number,
     imagePosition?: Position,
-}): Promise<ExpandedArticleSection> {
+}): Promise<ArticleSection> {
     //Sets the image resolution based on the image size
     let newCmsImageResolution: ImageSize | undefined = undefined
 
@@ -70,7 +70,7 @@ export async function updateArticleSection(nameOrId: string | number, changes: {
 export async function addArticleSectionPart(
     nameOrId: string | number,
     part: ArticleSectionPart
-): Promise<ExpandedArticleSection> {
+): Promise<ArticleSection> {
     const where = {
         name: typeof nameOrId === 'string' ? nameOrId : undefined,
         id: typeof nameOrId === 'number' ? nameOrId : undefined

@@ -5,11 +5,11 @@ import { createZodActionError } from '@/actions/error'
 import { createArticleSectionValidation } from '@/services/cms/articleSections/validation'
 import type { CreateArticleSectionTypes } from '@/services/cms/articleSections/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedArticleSection } from '@/cms/articleSections/Types'
+import { ArticleSection } from '@prisma/client'
 
 export async function createArticleSectionAction(
     rawData: FormData | CreateArticleSectionTypes['Type'],
-): Promise<ActionReturn<ExpandedArticleSection>> {
+): Promise<ActionReturn<ArticleSection>> {
     //TODO: Auth on general cms permission
     const parse = createArticleSectionValidation.typeValidate(rawData)
     if (!parse.success) return createZodActionError(parse)

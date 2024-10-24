@@ -5,19 +5,10 @@ import AddPartToArticleSection from './AddPartToArticleSection'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import type { ExpandedCmsImage } from '@/cms/images/Types'
-import type {
-    ArticleSection as ArticleSectionT,
-    CmsParagraph as CmsParagraphT,
-    CmsLink as CmsLinkT
-} from '@prisma/client'
+import type { ExpandedArticleSection } from '@/services/cms/articleSections/Types'
 
 type PropTypes = {
-    articleSection: ArticleSectionT & {
-        cmsParagraph: CmsParagraphT | null,
-        cmsImage: ExpandedCmsImage | null,
-        cmsLink: CmsLinkT | null
-    }
+    articleSection: ExpandedArticleSection
 }
 
 export default function ArticleSection({ articleSection }: PropTypes) {
