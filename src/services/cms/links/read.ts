@@ -45,11 +45,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
+                        id: cmsLink.id,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
+                    id: cmsLink.id,
                     text: cmsLink.rawUrlText,
                     url: cmsLink.rawUrl
                 }
@@ -65,11 +67,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
+                        id: cmsLink.id,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
+                    id: cmsLink.id,
                     text: cmsLink.newsArticle.articleName,
                     url: `/news/${cmsLink.newsArticle.orderPublished}/${cmsLink.newsArticle.articleName}`
                 }
@@ -85,11 +89,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
+                        id: cmsLink.id,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
+                    id: cmsLink.id,
                     text: cmsLink.articleCategoryArticle.name,
                     url: `/articles/${cmsLink.articleCategoryArticle.articleCategory.name}/${cmsLink.articleCategoryArticle.name}`
                 }
@@ -105,11 +111,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
+                        id: cmsLink.id,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
+                    id: cmsLink.id,
                     text: cmsLink.imageCollection.name,
                     url: `/images/collections/${cmsLink.imageCollectionId}`
                 }

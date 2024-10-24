@@ -1,10 +1,10 @@
 import styles from './CmsLink.module.scss'
 import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
-import type { CmsLink as CmsLinkT } from '@prisma/client'
+import { CmsLinkCollapsed } from '@/services/cms/links/Types'
 
 type PropTypes = {
-    cmsLink: CmsLinkT
+    cmsLink: CmsLinkCollapsed
     className?: string
     color?: 'primary' | 'secondary'
 }

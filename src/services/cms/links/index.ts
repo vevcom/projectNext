@@ -3,6 +3,7 @@ import { readSpecial, validateAndCollapseCmsLink } from './read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { create } from './create'
 import { destroy } from './destroy'
+import { update } from './update'
 
 export const CmsLinks = {
     readSpacial: ServiceMethod({
@@ -23,7 +24,7 @@ export const CmsLinks = {
     update: ServiceMethod({
         withData: true,
         hasAuther: false, //TODO: Auth
-        serviceMethodHandler: create
+        serviceMethodHandler: update
     }),
     destroy: ServiceMethod({
         withData: false,

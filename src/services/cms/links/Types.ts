@@ -24,6 +24,7 @@ export type CmsLinkExpanded = CmsLink & {
  * specified in the type of the cms link.
  */
 export type CmsLinkCollapsed = {
+    id: number,
     text: string
     url: string
 }
