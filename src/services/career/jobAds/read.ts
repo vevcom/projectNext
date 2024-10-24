@@ -6,6 +6,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
 import type { ExpandedJobAd, JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from './Types'
 import type { ReadPageInput } from '@/services/paging/Types'
+import { Articles } from '@/services/cms/articles'
 
 /**
  * This handler reads a jobAd by id or articleName and order
@@ -17,7 +18,7 @@ export const read = ServiceMethodHandler({
     handler: async (prisma, { idOrName }: { idOrName: number | {
         articleName: string
         order: number
-    } }): Promise<ExpandedJobAd> => {
+    } }): Promise<ExpandedJobAd<true>> => {
         const jobAd = await prisma.jobAd.findUnique({
             where: typeof idOrName === 'number' ? {
                 id: idOrName
@@ -35,7 +36,12 @@ export const read = ServiceMethodHandler({
             }
         })
         if (!jobAd) throw new ServerError('NOT FOUND', `job ad ${idOrName} not found`)
-        return jobAd
+        return {
+            ...jobAd,
+            article: await Articles.validateAndCollapseCmsLinksInArticle.client(prisma).execute({
+                params: jobAd.article, session: null,
+            })
+        }
     }
 })
 

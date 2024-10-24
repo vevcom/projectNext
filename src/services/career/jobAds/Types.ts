@@ -1,8 +1,8 @@
 import type { CompanyExpanded } from '@/career/companies/Types'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 import type { JobAd, Image, JobType } from '@prisma/client'
-export type ExpandedJobAd = JobAd & {
-    article: ExpandedArticle,
+export type ExpandedJobAd<CmsLinkIsCollapsed extends boolean> = JobAd & {
+    article: ExpandedArticle<CmsLinkIsCollapsed>,
     company: CompanyExpanded,
 }
 
