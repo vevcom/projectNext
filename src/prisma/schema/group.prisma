@@ -83,7 +83,10 @@ model InterestGroup {
 
   name      String
   shortName String @unique
-  // TODOD - add intereset group data
+
+  articleSection   ArticleSection @relation(fields: [articleSectionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  articleSectionId Int            @unique
+  // TODO - add intereset group data
 }
 
 model ManualGroup {
