@@ -141,7 +141,7 @@ async function seedCmsLink(cmsLink: SeedCmsLink, prisma: PrismaClient) {
         },
         create: {
             name: cmsLink.name,
-            url: cmsLink.url,
+            rawUrl: cmsLink.url,
         }
     })
 }
