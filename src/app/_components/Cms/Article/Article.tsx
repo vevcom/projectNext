@@ -9,7 +9,7 @@ import type { ReactNode } from 'react'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 
 export type PropTypes = {
-    article: ExpandedArticle,
+    article: ExpandedArticle<true>,
     coverImageClass?: string,
     hideCoverImage?: boolean
     noMargin?: boolean

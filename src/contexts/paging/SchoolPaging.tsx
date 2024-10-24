@@ -11,7 +11,7 @@ const fetcher = async (x: ReadPageInput<PageSizeSchool, SchoolCursor>) => {
 }
 
 export const SchoolPagingContext = generatePagingContext<
-    ExpandedSchool,
+    ExpandedSchool<true>,
     SchoolCursor,
     PageSizeSchool
 >()

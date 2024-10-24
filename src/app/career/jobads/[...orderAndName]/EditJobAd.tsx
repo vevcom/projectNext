@@ -18,7 +18,7 @@ import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/career/jobAds/Types'
 
 type PropTypes = {
-    jobAd: ExpandedJobAd
+    jobAd: ExpandedJobAd<true>
     children?: ReactNode
 }
 

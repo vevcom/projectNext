@@ -6,7 +6,7 @@ import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
 import type { ExpandedSchool } from '@/education/schools/Types'
 
 type PropTypes = {
-    school: ExpandedSchool
+    school: ExpandedSchool<true>
     asClient?: boolean
 }
 

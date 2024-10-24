@@ -9,7 +9,7 @@ import type { CreateNewsArticleTypes } from '@/services/news/validation'
 
 export async function createNewsAction(
     rawdata: FormData | CreateNewsArticleTypes['Type']
-): Promise<ActionReturn<ExpandedNewsArticle>> {
+): Promise<ActionReturn<ExpandedNewsArticle<true>>> {
     //TODO: check for can create news permission
     const parse = createNewsArticleValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)

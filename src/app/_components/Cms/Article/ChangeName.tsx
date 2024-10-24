@@ -4,17 +4,18 @@ import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateArticleAction } from '@/actions/cms/articles/update'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import type { Article } from '@prisma/client'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 
 type PropTypes = {
-    article: ExpandedArticle
+    article: ExpandedArticle<true>
 }
 
 export default function ChangeName({ article }: PropTypes) {
     const changeName = updateArticleAction.bind(null, article.id)
     const currentPath = usePathname()
     const [currentName, setCurrentName] = useState(article.name)
-    const successCallback = (data: ExpandedArticle | undefined) => {
+    const successCallback = (data: Article | undefined) => {
         const oldName = encodeURIComponent(currentName)
         const newName = encodeURIComponent(data ? data.name : '')
         const newPath = currentPath.replace(oldName, newName)

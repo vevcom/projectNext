@@ -40,7 +40,7 @@ export async function readCommitteeAction(
     return await safeServerCall(() => readCommittee(data))
 }
 
-export async function readCommitteeArticleAction(shortName: string): Promise<ActionReturn<ExpandedArticle>> {
+export async function readCommitteeArticleAction(shortName: string): Promise<ActionReturn<ExpandedArticle<true>>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['COMMITTEE_READ']]
     })

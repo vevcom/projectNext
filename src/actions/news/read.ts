@@ -20,7 +20,7 @@ export async function readNewsCurrentAction(): Promise<ActionReturn<SimpleNewsAr
 export async function readNewsAction(idOrName: number | {
     articleName: string
     order: number
-}): Promise<ActionReturn<ExpandedNewsArticle>> {
+}): Promise<ActionReturn<ExpandedNewsArticle<true>>> {
     //TODO: only read news if right visibility
     return await safeServerCall(() => readNews(idOrName))
 }

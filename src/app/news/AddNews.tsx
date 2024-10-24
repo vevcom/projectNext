@@ -12,7 +12,7 @@ import type { ExpandedNewsArticle } from '@/services/news/Types'
 export default function AddNews() {
     const { push } = useRouter()
     const editModeCtx = useContext(EditModeContext)
-    const handleCreate = (data?: ExpandedNewsArticle) => {
+    const handleCreate = (data?: ExpandedNewsArticle<true>) => {
         editModeCtx?.setEditMode(true)
         push(`/news/${data?.orderPublished}/${data?.articleName}`)
     }

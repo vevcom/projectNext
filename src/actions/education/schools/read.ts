@@ -9,7 +9,7 @@ import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/s
 
 export async function readSchoolsPageAction<const PageSize extends number>(
     pageReadInput: ReadPageInput<PageSize, SchoolCursor>
-): Promise<ActionReturn<ExpandedSchool[]>> {
+): Promise<ActionReturn<ExpandedSchool<true>[]>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCHOOLS_READ']]
     })
@@ -40,7 +40,7 @@ export async function readSchoolsAction({
     return await safeServerCall(() => readSchools({ onlyNonStandard }))
 }
 
-export async function readSchoolAction(shortname: string): Promise<ActionReturn<ExpandedSchool>> {
+export async function readSchoolAction(shortname: string): Promise<ActionReturn<ExpandedSchool<true>>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [['SCHOOLS_READ']]
     })

@@ -12,7 +12,7 @@ import type { ExpandedNewsArticle } from '@/services/news/Types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
-    news: ExpandedNewsArticle
+    news: ExpandedNewsArticle<true>
     children?: ReactNode
 }
 
