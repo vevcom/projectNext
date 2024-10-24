@@ -1,8 +1,8 @@
 'use client'
-import Form from '@/app/_components/Form/Form'
+import Form from '@/components/Form/Form'
 import { createLockerLocationAction } from '@/actions/lockers/location/create'
-import TextInput from '@/app/_components/UI/TextInput'
-import NumberInput from '@/app/_components/UI/NumberInput'
+import TextInput from '@/components/UI/TextInput'
+import NumberInput from '@/components/UI/NumberInput'
 
 export default function CreateLockerLocationForm() {
     return (

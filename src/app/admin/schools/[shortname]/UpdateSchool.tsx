@@ -1,5 +1,5 @@
 'use client'
-import Form from '@/app/_components/Form/Form'
+import Form from '@/components/Form/Form'
 import { updateSchoolAction } from '@/education/schools/update'
 import TextInput from '@/components/UI/TextInput'
 import type { SchoolFiltered } from '@/education/schools/Types'

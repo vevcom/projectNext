@@ -15,10 +15,12 @@ import type { PagingContextType } from '@/contexts/paging/PagingGenerator'
 type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
     pagingContext: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
     renderer: (data: Data, i: number) => React.ReactNode,
+    loadingInfoClassName?: string,
 }
 
 export default function EndlessScroll<Data, Cursor, const PageSize extends number, FetcherDetails>({
     pagingContext,
+    loadingInfoClassName,
     renderer
 }: PropTypes<Data, Cursor, PageSize, FetcherDetails>) {
     const context = useContext(pagingContext)
@@ -65,7 +67,7 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
     return (
         <>
             {renderedPageData}
-            <span ref={ref} className={styles.loadingControl}>
+            <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName}`}>
                 <i style={{ opacity: showButton ? 0 : 1 }}>Ingen flere å laste inn</i>
                 <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMore}>Last inn flere</Button>
             </span>

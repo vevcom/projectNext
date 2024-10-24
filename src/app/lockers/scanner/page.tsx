@@ -1,11 +1,11 @@
 'use client'
 import styles from './page.module.scss'
-import Button from '@/app/_components/UI/Button'
-import CameraFeed from '@/app/_components/Camera/CameraFeed'
+import Button from '@/components/UI/Button'
+import CameraFeed from '@/components/Camera/CameraFeed'
 import { useRouter } from 'next/navigation'
 import jsQR from 'jsqr'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { CameraState } from '@/app/_components/Camera/Types'
+import type { CameraState } from '@/components/Camera/Types'
 
 const WIDTH = 400
 const HEIGHT = 400

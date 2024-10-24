@@ -40,8 +40,24 @@ $slider-width: 60px;
         }
     }
 
-    input:checked + .slider {
+    
+    &.secondary input:checked + .slider {
         background-color: ohma.$colors-secondary;
+    }
+    &.primary input:checked + .slider {
+        background-color: ohma.$colors-primary;
+    }
+    &.red input:checked + .slider {
+        background-color: ohma.$colors-red;
+    }
+    &.green input:checked + .slider {
+        background-color: ohma.$colors-green;
+    }
+    &.white input:checked + .slider {
+        background-color: ohma.$colors-white;
+    }
+    &.black input:checked + .slider {
+        background-color: ohma.$colors-black;
     }
 
     input:checked + .slider:before {

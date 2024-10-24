@@ -9,9 +9,9 @@ type PropTypes = Omit<TextInputPropTypes, 'type'>
  * @param name - The name of the slider
  * @returns
  */
-export default function Slider({ label, name, ...props }: PropTypes) {
+export default function Slider({ label, name, color = 'secondary', ...props }: PropTypes) {
     return (
-        <label className={styles.Slider}>
+        <label className={`${styles.Slider} ${styles[color]}`}>
             <p className={styles.label}>{label}</p>
             <input {...props} name={name} type="checkbox" />
             <span className={styles.slider}></span>

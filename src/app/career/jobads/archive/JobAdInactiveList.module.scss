@@ -1,0 +1,9 @@
+@use '@/styles/ohma';
+
+.JobAdInactiveList {
+    margin: 1em 0;
+    @include ohma.ImageCardListLayout;
+    .loadingInfo {
+        grid-column: 1 / -1;
+    }
+}

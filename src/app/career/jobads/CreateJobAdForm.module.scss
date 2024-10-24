@@ -1,0 +1,21 @@
+@use '@/styles/ohma';
+
+.CreateJobAdForm {
+    @include ohma.screenLg {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 2em;
+        min-width: 80vw;
+        max-height: 80vh;
+        .companyList {
+            max-height: 70vh;
+            padding-right: 1em;
+            overflow-y: scroll;
+        }
+    }
+    @include ohma.screenMobile {
+        form {
+            max-width: 230px;
+        }
+    }
+}

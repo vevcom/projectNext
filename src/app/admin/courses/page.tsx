@@ -1,4 +1,4 @@
-import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default function CoursesAdmin() {
     return (

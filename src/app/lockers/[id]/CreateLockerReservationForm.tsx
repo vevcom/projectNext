@@ -1,9 +1,9 @@
 'use client'
 import { createLockerReservationAction } from '@/actions/lockers/reservations/create'
-import Form from '@/app/_components/Form/Form'
-import { SelectString } from '@/app/_components/UI/Select'
-import DateInput from '@/app/_components/UI/DateInput'
-import Checkbox from '@/app/_components/UI/Checkbox'
+import Form from '@/components/Form/Form'
+import { SelectString } from '@/components/UI/Select'
+import DateInput from '@/components/UI/DateInput'
+import Checkbox from '@/components/UI/Checkbox'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 

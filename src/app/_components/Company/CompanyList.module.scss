@@ -1,0 +1,10 @@
+@use '@/styles/ohma';
+
+.CompanyList {
+    margin-top: 2em;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 225px);
+    gap: 2em;
+    justify-content: space-between;
+    width: 100%;
+}

@@ -432,6 +432,16 @@ export const PermissionConfig = {
         description: 'kan oppdatere skapreservasjoner',
         category: 'brukere'
     },
+    COMPANY_ADMIN: {
+        name: 'Bedriftsadministrator',
+        description: 'kan administrere bedrifter',
+        category: 'brukere'
+    },
+    COMPANY_READ: {
+        name: 'Les bedrifter',
+        description: 'kan lese bedrifter',
+        category: 'brukere'
+    },
     DOTS_ADMIN: {
         name: 'Prikkadministrator',
         description: 'kan administrere prikker',

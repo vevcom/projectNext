@@ -1,0 +1,30 @@
+@use '@/styles/ohma';
+
+.Company {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    .logo, .logoSq {
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1em; 
+    }
+    .logoSq {
+        aspect-ratio: 1/1;
+    }
+    .info {
+        position: relative;
+        h2 {
+            font-size: ohma.$fonts-xl;
+        }
+        .showSettings {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+    }
+}

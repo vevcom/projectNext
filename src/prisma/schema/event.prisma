@@ -40,13 +40,18 @@ model EventTagEvent {
   @@id([eventId, tagId])
 }
 
+enum SpecialEventTags {
+  COMPANY_PRESENTATION
+}
+
 model EventTag {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
+  id            Int               @id @default(autoincrement())
+  name          String            @unique
   description   String
   colorR        Int
   colorG        Int
   colorB        Int
+  special       SpecialEventTags? @unique
   EventTagEvent EventTagEvent[]
   ScreenPage    ScreenPage[]
 

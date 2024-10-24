@@ -13,6 +13,7 @@ export type PropTypes = Omit<
     children?: React.ReactNode
     className?: string
     classNameImage?: string
+    disableEditor?: boolean
 }
 
 export const fallbackImage = '/images/fallback.jpg'
@@ -31,6 +32,7 @@ export default async function CmsImage({
     children,
     className = '',
     classNameImage,
+    disableEditor = false,
     ...props
 }: PropTypes) {
     let image = cmsImage.image
@@ -42,7 +44,7 @@ export default async function CmsImage({
 
     return (
         <div className={`${styles.CmsImage} ${className}`}>
-            <CmsImageEditor cmsImage={{ ...cmsImage, image }}/>
+            {!disableEditor && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/> }
             <Image className={classNameImage} imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>

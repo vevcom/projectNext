@@ -1,0 +1,27 @@
+@use '@/styles/ohma';
+
+.CompanyChooser {
+    position: relative;
+    a {
+        @include ohma.borderBtn(ohma.$colors-secondary);
+    }
+    @include ohma.screenLg {
+        padding-top: 3em;
+        a {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .filter {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+    @include ohma.screenMobile {
+        .filter, a {
+            margin: 2em 0;
+        }
+    }
+   
+}
