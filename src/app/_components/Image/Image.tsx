@@ -9,6 +9,7 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     width: number,
     alt?: string,
     smallSize?: boolean,
+    imageContainerClassName?: string,
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
@@ -32,6 +33,7 @@ export default function Image({
     smallSize,
     largeSize,
     imageSize,
+    imageContainerClassName,
     ...props
 }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
@@ -57,7 +59,7 @@ export default function Image({
         if (largeSize) url = `/store/images/${image.fsLocationLargeSize}`
     }
     return (
-        <div style={{ width: `${width}px` }} className={styles.Image}>
+        <div style={{ width: `${width}px` }} className={`${styles.Image} ${imageContainerClassName}`}>
             <img {...props}
                 width={width}
                 alt={alt || image.alt}
