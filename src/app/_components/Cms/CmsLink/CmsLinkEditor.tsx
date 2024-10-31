@@ -16,7 +16,7 @@ type PropTypes = {
 
 export default function CmsLinkEditor({ cmsLink }: PropTypes) {
     const canEdit = useEditing({}) //TODO: check visibility of cmsLink for user and pass it to useEditing
-    const type = useState<CmsLinkType>(cmsLink.type)
+    const [type, setType] = useState<CmsLinkType>(cmsLink.type)
     if (!canEdit) return null
 
     return (
@@ -32,10 +32,39 @@ export default function CmsLinkEditor({ cmsLink }: PropTypes) {
                 submitText="Endre Lenke"
                 refreshOnSuccess
             >
-                <TextInput defaultValue={cmsLink.text} name="rawUrlText" label="Tekst" />
-                <TextInput defaultValue={cmsLink.url} name="rawUrl" label="URL" />
+                <CmsLinkEditorContent type={type} cmsLink={cmsLink} />
             </Form>
         </PopUp>
 
     )
+}
+
+function CmsLinkEditorContent({ type, cmsLink }: PropTypes & { type: CmsLinkType }) {
+    switch (type) {
+        case 'RAW_URL':
+            return (
+            <>
+                <TextInput defaultValue={cmsLink.text} name="rawUrlText" label="Tekst" />
+                <TextInput defaultValue={cmsLink.url} name="rawUrl" label="URL" />
+            </>
+            )
+        case 'NEWS':
+            return (
+            <>
+                
+            </>
+            )
+        case 'ARTICLE_CATEGORY_ARTICLE':
+            return (
+            <>
+            </>   
+            )
+        case 'IMAGE_COLLECTION':
+            return (
+            <>
+            </>
+            )
+        default:
+            return <></>
+    }
 }
