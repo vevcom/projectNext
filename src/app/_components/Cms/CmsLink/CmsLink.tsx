@@ -1,10 +1,10 @@
 import styles from './CmsLink.module.scss'
 import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
-import type { CmsLinkCollapsed } from '@/services/cms/links/Types'
+import type { CmsLinkInfered } from '@/services/cms/links/Types'
 
 type PropTypes = {
-    cmsLink: CmsLinkCollapsed
+    cmsLink: CmsLinkInfered
     className?: string
     color?: 'primary' | 'secondary'
 }

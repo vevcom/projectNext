@@ -6,14 +6,17 @@ import Form from '@/components/Form/Form'
 import { updateCmsLinkAction } from '@/cms/links/update'
 import PopUp from '@/components/PopUp/PopUp'
 import useEditing from '@/hooks/useEditing'
-import type { CmsLinkCollapsed } from '@/services/cms/links/Types'
+import type { CmsLinkInfered } from '@/services/cms/links/Types'
+import { useState } from 'react'
+import type { CmsLinkType } from '@prisma/client'
 
 type PropTypes = {
-    cmsLink: CmsLinkCollapsed
+    cmsLink: CmsLinkInfered
 }
 
 export default function CmsLinkEditor({ cmsLink }: PropTypes) {
     const canEdit = useEditing({}) //TODO: check visibility of cmsLink for user and pass it to useEditing
+    const type = useState<CmsLinkType>(cmsLink.type)
     if (!canEdit) return null
 
     return (
@@ -29,8 +32,8 @@ export default function CmsLinkEditor({ cmsLink }: PropTypes) {
                 submitText="Endre Lenke"
                 refreshOnSuccess
             >
-                <TextInput defaultValue={cmsLink.text} name="text" label="Tekst" />
-                <TextInput defaultValue={cmsLink.url} name="url" label="URL" />
+                <TextInput defaultValue={cmsLink.text} name="rawUrlText" label="Tekst" />
+                <TextInput defaultValue={cmsLink.url} name="rawUrl" label="URL" />
             </Form>
         </PopUp>
 

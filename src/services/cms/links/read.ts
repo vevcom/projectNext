@@ -3,18 +3,18 @@ import { CmsLinkRelationsIncluder } from './ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import logger from '@/logger'
 import { ServerError } from '@/services/error'
-import type { CmsLinkCollapsed, CmsLinkExpanded } from './Types'
+import type { CmsLinkInfered, CmsLinkExpanded } from './Types'
 import type { SpecialCmsLink } from '@prisma/client'
 
 /**
- * This function reduces a CmsLinkExpanded to a CmsLinkCollapsed. The way it is reduced is
+ * This function reduces a CmsLinkExpanded to a CmsLinkInfered. The way it is reduced is
  * specified in the type of the cms link. If the cmsLink is of a type lacking info about a
  * way to reduce it, it will be set to type raw pointing to front page. This can for example happen if
  * the link points to a news article, but the news article is deleted.
  */
 export const validateAndCollapseCmsLink = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, cmsLink: CmsLinkExpanded): Promise<CmsLinkCollapsed> => {
+    handler: async (prisma, cmsLink: CmsLinkExpanded): Promise<CmsLinkInfered> => {
         switch (cmsLink.type) {
             case 'RAW_URL':
                 if (!cmsLink.rawUrl || !cmsLink.rawUrlText) {
@@ -32,13 +32,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
-                        id: cmsLink.id,
+                        ...cmsLink,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
-                    id: cmsLink.id,
+                    ...cmsLink,
                     text: cmsLink.rawUrlText,
                     url: cmsLink.rawUrl
                 }
@@ -59,13 +59,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
-                        id: cmsLink.id,
+                        ...cmsLink,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
-                    id: cmsLink.id,
+                    ...cmsLink,
                     text: cmsLink.newsArticle.articleName,
                     url: `/news/${cmsLink.newsArticle.orderPublished}/${cmsLink.newsArticle.articleName}`
                 }
@@ -86,13 +86,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
-                        id: cmsLink.id,
+                        ...cmsLink,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
-                    id: cmsLink.id,
+                    ...cmsLink,
                     text: cmsLink.articleCategoryArticle.name,
                     url: `
                         /articles/${cmsLink.articleCategoryArticle.articleCategory.name}/
@@ -116,13 +116,13 @@ export const validateAndCollapseCmsLink = ServiceMethodHandler({
                         }
                     })
                     return {
-                        id: cmsLink.id,
+                        ...cmsLink,
                         text: 'Link',
                         url: '/'
                     }
                 }
                 return {
-                    id: cmsLink.id,
+                    ...cmsLink,
                     text: cmsLink.imageCollection.name,
                     url: `/images/collections/${cmsLink.imageCollectionId}`
                 }
@@ -144,7 +144,7 @@ export const readSpecial = ServiceMethodHandler({
         prisma,
         { special }: { special: SpecialCmsLink },
         session
-    ): Promise<CmsLinkCollapsed> => {
+    ): Promise<CmsLinkInfered> => {
         const cmsLink = await prisma.cmsLink.findUnique({
             where: { special },
             include: CmsLinkRelationsIncluder
