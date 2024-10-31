@@ -5,17 +5,17 @@ import { ServiceMethodHandler } from "../ServiceMethodHandler"
 export const update = ServiceMethodHandler({
     withData: true,
     validation: updateThemeColorValidation,
-    handler: async (prisma, _, { id }: {id: number}, { primaryLight, secondaryLight, primaryDark, secondaryDark, ...data }) => {
-        if (!/^#([0-9A-F]{3}){1,2}$/i.test(primaryLight)) {
+    handler: async (prisma, { id }: {id: number}, { name, primaryLight, primaryDark, secondaryLight, secondaryDark, ...data }) => {
+        if (primaryLight && !/^#([0-9A-F]{3}){1,2}$/i.test(primaryLight)) {
             throw new Error('Invalid hex color code')
         }
-        if (!/^#([0-9A-F]{3}){1,2}$/i.test(primaryDark)) {
+        if (primaryDark && !/^#([0-9A-F]{3}){1,2}$/i.test(primaryDark)) {
             throw new Error('Invalid hex color code')
         }
-        if (!/^#([0-9A-F]{3}){1,2}$/i.test(secondaryLight)) {
+        if (secondaryLight && !/^#([0-9A-F]{3}){1,2}$/i.test(secondaryLight)) {
             throw new Error('Invalid hex color code')
         }
-        if (!/^#([0-9A-F]{3}){1,2}$/i.test(secondaryDark)) {
+        if (secondaryDark && !/^#([0-9A-F]{3}){1,2}$/i.test(secondaryDark)) {
             throw new Error('Invalid hex color code')
         }
 

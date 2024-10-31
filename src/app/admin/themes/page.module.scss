@@ -3,15 +3,15 @@
 .themeList {
   padding: 10px;
   margin: 10px 0;
-  background: linear-gradient(135deg, var(--primarylight-color), var(--secondarylight-color));
-  color: var(--secondarylight-color);
+  background: linear-gradient(135deg, var(--primaryLight), var(--secondaryLight));
+  color: var(--secondaryLight);
   border-radius: 8px;
   transition: background 0.3s ease;
 }
 
 
 .themeUl {
-  background: linear-gradient(var(--primarylight-color), var(--secondarylight-color));
+  background: linear-gradient(var(--primaryLight), var(--secondaryLight));
 }
 
 .themeName {
@@ -21,7 +21,7 @@
 
 .buttonGroup {
   display: flex;
-  gap: 10px;               // Add some spacing between buttons
+  gap: 10px;               
 }
 
 .button {
@@ -34,22 +34,29 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Edit Button */
 .editButton {  
-  background-color: var(--secondarydark-color);
-  color: var(--primarydark-color);            
+  background-color: var(--secondaryDark);
+  color: var(--primaryDark);            
 }
 
 .editButton:hover {
   filter: brightness(75%);
 }
 
-/* Delete Button */
 .deleteButton {
-  background-color: var(--primarydark-color);
-  color: var(--secondarydark-color); 
+  background-color: var(--primaryDark);
+  color: var(--secondaryDark); 
 }
 
 .deleteButton:hover {
+  filter: brightness(75%);
+}
+
+.applyButton {
+  background-color: var(--primaryDark);
+  color: var(--secondaryDark); 
+}
+
+.applyButton:hover {
   filter: brightness(75%);
 }
