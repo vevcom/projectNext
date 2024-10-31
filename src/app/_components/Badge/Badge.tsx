@@ -1,20 +1,18 @@
 import styles from './Badge.module.scss'
-import { Prisma } from '@prisma/client'
 import type { Badge } from '@prisma/client'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import CmsImage from '@/cms/CmsImage/CmsImage'
-import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
+import type { ExpandedBadge } from '@/services/users/badges/Types'
 
 
 
 type PropTypes = {
-    badge: Prisma.BadgeGetPayload < {include : { cmsImage: {include: {image: true}}}}>,
-    asClient : Boolean  
-    title: string
+    badge: ExpandedBadge,
+    asClient : Boolean
 }
 
 
-export default function Badge({ badge, asClient = false, title}: PropTypes) {
+export default function Badge({ badge, asClient = false}: PropTypes) {
     return (
         <div className={styles.Badge}>
             {
@@ -33,10 +31,14 @@ export default function Badge({ badge, asClient = false, title}: PropTypes) {
                 />
             }
             <div className={styles.text}>
-                <div className={styles.name}>
-                    <h2>{title || badge.name}</h2>
-                </div>
+                <h2 className={styles.name}>
+                    {badge.name}
+                </h2>
+                <p>
+                    {badge.description}
+                </p>
             </div>
+
         </div>
     )
 }

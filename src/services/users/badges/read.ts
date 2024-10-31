@@ -16,7 +16,9 @@ export const read = ServiceMethodHandler({
 export const readAll = ServiceMethodHandler({
     withData: false,
     handler: async (prisma) => await prisma.badge.findMany({
-    include: {cmsImage: true},
-    })
+    include: {
+        cmsImage: {include: {image: true}}
+    },
     
+    })
 })
