@@ -1,0 +1,16 @@
+@use '@/styles/ohma';
+
+.Nav {
+    display: flex;
+    flex-direction: column;
+    @include ohma.screenMobile {
+        flex-direction: row;
+    }
+    gap: 1em;
+    a {
+        @include ohma.roundAdminSvgBtn();
+        &.selected {
+            background-color: ohma.$colors-secondary;
+        }
+    }
+}

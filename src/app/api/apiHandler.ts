@@ -1,7 +1,7 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
 import { ServerError, Smorekopp } from '@/services/error'
-import type { ActionErrorCode } from '@/actions/Types'
+import type { ErrorCode } from '@/services/error'
 import type { SessionNoUser } from '@/auth/Session'
 import type { ServiceMethod } from '@/services/ServiceTypes'
 
@@ -110,7 +110,7 @@ export function apiHandler<
         )
 }
 
-function createApiErrorRespone(errorCode: ActionErrorCode, message: string) {
+function createApiErrorRespone(errorCode: ErrorCode, message: string) {
     return new Response(JSON.stringify({
         errorCode,
         message

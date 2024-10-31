@@ -1,14 +1,11 @@
 'use client'
 import styles from './CollectionAdminUpload.module.scss'
 import Dropzone from '@/components/UI/Dropzone'
-import PopUp from '@/components/PopUp/PopUp'
 import { createImagesAction } from '@/actions/images/create'
 import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
@@ -76,26 +73,19 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
     }, [files, progress, collectionId])
 
     return (
-        <PopUp PopUpKey="UploadImages" showButtonContent={
-            <>
-            Last opp mange
-                <FontAwesomeIcon icon={faUpload} />
-            </>
-        }>
-            <Form
-                className={styles.uploadMany}
-                successCallback={refreshImages}
-                closePopUpOnSuccess="UploadImages"
-                title="last opp bilder"
-                submitText="last opp"
-                action={handleBatchedUpload}
-            >
-                <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
-                <Slider label="Bruk filnavn som navn" name="useFileName" />
-                {
-                    progress ? <ProgressBar progress={progress} /> : <></>
-                }
-            </Form>
-        </PopUp>
+        <Form
+            className={styles.uploadMany}
+            successCallback={refreshImages}
+            closePopUpOnSuccess="UploadImages"
+            title="last opp bilder"
+            submitText="last opp"
+            action={handleBatchedUpload}
+        >
+            <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
+            <Slider label="Bruk filnavn som navn" name="useFileName" />
+            {
+                progress ? <ProgressBar progress={progress} /> : <></>
+            }
+        </Form>
     )
 }

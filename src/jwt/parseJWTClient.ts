@@ -2,6 +2,7 @@
 
 import { readJWTPayload } from './jwtReadUnsecure'
 import { JWT_ISSUER } from '@/auth/ConfigVars'
+import { createActionError } from '@/actions/error'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { OmegaId } from '@/services/omegaid/Types'
@@ -19,13 +20,7 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
     // TODO: This only works in safari and firefox :///
 
     function invalidJWT(message?: string): ActionReturn<OmegaId> {
-        return {
-            success: false,
-            errorCode: 'JWT INVALID',
-            error: message ? [{
-                message
-            }] : []
-        }
+        return createActionError('JWT INVALID', message || 'Ugyldig QR kode')
     }
 
     if (timeOffset < 0) {
@@ -103,7 +98,7 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
                 lastname: payload.sn,
             }
         }
-    } catch (error) {
+    } catch {
         return invalidJWT('An unexpected error occured')
     }
 }

@@ -1,13 +1,13 @@
 'use client'
 import styles from './ChangeImage.module.scss'
+import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
-import { updateCmsImageAction, updateCmsImageConfigAction } from '@/actions/cms/images/update'
+import { updateCmsImageConfigAction } from '@/actions/cms/images/update'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
@@ -19,7 +19,6 @@ type PropTypes = {
 export default function ChangeImage({ currentImage, cmsImageId, currentImageSize }: PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
-    const { refresh } = useRouter()
 
     //What is the next option in quality. The image always cycles up.
     const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
@@ -63,11 +62,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
             <i>image name: {currentImage.name}</i>
             {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
-                    <Form
-                        action={updateCmsImageAction.bind(null, cmsImageId).bind(null, selectedContext.selectedImage.id)}
-                        submitText="change"
-                        successCallback={refresh}
-                    />
+                    <ChangeImageForm cmsImageId={cmsImageId} />
                 ) : (
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
@@ -78,7 +73,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                                     .bind(null, { imageSize: changeToSize })
                             }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
-                            successCallback={refresh}
+                            refreshOnSuccess
                             submitColor="secondary"
                         />
                     </div>

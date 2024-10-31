@@ -4,14 +4,13 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import logger from '@/logger'
-import { getOsloTime } from '@/dates/getOsloTime'
 import type { ApiKey } from '@prisma/client'
 import type { UpdateApiKeyTypes } from './validation'
 
 export async function updateApiKey(id: number, rawdata: UpdateApiKeyTypes['Detailed']): Promise<void> {
     const data = updateApiKeyValidation.detailedValidate(rawdata)
 
-    if (data.active && data.expiresAt && data.expiresAt < getOsloTime()) {
+    if (data.active && data.expiresAt && data.expiresAt < new Date()) {
         throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
     }
 
@@ -35,7 +34,7 @@ export async function updateApiKeyIfExpired<ExtraFields extends object>(
         throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
     }
 
-    if (!apiKey.expiresAt || apiKey.expiresAt > getOsloTime()) return apiKey
+    if (!apiKey.expiresAt || apiKey.expiresAt > new Date()) return apiKey
     logger.info('Deactivating expired api key', { id: apiKey.id })
 
     const updated = await prismaCall(() => prisma.apiKey.update({

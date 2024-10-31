@@ -1,6 +1,7 @@
 'use client'
 import styles from './CmsImageEditor.module.scss'
 import ChangeImage from './ChangeImage'
+import ChangeImageForm from './ChangeImageForm'
 import EditOverlay from '@/cms/EditOverlay'
 import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
@@ -36,7 +37,7 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
 
     return canEdit && (
         <PopUp
-            PopUpKey={cmsImage.id}
+            PopUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >
@@ -67,8 +68,9 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                     cmsImageId={cmsImage.id}
                                 />
                             </div>
+                            <ChangeImageForm className={styles.changeImageMobile} cmsImageId={cmsImage.id} />
                             <div className={styles.selectImage}>
-                                <ImageList disableEditing={true}/>
+                                <ImageList/>
                             </div>
                             <div className={styles.selectCollection}>
                                 <ImageCollectionPagingProvider
