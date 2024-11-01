@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client'
+import { CmsLinkType, Prisma } from '@prisma/client'
 
 export const CmsLinkRelationsIncluder = {
     imageCollection: {
@@ -23,3 +23,15 @@ export const CmsLinkRelationsIncluder = {
         }
     }
 } as const satisfies Prisma.CmsLinkInclude
+
+const CmsLinkTypeConfig = {
+    RAW_URL: { label: 'Lenke til URL' },
+    NEWS: { label: 'Nyhet' },
+    ARTICLE_CATEGORY_ARTICLE: { label: 'Artikkel' },
+    IMAGE_COLLECTION: { label: 'Bilde samling' }
+} satisfies Record<CmsLinkType, { label: string }>
+
+export const CmsLinkTypeOptions = Object.values(CmsLinkType).map(type => ({
+    value: type,
+    label: CmsLinkTypeConfig[type].label
+}))

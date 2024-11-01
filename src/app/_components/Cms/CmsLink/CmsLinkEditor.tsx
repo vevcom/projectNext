@@ -8,7 +8,9 @@ import PopUp from '@/components/PopUp/PopUp'
 import useEditing from '@/hooks/useEditing'
 import type { CmsLinkInfered } from '@/services/cms/links/Types'
 import { useState } from 'react'
-import type { CmsLinkType } from '@prisma/client'
+import { CmsLinkType } from '@prisma/client'
+import { SelectString } from '../../UI/Select'
+import { CmsLinkTypeOptions } from '@/services/cms/links/ConfigVars'
 
 type PropTypes = {
     cmsLink: CmsLinkInfered
@@ -32,6 +34,13 @@ export default function CmsLinkEditor({ cmsLink }: PropTypes) {
                 submitText="Endre Lenke"
                 refreshOnSuccess
             >
+                <SelectString
+                    name='type'
+                    onChange={val => setType(Object.values(CmsLinkType).find(v => v === val) || 'RAW_URL')}
+                    options={CmsLinkTypeOptions}
+                    defaultValue={cmsLink.type}
+                    value={type}
+                />
                 <CmsLinkEditorContent type={type} cmsLink={cmsLink} />
             </Form>
         </PopUp>
