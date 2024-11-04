@@ -26,7 +26,7 @@
   "devDependencies": {
     "@prisma/client": "^5.21.1",
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.7",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^5.1.1",
     "prisma": "^5.21.1",
