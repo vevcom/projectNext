@@ -1,0 +1,27 @@
+@use '@/styles/ohma';
+
+.button {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.check {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: ohma.$colors-gray-300;
+    width: 1.5em;
+    height: 1.5em;
+    color: ohma.$colors-black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.selected {
+        background-color: ohma.$colors-primary;
+    }
+}

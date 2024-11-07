@@ -163,6 +163,10 @@ export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
     INTEREST_GROUP_GENERAL_INFO: {
         name: 'interest_group_general_info',
         file: 'interest_groups/general_info.md'
+    },
+    CAREER_INFO: {
+        name: 'career_info',
+        file: 'career/career_info.md'
     }
 }
 

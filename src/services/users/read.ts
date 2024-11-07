@@ -1,14 +1,15 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
+import { readSpecialImage } from '@/services/images/read'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { User } from '@prisma/client'
 
 /**
@@ -139,6 +140,7 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
 }
 
 export async function readUserProfile(username: string): Promise<Profile> {
+    const defaultProfileImage = await readSpecialImage('DEFAULT_PROFILE_IMAGE')
     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
         where: { username },
         select: {
@@ -146,8 +148,10 @@ export async function readUserProfile(username: string): Promise<Profile> {
             bio: true,
             image: true,
         },
+    })).then(u => ({
+        ...u,
+        image: u.image || defaultProfileImage
     }))
-
     const memberships = await readMembershipsOfUser(user.id)
     const permissions = await readPermissionsOfUser(user.id)
 
@@ -164,7 +168,10 @@ export const readProfile = ServiceMethodHandler({
                 bio: true,
                 image: true,
             },
-        })
+        }).then(async u => ({
+            ...u,
+            image: u.image || await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+        }))
 
         const memberships = await readMembershipsOfUser(user.id)
         const permissions = await readPermissionsOfUser(user.id)

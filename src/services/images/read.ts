@@ -1,9 +1,9 @@
 import 'server-only'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { ImageDetails, ImageCursor } from '@/services/images/Types'
 import type { Image, SpecialImage } from '@prisma/client'
 

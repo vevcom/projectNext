@@ -4,7 +4,7 @@ import { createActionError } from '@/actions/error'
 import { getUser } from '@/auth/getUser'
 import { readQuotesPage } from '@/services/omegaquotes/read'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'
 
 export async function readQuotesPageAction<const PageSize extends number>(

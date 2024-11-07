@@ -3,7 +3,7 @@ import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import logger from '@/logger'
+import logger from '@/lib/logger'
 import type {
     Group,
     User,

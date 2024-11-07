@@ -1,4 +1,5 @@
 'use client'
+import { createActionError } from '@/actions/error'
 import { useState, useEffect } from 'react'
 import type { ActionReturn, ActionReturnError } from '@/actions/Types'
 
@@ -32,7 +33,7 @@ export default function useActionCall<
                 setRes({ data: null, error: result })
             }
         }).catch(() => {
-            setRes({ data: null, error: { success: false, errorCode: 'UNKNOWN ERROR' } })
+            setRes({ data: null, error: createActionError('UNKNOWN ERROR', 'An unknown error occured') })
         })
     }, [action])
 

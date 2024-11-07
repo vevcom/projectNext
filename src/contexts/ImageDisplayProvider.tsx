@@ -1,9 +1,9 @@
 'use client'
 
-import ImageDisplay from '@/app/_components/Image/ImageList/ImageDisplay'
+import ImageDisplay from '@/components/Image/ImageList/ImageDisplay'
 import React, { createContext, useState } from 'react'
 import type { Image } from '@prisma/client'
-import type { ImageSizeOptions } from '@/app/_components/Image/Image'
+import type { ImageSizeOptions } from '@/components/Image/Image'
 
 /**
  * This is a contect that displays a image to the user using the imageSelectionContext.

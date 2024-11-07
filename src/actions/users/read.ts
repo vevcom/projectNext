@@ -9,7 +9,7 @@ import { User } from '@/services/users'
 import type { ExpandedGroup } from '@/services/groups/Types'
 import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { Permission } from '@prisma/client'
 
 /**
