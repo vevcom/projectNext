@@ -3,7 +3,7 @@ import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { readSchool, readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
 import { getUser } from '@/auth/getUser'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
 

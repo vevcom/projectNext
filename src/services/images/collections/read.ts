@@ -6,7 +6,7 @@ import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { readSpecialVisibility } from '@/services/visibility/read'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
@@ -14,7 +14,7 @@ import type {
     ImageCollectionPageReturn
 } from '@/services/images/collections/Types'
 import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 
 
 /**
