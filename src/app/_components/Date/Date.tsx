@@ -1,5 +1,5 @@
 'use client'
-import { displayDate } from '@/dates/displayDate'
+import { displayDate } from '@/lib/dates/displayDate'
 import { useEffect, useState } from 'react'
 
 type PropTypes = {

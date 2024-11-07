@@ -3,7 +3,7 @@ import { lockerReservationIncluder } from './reservations/ConfigVars'
 import prisma from '@/prisma'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { LockerWithReservation, LockerCursor } from '@/services/lockers/Types'
 
 export async function readLocker(id: number) {
