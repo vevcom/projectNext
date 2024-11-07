@@ -94,7 +94,7 @@ const navigations = [
                 href: '/admin/classes'
             },
             {
-                title: 'Studeprogrammer',
+                title: 'Studieprogrammer',
                 href: '/admin/study-programmes'
             }
         ],

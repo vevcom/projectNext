@@ -17,6 +17,8 @@ export type JWT<T = Record<string, unknown>> = T & JwtPayloadType['Detailed']
  * @param aud - An audience for the token, this is the purpose of the token
  * @param payload - The payload to be included in the JWT.
  * @param expiresIn - The expiration time of the JWT in seconds.
+ * @param asymetric - If this is set to true the JWT token will be signed with a private key,
+ *                    and can be verified with a public key. The public key is available for all users
  * @returns The generated JWT.
  */
 export function generateJWT<T extends object>(
