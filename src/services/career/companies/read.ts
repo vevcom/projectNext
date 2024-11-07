@@ -1,8 +1,8 @@
 import 'server-only'
 import { CompanyRelationIncluder } from './ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
-import type { ReadPageInput } from '@/services/paging/Types'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { CompanyCursor, CompanyDetails, CompanyExpanded } from './Types'
 
 export const readPage = ServiceMethodHandler({

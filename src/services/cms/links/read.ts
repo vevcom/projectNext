@@ -1,6 +1,6 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import logger from '@/logger'
+import logger from '@/lib/logger'
 import type { SpecialCmsLink } from '@prisma/client'
 
 export const readSpecial = ServiceMethodHandler({
