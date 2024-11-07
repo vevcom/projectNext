@@ -9,7 +9,7 @@ import useEditing from '@/hooks/useEditing'
 import type { CmsLinkInfered } from '@/services/cms/links/Types'
 import { useState } from 'react'
 import { CmsLinkType } from '@prisma/client'
-import { SelectString } from '../../UI/Select'
+import { SelectString } from '@/UI/Select'
 import { CmsLinkTypeOptions } from '@/services/cms/links/ConfigVars'
 
 type PropTypes = {

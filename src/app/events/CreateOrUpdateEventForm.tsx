@@ -37,7 +37,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
 
     return (
         <div className={styles.CreateOrUpdateEventForm}>
-            <h1>Oppdater Hendelse</h1>
+            <h1>{event ? 'Rediger' : 'Opprett'} Arrangement</h1>
             <Form
                 closePopUpOnSuccess="EditEvent"
                 action={action}

@@ -21,7 +21,12 @@ export const baseCmsLinkValidation = new ValidationBase({
         name: z.string().optional(),
         type: z.nativeEnum(CmsLinkType),
 
-        rawUrl: z.string().optional(),
+        rawUrl: z.string().optional().transform(val => {
+            if (val && val.includes('.') && !val.startsWith('http://') && !val.startsWith('https://')) {
+                return `https://${val}`
+            }
+            return val
+        }),
         rawUrlText: z.string().min(
             1, 'Linken må ha tekst på mer enn 1 bokstav'
         ).max(
