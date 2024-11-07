@@ -2,8 +2,8 @@ import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
 
 const themeColorValidation = z.string().regex(
-            /^#[0-9A-Fa-f]{6}$/, 'Farge må være en gyldig hex-farge'
-        ).transform(value => value.toUpperCase())
+    /^#[0-9A-Fa-f]{6}$/, 'Farge må være en gyldig hex-farge'
+).transform(value => value.toUpperCase())
 
 const baseThemeColorValidation = new ValidationBase({
     type: {

@@ -40,7 +40,7 @@ export const create = ServiceMethodHandler({
                 primaryLightB,
                 primaryDarkR,
                 primaryDarkG,
-                primaryDarkB ,
+                primaryDarkB,
                 secondaryLightR,
                 secondaryLightG,
                 secondaryLightB,

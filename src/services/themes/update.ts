@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateThemeColorValidation } from './validation'
-import { ServiceMethodHandler } from "../ServiceMethodHandler"
+import { ServiceMethodHandler } from '../ServiceMethodHandler'
 
 export const update = ServiceMethodHandler({
     withData: true,
@@ -21,7 +21,7 @@ export const update = ServiceMethodHandler({
 
         const primaryLightR = primaryLight ? parseInt(primaryLight.slice(1, 3), 16) : undefined
         const primaryLightG = primaryLight ? parseInt(primaryLight.slice(3, 5), 16) : undefined
-        const primaryLightB =  primaryLight ? parseInt(primaryLight.slice(5, 7), 16) : undefined
+        const primaryLightB = primaryLight ? parseInt(primaryLight.slice(5, 7), 16) : undefined
         const primaryDarkR = primaryDark ? parseInt(primaryDark.slice(1, 3), 16) : undefined
         const primaryDarkG = primaryDark ? parseInt(primaryDark.slice(3, 5), 16) : undefined
         const primaryDarkB = primaryDark ? parseInt(primaryDark.slice(5, 7), 16) : undefined
@@ -43,7 +43,7 @@ export const update = ServiceMethodHandler({
                 primaryLightB,
                 primaryDarkR,
                 primaryDarkG,
-                primaryDarkB ,
+                primaryDarkB,
                 secondaryLightR,
                 secondaryLightG,
                 secondaryLightB,

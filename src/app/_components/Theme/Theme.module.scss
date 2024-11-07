@@ -1,0 +1,62 @@
+@use '@/styles/ohma';
+
+.themeList {
+  padding: 10px;
+  margin: 10px 0;
+  background: linear-gradient(135deg, var(--primaryLight), var(--secondaryLight));
+  color: var(--secondaryLight);
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+
+.themeUl {
+  background: linear-gradient(var(--primaryLight), var(--secondaryLight));
+}
+
+.themeName {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;               
+}
+
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.editButton {  
+  background-color: var(--secondaryDark);
+  color: var(--primaryDark);            
+}
+
+.editButton:hover {
+  filter: brightness(75%);
+}
+
+.deleteButton {
+  background-color: var(--primaryDark);
+  color: var(--secondaryDark); 
+}
+
+.deleteButton:hover {
+  filter: brightness(75%);
+}
+
+.applyButton {
+  background-color: var(--primaryDark);
+  color: var(--secondaryDark); 
+}
+
+.applyButton:hover {
+  filter: brightness(75%);
+}
