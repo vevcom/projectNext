@@ -6,6 +6,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { OmegaId } from '@/services/omegaid/Types'
+import { decomporessOmegaId as decompressOmegaId } from '@/services/omegaid/compress'
 
 /**
  * Renders a component for reading OmegaId QR codes.
@@ -51,11 +52,17 @@ export default function OmegaIdReader({
         let lastReadTime = 0
         let lastReadUserId = -1
 
-        html5QrcodeScanner.render(async (token) => {
-            const parse = await parseJWT(token, publicKey, expiryOffset ?? 100)
+        html5QrcodeScanner.render(async (rawToken) => {
+            const token = decompressOmegaId(rawToken)
+            if (!token.success) {
+                setFeedBack({
+                    status: 'ERROR',
+                    text: 'Ugyldig QR kode'
+                })
+                return
+            }
+            const parse = await parseJWT(token.data, publicKey, expiryOffset ?? 100, 'omegaid')
             if (!parse.success) {
-                console.log(parse)
-
                 const msg = parse.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
 
                 setFeedBack({

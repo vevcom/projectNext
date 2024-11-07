@@ -66,8 +66,8 @@
 }
 
 .omegaId {
-    min-width: 50vw;
-    min-height: 50vw;
+    min-width: min(50vw, 400px);
+    min-height: min(50vw, 400px);
     display: grid;
     place-items: center;
     > * {
