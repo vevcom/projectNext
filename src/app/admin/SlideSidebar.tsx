@@ -92,6 +92,10 @@ const navigations = [
             {
                 title: 'Klasser',
                 href: '/admin/classes'
+            },
+            {
+                title: 'Studeprogrammer',
+                href: '/admin/study-programmes'
             }
         ],
     },
