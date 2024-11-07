@@ -3,7 +3,7 @@ import CreateApiKeyForm from './CreateApiKeyForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readApiKeysAction } from '@/actions/api-keys/read'
-import { displayDate } from '@/lib/dates/displayDate'
+import Date from '@/components/Date/Date'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 
@@ -36,9 +36,9 @@ export default async function ApiKeysAdmin() {
                             <Link href={`/admin/api-keys/${apiKey.name}`} key={uuid()} passHref>
                                 <tr className={apiKey.active ? styles.activated : styles.deactivated}>
                                     <td>{apiKey.name}</td>
-                                    <td>{displayDate(apiKey.createdAt)}</td>
-                                    <td>{displayDate(apiKey.updatedAt)}</td>
-                                    <td>{apiKey.expiresAt ? displayDate(apiKey.expiresAt) : 'Ikke satt'}</td>
+                                    <td><Date date={apiKey.createdAt} /></td>
+                                    <td><Date date={apiKey.updatedAt} /></td>
+                                    <td>{apiKey.expiresAt ? <Date date={apiKey.expiresAt} /> : 'Ikke satt'}</td>
                                     <td>{apiKey.active ? 'AKTIV' : 'INAKTIV'}</td>
                                 </tr>
                             </Link>

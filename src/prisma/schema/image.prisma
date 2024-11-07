@@ -9,6 +9,9 @@ enum SpecialImage {
   MAGISK_HATT
   HOVEDBYGGNINGEN
   R1
+  SKYSCRAPER
+  ENGINEER
+  FAIR
 }
 
 model Image {

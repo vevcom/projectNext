@@ -2,6 +2,7 @@
 
 import MailListItem from './mailListItem'
 import styles from './mailList.module.scss'
+import { createActionError } from '@/actions/error'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/actions/Types'
@@ -49,11 +50,7 @@ export default function MailList<T extends MailListTypes>({
 
                 setItemsState(itemsState.filter(i => i.id !== id))
             }
-            return {
-                success: false,
-                errorCode: 'BAD PARAMETERS',
-                error: [{ message: 'Destory function is not set' }],
-            }
+            return createActionError('BAD PARAMETERS', 'No destroy function')
         }
     }
 

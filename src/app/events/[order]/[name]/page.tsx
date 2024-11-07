@@ -2,13 +2,13 @@ import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEvent } from '@/actions/events/read'
-import CmsImage from '@/app/_components/Cms/CmsImage/CmsImage'
-import CmsParagraph from '@/app/_components/Cms/CmsParagraph/CmsParagraph'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import { displayDate } from '@/lib/dates/displayDate'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
 import { destroyEvent } from '@/actions/events/destroy'
-import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
+import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -43,7 +43,7 @@ export default async function Event({ params }: PropTypes) {
                     <ul className={styles.tags}>
                         {event.tags.map(tag => (
                             <li key={tag.id}>
-                                <Link href={`/events${QueryParams.eventTags.encodeUrl([tag.name])}`}>
+                                <Link href={`/events?${QueryParams.eventTags.encodeUrl([tag.name])}`}>
                                     <EventTag eventTag={tag} />
                                 </Link>
                             </li>

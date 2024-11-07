@@ -1,0 +1,9 @@
+@use '@/styles/ohma';
+
+.backLink {
+    color: ohma.$colors-black;
+    svg {
+        width: 30px;
+        height: 30px;
+    }
+}

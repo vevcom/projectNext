@@ -1,0 +1,44 @@
+@use '@/styles/ohma';
+
+.DotList {
+    @include ohma.table();
+    margin-top: 0;
+    .inactive {
+        text-decoration: line-through;
+        color: ohma.$colors-red;
+    }
+}
+
+.selection {
+    margin-top: 1em;
+    border-radius: ohma.$rounding ohma.$rounding 0 0;
+    padding: ohma.$rounding;
+    background-color: ohma.$colors-gray-300;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+
+    .openUserList {
+        @include ohma.btn(ohma.$colors-primary);
+        font-weight: ohma.$fonts-weight-s;
+        margin-right: 2em;
+    }
+
+    .userSelected {
+        display: flex;
+        button {
+            border: none;
+            background-color: transparent;
+            svg {
+                color: ohma.$colors-gray-800;
+                width: 1.5em;
+                height: 1.5em;
+            }
+        }
+    }
+
+    .selectActive {
+        @include ohma.btn(ohma.$colors-primary);
+        font-weight: ohma.$fonts-weight-s;
+    }
+}
