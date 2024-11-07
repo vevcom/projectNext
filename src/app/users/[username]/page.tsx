@@ -47,6 +47,8 @@ export default async function User({ params }: PropTypes) {
         { username: profile.user.username }
     ).auth(session)
 
+    const showOmegaId = session.user?.username === params.username
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
@@ -57,7 +59,7 @@ export default async function User({ params }: PropTypes) {
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
-                            <PopUp
+                            {showOmegaId && <PopUp
                                 showButtonClass={styles.omegaIdOpen}
                                 showButtonContent={
                                     <FontAwesomeIcon icon={faQrcode} />
@@ -67,7 +69,7 @@ export default async function User({ params }: PropTypes) {
                                 <div className={styles.omegaId}>
                                     <OmegaId />
                                 </div>
-                            </PopUp>
+                            </PopUp> }
                         </div>
                         {
                             studyProgramme && (

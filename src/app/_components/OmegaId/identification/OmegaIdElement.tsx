@@ -2,27 +2,20 @@
 import styles from './OmegaIdElement.module.scss'
 import { generateOmegaIdAction } from '@/actions/omegaid/generate'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
+import { compressOmegaId } from '@/services/omegaid/compress'
 import { useQRCode } from 'next-qrcode'
 import { useEffect, useState } from 'react'
 
 const EXPIRY_THRESHOLD = 60
 
-type PropTypes = {
+export default function OmegaIdElement({ token }: {
     token: string,
-}
-
-export default function OmegaIdElement({ token }: PropTypes) {
+}) {
     const [tokenState, setTokenState] = useState(token)
 
     const { SVG } = useQRCode()
 
-    const JWTPayload = readJWTPayload<{
-        gn?: string,
-        sn?: string,
-    }>(token)
-
-    const firstname = JWTPayload.gn ?? ''
-    const lastname = JWTPayload.sn ?? ''
+    const JWTPayload = readJWTPayload(tokenState)
 
     const [expiryTime, setExpiryTime] = useState(new Date((JWTPayload.exp - EXPIRY_THRESHOLD) * 1000))
 
@@ -48,9 +41,7 @@ export default function OmegaIdElement({ token }: PropTypes) {
 
     return <div className={styles.OmegaIdElement}>
         <SVG
-            text={tokenState}
+            text={compressOmegaId(tokenState)}
         />
-
-        <p>{firstname} {lastname}</p>
     </div>
 }

@@ -17,6 +17,8 @@ export type JWT<T = Record<string, unknown>> = T & JwtPayloadType['Detailed']
  * @param aud - An audience for the token, this is the purpose of the token
  * @param payload - The payload to be included in the JWT.
  * @param expiresIn - The expiration time of the JWT in seconds.
+ * @param asymetric - If this is set to true the JWT token will be signed with a private key,
+ *                    and can be verified with a public key. The public key is available for all users
  * @returns The generated JWT.
  */
 export function generateJWT<T extends object>(
@@ -25,11 +27,11 @@ export function generateJWT<T extends object>(
     expiresIn: number,
     asymetric = false
 ): string {
-    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PRIVATE_KEY) {
+    if (!process.env.JWT_SECRET || !process.env.JWT_PRIVATE_KEY) {
         throw new ServerError('INVALID CONFIGURATION', 'Missing secret for JWT generation')
     }
 
-    return sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.NEXTAUTH_SECRET, {
+    return sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.JWT_SECRET, {
         audience: aud,
         algorithm: asymetric ? 'ES256' : 'HS256',
         issuer: JWT_ISSUER,
@@ -44,16 +46,16 @@ export function generateJWT<T extends object>(
  * @throws {ServerError} If the JWT is expired or invalid.
  */
 export function verifyJWT(token: string, aud?: OmegaJWTAudience): (jwt.JwtPayload & Record<string, string | number | null>) {
-    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PUBLIC_KEY) {
+    if (!process.env.JWT_SECRET || !process.env.JWT_PUBLIC_KEY) {
         throw new ServerError(
             'INVALID CONFIGURATION',
-            'JWT environ variables is not set. Missing NEXTAUTH_SECRET or JWT_PUBLIC_KEY'
+            'JWT environ variables is not set. Missing JWT_SECRET or JWT_PUBLIC_KEY'
         )
     }
 
     try {
         const JWTHeader = readJWTPart(token, 0)
-        let jwtKey = process.env.NEXTAUTH_SECRET
+        let jwtKey = process.env.JWT_SECRET
         if (JWTHeader.alg === 'ES256') {
             jwtKey = process.env.JWT_PUBLIC_KEY
         }
