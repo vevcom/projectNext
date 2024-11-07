@@ -4,7 +4,15 @@
     position: relative;
     min-width: 70px; 
     height: 30px;
+    .extenalLinkIcon {
+        position: absolute;
+        top: 50%;
+        width: 20px;
+        height: 20px;
+        transform: translate(10px, -50%);
+    }
     > a {
+        position: relative;
         &.primary {
             @include ohma.borderBtn(ohma.$colors-primary);
             margin: 0;
