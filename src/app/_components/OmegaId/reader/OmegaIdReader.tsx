@@ -5,7 +5,6 @@ import { parseJWT } from '@/jwt/parseJWTClient'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { OmegaId } from '@/services/omegaid/Types'
 import { decomporessOmegaId as decompressOmegaId } from '@/services/omegaid/compress'
 
 /**
