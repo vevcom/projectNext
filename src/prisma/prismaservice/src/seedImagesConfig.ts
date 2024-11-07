@@ -141,4 +141,22 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'R1NTNU.jpeg',
         collection: defaultCollection,
     },
+    ENGINEER: {
+        name: 'engineer',
+        alt: 'Engineer',
+        fsLocation: 'engineer.jpeg',
+        collection: defaultCollection,
+    },
+    SKYSCRAPER: {
+        name: 'skyscraper',
+        alt: 'Skyscraper',
+        fsLocation: 'skyscraper.jpeg',
+        collection: defaultCollection,
+    },
+    FAIR: {
+        name: 'fair',
+        alt: 'Fair',
+        fsLocation: 'fair.webp',
+        collection: defaultCollection,
+    },
 } as const

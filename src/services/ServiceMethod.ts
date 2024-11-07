@@ -69,7 +69,8 @@ export function ServiceMethod<
         return config.withData ? {
             withData: true,
             client: config.serviceMethodHandler.client,
-            typeValidate: config.serviceMethodHandler.typeValidate
+            typeValidate: config.serviceMethodHandler.typeValidate,
+            detailedValidate: config.serviceMethodHandler.detailedValidate,
         } : {
             withData: false,
             client: config.serviceMethodHandler.client
@@ -83,7 +84,7 @@ export function ServiceMethod<
                     const authRes = config.auther.dynamicFields(
                         config.dynamicFields({
                             params,
-                            data
+                            data: config.serviceMethodHandler.detailedValidate(data)
                         })
                     ).auth(
                         session ?? Session.empty()
@@ -94,6 +95,7 @@ export function ServiceMethod<
             },
         }),
         typeValidate: config.serviceMethodHandler.typeValidate,
+        detailedValidate: config.serviceMethodHandler.detailedValidate
     } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> : {
         withData: false,
         client: (prisma) => ({

@@ -10,8 +10,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export const imageSizes = {
-    small: 250,
-    medium: 600,
+    small: 180,
+    medium: 450,
+    large: 700,
 }
 
 const standardLocation = join(__dirname, '..', 'standard_store', 'images')
@@ -49,10 +50,10 @@ export default async function seedImages(prisma: PrismaClient) {
         }
 
         //full size version of the image
-        const fsLocation = `${uuid()}.${ext}`
+        const fsLocationOriginal = `${uuid()}.${ext}`
         await copyFile(
             join(standardLocation, file),
-            join(imageStoreLocation, fsLocation)
+            join(imageStoreLocation, fsLocationOriginal)
         )
 
         const bigPath = path.join(standardLocation, file)
@@ -73,6 +74,14 @@ export default async function seedImages(prisma: PrismaClient) {
             withoutEnlargement: true
         }).toFile(mediumPath)
 
+        // Create Large size version of the image
+        const fsLocationLargeSize = `${uuid()}.${ext}`
+        const largePath = path.join(imageStoreLocation, fsLocationLargeSize)
+        await sharp(bigPath).resize(imageSizes.large, imageSizes.large, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        }).toFile(largePath)
+
         //Delete all images with image.name
         await prisma.image.deleteMany({
             where: {
@@ -84,10 +93,11 @@ export default async function seedImages(prisma: PrismaClient) {
             data: {
                 name: image.name,
                 alt: image.alt,
-                fsLocation,
+                fsLocationOriginal,
                 fsLocationSmallSize,
                 fsLocationMediumSize,
-                ext,
+                fsLocationLargeSize,
+                extOriginal: ext,
                 special: image.special,
                 collection: {
                     connect: {

@@ -14,7 +14,7 @@ type PropTypes = {
  */
 export default function BackButton({ className }: PropTypes) {
     const pathname = usePathname()
-    const href = `/${pathname?.split('/').slice(1, -1).join('/')}` ?? '/admin'
+    const href = `/${pathname?.split('/').slice(1, -1).join('/')}`
 
     return (
         <Link className={`${styles.BackButton} ${className}`} href={href}>

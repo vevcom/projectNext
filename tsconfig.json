@@ -21,6 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@/lib/*": ["src/lib/*"],
       "@/components/*": ["src/app/_components/*"],
       "@/UI/*": ["src/app/_components/UI/*"],
       "@/styles/*": ["src/styles/*"],
@@ -35,6 +36,7 @@
       "@/jwt/*": ["src/jwt/*"],
       "@/api/*": ["src/app/api/*"],
       "@/education/*": ["src/actions/education/*", "src/services/education/*", "src/app/education/*"],
+      "@/career/*": ["src/actions/career/*", "src/services/career/*", "src/app/career/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

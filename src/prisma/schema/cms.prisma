@@ -35,6 +35,7 @@ model CmsImage {
   ScreenPage           ScreenPage[]
   School               School[]
   Event                Event[]
+  Company              Company[]
 }
 
 enum SpecialCmsParagraph {
@@ -42,6 +43,8 @@ enum SpecialCmsParagraph {
   FRONTPAGE_2
   FRONTPAGE_3
   FRONTPAGE_4
+
+  CAREER_INFO
 }
 
 model CmsParagraph {
@@ -58,6 +61,11 @@ model CmsParagraph {
   Course           Course[]
   School           School[]
   Event            Event[]
+  Committee        Committee?
+}
+
+enum SpecialCmsLink {
+  CAREER_LINK_TO_CONTACTOR
 }
 
 model CmsLink {
@@ -67,6 +75,7 @@ model CmsLink {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   text             String          @default("Link")
+  special          SpecialCmsLink? @unique
   articleSection   ArticleSection? @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId Int?            @unique
   School           School[]
@@ -111,6 +120,7 @@ model Article {
   coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
   coverImageId        Int              @unique
   JobAd               JobAd?
+  Committee           Committee?
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])

@@ -11,7 +11,7 @@ import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 
-type SessionType<UserGuarantee extends UserGuaranteeOption> = {
+export type SessionType<UserGuarantee extends UserGuaranteeOption> = {
     user: UserGuarantee extends 'HAS_USER' ? UserFiltered : (
         UserGuarantee extends 'NO_USER' ? null : never
     ),
@@ -19,9 +19,9 @@ type SessionType<UserGuarantee extends UserGuaranteeOption> = {
     memberships: MembershipFiltered[],
 }
 
-export type SessionUser = Session<'HAS_USER'>
-export type SessionNoUser = Session<'NO_USER'>
-export type SessionMaybeUser = Session<'HAS_USER'> | Session<'NO_USER'>
+export type SessionUser = SessionType<'HAS_USER'>
+export type SessionNoUser = SessionType<'NO_USER'>
+export type SessionMaybeUser = SessionType<'HAS_USER'> | SessionType<'NO_USER'>
 
 export class Session<UserGuarantee extends UserGuaranteeOption> {
     private session: SessionType<UserGuarantee>
@@ -42,11 +42,28 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return this.session.memberships
     }
 
-    public static empty(): SessionNoUser {
-        return new Session({ user: null, permissions: [], memberships: [] })
+    /**
+     * This functions makes sure the Session class can be sent to the client
+     * @returns A javascript object representation of the session
+     */
+    public toJsObject(): SessionType<UserGuarantee> {
+        return {
+            user: this.user,
+            permissions: this.permissions,
+            memberships: this.memberships
+        }
     }
 
-    public static async fromNextAuth(): Promise<SessionMaybeUser> {
+    public static empty(): Session<'NO_USER'> {
+        return new Session<'NO_USER'>({ user: null, permissions: [], memberships: [] })
+    }
+
+    public static async fromJsObject(jsObject: SessionMaybeUser): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
+        if (jsObject instanceof Session) return jsObject
+        return new Session(jsObject)
+    }
+
+    public static async fromNextAuth(): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
         const {
             user = null,
             permissions = await readDefaultPermissions(),
@@ -61,9 +78,9 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
      * @param key - The key provided by client in the `id=keyId&key=key` format
      * If the key is null, the session will be cratedwith only default permissios
      */
-    public static async fromApiKey(keyAndIdEncoded: string | null): Promise<SessionNoUser> {
+    public static async fromApiKey(keyAndIdEncoded: string | null): Promise<Session<'NO_USER'>> {
         const defaultPermissions = await readDefaultPermissions()
-        if (!keyAndIdEncoded) return new Session({ user: null, permissions: defaultPermissions, memberships: [] })
+        if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
         const { id, key } = decodeApiKey(keyAndIdEncoded)
         const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted(id)
         if (!active) throw new ServerError('INVALID API KEY', 'Api nøkkelen har utløpt')
@@ -71,7 +88,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)
         if (!success) throw new ServerError('INVALID API KEY', 'Api nøkkelen er ikke valid')
 
-        return new Session({
+        return new Session<'NO_USER'>({
             user: null,
             permissions: [...defaultPermissions, ...permissions].filter(
                 (permission, i, ps) => ps.indexOf(permission) === i

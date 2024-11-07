@@ -136,6 +136,11 @@ enum Permission {
 
   COURSES_READ
   COURSES_ADMIN
+
+  COMPANY_READ
+  COMPANY_ADMIN
+
+  DOTS_ADMIN
 }
 
 model Role {
