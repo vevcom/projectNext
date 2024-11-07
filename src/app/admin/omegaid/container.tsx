@@ -9,9 +9,9 @@ export default function OmegaIdContainer({
 }) {
     return <OmegaIdReader
         publicKey={publicKey}
-        successCallback={async (user) => ({
+        successCallback={async (userId) => ({
             success: true,
-            text: `${user.firstname} ${user.lastname}`,
+            text: `userID: ${userId}`,
         })}
     />
 }
