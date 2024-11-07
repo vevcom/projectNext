@@ -27,7 +27,7 @@ export default function OmegaIdReader({
     debounceThreshold,
     singleRead,
 }: {
-    successCallback: (user: OmegaId, token: string) => Promise<{
+    successCallback: (user: number, token: string) => Promise<{
         success: boolean,
         text: string,
     }>,
@@ -72,7 +72,7 @@ export default function OmegaIdReader({
                 return
             }
 
-            const userId = parse.data.id
+            const userId = parse.data
 
             if (userId === lastReadUserId && Date.now() - lastReadTime < (debounceThreshold ?? 5000)) {
                 lastReadTime = Date.now()
@@ -84,7 +84,7 @@ export default function OmegaIdReader({
                 text: '...',
             })
 
-            const results = await successCallback(parse.data, token)
+            const results = await successCallback(userId, token.data)
 
             if (results.success && (singleRead ?? false)) {
                 html5QrcodeScanner.clear()

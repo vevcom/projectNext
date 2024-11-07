@@ -4,12 +4,14 @@ import { readUserAdmissionTrials } from './read'
 import { prismaCall } from '@/services/prismaCall'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import prisma from '@/prisma'
-import { Admission, type AdmissionTrial } from '@prisma/client'
+import { userFilterSelection } from '@/services/users/ConfigVars'
+import { Admission } from '@prisma/client'
 import type { CreateAdmissionTrialType } from './validation'
+import type { ExpandedAdmissionTrail } from './Types'
 
 export async function createAdmissionTrial(
     data: CreateAdmissionTrialType['Detailed']
-): Promise<AdmissionTrial> {
+): Promise<ExpandedAdmissionTrail> {
     const parse = createAdmissionTrialValidation.detailedValidate(data)
 
     const results = await prismaCall(() => prisma.admissionTrial.create({
@@ -25,6 +27,11 @@ export async function createAdmissionTrial(
                 },
             },
             admission: parse.admission,
+        },
+        include: {
+            user: {
+                select: userFilterSelection
+            }
         }
     }))
 

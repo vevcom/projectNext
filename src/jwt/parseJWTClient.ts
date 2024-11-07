@@ -5,7 +5,6 @@ import { JWT_ISSUER } from '@/auth/ConfigVars'
 import { createActionError } from '@/actions/error'
 import type { OmegaJWTAudience } from '@/auth/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { OmegaId } from '@/services/omegaid/Types'
 
 /**
  * Parses a JSON Web Token (JWT) and verifies its signature using the provided public key.
@@ -16,11 +15,16 @@ import type { OmegaId } from '@/services/omegaid/Types'
  * @returns A promise that resolves to an `ActionReturn` object containing the parsed JWT payload if the JWT is valid,
  * or an error object if the JWT is invalid.
  */
-export async function parseJWT(token: string, publicKey: string, timeOffset: number): Promise<ActionReturn<OmegaId>> {
+export async function parseJWT(
+    token: string,
+    publicKey: string,
+    timeOffset: number,
+    audience: OmegaJWTAudience
+): Promise<ActionReturn<number>> {
     // TODO: This only works in safari and firefox :///
 
-    function invalidJWT(message?: string): ActionReturn<OmegaId> {
-        return createActionError('JWT INVALID', message || 'Ugyldig QR kode')
+    function invalidJWT(message?: string): ActionReturn<number> {
+        return createActionError('JWT INVALID', message || 'Invalid JWT')
     }
 
     if (timeOffset < 0) {
@@ -30,7 +34,7 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
 
     const tokenS = token.split('.')
     if (tokenS.length !== 3) {
-        return invalidJWT('Ugyldig QR kode type')
+        return invalidJWT('Malformatted JWT')
     }
 
     const keyStripped = publicKey
@@ -68,35 +72,25 @@ export async function parseJWT(token: string, publicKey: string, timeOffset: num
     try {
         const payload = readJWTPayload(token)
 
-        if (!(
-            typeof payload.usrnm === 'string' &&
-            typeof payload.gn === 'string' &&
-            typeof payload.sn === 'string' &&
-            typeof payload.sub === 'number'
-        )) {
-            return invalidJWT('Invalid fields')
+        if (typeof payload.sub !== 'number') {
+            return invalidJWT('JWT is missing sub field')
         }
 
         if (new Date(payload.exp * 1000 + timeOffset) < new Date()) {
-            return invalidJWT('QR koden er utløpt')
+            return invalidJWT('JWT has expired')
         }
 
         if (payload.iss !== JWT_ISSUER) {
             return invalidJWT('Invalid issuer')
         }
 
-        if (payload.aud !== 'omegaid' satisfies OmegaJWTAudience) {
+        if (payload.aud !== audience) {
             return invalidJWT('Invalid audience')
         }
 
         return {
             success: true,
-            data: {
-                id: payload.sub,
-                username: payload.usrnm,
-                firstname: payload.gn,
-                lastname: payload.sn,
-            }
+            data: payload.sub
         }
     } catch {
         return invalidJWT('An unexpected error occured')
