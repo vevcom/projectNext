@@ -125,6 +125,13 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `Interessegruppe ${i}`,
             shortName: `IG${i}`,
+            articleSection: {
+                create: {
+                    cmsImage: { create: {} },
+                    cmsParagraph: { create: {} },
+                    cmsLink: { create: {} },
+                }
+            },
             group: {
                 create: {
                     groupType: 'INTEREST_GROUP',
