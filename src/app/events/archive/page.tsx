@@ -26,9 +26,9 @@ export default async function EventArchive({
     const canDestroy = DestroyEventTagAuther.dynamicFields({}).auth(session)
 
     return (
-        <EventsLandingLayout title="Hvad Der Har Hendt" headerLinks={[
+        <EventsLandingLayout page="EVENT_ARCHIVE" title="Hvad Der Har Hendt" headerLinks={[
             {
-                href: selectedTagNames?.length ? `/events${QueryParams.eventTags.encodeUrl(selectedTagNames)}` : '/events',
+                href: selectedTagNames?.length ? `/events?${QueryParams.eventTags.encodeUrl(selectedTagNames)}` : '/events',
                 icon: faArrowLeft
             }
         ]} headerItem={

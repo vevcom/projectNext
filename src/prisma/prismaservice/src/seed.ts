@@ -17,6 +17,7 @@ import seedMail from './seedMail'
 import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
 import seedDevSchools from './development/seedDevSchools'
+import seedDevCompanies from './development/seedDevCompanies'
 import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
@@ -49,6 +50,7 @@ async function seed() {
     await seedDevNews(prisma)
     await seedDevLockers(prisma)
     await seedDevSchools(prisma)
+    await seedDevCompanies(prisma)
     console.log('seed dev done')
 }
 

@@ -435,7 +435,22 @@ export const PermissionConfig = {
     THEME_ADMIN: {
         name: 'Tema admin',
         description: 'kan opprette, redigere og gjerne temaer',
-        category: 'diverse admin'
+        category: 'diverse admin',
+    },
+    COMPANY_ADMIN: {
+        name: 'Bedriftsadministrator',
+        description: 'kan administrere bedrifter',
+        category: 'brukere',
+    },
+    COMPANY_READ: {
+        name: 'Les bedrifter',
+        description: 'kan lese bedrifter',
+        category: 'brukere'
+    },
+    DOTS_ADMIN: {
+        name: 'Prikkadministrator',
+        description: 'kan administrere prikker',
+        category: 'brukere'
     }
 } satisfies Record<Permission, PermissionInfo>
 

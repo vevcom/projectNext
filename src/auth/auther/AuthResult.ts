@@ -1,3 +1,5 @@
+import { redirectToErrorPage } from '@/app/redirectToErrorPage'
+import { redirect } from 'next/navigation'
 import type { SessionType, UserGuaranteeOption } from '@/auth/Session'
 
 export type AuthStatus = 'AUTHORIZED' | 'UNAUTHORIZED' | 'AUTHORIZED_NO_USER' | 'UNAUTHENTICATED'
@@ -21,6 +23,14 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
         }
         if (this.authorized) return 'AUTHORIZED_NO_USER'
         return 'UNAUTHENTICATED'
+    }
+
+    public requireAuthorized({ returnUrlIfFail }: { returnUrlIfFail: string }) : AuthResult<UserGuatantee, true> {
+        if (!this.authorized) {
+            if (this.session.user) redirectToErrorPage('UNAUTHORIZED')
+            redirect(`/login?callbackUrl=${encodeURI(returnUrlIfFail)}`)
+        }
+        return new AuthResult(this.session, true)
     }
 }
 

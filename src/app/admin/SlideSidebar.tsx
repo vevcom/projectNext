@@ -14,7 +14,8 @@ import {
     faArrowLeft,
     faPaperPlane,
     faSchool,
-    faPaintbrush
+    faPaintbrush,
+    faDotCircle
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -165,6 +166,22 @@ const navigations = [
                 href: '/admin/courses'
             }
         ],
+    },
+    {
+        header: {
+            icon: faDotCircle,
+            title: 'Prikker'
+        },
+        links: [
+            {
+                title: 'Prikker',
+                href: '/admin/dots'
+            },
+            {
+                title: 'Frysperioder',
+                href: '/admin/dots-freeze-periods'
+            },
+        ]
     }
 ] satisfies {
     header: {

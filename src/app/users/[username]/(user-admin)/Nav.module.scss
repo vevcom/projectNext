@@ -1,0 +1,20 @@
+@use '@/styles/ohma';
+
+.Nav {
+    position: fixed;
+    top: calc(100px + 10vh);
+    right: calc(10vw + 10px);
+    transform: translateX(calc(100% + 1em));
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    > a {
+        @include ohma.roundAdminSvgBtn;
+        &.selected {
+            background-color: ohma.$colors-secondary;
+            &:hover svg {
+                color: initial;
+            }
+        }
+    }
+}
