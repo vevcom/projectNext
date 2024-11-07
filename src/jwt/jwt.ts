@@ -25,11 +25,11 @@ export function generateJWT<T extends object>(
     expiresIn: number,
     asymetric = false
 ): string {
-    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PRIVATE_KEY) {
+    if (!process.env.JWT_SECRET || !process.env.JWT_PRIVATE_KEY) {
         throw new ServerError('INVALID CONFIGURATION', 'Missing secret for JWT generation')
     }
 
-    return sign(payload, Buffer.from(asymetric ? process.env.JWT_PRIVATE_KEY : process.env.NEXTAUTH_SECRET), {
+    return sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.JWT_SECRET, {
         audience: aud,
         algorithm: asymetric ? 'ES256' : 'HS256',
         issuer: JWT_ISSUER,
@@ -44,16 +44,16 @@ export function generateJWT<T extends object>(
  * @throws {ServerError} If the JWT is expired or invalid.
  */
 export function verifyJWT(token: string, aud?: OmegaJWTAudience): (jwt.JwtPayload & Record<string, string | number | null>) {
-    if (!process.env.NEXTAUTH_SECRET || !process.env.JWT_PUBLIC_KEY) {
+    if (!process.env.JWT_SECRET || !process.env.JWT_PUBLIC_KEY) {
         throw new ServerError(
             'INVALID CONFIGURATION',
-            'JWT environ variables is not set. Missing NEXTAUTH_SECRET or JWT_PUBLIC_KEY'
+            'JWT environ variables is not set. Missing JWT_SECRET or JWT_PUBLIC_KEY'
         )
     }
 
     try {
         const JWTHeader = readJWTPart(token, 0)
-        let jwtKey = process.env.NEXTAUTH_SECRET
+        let jwtKey = process.env.JWT_SECRET
         if (JWTHeader.alg === 'ES256') {
             jwtKey = process.env.JWT_PUBLIC_KEY
         }

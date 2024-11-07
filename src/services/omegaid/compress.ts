@@ -73,7 +73,7 @@ function decompressPayload(rawdata: string): string {
     return encodeBase64Url(payloadString)
 }
 
-export function decomporessOmegaId(rawdata: string): ActionReturn<string> {
+export function decompressOmegaId(rawdata: string): ActionReturn<string> {
     const header = {
         alg: 'ES256',
         typ: 'JWT'
