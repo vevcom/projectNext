@@ -3,6 +3,7 @@ import Form from '../Form/Form'
 import { destroyThemeAction } from '@/actions/themes/destroy'
 import React from 'react'
 import type { Theme as ThemeT } from '@prisma/client'
+import { generateSCSSVariables } from '@/lib/themes/GenerateSCSSVariables'
 
 
 type PropTypes = {
@@ -15,16 +16,33 @@ export default function Theme({
     return (
         <div
             className={styles.themeList}
-            style={{
-                '--primaryLight': `rgb(${theme.primaryLightR}, ${theme.primaryLightG}, ${theme.primaryLightB})`,
-                '--primaryDark': `rgb(${theme.primaryDarkR}, ${theme.primaryDarkG}, ${theme.primaryDarkB})`,
-                '--secondaryLight': `rgb(${theme.secondaryLightR}, ${theme.secondaryLightG}, ${theme.secondaryLightB})`,
-                '--secondaryDark': `rgb(${theme.secondaryDarkR}, ${theme.secondaryDarkG}, ${theme.secondaryDarkB})`
-            } as React.CSSProperties}
+            style={generateSCSSVariables(theme)}
         >
-            <span className="styles.themeName">{theme.id}</span>
+            <h2>{theme.name}</h2>
+            <div className={styles.primary}>
+                <div className={styles.light}>
+                    <div/><div/><div/>
+                </div>
+                <div className={styles.dark}>
+                    <div/><div/><div/>
+                </div>
+            </div>
+            <div className={styles.secondary}>
+                <div className={styles.light}>
+                    <div/><div/><div/>
+                </div>
+                <div className={styles.dark}>
+                    <div/><div/><div/>
+                </div>
+            </div>
             <div className={styles.buttonGroup}>
-                <Form action={destroyThemeAction.bind(null, { id: theme.id })} />
+                <Form 
+                    action={destroyThemeAction.bind(null, { id: theme.id })} 
+                    refreshOnSuccess
+                    submitText='Slett'
+                    submitColor="red"
+                    confirmation={{confirm: true, text: "Er du sikker?"}}
+                />
             </div>
         </div>
     )

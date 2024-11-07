@@ -4,59 +4,77 @@
   padding: 10px;
   margin: 10px 0;
   background: linear-gradient(135deg, var(--primaryLight), var(--secondaryLight));
-  color: var(--secondaryLight);
+  color: var(--secondaryDark);
   border-radius: 8px;
   transition: background 0.3s ease;
 }
 
-
-.themeUl {
-  background: linear-gradient(var(--primaryLight), var(--secondaryLight));
-}
-
-.themeName {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.buttonGroup {
+.primary,
+.secondary {
   display: flex;
-  gap: 10px;               
-}
-
-.button {
-  padding: 8px 16px;
-  border: none;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.editButton {  
+.primary {
+  background: linear-gradient(135deg, var(--primaryDark), var(--primaryLight));
+}
+
+.secondary {
+  background: linear-gradient(135deg, var(--secondaryDark), var(--secondaryLight));
+}
+
+.light,
+.dark {
+  display: flex;
+  gap: 5px;
+}
+
+.light > div,
+.dark > div {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+}
+
+.primary .light > div:nth-child(1) {
+  background-color: var(--primaryLightLighten);
+}
+.primary .light > div:nth-child(2) {
+  background-color: var(--primaryLight);
+}
+.primary .light > div:nth-child(3) {
+  background-color: var(--primaryLightDarken);
+}
+
+.primary .dark > div:nth-child(1) {
+  background-color: var(--primaryDarkLighten);
+}
+.primary .dark > div:nth-child(2) {
+  background-color: var(--primaryDark);
+}
+.primary .dark > div:nth-child(3) {
+  background-color: var(--primaryDarkDarken);
+}
+
+.secondary .light > div:nth-child(1) {
+  background-color: var(--secondaryLightLighten);
+}
+.secondary .light > div:nth-child(2) {
+  background-color: var(--secondaryLight);
+}
+.secondary .light > div:nth-child(3) {
+  background-color: var(--secondaryLightDarken);
+}
+
+.secondary .dark > div:nth-child(1) {
+  background-color: var(--secondaryDarkLighten);
+}
+.secondary .dark > div:nth-child(2) {
   background-color: var(--secondaryDark);
-  color: var(--primaryDark);            
 }
-
-.editButton:hover {
-  filter: brightness(75%);
-}
-
-.deleteButton {
-  background-color: var(--primaryDark);
-  color: var(--secondaryDark); 
-}
-
-.deleteButton:hover {
-  filter: brightness(75%);
-}
-
-.applyButton {
-  background-color: var(--primaryDark);
-  color: var(--secondaryDark); 
-}
-
-.applyButton:hover {
-  filter: brightness(75%);
+.secondary .dark > div:nth-child(3) {
+  background-color: var(--secondaryDarkDarken);
 }

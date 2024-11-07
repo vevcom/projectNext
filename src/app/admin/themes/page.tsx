@@ -19,6 +19,7 @@ export default async function ThemesAdmin() {
             <Form
                 action={createThemeAction.bind(null, {})}
                 submitText="Lag nytt tema"
+                refreshOnSuccess
             >
                 <TextInput name="name" label="Navn" />
                 <ColorInput name="primaryLight" label="Primærfarge lys" />

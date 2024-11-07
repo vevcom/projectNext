@@ -5,7 +5,7 @@ import { ServiceMethodHandler } from '../ServiceMethodHandler'
 export const create = ServiceMethodHandler({
     withData: true,
     validation: createThemeColorValidation,
-    handler: async (prisma, _, { name, primaryLight, primaryDark, secondaryLight, secondaryDark, ...data }) => {
+    handler: async (prisma, _, { primaryLight, primaryDark, secondaryLight, secondaryDark, ...data }) => {
         if (!/^#([0-9A-F]{3}){1,2}$/i.test(primaryLight)) {
             throw new Error('Invalid hex color code')
         }
