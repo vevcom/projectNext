@@ -12,7 +12,7 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
     // Create Harambe's role
     const user = await prisma.user.findUnique({
         where: {
-            username: 'Harambe104'
+            username: 'harambe'
         }
     })
 

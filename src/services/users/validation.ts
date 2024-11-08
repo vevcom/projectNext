@@ -5,7 +5,7 @@ import type { ValidationTypes } from '@/services/Validation'
 
 const baseUserValidation = new ValidationBase({
     type: {
-        username: z.string(),
+        username: z.string().toLowerCase(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string(),
         emailVerified: z.string().optional().nullable(),
@@ -20,7 +20,7 @@ const baseUserValidation = new ValidationBase({
         }),
     },
     details: {
-        username: z.string().max(50).min(2),
+        username: z.string().max(50).min(2).toLowerCase(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),
         emailVerified: z.string().datetime({}).optional().nullable(),

@@ -15,10 +15,10 @@ export type PropTypes = {
 export default async function NavBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
-
-    //temporary
+    // TODO: Actual application period check
     const applicationPeriod = false
-    const isAdmin = user?.username === 'Harambe104'
+    // TODO: Actual admin/auth check
+    const isAdmin = user?.username === 'harambe'
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)

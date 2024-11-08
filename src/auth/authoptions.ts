@@ -28,7 +28,7 @@ export const authOptions: AuthOptions = {
                 // This should be an action
                 const userCredentials = await prisma.credentials.findUnique({
                     where: {
-                        username: credentials.username,
+                        username: credentials.username.toLowerCase(),
                     },
                     select: {
                         userId: true,
