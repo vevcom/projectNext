@@ -59,7 +59,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     const harambeImage = await prisma.image.findFirst({
         where: {
-            name: 'Harambe104'
+            name: 'harambe'
         }
     })
     if (!harambeImage) {
@@ -77,7 +77,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Harambe',
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
-            username: 'Harambe104',
+            username: 'harambe',
             bio: 'Harambe did nothing wrong',
             credentials: {
                 create: {
@@ -104,7 +104,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Vever',
             lastname: 'Vevsen',
             email: 'vever@vevcom.com',
-            username: 'Vever104',
+            username: 'vever',
             credentials: {
                 create: {
                     passwordHash: 'password',
@@ -117,7 +117,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     console.log(vever)
 }
 
-// WE NEED TO FIND A BETTER WAY TO SHARE CODE BETWEEN PRISMA SERVICE AND NEXT
+// TODO: WE NEED TO FIND A BETTER WAY TO SHARE CODE BETWEEN PRISMA SERVICE AND NEXT
 
 const ENCRYPTION_ALGORITHM = 'aes-256-cbc'
 const IV_LENGTH = 16 // IV = Initalization Vector

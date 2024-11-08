@@ -92,24 +92,14 @@ export const PermissionConfig = {
         description: 'kan oppdatere komite',
         category: 'groups',
     },
-    INTEREST_GROUP_CREATE: {
-        name: 'Lage interessegruppe',
-        description: 'kan lage interessegruppe',
-        category: 'groups',
-    },
-    INTEREST_GROUP_DESTROY: {
-        name: 'Slette interessegruppe',
-        description: 'kan slette interessegruppe',
-        category: 'groups',
-    },
     INTEREST_GROUP_READ: {
         name: 'Les interessegruppe',
         description: 'kan lese interessegruppe',
         category: 'groups',
     },
-    INTEREST_GROUP_UPDATE: {
-        name: 'Oppdatere interessegruppe',
-        description: 'kan oppdatere interessegruppe',
+    INTEREST_GROUP_ADMIN: {
+        name: 'Administrere interessegruppe',
+        description: 'Administrere interessegruppe uten å være admin i gruppen. Og lage nye grupper',
         category: 'groups',
     },
     OMEGA_MEMBERSHIP_GROUP_UPDATE: {
@@ -430,6 +420,21 @@ export const PermissionConfig = {
     LOCKERRESERVATION_UPDATE: {
         name: 'Oppdatere skapreservasjoner',
         description: 'kan oppdatere skapreservasjoner',
+        category: 'brukere'
+    },
+    COMPANY_ADMIN: {
+        name: 'Bedriftsadministrator',
+        description: 'kan administrere bedrifter',
+        category: 'brukere'
+    },
+    COMPANY_READ: {
+        name: 'Les bedrifter',
+        description: 'kan lese bedrifter',
+        category: 'brukere'
+    },
+    DOTS_ADMIN: {
+        name: 'Prikkadministrator',
+        description: 'kan administrere prikker',
         category: 'brukere'
     }
 } satisfies Record<Permission, PermissionInfo>

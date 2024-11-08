@@ -69,7 +69,8 @@ export function ServiceMethod<
         return config.withData ? {
             withData: true,
             client: config.serviceMethodHandler.client,
-            typeValidate: config.serviceMethodHandler.typeValidate
+            typeValidate: config.serviceMethodHandler.typeValidate,
+            detailedValidate: config.serviceMethodHandler.detailedValidate,
         } : {
             withData: false,
             client: config.serviceMethodHandler.client
@@ -78,12 +79,15 @@ export function ServiceMethod<
     return config.withData ? {
         withData: true,
         client: (prisma) => ({
-            execute: ({ data, params, session }, authRunConfig) => {
+            execute: async ({ data, params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
                     const authRes = config.auther.dynamicFields(
-                        config.dynamicFields({
+                        config.dynamicFields ? config.dynamicFields({
                             params,
-                            data
+                            data: config.serviceMethodHandler.detailedValidate(data)
+                        }) : await config.dynamicFieldsAsync({
+                            params,
+                            data: config.serviceMethodHandler.detailedValidate(data)
                         })
                     ).auth(
                         session ?? Session.empty()
@@ -94,13 +98,16 @@ export function ServiceMethod<
             },
         }),
         typeValidate: config.serviceMethodHandler.typeValidate,
+        detailedValidate: config.serviceMethodHandler.detailedValidate
     } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> : {
         withData: false,
         client: (prisma) => ({
-            execute: ({ params, session }, authRunConfig) => {
+            execute: async ({ params, session }, authRunConfig) => {
                 if (authRunConfig.withAuth) {
                     const authRes = config.auther.dynamicFields(
-                        config.dynamicFields({
+                        config.dynamicFields ? config.dynamicFields({
+                            params
+                        }) : await config.dynamicFieldsAsync({
                             params
                         })
                     ).auth(

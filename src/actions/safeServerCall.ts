@@ -1,5 +1,5 @@
 import { createActionError } from './error'
-import { ServerError } from '@/services/error'
+import { Smorekopp } from '@/services/error'
 import type { ActionReturn } from './Types'
 
 /**
@@ -17,7 +17,7 @@ export async function safeServerCall<T>(call: () => Promise<T>): Promise<ActionR
             data
         }
     } catch (error) {
-        if (error instanceof ServerError) {
+        if (error instanceof Smorekopp) {
             return createActionError(error.errorCode, error.errors)
         }
         return createActionError('UNKNOWN ERROR', 'unknown error')

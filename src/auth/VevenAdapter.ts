@@ -6,7 +6,7 @@ import { User } from '@/services/users'
 import { readUserOrNull } from '@/services/users/read'
 import type { UserFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
-import type { Adapter, AdapterUser } from 'next-auth/adapters'
+import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 
 /**
  * Utility function for converting a user object to
@@ -78,7 +78,7 @@ async function generateUsername(prisma: PrismaClient, preferredUsername: string,
 
 export default function VevenAdapter(prisma: PrismaClient): Adapter {
     return {
-        async createUser(user) {
+        async createUser(user: AdapterUser) {
             if (!user.username || !user.firstname || !user.lastname) {
                 throw new Error()
             }
@@ -146,7 +146,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
             return convertToAdapterUser(updatedUser)
         },
 
-        async linkAccount(account) {
+        async linkAccount(account: AdapterAccount) {
             console.log('link acc')
 
             if (!account.access_token || !account.expires_at || !account.id_token) {

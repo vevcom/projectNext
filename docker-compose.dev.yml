@@ -37,6 +37,7 @@ services:
             DOMAIN: ${DOMAIN}
             JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
             JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+            JWT_SECRET: ${JWT_SECRET}
         depends_on:
             db:
                 condition: service_healthy
@@ -97,7 +98,7 @@ services:
         ports:
             - 80:80
         volumes:
-            - ${PROJECT_ROOT:-.}/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+            - ${PROJECT_ROOT:-.}/containers/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
             - devstore:/usr/store
         depends_on:
             - projectnext

@@ -31,8 +31,19 @@ $imgHeight: $height / 2.5;
     background-color: lighten(ohma.$colors-secondary, 40%);
     border-radius: ohma.$cardRounding;
     padding: 3em;
-    h2 {
-        font-size: ohma.$fonts-xl;
-        margin: 0.5em 0;
+    .topInfo {
+        display: flex;
+        align-items: center;
+        gap: 0 1em;
+        h2 {
+            font-size: ohma.$fonts-xl;
+            margin: 0.5em 0;
+        }
+        ul {
+            display: flex;
+            gap: 0 .3em;
+            list-style-type: none;
+        }
     }
+
 }

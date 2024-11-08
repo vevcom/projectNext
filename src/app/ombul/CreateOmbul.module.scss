@@ -1,20 +1,21 @@
 @use '@/styles/ohma';
 
 .CreateOmbul {
+    min-width: 60vw;
     display: grid;
     grid-template-columns: 1fr 1fr;
     @include ohma.screenMobile {
         grid-template-columns: 1fr;
     }
     grid-template-rows: auto auto;
-    gap: ohma.$gap;
+    gap: 5*ohma.$gap;
     h1 {
         grid-column: 1 / 3;
         grid-row: 1 / 2;
     }
     .form {
         grid-column: 1 / 2;
-        min-width: 35vw;
+        min-width: 30vw;
         textarea {
             min-height: 100px;
         }
@@ -22,12 +23,12 @@
     .imgPreview {
         grid-column: 2 / 3;
         margin-left: 2*ohma.$gap;
-        width: 100%;
-        height: 100%;
+        width: 70%;
+        height: 70%;
         min-width: 20vw;
         max-width: 30vw;
         img {
-            width: 100% !important;
+            width: 70% !important;
             height: 100%;
             object-fit: contain;
             margin-bottom: ohma.$gap;

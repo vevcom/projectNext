@@ -66,8 +66,8 @@
 }
 
 .omegaId {
-    min-width: 50vw;
-    min-height: 50vw;
+    min-width: min(50vw, 400px);
+    min-height: min(50vw, 400px);
     display: grid;
     place-items: center;
     > * {
@@ -92,17 +92,6 @@
     grid-template-columns: max(300px) 1fr;
 
     gap: 0.5em;
-    
-    .imageWrapper {
-        display: flex;
-        justify-content: center;
-
-        .profilePicture {
-            border-radius: 50%;
-            border: 3px solid ohma.$colors-white;
-            background-color: ohma.$colors-white;
-        }
-    }
     
     .header {
         display: flex;

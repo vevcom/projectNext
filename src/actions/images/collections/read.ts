@@ -12,7 +12,7 @@ import { includeVisibility } from '@/services/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { SpecialCollection } from '@prisma/client'
 import type { VisibilityCollapsed } from '@/services/visibility/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { ImageCollection } from '@prisma/client'
 import type {
     ExpandedImageCollection,

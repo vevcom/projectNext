@@ -1,0 +1,16 @@
+@use '@/styles/ohma';
+
+.interestGroup {
+    margin-top: 2rem;
+    border-top: 8px solid ohma.$colors-secondary;
+    padding-top: 1rem;
+    position: relative;
+    h2 {
+        font-size: ohma.$fonts-xl;
+    }
+    .admin {
+        position: absolute;
+        top: 1em;
+        right: 1em;
+    }
+}

@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    padding: 1em;
+    .createNew {
+        margin-top: 1em;
+        background-color: ohma.$colors-gray-500;
+        @include ohma.round();
+        min-height: 100px;
+    }
+}

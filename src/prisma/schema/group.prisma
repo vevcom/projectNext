@@ -66,11 +66,15 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name        String
-  shortName   String   @unique
-  logoImage   CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId Int      @unique
-  Event       Event[]
+  committeeArticle   Article      @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  committeeArticleId Int          @unique
+  name               String
+  shortName          String       @unique
+  logoImage          CmsImage     @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId        Int          @unique
+  paragraph          CmsParagraph @relation(fields: [paragraphId], references: [id])
+  paragraphId        Int          @unique
+  events             Event[]
 }
 
 model InterestGroup {
@@ -80,7 +84,10 @@ model InterestGroup {
 
   name      String
   shortName String @unique
-  // TODOD - add intereset group data
+
+  articleSection   ArticleSection @relation(fields: [articleSectionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  articleSectionId Int            @unique
+  // TODO - add intereset group data
 }
 
 model ManualGroup {

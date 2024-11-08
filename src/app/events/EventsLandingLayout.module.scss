@@ -3,8 +3,28 @@
 .EventsLandingLayout {
     padding: 1em ohma.$minimalPagePadding;
     .top {
-        h1 {
-            font-size: ohma.$fonts-xxl;
+        > .titleAndTags {
+            h1 {
+                font-size: ohma.$fonts-xxl;
+            }
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            > a {
+                text-decoration: none;
+                position: relative;
+                &:hover {
+                    &::after {
+                        content: '✖';
+                        font-size: 4em;
+                        color: ohma.$colors-black;
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
         }
         display: flex;
         justify-content: space-between;

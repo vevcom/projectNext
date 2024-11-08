@@ -3,7 +3,7 @@ import type { PrismaClient } from '@/generated/pn'
 export default async function seedDevGroups(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({
         where: {
-            username: 'Harambe104'
+            username: 'harambe'
         }
     })
 
@@ -49,6 +49,19 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `${user.firstname}'s komité`,
             shortName: `${user.username.slice(0, 3)}com`,
+            committeeArticle: {
+                create: {
+                    name: `${user.firstname}'s komité`,
+                    coverImage: {
+                        create: {
+                            name: `${user.firstname}'s bilde`
+                        }
+                    }
+                }
+            },
+            paragraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -81,6 +94,19 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `Testkomité ${i}`,
             shortName: `TK${i}`,
+            committeeArticle: {
+                create: {
+                    name: `Testkomité ${i}`,
+                    coverImage: {
+                        create: {
+                            name: `Bilde for testkomité ${i}`
+                        }
+                    }
+                }
+            },
+            paragraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -99,6 +125,13 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `Interessegruppe ${i}`,
             shortName: `IG${i}`,
+            articleSection: {
+                create: {
+                    cmsImage: { create: {} },
+                    cmsParagraph: { create: {} },
+                    cmsLink: { create: {} },
+                }
+            },
             group: {
                 create: {
                     groupType: 'INTEREST_GROUP',

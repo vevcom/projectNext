@@ -1,10 +1,11 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
 import { createImageValidation } from './validation'
+import { allowedExtImageUpload, avifOptions, imageSizes } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { createFile } from '@/services/store/createFile'
 import prisma from '@/prisma'
-import logger from '@/logger'
+import logger from '@/lib/logger'
 import sharp from 'sharp'
 import type { CreateImageTypes } from './validation'
 import type { Image, SpecialImage } from '@prisma/client'
@@ -20,27 +21,33 @@ export async function createImage({
     ...rawdata
 }: CreateImageTypes['Detailed'] & { collectionId: number }): Promise<Image> {
     const { file, ...meta } = createImageValidation.detailedValidate(rawdata)
-    const allowedExt = ['png', 'jpg', 'jpeg', 'heic']
+
+    const buffer = Buffer.from(await file.arrayBuffer())
+    const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifOptions).toBuffer()
+    const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' })
 
     const uploadPromises = [
-        createOneInStore(file, allowedExt, 250),
-        createOneInStore(file, allowedExt, 600),
-        createFile(file, 'images', allowedExt),
+        createOneInStore(avifFile, ['avif'], imageSizes.small),
+        createOneInStore(avifFile, ['avif'], imageSizes.medium),
+        createOneInStore(avifFile, ['avif'], imageSizes.large),
+        createFile(file, 'images', [...allowedExtImageUpload]),
     ]
 
-    const [smallSize, mediumSize, original] = await Promise.all(uploadPromises)
+    const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
     const fsLocationSmallSize = smallSize.fsLocation
     const fsLocationMediumSize = mediumSize.fsLocation
-    const fsLocation = original.fsLocation
-    const ext = original.ext
+    const fsLocationLargeSize = largeSize.fsLocation
+    const fsLocationOriginal = original.fsLocation
+    const extOriginal = original.ext
     return await prismaCall(() => prisma.image.create({
         data: {
             name: meta.name,
             alt: meta.alt,
-            fsLocation,
+            fsLocationOriginal,
             fsLocationSmallSize,
             fsLocationMediumSize,
-            ext,
+            fsLocationLargeSize,
+            extOriginal,
             collection: {
                 connect: {
                     id: collectionId,
@@ -81,10 +88,11 @@ export async function createBadImage(name: string, config: {
         data: {
             name,
             special: config.special,
-            fsLocation: 'not_found',
+            fsLocationOriginal: 'not_found',
             fsLocationMediumSize: 'not_found',
             fsLocationSmallSize: 'not_found',
-            ext: 'jpg',
+            fsLocationLargeSize: 'not_found',
+            extOriginal: 'jpg',
             alt: 'not found',
             collection: {
                 connect: {

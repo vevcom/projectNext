@@ -69,7 +69,7 @@ export const seedImageConfig: ImageSeedConfig = [
         collection: defaultCollection,
     },
     {
-        name: 'Harambe104',
+        name: 'harambe',
         alt: 'Harambe',
         fsLocation: 'harambe.jpg',
         collection: 'PROFILEIMAGES'
@@ -139,6 +139,24 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         name: 'R1 NTNU',
         alt: 'R1 på NTNU',
         fsLocation: 'R1NTNU.jpeg',
+        collection: defaultCollection,
+    },
+    ENGINEER: {
+        name: 'engineer',
+        alt: 'Engineer',
+        fsLocation: 'engineer.jpeg',
+        collection: defaultCollection,
+    },
+    SKYSCRAPER: {
+        name: 'skyscraper',
+        alt: 'Skyscraper',
+        fsLocation: 'skyscraper.jpeg',
+        collection: defaultCollection,
+    },
+    FAIR: {
+        name: 'fair',
+        alt: 'Fair',
+        fsLocation: 'fair.webp',
         collection: defaultCollection,
     },
 } as const

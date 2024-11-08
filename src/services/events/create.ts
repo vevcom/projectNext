@@ -4,7 +4,7 @@ import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
-import { getOsloTime } from '@/dates/getOsloTime'
+import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 
@@ -27,7 +27,7 @@ export const create = ServiceMethodHandler({
             throw new ServerError('BAD PARAMETERS', 'Begge registreringsdatoer må være satt eller ingen')
         }
 
-        return await prisma.event.create({
+        const event = await prisma.event.create({
             data: {
                 name: data.name,
                 eventStart: data.eventStart,
@@ -55,5 +55,12 @@ export const create = ServiceMethodHandler({
                 }
             }
         })
+        await prisma.eventTagEvent.createMany({
+            data: data.tagIds.map(tagId => ({
+                eventId: event.id,
+                tagId
+            }))
+        })
+        return event
     }
 })

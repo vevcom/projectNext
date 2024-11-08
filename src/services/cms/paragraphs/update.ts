@@ -33,7 +33,7 @@ export async function updateCmsParagraphContents(id: number, contentMd: string):
                 contentHtml,
             }
         }))
-    } catch (e) {
+    } catch {
         throw new ServerError('BAD PARAMETERS', 'Invalid markdown')
     }
 }
