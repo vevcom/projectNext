@@ -74,6 +74,7 @@ model Committee {
   logoImageId        Int          @unique
   paragraph          CmsParagraph @relation(fields: [paragraphId], references: [id])
   paragraphId        Int          @unique
+  events             Event[]
 }
 
 model InterestGroup {

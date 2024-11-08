@@ -14,9 +14,11 @@ model Event {
   coverImageId   Int
   eventTagEvents EventTagEvent[]
 
-  eventStart   DateTime
-  eventEnd     DateTime
-  canBeViewdBy EventCanView
+  eventStart         DateTime
+  eventEnd           DateTime
+  canBeViewdBy       EventCanView
+  hostedByCommitee   Committee?   @relation(fields: [hostedByCommiteeId], references: [id])
+  hostedByCommiteeId Int?
 
   takesRegistration  Boolean
   places             Int                 @default(0)
