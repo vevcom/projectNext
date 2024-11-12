@@ -1,0 +1,47 @@
+model Shop {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  purchase    Purchase[]
+  ShopProduct ShopProduct[]
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  barcode         String?           @unique
+  ShopProduct     ShopProduct[]
+  PurchaseProduct PurchaseProduct[]
+}
+
+model ShopProduct {
+  shop      Shop    @relation(fields: [shopId], references: [id])
+  shopId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  price Int
+
+  @@id([shopId, productId])
+}
+
+model Purchase {
+  id              Int               @id @default(autoincrement())
+  timestamp       DateTime          @default(now())
+  shop            Shop              @relation(fields: [shopId], references: [id])
+  shopId          Int
+  // account Account @relation(field: [acountId], references: [id])
+  PurchaseProduct PurchaseProduct[]
+}
+
+model PurchaseProduct {
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId Int
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
+
+  price Int
+
+  @@id([purchaseId, productId])
+}
+
+
