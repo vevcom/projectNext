@@ -185,6 +185,10 @@ const navigations = [
                 title: 'Butikker',
                 href: '/admin/shop'
             },
+            {
+                title: 'Produkter',
+                href: '/admin/product'
+            },
         ]
     },
 ] satisfies {

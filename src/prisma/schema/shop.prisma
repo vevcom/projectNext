@@ -10,6 +10,7 @@ model Shop {
 model Product {
   id              Int               @id @default(autoincrement())
   name            String            @unique
+  description     String            @default("")
   barcode         String?           @unique
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -50,9 +51,8 @@ model PurchaseProduct {
   product    Product  @relation(fields: [productId], references: [id])
   productId  Int
 
-  price Int
+  quantity Int
+  price    Int
 
   @@id([purchaseId, productId])
 }
-
-

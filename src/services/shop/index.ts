@@ -1,7 +1,9 @@
 import 'server-only'
-import { CreateShop, ReadShop, ReadShops } from './Authers'
+import { CreateProduct, CreateShop, ReadProduct, ReadShop, ReadShops } from './Authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
+import { readProducts } from './product/read'
+import { createProduct } from './product/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Shop = {
@@ -25,7 +27,21 @@ export const Shop = {
         auther: CreateShop,
         dynamicFields: () => ({}),
         serviceMethodHandler: createShop,
-    })
+    }),
+    readProducts: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: ReadProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: readProducts,
+    }),
+    createProduct: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: CreateProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: createProduct,
+    }),
     // readWrapperForUser: ServiceMethod({
     //     withData: false,
     //     hasAuther: true,

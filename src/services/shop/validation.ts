@@ -9,7 +9,7 @@ const baseShopValidation = new ValidationBase({
     },
     details: {
         shopId: z.coerce.number().int(),
-        name: z.string(),
+        name: z.string().min(3),
         description: z.string(),
     }
 })
@@ -21,3 +21,9 @@ export const createShopValidation = baseShopValidation.createValidation({
 
 export const updateShopValidation = createShopValidation
 
+export const createProductValidation = baseShopValidation.createValidation({
+    keys: ['name', 'description'],
+    transformer: data => data,
+})
+
+export const updateProductValidation = createShopValidation
