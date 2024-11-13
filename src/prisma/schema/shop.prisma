@@ -1,6 +1,8 @@
 model Shop {
   id          Int           @id @default(autoincrement())
   name        String        @unique
+  description String?
+  createdAt   DateTime      @default(now())
   purchase    Purchase[]
   ShopProduct ShopProduct[]
 }
@@ -9,6 +11,8 @@ model Product {
   id              Int               @id @default(autoincrement())
   name            String            @unique
   barcode         String?           @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   ShopProduct     ShopProduct[]
   PurchaseProduct PurchaseProduct[]
 }
@@ -24,9 +28,16 @@ model ShopProduct {
   @@id([shopId, productId])
 }
 
+enum PurchaseMethod {
+  MANUAL
+  STUDENT_CARD
+  OMEGA_ID
+}
+
 model Purchase {
   id              Int               @id @default(autoincrement())
   timestamp       DateTime          @default(now())
+  method          PurchaseMethod
   shop            Shop              @relation(fields: [shopId], references: [id])
   shopId          Int
   // account Account @relation(field: [acountId], references: [id])

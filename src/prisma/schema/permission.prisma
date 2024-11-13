@@ -139,6 +139,16 @@ enum Permission {
   COMPANY_ADMIN
 
   DOTS_ADMIN
+
+  // Shop
+  SHOP_READ
+  SHOP_ADMIN
+
+  PRODUCT_READ
+  PRODUCT_ADMIN
+
+  PURCHASE_CREATE
+
 }
 
 model Role {

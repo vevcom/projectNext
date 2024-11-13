@@ -14,7 +14,8 @@ import {
     faArrowLeft,
     faPaperPlane,
     faSchool,
-    faDotCircle
+    faDotCircle,
+    faShop
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -173,7 +174,19 @@ const navigations = [
                 href: '/admin/dots-freeze-periods'
             },
         ]
-    }
+    },
+    {
+        header: {
+            icon: faShop,
+            title: 'Shop'
+        },
+        links: [
+            {
+                title: 'Butikker',
+                href: '/admin/shop'
+            },
+        ]
+    },
 ] satisfies {
     header: {
         icon: IconDefinition
