@@ -160,9 +160,9 @@ export default async function migrateImages(
     return migrateImageIdMap
 }
 
-type Locations = { 
-    fsLocationOriginal: string, 
-    fsLocationSmallSize: string, 
+type Locations = {
+    fsLocationOriginal: string,
+    fsLocationSmallSize: string,
     fsLocationMediumSize: string,
     fsLocationLargeSize: string
 }
@@ -183,35 +183,39 @@ async function fetchAllImagesAndUploadToStore<X extends {
         }
         return acc
     }, [[]] as X[][])
+
+    const uploadOne = async (image: X) => {
+        manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
+        const ext = image.originalName.split('.').pop() || ''
+        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
+            + `?url=/store/images/${image.name}.${ext}`
+        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
+            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
+            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
+            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
+        const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
+        const fsLocationSmallSize = await fetchImageAndUploadToStore(fsLocationSmallOldVev)
+        const fsLocationLargeSize = await fetchImageAndUploadToStore(fsLocationLargeOldVev)
+        if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
+            console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
+            ret.push(null)
+        } else {
+            ret.push({
+                ...image,
+                fsLocationSmallSize,
+                fsLocationMediumSize,
+                fsLocationOriginal,
+                fsLocationLargeSize
+            })
+        }
+    }
+
+
     for (const imageBatch of imageBatches) {
-        await Promise.all(imageBatch.map(async image => {
-            manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
-            const ext = image.originalName.split('.').pop() || ''
-            const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
-                + `?url=/store/images/${image.name}.${ext}`
-            const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
-                + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
-            const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
-                + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-            const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
-                + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
-            const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
-            const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
-            const fsLocationSmallSize = await fetchImageAndUploadToStore(fsLocationSmallOldVev)
-            const fsLocationLargeSize = await fetchImageAndUploadToStore(fsLocationLargeOldVev)
-            if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
-                console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
-                ret.push(null)
-            } else {
-                ret.push({
-                    ...image,
-                    fsLocationSmallSize,
-                    fsLocationMediumSize,
-                    fsLocationOriginal,
-                    fsLocationLargeSize
-                })
-            }
-        }))
+        await Promise.all(imageBatch.map(uploadOne))
     }
     return ret
 }
