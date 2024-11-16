@@ -3,6 +3,7 @@ import requests
 
 PURCHASE_URL = "http://localhost/api/shop/purchase/createByStudentCard"
 BARCODE_URL = "http://localhost/api/shop/product/barcode"
+READ_SHOPS_URL = "http://localhost/api/shop/getAll"
 
 apiKey = "id=1&key=dev0f850abdffd827de51e2800b60f4073c13970054ba74f2118726087051"
 
@@ -42,6 +43,18 @@ data2 = {
 
 response = requests.post(BARCODE_URL, json=data2, headers=headers)
 
+print(response.status_code)
+if (response.status_code == 200):
+    print(response.json())
+else:
+    print(response.text)
+
+print()
+
+headersSmall = {
+    "Authorization": headers["Authorization"]
+}
+response = requests.get(READ_SHOPS_URL, headers=headersSmall)
 print(response.status_code)
 if (response.status_code == 200):
     print(response.json())
