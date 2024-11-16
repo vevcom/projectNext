@@ -3,11 +3,11 @@ import requests
 
 URL = "http://localhost/api/shop/purchase/createByStudentCard"
 
-apiKey = "id=4&key=dev9b47fbcfa7548e7bcd19cec343f4c7221c2670f7159b2654686a086858"
+apiKey = "id=1&key=devf491fc632b8ce9dd0a5a948be2e3a9d7876129e37596ab25ea2a6082c0"
 
 data = {
     "shopId": 1,
-    "NTNUCard": "ABC123",
+    "studentCard": "harambeCard",
     "products": [
         {"id": 1, "quantity": 2},
         {"id": 2, "quantity": 5}
@@ -23,4 +23,8 @@ response = requests.post(URL, json=data, headers=headers)
 print(response)
 print(response.status_code)
 print(response.headers)
-print(response.text)
+
+if (response.status_code == 200):
+    print(response.json())
+else:
+    print(response.text)

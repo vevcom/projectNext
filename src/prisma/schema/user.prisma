@@ -20,7 +20,7 @@ model User {
   updatedAt         DateTime            @updatedAt // is also updated manually
   image             Image?              @relation(fields: [imageId], references: [id])
   imageId           Int?
-  studentCard       String?
+  studentCard       String?             @unique
   LockerReservation LockerReservation[]
   omegaQuote        OmegaQuote[]
   memberships       Membership[]

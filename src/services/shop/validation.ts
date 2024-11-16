@@ -13,7 +13,7 @@ const baseShopValidation = new ValidationBase({
         name: z.string(),
         description: z.string(),
         price: z.number().or(z.string()),
-        NTNUCard: z.string(),
+        studentCard: z.string(),
         products: productsZodObject,
     },
     details: {
@@ -21,7 +21,7 @@ const baseShopValidation = new ValidationBase({
         name: z.string().min(3),
         description: z.string(),
         price: z.number().int().min(0),
-        NTNUCard: z.string(),
+        studentCard: z.string(),
         products: productsZodObject,
     }
 })
@@ -49,7 +49,7 @@ export const createProductForShopValidation = baseShopValidation.createValidatio
 })
 
 export const createPurchaseFromStudentCardValidation = baseShopValidation.createValidation({
-    keys: ['shopId', 'products', 'NTNUCard'],
+    keys: ['shopId', 'products', 'studentCard'],
     transformer: data => data,
 })
 export type CreatePurchaseFromStudnetCardType = ValidationTypes<typeof createPurchaseFromStudentCardValidation>

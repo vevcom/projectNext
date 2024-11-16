@@ -4,6 +4,11 @@ import { ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode } from '@/services/error'
 import type { SessionNoUser } from '@/auth/Session'
 import type { ServiceMethod } from '@/services/ServiceTypes'
+import type { ZodError } from 'zod'
+
+function formatZodError(error: ZodError): string {
+    return error.errors.reduce((acc, val) => `${acc} ${val.code} ${val.path} ${val.message}\n`, '') // TODO: Create better error messages for API
+}
 
 type APIHandler<
     WithValidation extends boolean,
@@ -93,7 +98,9 @@ export function apiHandler<
         await apiHandlerGeneric<Return>(req, async session => {
             const rawdata = await req.json().catch(console.log)
             const parse = serviceMethod.typeValidate(rawdata)
-            if (!parse.success) throw new ServerError('BAD PARAMETERS', 'Dårlig data')
+            if (!parse.success) {
+                throw new ServerError('BAD PARAMETERS', formatZodError(parse.error))
+            }
             const data = parse.data
 
             return serviceMethod.client('NEW').execute({

@@ -4,6 +4,7 @@ import { createPurchaseFromStudentCardValidation } from '@/services/shop/validat
 import { ServerError } from '@/services/error'
 import { type PrismaClient, PurchaseMethod } from '@prisma/client'
 import type { ProductList } from './Types'
+import { userFilterSelection } from '@/services/users/ConfigVars'
 
 
 export const createPurchaseByStudentCard = ServiceMethodHandler({
@@ -11,7 +12,20 @@ export const createPurchaseByStudentCard = ServiceMethodHandler({
     wantsToOpenTransaction: true,
     validation: createPurchaseFromStudentCardValidation,
     handler: async (prisma, _, data) => {
+        const user = await prisma.user.findUnique({
+            where: {
+                studentCard: data.studentCard,
+            },
+            select: userFilterSelection
+        })
+        if (!user) throw new ServerError('NOT FOUND', `No user is connected to the Student card ${data.studentCard}.`)
+
         await createPurchase(prisma, PurchaseMethod.STUDENT_CARD, data.shopId, 0, data.products)
+
+        return {
+            remainingBalance: 15100,
+            user,
+        }
     }
 })
 
