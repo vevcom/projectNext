@@ -1,8 +1,12 @@
+import { CreateProductForShopForm } from './CreateProductForShopForm'
 import { readShop } from '@/actions/shop'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
+import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { notFound } from 'next/navigation'
-
+import { v4 as uuid } from 'uuid'
+import styles from './page.module.scss'
+import { displayPrice } from '@/lib/money/convert'
 
 export default async function Shop(params: {
     params: {
@@ -21,6 +25,29 @@ export default async function Shop(params: {
     return <PageWrapper
         title={shopData.name}
     >
-        hei hei
+        <p>{shopData.description}</p>
+
+        <PopUp
+            showButtonClass={styles.button}
+            showButtonContent="Legg til Produkt"
+            PopUpKey="createProductForShop"
+        >
+            <CreateProductForShopForm shopId={shopId} />
+        </PopUp>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Pris</th>
+                </tr>
+            </thead>
+            <tbody>
+                {shopData.products.map(product => <tr key={uuid()}>
+                    <td>{product.name}</td>
+                    <td>{displayPrice(product.price, false)}</td>
+                </tr>)}
+            </tbody>
+        </table>
     </PageWrapper>
 }

@@ -10,3 +10,5 @@ export const createShop = Action(Shop.createShop)
 
 export const readProducts = ActionNoData(Shop.readProducts)
 export const createProduct = Action(Shop.createProduct)
+
+export const createProductForShop = Action(Shop.createProductForShop)

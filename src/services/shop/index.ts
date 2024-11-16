@@ -3,7 +3,7 @@ import { CreateProduct, CreateShop, ReadProduct, ReadShop, ReadShops } from './A
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
 import { readProducts } from './product/read'
-import { createProduct } from './product/create'
+import { createProduct, createProductForShop } from './product/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Shop = {
@@ -42,18 +42,11 @@ export const Shop = {
         dynamicFields: () => ({}),
         serviceMethodHandler: createProduct,
     }),
-    // readWrapperForUser: ServiceMethod({
-    //     withData: false,
-    //     hasAuther: true,
-    //     auther: ReadDotForUserAuther,
-    //     dynamicFields: ({ params }) => ({ userId: params.userId }),
-    //     serviceMethodHandler: readWrappersForUser,
-    // }),
-    // readPage: ServiceMethod({
-    //     withData: false,
-    //     hasAuther: true,
-    //     auther: ReadDotAuther,
-    //     dynamicFields: () => ({}),
-    //     serviceMethodHandler: readPage,
-    // })
+    createProductForShop: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: CreateProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: createProductForShop,
+    }),
 } as const

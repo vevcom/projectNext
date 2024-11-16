@@ -10,5 +10,7 @@ export const ReadProduct = RequirePermission.staticFields({ permission: 'PRODUCT
 export const CreateProduct = RequirePermission.staticFields({ permission: 'PRODUCT_ADMIN' })
 export const UpdateProduct = RequirePermission.staticFields({ permission: 'PRODUCT_ADMIN' })
 
+// export const CreateProductForShop = RequirePermission.staticFields({ permission: ['PRODUCT_READ'] })
+
 export const CreatePurchase = RequirePermissioAndUser.staticFields({ permission: 'PURCHASE_CREATE' })
 
