@@ -54,7 +54,7 @@ export default async function seedDevShop(prisma: PrismaClient) {
 
     await Promise.all(products.map(product => prisma.product.create({
         data: {
-            name: product.name,
+            name: product.name.toUpperCase(),
             description: product.description,
             ShopProduct: {
                 create: {
