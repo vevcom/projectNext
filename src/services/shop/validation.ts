@@ -15,6 +15,7 @@ const baseShopValidation = new ValidationBase({
         price: z.number().or(z.string()),
         studentCard: z.string(),
         products: productsZodObject,
+        barcode: z.string().or(z.number()),
     },
     details: {
         shopId: z.coerce.number().int(),
@@ -23,6 +24,7 @@ const baseShopValidation = new ValidationBase({
         price: z.number().int().min(0),
         studentCard: z.string(),
         products: productsZodObject,
+        barcode: z.string().or(z.number()),
     }
 })
 
@@ -39,6 +41,11 @@ export const createProductValidation = baseShopValidation.createValidation({
 })
 
 export const updateProductValidation = createShopValidation
+
+export const readProductByBarcodeValidation = baseShopValidation.createValidation({
+    keys: ['barcode', 'shopId'],
+    transformer: data => data,
+})
 
 export const createProductForShopValidation = baseShopValidation.createValidation({
     keys: ['name', 'description', 'price'],

@@ -2,7 +2,7 @@ import 'server-only'
 import { CreateProduct, CreatePurchaseByStudentCard, CreateShop, ReadProduct, ReadShop, ReadShops } from './Authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
-import { readProducts } from './product/read'
+import { readProductByBarCode, readProducts } from './product/read'
 import { createProduct, createProductForShop } from './product/create'
 import { createPurchaseByStudentCard } from './purchase/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
@@ -35,6 +35,13 @@ export const Shop = {
         auther: ReadProduct,
         dynamicFields: () => ({}),
         serviceMethodHandler: readProducts,
+    }),
+    readProductByBarCode: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: ReadProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: readProductByBarCode,
     }),
     createProduct: ServiceMethod({
         withData: true,

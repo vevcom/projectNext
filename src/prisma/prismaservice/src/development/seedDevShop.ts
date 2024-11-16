@@ -56,6 +56,7 @@ export default async function seedDevShop(prisma: PrismaClient) {
         data: {
             name: product.name.toUpperCase(),
             description: product.description,
+            barcode: product.barcode,
             ShopProduct: {
                 create: {
                     price: product.price,

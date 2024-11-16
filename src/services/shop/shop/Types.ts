@@ -1,7 +1,7 @@
-import type { Product, Shop, ShopProduct } from '@prisma/client'
-import type { Pick } from '@prisma/client/runtime/library'
+import type { Shop } from '@prisma/client'
+import type { ExtendedProduct } from '@/services/shop/product/Types'
 
 
 export type ExtendedShop = Shop & {
-    products: (Product & Pick<ShopProduct, 'price'>)[]
+    products: ExtendedProduct[]
 }
