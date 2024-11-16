@@ -120,5 +120,6 @@ function createApiErrorRespone(errorCode: ErrorCode, message: string) {
 }
 
 function createApiResponse<Return>(res: Return) {
-    return Response.json(JSON.stringify(res), { status: 200 })
+    const data = res ? JSON.stringify(res) : ''
+    return Response.json(data, { status: 200 })
 }

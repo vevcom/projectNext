@@ -14,6 +14,7 @@ export const permissionCategories = [
     'notifikasjoner',
     'mail',
     'skjermer',
+    'shop',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -436,6 +437,31 @@ export const PermissionConfig = {
         name: 'Prikkadministrator',
         description: 'kan administrere prikker',
         category: 'brukere'
+    },
+    SHOP_READ: {
+        name: 'Les butikker',
+        description: 'kan lese butikker',
+        category: 'shop'
+    },
+    SHOP_ADMIN: {
+        name: 'Butikk administrator',
+        description: 'Kan administrere alle butikker',
+        category: 'shop'
+    },
+    PRODUCT_READ: {
+        name: 'Les produkter',
+        description: 'Kan lese produkter',
+        category: 'shop'
+    },
+    PRODUCT_ADMIN: {
+        name: 'Produkt administrator',
+        description: 'Kan administrare alle produkter',
+        category: 'shop'
+    },
+    PURCHASE_CREATE: {
+        name: 'Gjennomfør kjøp',
+        description: 'Kan gjennomføre et kjøp i en butikk',
+        category: 'shop'
     }
 } satisfies Record<Permission, PermissionInfo>
 
