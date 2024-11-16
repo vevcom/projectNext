@@ -30,7 +30,7 @@ model ShopProduct {
 }
 
 enum PurchaseMethod {
-  MANUAL
+  WEB
   STUDENT_CARD
   OMEGA_ID
 }
@@ -41,7 +41,7 @@ model Purchase {
   method          PurchaseMethod
   shop            Shop              @relation(fields: [shopId], references: [id])
   shopId          Int
-  // account Account @relation(field: [acountId], references: [id])
+  // transaction Transaction @relation(field: [acountId], references: [id])
   PurchaseProduct PurchaseProduct[]
 }
 

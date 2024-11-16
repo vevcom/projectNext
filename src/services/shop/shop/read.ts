@@ -7,9 +7,12 @@ export const readShops = ServiceMethodHandler({
 
 export const readShop = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma, { shopId }: { shopId: number }) => prisma.shop.findFirst({
-        where: {
-            id: shopId
-        },
-    })
+    handler: async (prisma, { shopId }: { shopId: number }) => {
+        console.log(shopId)
+        return await prisma.shop.findFirst({
+            where: {
+                id: shopId
+            },
+        })
+    }
 })
