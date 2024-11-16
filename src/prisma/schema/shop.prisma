@@ -12,6 +12,7 @@ model Product {
   name            String            @unique
   description     String            @default("")
   barcode         String?           @unique
+  active          Boolean           @default(true)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   ShopProduct     ShopProduct[]

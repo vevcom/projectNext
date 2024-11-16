@@ -46,7 +46,7 @@ export const Shop = {
         withData: true,
         hasAuther: true,
         auther: CreateProduct,
-        dynamicFields: () => ({}),
+        dynamicFields: () => ({}), // So this doesn't need dynamic field???
         serviceMethodHandler: createProductForShop,
     }),
 } as const
