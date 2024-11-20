@@ -18,7 +18,7 @@ data = {
 
 headers = {
     "Content-Type": "application/json",  # Specifies JSON payload
-    "Authorization": f"{apiKey}"  # Include if API requires authentication
+    "Authorization": apiKey  # Include if API requires authentication
 }
 
 response = requests.post(PURCHASE_URL, json=data, headers=headers)
