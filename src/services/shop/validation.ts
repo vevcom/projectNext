@@ -16,15 +16,17 @@ const baseShopValidation = new ValidationBase({
         studentCard: z.string(),
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
+        active: z.boolean().or(z.enum(['on'])).optional(),
     },
     details: {
         shopId: z.coerce.number().int(),
         name: z.string().min(3),
         description: z.string(),
-        price: z.number().int().min(0),
+        price: z.number().int().min(1),
         studentCard: z.string(),
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
+        active: z.boolean(),
     }
 })
 
@@ -52,6 +54,15 @@ export const createProductForShopValidation = baseShopValidation.createValidatio
     transformer: data => ({
         ...data,
         price: convertPrice(data.price)
+    })
+})
+
+export const updateProductForShopValidation = baseShopValidation.createValidation({
+    keys: ['name', 'description', 'price', 'barcode', 'active'],
+    transformer: data => ({
+        ...data,
+        price: convertPrice(data.price),
+        active: data.active === 'on' || data.active === true
     })
 })
 

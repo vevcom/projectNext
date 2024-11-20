@@ -1,11 +1,12 @@
 import 'server-only'
-import { CreateProduct, CreatePurchaseByStudentCard, CreateShop, ReadProduct, ReadShop, ReadShops } from './Authers'
+import { CreateProduct, CreatePurchaseByStudentCard, CreateShop, ReadProduct, ReadShop, ReadShops, UpdateProduct } from './Authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
 import { readProductByBarCode, readProducts } from './product/read'
 import { createProduct, createProductForShop } from './product/create'
 import { createPurchaseByStudentCard } from './purchase/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { updateProductForShop } from './product/update'
 
 export const Shop = {
     readShops: ServiceMethod({
@@ -56,6 +57,13 @@ export const Shop = {
         auther: CreateProduct,
         dynamicFields: () => ({}), // So this doesn't need dynamic field???
         serviceMethodHandler: createProductForShop,
+    }),
+    updateProductForShop: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: UpdateProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: updateProductForShop,
     }),
     createPurchaseByStudentCard: ServiceMethod({
         withData: true,

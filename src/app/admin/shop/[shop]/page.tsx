@@ -42,11 +42,15 @@ export default async function Shop(params: {
                 <tr>
                     <th>Rediger</th>
                     <th>Produkt</th>
+                    <th>Beskrivelse</th>
                     <th>Pris</th>
                 </tr>
             </thead>
             <tbody>
-                {shopData.products.map(product => <tr key={uuid()}>
+                {shopData.products.map(product => <tr
+                    key={uuid()}
+                    className={product.active ? '' : styles.deactivatedProduct}
+                >
                     <td className={styles.editButtonWrapper}>
                         <PopUp
                             showButtonContent={<FontAwesomeIcon icon={faPencil} />}
@@ -56,6 +60,7 @@ export default async function Shop(params: {
                         </PopUp>
                     </td>
                     <td>{product.name}</td>
+                    <td>{product.description}</td>
                     <td>{displayPrice(product.price, false)}</td>
                 </tr>)}
             </tbody>

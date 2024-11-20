@@ -2,7 +2,7 @@ import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createProductForShopValidation, createProductValidation } from '@/services/shop/validation'
 
-function convertBarcode(barcode?: string | number) {
+export function convertBarcode(barcode?: string | number) {
     if (typeof barcode === 'string' || typeof barcode === 'number') {
         const stringBarcode = String(barcode).trim()
         if (stringBarcode.length > 0) {

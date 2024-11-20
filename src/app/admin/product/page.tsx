@@ -32,7 +32,7 @@ export default async function ProductPage() {
                 {products.map(product => <tr key={uuid()}>
                     <td>{product.name}</td>
                     <td>{product.description}</td>
-                    <td>{product.barcode ?? 'Ingen'}</td>
+                    <td>{product.barcode ?? ''}</td>
                 </tr>)}
             </tbody>
         </table>

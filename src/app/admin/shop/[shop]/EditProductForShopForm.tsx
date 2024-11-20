@@ -1,4 +1,4 @@
-import { createProductForShop } from '@/actions/shop'
+import { createProductForShop, updateProductForShop } from '@/actions/shop'
 import Form from '@/app/_components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import NumberInput from '@/app/_components/UI/NumberInput'
@@ -14,9 +14,12 @@ export function EditProductForShopForm({
     shopId: number,
     product?: ExtendedProduct,
 }) {
-    console.log(product)
+    const submitAction = product
+        ? updateProductForShop.bind(null, { shopId, productId: product.id })
+        : createProductForShop.bind(null, { shopId })
+
     return <Form
-        action={createProductForShop.bind(null, { shopId })}
+        action={submitAction}
         submitText={product ? 'Oppdater produkt' : 'Lag nytt produkt'}
     >
         <TextInput name="name" label="Navn" defaultValue={product?.name}/>
