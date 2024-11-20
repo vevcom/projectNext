@@ -28,7 +28,10 @@ const baseUserValidation = new ValidationBase({
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         allergies: z.string().max(150).optional().nullable(),
-        password: z.string().max(50).min(12),
+        password: z.string().max(50).min(12, {
+            // eslint-disable-next-line
+            message: 'Passoret må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
+        }),
         confirmPassword: z.string().max(50).min(12),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
