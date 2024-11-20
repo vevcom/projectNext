@@ -19,13 +19,13 @@ export default function StudyProgrammeTableBody({
     return <tbody>
         {studyprogrammes.map(s =>
             <tr key={uuid()}>
-                {canEdit && <PopUp
+                {canEdit && <td className={styles.editButtonWrapper}><PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
                     showButtonClass={styles.editButton}
                     PopUpKey={uuid()}
                 >
                     <UpdateStudyProgrammeForm studyProgramme={s} />
-                </PopUp>}
+                </PopUp></td>}
                 <th>{s.name}</th>
                 <td>{s.code}</td>
                 <td>{s.insititueCode ?? ''}</td>

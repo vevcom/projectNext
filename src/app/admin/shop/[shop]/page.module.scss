@@ -7,3 +7,18 @@
 .table {
     @include ohma.table();
 }
+
+.deactivatedProduct {
+    color: ohma.$colors-gray-500;
+}
+
+.editButtonWrapper {
+    text-align: center;
+
+    > button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: transparent;
+    }
+}

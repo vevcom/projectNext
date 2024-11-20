@@ -30,6 +30,7 @@ export const readShop = ServiceMethodHandler({
         Reflect.deleteProperty(ret, 'ShopProduct')
         ret.products = results.ShopProduct.map(shopProduct => ({
             price: shopProduct.price,
+            active: shopProduct.active,
             ...shopProduct.product,
         }))
 
