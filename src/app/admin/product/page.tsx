@@ -1,6 +1,7 @@
 'use server'
 
 import ProductForm from './productForm'
+import styles from './page.module.scss'
 import { readProducts } from '@/actions/shop'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
@@ -19,7 +20,7 @@ export default async function ProductPage() {
             </AddHeaderItemPopUp>
         }
     >
-        <table>
+        <table className={styles.table}>
             <thead>
                 <tr>
                     <th>Produkt</th>

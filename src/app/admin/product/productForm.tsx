@@ -11,5 +11,6 @@ export default function ProductForm() {
     >
         <TextInput name="name" label="Navn" />
         <TextInput name="description" label="Beskrivelse"/>
+        <TextInput name="barcode" label="Strekkode"/>
     </Form>
 }

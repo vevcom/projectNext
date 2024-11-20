@@ -1,12 +1,12 @@
 import { CreateProductForShopForm } from './CreateProductForShopForm'
+import styles from './page.module.scss'
 import { readShop } from '@/actions/shop'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { displayPrice } from '@/lib/money/convert'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import styles from './page.module.scss'
-import { displayPrice } from '@/lib/money/convert'
 
 export default async function Shop(params: {
     params: {
@@ -35,7 +35,7 @@ export default async function Shop(params: {
             <CreateProductForShopForm shopId={shopId} />
         </PopUp>
 
-        <table>
+        <table className={styles.table}>
             <thead>
                 <tr>
                     <th>Produkt</th>

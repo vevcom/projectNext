@@ -15,6 +15,7 @@ export function CreateProductForShopForm({
     >
         <TextInput name="name" label="Navn" />
         <TextInput name="description" label="Beskrivelse" />
+        <TextInput name="barcode" label="Strekkode" />
         <NumberInput name="price" label="Pris" />
     </Form>
 }
