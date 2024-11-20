@@ -1,14 +1,9 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
-import { ServerError, Smorekopp } from '@/services/error'
-import type { ErrorCode } from '@/services/error'
+import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import type { ErrorCode, ErrorMessage } from '@/services/error'
 import type { SessionNoUser } from '@/auth/Session'
 import type { ServiceMethod } from '@/services/ServiceTypes'
-import type { ZodError } from 'zod'
-
-function formatZodError(error: ZodError): string {
-    return error.errors.reduce((acc, val) => `${acc} ${val.code} ${val.path} ${val.message}\n`, '') // TODO: Create better error messages for API
-}
 
 type APIHandler<
     WithValidation extends boolean,
@@ -33,8 +28,8 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         const result = await handle(session)
         return createApiResponse(result)
     } catch (error: unknown) {
-        if (error instanceof Smorekopp) {
-            return createApiErrorRespone(error.errorCode, error.errors.length ? error.errors[0].message : error.errorCode)
+        if (error instanceof Smorekopp || error instanceof ServerError) {
+            return createApiErrorRespone(error.errorCode, error.errors)
         }
         if (error instanceof Error) {
             return createApiErrorRespone('UNKNOWN ERROR', error.message)
@@ -94,35 +89,44 @@ export function apiHandler<
     >
 
 ) {
-    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>
-        await apiHandlerGeneric<Return>(req, async session => {
-            const rawdata = await req.json().catch(console.log)
-            const parse = serviceMethod.typeValidate(rawdata)
-            if (!parse.success) {
-                throw new ServerError('BAD PARAMETERS', formatZodError(parse.error))
-            }
-            const data = parse.data
+    // TODO: I think I will rewrite this so it is simpler to read
+    if (serviceMethod.withData) {
+        return async (req: Request, { params: rawParams }: { params: RawParams }) =>
+            await apiHandlerGeneric<Return>(req, async session => {
+                const rawdata = await req.json().catch(console.log)
+                const parse = serviceMethod.typeValidate(rawdata)
+                if (!parse.success) {
+                    throw new Smorekopp('BAD PARAMETERS', parse.error.errors)
+                }
+                const data = parse.data
 
-            return serviceMethod.client('NEW').execute({
-                params: params(rawParams),
-                data,
-                session,
-            }, { withAuth: true })
-        }) : async (req: Request, { params: rawParams }: { params: RawParams }) =>
+                return serviceMethod.client('NEW').execute({
+                    params: params(rawParams),
+                    data,
+                    session,
+                }, { withAuth: true })
+            })
+    }
+
+    return async (req: Request, { params: rawParams }: { params: RawParams }) =>
         await apiHandlerGeneric(req, session =>
             serviceMethod.client('NEW').execute({
                 params: params(rawParams),
-                session }, { withAuth: true }
-            )
+                session
+            }, { withAuth: true })
         )
 }
 
-function createApiErrorRespone(errorCode: ErrorCode, message: string) {
+function createApiErrorRespone(errorCode: ErrorCode, message: string | ErrorMessage[]) {
+    const errors: ErrorMessage[] = Array.isArray(message) ? message : [{
+        message,
+    }]
+
     return new Response(JSON.stringify({
         errorCode,
-        message
+        errors,
     }), {
-        status: 500 //TODO:
+        status: getHttpErrorCode(errorCode)
     })
 }
 

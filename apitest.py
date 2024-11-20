@@ -5,7 +5,7 @@ PURCHASE_URL = "http://localhost/api/shop/purchase/createByStudentCard"
 BARCODE_URL = "http://localhost/api/shop/product/barcode"
 READ_SHOPS_URL = "http://localhost/api/shop/getAll"
 
-apiKey = "id=1&key=dev0f850abdffd827de51e2800b60f4073c13970054ba74f2118726087051"
+apiKey = "id=1&key=dev0e149b26e9ed31e81e091424034240a4b47d8dc75d84e32f58999168e4"
 
 data = {
     "shopId": 1,

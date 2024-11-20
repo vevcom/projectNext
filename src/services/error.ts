@@ -100,3 +100,10 @@ export class ServerError extends Smorekopp<ServerErrorCode> {
         this.serviceCausedError = serviceCausedError
     }
 }
+
+export function getHttpErrorCode(errorType: ErrorCode): number {
+    for (const error of errorCodes) {
+        if (error.name === errorType) return error.httpCode
+    }
+    return 500
+}

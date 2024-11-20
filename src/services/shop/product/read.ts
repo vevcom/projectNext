@@ -1,7 +1,7 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { readProductByBarcodeValidation } from '@/services/shop/validation'
-import { ServerError } from '@/services/error'
+import { ServerError, Smorekopp } from '@/services/error'
 import type { ExtendedProduct } from './Types'
 
 export const readProducts = ServiceMethodHandler({
@@ -28,7 +28,7 @@ export const readProductByBarCode = ServiceMethodHandler({
         })
 
         if (!results || results.ShopProduct.length === 0) {
-            throw new ServerError(
+            throw new Smorekopp(
                 'NOT FOUND',
                 `Could not find any prduct with barcode ${data.barcode} in shop ${data.shopId}.`
             )

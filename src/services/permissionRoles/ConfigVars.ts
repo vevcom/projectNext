@@ -462,6 +462,11 @@ export const PermissionConfig = {
         name: 'Gjennomfør kjøp',
         description: 'Kan gjennomføre et kjøp i en butikk',
         category: 'shop'
+    },
+    PURCHASE_CREATE_ONBEHALF: {
+        name: 'Kan ta betalt i en butikk',
+        description: 'Kan belaste andre brukerkontoer, når de handler i en butikk.',
+        category: 'shop'
     }
 } satisfies Record<Permission, PermissionInfo>
 
