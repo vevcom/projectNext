@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import type { Product } from '@prisma/client'
+import { sortObjectsByName } from '@/lib/sortObjects'
 
 export default async function Shop(params: {
     params: {
@@ -58,7 +59,7 @@ export default async function Shop(params: {
                 </tr>
             </thead>
             <tbody>
-                {shopData.products.map(product => <tr
+                {sortObjectsByName(shopData.products).map(product => <tr
                     key={uuid()}
                     className={product.active ? '' : styles.deactivatedProduct}
                 >

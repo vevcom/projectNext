@@ -6,6 +6,7 @@ import { readProducts } from '@/actions/shop'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { sortObjectsByName } from '@/lib/sortObjects'
 import { v4 as uuid } from 'uuid'
 
 
@@ -29,7 +30,7 @@ export default async function ProductPage() {
                 </tr>
             </thead>
             <tbody>
-                {products.map(product => <tr key={uuid()}>
+                {sortObjectsByName(products).map(product => <tr key={uuid()}>
                     <td>{product.name}</td>
                     <td>{product.description}</td>
                     <td>{product.barcode ?? ''}</td>

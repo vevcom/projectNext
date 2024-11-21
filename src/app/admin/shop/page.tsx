@@ -5,6 +5,7 @@ import { readShops } from '@/actions/shop'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { sortObjectsByName } from '@/lib/sortObjects'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
@@ -28,7 +29,7 @@ export default async function Shop() {
                 </tr>
             </thead>
             <tbody>
-                {shops.map(shop =>
+                {sortObjectsByName(shops).map(shop =>
                     <tr key={uuid()}>
                         <Link style={{ display: 'contents' }} href={`./shop/${shop.id}`} passHref>
                             <td>{shop.name}</td>
