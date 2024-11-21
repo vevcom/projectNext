@@ -1,6 +1,7 @@
 import { EditProductForShopForm } from './EditProductForShopForm'
 import styles from './page.module.scss'
-import { readShop } from '@/actions/shop'
+import FindProductForm from './FindProductForm'
+import { readProducts, readShop } from '@/actions/shop'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -9,6 +10,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+import type { Product } from '@prisma/client'
 
 export default async function Shop(params: {
     params: {
@@ -24,6 +26,13 @@ export default async function Shop(params: {
 
     if (!shopData) notFound()
 
+    const allProducts = unwrapActionReturn(await readProducts({}))
+    let unconnectedProducts: Product[] = []
+    if (allProducts) {
+        const existingProductIds = new Set(shopData.products.map(p => p.id))
+        unconnectedProducts = allProducts.filter(product => !existingProductIds.has(product.id))
+    }
+
     return <PageWrapper
         title={shopData.name}
     >
@@ -34,6 +43,8 @@ export default async function Shop(params: {
             showButtonContent="Legg til Produkt"
             PopUpKey="createProductForShop"
         >
+            <FindProductForm shopId={shopId} products={unconnectedProducts} />
+            <br />
             <EditProductForShopForm shopId={shopId} />
         </PopUp>
 

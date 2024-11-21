@@ -13,3 +13,4 @@ export const UpdateProduct = RequirePermission.staticFields({ permission: 'PRODU
 
 export const CreatePurchaseByStudentCard = RequirePermission.staticFields({ permission: 'PURCHASE_CREATE_ONBEHALF' })
 
+export const CreateShopProductConnection = RequirePermission.staticFields({ permission: 'SHOP_ADMIN' })

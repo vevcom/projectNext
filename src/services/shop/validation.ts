@@ -9,7 +9,7 @@ const productsZodObject = z.array(z.object({
 
 const baseShopValidation = new ValidationBase({
     type: {
-        shopId: z.coerce.number(),
+        shopId: z.coerce.number().int(),
         name: z.string(),
         description: z.string(),
         price: z.number().or(z.string()),
@@ -17,6 +17,7 @@ const baseShopValidation = new ValidationBase({
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
         active: z.boolean().or(z.enum(['on'])).optional(),
+        productId: z.coerce.number().int(),
     },
     details: {
         shopId: z.coerce.number().int(),
@@ -27,6 +28,7 @@ const baseShopValidation = new ValidationBase({
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
         active: z.boolean(),
+        productId: z.coerce.number().int(),
     }
 })
 
@@ -71,3 +73,11 @@ export const createPurchaseFromStudentCardValidation = baseShopValidation.create
     transformer: data => data,
 })
 export type CreatePurchaseFromStudnetCardType = ValidationTypes<typeof createPurchaseFromStudentCardValidation>
+
+export const createShopProductConnectionValidation = baseShopValidation.createValidation({
+    keys: ['shopId', 'productId', 'price'],
+    transformer: data => ({
+        ...data,
+        price: convertPrice(data.price)
+    })
+})

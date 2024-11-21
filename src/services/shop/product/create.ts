@@ -1,6 +1,7 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { createProductForShopValidation, createProductValidation } from '@/services/shop/validation'
+import { createProductForShopValidation, createProductValidation, createShopProductConnectionValidation } from '@/services/shop/validation'
+import { connect } from 'http2'
 
 export function convertBarcode(barcode?: string | number) {
     if (typeof barcode === 'string' || typeof barcode === 'number') {
@@ -45,6 +46,26 @@ export const createProductForShop = ServiceMethodHandler({
                 },
             },
         },
+    })
+})
+
+export const createShopProductConnection = ServiceMethodHandler({
+    withData: true,
+    validation: createShopProductConnectionValidation,
+    handler: async (prisma, _, data) => prisma.shopProduct.create({
+        data: {
+            shop: {
+                connect: {
+                    id: data.shopId,
+                }
+            },
+            product: {
+                connect: {
+                    id: data.productId,
+                },
+            },
+            price: data.price,
+        }
     })
 })
 
