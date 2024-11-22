@@ -1,7 +1,7 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { createPurchaseFromStudentCardValidation } from '@/services/shop/validation'
-import { ServerError, Smorekopp } from '@/services/error'
+import { Smorekopp } from '@/services/error'
 import { userFilterSelection } from '@/services/users/ConfigVars'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { type PrismaClient, PurchaseMethod } from '@prisma/client'
@@ -34,6 +34,7 @@ export const createPurchaseByStudentCard = ServiceMethodHandler({
         }
     }
 })
+
 
 async function createPurchase(
     prisma: PrismaClient,

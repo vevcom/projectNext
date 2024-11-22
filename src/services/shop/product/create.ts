@@ -1,7 +1,9 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { createProductForShopValidation, createProductValidation, createShopProductConnectionValidation } from '@/services/shop/validation'
-import { connect } from 'http2'
+import {
+    createProductForShopValidation,
+    createProductValidation,
+    createShopProductConnectionValidation } from '@/services/shop/validation'
 
 export function convertBarcode(barcode?: string | number) {
     if (typeof barcode === 'string' || typeof barcode === 'number') {
