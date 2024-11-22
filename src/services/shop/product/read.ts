@@ -9,6 +9,22 @@ export const readProducts = ServiceMethodHandler({
     handler: async (prisma) => await prisma.product.findMany()
 })
 
+export const readProduct = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, params: { productId: number }) => await prisma.product.findUniqueOrThrow({
+        where: {
+            id: params.productId
+        },
+        include: {
+            ShopProduct: {
+                include: {
+                    shop: true
+                }
+            }
+        }
+    })
+})
+
 export const readProductByBarCode = ServiceMethodHandler({
     withData: true,
     validation: readProductByBarcodeValidation,

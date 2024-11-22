@@ -1,8 +1,23 @@
 import 'server-only'
 import { convertBarcode } from './create'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { updateProductForShopValidation } from '@/services/shop/validation'
+import { updateProductForShopValidation, updateProductValidation } from '@/services/shop/validation'
 
+
+export const updateProduct = ServiceMethodHandler({
+    withData: true,
+    validation: updateProductValidation,
+    handler: async (prisma, _, data) => prisma.product.update({
+        where: {
+            id: data.productId,
+        },
+        data: {
+            name: data.name.toUpperCase(),
+            description: data.description,
+            barcode: convertBarcode(data.barcode),
+        },
+    })
+})
 
 export const updateProductForShop = ServiceMethodHandler({
     withData: true,

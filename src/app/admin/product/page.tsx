@@ -8,6 +8,7 @@ import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { sortObjectsByName } from '@/lib/sortObjects'
 import { v4 as uuid } from 'uuid'
+import Link from 'next/link'
 
 
 export default async function ProductPage() {
@@ -31,9 +32,11 @@ export default async function ProductPage() {
             </thead>
             <tbody>
                 {sortObjectsByName(products).map(product => <tr key={uuid()}>
-                    <td>{product.name}</td>
-                    <td>{product.description}</td>
-                    <td>{product.barcode ?? ''}</td>
+                    <Link style={{ display: 'contents' }} href={`./product/${product.id}`} passHref>
+                        <td>{product.name}</td>
+                        <td>{product.description}</td>
+                        <td>{product.barcode ?? ''}</td>
+                    </Link>
                 </tr>)}
             </tbody>
         </table>

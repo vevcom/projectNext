@@ -44,7 +44,10 @@ export const createProductValidation = baseShopValidation.createValidation({
     transformer: data => data,
 })
 
-export const updateProductValidation = createShopValidation
+export const updateProductValidation = baseShopValidation.createValidation({
+    keys: ['productId', 'name', 'description', 'barcode'],
+    transformer: data => data,
+})
 
 export const readProductByBarcodeValidation = baseShopValidation.createValidation({
     keys: ['barcode', 'shopId'],

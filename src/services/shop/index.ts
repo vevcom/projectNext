@@ -1,12 +1,20 @@
 import 'server-only'
-import { CreateProduct, CreatePurchaseByStudentCard, CreateShop, CreateShopProductConnection, ReadProduct, ReadShop, ReadShops, UpdateProduct } from './Authers'
+import {
+    CreateProduct,
+    CreatePurchaseByStudentCard,
+    CreateShop,
+    CreateShopProductConnection,
+    ReadProduct,
+    ReadShop,
+    ReadShops,
+    UpdateProduct } from './Authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
-import { readProductByBarCode, readProducts } from './product/read'
+import { readProduct, readProductByBarCode, readProducts } from './product/read'
 import { createProduct, createProductForShop, createShopProductConnection } from './product/create'
 import { createPurchaseByStudentCard } from './purchase/create'
+import { updateProduct, updateProductForShop } from './product/update'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { updateProductForShop } from './product/update'
 
 export const Shop = {
     readShops: ServiceMethod({
@@ -37,6 +45,13 @@ export const Shop = {
         dynamicFields: () => ({}),
         serviceMethodHandler: readProducts,
     }),
+    readProduct: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: ReadProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: readProduct,
+    }),
     readProductByBarCode: ServiceMethod({
         withData: true,
         hasAuther: true,
@@ -57,6 +72,13 @@ export const Shop = {
         auther: CreateProduct,
         dynamicFields: () => ({}), // So this doesn't need dynamic field???
         serviceMethodHandler: createProductForShop,
+    }),
+    updateProduct: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: UpdateProduct,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: updateProduct,
     }),
     updateProductForShop: ServiceMethod({
         withData: true,
