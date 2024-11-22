@@ -1,3 +1,4 @@
+import { studentCardZodValidation } from '@/services/users/validation'
 import { convertPrice } from '@/lib/money/convert'
 import { ValidationBase, type ValidationTypes } from '@/services/Validation'
 import { z } from 'zod'
@@ -13,7 +14,7 @@ const baseShopValidation = new ValidationBase({
         name: z.string(),
         description: z.string(),
         price: z.number().or(z.string()),
-        studentCard: z.string(),
+        studentCard: studentCardZodValidation,
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
         active: z.boolean().or(z.enum(['on'])).optional(),
@@ -24,7 +25,7 @@ const baseShopValidation = new ValidationBase({
         name: z.string().min(3),
         description: z.string(),
         price: z.number().int().min(1),
-        studentCard: z.string(),
+        studentCard: studentCardZodValidation,
         products: productsZodObject,
         barcode: z.string().or(z.number()).optional(),
         active: z.boolean(),

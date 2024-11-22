@@ -1,17 +1,18 @@
 import 'server-only'
 import {
+    connectStudentCardValidation,
     registerUserValidation,
     updateUserPasswordValidation,
     updateUserValidation,
     verifyEmailValidation,
     verifyUserEmailValidation
 } from './validation'
-import { userFilterSelection } from './ConfigVars'
+import { studentCardRegistrationExpiry, userFilterSelection } from './ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
-import { ServerError } from '@/services/error'
+import { ServerError, Smorekopp } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
@@ -211,3 +212,73 @@ export async function verifyUserEmail(id: number, email: string): Promise<UserFi
         select: userFilterSelection
     }))
 }
+
+export const registerStudentCardInQueue = ServiceMethodHandler({
+    withData: false,
+    handler: async (_prisma, { userId }: { userId: number }) => {
+        const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
+        await _prisma.registerStudentCard.upsert({
+            where: {
+                userId,
+            },
+            update: {
+                expiry: new Date(expiry),
+            },
+            create: {
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+                expiry: new Date(expiry),
+            }
+        })
+    }
+})
+
+export const connectStudentCard = ServiceMethodHandler({
+    withData: true,
+    validation: connectStudentCardValidation,
+    wantsToOpenTransaction: true,
+    handler: async (_prisma, _, data) => {
+        const currentQueue = await _prisma.registerStudentCard.findMany({
+            where: {
+                expiry: {
+                    gt: new Date(),
+                },
+            },
+            orderBy: {
+                expiry: 'desc',
+            },
+            take: 1,
+        })
+
+        if (currentQueue.length === 0) {
+            throw new Smorekopp(
+                'NOT FOUND',
+                `No user has placed them selves in the registration queue at ${process.env.DOMAIN}`
+            )
+        }
+
+        const userId = currentQueue[0].userId
+        const result = await _prisma.$transaction([
+            _prisma.registerStudentCard.delete({
+                where: {
+                    userId,
+                }
+            }),
+            _prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    studentCard: data.studentCard,
+                },
+                select: userFilterSelection,
+            })
+        ])
+
+        return result[1]
+    }
+})
+

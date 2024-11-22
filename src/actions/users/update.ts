@@ -13,6 +13,7 @@ import { ServerError } from '@/services/error'
 import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
 import { User } from '@/services/users'
 import { Session } from '@/auth/Session'
+import { ActionNoData } from '@/actions/Action'
 import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { User as UserT } from '@prisma/client'
@@ -92,3 +93,5 @@ export async function verifyUserEmailAction(token: string): Promise<ActionReturn
         return await verifyUserEmail(userId, email)
     })
 }
+
+export const registerStudentCardInQueueAction = ActionNoData(User.registerStudentCardInQueue)

@@ -1,6 +1,11 @@
-import { CreateUserAuther, ReadUserAuther, UpdateUserAuther } from './Authers'
+import {
+    ConnectUserStudentCardAuther,
+    CreateUserAuther,
+    ReadUserAuther,
+    RegisterStudentCardInQueueAuther,
+    UpdateUserAuther } from './Authers'
 import { readProfile } from './read'
-import { update } from './update'
+import { connectStudentCard, registerStudentCardInQueue, update } from './update'
 import { create } from './create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
@@ -23,6 +28,20 @@ export const User = {
         serviceMethodHandler: create,
         hasAuther: true,
         auther: CreateUserAuther,
+        withData: true,
+        dynamicFields: () => ({}),
+    }),
+    registerStudentCardInQueue: ServiceMethod({
+        serviceMethodHandler: registerStudentCardInQueue,
+        hasAuther: true,
+        auther: RegisterStudentCardInQueueAuther,
+        withData: false,
+        dynamicFields: params => params.params,
+    }),
+    connectStudentCard: ServiceMethod({
+        serviceMethodHandler: connectStudentCard,
+        hasAuther: true,
+        auther: ConnectUserStudentCardAuther,
         withData: true,
         dynamicFields: () => ({}),
     })

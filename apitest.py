@@ -4,8 +4,9 @@ import requests
 PURCHASE_URL = "http://localhost/api/shop/purchase/createByStudentCard"
 BARCODE_URL = "http://localhost/api/shop/product/barcode"
 READ_SHOPS_URL = "http://localhost/api/shop/getAll"
+CONNECT_STUDENT_CARD_URL = "http://localhost/api/users/connectStudentCard"
 
-apiKey = "id=1&key=dev0e149b26e9ed31e81e091424034240a4b47d8dc75d84e32f58999168e4"
+apiKey = "id=1&key=deve74a7dc1d7479db2ddc42c7df79575b6912cfcc9b4aec8cfaafa7832a8"
 
 data = {
     "shopId": 1,
@@ -22,9 +23,7 @@ headers = {
 }
 
 response = requests.post(PURCHASE_URL, json=data, headers=headers)
-print(response)
 print(response.status_code)
-print(response.headers)
 
 if (response.status_code == 200):
     print(response.json())
@@ -60,3 +59,11 @@ if (response.status_code == 200):
     print(response.json())
 else:
     print(response.text)
+
+print()
+data3 = {
+    "studentCard": "1234"
+}
+response = requests.post(CONNECT_STUDENT_CARD_URL, json=data3, headers=headers)
+print(response.status_code)
+print(response.json())
