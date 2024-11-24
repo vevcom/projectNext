@@ -48,12 +48,12 @@ export default async function Register({ searchParams }: PropTypes) {
     }
 
     if (updatedUser.data.acceptedTerms) {
-        redirect(searchParams.callbackUrl ?? 'users/me')
+        redirect(searchParams.callbackUrl ?? '/users/me')
     }
 
     if (!updatedUser.data.emailVerified) {
         redirect('/register-email')
     }
 
-    return <RegistrationForm />
+    return <RegistrationForm userData={updatedUser.data} />
 }
