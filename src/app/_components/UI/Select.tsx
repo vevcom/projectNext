@@ -46,7 +46,7 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
                     id={id}
                     name={name}
                     {
-                        ...{ value }
+                        ...(value ? { value } : { defaultValue })
                     }
                     onChange={(event) => {
                         if (onChange && options.length > 0) {
