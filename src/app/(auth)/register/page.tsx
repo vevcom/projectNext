@@ -20,29 +20,24 @@ export default async function Register({ searchParams }: PropTypes) {
     })
 
     let userId = user?.id
+    let shouldLogOut = false
 
     if (typeof searchParams.token === 'string') {
         const verify = await verifyUserEmailAction(searchParams.token)
         if (!verify.success) {
-            console.log(verify)
-            return <p>Token er ugyldig</p>
+            redirect('./register')
         }
 
         if (user && verify.data.id !== user.id) {
-            // TODO: Logout
-            throw new Error('Email is verified. Cannot continue registrations while another user is logged in.')
+            // throw new Error('Email is verified. Cannot continue registrations while another user is logged in.')
+            shouldLogOut = true
         }
 
-        console.log(verify)
         userId = verify.data.id
-
-        //TODO: Login the correct user
-        // See https://github.com/nextauthjs/next-auth/discussions/5334
     } else if (!authorized || !user) {
         return notFound()
     }
 
-    //TODO: change to action.
     const updatedUser = await safeServerCall(() => readUser({ id: userId }))
     if (!updatedUser.success) {
         return notFound()
@@ -56,5 +51,5 @@ export default async function Register({ searchParams }: PropTypes) {
         redirect('/register-email')
     }
 
-    return <RegistrationForm userData={updatedUser.data} />
+    return <RegistrationForm userData={updatedUser.data} shouldLogOut={shouldLogOut} />
 }

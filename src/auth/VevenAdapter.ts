@@ -39,6 +39,9 @@ async function generateUsername(prisma: PrismaClient, preferredUsername: string,
             username: {
                 startsWith: preferredUsername
             }
+        },
+        select: {
+            username: true
         }
     })
 
@@ -92,7 +95,8 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                     lastname: user.lastname,
                     username,
                     emailVerified: null,
-                }
+                },
+                select: userFilterSelection,
             })
 
             return convertToAdapterUser(createdUser)
@@ -152,7 +156,8 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 data: {
                     firstname: user.firstname,
                     lastname: user.lastname,
-                }
+                },
+                select: userFilterSelection,
             })
 
             return convertToAdapterUser(updatedUser)
