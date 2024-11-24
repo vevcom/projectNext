@@ -6,14 +6,16 @@ import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { useUser } from '@/auth/useUser'
 import { sexConfig } from '@/services/users/ConfigVars'
-import { SEX, User } from '@prisma/client'
-import { signIn } from 'next-auth/react'
+import { SEX, type User } from '@prisma/client'
+import { signIn, signOut } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 
 export default function RegistrationForm({
-    userData
+    userData,
+    shouldLogOut,
 }: {
-    userData: Pick<User, 'mobile' | 'allergies' | 'sex'>
+    userData: Pick<User, 'mobile' | 'allergies' | 'sex'>,
+    shouldLogOut?: boolean
 }) {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
@@ -22,6 +24,12 @@ export default function RegistrationForm({
         userRequired: true,
         shouldRedirect: true,
     })
+
+    if (shouldLogOut) {
+        signOut({
+            redirect: false
+        })
+    }
 
     const lastUsername = userAuth.user?.username
     let lastPassword: string = ''
