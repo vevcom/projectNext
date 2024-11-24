@@ -1,4 +1,4 @@
-import { ServerError } from './error'
+import { ServerError, Smorekopp } from './error'
 import { Prisma } from '@prisma/client'
 import type { ServerErrorCode } from './error'
 
@@ -16,6 +16,10 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
     try {
         return await call()
     } catch (error) {
+        if (error instanceof ServerError || error instanceof Smorekopp) {
+            throw error
+        }
+
         if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
             console.error(error)
             throw new ServerError('UNKNOWN ERROR', 'unknown error')

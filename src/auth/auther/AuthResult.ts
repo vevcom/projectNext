@@ -22,6 +22,8 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
             return 'UNAUTHORIZED'
         }
         if (this.authorized) return 'AUTHORIZED_NO_USER'
+
+        if (typeof this.session.apiKeyId === 'number') return 'UNAUTHORIZED'
         return 'UNAUTHENTICATED'
     }
 
