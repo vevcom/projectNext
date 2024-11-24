@@ -6,7 +6,9 @@ import migrateOmegaquotes from './migrateOmegaquotes'
 import migrateArticles from './migateArticles'
 import migrateMailAliases from './migrateMailAlias'
 import migrateEvents from './migrateEvents'
+import migrateUsers from './migrateUsers'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import manifest from '@/src/logger'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 
 /**
@@ -15,20 +17,21 @@ import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
-    console.log('============================================')
-    console.log('==========!!!Dobbel Omega!!!================')
+    manifest.info('============================================')
+    manifest.info('==========!!!Dobbel Omega!!!================')
     const vevenPrisma = new PrismaClientVeven()
 
     const limits = getLimits()
 
     const imageCollectionIdMap = await migrateImageCollections(pnPrisma, vevenPrisma)
     const imageIdMap = await migrateImages(pnPrisma, vevenPrisma, imageCollectionIdMap, limits)
+    const userIdMap = await migrateUsers(pnPrisma, vevenPrisma, limits, imageIdMap)
     await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap, limits)
-    await migrateOmegaquotes(pnPrisma, vevenPrisma, limits)
+    await migrateOmegaquotes(pnPrisma, vevenPrisma, userIdMap, limits)
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, vevenPrisma, limits)
     await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, limits)
 
     vevenPrisma.$disconnect()
-    console.log('=======Dobbel Omega ferdig, dagen derpå=======')
+    manifest.info('=======Dobbel Omega ferdig, dagen derpå=======')
 }
