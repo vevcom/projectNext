@@ -60,8 +60,8 @@ async function generateUsername(prisma: PrismaClient, preferredUsername: string,
         }
     }
 
-    for (let i = overlap + 1; i <= lastlastname.length; i++) {
-        username = `${username}${lastlastname.slice(overlap, i)}`
+    for (let i = overlap; i < lastlastname.length; i++) {
+        username = `${username}${lastlastname[i]}`
         if (!existingUsernames.has(username)) {
             return username
         }

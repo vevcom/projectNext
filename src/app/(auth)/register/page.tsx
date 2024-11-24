@@ -19,6 +19,8 @@ export default async function Register({ searchParams }: PropTypes) {
         shouldRedirect: false,
     })
 
+    let userId = user?.id
+
     if (typeof searchParams.token === 'string') {
         const verify = await verifyUserEmailAction(searchParams.token)
         if (!verify.success) {
@@ -28,21 +30,20 @@ export default async function Register({ searchParams }: PropTypes) {
 
         if (user && verify.data.id !== user.id) {
             // TODO: Logout
-            console.log('Should logout')
+            throw new Error('Email is verified. Cannot continue registrations while another user is logged in.')
         }
 
         console.log(verify)
+        userId = verify.data.id
 
         //TODO: Login the correct user
         // See https://github.com/nextauthjs/next-auth/discussions/5334
-    }
-
-    if (!authorized || !user) {
+    } else if (!authorized || !user) {
         return notFound()
     }
 
     //TODO: change to action.
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
+    const updatedUser = await safeServerCall(() => readUser({ id: userId }))
     if (!updatedUser.success) {
         return notFound()
     }
