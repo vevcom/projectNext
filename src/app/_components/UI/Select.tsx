@@ -32,6 +32,7 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
             (option) => <option
                 key={option.key ?? uuid()}
                 value={option.value}
+                selected={option.value === defaultValue}
             >
                 {option.label ?? option.value}
             </option>
@@ -45,7 +46,7 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
                     id={id}
                     name={name}
                     {
-                        ...(value ? { value } : { defaultValue })
+                        ...{ value }
                     }
                     onChange={(event) => {
                         if (onChange && options.length > 0) {
