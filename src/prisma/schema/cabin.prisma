@@ -1,0 +1,51 @@
+model ReleaseGroup {
+  id            Int             @id @default(autoincrement())
+  releaseTime   DateTime
+  BookingPeriod BookingPeriod[]
+}
+
+enum BookingPeriodType {
+  ROOM
+  CABIN
+  RESERVED
+  EVENT
+}
+
+model BookingPeriod {
+  id             Int               @id @default(autoincrement())
+  type           BookingPeriodType
+  notes          String?
+  start          DateTime // Inclusive (counting nights, not days)
+  end            DateTime // Exclusive
+  releaseGroup   ReleaseGroup      @relation(fields: [releaseGroupId], references: [id])
+  releaseGroupId Int
+  event          Event?            @relation(fields: [eventId], references: [id])
+  eventId        Int?
+  Booking        Booking[]
+}
+
+model Room {
+  id       Int       @id @default(autoincrement())
+  name     String
+  capacity Int
+  Booking  Booking[]
+  // Jointable to images ?
+}
+
+model Booking {
+  id                 Int           @id @default(autoincrement())
+  start              DateTime // Inclusive (counting nights after)
+  end                DateTime // Exclusive
+  room               Room?         @relation(fields: [roomId], references: [id])
+  roomId             Int?
+  user               User?         @relation(name: "booking", fields: [userId], references: [id])
+  userId             Int?
+  notes              String?
+  // transaction Transaction
+  transactionTimeout DateTime? // When the booking is deleted, due to no payment
+  canceled           DateTime?
+  bookingPeriod      BookingPeriod @relation(fields: [bookingPeriodId], references: [id])
+  bookingPeriodId    Int
+  createdBy          User          @relation("bookingCreator", fields: [createdByUserId], references: [id])
+  createdByUserId    Int
+}
