@@ -139,6 +139,12 @@ enum Permission {
   COMPANY_ADMIN
 
   DOTS_ADMIN
+
+  // Cabin
+  CABIN_CALENDAR_READ
+  CABIN_BOOKING_CREATE
+  CABIN_BOOKING_ADMIN
+  CABIN_ADMIN
 }
 
 model Role {
