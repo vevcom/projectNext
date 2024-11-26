@@ -1,114 +1,43 @@
-
 services:
     projectnext:
         build:
-            context: ./
-            dockerfile: ./Dockerfile
             target: prod
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
         environment:
             NODE_ENV: production
-            DB_URI: ${DB_URI}
-            LOG_LEVEL: ${LOG_LEVEL}
-            LOG_TO_CONSOLE: ${LOG_TO_CONSOLE}
-            LOG_TO_FOLDER: ${LOG_TO_FOLDER}
-            LOG_MAX_FILES: ${LOG_MAX_FILES}
-            NEXTAUTH_URL: ${NEXTAUTH_URL}
-            NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-            PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
-            PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
-            API_KEY_SALT_ROUNDS: ${API_KEY_SALT_ROUNDS}
-            API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
-            NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
-            FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
-            FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
-            MAIL_SERVER: ${MAIL_SERVER}
-            MAIL_DOMAIN: ${MAIL_DOMAIN}
-            DOMAIN: ${DOMAIN}
-            JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
-            JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
-            JWT_SECRET: ${JWT_SECRET}
-        depends_on:
-            db:
-                condition: service_healthy
-            prisma:
-                condition: service_completed_successfully
-        links:
-            - db
         deploy:
             replicas: 8
 
     db:
-        image: postgres:16.0-alpine
         restart: always
-        ports:
-            - 5432:5432
-        environment:
-            POSTGRES_DB: ${DB_NAME}
-            POSTGRES_USER: ${DB_USERNAME}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
         volumes:
             - proddb:/var/lib/postgresql/data
-        healthcheck:
-            test:
-                [
-                    "CMD-SHELL",
-                    "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_NAME}'"
-                ]
-            interval: 0.5s
-            timeout: 0.5s
-            retries: 60
 
     prisma:
         build:
-            context: ./src/prisma
-            dockerfile: ./prismaservice/Dockerfile
             target: prod
-            args:
-                SHOULD_MIGRATE: ${VEVEN_DB_URI}
         environment:
             NODE_ENV: production
-            DB_URI: ${DB_URI}
-            MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
-            VEVEN_STORE_URL: ${VEVEN_STORE_URL}
-            VEVEN_DB_URI: ${VEVEN_DB_URI}
-            MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
-            MAIL_SERVER: ${MAIL_SERVER}
-            PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
-            PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
-            API_KEY_SALT_ROUNDS: ${API_KEY_SALT_ROUNDS}
-            API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
         volumes:
             - store:/usr/src/app/prismaservice/store
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
-        depends_on:
-            db:
-                condition: service_healthy
-        links:
-            - db
 
     nginx:
-        image: nginx:1.21.3-alpine
         restart: always
         ports:
             - 80:80
             - 443:443
+        environment:
+            DOMAIN: ${DOMAIN}
+            PROXY_PASS: 'projectnext:3000'
         volumes:
             - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./containers/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
             - store:/usr/store:ro
             - ./certs/conf:/etc/letsencrypt:ro
             - ./certs/www/:/var/www/certbot:ro
-        environment:
-            DOMAIN: ${DOMAIN}
-            PROXY_PASS: 'projectnext:3000'
-        depends_on:
-            - projectnext
-        links:
-            - projectnext
-        
 
     certbot:
         image: certbot/certbot:latest
@@ -119,7 +48,7 @@ services:
         restart: always
 
     postfix:
-        build: ./containers/postfix/
+        build: ${PROJECT_ROOT:-.}/containers/postfix/
         ports:
             - '587:587'
             - '25:25'
@@ -131,10 +60,10 @@ services:
             MY_HOSTNAME: ${MAIL_DOMAIN}
             MY_DOMAIN: ${DOMAIN}
             RELAY_HOST: ${MAIL_RELAY_HOST}
-        depends_on:
-            - db
         volumes:
             - ./certs/conf:/etc/letsencrypt:ro
+        depends_on:
+            - db
         links:
             - db
         restart: always
