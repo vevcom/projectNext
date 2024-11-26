@@ -29,7 +29,6 @@ export default async function Register({ searchParams }: PropTypes) {
         }
 
         if (user && verify.data.id !== user.id) {
-            // throw new Error('Email is verified. Cannot continue registrations while another user is logged in.')
             shouldLogOut = true
         }
 
