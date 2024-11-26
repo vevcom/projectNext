@@ -32,6 +32,31 @@ export default async function migrateUsers(
             }
         }
     })
+
+    if (limits.users) {
+        const extraUsers = await Promise.all(['theodokl104', 'martiarm104', 'johanhst103', 'pauliusj103'].map(async uname =>
+            await vevenPrisma.users.findUnique({
+                where: {
+                    username_order: {
+                        username: uname.slice(0, -3),
+                        order: Number(uname.slice(-3))
+                    }
+                },
+                include: {
+                    StudyProgrammes: {
+                        select: {
+                            years: true
+                        }
+                    }
+                }
+            })
+        ))
+
+        extraUsers.forEach(user => {
+            if (user) users_.push(user)
+        })
+    }
+
     const users = makeUsernameUnique(makeEmailUnique(users_))
 
     const soelleGroup = await pnPrisma.omegaMembershipGroup.findUniqueOrThrow({

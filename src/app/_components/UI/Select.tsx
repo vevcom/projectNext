@@ -32,6 +32,7 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
             (option) => <option
                 key={option.key ?? uuid()}
                 value={option.value}
+                selected={option.value === defaultValue}
             >
                 {option.label ?? option.value}
             </option>

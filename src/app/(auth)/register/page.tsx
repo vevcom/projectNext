@@ -19,41 +19,36 @@ export default async function Register({ searchParams }: PropTypes) {
         shouldRedirect: false,
     })
 
+    let userId = user?.id
+    let shouldLogOut = false
+
     if (typeof searchParams.token === 'string') {
         const verify = await verifyUserEmailAction(searchParams.token)
         if (!verify.success) {
-            console.log(verify)
-            return <p>Token er ugyldig</p>
+            redirect('./register')
         }
 
         if (user && verify.data.id !== user.id) {
-            // TODO: Logout
-            console.log('Should logout')
+            shouldLogOut = true
         }
 
-        console.log(verify)
-
-        //TODO: Login the correct user
-        // See https://github.com/nextauthjs/next-auth/discussions/5334
-    }
-
-    if (!authorized || !user) {
+        userId = verify.data.id
+    } else if (!authorized || !user) {
         return notFound()
     }
 
-    //TODO: change to action.
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
+    const updatedUser = await safeServerCall(() => readUser({ id: userId }))
     if (!updatedUser.success) {
         return notFound()
     }
 
     if (updatedUser.data.acceptedTerms) {
-        redirect(searchParams.callbackUrl ?? 'users/me')
+        redirect(searchParams.callbackUrl ?? '/users/me')
     }
 
     if (!updatedUser.data.emailVerified) {
         redirect('/register-email')
     }
 
-    return <RegistrationForm />
+    return <RegistrationForm userData={updatedUser.data} shouldLogOut={shouldLogOut} />
 }
