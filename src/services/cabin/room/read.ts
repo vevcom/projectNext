@@ -1,5 +1,4 @@
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import 'server-only'
 
 
 export const readRooms = ServiceMethodHandler({

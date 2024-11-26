@@ -1,14 +1,25 @@
+'use client'
 import styles from './CabinCalendar.module.scss'
+import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
+type Day = {
+    correctMonth: boolean,
+    date: Date,
+    selected: boolean,
+    inRange: boolean,
+}
+
 type Week = {
-    days: {
-        active: boolean,
-        date: Date
-    }[],
+    days: Day[],
     number: number,
+}
+
+type DateRange = {
+    start?: Date,
+    end?: Date,
 }
 
 function getWeekNumber(date: Date): number {
@@ -17,7 +28,13 @@ function getWeekNumber(date: Date): number {
     return Math.ceil((days + startDate.getDay() + 1) / 7)
 }
 
-function generateCalendarData(date: Date): Week[] {
+function datesEqual(lhs?: Date, rhs?: Date) {
+    if (!lhs && !rhs) return true
+    if (!lhs || !rhs) return false
+    return lhs.getFullYear() === rhs.getFullYear() && lhs.getMonth() === rhs.getMonth() && lhs.getDate() === rhs.getDate()
+}
+
+function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
 
     const firstDayOfFirstWeek = new Date(date)
@@ -38,9 +55,19 @@ function generateCalendarData(date: Date): Week[] {
                 const thisDate = new Date(firstDayOfFirstWeek)
                 thisDate.setDate(thisDate.getDate() + i * 7 + j)
 
+                let selected = false
+                let inRange = false
+                selected = datesEqual(thisDate, dateRange.start) || datesEqual(thisDate, dateRange.end)
+
+                if (dateRange.start && dateRange.end) {
+                    inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
+                }
+
                 return {
-                    active: currentMonth === thisDate.getMonth(),
-                    date: thisDate
+                    correctMonth: currentMonth === thisDate.getMonth(),
+                    date: thisDate,
+                    selected,
+                    inRange,
                 }
             })
         })
@@ -55,9 +82,36 @@ export default function CabinCalendar({
 }: {
     date: Date
 }) {
-    const weeks = generateCalendarData(date)
+    const [dateRange, setDateRange] = useState<DateRange>({})
+    const [lastChangeWasStart, setLastChangeWasStart] = useState(false)
+    const [weeks, setWeeks] = useState(generateCalendarData(date, dateRange))
 
-    return <div className={styles.calendar}>
+    function callback(day: Day) {
+        let newDateRange: DateRange = {}
+        let shouldChangeStart = !lastChangeWasStart
+        if (dateRange.start && day.date < dateRange.start) shouldChangeStart = true
+        if (dateRange.end && day.date > dateRange.end) shouldChangeStart = false
+
+        if (shouldChangeStart) {
+            newDateRange = {
+                start: day.date,
+                end: dateRange.end
+            }
+        } else {
+            newDateRange = {
+                start: dateRange.start,
+                end: day.date,
+            }
+        }
+        console.log(newDateRange)
+        setDateRange(newDateRange)
+        setLastChangeWasStart(shouldChangeStart)
+        setWeeks(generateCalendarData(date, newDateRange))
+    }
+
+    return <div
+        className={styles.calendar}
+    >
         <div className={styles.week}>
             <div className={styles.weekNumber}>Uke</div>
             <div className={styles.weekDays}>
@@ -65,15 +119,44 @@ export default function CabinCalendar({
             </div>
         </div>
 
-        {weeks.map((week, index) => <div className={styles.week} key={index}>
-            <div className={styles.weekNumber}>{week.number}</div>
-            <div className={styles.weekDays}>
-                {week.days.map(day =>
-                    <div key={uuid()} className={`${styles.day} ${day.active ? '' : styles.wrongMonth}`}>
-                        {day.date.getDate()}
-                    </div>
-                )}
-            </div>
-        </div>)}
+        {weeks.map((week, index) => <CalendarWeek week={week} key={index} callback={callback} />)}
+    </div>
+}
+
+function CalendarWeek({
+    week,
+    callback
+}: {
+    week: Week,
+    callback: (day: Day) => void
+}) {
+    return <div className={styles.week} >
+        <div className={styles.weekNumber}>{week.number}</div>
+        <div className={styles.weekDays}>
+            {week.days.map(day => <CalendarDay day={day} key={uuid()} callback={callback} />)}
+        </div>
+    </div>
+}
+
+function CalendarDay({
+    day,
+    callback
+}: {
+    day: Day,
+    callback: (sourceDay: Day) => void
+}) {
+    const classList: string[] = [styles.day]
+    if (!day.correctMonth) classList.push(styles.wrongMonth)
+    if (day.selected) {
+        classList.push(styles.selected)
+    } else if (day.inRange) {
+        classList.push(styles.inRange)
+    }
+
+    return <div
+        className={classList.join(' ')}
+        onMouseDown={() => callback(day)}
+    >
+        {day.date.getDate()}
     </div>
 }

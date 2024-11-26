@@ -12,17 +12,29 @@
     grid-template-columns: repeat(7, 1fr);
     flex: 1;
 
-    > .wrongMonth {
+    >.wrongMonth {
       color: ohma.$colors-gray-500;
     }
 
-    > .day {
+    >.day {
       padding: 4px;
       height: 2.5rem;
-      
-      &:hover {
-        background-color: ohma.$colors-gray-200;
+      font-size: 1.3rem;
+
+      &:hover:not(.selected) {
+        background-color: ohma.$colors-gray-300;
       }
+    }
+
+    >.selected {
+      background-color: ohma.$colors-primary;
+      &:hover {
+        background-color: darken(ohma.$colors-primary, 2);
+      }
+    }
+
+    >.inRange {
+      background-color: lighten(ohma.$colors-primary, 30);
     }
   }
 
