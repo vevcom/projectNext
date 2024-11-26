@@ -1,0 +1,39 @@
+@use '@/styles/ohma';
+
+.calendar {
+  width: 100%;
+  border: 2px solid black;
+  padding: 5px;
+  margin-top: 1rem;
+
+  .weekDays {
+    display: grid;
+    /* grid-auto-flow: column; */
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1;
+
+    > .wrongMonth {
+      color: ohma.$colors-gray-500;
+    }
+
+    > .day {
+      padding: 4px;
+      height: 2.5rem;
+      
+      &:hover {
+        background-color: ohma.$colors-gray-200;
+      }
+    }
+  }
+
+  .weekNumber {
+    width: 2.5rem;
+  }
+
+  >.week {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+}

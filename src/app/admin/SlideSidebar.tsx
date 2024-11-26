@@ -182,9 +182,13 @@ const navigations = [
         },
         links: [
             {
+                title: 'Kalender',
+                href: '/admin/cabin-calendar',
+            },
+            {
                 title: 'Rom',
                 href: '/admin/cabin-room',
-            }
+            },
         ]
     }
 ] satisfies {
