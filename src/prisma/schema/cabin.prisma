@@ -1,7 +1,7 @@
 model ReleaseGroup {
-  id            Int             @id @default(autoincrement())
-  releaseTime   DateTime?
-  BookingPeriod BookingPeriod[]
+  id             Int             @id @default(autoincrement())
+  releaseTime    DateTime?
+  bookingPeriods BookingPeriod[]
 }
 
 enum BookingPeriodType {
@@ -17,18 +17,18 @@ model BookingPeriod {
   notes          String?
   start          DateTime          @db.Date // Inclusive (counting nights, not days)
   end            DateTime          @db.Date // Exclusive
-  releaseGroup   ReleaseGroup?     @relation(fields: [releaseGroupId], references: [id])
+  releaseGroup   ReleaseGroup?     @relation(fields: [releaseGroupId], references: [id], onDelete: SetNull)
   releaseGroupId Int?
   event          Event?            @relation(fields: [eventId], references: [id])
   eventId        Int?
-  Booking        Booking[]
+  bookings        Booking[]
 }
 
 model Room {
   id       Int       @id @default(autoincrement())
   name     String
   capacity Int
-  Booking  Booking[]
+  bookings  Booking[]
   // Jointable to images ?
 }
 

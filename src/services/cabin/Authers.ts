@@ -9,3 +9,5 @@ export const ReadAllBookingPeriodsAuther = RequirePermission.staticFields({ perm
 
 export const CreateReleaseGroupAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })
 export const ReadReleaseGroupsAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })
+export const UpdateReleaseGroupAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })
+export const DeleteReleaseGroupAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })

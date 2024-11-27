@@ -5,9 +5,9 @@ import { z } from 'zod'
 
 const baseCabinValidation = new ValidationBase({
     type: {
-        id: z.number(),
+        id: z.coerce.number(),
         userId: z.coerce.number(),
-        releaseTime: z.string().datetime(),
+        releaseTime: z.string(),
         type: z.nativeEnum(BookingPeriodType),
         start: z.string().date(),
         end: z.string().date(),
@@ -16,9 +16,9 @@ const baseCabinValidation = new ValidationBase({
         notes: z.string().optional(),
     },
     details: {
-        id: z.number(),
+        id: z.coerce.number(),
         userId: z.coerce.number(),
-        releaseTime: z.string().datetime(),
+        releaseTime: z.date(),
         type: z.nativeEnum(BookingPeriodType),
         start: z.date(),
         end: z.date(),
@@ -46,5 +46,16 @@ export const createBookingPeriodValidation = baseCabinValidation.createValidatio
         end: new Date(data.end),
     }),
     refiner,
+})
+
+export const updateReleaseGroupValidation = baseCabinValidation.createValidation({
+    keys: ['id', 'releaseTime'],
+    transformer: data => {
+        console.log(data)
+        return {
+            ...data,
+            releaseTime: new Date(data.releaseTime)
+        }
+    },
 })
 
