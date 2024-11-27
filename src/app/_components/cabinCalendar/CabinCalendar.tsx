@@ -3,10 +3,25 @@ import styles from './CabinCalendar.module.scss'
 import { dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { ReactNode } from 'react'
 import type { Record } from '@prisma/client/runtime/library'
 import type { BookingPeriodType, BookingPeriod } from '@prisma/client'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
+const MONTHS = [
+    'Januar',
+    'Februar',
+    'Mars',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+]
 
 enum Selection {
     'START',
@@ -19,14 +34,13 @@ type Marker = BookingPeriod & {
 }
 
 type Day = {
-    correctMonth: boolean,
     date: Date,
     selection?: Selection,
     markers: Marker[]
 }
 
 type Week = {
-    days: Day[],
+    days: (Day | null)[],
     number: number,
 }
 
@@ -60,48 +74,74 @@ function getMarkers(date: Date, bookingPeriods: BookingPeriod[]): Marker[] {
     return ret
 }
 
-function generateCalendarData(date: Date, dateRange: DateRange, bookingPeriods: BookingPeriod[] = []): Week[] {
+function createNullArray(num: number): null[] {
+    return Array.from({ length: num }).map(() => null)
+}
+
+function generateCalendarData(date: Date, dateRange: DateRange, bookingPeriods: BookingPeriod[] = []): (Week | string)[] {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
 
     const firstDayOfFirstWeek = new Date(date)
     const firstDayOfFirstWeekOffset = firstDayOfMonth.getDate() - firstDayOfMonth.getDay() + 1
     firstDayOfFirstWeek.setDate(firstDayOfFirstWeekOffset)
 
-    const currentMonth = date.getMonth()
+    const ret: (Week | string)[] = []
 
-    const ret: Week[] = []
-    const daysArray = Array.from({ length: 7 })
+    let lastMonth = firstDayOfMonth.getUTCMonth() - 1
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 20; i++) {
         const mondayDate = new Date(firstDayOfFirstWeek)
         mondayDate.setDate(mondayDate.getDate() + 7 * i)
+
+        let days: (Day | null)[] = []
+
+        for (let j = 0; j < 7; j++) {
+            const thisDate = new Date(firstDayOfFirstWeek)
+            thisDate.setDate(thisDate.getDate() + i * 7 + j)
+
+            let selection: undefined | Selection = undefined
+
+            if (datesEqual(thisDate, dateRange.start)) {
+                selection = Selection.START
+            } else if (datesEqual(thisDate, dateRange.end)) {
+                selection = Selection.END
+            } else if (dateRange.start && dateRange.end) {
+                const inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
+
+                if (inRange) {
+                    selection = Selection.INRANGE
+                }
+            }
+
+            if (lastMonth !== thisDate.getUTCMonth()) {
+                lastMonth = thisDate.getUTCMonth()
+                if (days.length > 0) {
+                    ret.push({
+                        number: getWeekNumber(mondayDate),
+                        days: [...days, ...createNullArray(7 - days.length)]
+                    })
+                }
+
+                ret.push(MONTHS[thisDate.getUTCMonth()])
+
+                days = createNullArray(days.length)
+            }
+
+            days.push({
+                date: thisDate,
+                selection,
+                markers: getMarkers(thisDate, bookingPeriods)
+            })
+        }
+
+        if (i === 0 && dateLessThan(mondayDate, firstDayOfMonth)) {
+            // This will only happen the first week
+            ret.splice(0, 2)
+        }
+
         ret.push({
             number: getWeekNumber(mondayDate),
-            days: daysArray.map((_, j) => {
-                const thisDate = new Date(firstDayOfFirstWeek)
-                thisDate.setDate(thisDate.getDate() + i * 7 + j)
-
-                let selection: undefined | Selection = undefined
-
-                if (datesEqual(thisDate, dateRange.start)) {
-                    selection = Selection.START
-                } else if (datesEqual(thisDate, dateRange.end)) {
-                    selection = Selection.END
-                } else if (dateRange.start && dateRange.end) {
-                    const inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
-
-                    if (inRange) {
-                        selection = Selection.INRANGE
-                    }
-                }
-
-                return {
-                    correctMonth: currentMonth === thisDate.getMonth(),
-                    date: thisDate,
-                    selection,
-                    markers: getMarkers(thisDate, bookingPeriods)
-                }
-            })
+            days
         })
     }
 
@@ -147,15 +187,28 @@ export default function CabinCalendar({
     return <div
         className={styles.calendar}
     >
-        <div className={styles.week}>
+        <div className={`${styles.week} ${styles.weekHeader}`}>
             <div className={styles.weekNumber}>Uke</div>
             <div className={styles.weekDays}>
                 {WEEKDAYS.map(day => <div key={uuid()}>{day}</div>)}
             </div>
         </div>
 
-        {weeks.map((week, index) => <CalendarWeek week={week} key={index} callback={callback} />)}
+        {weeks.map((week, index) => {
+            if (typeof week === 'string') {
+                return <MonthHeader key={index}>{week}</MonthHeader>
+            }
+            return <CalendarWeek week={week} key={index} callback={callback} />
+        })}
     </div>
+}
+
+function MonthHeader({
+    children
+}: {
+    children: ReactNode
+}) {
+    return <h2 className={styles.monthHeader}>{children}</h2>
 }
 
 function CalendarWeek({
@@ -168,7 +221,10 @@ function CalendarWeek({
     return <div className={styles.week} >
         <div className={styles.weekNumber}>{week.number}</div>
         <div className={styles.weekDays}>
-            {week.days.map(day => <CalendarDay day={day} key={uuid()} callback={callback} />)}
+            {week.days.map(day => {
+                if (day) return <CalendarDay day={day} key={uuid()} callback={callback} />
+                return <div key={uuid()} className={styles.day}></div>
+            })}
         </div>
     </div>
 }
@@ -180,8 +236,7 @@ function CalendarDay({
     day: Day,
     callback: (sourceDay: Day) => void
 }) {
-    const classList: string[] = [styles.day]
-    if (!day.correctMonth) classList.push(styles.wrongMonth)
+    const classList: string[] = [styles.day, styles.exists]
 
     const selectionMap: Record<Selection, string> = {
         [Selection.START]: styles.start,
