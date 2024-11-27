@@ -14,10 +14,10 @@ import { readRooms } from './room/read'
 import { createBookingPeriod } from './bookingPeriod/create'
 import { readAllBookingPeriods } from './bookingPeriod/read'
 import { createReleaseGroup } from './releaseGroup/create'
-import { readReleaseGroups } from './releaseGroup/read'
-import { ServiceMethod } from '@/services/ServiceMethod'
-import { updateReleaseGroup } from './releaseGroup/update'
+import { readReleaseGroup, readReleaseGroups } from './releaseGroup/read'
+import { updateReleaseGroup, updateReleaseGroupBookingPeriods } from './releaseGroup/update'
 import { deleteReleaseGroup } from './releaseGroup/delete'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Cabin = {
     createRoom: ServiceMethod({
@@ -62,12 +62,26 @@ export const Cabin = {
         dynamicFields: () => ({}),
         serviceMethodHandler: readReleaseGroups,
     }),
+    readReleaseGroup: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: ReadReleaseGroupsAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: readReleaseGroup,
+    }),
     updateReleaseGroup: ServiceMethod({
         withData: true,
         hasAuther: true,
         auther: UpdateReleaseGroupAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: updateReleaseGroup,
+    }),
+    updateReleaseGroupBookingPeriods: ServiceMethod({
+        withData: false,
+        hasAuther: true,
+        auther: UpdateReleaseGroupAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: updateReleaseGroupBookingPeriods,
     }),
     deleteReleaseGroup: ServiceMethod({
         withData: false,

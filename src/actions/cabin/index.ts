@@ -11,5 +11,7 @@ export const readAllBookingPeriodsAction = ActionNoData(Cabin.readAllBookingPeri
 
 export const createReleaseGroupAction = ActionNoData(Cabin.createReleaseGroup)
 export const readReleaseGroupsAction = ActionNoData(Cabin.readReleaseGroups)
+export const readReleaseGroupAction = ActionNoData(Cabin.readReleaseGroup)
 export const updateReleaseGroupAction = Action(Cabin.updateReleaseGroup)
+export const updateReleaseGroupBookingPeriodsAction = ActionNoData(Cabin.updateReleaseGroupBookingPeriods)
 export const deleteReleaseGroupAction = ActionNoData(Cabin.deleteReleaseGroup)

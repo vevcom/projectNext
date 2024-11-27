@@ -1,23 +1,28 @@
 'use client'
 import styles from './ReleaseGroups.module.scss'
+import UpdateReleaseGroupForm from './UpdateReleaseGroupForm'
 import Button from '@/app/_components/UI/Button'
 import { createReleaseGroupAction } from '@/actions/cabin'
 import { displayDate } from '@/lib/dates/displayDate'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Checkbox from '@/app/_components/UI/Checkbox'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { BookingPeriod, ReleaseGroup } from '@prisma/client'
-import PopUp from '@/app/_components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
-import UpdateReleaseGroupForm from './UpdateReleaseGroupForm'
+import type { BookingPeriod, ReleaseGroup } from '@prisma/client'
 
 export function ReleaseGroups({
-    releaseGroups
+    releaseGroups,
+    selectedGroupId,
+    selectCallBack,
 }: {
     releaseGroups: (ReleaseGroup & {
         bookingPeriods: BookingPeriod[]
-    })[]
+    })[],
+    selectedGroupId?: number,
+    selectCallBack?: (newGroupSelectionId: ReleaseGroup, value: boolean) => void
 }) {
     const [groups, setGroups] = useState(releaseGroups)
     async function newReleaseGroup() {
@@ -31,6 +36,7 @@ export function ReleaseGroups({
                 <thead>
                     <tr>
                         <th>Rediger</th>
+                        <th>Velg</th>
                         <th>Slippgruppe</th>
                         <th>Slipptid</th>
                         <th>Startdato</th>
@@ -56,6 +62,14 @@ export function ReleaseGroups({
                                 >
                                     <UpdateReleaseGroupForm releaseGroup={group} />
                                 </PopUp>
+                            </td>
+                            <td>
+                                <Checkbox
+                                    onClick={() => {
+                                        if (selectCallBack) selectCallBack(group, selectedGroupId !== group.id)
+                                    }}
+                                    checked={selectedGroupId === group.id}
+                                />
                             </td>
                             <td>{group.id}</td>
                             <td>{group.releaseTime ? displayDate(group.releaseTime) : 'Aldri'}</td>

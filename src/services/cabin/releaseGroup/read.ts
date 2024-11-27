@@ -9,3 +9,15 @@ export const readReleaseGroups = ServiceMethodHandler({
         },
     })
 })
+
+export const readReleaseGroup = ServiceMethodHandler({
+    withData: false,
+    handler: async (prisma, params: { id: number}) => await prisma.releaseGroup.findUniqueOrThrow({
+        where: {
+            id: params.id
+        },
+        include: {
+            bookingPeriods: true
+        }
+    })
+})
