@@ -1,15 +1,27 @@
 'use client'
+import { BookingPeriodType } from '@prisma/client'
 import styles from './CabinCalendar.module.scss'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
+enum Selection {
+    'SELECT_START',
+    'SELECT_END',
+    'INRANGE'
+}
+
+type Marker = {
+    name: string,
+    type: BookingPeriodType,
+}
+
 type Day = {
     correctMonth: boolean,
     date: Date,
-    selected: boolean,
-    inRange: boolean,
+    selection?: Selection,
+    markers: Marker[]
 }
 
 type Week = {
@@ -55,19 +67,25 @@ function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
                 const thisDate = new Date(firstDayOfFirstWeek)
                 thisDate.setDate(thisDate.getDate() + i * 7 + j)
 
-                let selected = false
-                let inRange = false
-                selected = datesEqual(thisDate, dateRange.start) || datesEqual(thisDate, dateRange.end)
+                let selection: undefined | Selection = undefined
 
-                if (dateRange.start && dateRange.end) {
-                    inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
+                if (datesEqual(thisDate, dateRange.start)) {
+                    selection = Selection.SELECT_START
+                } else if (datesEqual(thisDate, dateRange.end)) {
+                    selection = Selection.SELECT_END
+                } else if (dateRange.start && dateRange.end) {
+                    const inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
+
+                    if (inRange) {
+                        selection = Selection.INRANGE
+                    }
                 }
 
                 return {
                     correctMonth: currentMonth === thisDate.getMonth(),
                     date: thisDate,
-                    selected,
-                    inRange,
+                    selection,
+                    markers: []
                 }
             })
         })
@@ -87,6 +105,8 @@ export default function CabinCalendar({
     const [weeks, setWeeks] = useState(generateCalendarData(date, dateRange))
 
     function callback(day: Day) {
+        if (datesEqual(day.date, dateRange.start) || datesEqual(day.date, dateRange.end)) return
+
         let newDateRange: DateRange = {}
         let shouldChangeStart = !lastChangeWasStart
         if (dateRange.start && day.date < dateRange.start) shouldChangeStart = true
@@ -147,9 +167,12 @@ function CalendarDay({
 }) {
     const classList: string[] = [styles.day]
     if (!day.correctMonth) classList.push(styles.wrongMonth)
-    if (day.selected) {
-        classList.push(styles.selected)
-    } else if (day.inRange) {
+
+    if (day.selection === Selection.SELECT_START) {
+        classList.push(styles.startSelect)
+    } else if (day.selection === Selection.SELECT_END) {
+        classList.push(styles.endSelect)
+    } else if (day.selection === Selection.INRANGE) {
         classList.push(styles.inRange)
     }
 

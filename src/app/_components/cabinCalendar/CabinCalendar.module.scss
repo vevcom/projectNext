@@ -20,18 +20,21 @@
       padding: 4px;
       height: 2.5rem;
       font-size: 1.3rem;
+      text-align: center;
 
-      &:hover:not(.selected) {
+      &:hover {
         background-color: ohma.$colors-gray-300;
       }
     }
 
-    >.selected {
-      background-color: ohma.$colors-primary;
-      &:hover {
-        background-color: darken(ohma.$colors-primary, 2);
-      }
+    .startSelect {
+      background: linear-gradient(to right, ohma.$colors-body-background 50%, ohma.$colors-primary 50%);
     }
+
+    .endSelect {
+      background: linear-gradient(to left, ohma.$colors-body-background 50%, ohma.$colors-primary 50%);
+    }
+
 
     >.inRange {
       background-color: lighten(ohma.$colors-primary, 30);
