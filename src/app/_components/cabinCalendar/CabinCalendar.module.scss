@@ -17,13 +17,39 @@
     }
 
     >.day {
-      padding: 4px;
-      height: 2.5rem;
-      font-size: 1.3rem;
+      min-height: 2.5rem;
       text-align: center;
+
+      >.dateNumber {
+        padding: 4px;
+        font-size: 1.3rem;
+      }
 
       &:hover {
         background-color: ohma.$colors-gray-300;
+      }
+
+      >.markerContainer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        > div {
+          min-height: 1rem;
+        }
+
+        > .ROOM {
+          background-color: ohma.$colors-blue;
+        }
+        >.CABIN {
+          background-color: ohma.$colors-yellow;
+        }
+        >.EVENT {
+          background-color: ohma.$colors-green;
+        }
+        >.RESERVED {
+          background-color: ohma.$colors-red;
+        }
       }
     }
 
@@ -39,6 +65,7 @@
     >.inRange {
       background-color: lighten(ohma.$colors-primary, 30);
     }
+
   }
 
   .weekNumber {

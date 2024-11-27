@@ -1,9 +1,10 @@
 'use client'
-import { BookingPeriodType } from '@prisma/client'
 import styles from './CabinCalendar.module.scss'
+import { dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { datesEqual, getWeekNumber } from '@/lib/dates/comparison'
+import type { Record } from '@prisma/client/runtime/library'
+import type { BookingPeriodType, BookingPeriod } from '@prisma/client'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
@@ -13,9 +14,8 @@ enum Selection {
     'INRANGE'
 }
 
-type Marker = {
-    name: string,
-    type: BookingPeriodType,
+type Marker = BookingPeriod & {
+    selection: Selection,
 }
 
 type Day = {
@@ -35,8 +35,32 @@ type DateRange = {
     end?: Date,
 }
 
+function getMarkers(date: Date, bookingPeriods: BookingPeriod[]): Marker[] {
+    const ret: Marker[] = []
 
-function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
+    for (const period of bookingPeriods) {
+        if (datesEqual(date, period.start)) {
+            ret.push({
+                ...period,
+                selection: Selection.SELECT_START,
+            })
+        } else if (datesEqual(date, period.end)) {
+            ret.push({
+                ...period,
+                selection: Selection.SELECT_END,
+            })
+        } else if (dateLessThan(period.start, date) && dateLessThan(date, period.end)) {
+            ret.push({
+                ...period,
+                selection: Selection.INRANGE,
+            })
+        }
+    }
+
+    return ret
+}
+
+function generateCalendarData(date: Date, dateRange: DateRange, bookingPeriods: BookingPeriod[] = []): Week[] {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)
 
     const firstDayOfFirstWeek = new Date(date)
@@ -75,7 +99,7 @@ function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
                     correctMonth: currentMonth === thisDate.getMonth(),
                     date: thisDate,
                     selection,
-                    markers: []
+                    markers: getMarkers(thisDate, bookingPeriods)
                 }
             })
         })
@@ -87,12 +111,14 @@ function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
 
 export default function CabinCalendar({
     date,
+    bookingPeriods,
 }: {
-    date: Date
+    date: Date,
+    bookingPeriods?: BookingPeriod[],
 }) {
     const [dateRange, setDateRange] = useState<DateRange>({})
     const [lastChangeWasStart, setLastChangeWasStart] = useState(false)
-    const [weeks, setWeeks] = useState(generateCalendarData(date, dateRange))
+    const [weeks, setWeeks] = useState(generateCalendarData(date, dateRange, bookingPeriods))
 
     function callback(day: Day) {
         if (datesEqual(day.date, dateRange.start) || datesEqual(day.date, dateRange.end)) return
@@ -116,7 +142,7 @@ export default function CabinCalendar({
         console.log(newDateRange)
         setDateRange(newDateRange)
         setLastChangeWasStart(shouldChangeStart)
-        setWeeks(generateCalendarData(date, newDateRange))
+        setWeeks(generateCalendarData(date, newDateRange, bookingPeriods))
     }
 
     return <div
@@ -166,10 +192,20 @@ function CalendarDay({
         classList.push(styles.inRange)
     }
 
+    const styleMap: Record<BookingPeriodType, string> = {
+        ROOM: styles.ROOM,
+        CABIN: styles.CABIN,
+        EVENT: styles.EVENT,
+        RESERVED: styles.RESERVED,
+    }
+
     return <div
         className={classList.join(' ')}
         onMouseDown={() => callback(day)}
     >
-        {day.date.getDate()}
+        <div className={styles.dateNumber}>{day.date.getDate()}</div>
+        <div className={styles.markerContainer}>
+            {day.markers.map(marker => <div className={styleMap[marker.type]} key={uuid()}>{marker.notes}</div>)}
+        </div>
     </div>
 }

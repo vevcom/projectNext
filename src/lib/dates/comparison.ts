@@ -15,7 +15,11 @@ export function datesEqual(lhs?: Date, rhs?: Date) {
 
 export function dateLessThan(lhs: Date, rhs: Date) {
     if (lhs.getUTCFullYear() < rhs.getUTCFullYear()) return true
+    if (lhs.getUTCFullYear() > rhs.getUTCFullYear()) return false
+
     if (lhs.getUTCMonth() < rhs.getUTCMonth()) return true
+    if (lhs.getUTCMonth() > rhs.getUTCMonth()) return false
+
     if (lhs.getUTCDate() < rhs.getUTCDate()) return true
     return false
 }

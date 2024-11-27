@@ -6,8 +6,8 @@ import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readAllBookingPeriodsAction } from '@/actions/cabin'
-import { v4 as uuid } from 'uuid'
 import { displayDate } from '@/lib/dates/displayDate'
+import { v4 as uuid } from 'uuid'
 
 
 export default async function CabinCalendarPage() {
@@ -17,7 +17,7 @@ export default async function CabinCalendarPage() {
     >
         <h4>Ulike release group kan være her kanskje?</h4>
 
-        <CabinCalendar date={new Date()} />
+        <CabinCalendar date={new Date()} bookingPeriods={bookingPeriods} />
 
         <PopUp
             PopUpKey="CreateBookingPeriod"
