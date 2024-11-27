@@ -8,3 +8,6 @@ export const readRoomsAction = ActionNoData(Cabin.readRooms)
 
 export const createBookingPeriodAction = Action(Cabin.createBookingPeriod)
 export const readAllBookingPeriodsAction = ActionNoData(Cabin.readAllBookingPeriods)
+
+export const createReleaseGroupAction = ActionNoData(Cabin.createReleaseGroup)
+export const readReleaseGroupsAction = ActionNoData(Cabin.readReleaseGroups)

@@ -1,0 +1,16 @@
+@use "@/styles/ohma";
+
+.tableContainer {
+    max-height: 15rem;
+    overflow-y: auto;
+
+    table {
+        @include ohma.table();
+        margin-top: 0;
+
+        thead {
+            position: sticky;
+            top: 0;
+        }
+    }
+}

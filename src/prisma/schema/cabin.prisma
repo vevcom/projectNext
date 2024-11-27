@@ -1,6 +1,6 @@
 model ReleaseGroup {
   id            Int             @id @default(autoincrement())
-  releaseTime   DateTime
+  releaseTime   DateTime?
   BookingPeriod BookingPeriod[]
 }
 

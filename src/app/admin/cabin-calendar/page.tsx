@@ -5,17 +5,19 @@ import CabinCalendar from '@/app/_components/cabinCalendar/CabinCalendar'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readAllBookingPeriodsAction } from '@/actions/cabin'
+import { readAllBookingPeriodsAction, readReleaseGroupsAction } from '@/actions/cabin'
 import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
+import { ReleaseGroups } from './ReleaseGroups'
 
 
 export default async function CabinCalendarPage() {
     const bookingPeriods = unwrapActionReturn(await readAllBookingPeriodsAction(null))
+    const releaseGroups = unwrapActionReturn(await readReleaseGroupsAction(null))
     return <PageWrapper
         title="Heutte Kalender"
     >
-        <h4>Ulike release group kan være her kanskje?</h4>
+        <ReleaseGroups releaseGroups={releaseGroups} />
 
         <CabinCalendar date={new Date()} bookingPeriods={bookingPeriods} />
 
