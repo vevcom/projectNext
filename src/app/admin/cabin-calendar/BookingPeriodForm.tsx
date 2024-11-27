@@ -22,6 +22,6 @@ export default function BookingPeriodForm() {
         <DateInput name="start" label="Startdato (Inkluderende)" />
         <DateInput name="end" label="Sluttdato (Ekskluderende)" />
         <SelectString name="type" label="Type" options={options} />
-        <TextInput name="notes" label="Kommentarer" />
+        <TextInput name="notes" label="Notater" />
     </Form>
 }

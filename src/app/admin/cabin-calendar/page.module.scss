@@ -3,3 +3,7 @@
 .button {
     @include ohma.btn(ohma.$colors-primary);
 }
+
+.table {
+    @include ohma.table();
+}

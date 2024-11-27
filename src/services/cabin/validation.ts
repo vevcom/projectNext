@@ -29,10 +29,7 @@ const baseCabinValidation = new ValidationBase({
 })
 
 const refiner = {
-    fcn: (data: { start: Date, end: Date }) => {
-        console.log(data)
-        return dateLessThan(data.start, data.end)
-    },
+    fcn: (data: { start: Date, end: Date }) => dateLessThan(data.start, data.end),
     message: 'Start dato må være før sluttdato.'
 }
 

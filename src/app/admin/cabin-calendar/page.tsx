@@ -1,11 +1,17 @@
+'use server'
+import styles from './page.module.scss'
+import BookingPeriodForm from './BookingPeriodForm'
 import CabinCalendar from '@/app/_components/cabinCalendar/CabinCalendar'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
-import styles from './page.module.scss'
-import BookingPeriodForm from './BookingPeriodForm'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readAllBookingPeriodsAction } from '@/actions/cabin'
+import { v4 as uuid } from 'uuid'
+import { displayDate } from '@/lib/dates/displayDate'
 
 
-export default function CabinCalendarPage() {
+export default async function CabinCalendarPage() {
+    const bookingPeriods = unwrapActionReturn(await readAllBookingPeriodsAction(null))
     return <PageWrapper
         title="Heutte Kalender"
     >
@@ -20,5 +26,24 @@ export default function CabinCalendarPage() {
         >
             <BookingPeriodForm />
         </PopUp>
+
+        <table className={styles.table}>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Startdato</th>
+                    <th>Sluttdato</th>
+                    <th>Notater</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bookingPeriods.map(bookingPeriod => <tr key={uuid()}>
+                    <td>{bookingPeriod.type}</td>
+                    <td>{displayDate(bookingPeriod.start, false)}</td>
+                    <td>{displayDate(bookingPeriod.end, false)}</td>
+                    <td>{bookingPeriod.notes}</td>
+                </tr>)}
+            </tbody>
+        </table>
     </PageWrapper>
 }
