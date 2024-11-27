@@ -9,8 +9,8 @@ import type { BookingPeriodType, BookingPeriod } from '@prisma/client'
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
 enum Selection {
-    'SELECT_START',
-    'SELECT_END',
+    'START',
+    'END',
     'INRANGE'
 }
 
@@ -42,12 +42,12 @@ function getMarkers(date: Date, bookingPeriods: BookingPeriod[]): Marker[] {
         if (datesEqual(date, period.start)) {
             ret.push({
                 ...period,
-                selection: Selection.SELECT_START,
+                selection: Selection.START,
             })
         } else if (datesEqual(date, period.end)) {
             ret.push({
                 ...period,
-                selection: Selection.SELECT_END,
+                selection: Selection.END,
             })
         } else if (dateLessThan(period.start, date) && dateLessThan(date, period.end)) {
             ret.push({
@@ -84,9 +84,9 @@ function generateCalendarData(date: Date, dateRange: DateRange, bookingPeriods: 
                 let selection: undefined | Selection = undefined
 
                 if (datesEqual(thisDate, dateRange.start)) {
-                    selection = Selection.SELECT_START
+                    selection = Selection.START
                 } else if (datesEqual(thisDate, dateRange.end)) {
-                    selection = Selection.SELECT_END
+                    selection = Selection.END
                 } else if (dateRange.start && dateRange.end) {
                     const inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
 
@@ -139,7 +139,6 @@ export default function CabinCalendar({
                 end: day.date,
             }
         }
-        console.log(newDateRange)
         setDateRange(newDateRange)
         setLastChangeWasStart(shouldChangeStart)
         setWeeks(generateCalendarData(date, newDateRange, bookingPeriods))
@@ -184,13 +183,18 @@ function CalendarDay({
     const classList: string[] = [styles.day]
     if (!day.correctMonth) classList.push(styles.wrongMonth)
 
-    if (day.selection === Selection.SELECT_START) {
-        classList.push(styles.startSelect)
-    } else if (day.selection === Selection.SELECT_END) {
-        classList.push(styles.endSelect)
-    } else if (day.selection === Selection.INRANGE) {
-        classList.push(styles.inRange)
+    const selectionMap: Record<Selection, string> = {
+        [Selection.START]: styles.start,
+        [Selection.END]: styles.end,
+        [Selection.INRANGE]: styles.inRange
     }
+
+    function getSelectionStyle(sel?: Selection): string {
+        if (sel === undefined) return ''
+        return selectionMap[sel]
+    }
+
+    classList.push(getSelectionStyle(day.selection))
 
     const styleMap: Record<BookingPeriodType, string> = {
         ROOM: styles.ROOM,
@@ -205,7 +209,14 @@ function CalendarDay({
     >
         <div className={styles.dateNumber}>{day.date.getDate()}</div>
         <div className={styles.markerContainer}>
-            {day.markers.map(marker => <div className={styleMap[marker.type]} key={uuid()}>{marker.notes}</div>)}
+            {day.markers.map(marker =>
+                <div
+                    className={`${styleMap[marker.type]} ${getSelectionStyle(marker.selection)}`}
+                    key={uuid()}
+                >
+                    {marker.selection === Selection.INRANGE ? marker.notes : ''}
+                </div>
+            )}
         </div>
     </div>
 }

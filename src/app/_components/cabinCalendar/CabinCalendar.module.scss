@@ -1,5 +1,51 @@
 @use '@/styles/ohma';
 
+$color-mapping: (
+  ROOM: ohma.$colors-blue,
+  EVENT: ohma.$colors-green,
+  CABIN: ohma.$colors-purple,
+  RESERVED: ohma.$colors-red
+);
+
+@mixin rangeStyles($color) {
+
+  &.start {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50%;
+      background-color: $color;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+  }
+
+  &.end {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 50%;
+      background-color: $color;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+  }
+
+  &.inRange {
+    background-color: $color;
+  }
+}
+
 .calendar {
   width: 100%;
   border: 2px solid black;
@@ -20,9 +66,17 @@
       min-height: 2.5rem;
       text-align: center;
 
+      @include rangeStyles(ohma.$colors-primary);
+
+      &.inRange {
+        background-color: lighten(ohma.$colors-primary, 30);
+      }
+
       >.dateNumber {
         padding: 4px;
         font-size: 1.3rem;
+        position: relative;
+        z-index: 2;
       }
 
       &:hover {
@@ -34,36 +88,18 @@
         flex-direction: column;
         width: 100%;
 
-        > div {
-          min-height: 1rem;
+        >div {
+          min-height: 1.05rem;
         }
 
-        > .ROOM {
-          background-color: ohma.$colors-blue;
+        @each $key, $color in $color-mapping {
+          >.#{$key} {
+            @include rangeStyles($color);
+            z-index: 2;
+          }
         }
-        >.CABIN {
-          background-color: ohma.$colors-yellow;
-        }
-        >.EVENT {
-          background-color: ohma.$colors-green;
-        }
-        >.RESERVED {
-          background-color: ohma.$colors-red;
-        }
+
       }
-    }
-
-    .startSelect {
-      background: linear-gradient(to right, ohma.$colors-body-background 50%, ohma.$colors-primary 50%);
-    }
-
-    .endSelect {
-      background: linear-gradient(to left, ohma.$colors-body-background 50%, ohma.$colors-primary 50%);
-    }
-
-
-    >.inRange {
-      background-color: lighten(ohma.$colors-primary, 30);
     }
 
   }
@@ -77,5 +113,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
   }
 }

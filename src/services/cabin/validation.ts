@@ -24,7 +24,7 @@ const baseCabinValidation = new ValidationBase({
         end: z.date(),
         name: z.string().min(2).max(20),
         capacity: z.coerce.number().int().min(0),
-        notes: z.string().optional(),
+        notes: z.string().max(20).optional(),
     }
 })
 
