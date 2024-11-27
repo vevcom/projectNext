@@ -4,3 +4,5 @@ export const CreateRoomAuther = RequirePermission.staticFields({ permission: 'CA
 export const UpdateRoomAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })
 export const ReadRoomAuther = RequirePermission.staticFields({ permission: 'CABIN_CALENDAR_READ' })
 
+export const CreateBookingPeriodAuther = RequirePermission.staticFields({ permission: 'CABIN_ADMIN' })
+

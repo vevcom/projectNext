@@ -3,6 +3,7 @@ import { BookingPeriodType } from '@prisma/client'
 import styles from './CabinCalendar.module.scss'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import { datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 
@@ -34,17 +35,6 @@ type DateRange = {
     end?: Date,
 }
 
-function getWeekNumber(date: Date): number {
-    const startDate = new Date(date.getFullYear(), 0, 1)
-    const days = Math.floor((date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
-    return Math.ceil((days + startDate.getDay() + 1) / 7)
-}
-
-function datesEqual(lhs?: Date, rhs?: Date) {
-    if (!lhs && !rhs) return true
-    if (!lhs || !rhs) return false
-    return lhs.getFullYear() === rhs.getFullYear() && lhs.getMonth() === rhs.getMonth() && lhs.getDate() === rhs.getDate()
-}
 
 function generateCalendarData(date: Date, dateRange: DateRange): Week[] {
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1)

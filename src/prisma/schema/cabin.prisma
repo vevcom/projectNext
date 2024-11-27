@@ -15,10 +15,10 @@ model BookingPeriod {
   id             Int               @id @default(autoincrement())
   type           BookingPeriodType
   notes          String?
-  start          DateTime // Inclusive (counting nights, not days)
-  end            DateTime // Exclusive
-  releaseGroup   ReleaseGroup      @relation(fields: [releaseGroupId], references: [id])
-  releaseGroupId Int
+  start          DateTime          @db.Date // Inclusive (counting nights, not days)
+  end            DateTime          @db.Date // Exclusive
+  releaseGroup   ReleaseGroup?     @relation(fields: [releaseGroupId], references: [id])
+  releaseGroupId Int?
   event          Event?            @relation(fields: [eventId], references: [id])
   eventId        Int?
   Booking        Booking[]
@@ -34,8 +34,8 @@ model Room {
 
 model Booking {
   id                 Int           @id @default(autoincrement())
-  start              DateTime // Inclusive (counting nights after)
-  end                DateTime // Exclusive
+  start              DateTime      @db.Date // Inclusive (counting nights after)
+  end                DateTime      @db.Date // Exclusive
   room               Room?         @relation(fields: [roomId], references: [id])
   roomId             Int?
   user               User?         @relation(name: "booking", fields: [userId], references: [id])

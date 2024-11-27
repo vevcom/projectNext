@@ -1,7 +1,8 @@
 import 'server-only'
-import { CreateRoomAuther, ReadRoomAuther } from './Authers'
+import { CreateBookingPeriodAuther, CreateRoomAuther, ReadRoomAuther } from './Authers'
 import { createRoom } from './room/create'
 import { readRooms } from './room/read'
+import { createBookingPeriod } from './bookingPeriod/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Cabin = {
@@ -18,5 +19,12 @@ export const Cabin = {
         auther: ReadRoomAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: readRooms,
+    }),
+    createBookingPeriod: ServiceMethod({
+        withData: true,
+        hasAuther: true,
+        auther: CreateBookingPeriodAuther,
+        dynamicFields: () => ({}),
+        serviceMethodHandler: createBookingPeriod,
     }),
 } as const
