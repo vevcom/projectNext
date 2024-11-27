@@ -53,6 +53,7 @@ export default function FeideProvider<P extends FeideProfile>(
                 lastname: extendedUserInfo.sn?.join(' '),
             }
         },
+        allowDangerousEmailAccountLinking: true, // This will try to link accounts with the same email
         options,
     }
 }
