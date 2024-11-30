@@ -1,6 +1,6 @@
 import { dateLessThan } from '@/lib/dates/comparison'
 import { ValidationBase } from '@/services/Validation'
-import { BookingPeriodType } from '@prisma/client'
+import { BookingType } from '@prisma/client'
 import { z } from 'zod'
 
 const baseCabinValidation = new ValidationBase({
@@ -8,7 +8,8 @@ const baseCabinValidation = new ValidationBase({
         id: z.coerce.number(),
         userId: z.coerce.number(),
         releaseTime: z.string(),
-        type: z.nativeEnum(BookingPeriodType),
+        releaseUntil: z.string(),
+        type: z.nativeEnum(BookingType),
         start: z.string().date(),
         end: z.string().date(),
         name: z.string(),
@@ -19,7 +20,8 @@ const baseCabinValidation = new ValidationBase({
         id: z.coerce.number(),
         userId: z.coerce.number(),
         releaseTime: z.date(),
-        type: z.nativeEnum(BookingPeriodType),
+        releaseUntil: z.date(),
+        type: z.nativeEnum(BookingType),
         start: z.date(),
         end: z.date(),
         name: z.string().min(2).max(20),
@@ -33,29 +35,28 @@ const refiner = {
     message: 'Start dato må være før sluttdato.'
 }
 
-export const createRoomValidation = baseCabinValidation.createValidation({
-    keys: ['name', 'capacity'],
-    transformer: data => data,
+const releasePeriodRefiner = {
+    fcn: (data: { releaseTime: Date, releaseUntil: Date}) => dateLessThan(data.releaseTime, data.releaseUntil),
+    message: 'Slipp tiden må være før slutten av perioden som slippes.'
+}
+
+
+export const createReleasePeriodValidation = baseCabinValidation.createValidation({
+    keys: ['releaseTime', 'releaseUntil'],
+    transformer: data => ({
+        releaseUntil: new Date(data.releaseUntil),
+        releaseTime: new Date(data.releaseTime),
+    }),
+    refiner: releasePeriodRefiner,
 })
 
-export const createBookingPeriodValidation = baseCabinValidation.createValidation({
-    keys: ['start', 'end', 'type', 'notes'],
+export const updateReleasePeriodValidation = baseCabinValidation.createValidation({
+    keys: ['id', 'releaseTime', 'releaseUntil'],
     transformer: data => ({
         ...data,
-        start: new Date(data.start),
-        end: new Date(data.end),
+        releaseUntil: new Date(data.releaseUntil),
+        releaseTime: new Date(data.releaseTime),
     }),
-    refiner,
-})
-
-export const updateReleaseGroupValidation = baseCabinValidation.createValidation({
-    keys: ['id', 'releaseTime'],
-    transformer: data => {
-        console.log(data)
-        return {
-            ...data,
-            releaseTime: new Date(data.releaseTime)
-        }
-    },
+    refiner: releasePeriodRefiner,
 })
 

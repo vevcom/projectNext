@@ -1,93 +1,43 @@
 import 'server-only'
 import {
-    CreateBookingPeriodAuther,
-    CreateReleaseGroupAuther,
-    CreateRoomAuther,
-    DeleteReleaseGroupAuther,
-    ReadAllBookingPeriodsAuther,
-    ReadReleaseGroupsAuther,
-    ReadRoomAuther,
-    UpdateReleaseGroupAuther
+    CreateReleasePeriodAuther,
+    DeleteReleasePeriodAuther,
+    ReadReleasePeriodAuther,
+    UpdateReleasePeriodAuther
 } from './Authers'
-import { createRoom } from './room/create'
-import { readRooms } from './room/read'
-import { createBookingPeriod } from './bookingPeriod/create'
-import { readAllBookingPeriods } from './bookingPeriod/read'
-import { createReleaseGroup } from './releaseGroup/create'
-import { readReleaseGroup, readReleaseGroups } from './releaseGroup/read'
-import { updateReleaseGroup, updateReleaseGroupBookingPeriods } from './releaseGroup/update'
-import { deleteReleaseGroup } from './releaseGroup/delete'
+import { readReleasePeriods } from './releasePeriod/read'
+import { updateReleaseGroup } from './releasePeriod/update'
+import { deleteReleasePeriod } from './releasePeriod/delete'
+import { createReleasePeriod } from './releasePeriod/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Cabin = {
-    createRoom: ServiceMethod({
+    createReleasePeriod: ServiceMethod({
         withData: true,
         hasAuther: true,
-        auther: CreateRoomAuther,
+        auther: CreateReleasePeriodAuther,
         dynamicFields: () => ({}),
-        serviceMethodHandler: createRoom,
+        serviceMethodHandler: createReleasePeriod,
     }),
-    readRooms: ServiceMethod({
+    readReleasePeriod: ServiceMethod({
         withData: false,
         hasAuther: true,
-        auther: ReadRoomAuther,
+        auther: ReadReleasePeriodAuther,
         dynamicFields: () => ({}),
-        serviceMethodHandler: readRooms,
+        serviceMethodHandler: readReleasePeriods,
     }),
-    createBookingPeriod: ServiceMethod({
+    updateReleasePeriod: ServiceMethod({
         withData: true,
         hasAuther: true,
-        auther: CreateBookingPeriodAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: createBookingPeriod,
-    }),
-    readAllBookingPeriods: ServiceMethod({
-        withData: false,
-        hasAuther: true,
-        auther: ReadAllBookingPeriodsAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: readAllBookingPeriods,
-    }),
-    createReleaseGroup: ServiceMethod({
-        withData: false,
-        hasAuther: true,
-        auther: CreateReleaseGroupAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: createReleaseGroup,
-    }),
-    readReleaseGroups: ServiceMethod({
-        withData: false,
-        hasAuther: true,
-        auther: ReadReleaseGroupsAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: readReleaseGroups,
-    }),
-    readReleaseGroup: ServiceMethod({
-        withData: false,
-        hasAuther: true,
-        auther: ReadReleaseGroupsAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: readReleaseGroup,
-    }),
-    updateReleaseGroup: ServiceMethod({
-        withData: true,
-        hasAuther: true,
-        auther: UpdateReleaseGroupAuther,
+        auther: UpdateReleasePeriodAuther,
         dynamicFields: () => ({}),
         serviceMethodHandler: updateReleaseGroup,
     }),
-    updateReleaseGroupBookingPeriods: ServiceMethod({
+    deleteReleasePeriod: ServiceMethod({
         withData: false,
         hasAuther: true,
-        auther: UpdateReleaseGroupAuther,
+        auther: DeleteReleasePeriodAuther,
         dynamicFields: () => ({}),
-        serviceMethodHandler: updateReleaseGroupBookingPeriods,
-    }),
-    deleteReleaseGroup: ServiceMethod({
-        withData: false,
-        hasAuther: true,
-        auther: DeleteReleaseGroupAuther,
-        dynamicFields: () => ({}),
-        serviceMethodHandler: deleteReleaseGroup,
+        serviceMethodHandler: deleteReleasePeriod,
     })
 } as const
