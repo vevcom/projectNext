@@ -26,10 +26,10 @@ model Event {
   registrationEnd    DateTime
   eventRegistrations EventRegistration[]
 
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ScreenPage    ScreenPage[]
-  cabinEvent BookingPeriod[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  ScreenPage ScreenPage[]
+  cabinEvent Booking[]
 
   @@unique([order, name])
 }
