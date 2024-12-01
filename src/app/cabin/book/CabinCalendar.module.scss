@@ -58,7 +58,6 @@
     text-align: center;
 
     >.day {
-      min-height: 2.5rem;
 
       @include rangeStyles(ohma.$colors-primary);
 

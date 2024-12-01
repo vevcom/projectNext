@@ -48,25 +48,32 @@ function createNullArray(num: number): null[] {
 }
 
 function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRange): (Week | string)[] {
-    const firstDayOfMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+    const firstDayOfMonth = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1))
 
-    const firstDayOfFirstWeek = new Date(startDate)
-    const firstDayOfFirstWeekOffset = firstDayOfMonth.getDate() - firstDayOfMonth.getDay() + 1
-    firstDayOfFirstWeek.setDate(firstDayOfFirstWeekOffset)
+    const stopAtMonth = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth() + 1, 1))
+
+
+    const firstDayOfFirstWeek = new Date(firstDayOfMonth)
+
+    // This will change Sunday to 6, and Monday to 0
+    const dayOfWeek = firstDayOfMonth.getUTCDay() === 0 ? 6 : firstDayOfMonth.getUTCDay() - 1
+
+    const firstDayOfFirstWeekOffset = firstDayOfMonth.getUTCDate() - dayOfWeek
+    firstDayOfFirstWeek.setUTCDate(firstDayOfFirstWeekOffset)
 
     const ret: (Week | string)[] = []
 
     let lastMonth = firstDayOfMonth.getUTCMonth() - 1
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
         const mondayDate = new Date(firstDayOfFirstWeek)
-        mondayDate.setDate(mondayDate.getDate() + 7 * i)
+        mondayDate.setUTCDate(mondayDate.getUTCDate() + 7 * i)
 
         let days: (Day | null)[] = []
 
         for (let j = 0; j < 7; j++) {
             const thisDate = new Date(firstDayOfFirstWeek)
-            thisDate.setDate(thisDate.getDate() + i * 7 + j)
+            thisDate.setUTCDate(thisDate.getUTCDate() + i * 7 + j)
 
             let selection: undefined | Selection = undefined
 
@@ -75,7 +82,7 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
             } else if (datesEqual(thisDate, dateRange.end)) {
                 selection = Selection.END
             } else if (dateRange.start && dateRange.end) {
-                const inRange = dateRange && dateRange.start <= thisDate && thisDate < dateRange.end
+                const inRange = dateRange && dateLessThan(dateRange.start, thisDate) && dateLessThan(thisDate, dateRange.end)
 
                 if (inRange) {
                     selection = Selection.INRANGE
@@ -84,6 +91,11 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
 
             if (lastMonth !== thisDate.getUTCMonth()) {
                 lastMonth = thisDate.getUTCMonth()
+                if (!dateLessThan(thisDate, stopAtMonth)) {
+                    i = 100
+                    break
+                }
+
                 if (days.length > 0) {
                     ret.push({
                         number: getWeekNumber(mondayDate),
@@ -102,9 +114,10 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
             })
         }
 
+
         if (i === 0 && dateLessThan(mondayDate, firstDayOfMonth)) {
             // This will only happen the first week
-            ret.splice(0, 2)
+            ret.splice(0, 1)
         }
 
         ret.push({
