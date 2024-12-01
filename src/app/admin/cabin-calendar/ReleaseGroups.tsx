@@ -2,7 +2,7 @@
 import styles from './ReleaseGroups.module.scss'
 import UpdateReleaseGroupForm from './UpdateReleaseGroupForm'
 import Button from '@/app/_components/UI/Button'
-import { createReleaseGroupAction } from '@/actions/cabin'
+import { createReleasePeriodAction } from '@/actions/cabin'
 import { displayDate } from '@/lib/dates/displayDate'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PopUp from '@/app/_components/PopUp/PopUp'
@@ -26,7 +26,7 @@ export function ReleaseGroups({
 }) {
     const [groups, setGroups] = useState(releaseGroups)
     async function newReleaseGroup() {
-        const results = unwrapActionReturn(await createReleaseGroupAction(null))
+        const results = unwrapActionReturn(await createReleasePeriodAction(null))
         setGroups([...groups, results])
     }
 
