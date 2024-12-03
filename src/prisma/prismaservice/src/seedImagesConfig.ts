@@ -132,7 +132,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
     HOVEDBYGGNINGEN: {
         name: 'hovedbygningen',
         alt: 'Hovedbygningen',
-        fsLocation: 'hovedbygningen.webp',
+        fsLocation: 'magisk_hatt.png',
         collection: defaultCollection,
     },
     R1: {
