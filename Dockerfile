@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:22-alpine3.20 AS base
 WORKDIR /usr/src/app
 
 # Install node packages
@@ -16,18 +16,13 @@ COPY public public
 COPY next-env.d.t[s] next.config.js tsconfig.json ./
 
 ############################################################
-FROM node:22-alpine AS prod
-WORKDIR /usr/src/app
+FROM base AS prod
 
 COPY src src
-COPY --from=base /usr/src/app/ .
 
 RUN npm run build
 CMD ["npm", "run", "start"]
 ############################################################
-FROM node:22-alpine AS dev
-WORKDIR /usr/src/app
-
-COPY --from=base /usr/src/app/ .
+FROM base AS dev
 
 CMD ["npm", "run", "dev"]
