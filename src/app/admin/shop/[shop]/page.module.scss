@@ -1,0 +1,25 @@
+@use '@/styles/ohma';
+
+.button {
+    @include ohma.btn(ohma.$colors-primary);
+}
+
+.table {
+    @include ohma.table();
+}
+
+.deactivatedProduct {
+    color: ohma.$colors-gray-600;
+    font-style: italic;
+}
+
+.editButtonWrapper {
+    text-align: center;
+
+    > button {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: transparent;
+    }
+}

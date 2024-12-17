@@ -17,6 +17,7 @@ export type SessionType<UserGuarantee extends UserGuaranteeOption> = {
     ),
     permissions: Permission[],
     memberships: MembershipFiltered[],
+    apiKeyId?: number,
 }
 
 export type SessionUser = SessionType<'HAS_USER'>
@@ -42,6 +43,10 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return this.session.memberships
     }
 
+    public get apiKeyId() {
+        return this.session.apiKeyId
+    }
+
     /**
      * This functions makes sure the Session class can be sent to the client
      * @returns A javascript object representation of the session
@@ -50,7 +55,8 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return {
             user: this.user,
             permissions: this.permissions,
-            memberships: this.memberships
+            memberships: this.memberships,
+            apiKeyId: this.apiKeyId,
         }
     }
 
@@ -93,7 +99,8 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
             permissions: [...defaultPermissions, ...permissions].filter(
                 (permission, i, ps) => ps.indexOf(permission) === i
             ),
-            memberships: []
+            memberships: [],
+            apiKeyId: id,
         })
     }
 }
