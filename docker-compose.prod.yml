@@ -25,6 +25,7 @@ services:
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
 
     nginx:
+        image: nginx:1.21.3-alpine
         restart: always
         ports:
             - 80:80
@@ -38,6 +39,8 @@ services:
             - store:/usr/store:ro
             - ./certs/conf:/etc/letsencrypt:ro
             - ./certs/www/:/var/www/certbot:ro
+        depends_on:
+            - projectnext
 
     certbot:
         image: certbot/certbot:latest

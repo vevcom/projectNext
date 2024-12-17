@@ -68,8 +68,3 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-
-    nginx:
-        image: nginx:1.21.3-alpine
-        depends_on:
-            - projectnext

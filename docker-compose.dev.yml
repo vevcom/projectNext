@@ -28,13 +28,16 @@ services:
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
         environment:
             NODE_ENV: development
-    
+
     nginx:
+        image: nginx:1.21.3-alpine
         ports:
             - 80:80
         volumes:
             - ${PROJECT_ROOT:-.}/containers/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
             - devstore:/usr/store
+        depends_on:
+            - projectnext
 
 volumes:
     devdb:
