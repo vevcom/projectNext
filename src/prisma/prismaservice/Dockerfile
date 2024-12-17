@@ -33,6 +33,8 @@ WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 WORKDIR /usr/src/app/prismaservice
 
+ENV NODE_ENV=production
+
 #DEPLOY NOT IMPLEMENTED YET: should be npy prisma migrate deploy.
 CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npm run seed"]
 
@@ -41,5 +43,7 @@ FROM node:22-alpine AS dev
 WORKDIR /usr/src/app
 COPY --from=base /usr/src/app .
 WORKDIR /usr/src/app/prismaservice
+
+ENV NODE_ENV=development
 
 CMD ["/bin/sh", "-c", "npx prisma db push --force-reset --skip-generate; npm run seed"]

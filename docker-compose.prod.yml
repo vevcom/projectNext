@@ -5,8 +5,6 @@ services:
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
-        environment:
-            NODE_ENV: production
         deploy:
             replicas: 8
 
@@ -18,8 +16,6 @@ services:
     prisma:
         build:
             target: prod
-        environment:
-            NODE_ENV: production
         volumes:
             - store:/usr/src/app/prismaservice/store
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
