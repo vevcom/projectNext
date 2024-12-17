@@ -15,7 +15,6 @@ services:
             PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
             API_KEY_SALT_ROUNDS: ${API_KEY_SALT_ROUNDS}
             API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
-            NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED}
             FEIDE_CLIENT_ID: ${FEIDE_CLIENT_ID}
             FEIDE_CLIENT_SECRET: ${FEIDE_CLIENT_SECRET}
             MAIL_SERVER: ${MAIL_SERVER}
@@ -55,7 +54,6 @@ services:
             args:
                 SHOULD_MIGRATE: ${VEVEN_DB_URI}
         environment:
-            # NODE_ENV is set in docker-compose.(dev|prod|test).yml
             DB_URI: ${DB_URI}
             MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
             VEVEN_STORE_URL: ${VEVEN_STORE_URL}
