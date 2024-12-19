@@ -10,7 +10,7 @@
     "lint": "next lint",
     "test": "echo Success!",
     "docker:dev": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.base.yml -f docker-compose.dev.yml up --build",
-    "docker:test": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.base.yml -f docker-compose.test.yml up --build",
+    "docker:test": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.base.yml -f docker-compose.test.yml run --rm --build projectnext",
     "docker:prod": "docker-compose --env-file .env -f docker-compose.base.yml -f docker-compose.test.yml up --build"
   },
   "prisma": {
