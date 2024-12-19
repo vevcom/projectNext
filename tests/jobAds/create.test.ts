@@ -9,7 +9,7 @@ const testJobAd = {
     company: 'Vevcom',
 }
 
-describe('Job Ads', () => {
+describe('Create Job Ads', () => {
     it('Create Job Ad with Unauthorized User', async () => {
         setMockSession({
             memberships: [],
