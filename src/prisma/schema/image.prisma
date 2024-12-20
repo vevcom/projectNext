@@ -26,11 +26,22 @@ model Image {
   collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
   collectionId            Int
+  credit                  String?
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
+  lisenceId               Int?
+  lisence                 Lisence?         @relation(fields: [lisenceId], references: [id])
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
+}
+
+model Lisence {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  link String
+
+  images Image[]
 }
 
 enum SpecialCollection {
