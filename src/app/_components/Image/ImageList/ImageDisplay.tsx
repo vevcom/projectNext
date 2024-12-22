@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
 import type { ImageSizeOptions } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
+import Link from 'next/link'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',
@@ -167,15 +168,17 @@ export default function ImageDisplay() {
             </button>
             <div className={styles.currentImage}>
                 <h1>{image.name}</h1>
-                <i>{image.alt}</i>
+                <i>Alt-tekst: {image.alt}</i>
                 <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
-                <i>Kreditert: {image.credit}</i>
+                <i>Kreditert: {image.credit ?? 'ingen'}</i>
+                <i>Lisens: {image.licenseLink ? <Link href={image.licenseLink} target="_blank" referrerPolicy="no-referrer">{image.licenseName}</Link> : 'ingen'}</i>
                 {
                     pagingContext.loading ? (
                         <div className={styles.loading}></div>
                     ) : (
                         <Image
                             hideCredit
+                            hideCopyRight
                             width={200}
                             imageSize={displayContext.imageSize}
                             image={image}
@@ -194,10 +197,8 @@ export default function ImageDisplay() {
             </div>
             {
                 canEdit && (
-                    <PopUp PopUpKey="EditImage" showButtonContent={
-                        <div className={styles.openImageAdmin}>
-                            <FontAwesomeIcon icon={faCog}/>
-                        </div>
+                    <PopUp PopUpKey="EditImage" showButtonClass={styles.openImageAdmin} showButtonContent={
+                        <FontAwesomeIcon icon={faCog}/>
                     }>
                         <div className={styles.admin}>
                             <Form

@@ -1,6 +1,9 @@
 import styles from './Image.module.scss'
 import type { ImageProps } from 'next/image'
 import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
+import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 
 export type ImageSizeOptions = ImageSize | 'ORIGINAL'
 
@@ -12,6 +15,7 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     imageContainerClassName?: string,
     creditPlacement?: 'top' | 'bottom',
     hideCredit?: boolean,
+    hideCopyRight?: boolean,
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
@@ -38,6 +42,7 @@ export default function Image({
     imageContainerClassName,
     creditPlacement = 'bottom',
     hideCredit = false,
+    hideCopyRight = false,
     ...props
 }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
@@ -70,6 +75,14 @@ export default function Image({
                 src={url}
             />
             {image.credit && !hideCredit && <p className={`${styles.credit} ${styles[creditPlacement]}`}>{image.credit}</p>}
+            {!hideCopyRight && image.licenseLink && (
+                <div className={styles.license}>
+                    <Link href={image.licenseLink} target="_blank" referrerPolicy="no-referrer">
+                        {image.licenseName}
+                    </Link>
+                    <FontAwesomeIcon icon={faCopyright}/>
+                </div>
+            )}
         </div>
     )
 }

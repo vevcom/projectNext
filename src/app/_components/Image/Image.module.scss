@@ -22,8 +22,32 @@
         }
         &.top {
             top: 0;
-            right: 0;
+            left: 0;
         }
         padding: .5em
+    }
+
+    .license {
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-decoration: none;
+        color: ohma.$colors-black;
+        z-index: 2;
+        svg {
+            color: ohma.$colors-white;
+            width: 1.3em;
+            height: 1.3em;
+            margin: .3em;
+        }
+        a {
+            display: none;
+        }
+        &:hover {
+            background-color: rgba(ohma.$colors-gray-300, .5);
+            a {
+                display: inline;
+            }
+        }
     }
 }
