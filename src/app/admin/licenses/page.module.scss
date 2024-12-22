@@ -2,4 +2,7 @@
 
 .wrapper {
     padding: 1em;
+    .licenses {
+        @include ohma.table;
+    }
 }

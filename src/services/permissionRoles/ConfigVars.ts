@@ -436,6 +436,14 @@ export const PermissionConfig = {
         name: 'Prikkadministrator',
         description: 'kan administrere prikker',
         category: 'brukere'
+    },
+    LICENSE_ADMIN: {
+        name: 'Lisensadministrator',
+        description: `
+            kan administrere lisenser. Alle som eier et bilde kan 
+            legge til en lisens uavhengig av denne tillatelsen
+        `,
+        category: 'brukere'
     }
 } satisfies Record<Permission, PermissionInfo>
 
