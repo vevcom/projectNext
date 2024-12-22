@@ -443,7 +443,7 @@ export const PermissionConfig = {
             kan administrere lisenser. Alle som eier et bilde kan 
             legge til en lisens uavhengig av denne tillatelsen
         `,
-        category: 'brukere'
+        category: 'diverse admin'
     }
 } satisfies Record<Permission, PermissionInfo>
 

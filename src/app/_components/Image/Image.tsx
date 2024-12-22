@@ -10,6 +10,8 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     alt?: string,
     smallSize?: boolean,
     imageContainerClassName?: string,
+    creditPlacement?: 'top' | 'bottom',
+    hideCredit?: boolean,
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
@@ -34,6 +36,8 @@ export default function Image({
     largeSize,
     imageSize,
     imageContainerClassName,
+    creditPlacement = 'bottom',
+    hideCredit = false,
     ...props
 }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
@@ -65,6 +69,7 @@ export default function Image({
                 alt={alt || image.alt}
                 src={url}
             />
+            {image.credit && !hideCredit && <p className={`${styles.credit} ${styles[creditPlacement]}`}>{image.credit}</p>}
         </div>
     )
 }

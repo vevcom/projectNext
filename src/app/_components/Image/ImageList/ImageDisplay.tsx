@@ -169,11 +169,13 @@ export default function ImageDisplay() {
                 <h1>{image.name}</h1>
                 <i>{image.alt}</i>
                 <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
+                <i>Kreditert: {image.credit}</i>
                 {
                     pagingContext.loading ? (
                         <div className={styles.loading}></div>
                     ) : (
                         <Image
+                            hideCredit
                             width={200}
                             imageSize={displayContext.imageSize}
                             image={image}
