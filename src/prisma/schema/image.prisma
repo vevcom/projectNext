@@ -29,19 +29,22 @@ model Image {
   credit                  String?
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
-  lisenceId               Int?
-  lisence                 Lisence?         @relation(fields: [lisenceId], references: [id])
+  license                 License?         @relation(fields: [licenseName, licenseLink], references: [name, link])
+  licenseName             String?
+  licenseLink             String?
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
 }
 
-model Lisence {
+model License {
   id   Int    @id @default(autoincrement())
   name String @unique
   link String
 
   images Image[]
+
+  @@unique([name, link])
 }
 
 enum SpecialCollection {

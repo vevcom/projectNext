@@ -1,11 +1,11 @@
 import type { SpecialImage, SpecialCollection } from '@/generated/pn'
 
-type LisenceSeed = {
+type LicenseSeed = {
     name: string,
     link: string,
 }
 
-export const seedLisenceConfig = [
+export const seedLicenseConfig = [
     {
         name: 'CC BY-SA 4.0',
         link: 'https://creativecommons.org/licenses/by-sa/4.0/',
@@ -14,9 +14,9 @@ export const seedLisenceConfig = [
         name: 'Paxels',
         link: 'https://www.pexels.com/license/',
     },
-] as const satisfies LisenceSeed[]
+] as const satisfies LicenseSeed[]
 
-type LisenceName = typeof seedLisenceConfig[number]['name']
+type licenseName = typeof seedLicenseConfig[number]['name']
 
 type ImageSeedConfigBase = {
     name: string,
@@ -24,7 +24,7 @@ type ImageSeedConfigBase = {
     fsLocation: string, //location in standard_store/images
     collection: string,
     credit: string | null,
-    lisence: LisenceName | null,
+    license: licenseName | null,
 }
 
 const defaultCollection = 'STANDARDIMAGES' as const satisfies SpecialCollection
@@ -46,7 +46,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'treaty.jpeg',
         collection: defaultCollection,
         credit: 'Skylar Kang',
-        lisence: 'Paxels',
+        license: 'Paxels',
     },
     {
         name: 'kappemann',
@@ -54,7 +54,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'kappemann.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'kongsberg',
@@ -62,7 +62,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'kongsberg.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'nordic',
@@ -70,7 +70,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'nordic.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'ohma',
@@ -78,7 +78,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'ohma.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'omega_mai',
@@ -86,7 +86,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'Omegamai.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'ov',
@@ -94,7 +94,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'ov.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'pwa',
@@ -102,7 +102,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'pwa.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     {
         name: 'harambe',
@@ -110,7 +110,7 @@ export const seedImageConfig: ImageSeedConfig = [
         fsLocation: 'harambe.jpg',
         collection: 'PROFILEIMAGES',
         credit: null,
-        lisence: null,
+        license: null,
     }
 ]
 
@@ -125,7 +125,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'default_image.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     DEFAULT_IMAGE_COLLECTION_COVER: {
         name: 'lens_camera',
@@ -133,7 +133,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'lens_camera.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     DEFAULT_PROFILE_IMAGE: {
         name: 'default_profile_image',
@@ -141,7 +141,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'default_profile_image.png',
         collection: 'PROFILEIMAGES',
         credit: null,
-        lisence: null,
+        license: null,
     },
     DAFAULT_COMMITTEE_LOGO: {
         name: 'default_committee_logo',
@@ -149,7 +149,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'logo_simple.png',
         collection: 'COMMITTEELOGOS',
         credit: null,
-        lisence: null,
+        license: null,
     },
     LOGO_SIMPLE: {
         name: 'logo_simple',
@@ -157,7 +157,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'logo_simple.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     LOGO_WHITE: {
         name: 'logo_white',
@@ -165,7 +165,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'logo_white.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     LOGO_WHITE_TEXT: {
         name: 'logo_white_text',
@@ -173,7 +173,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'omega_logo_white.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     MAGISK_HATT: {
         name: 'magisk_hatt',
@@ -181,7 +181,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'magisk_hatt.png',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
     },
     HOVEDBYGGNINGEN: {
         name: 'hovedbygningen',
@@ -189,7 +189,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'hovedbygget.jpeg',
         collection: defaultCollection,
         credit: 'Thomas Høstad/NTNU',
-        lisence: 'CC BY-SA 4.0',
+        license: 'CC BY-SA 4.0',
         // https://ntnu.fotoware.cloud/fotoweb/archives/
         // 5005-Blinkskudd/Folder%20112/Hovedbygget-03.jpg.info#c=%2Ffotoweb%2Farchives%2F5005-Blinkskudd%2F
     },
@@ -199,7 +199,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'books.jpeg',
         collection: defaultCollection,
         credit: 'Alexander Grey',
-        lisence: 'Paxels',
+        license: 'Paxels',
     },
     MACHINE: {
         name: 'machine',
@@ -207,7 +207,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'machine.jpeg',
         collection: defaultCollection,
         credit: 'Børge Sandnes/NTNU',
-        lisence: 'CC BY-SA 4.0',
+        license: 'CC BY-SA 4.0',
         // https://ntnu.fotoware.cloud/fotoweb/archives/
         // 5005-Blinkskudd/Folder%20112/Manu-08.jpg.info#c=%2Ffotoweb%2Farchives%2F5005-Blinkskudd%2F
     },
@@ -217,7 +217,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'realfagsbygget.jpeg',
         collection: defaultCollection,
         credit: 'Per Henning/NTNU',
-        lisence: 'CC BY-SA 4.0',
+        license: 'CC BY-SA 4.0',
         // https://ntnu.fotoware.cloud/fotoweb/archives/
         // 5019-Campuser/Folder%20112/Realfagbygget-soloppgang-2015-2.jpg.info#c=%2Ffotoweb%2Farchives%2F5019-Campuser%2F
     },
@@ -227,7 +227,7 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
         fsLocation: 'fair.jpeg',
         collection: defaultCollection,
         credit: null,
-        lisence: null,
+        license: null,
         // From contactor
     },
 } as const
