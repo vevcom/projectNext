@@ -5,7 +5,7 @@ import ImageCard from '@/components/ImageCard/ImageCard'
 
 export default async function education() {
     const hovedbyggningenRes = await readSpecialImageAction('HOVEDBYGGNINGEN')
-    const R1Res = await readSpecialImageAction('R1')
+    const R1Res = await readSpecialImageAction('BOOKS')
 
     const hovedbyggningen = hovedbyggningenRes.success ? hovedbyggningenRes.data : null
     const R1 = R1Res.success ? R1Res.data : null
