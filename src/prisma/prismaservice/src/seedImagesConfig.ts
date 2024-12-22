@@ -10,6 +10,10 @@ export const seedLisenceConfig = [
         name: 'CC BY-SA 4.0',
         link: 'https://creativecommons.org/licenses/by-sa/4.0/',
     },
+    {
+        name: 'Paxels',
+        link: 'https://www.pexels.com/license/',
+    },
 ] as const satisfies LisenceSeed[]
 
 type LisenceName = typeof seedLisenceConfig[number]['name']
@@ -39,10 +43,10 @@ export const seedImageConfig: ImageSeedConfig = [
     {
         name: 'traktat',
         alt: 'En gammel traktat',
-        fsLocation: 'traktat.jpg',
+        fsLocation: 'treaty.jpeg',
         collection: defaultCollection,
-        credit: null,
-        lisence: null,
+        credit: 'Skylar Kang',
+        lisence: 'Paxels',
     },
     {
         name: 'kappemann',
@@ -182,41 +186,48 @@ export const seedSpecialImageConfig: ImageSeedSpecialConfig = {
     HOVEDBYGGNINGEN: {
         name: 'hovedbygningen',
         alt: 'Hovedbygningen',
-        fsLocation: 'magisk_hatt.png',
+        fsLocation: 'hovedbygget.jpeg',
         collection: defaultCollection,
-        credit: null,
-        lisence: null,
+        credit: 'Thomas Høstad/NTNU',
+        lisence: 'CC BY-SA 4.0',
+        // https://ntnu.fotoware.cloud/fotoweb/archives/
+        // 5005-Blinkskudd/Folder%20112/Hovedbygget-03.jpg.info#c=%2Ffotoweb%2Farchives%2F5005-Blinkskudd%2F
     },
-    R1: {
-        name: 'R1 NTNU',
-        alt: 'R1 på NTNU',
-        fsLocation: 'R1NTNU.jpeg',
+    BOOKS: {
+        name: 'Books',
+        alt: 'Bøker',
+        fsLocation: 'books.jpeg',
         collection: defaultCollection,
-        credit: null,
-        lisence: null,
+        credit: 'Alexander Grey',
+        lisence: 'Paxels',
     },
-    ENGINEER: {
-        name: 'engineer',
-        alt: 'Engineer',
-        fsLocation: 'engineer.jpeg',
+    MACHINE: {
+        name: 'machine',
+        alt: 'Maskin',
+        fsLocation: 'machine.jpeg',
         collection: defaultCollection,
-        credit: null,
-        lisence: null,
+        credit: 'Børge Sandnes/NTNU',
+        lisence: 'CC BY-SA 4.0',
+        // https://ntnu.fotoware.cloud/fotoweb/archives/
+        // 5005-Blinkskudd/Folder%20112/Manu-08.jpg.info#c=%2Ffotoweb%2Farchives%2F5005-Blinkskudd%2F
     },
-    SKYSCRAPER: {
-        name: 'skyscraper',
-        alt: 'Skyscraper',
-        fsLocation: 'skyscraper.jpeg',
+    REALFAGSBYGGET: {
+        name: 'Realfagsbygget',
+        alt: 'Realfagsbygget',
+        fsLocation: 'realfagsbygget.jpeg',
         collection: defaultCollection,
-        credit: null,
-        lisence: null,
+        credit: 'Per Henning/NTNU',
+        lisence: 'CC BY-SA 4.0',
+        // https://ntnu.fotoware.cloud/fotoweb/archives/
+        // 5019-Campuser/Folder%20112/Realfagbygget-soloppgang-2015-2.jpg.info#c=%2Ffotoweb%2Farchives%2F5019-Campuser%2F
     },
     FAIR: {
         name: 'fair',
         alt: 'Fair',
-        fsLocation: 'fair.webp',
+        fsLocation: 'fair.jpeg',
         collection: defaultCollection,
         credit: null,
         lisence: null,
+        // From contactor
     },
 } as const

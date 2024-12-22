@@ -12,9 +12,9 @@ import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction('ENGINEER')
+    const jobAdImageRes = await readSpecialImageAction('MACHINE')
     const eventImageRes = await readSpecialImageAction('FAIR')
-    const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
+    const comanyImageRes = await readSpecialImageAction('REALFAGSBYGGET')
     const conactorCmsLinkRes = await readSpecialCmsLinkAction.bind(
         null, { special: 'CAREER_LINK_TO_CONTACTOR' }
     )()
