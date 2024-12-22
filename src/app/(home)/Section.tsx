@@ -28,7 +28,7 @@ function Section({ specialCmsImage, specialCmsParagraph, lesMer, right, imgWidth
             {!right && imgContainer}
             <div>
                 <SpecialCmsParagraph className={styles.paragraph} special={specialCmsParagraph} />
-                <Link href={lesMer}>Les mer</Link>
+                <Link className={styles.readMore} href={lesMer}>Les mer</Link>
             </div>
             {right && imgContainer}
         </div>

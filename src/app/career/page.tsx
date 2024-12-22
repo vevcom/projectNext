@@ -37,6 +37,7 @@ export default async function CareerLandingPage() {
                 <span className={styles.links}>
                     <Link href="/career/jobads">
                         { jobAdImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={jobAdImage} /> : <></> }
                         <h2>Jobbanonser</h2>
@@ -45,12 +46,14 @@ export default async function CareerLandingPage() {
                         companyPresentationEventTag ? [companyPresentationEventTag.name] : []
                     )}`}>
                         { eventImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={eventImage} /> : <></> }
                         <h2>Bedriftpresentasjoner</h2>
                     </Link>
                     <Link href="/career/companies">
                         { companyImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={companyImage} /> : <></> }
                         <h2>Bedrifter</h2>
