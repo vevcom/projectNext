@@ -12,7 +12,7 @@ const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
  * @param call - A async prisma function to call.
  * @returns
  */
-export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
+export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
     try {
         return await call()
     } catch (error) {
@@ -27,6 +27,7 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
     }
 }
 
+// Gjør ikke denne funksjonen akkurat det samme som prismaCall???
 export async function prismaErrorWrapper<T>(
     call: () => Promise<T>,
 ) {

@@ -1,58 +1,62 @@
 import { createZodActionError } from './error'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
-import type { SessionMaybeUser } from '@/auth/Session'
-import type { ServiceMethod } from '@/services/ServiceTypes'
+import { Smorekopp } from '@/services/error'
+import { ActionReturn } from './Types'
+import type { ServiceMethodReturn } from '@/services/ServiceMethodTypes'
 
-export function Action<
-    TypeType,
-    DetailedType,
-    Params,
-    Return,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->(serviceMethod: ServiceMethod<
-    true,
-    TypeType,
-    DetailedType,
-    Params,
-    Return,
-    WantsToOpenTransaction,
-    NoAuther
->) {
-    return async (params: Params, rawData: FormData) => {
-        const session = await Session.fromNextAuth()
-        const parse = serviceMethod.typeValidate(rawData)
-        if (!parse.success) return createZodActionError(parse)
-        const data = parse.data
-        const config: { session: SessionMaybeUser, params: Params, data: DetailedType } = { session, params, data }
-        return {
-            ...(await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))),
-            session: session.toJsObject()
-        }
-    }
-}
+// What a mess... :/
 
-export function ActionNoData<
-    Params,
-    Return,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->(serviceMethod: ServiceMethod<
-    false,
-    never,
-    never,
-    Params,
-    Return,
-    WantsToOpenTransaction,
-    NoAuther
->) {
-    return async (params: Params) => {
+type Action<Params, TakesParams extends boolean, Data, TakesData extends boolean, Return> = TakesParams extends true
+    ? (
+        TakesData extends true
+            ? (params: Params, data: Data | FormData) => Promise<ActionReturn<Return>>
+            : (params: Params) => Promise<ActionReturn<Return>>)
+    : (
+        TakesData extends true
+            ? (data: Data | FormData) => Promise<ActionReturn<Return>>
+            : () => Promise<ActionReturn<Return>>
+        )
+
+export function Action<Params, TakesParams extends boolean, DetailedData, TakesData extends boolean, Return>(
+    serviceMethod: ServiceMethodReturn<Params, TakesParams, any, DetailedData, TakesData, Return, boolean>
+): Action<Params, TakesParams, DetailedData, TakesData, Return>
+
+export function Action<Params, DetailedData, Return>(
+    serviceMethod: ServiceMethodReturn<Params, boolean, any, DetailedData, boolean, Return, boolean>
+): Action<Params, boolean, DetailedData, boolean, Return> 
+{    
+    const call = async (params?: Params, data?: FormData | DetailedData) => {
         const session = await Session.fromNextAuth()
-        const config: { session: SessionMaybeUser, params: Params, data: unknown } = { session, params, data: {} }
-        return {
-            ...(await safeServerCall(() => serviceMethod.client('NEW').execute(config, { withAuth: true }))),
-            session: session.toJsObject()
+
+        if (data) {
+            if (!serviceMethod.takesData) {
+                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but underlying service method does not take data.')
+            }
+
+            if (!serviceMethod.typeValidate) {
+                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but underlying service method has no validation.')
+            }
+
+            const parse = serviceMethod.typeValidate(data)
+            if (!parse.success) return createZodActionError(parse)
+            data = parse.data
         }
+
+        return safeServerCall(() => serviceMethod.newClient().execute({ session, params, data }))
     }
+
+    if (serviceMethod.takesParams && serviceMethod.takesData) {
+        return call
+    }
+
+    if (serviceMethod.takesParams) {
+        return (params: Params) => call(params)
+    }
+
+    if (serviceMethod.takesData) {
+        return (data: FormData | DetailedData) => call(undefined, data)
+    }
+
+    return () => call()
 }

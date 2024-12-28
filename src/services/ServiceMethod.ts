@@ -1,122 +1,96 @@
+import 'server-only'
 import { Smorekopp } from './error'
+import { prismaCall } from './prismaCall'
 import { Session } from '@/auth/Session'
-import type { ServiceMethod, ServiceMethodConfig } from './ServiceTypes'
+import type { ServiceMethodExecuteArgs, PrismaPossibleTransaction, ServiceMethodConfig, ServiceMethodReturn } from './ServiceMethodTypes'
 
+/**
+ * Wrapper for creating service methods. It handles validation, authorization, and errors for you.
+ * @param config - The configuration for the service method.
+ * @param config.auther - The auther that will be used to authorize the user.
+ * @param config.dynamicAuthFields - A function that returns the dynamic auth fields that will be used to authorize the user.
+ * @param config.method - The method that will be called when the service method is executed.
+ * @param config.validation - The validation that will be used to validate the data that is passed to the service method.
+ * @param [config.opensTransaction=false] - Whether or not the service method opens a transaction.
+ */
 export function ServiceMethod<
-    TypeType,
-    DetailedType,
-    Params,
-    Return,
     DynamicFields extends object,
-    WantsToOpenTransaction extends boolean,
+    Return,
+    OpensTransaction extends boolean = false,
+    TakesParams extends boolean = false,
+    TakesData extends boolean = false,
+    GeneralData = undefined,
+    DetailedData = undefined,
+    Params = undefined,
 >(
-    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, true>
-): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true>
+    config: ServiceMethodConfig<Params, TakesParams, GeneralData, DetailedData, TakesData, OpensTransaction, Return, DynamicFields>
+): ServiceMethodReturn<Params, TakesParams, GeneralData, DetailedData, TakesData, Return, OpensTransaction> {
+    const client = (client: PrismaPossibleTransaction<OpensTransaction>) => ({
+        execute: async (args: ServiceMethodExecuteArgs<Params, TakesParams, DetailedData, TakesData>) => {
+            // First validate parameters (if any)
 
-export function ServiceMethod<
-    Params,
-    Return,
-    DynamicFields extends object,
-    WantsToOpenTransaction extends boolean,
->(
-    config: ServiceMethodConfig<
-        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, true
-    >
-): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, true>
+            if (config.takesParams) {
+                if (!('paramsSchema' in config)) {
+                    throw new Smorekopp('SERVER ERROR', 'Service method takes params, but has no params schema.')
+                }
 
-export function ServiceMethod<
-    TypeType,
-    DetailedType,
-    Params,
-    Return,
-    DynamicFields extends object,
-    WantsToOpenTransaction extends boolean,
->(
-    config: ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
-): ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false>
+                if (!('params' in args)) {
+                    throw new Smorekopp('SERVER ERROR', 'Serivce method expects params, but none were passed.')
+                }
 
-export function ServiceMethod<
-    Params,
-    Return,
-    DynamicFields extends object,
-    WantsToOpenTransaction extends boolean,
->(
-    config: ServiceMethodConfig<
-        false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, false
-    >
-): ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
+                // TODO: Decide if this should be a validation or a schema.
+                // For now it's just a schema because it's simpler.
+                const paramsParse = config.paramsSchema.safeParse(args.params)
 
-export function ServiceMethod<
-    TypeType,
-    DetailedType,
-    Params,
-    Return,
-    DynamicFields extends object,
-    WantsToOpenTransaction extends boolean,
->(
-    config:
-        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, true>
-        | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, true>
-        | ServiceMethodConfig<true, TypeType, DetailedType, Params, Return, DynamicFields, WantsToOpenTransaction, false>
-        | ServiceMethodConfig<false, void, void, Params, Return, DynamicFields, WantsToOpenTransaction, false>
-): (
-    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, true>
-    | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, true>
-    | ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false>
-    | ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
-) {
-    if (!config.hasAuther) {
-        return config.withData ? {
-            withData: true,
-            client: config.serviceMethodHandler.client,
-            typeValidate: config.serviceMethodHandler.typeValidate,
-            detailedValidate: config.serviceMethodHandler.detailedValidate,
-        } : {
-            withData: false,
-            client: config.serviceMethodHandler.client
+                if (!paramsParse.success) {
+                    throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service method.')
+                }
+
+                args.params = paramsParse.data
+            }
+            
+
+            // Then validate data (if any)
+
+            if (config.takesData) {
+                if (!('validation' in config)) {
+                    throw new Smorekopp('SERVER ERROR', 'Service method takes data, but has no validation.')
+                }
+
+                if (!('data' in args)) {
+                    throw new Smorekopp('SERVER ERROR', 'Serivce method expects data, but none were passed.')
+                }
+
+                args.data = config.validation.detailedValidate(args.data)
+            }
+
+            // Then authorize user
+
+            if (!args.bypassAuth && config.auther !== 'NO_AUTH') {
+                const authRes = config.auther
+                    .dynamicFields(await config.dynamicAuthFields(args))
+                    .auth(args.session ?? Session.empty())
+
+                if (!authRes.authorized) {
+                    throw new Smorekopp(authRes.status)
+                }
+            }
+            
+            // Finally, call the method
+
+            return prismaCall(() => config.method({
+                ...args,
+                prisma: client,
+                session: args.session,
+            }))
         }
+    })
+
+    return {
+        takesParams: config.takesParams,
+        takesData: config.takesData,
+        typeValidate: ('validation' in config) ? config.validation.typeValidate : undefined,
+        client,
+        newClient: () => client(prisma),
     }
-    return config.withData ? {
-        withData: true,
-        client: (prisma) => ({
-            execute: async ({ data, params, session }, authRunConfig) => {
-                if (authRunConfig.withAuth) {
-                    const authRes = config.auther.dynamicFields(
-                        config.dynamicFields ? config.dynamicFields({
-                            params,
-                            data: config.serviceMethodHandler.detailedValidate(data)
-                        }) : await config.dynamicFieldsAsync({
-                            params,
-                            data: config.serviceMethodHandler.detailedValidate(data)
-                        })
-                    ).auth(
-                        session ?? Session.empty()
-                    )
-                    if (!authRes.authorized) throw new Smorekopp(authRes.status)
-                }
-                return config.serviceMethodHandler.client(prisma).execute({ data, params, session })
-            },
-        }),
-        typeValidate: config.serviceMethodHandler.typeValidate,
-        detailedValidate: config.serviceMethodHandler.detailedValidate
-    } satisfies ServiceMethod<true, TypeType, DetailedType, Params, Return, WantsToOpenTransaction, false> : {
-        withData: false,
-        client: (prisma) => ({
-            execute: async ({ params, session }, authRunConfig) => {
-                if (authRunConfig.withAuth) {
-                    const authRes = config.auther.dynamicFields(
-                        config.dynamicFields ? config.dynamicFields({
-                            params
-                        }) : await config.dynamicFieldsAsync({
-                            params
-                        })
-                    ).auth(
-                        session ?? Session.empty()
-                    )
-                    if (!authRes.authorized) throw new Smorekopp(authRes.status)
-                }
-                return config.serviceMethodHandler.client(prisma).execute({ params, session })
-            },
-        }),
-    } satisfies ServiceMethod<false, void, void, Params, Return, WantsToOpenTransaction, false>
 }
