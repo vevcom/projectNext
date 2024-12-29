@@ -2,7 +2,7 @@ import { createZodActionError } from './error'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
-import { ActionReturn } from './Types'
+import type { ActionReturn } from './Types'
 import type { ServiceMethodReturn } from '@/services/ServiceMethodTypes'
 
 // What a mess... :/
@@ -19,23 +19,22 @@ type Action<Params, TakesParams extends boolean, Data, TakesData extends boolean
         )
 
 export function Action<Params, TakesParams extends boolean, DetailedData, TakesData extends boolean, Return>(
-    serviceMethod: ServiceMethodReturn<Params, TakesParams, any, DetailedData, TakesData, Return, boolean>
+    serviceMethod: ServiceMethodReturn<Params, TakesParams, unknown, DetailedData, TakesData, Return, boolean>
 ): Action<Params, TakesParams, DetailedData, TakesData, Return>
 
 export function Action<Params, DetailedData, Return>(
-    serviceMethod: ServiceMethodReturn<Params, boolean, any, DetailedData, boolean, Return, boolean>
-): Action<Params, boolean, DetailedData, boolean, Return> 
-{    
+    serviceMethod: ServiceMethodReturn<Params, boolean, unknown, DetailedData, boolean, Return, boolean>
+): Action<Params, boolean, DetailedData, boolean, Return> {
     const call = async (params?: Params, data?: FormData | DetailedData) => {
         const session = await Session.fromNextAuth()
 
         if (data) {
             if (!serviceMethod.takesData) {
-                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but underlying service method does not take data.')
+                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method does not take data.')
             }
 
             if (!serviceMethod.typeValidate) {
-                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but underlying service method has no validation.')
+                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method has no validation.')
             }
 
             const parse = serviceMethod.typeValidate(data)
@@ -47,7 +46,7 @@ export function Action<Params, DetailedData, Return>(
     }
 
     if (serviceMethod.takesParams && serviceMethod.takesData) {
-        return call
+        return (params: Params, data: FormData | DetailedData) => call(params, data)
     }
 
     if (serviceMethod.takesParams) {

@@ -1,8 +1,14 @@
 import 'server-only'
 import { Smorekopp } from './error'
 import { prismaCall } from './prismaCall'
+import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
-import type { ServiceMethodExecuteArgs, PrismaPossibleTransaction, ServiceMethodConfig, ServiceMethodReturn } from './ServiceMethodTypes'
+import type {
+    ServiceMethodExecuteArgs,
+    PrismaPossibleTransaction,
+    ServiceMethodConfig,
+    ServiceMethodReturn
+} from './ServiceMethodTypes'
 
 /**
  * Wrapper for creating service methods. It handles validation, authorization, and errors for you.
@@ -23,9 +29,18 @@ export function ServiceMethod<
     DetailedData = undefined,
     Params = undefined,
 >(
-    config: ServiceMethodConfig<Params, TakesParams, GeneralData, DetailedData, TakesData, OpensTransaction, Return, DynamicFields>
+    config: ServiceMethodConfig<
+        Params,
+        TakesParams,
+        GeneralData,
+        DetailedData,
+        TakesData,
+        OpensTransaction,
+        Return,
+        DynamicFields
+    >
 ): ServiceMethodReturn<Params, TakesParams, GeneralData, DetailedData, TakesData, Return, OpensTransaction> {
-    const client = (client: PrismaPossibleTransaction<OpensTransaction>) => ({
+    const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => ({
         execute: async (args: ServiceMethodExecuteArgs<Params, TakesParams, DetailedData, TakesData>) => {
             // First validate parameters (if any)
 
@@ -48,7 +63,7 @@ export function ServiceMethod<
 
                 args.params = paramsParse.data
             }
-            
+
 
             // Then validate data (if any)
 
@@ -75,13 +90,13 @@ export function ServiceMethod<
                     throw new Smorekopp(authRes.status)
                 }
             }
-            
+
             // Finally, call the method
 
             return prismaCall(() => config.method({
                 ...args,
-                prisma: client,
-                session: args.session,
+                prisma,
+                session: args.session ?? Session.empty(),
             }))
         }
     })
@@ -91,6 +106,6 @@ export function ServiceMethod<
         takesData: config.takesData,
         typeValidate: ('validation' in config) ? config.validation.typeValidate : undefined,
         client,
-        newClient: () => client(prisma),
+        newClient: () => client(globalPrisma),
     }
 }

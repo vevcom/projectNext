@@ -20,20 +20,26 @@ export type PrismaPossibleTransaction<
  * Type for an object that contains params and data fields as long as thery are not undefined.
  * For example, if Params is undefined and Data is not, the type will be { data: Data }.
  * Conversely, if Data is undefined and Params is not, the type will be { params: Params }.
- * If both are undefined, the type will be {}.
+ * If both are undefined, the type will be object.
  * This is used to make the type of the arguments of a service method align with whether
  * or not the underlying method expects params/data or not.
  */
 export type ServiceMethodParamsData<Params, TakesParams extends boolean, Data, TakesData extends boolean> = (
-    TakesParams extends true ? { params: Params } : {}
+    TakesParams extends true ? { params: Params } : object
 ) & (
-    TakesData extends true ? { data: Data } : {}
+    TakesData extends true ? { data: Data } : object
 )
 
 /**
  * This is the type for the arguments that are passed to the method implementation of a service method.
  */
-export type ServiceMethodArguments<OpensTransaction extends boolean, Params, TakesParams extends boolean, Data, TakesData extends boolean> = {
+export type ServiceMethodArguments<
+    OpensTransaction extends boolean,
+    Params,
+    TakesParams extends boolean,
+    Data,
+    TakesData extends boolean
+> = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
 } & ServiceMethodParamsData<Params, TakesParams, Data, TakesData>
@@ -42,36 +48,52 @@ export type ServiceMethodArguments<OpensTransaction extends boolean, Params, Tak
  * This is the type for the argument that are passed to the execute method of a service method.
  */
 export type ServiceMethodExecuteArgs<Params, TakesParams extends boolean, Data, TakesData extends boolean> = {
-    session: SessionMaybeUser,
+    session: SessionMaybeUser | null,
     bypassAuth?: boolean,
 } & ServiceMethodParamsData<Params, TakesParams, Data, TakesData>
 
 /**
- * This is the type for the configuration of a service method. I.e. what is passed to the ServiceMethod function when creating a service method.
+ * This is the type for the configuration of a service method.
+ * I.e. what is passed to the ServiceMethod function when creating a service method.
  */
-export type ServiceMethodConfig<Params, TakesParams extends boolean, GeneralData, DetailedData, TakesData extends boolean, OpensTransaction extends boolean, Return, DynamicFields extends object> = {
+export type ServiceMethodConfig<
+    Params,
+    TakesParams extends boolean,
+    GeneralData, DetailedData,
+    TakesData extends boolean,
+    OpensTransaction extends boolean,
+    Return,
+    DynamicFields extends object
+> = {
     opensTransaction?: OpensTransaction,
     takesParams: TakesParams,
     takesData: TakesData,
-    method: (args: ServiceMethodArguments<OpensTransaction, Params, TakesParams, DetailedData, TakesData>) => Return,
+    method: (
+        args: ServiceMethodArguments<OpensTransaction, Params, TakesParams, DetailedData, TakesData>
+    ) => Promise<Return>,
 } & (
     {
-        auther: AutherStaticFieldsBound<DynamicFields, 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'>,
-        dynamicAuthFields: (paramsData: ServiceMethodParamsData<Params, TakesParams, DetailedData, TakesData>) => DynamicFields | Promise<DynamicFields>,
+        auther: AutherStaticFieldsBound<
+            DynamicFields,
+            'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
+        >,
+        dynamicAuthFields: (
+            paramsData: ServiceMethodParamsData<Params, TakesParams, DetailedData, TakesData>
+        ) => DynamicFields | Promise<DynamicFields>,
     } | {
         auther: 'NO_AUTH',
     }
 ) & (
     TakesParams extends true ? {
         paramsSchema: z.ZodType<Params>,
-    } : {}
+    } : object
 ) & (
     TakesData extends true ? {
         validation: {
             detailedValidate: (data: DetailedData | unknown) => DetailedData,
             typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
-        } 
-    } : {}
+        }
+    } : object
 )
 
 /**
@@ -82,7 +104,15 @@ export type ServiceMethodConfig<Params, TakesParams extends boolean, GeneralData
  * TypeScript is smart enough to infer the behaviour of the return functons without the need to excplitly
  * type the return type of the ServiceMethod function, but it is done so for the sake of clarity.
  */
-export type ServiceMethodReturn<Params, TakesParams extends boolean, GeneralData, DetailedData, TakesData extends boolean, Return, OpensTransaction extends boolean> = {
+export type ServiceMethodReturn<
+    Params,
+    TakesParams extends boolean,
+    GeneralData,
+    DetailedData,
+    TakesData extends boolean,
+    Return,
+    OpensTransaction extends boolean
+> = {
     takesParams: TakesParams,
     takesData: TakesData,
     /**
@@ -96,6 +126,18 @@ export type ServiceMethodReturn<Params, TakesParams extends boolean, GeneralData
     /**
      * Use the global prisma client for the service method.
      */
-    newClient: () => ReturnType<ServiceMethodReturn<Params, TakesParams, GeneralData, DetailedData, TakesData, Return, OpensTransaction>['client']>,
+    newClient: () => (
+        ReturnType<
+            ServiceMethodReturn<
+                Params,
+                TakesParams,
+                GeneralData,
+                DetailedData,
+                TakesData,
+                Return,
+                OpensTransaction
+            >['client']
+        >
+    ),
     typeValidate?: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
 }
