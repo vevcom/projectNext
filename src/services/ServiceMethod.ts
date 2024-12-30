@@ -3,11 +3,14 @@ import { Smorekopp } from './error'
 import { prismaCall } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
+import type { z } from 'zod'
 import type {
-    ServiceMethodExecuteArgs,
     PrismaPossibleTransaction,
     ServiceMethodConfig,
-    ServiceMethodReturn
+    ServiceMethodReturn,
+    ServiceMethodExecuteArgs,
+    Validation,
+    ServiceMethodExecuteArgsUnsafe,
 } from './ServiceMethodTypes'
 
 /**
@@ -17,40 +20,32 @@ import type {
  * @param config.dynamicAuthFields - A function that returns the dynamic auth fields that will be used to authorize the user.
  * @param config.method - The method that will be called when the service method is executed.
  * @param config.validation - The validation that will be used to validate the data that is passed to the service method.
- * @param [config.opensTransaction=false] - Whether or not the service method opens a transaction.
+ * @param [config.opensTransaction=false] - Whether or not the service method opens a transaction. (Just for correct typing)
  */
 export function ServiceMethod<
     DynamicFields extends object,
+    OpensTransaction extends boolean,
     Return,
-    OpensTransaction extends boolean = false,
-    TakesParams extends boolean = false,
-    TakesData extends boolean = false,
-    GeneralData = undefined,
-    DetailedData = undefined,
-    Params = undefined,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
 >(
-    config: ServiceMethodConfig<
-        Params,
-        TakesParams,
-        GeneralData,
-        DetailedData,
-        TakesData,
-        OpensTransaction,
-        Return,
-        DynamicFields
-    >
-): ServiceMethodReturn<Params, TakesParams, GeneralData, DetailedData, TakesData, Return, OpensTransaction> {
-    const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => ({
-        execute: async (args: ServiceMethodExecuteArgs<Params, TakesParams, DetailedData, TakesData>) => {
-            // First validate parameters (if any)
+    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataValidation>,
+): ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, DataValidation> {
+    const argsAreValid = (
+        args: ServiceMethodExecuteArgsUnsafe
+    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataValidation> => {
+        const paramsMatch = (args.params === undefined) === (config.paramsSchema === undefined)
+        const dataMatches = (args.data === undefined) === (config.dataValidation === undefined)
+        return paramsMatch && dataMatches
+    }
 
-            if (config.takesParams) {
-                if (!('paramsSchema' in config)) {
-                    throw new Smorekopp('SERVER ERROR', 'Service method takes params, but has no params schema.')
-                }
-
-                if (!('params' in args)) {
-                    throw new Smorekopp('SERVER ERROR', 'Serivce method expects params, but none were passed.')
+    const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => {
+        const executeUnsafe = async (args: ServiceMethodExecuteArgsUnsafe) => {
+            // First, validate parameters (if any)
+            
+            if (args.params) {
+                if (!config.paramsSchema) {
+                    throw new Smorekopp('SERVER ERROR', 'Service method recieved params, but has no params schema.')
                 }
 
                 // TODO: Decide if this should be a validation or a schema.
@@ -64,22 +59,23 @@ export function ServiceMethod<
                 args.params = paramsParse.data
             }
 
+            // Then, validate data (if any)
 
-            // Then validate data (if any)
-
-            if (config.takesData) {
-                if (!('validation' in config)) {
-                    throw new Smorekopp('SERVER ERROR', 'Service method takes data, but has no validation.')
+            if (args.data) {
+                if (!config.dataValidation) {
+                    throw new Smorekopp('SERVER ERROR', 'Service method recieved validation, but has no validation.')
                 }
 
-                if (!('data' in args)) {
-                    throw new Smorekopp('SERVER ERROR', 'Serivce method expects data, but none were passed.')
-                }
-
-                args.data = config.validation.detailedValidate(args.data)
+                args.data = config.dataValidation.detailedValidate(args.data)
             }
 
-            // Then authorize user
+            // Then, determine if the correct properties are present
+
+            if (!argsAreValid(args)) {
+                throw new Smorekopp('SERVER ERROR', 'Service method recieved invalid arguments.')
+            }
+
+            // Then, authorize user
 
             if (!args.bypassAuth && config.auther !== 'NO_AUTH') {
                 const authRes = config.auther
@@ -99,13 +95,34 @@ export function ServiceMethod<
                 session: args.session ?? Session.empty(),
             }))
         }
-    })
+
+        return {
+            executeUnsafe,
+            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation>) => executeUnsafe(args),
+        }
+    }
 
     return {
-        takesParams: config.takesParams,
-        takesData: config.takesData,
-        typeValidate: ('validation' in config) ? config.validation.typeValidate : undefined,
         client,
         newClient: () => client(globalPrisma),
+        paramsSchema: config.paramsSchema,
+        dataValidation: config.dataValidation,
     }
 }
+
+// const helloName = ServiceMethod({
+//     auther: 'NO_AUTH',
+//     paramsSchema: z.string(),
+//     method: async ({ params: name }) => `Hello, ${name}!`,
+// })
+
+// const helloWorld = ServiceMethod({
+//     auther: 'NO_AUTH',
+//     dataValidation: createUserValidation,
+//     method: ({}) => 'Hello, world!'
+// })
+
+// const helloService = {
+//     helloName,
+//     helloWorld,
+// }

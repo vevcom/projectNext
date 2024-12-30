@@ -3,59 +3,74 @@ import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
 import type { ActionReturn } from './Types'
-import type { ServiceMethodReturn } from '@/services/ServiceMethodTypes'
+import type {
+    ExtractDetailedType,
+    ServiceMethodParamsDataUnsafe,
+    ServiceMethodReturn,
+    Validation
+} from '@/services/ServiceMethodTypes'
+import type { z } from 'zod'
 
-// What a mess... :/
+// What a mess... :/ TODO: Refactor maybe?
 
-type Action<Params, TakesParams extends boolean, Data, TakesData extends boolean, Return> = TakesParams extends true
-    ? (
-        TakesData extends true
-            ? (params: Params, data: Data | FormData) => Promise<ActionReturn<Return>>
-            : (params: Params) => Promise<ActionReturn<Return>>)
-    : (
-        TakesData extends true
-            ? (data: Data | FormData) => Promise<ActionReturn<Return>>
-            : () => Promise<ActionReturn<Return>>
-        )
+type Action<
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
+> = ParamsSchema extends undefined ? {
+    params: (params?: z.infer<NonNullable<ParamsSchema>>) => (
+        DataValidation extends undefined
+            ? () => Promise<ActionReturn<Return>>
+            : (data: ExtractDetailedType<NonNullable<DataValidation>> | FormData) => Promise<ActionReturn<Return>>
+    )
+} : {
+    params: (params?: z.infer<NonNullable<ParamsSchema>>) => (
+        DataValidation extends undefined
+            ? () => Promise<ActionReturn<Return>>
+            : (data: ExtractDetailedType<NonNullable<DataValidation>> | FormData) => Promise<ActionReturn<Return>>
+    )
+}
 
-export function Action<Params, TakesParams extends boolean, DetailedData, TakesData extends boolean, Return>(
-    serviceMethod: ServiceMethodReturn<Params, TakesParams, unknown, DetailedData, TakesData, Return, boolean>
-): Action<Params, TakesParams, DetailedData, TakesData, Return>
+export function Action<
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
+>(
+    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
+): Action<Return, ParamsSchema, DataValidation>
 
-export function Action<Params, DetailedData, Return>(
-    serviceMethod: ServiceMethodReturn<Params, boolean, unknown, DetailedData, boolean, Return, boolean>
-): Action<Params, boolean, DetailedData, boolean, Return> {
-    const call = async (params?: Params, data?: FormData | DetailedData) => {
+export function Action<
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
+>(
+    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
+) {
+    const call = async (args: ServiceMethodParamsDataUnsafe) => {
         const session = await Session.fromNextAuth()
 
-        if (data) {
-            if (!serviceMethod.takesData) {
-                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method does not take data.')
-            }
-
-            if (!serviceMethod.typeValidate) {
+        if (args.data) {
+            if (!serviceMethod.dataValidation) {
                 throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method has no validation.')
             }
 
-            const parse = serviceMethod.typeValidate(data)
+            const parse = serviceMethod.dataValidation.typeValidate(args.data)
             if (!parse.success) return createZodActionError(parse)
-            data = parse.data
+            args.data = parse.data
         }
 
-        return safeServerCall(() => serviceMethod.newClient().execute({ session, params, data }))
+        return safeServerCall(() => serviceMethod.newClient().executeUnsafe({ session, ...args }))
     }
 
-    if (serviceMethod.takesParams && serviceMethod.takesData) {
-        return (params: Params, data: FormData | DetailedData) => call(params, data)
-    }
+    type Params = z.infer<NonNullable<ParamsSchema>>
+    type Data = ExtractDetailedType<NonNullable<DataValidation>>
 
-    if (serviceMethod.takesParams) {
-        return (params: Params) => call(params)
+    return {
+        params: (params?: Params) => (data?: Data | FormData) => call({ params, data })
     }
-
-    if (serviceMethod.takesData) {
-        return (data: FormData | DetailedData) => call(undefined, data)
-    }
-
-    return () => call()
 }
+
+// TODO: Ville vært så kult!!
+/*function ActionsFromService<Service extends Record<string, ServiceMethodReturn<any, any, any, any>>>(service: Service) {
+
+}*/

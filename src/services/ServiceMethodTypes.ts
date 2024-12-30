@@ -1,9 +1,17 @@
 import 'server-only'
+import type { z } from 'zod'
 import type { TypeValidateReturn } from './ServiceTypes'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { Prisma, PrismaClient } from '@prisma/client'
-import type { z } from 'zod'
+
+// TODO: These two types should really be defined in Validation.ts
+export type Validation<GeneralData, DetailedData> = {
+    detailedValidate: (data: DetailedData | unknown) => DetailedData,
+    typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
+}
+
+export type ExtractDetailedType<V extends Validation<unknown, unknown>> = ReturnType<V['detailedValidate']>
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -24,77 +32,79 @@ export type PrismaPossibleTransaction<
  * This is used to make the type of the arguments of a service method align with whether
  * or not the underlying method expects params/data or not.
  */
-export type ServiceMethodParamsData<Params, TakesParams extends boolean, Data, TakesData extends boolean> = (
-    TakesParams extends true ? { params: Params } : object
+export type ServiceMethodParamsData<
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined,
+> = (
+    ParamsSchema extends undefined ? object : { params: z.infer<NonNullable<ParamsSchema>> }
 ) & (
-    TakesData extends true ? { data: Data } : object
+    DataValidation extends undefined ? object : { data: ExtractDetailedType<NonNullable<DataValidation>> }
 )
+
+// TODO: Refactor into maybe one type? Or maybe something more concise?
+export type ServiceMethodParamsDataUnsafe = {
+    params?: unknown,
+    data?: unknown,
+}
 
 /**
  * This is the type for the arguments that are passed to the method implementation of a service method.
  */
 export type ServiceMethodArguments<
     OpensTransaction extends boolean,
-    Params,
-    TakesParams extends boolean,
-    Data,
-    TakesData extends boolean
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined,
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
-} & ServiceMethodParamsData<Params, TakesParams, Data, TakesData>
+} & ServiceMethodParamsData<ParamsSchema, DataValidation>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
  */
-export type ServiceMethodExecuteArgs<Params, TakesParams extends boolean, Data, TakesData extends boolean> = {
+export type ServiceMethodExecuteArgs<
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined,
+> = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
-} & ServiceMethodParamsData<Params, TakesParams, Data, TakesData>
+} & ServiceMethodParamsData<ParamsSchema, DataValidation>
+
+/**
+ * This is the type for the argument that are passed to the execute method of a service method.
+ */
+export type ServiceMethodExecuteArgsUnsafe = {
+    session: SessionMaybeUser | null,
+    bypassAuth?: boolean,
+} & ServiceMethodParamsDataUnsafe
 
 /**
  * This is the type for the configuration of a service method.
  * I.e. what is passed to the ServiceMethod function when creating a service method.
  */
 export type ServiceMethodConfig<
-    Params,
-    TakesParams extends boolean,
-    GeneralData, DetailedData,
-    TakesData extends boolean,
+    DynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
-    DynamicFields extends object
-> = {
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined,
+> = ({
+    paramsSchema?: ParamsSchema,
+    dataValidation?: DataValidation,
     opensTransaction?: OpensTransaction,
-    takesParams: TakesParams,
-    takesData: TakesData,
     method: (
-        args: ServiceMethodArguments<OpensTransaction, Params, TakesParams, DetailedData, TakesData>
-    ) => Promise<Return>,
+        args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation>
+    ) => Return | Promise<Return>,
 } & (
     {
-        auther: AutherStaticFieldsBound<
-            DynamicFields,
-            'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
-        >,
+        auther: AutherStaticFieldsBound<DynamicFields>,
         dynamicAuthFields: (
-            paramsData: ServiceMethodParamsData<Params, TakesParams, DetailedData, TakesData>
+            paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
         ) => DynamicFields | Promise<DynamicFields>,
     } | {
         auther: 'NO_AUTH',
     }
-) & (
-    TakesParams extends true ? {
-        paramsSchema: z.ZodType<Params>,
-    } : object
-) & (
-    TakesData extends true ? {
-        validation: {
-            detailedValidate: (data: DetailedData | unknown) => DetailedData,
-            typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
-        }
-    } : object
-)
+))
 
 /**
  * This is the return type of the ServiceMethod function. It contains a client function that can be used
@@ -105,39 +115,39 @@ export type ServiceMethodConfig<
  * type the return type of the ServiceMethod function, but it is done so for the sake of clarity.
  */
 export type ServiceMethodReturn<
-    Params,
-    TakesParams extends boolean,
-    GeneralData,
-    DetailedData,
-    TakesData extends boolean,
+    OpensTransaction extends boolean,
     Return,
-    OpensTransaction extends boolean
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends Validation<unknown, unknown> | undefined,
 > = {
-    takesParams: TakesParams,
-    takesData: TakesData,
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
      * @note
      * @param client
      */
     client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
-        execute: (args: ServiceMethodExecuteArgs<Params, TakesParams, DetailedData, TakesData>) => Promise<Return>,
+        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation>) => Promise<Return>,
+        executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe) => Promise<Return>,
     },
     /**
      * Use the global prisma client for the service method.
      */
     newClient: () => (
         ReturnType<
-            ServiceMethodReturn<
-                Params,
-                TakesParams,
-                GeneralData,
-                DetailedData,
-                TakesData,
-                Return,
-                OpensTransaction
-            >['client']
+            ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, DataValidation>['client']
         >
     ),
-    typeValidate?: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
+    paramsSchema?: ParamsSchema,
+    dataValidation?: DataValidation,
 }
+
+// export type ServiceMethodReturns<
+//     OpensTransaction extends boolean,
+//     Return,
+//     ParamsSchema extends z.ZodTypeAny,
+//     DataValidation extends Validation<unknown, unknown>,
+// > =
+//  | ServiceMethodReturn<OpensTransaction, Return, undefined,    undefined>
+//  | ServiceMethodReturn<OpensTransaction, Return, undefined,    DataValidation>
+//  | ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, undefined>
+//  | ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, DataValidation>
