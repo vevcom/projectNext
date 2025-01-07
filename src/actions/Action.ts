@@ -1,52 +1,55 @@
+import 'server-only'
 import { createZodActionError } from './error'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
 import type { ActionReturn } from './Types'
 import type {
-    ExtractDetailedType,
+    ServiceMethodParamsData,
     ServiceMethodParamsDataUnsafe,
     ServiceMethodReturn,
     Validation
 } from '@/services/ServiceMethodTypes'
 import type { z } from 'zod'
 
-// What a mess... :/ TODO: Refactor maybe?
+// TODO: Find better names for these types.
 
-type Action<
-    Return,
+export type ActionParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataValidation extends Validation<unknown, unknown> | undefined = undefined,
-> = ParamsSchema extends undefined ? {
-    params: (params?: z.infer<NonNullable<ParamsSchema>>) => (
-        DataValidation extends undefined
-            ? () => Promise<ActionReturn<Return>>
-            : (data: ExtractDetailedType<NonNullable<DataValidation>> | FormData) => Promise<ActionReturn<Return>>
-    )
-} : {
-    params: (params?: z.infer<NonNullable<ParamsSchema>>) => (
-        DataValidation extends undefined
-            ? () => Promise<ActionReturn<Return>>
-            : (data: ExtractDetailedType<NonNullable<DataValidation>> | FormData) => Promise<ActionReturn<Return>>
-    )
+> = {
+    [K in keyof ServiceMethodParamsData<ParamsSchema, DataValidation>]: (
+        K extends 'data'
+            ? FormData
+            : never
+    ) | ServiceMethodParamsData<ParamsSchema, DataValidation>[K]
 }
 
-export function Action<
+export type ActionType<
     Return,
-    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
->(
-    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
-): Action<Return, ParamsSchema, DataValidation>
+    Args extends ServiceMethodParamsDataUnsafe,
+> = keyof Args extends never ? (args?: Args) => Promise<ActionReturn<Return>> : (args: Args) => Promise<ActionReturn<Return>>
 
+/**
+ * Turn a service method into suitable function for an action.
+ * 
+ * @param serviceMethod - The service method to create an action for.
+ * @returns - A function that takes in data (which may be FormData) and/or/nor parameters and calls the service method.
+ */
 export function Action<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataValidation extends Validation<unknown, unknown> | undefined = undefined,
 >(
     serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
-) {
-    const call = async (args: ServiceMethodParamsDataUnsafe) => {
+): ActionType<Return, ActionParamsData<ParamsSchema, DataValidation>> {
+    // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
+    // The action and service method will validate the parameter and data before it is used.
+    //
+    // For convinience this function is given a return type that is more specific. The return type is a function that
+    // has arguments witch match the underlying service method. This makes programming easier as intellisesne can
+    // help and errors are caught at compile time.
+    return async (args: ServiceMethodParamsDataUnsafe = {}) => {
         const session = await Session.fromNextAuth()
 
         if (args.data) {
@@ -61,16 +64,4 @@ export function Action<
 
         return safeServerCall(() => serviceMethod.newClient().executeUnsafe({ session, ...args }))
     }
-
-    type Params = z.infer<NonNullable<ParamsSchema>>
-    type Data = ExtractDetailedType<NonNullable<DataValidation>>
-
-    return {
-        params: (params?: Params) => (data?: Data | FormData) => call({ params, data })
-    }
 }
-
-// TODO: Ville vært så kult!!
-/*function ActionsFromService<Service extends Record<string, ServiceMethodReturn<any, any, any, any>>>(service: Service) {
-
-}*/

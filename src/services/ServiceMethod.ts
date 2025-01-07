@@ -42,7 +42,7 @@ export function ServiceMethod<
     const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => {
         const executeUnsafe = async (args: ServiceMethodExecuteArgsUnsafe) => {
             // First, validate parameters (if any)
-            
+
             if (args.params) {
                 if (!config.paramsSchema) {
                     throw new Smorekopp('SERVER ERROR', 'Service method recieved params, but has no params schema.')
@@ -109,20 +109,3 @@ export function ServiceMethod<
         dataValidation: config.dataValidation,
     }
 }
-
-// const helloName = ServiceMethod({
-//     auther: 'NO_AUTH',
-//     paramsSchema: z.string(),
-//     method: async ({ params: name }) => `Hello, ${name}!`,
-// })
-
-// const helloWorld = ServiceMethod({
-//     auther: 'NO_AUTH',
-//     dataValidation: createUserValidation,
-//     method: ({}) => 'Hello, world!'
-// })
-
-// const helloService = {
-//     helloName,
-//     helloWorld,
-// }
