@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { InterestGroups } from '@/services/groups/interestGroups'
+import { Action } from '@/actions/Action'
+import { readAllInterestGroups } from '@/services/groups/interestGroups/read'
 
-export const readInterestGroupsAction = ActionNoData(InterestGroups.readAll)
+export const readInterestGroupsAction = Action(readAllInterestGroups)

@@ -1,10 +1,16 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { DestroyInterestGroupAuther } from './Auther'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const destroy = ServiceMethodHandler({
-    withData: false,
-    wantsToOpenTransaction: true,
-    handler: async (prisma, { id }: { id: number }) => {
+export const destroyInterestGroup = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: DestroyInterestGroupAuther,
+    dynamicAuthFields: () => ({}),
+    opensTransaction: true,
+    method: async ({ prisma, params: { id } }) => {
         await prisma.$transaction(async tx => {
             const intrestGroup = await tx.interestGroup.delete({
                 where: { id }

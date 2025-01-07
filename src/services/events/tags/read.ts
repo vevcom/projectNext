@@ -1,21 +1,28 @@
 import 'server-only'
 import { SpecialEventTagsConfig } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import logger from '@/lib/logger'
-import type { SpecialEventTags } from '@prisma/client'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { SpecialEventTags } from '@prisma/client'
+import { z } from 'zod'
 
-export const read = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { id }: { id: number }) => await prisma.eventTag.findUniqueOrThrow({
+export const readEventTag = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: 'NO_AUTH',
+    method: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
         where: {
             id
         }
     })
 })
 
-export const readSpecial = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { special }: { special: SpecialEventTags }) => {
+export const readSpecialEventTag = ServiceMethod({
+    paramsSchema: z.object({
+        special: z.nativeEnum(SpecialEventTags),
+    }),
+    auther: 'NO_AUTH',
+    method: async ({ prisma, params: { special } }) => {
         const tag = await prisma.eventTag.findUnique({
             where: {
                 special
@@ -34,7 +41,7 @@ export const readSpecial = ServiceMethodHandler({
     }
 })
 
-export const readAll = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => await prisma.eventTag.findMany()
+export const readAllEventTags = ServiceMethod({
+    auther: 'NO_AUTH',
+    method: async ({ prisma }) => await prisma.eventTag.findMany()
 })

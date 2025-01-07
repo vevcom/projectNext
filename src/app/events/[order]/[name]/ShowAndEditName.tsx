@@ -2,6 +2,7 @@
 import styles from './ShowAndEditName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateEventAction } from '@/actions/events/update'
+import { bindParams } from '@/actions/bindParams'
 import type { Event } from '@prisma/client'
 
 type PropTypes = {
@@ -9,7 +10,7 @@ type PropTypes = {
 }
 
 export default function ShowAndEditName({ event }: PropTypes) {
-    const updateAction = updateEventAction.bind(null, { id: event.id })
+    const updateAction = bindParams(updateEventAction, ({ id: event.id }))
 
     return (
         <EditableTextField

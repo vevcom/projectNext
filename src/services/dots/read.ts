@@ -1,18 +1,24 @@
 import 'server-only'
 import { DotWrapperWithDotsIncluder } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ReadDotAuther, ReadDotForUserAuther } from './Authers'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { DotCursor, DotDetails } from './Types'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { z } from 'zod'
 
 /**
  * This method reads all dots for a user
  * @param userId - The user id to read dots for
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
-export const readForUser = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { userId, onlyActive }: { userId: number, onlyActive: boolean }) => prisma.dot.findMany({
+export const readDotsForUser = ServiceMethod({
+    auther: ReadDotForUserAuther,
+    dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
+    paramsSchema: z.object({
+        userId: z.number(),
+        onlyActive: z.boolean(),
+    }),
+    method: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
         where: {
             wrapper: {
                 userId,
@@ -27,9 +33,13 @@ export const readForUser = ServiceMethodHandler({
     })
 })
 
-export const readWrappersForUser = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { userId }: { userId: number }) => {
+export const readDotWrappersForUser = ServiceMethod({
+    auther: ReadDotForUserAuther,
+    dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
+    paramsSchema: z.object({
+        userId: z.number(),
+    }),
+    method: async ({ prisma, params: { userId } }) => {
         const wrappers = await prisma.dotWrapper.findMany({
             where: {
                 userId
@@ -48,11 +58,20 @@ export const readWrappersForUser = ServiceMethodHandler({
     }
 })
 
-export const readPage = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: {
-        paging: ReadPageInput<number, DotCursor, DotDetails>
-    }) => (await prisma.dotWrapper.findMany({
+export const readDotsPage = ServiceMethod({
+    auther: ReadDotAuther,
+    dynamicAuthFields: () => ({}),
+    paramsSchema: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            userId: z.number().nullable(),
+            onlyActive: z.boolean(),
+        }),
+    ), // Created from ReadPageInput<number, DotCursor, DotDetails> TODO: Maybe refactor to be more reusable?
+    method: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
         ...cursorPageingSelection(params.paging.page),
         where: {
             userId: params.paging.details.userId ?? undefined,

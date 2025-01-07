@@ -1,6 +1,8 @@
-import { destroyArticle } from '@/services/cms/articles/destroy'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import 'server-only'
+import { DestroyJobAdAuther } from './Authers'
+import { destroyArticle } from '@/services/cms/articles/destroy'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
 /**
  * This handler destroys a jobAd. It is also responsible for cleaning up the article,
@@ -8,9 +10,13 @@ import 'server-only'
  * @param id - id of news article to destroy
  * @returns
  */
-export const destroy = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { id }: { id: number }) => {
+export const destroyJobAd = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: DestroyJobAdAuther,
+    dynamicAuthFields: () => ({}),
+    method: async ({ prisma, params: { id } }) => {
         const jobAd = await prisma.jobAd.delete({
             where: { id },
         })

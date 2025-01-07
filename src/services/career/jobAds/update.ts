@@ -1,11 +1,17 @@
 import 'server-only'
 import { updateJobAdValidation } from './validation'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { UpdateJobAdAuther } from './Authers'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const update = ServiceMethodHandler({
-    withData: true,
-    validation: updateJobAdValidation,
-    handler: async (prisma, { id }: { id: number }, data) => await prisma.jobAd.update({
+export const updateJobAd = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    dataValidation: updateJobAdValidation,
+    auther: UpdateJobAdAuther,
+    dynamicAuthFields: () => ({}),
+    method: async ({ prisma, params: { id }, data }) => await prisma.jobAd.update({
         where: { id },
         data,
     })

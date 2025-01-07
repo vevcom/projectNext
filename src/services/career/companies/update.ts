@@ -1,14 +1,20 @@
 import 'server-only'
 import { updateCompanyValidation } from './validation'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { UpdateCompanyAuther } from './Authers'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const update = ServiceMethodHandler({
-    withData: true,
-    validation: updateCompanyValidation,
-    handler: async (prisma, { id }: { id: number }, data) => {
+export const updateCompany = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    dataValidation: updateCompanyValidation,
+    auther: UpdateCompanyAuther,
+    dynamicAuthFields: () => ({}),
+    method: async ({ prisma, params: { id }, data }) => {
         await prisma.company.update({
             where: { id },
             data,
         })
-    }
+    },
 })

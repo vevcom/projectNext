@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Companies } from '@/services/career/companies'
+import { Action } from '@/actions/Action'
+import { readCompanyPage } from '@/services/career/companies/read'
 
-export const readCompanyPageAction = ActionNoData(Companies.readPage)
+export const readCompanyPageAction = Action(readCompanyPage)

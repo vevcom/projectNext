@@ -5,9 +5,12 @@ import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { CreateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
+import { Session } from '@/auth/Session'
+import { bindParams } from '@/actions/bindParams'
 
 export default async function InterestGroups() {
-    const { session, ...interestGroupsRes } = await readInterestGroupsAction.bind(null, {})()
+    const session = await Session.fromNextAuth()
+    const interestGroupsRes = await bindParams(readInterestGroupsAction, undefined)()
     if (!interestGroupsRes.success) return <div>Failed to load interest groups</div> //TODO: Change to unwrap
     const interestGroups = interestGroupsRes.data
 

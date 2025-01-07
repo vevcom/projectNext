@@ -1,17 +1,20 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { CreateUserAuther } from './Authers'
+import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createUserValidation } from '@/services/users/validation'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
-export const create = ServiceMethodHandler({
-    withData: true,
-    validation: createUserValidation,
-    handler: async (prisma, _, data) => {
+export const createUser = ServiceMethod({
+    dataValidation: createUserValidation,
+    auther: CreateUserAuther,
+    dynamicAuthFields: () => ({}),
+    method: async ({ prisma, data }) => {
         const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
         const omegaOrder = await readCurrentOmegaOrder()
 
-        return await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 ...data,
                 memberships: {
@@ -24,5 +27,9 @@ export const create = ServiceMethodHandler({
                 }
             },
         })
+
+        setTimeout(() => sendUserInvitationEmail(user), 1000)
+
+        return user
     }
 })

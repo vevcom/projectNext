@@ -8,6 +8,8 @@ import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { Session } from '@/auth/Session'
+import { bindParams } from '@/actions/bindParams'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
@@ -18,15 +20,17 @@ export default async function Events({
 }: PropTypes) {
     const tagNames = QueryParams.eventTags.decode(searchParams)
 
-    const currentEventsResponse = await readCurrentEventsAction.bind(null, { tags: tagNames })()
-    const eventTagsResponse = await readEventTagsAction.bind(null, {})()
+    const currentEventsResponse = await bindParams(readCurrentEventsAction, ({ tags: tagNames }))()
+    const eventTagsResponse = await bindParams(readEventTagsAction, undefined)()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
     const { data: currentEvents } = currentEventsResponse
-    const { data: eventTags, session } = eventTagsResponse
+    const { data: eventTags } = eventTagsResponse
 
     const currentTags = tagNames ? eventTags.filter(tag => tagNames.includes(tag.name)) : []
+
+    const session = await Session.fromNextAuth()
 
     const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
     const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)

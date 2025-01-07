@@ -1,12 +1,16 @@
 import 'server-only'
 import { updateEventValidation } from './validation'
 import { ServerError } from '@/services/error'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const update = ServiceMethodHandler({
-    withData: true,
-    validation: updateEventValidation,
-    handler: async (prisma, params: { id: number }, { tagIds, ...data }) => {
+export const updateEvent = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    dataValidation: updateEventValidation,
+    auther: 'NO_AUTH', // Temp
+    method: async ({ prisma, params, data: { tagIds, ...data } }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }
         })

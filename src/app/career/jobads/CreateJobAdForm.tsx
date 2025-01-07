@@ -8,6 +8,7 @@ import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import DateInput from '@/components/UI/DateInput'
+import { bindParams } from '@/actions/bindParams'
 import { v4 as uuid } from 'uuid'
 
 export default function CreateJobAdForm() {
@@ -16,7 +17,7 @@ export default function CreateJobAdForm() {
             <Form
                 title="Lag en ny stillingsannonse"
                 submitText="Opprett"
-                action={createJobAdAction.bind(null, {})}
+                action={bindParams(createJobAdAction, undefined)}
                 refreshOnSuccess
             >
                 <TextInput label="Tittel" name="articleName" key={uuid()}/>

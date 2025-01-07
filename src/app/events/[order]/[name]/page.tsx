@@ -1,16 +1,17 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
-import { readEvent } from '@/actions/events/read'
+import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import { displayDate } from '@/lib/dates/displayDate'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
-import { destroyEvent } from '@/actions/events/destroy'
+import { destroyEventAction } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { bindParams } from '@/actions/bindParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
@@ -23,11 +24,11 @@ type PropTypes = {
 }
 
 export default async function Event({ params }: PropTypes) {
-    const eventRes = await readEvent({
+    const eventRes = await readEventAction({
         name: decodeURIComponent(params.name),
         order: parseInt(params.order, 10)
     })
-    const tagsRes = await readEventTagsAction.bind(null, {})()
+    const tagsRes = await bindParams(readEventTagsAction, undefined)()
     if (!eventRes.success || !tagsRes.success) {
         throw new Error('Failed to read event')
     }
@@ -55,7 +56,7 @@ export default async function Event({ params }: PropTypes) {
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
                         <Form
-                            action={destroyEvent.bind(null, { id: event.id })}
+                            action={bindParams(destroyEventAction, ({ id: event.id }))}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}

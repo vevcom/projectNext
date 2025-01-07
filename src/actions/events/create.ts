@@ -1,17 +1,5 @@
 'use server'
-import { createZodActionError } from '@/actions/error'
-import { Events } from '@/services/events'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { Session } from '@/auth/Session'
+import { Action } from '@/actions/Action'
+import { createEvent } from '@/services/events/create'
 
-export async function createEventAction(rawData: FormData) {
-    console.log('createEventAction')
-    const parse = Events.create.typeValidate(rawData)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-    console.log('createEventAction', data)
-
-    const session = await Session.fromNextAuth()
-
-    return await safeServerCall(() => Events.create.client('NEW').execute({ data, params: {}, session }, { withAuth: true }))
-}
+export const createEventAction = Action(createEvent)

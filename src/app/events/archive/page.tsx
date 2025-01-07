@@ -5,6 +5,8 @@ import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
+import { Session } from '@/auth/Session'
+import { bindParams } from '@/actions/bindParams'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
@@ -14,12 +16,14 @@ export default async function EventArchive({
     searchParams
 }: PropTypes) {
     const selectedTagNames = QueryParams.eventTags.decode(searchParams)
-    const eventTagsResponse = await readEventTagsAction.bind(null, {})()
+    const eventTagsResponse = await bindParams(readEventTagsAction, undefined)()
     if (!eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }
-    const { data: eventTags, session } = eventTagsResponse
+    const { data: eventTags } = eventTagsResponse
     const selectedTags = selectedTagNames ? eventTags.filter(tag => selectedTagNames.includes(tag.name)) : []
+
+    const session = await Session.fromNextAuth()
 
     const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
     const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)

@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { EventTags } from '@/services/events/tags'
+import { Action } from '@/actions/Action'
+import { destroyEventTag } from '@/services/events/tags/destroy'
 
-export const destroyEventTagAction = ActionNoData(EventTags.destroy)
+export const destroyEventTagAction = Action(destroyEventTag)
