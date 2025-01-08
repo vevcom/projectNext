@@ -53,7 +53,7 @@ export default function EventTagsAdmin({
             {
                 canCreate && (
                     <span className={styles.create}>
-                        <Form refreshOnSuccess action={bindParams(createEventTagAction, undefined)} submitText="Lag">
+                        <Form refreshOnSuccess action={bindParams(createEventTagAction, {})} submitText="Lag">
                             <TextInput name="name" label="Navn" />
                             <Textarea name="description" label="Beskrivelse" />
                             <ColorInput name="color" label="Farge"/>

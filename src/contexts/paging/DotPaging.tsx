@@ -8,7 +8,7 @@ import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/
 
 export type PageSizeDots = 30
 const fetcher = async (x: ReadPageInput<PageSizeDots, DotCursor, DotDetails>) => {
-    const ret = await bindParams(readDotPageAction, ({ paging: x }))()
+    const ret = await readDotPageAction({ params: { paging: x } })
     return ret
 }
 

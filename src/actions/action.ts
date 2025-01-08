@@ -25,7 +25,7 @@ export type ActionParamsData<
     ) | ServiceMethodParamsData<ParamsSchema, DataValidation>[K]
 }
 
-export type ActionType<
+export type Action<
     Return,
     Args extends ServiceMethodParamsDataUnsafe,
 > = keyof Args extends never ? (args?: Args) => Promise<ActionReturn<Return>> : (args: Args) => Promise<ActionReturn<Return>>
@@ -42,7 +42,7 @@ export function action<
     DataValidation extends Validation<unknown, unknown> | undefined = undefined,
 >(
     serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
-): ActionType<Return, ActionParamsData<ParamsSchema, DataValidation>> {
+): Action<Return, ActionParamsData<ParamsSchema, DataValidation>> {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service method will validate the parameter and data before it is used.
     //

@@ -20,7 +20,7 @@ export default function CreateUserForm({ className }: PropTypes) {
             <Form
                 title="Lag en bruker"
                 submitText="Lag bruker"
-                action={bindParams(createUserAction, undefined)}
+                action={bindParams(createUserAction, {})}
                 successCallback={refresh}
             >
                 <TextInput label="email" name="email" key={uuid()}/>

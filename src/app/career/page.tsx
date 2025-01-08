@@ -16,8 +16,8 @@ export default async function CareerLandingPage() {
     const jobAdImageRes = await readSpecialImageAction('ENGINEER')
     const eventImageRes = await readSpecialImageAction('FAIR')
     const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
-    const conactorCmsLinkRes = await bindParams(readSpecialCmsLinkAction, { special: 'CAREER_LINK_TO_CONTACTOR' })()
-    const companyPresentationEventTagRes = await bindParams(readSpecialEventTagAction, { special: 'COMPANY_PRESENTATION' })()
+    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
+    const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null

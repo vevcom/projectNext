@@ -16,7 +16,7 @@ export default async function EventArchive({
     searchParams
 }: PropTypes) {
     const selectedTagNames = QueryParams.eventTags.decode(searchParams)
-    const eventTagsResponse = await bindParams(readEventTagsAction, undefined)()
+    const eventTagsResponse = await readEventTagsAction()
     if (!eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }

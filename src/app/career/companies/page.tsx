@@ -21,18 +21,20 @@ export default async function page({ searchParams }: PropTypes) {
     const name = QueryParams.companyName.decode(searchParams) ?? undefined
     // TODO: Decide how getting session in pages should be done. Are we going away form useUser/getUser?
     const session = await Session.fromNextAuth()
-    const res = await bindParams(readCompanyPageAction, {
-        paging: {
-            page: {
-                page: 0,
-                pageSize,
-                cursor: null
+    const res = await readCompanyPageAction({
+        params:{
+            paging: {
+                page: {
+                    page: 0,
+                    pageSize,
+                    cursor: null
+                },
+                details: {
+                    name
+                },
             },
-            details: {
-                name
-            },
-        }
-    })()
+        },
+    })
     const serverRenderedData = res.success ? res.data : []
 
     return (
@@ -40,7 +42,7 @@ export default async function page({ searchParams }: PropTypes) {
             <AddHeaderItemPopUp PopUpKey="CreateCompany">
                 <Form
                     title="Ny bedrift"
-                    action={bindParams(createCompanyAction, undefined)}
+                    action={bindParams(createCompanyAction, {})}
                     refreshOnSuccess
                     closePopUpOnSuccess="CreateCompany"
                     submitText="Lag"

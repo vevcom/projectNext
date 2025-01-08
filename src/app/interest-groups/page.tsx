@@ -10,7 +10,7 @@ import { bindParams } from '@/actions/bindParams'
 
 export default async function InterestGroups() {
     const session = await Session.fromNextAuth()
-    const interestGroupsRes = await bindParams(readInterestGroupsAction, undefined)()
+    const interestGroupsRes = await readInterestGroupsAction()
     if (!interestGroupsRes.success) return <div>Failed to load interest groups</div> //TODO: Change to unwrap
     const interestGroups = interestGroupsRes.data
 

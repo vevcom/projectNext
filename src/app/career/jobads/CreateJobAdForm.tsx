@@ -17,7 +17,7 @@ export default function CreateJobAdForm() {
             <Form
                 title="Lag en ny stillingsannonse"
                 submitText="Opprett"
-                action={bindParams(createJobAdAction, undefined)}
+                action={bindParams(createJobAdAction, {})}
                 refreshOnSuccess
             >
                 <TextInput label="Tittel" name="articleName" key={uuid()}/>

@@ -20,8 +20,8 @@ export default async function Events({
 }: PropTypes) {
     const tagNames = QueryParams.eventTags.decode(searchParams)
 
-    const currentEventsResponse = await bindParams(readCurrentEventsAction, ({ tags: tagNames }))()
-    const eventTagsResponse = await bindParams(readEventTagsAction, undefined)()
+    const currentEventsResponse = await readCurrentEventsAction({ params: { tags: tagNames } })
+    const eventTagsResponse = await readEventTagsAction()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')
     }

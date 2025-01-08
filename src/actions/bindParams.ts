@@ -6,9 +6,9 @@ import type { ActionReturn } from './Types'
  * @param params - The parameters to bind to the action.
  * @returns A function that takes data and calls the action with the bound parameters and the data.
  */
-export function bindParams<Return, Params = undefined, Data = undefined>(
-    action: (args: { params: Params, data: Data | FormData }) => Promise<ActionReturn<Return>>,
-    params: Params
+export function bindParams<Return, BindParams extends ActionParams, ActionParams = Record<string, never>, Data = undefined>(
+    action: (args: { params: ActionParams, data: Data | FormData }) => Promise<ActionReturn<Return>>,
+    params: BindParams, // We use two generic types here to avoid inferring the type of params when it is not passed.
 ) {
     // Here we do a cast to avoid having to pass "undefined" explicitly when data is not required for action.
     // This specific type cast is safe because in the case when

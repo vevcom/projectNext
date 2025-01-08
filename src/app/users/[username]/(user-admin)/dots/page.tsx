@@ -9,7 +9,7 @@ import Date from '@/components/Date/Date'
 export default async function UserDotAdmin(params: PropTypes) {
     const { profile } = await getProfileForAdmin(params, 'dots')
     const dotWrappers = unwrapActionReturn(
-        await bindParams(readDotWrappersForUserAction, ({ userId: profile.user.id }))()
+        await readDotWrappersForUserAction({ params: { userId: profile.user.id } })
     )
 
     return (

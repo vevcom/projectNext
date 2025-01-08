@@ -28,7 +28,7 @@ export default async function Event({ params }: PropTypes) {
         name: decodeURIComponent(params.name),
         order: parseInt(params.order, 10)
     })
-    const tagsRes = await bindParams(readEventTagsAction, undefined)()
+    const tagsRes = await readEventTagsAction()
     if (!eventRes.success || !tagsRes.success) {
         throw new Error('Failed to read event')
     }

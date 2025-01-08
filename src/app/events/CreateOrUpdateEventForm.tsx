@@ -30,7 +30,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? bindParams(updateEventAction, ({ id: event.id })) : bindParams(createEventAction, undefined)
+    const action = event ? bindParams(updateEventAction, { id: event.id }) : bindParams(createEventAction, {})
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)
