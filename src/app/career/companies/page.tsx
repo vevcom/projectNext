@@ -10,7 +10,6 @@ import { companyListRenderer } from '@/components/Company/CompanyListRenderer'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import CompanyListFilter from '@/app/_components/Company/CompanyListFilter'
 import { Session } from '@/auth/Session'
-import { bindParams } from '@/actions/bindParams'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 
@@ -22,16 +21,14 @@ export default async function page({ searchParams }: PropTypes) {
     // TODO: Decide how getting session in pages should be done. Are we going away form useUser/getUser?
     const session = await Session.fromNextAuth()
     const res = await readCompanyPageAction({
-        params:{
-            paging: {
-                page: {
-                    page: 0,
-                    pageSize,
-                    cursor: null
-                },
-                details: {
-                    name
-                },
+        paging: {
+            page: {
+                page: 0,
+                pageSize,
+                cursor: null
+            },
+            details: {
+                name
             },
         },
     })
@@ -42,7 +39,7 @@ export default async function page({ searchParams }: PropTypes) {
             <AddHeaderItemPopUp PopUpKey="CreateCompany">
                 <Form
                     title="Ny bedrift"
-                    action={bindParams(createCompanyAction, {})}
+                    action={createCompanyAction}
                     refreshOnSuccess
                     closePopUpOnSuccess="CreateCompany"
                     submitText="Lag"

@@ -1,5 +1,4 @@
 import JobAd from './JobAd'
-import { bindParams } from '@/actions/bindParams'
 import { readActiveJobAdsAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {

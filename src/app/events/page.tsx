@@ -9,7 +9,6 @@ import { readEventTagsAction } from '@/actions/events/tags/read'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { Session } from '@/auth/Session'
-import { bindParams } from '@/actions/bindParams'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
@@ -20,7 +19,7 @@ export default async function Events({
 }: PropTypes) {
     const tagNames = QueryParams.eventTags.decode(searchParams)
 
-    const currentEventsResponse = await readCurrentEventsAction({ params: { tags: tagNames } })
+    const currentEventsResponse = await readCurrentEventsAction({ tags: tagNames })
     const eventTagsResponse = await readEventTagsAction()
     if (!currentEventsResponse.success || !eventTagsResponse.success) {
         throw new Error('Failed to read current events')

@@ -3,7 +3,6 @@ import styles from './CreateUserForm.module.scss'
 import { createUserAction } from '@/actions/users/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bindParams'
 import React from 'react'
 import { v4 as uuid } from 'uuid'
 import { useRouter } from 'next/navigation'
@@ -20,7 +19,7 @@ export default function CreateUserForm({ className }: PropTypes) {
             <Form
                 title="Lag en bruker"
                 submitText="Lag bruker"
-                action={bindParams(createUserAction, {})}
+                action={createUserAction}
                 successCallback={refresh}
             >
                 <TextInput label="email" name="email" key={uuid()}/>

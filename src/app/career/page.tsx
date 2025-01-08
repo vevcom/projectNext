@@ -8,7 +8,6 @@ import { readSpecialCmsLinkAction } from '@/actions/cms/links/read'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { readSpecialEventTagAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import { bindParams } from '@/actions/bindParams'
 import Link from 'next/link'
 
 export default async function CareerLandingPage() {
@@ -16,8 +15,8 @@ export default async function CareerLandingPage() {
     const jobAdImageRes = await readSpecialImageAction('ENGINEER')
     const eventImageRes = await readSpecialImageAction('FAIR')
     const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
-    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
-    const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
+    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ special: 'CAREER_LINK_TO_CONTACTOR' })
+    const companyPresentationEventTagRes = await readSpecialEventTagAction({ special: 'COMPANY_PRESENTATION' })
 
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null

@@ -9,7 +9,6 @@ import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
 import { JobTypeConfig } from '@/services/career/jobAds/ConfigVars'
 import { Session } from '@/auth/Session'
-import { bindParams } from '@/actions/bindParams'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -33,11 +32,7 @@ export default async function JobAd({ params }: PropTypes) {
     const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
     const name = decodeURIComponent(params.orderAndName[1])
     const session = await Session.fromNextAuth()
-    const jobAdRes = await readJobAdAction({
-        params: {
-            idOrName: { articleName: name, order },
-        },
-    })
+    const jobAdRes = await readJobAdAction({ idOrName: { articleName: name, order } })
     if (!jobAdRes.success) {
         if (jobAdRes.errorCode === 'NOT FOUND') notFound()
         throw new Error('Failed to read jobAd')

@@ -184,8 +184,8 @@ export function ServiceMethod<
     const expectedArgsArePresent = (
         args: ServiceMethodExecuteArgsUnsafe
     ): args is ServiceMethodExecuteArgs<ParamsSchema, DataValidation> => {
-        const paramsMatch = Boolean(args.params) && Boolean(config.paramsSchema)
-        const dataMatches = Boolean(args.data) && Boolean(config.dataValidation)
+        const paramsMatch = Boolean(args.params) === Boolean(config.paramsSchema)
+        const dataMatches = Boolean(args.data) === Boolean(config.dataValidation)
         return paramsMatch && dataMatches
     }
 

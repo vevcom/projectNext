@@ -6,7 +6,6 @@ import { DestroyInterestGroupAuther, UpdateInterestGroupAuther } from '@/service
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
 import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
-import { bindParams } from '@/actions/bindParams'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
 
@@ -35,7 +34,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}
-                                            action={bindParams(updateInterestGroupAction, ({ id: interestGroup.id }))}
+                                            action={updateInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
                                             submitText="Endre"
                                         >
                                             <TextInput
@@ -57,7 +56,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                     <Form
                                         refreshOnSuccess
                                         closePopUpOnSuccess={PopUpKey}
-                                        action={bindParams(destroyInterestGroupAction, ({ id: interestGroup.id }))}
+                                        action={destroyInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{

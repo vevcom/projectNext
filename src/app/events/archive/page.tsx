@@ -6,7 +6,6 @@ import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
 import { Session } from '@/auth/Session'
-import { bindParams } from '@/actions/bindParams'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 

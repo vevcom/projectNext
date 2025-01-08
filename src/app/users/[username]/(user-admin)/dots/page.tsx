@@ -1,5 +1,4 @@
 import styles from './page.module.scss'
-import { bindParams } from '@/actions/bindParams'
 
 import { readDotWrappersForUserAction } from '@/actions/dots/read'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -9,7 +8,7 @@ import Date from '@/components/Date/Date'
 export default async function UserDotAdmin(params: PropTypes) {
     const { profile } = await getProfileForAdmin(params, 'dots')
     const dotWrappers = unwrapActionReturn(
-        await readDotWrappersForUserAction({ params: { userId: profile.user.id } })
+        await readDotWrappersForUserAction({ userId: profile.user.id })
     )
 
     return (
