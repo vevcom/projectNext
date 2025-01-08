@@ -19,6 +19,8 @@ export const baseImageValidation = new ValidationBase({
         name: z.string().optional(),
         alt: z.string(),
         files: zfd.repeatable(z.array(z.instanceof(File))),
+        licenseId: z.number().optional(),
+        credit: z.string().optional(),
     },
     details: {
         file: imageFileSchema,
@@ -31,17 +33,19 @@ export const baseImageValidation = new ValidationBase({
             files => files.every(file => allowedExtImageUpload.includes(file.type.split('/')[1])),
             `File type must be one of ${allowedExtImageUpload.join(', ')}`
         ),
+        licenseId: z.number().optional(),
+        credit: z.string().optional(),
     }
 })
 
 export const createImageValidation = baseImageValidation.createValidation({
-    keys: ['name', 'alt', 'file'],
+    keys: ['name', 'alt', 'file', 'licenseId', 'credit'],
     transformer: data => data
 })
 export type CreateImageTypes = ValidationTypes<typeof createImageValidation>
 
 export const createImagesValidation = baseImageValidation.createValidation({
-    keys: ['files'],
+    keys: ['files', 'credit', 'licenseId'],
     transformer: data => data,
     refiner: {
         fcn: data => data.files.length <= maxNumberOfImagesInOneBatch && data.files.length > 0,
@@ -51,7 +55,7 @@ export const createImagesValidation = baseImageValidation.createValidation({
 export type CreateImagesTypes = ValidationTypes<typeof createImagesValidation>
 
 export const updateImageValidation = baseImageValidation.createValidation({
-    keys: ['name', 'alt'],
+    keys: ['name', 'alt', 'credit', 'licenseId'],
     transformer: data => data
 })
 export type UpdateImageTypes = ValidationTypes<typeof updateImageValidation>

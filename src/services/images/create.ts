@@ -41,6 +41,8 @@ export const create = ServiceMethodHandler({
             data: {
                 name: meta.name,
                 alt: meta.alt,
+                license: meta.licenseId ? { connect: { id: meta.licenseId } } : undefined,
+                credit: meta.credit,
                 fsLocationOriginal,
                 fsLocationSmallSize,
                 fsLocationMediumSize,
@@ -73,7 +75,7 @@ export const createMany = ServiceMethodHandler({
             const name = useFileName ? file.name.split('.')[0] : undefined
             await create.client(prisma).execute({
                 params: { collectionId },
-                data: { file, name, alt: file.name.split('.')[0] },
+                data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
                 session
             })
         }

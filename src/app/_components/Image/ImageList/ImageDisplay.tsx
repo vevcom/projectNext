@@ -220,6 +220,7 @@ export default function ImageDisplay() {
                             >
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
                                 <TextInput name="alt" label="alt" defaultValue={image.alt} />
+                                <TextInput name="credit" label="kreditert" defaultValue={image.credit || ''} />
                             </Form>
                             <Form
                                 className={styles.deleteImage}
