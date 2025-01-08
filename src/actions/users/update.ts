@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail, updateUser } from '@/services/users/update'
@@ -16,7 +16,7 @@ import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { RegisterUserTypes } from '@/services/users/validation'
 
-export const updateUserAction = Action(updateUser)
+export const updateUserAction = action(updateUser)
 
 export async function registerNewEmailAction(rawdata: FormData): Promise<ActionReturn<RegisterNewEmailType>> {
     const { user, authorized, status } = await getUser({

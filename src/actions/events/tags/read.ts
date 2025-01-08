@@ -1,7 +1,7 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { readAllEventTags, readEventTag, readSpecialEventTag } from '@/services/events/tags/read'
 
-export const readEventTagsAction = Action(readAllEventTags)
-export const readSpecialEventTagAction = Action(readSpecialEventTag)
-export const readEventTagAction = Action(readEventTag)
+export const readEventTagsAction = action(readAllEventTags)
+export const readSpecialEventTagAction = action(readSpecialEventTag)
+export const readEventTagAction = action(readEventTag)

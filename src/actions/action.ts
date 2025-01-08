@@ -9,7 +9,7 @@ import type {
     ServiceMethodParamsDataUnsafe,
     ServiceMethodReturn,
     Validation
-} from '@/services/ServiceMethodTypes'
+} from '@/services/ServiceMethod'
 import type { z } from 'zod'
 
 // TODO: Find better names for these types.
@@ -32,11 +32,11 @@ export type ActionType<
 
 /**
  * Turn a service method into suitable function for an action.
- * 
+ *
  * @param serviceMethod - The service method to create an action for.
  * @returns - A function that takes in data (which may be FormData) and/or/nor parameters and calls the service method.
  */
-export function Action<
+export function action<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataValidation extends Validation<unknown, unknown> | undefined = undefined,

@@ -1,6 +1,6 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { createJobAd } from '@/services/career/jobAds/create'
 
-export const createJobAdAction = Action(createJobAd)
+export const createJobAdAction = action(createJobAd)
 

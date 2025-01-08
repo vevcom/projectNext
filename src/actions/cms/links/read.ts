@@ -1,6 +1,6 @@
 'use server'
 
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { readSpecialCmsLink } from '@/services/cms/links/read'
 
-export const readSpecialCmsLinkAction = Action(readSpecialCmsLink)
+export const readSpecialCmsLinkAction = action(readSpecialCmsLink)

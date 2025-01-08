@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { createDot } from '@/services/dots/create'
 
-export const createDotAction = Action(createDot)
+export const createDotAction = action(createDot)

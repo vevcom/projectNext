@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { updateInterestGroup } from '@/services/groups/interestGroups/update'
 
-export const updateInterestGroupAction = Action(updateInterestGroup)
+export const updateInterestGroupAction = action(updateInterestGroup)

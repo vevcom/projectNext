@@ -1,7 +1,7 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
 import { ServerError, Smorekopp } from '@/services/error'
-import type { ServiceMethodReturn, Validation } from '@/services/ServiceMethodTypes'
+import type { ServiceMethodReturn, Validation } from '@/services/ServiceMethod'
 import type { ErrorCode } from '@/services/error'
 import type { SessionNoUser } from '@/auth/Session'
 import type { z } from 'zod'

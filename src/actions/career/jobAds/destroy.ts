@@ -1,6 +1,6 @@
 'use server'
 
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { destroyJobAd } from '@/services/career/jobAds/destroy'
 
-export const destroyJobAdAction = Action(destroyJobAd)
+export const destroyJobAdAction = action(destroyJobAd)

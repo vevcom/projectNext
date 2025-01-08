@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
+import { action } from '@/actions/action'
 import { createUser } from '@/services/users/create'
 
 /**
@@ -7,4 +7,4 @@ import { createUser } from '@/services/users/create'
  * @param rawdata - The user to create
  * @returns - The created user
  */
-export const createUserAction = Action(createUser)
+export const createUserAction = action(createUser)
