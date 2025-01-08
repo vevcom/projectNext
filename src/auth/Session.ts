@@ -82,7 +82,10 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const defaultPermissions = await readDefaultPermissions()
         if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
         const { id, key } = decodeApiKey(keyAndIdEncoded)
-        const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted(id)
+        const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted.newClient().execute({
+            session: null,
+            params: id
+        })
         if (!active) throw new ServerError('INVALID API KEY', 'Api nøkkelen har utløpt')
 
         const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)

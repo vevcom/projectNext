@@ -1,18 +1,28 @@
 import 'server-only'
-import { prismaCall } from '@/services/prismaCall'
+import { adminApiKeyAuther } from './authers'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { z } from 'zod'
 
-export async function destroyApiKey(id: number): Promise<void> {
-    const apiKey = await prismaCall(() => prisma.apiKey.findUniqueOrThrow({
-        where: { id },
-        select: { active: true }
-    }))
-    if (apiKey.active) {
-        throw new ServerError('BAD PARAMETERS', 'Du kan ikke slette en aktiv nøkkel - deaktiver den først')
+export const destroyApiKey = ServiceMethod({
+    auther: adminApiKeyAuther,
+    dynamicAuthFields: () => ({}),
+    paramsSchema: z.number(),
+    opensTransaction: true,
+    method: async ({ prisma, params: id }): Promise<void> => {
+        await prisma.$transaction(async (tx) => {
+            const apiKey = await tx.apiKey.findUniqueOrThrow({
+                where: { id },
+                select: { active: true }
+            })
+
+            if (apiKey.active) {
+                throw new ServerError('BAD PARAMETERS', 'Du kan ikke slette en aktiv nøkkel - deaktiver den først')
+            }
+
+            await tx.apiKey.delete({
+                where: { id }
+            })
+        })
     }
-
-    await prisma.apiKey.delete({
-        where: { id }
-    })
-}
+})
