@@ -19,7 +19,7 @@ export const baseImageValidation = new ValidationBase({
         name: z.string().optional(),
         alt: z.string(),
         files: zfd.repeatable(z.array(z.instanceof(File))),
-        licenseId: z.number().optional(),
+        licenseId: z.string().optional(),
         credit: z.string().optional(),
     },
     details: {
@@ -40,13 +40,13 @@ export const baseImageValidation = new ValidationBase({
 
 export const createImageValidation = baseImageValidation.createValidation({
     keys: ['name', 'alt', 'file', 'licenseId', 'credit'],
-    transformer: data => data
+    transformer: transformer,
 })
 export type CreateImageTypes = ValidationTypes<typeof createImageValidation>
 
 export const createImagesValidation = baseImageValidation.createValidation({
     keys: ['files', 'credit', 'licenseId'],
-    transformer: data => data,
+    transformer: transformer,
     refiner: {
         fcn: data => data.files.length <= maxNumberOfImagesInOneBatch && data.files.length > 0,
         message: `Du kan bare laste opp mellom 1 og ${maxNumberOfImagesInOneBatch} bilder av gangen`
@@ -56,6 +56,14 @@ export type CreateImagesTypes = ValidationTypes<typeof createImagesValidation>
 
 export const updateImageValidation = baseImageValidation.createValidation({
     keys: ['name', 'alt', 'credit', 'licenseId'],
-    transformer: data => data
+    transformer: transformer,
 })
 export type UpdateImageTypes = ValidationTypes<typeof updateImageValidation>
+
+function transformer<Data>(data: Data & { licenseId?: string }) {
+    if (data.licenseId === undefined) return { ...data, licenseId: undefined }
+    return {
+        ...data,
+        licenseId: data.licenseId === 'NULL' ? undefined : parseInt(data.licenseId, 10)
+    }
+}
