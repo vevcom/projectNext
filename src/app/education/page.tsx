@@ -4,11 +4,15 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
 
 export default async function education() {
-    const hovedbyggningenRes = await readSpecialImageAction('HOVEDBYGGNINGEN')
-    const R1Res = await readSpecialImageAction('BOOKS')
+    const hovedbyggningenRes = await readSpecialImageAction.bind(null, {
+        special: 'HOVEDBYGGNINGEN'
+    })()
+    const BooksRes = await readSpecialImageAction.bind(null, {
+        special: 'BOOKS'
+    })()
 
     const hovedbyggningen = hovedbyggningenRes.success ? hovedbyggningenRes.data : null
-    const R1 = R1Res.success ? R1Res.data : null
+    const Books = BooksRes.success ? BooksRes.data : null
 
     return (
         <PageWrapper title="Fagveven">
@@ -21,7 +25,7 @@ export default async function education() {
                 <ImageCard image={hovedbyggningen} title="Skoler" href="/education/schools">
                     <p>På fagveven kan du finne mange ulike skoler som man kan lese om</p>
                 </ImageCard>
-                <ImageCard image={R1} title="Emner" href="/education/courses">
+                <ImageCard image={Books} title="Emner" href="/education/courses">
                     <p>Her kan du lese om ulike emner som du kan ta både på NTNU og på utveksling</p>
                 </ImageCard>
             </div>

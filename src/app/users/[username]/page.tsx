@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readSpecialImage } from '@/services/images/read'
+import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
@@ -41,7 +41,12 @@ export default async function User({ params }: PropTypes) {
     // TODO: Change to the correct order
     const order = 105
 
-    const profileImage = profile.user.image ? profile.user.image : await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+    const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
+        null, { special: 'DEFAULT_PROFILE_IMAGE' }
+    )().then(res => {
+        if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
+        return res.data
+    })
 
     const { authorized: canAdministrate } = UserProfileUpdateAuther.dynamicFields(
         { username: profile.user.username }

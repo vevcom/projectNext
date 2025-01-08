@@ -3,7 +3,6 @@ import { readSpecialImageCollection } from './collections/read'
 import { createImagesValidation, createImageValidation } from './validation'
 import { allowedExtImageUpload, avifOptions, imageSizes } from './ConfigVars'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { prismaCall } from '@/services/prismaCall'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
 import sharp from 'sharp'
@@ -38,7 +37,7 @@ export const create = ServiceMethodHandler({
         const fsLocationLargeSize = largeSize.fsLocation
         const fsLocationOriginal = original.fsLocation
         const extOriginal = original.ext
-        return await prismaCall(() => prisma.image.create({
+        return await prisma.image.create({
             data: {
                 name: meta.name,
                 alt: meta.alt,
@@ -53,7 +52,7 @@ export const create = ServiceMethodHandler({
                     }
                 }
             }
-        }))
+        })
     }
 })
 
@@ -93,7 +92,7 @@ export const createBad = ServiceMethodHandler({
     handler: async (prisma, { name, special }: { name: string, special: SpecialImage }) => {
         const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
         logger.warn('creating a bad image, this should only happen in extreme cases.')
-        return await prismaCall(() => prisma.image.create({
+        return await prisma.image.create({
             data: {
                 name,
                 special,
@@ -109,7 +108,7 @@ export const createBad = ServiceMethodHandler({
                     }
                 }
             },
-        }))
+        })
     }
 })
 

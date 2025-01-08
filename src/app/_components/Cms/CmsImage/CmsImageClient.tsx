@@ -30,7 +30,7 @@ export default function CmsImageClient({
 
     useEffect(() => {
         if (image) return
-        readSpecialImageAction('DEFAULT_IMAGE').then(res => {
+        readSpecialImageAction.bind(null, { special: 'DEFAULT_IMAGE' })().then(res => {
             if (!res.success) return setFallback(true)
             return setCmsImage(res.data)
         })
