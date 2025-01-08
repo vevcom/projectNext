@@ -44,7 +44,7 @@ export const createImagesValidation = baseImageValidation.createValidation({
     keys: ['files'],
     transformer: data => data,
     refiner: {
-        fcn: data => data.files.length < maxNumberOfImagesInOneBatch && data.files.length > 0,
+        fcn: data => data.files.length <= maxNumberOfImagesInOneBatch && data.files.length > 0,
         message: `Du kan bare laste opp mellom 1 og ${maxNumberOfImagesInOneBatch} bilder av gangen`
     }
 })

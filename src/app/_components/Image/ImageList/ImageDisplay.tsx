@@ -15,9 +15,9 @@ import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
+import Link from 'next/link'
 import type { ImageSizeOptions } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
-import Link from 'next/link'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',
@@ -133,7 +133,6 @@ export default function ImageDisplay() {
     }
 
     if (!image) return <></>
-    console.log(image)
 
     return (
         <div className={styles.ImageDisplay}>
@@ -171,7 +170,18 @@ export default function ImageDisplay() {
                 <i>Alt-tekst: {image.alt}</i>
                 <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
                 <i>Kreditert: {image.credit ?? 'ingen'}</i>
-                <i>Lisens: {image.licenseLink ? <Link href={image.licenseLink} target="_blank" referrerPolicy="no-referrer">{image.licenseName}</Link> : 'ingen'}</i>
+                <i>Lisens: {
+                    image.licenseLink ?
+                        <Link
+                            href={image.licenseLink}
+                            target="_blank"
+                            referrerPolicy="no-referrer"
+                        >
+                            {image.licenseName}
+                        </Link>
+                        : 'ingen'
+                }
+                </i>
                 {
                     pagingContext.loading ? (
                         <div className={styles.loading}></div>

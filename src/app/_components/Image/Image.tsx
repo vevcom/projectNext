@@ -1,9 +1,9 @@
 import styles from './Image.module.scss'
-import type { ImageProps } from 'next/image'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCopyright } from '@fortawesome/free-solid-svg-icons'
 import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopyright } from '@fortawesome/free-solid-svg-icons';
+import type { ImageProps } from 'next/image'
 
 export type ImageSizeOptions = ImageSize | 'ORIGINAL'
 
@@ -35,7 +35,8 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
  * @param creditPlacement - (optional) the placement of the credit
  * @param hideCredit - (optional) if true, the credit will be hidden
  * @param hideCopyRight - (optional) if true, the copy right will be hidden
- * @param disableLinkingToLicense - (optional) if true, the license will not be linked rather the name will be disblayed alone
+ * @param disableLinkingToLicense - (optional) if true, the license will not be linked rather
+ * the name will be disblayed alone
  * @param props - the rest of the props to pass to the img tag
  */
 export default function Image({

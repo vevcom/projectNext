@@ -22,7 +22,7 @@ export default function ImageUploader({ collectionId, ...formProps }: PropTypes)
         <Form
             title="last opp bilde"
             submitText="last opp"
-            action={createImageAction.bind(null, collectionId)}
+            action={createImageAction.bind(null, { collectionId })}
             closePopUpOnSuccess="UploadImages"
             {...formProps}
         >
