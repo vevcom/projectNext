@@ -6,11 +6,11 @@ import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
+import TextInput from '@/app/_components/UI/TextInput'
+import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
-import TextInput from '@/app/_components/UI/TextInput'
-import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
 
 type PropTypes = {
     collectionId: number
@@ -41,8 +41,8 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         const progressIncrement = 1 / batches.length
         for (const batch of batches) {
             const formData = new FormData()
-            credit && formData.append('credit', credit)
-            licenseId && formData.append('licenseId', licenseId)
+            if (credit) formData.append('credit', credit)
+            if (licenseId) formData.append('licenseId', licenseId)
             batch.forEach(file => {
                 formData.append('files', file.file)
             })

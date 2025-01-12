@@ -40,13 +40,13 @@ export const baseImageValidation = new ValidationBase({
 
 export const createImageValidation = baseImageValidation.createValidation({
     keys: ['name', 'alt', 'file', 'licenseId', 'credit'],
-    transformer: transformer,
+    transformer,
 })
 export type CreateImageTypes = ValidationTypes<typeof createImageValidation>
 
 export const createImagesValidation = baseImageValidation.createValidation({
     keys: ['files', 'credit', 'licenseId'],
-    transformer: transformer,
+    transformer,
     refiner: {
         fcn: data => data.files.length <= maxNumberOfImagesInOneBatch && data.files.length > 0,
         message: `Du kan bare laste opp mellom 1 og ${maxNumberOfImagesInOneBatch} bilder av gangen`
@@ -56,7 +56,7 @@ export type CreateImagesTypes = ValidationTypes<typeof createImagesValidation>
 
 export const updateImageValidation = baseImageValidation.createValidation({
     keys: ['name', 'alt', 'credit', 'licenseId'],
-    transformer: transformer,
+    transformer,
 })
 export type UpdateImageTypes = ValidationTypes<typeof updateImageValidation>
 

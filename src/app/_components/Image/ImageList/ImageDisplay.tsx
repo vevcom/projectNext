@@ -11,6 +11,7 @@ import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -221,6 +222,7 @@ export default function ImageDisplay() {
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
                                 <TextInput name="alt" label="alt" defaultValue={image.alt} />
                                 <TextInput name="credit" label="kreditert" defaultValue={image.credit || ''} />
+                                <LicenseChooser defaultLicenseName={image.licenseName} />
                             </Form>
                             <Form
                                 className={styles.deleteImage}
