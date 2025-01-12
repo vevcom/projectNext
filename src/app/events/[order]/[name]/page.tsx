@@ -11,6 +11,7 @@ import { destroyEventAction } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { bindParams } from '@/actions/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
@@ -55,7 +56,7 @@ export default async function Event({ params }: PropTypes) {
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
                         <Form
-                            action={destroyEventAction.bind(null, ({ id: event.id }))}
+                            action={bindParams(destroyEventAction, { id: event.id })}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}

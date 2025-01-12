@@ -9,6 +9,7 @@ import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { destroyEventTagAction } from '@/actions/events/tags/destroy'
+import { bindParams } from '@/actions/bind'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
 
@@ -79,7 +80,7 @@ export default function EventTagsAdmin({
                                         {canUpdate && <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess
-                                                action={updateEventTagAction.bind(null, ({ id: tag.id }))}
+                                                action={bindParams(updateEventTagAction, ({ id: tag.id }))}
                                                 submitText="Oppdater"
                                             >
                                                 <TextInput
@@ -107,7 +108,7 @@ export default function EventTagsAdmin({
                                         {canDestroy && <span className={styles.destroy}>
                                             <Form
                                                 refreshOnSuccess
-                                                action={destroyEventTagAction.bind(null, ({ id: tag.id }))}
+                                                action={bindParams(destroyEventTagAction, ({ id: tag.id }))}
                                                 submitColor="red"
                                                 confirmation={{
                                                     confirm: true,

@@ -1,6 +1,5 @@
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
-import { Admission } from '@prisma/client'
 import type { ValidationTypes } from '@/services/Validation'
 
 export const baseAdmissionTrialValidation = new ValidationBase({

@@ -1,6 +1,7 @@
 'use client'
 
 import styles from './registration.module.scss'
+import { bindParams } from '@/actions/bind'
 import { createAdmissionTrialAction } from '@/actions/admission/create'
 import Form from '@/components/Form/Form'
 import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
@@ -42,7 +43,7 @@ export default function RegisterAdmissiontrial({
         <h4>Registrer manuelt</h4>
         <Form
             submitText="Registrer"
-            action={createAdmissionTrialAction.bind(null, { admission })}
+            action={bindParams(createAdmissionTrialAction, { admission })}
         >
             <TextInput name="userId" label="userId" />
         </Form>

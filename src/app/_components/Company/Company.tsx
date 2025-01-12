@@ -8,6 +8,7 @@ import { DestroyCompanyAuther, UpdateCompanyAuther } from '@/services/career/com
 import Form from '@/components/Form/Form'
 import { updateComanyAction } from '@/actions/career/companies/update'
 import { destroyCompanyAction } from '@/actions/career/companies/destroy'
+import { bindParams } from '@/actions/bind'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
 
@@ -64,7 +65,7 @@ export default function Company({
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
-                                action={updateComanyAction.bind(null, { id: company.id })}
+                                action={bindParams(updateComanyAction, { id: company.id })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Lagre"
@@ -73,7 +74,7 @@ export default function Company({
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
                             <Form
-                                action={destroyCompanyAction.bind(null, { id: company.id })}
+                                action={bindParams(destroyCompanyAction, { id: company.id })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Slett"

@@ -1,12 +1,12 @@
 import 'server-only'
 import { createAdmissionTrialValidation } from './validation'
 import { readUserAdmissionTrials } from './read'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { userFilterSelection } from '@/services/users/ConfigVars'
 import { Admission } from '@prisma/client'
-import { ServiceMethod } from '../ServiceMethod'
-import { ExpandedAdmissionTrail } from './Types'
 import { z } from 'zod'
+import type { ExpandedAdmissionTrail } from './Types'
 
 export const createAdmissionTrial = ServiceMethod({
     auther: 'NO_AUTH',
@@ -15,7 +15,6 @@ export const createAdmissionTrial = ServiceMethod({
     }),
     dataValidation: createAdmissionTrialValidation,
     method: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
-
         const results = await prisma.admissionTrial.create({
             data: {
                 user: {
@@ -38,7 +37,7 @@ export const createAdmissionTrial = ServiceMethod({
         })
 
         // check if user has taken all admissions
-        const userTrials = await readUserAdmissionTrials.newClient().execute({ 
+        const userTrials = await readUserAdmissionTrials.newClient().execute({
             session,
             params: {
                 userId: data.userId

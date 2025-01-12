@@ -1,19 +1,18 @@
 import 'server-only'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { prismaCall } from '@/services/prismaCall'
-import type { AdmissionTrial } from '@prisma/client'
-import { ServiceMethod } from '../ServiceMethod'
 import { z } from 'zod'
+import type { AdmissionTrial } from '@prisma/client'
 
 export const readUserAdmissionTrials = ServiceMethod({
     auther: 'NO_AUTH',
     paramsSchema: z.object({
         userId: z.number(),
     }),
-    method: async ({ prisma, params: { userId } }): Promise<AdmissionTrial[]>  => {
-        return await prismaCall(() => prisma.admissionTrial.findMany({
+    method: async ({ prisma, params: { userId } }): Promise<AdmissionTrial[]> =>
+        await prismaCall(() => prisma.admissionTrial.findMany({
             where: {
                 userId,
             }
-        }))
-    },
+        })),
 })
