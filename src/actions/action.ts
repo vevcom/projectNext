@@ -51,6 +51,13 @@ export function action<
     const actionUnsafe = async (params?: unknown, data?: unknown) => {
         const session = await Session.fromNextAuth()
 
+        // Treate empty form data as undefined. This is required because the form component will always send a FormData,
+        // even if no data is being sent.
+        if (data instanceof FormData && data.entries().next().done) {
+            data = undefined
+        }
+
+        // Validate data if it's present.
         if (data) {
             if (!serviceMethod.dataValidation) {
                 throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method has no validation.')
