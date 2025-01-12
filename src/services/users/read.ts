@@ -1,5 +1,5 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
-import { ReadUserAuther } from './Authers'
+import { readUserAuther } from './authers'
 import { readSpecialImage } from '@/services/images/read'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
@@ -164,7 +164,7 @@ export const readUserProfile = ServiceMethod({
     paramsSchema: z.object({
         username: z.string(),
     }),
-    auther: ReadUserAuther,
+    auther: readUserAuther,
     dynamicAuthFields: ({ params }) => ({ username: params.username }),
     method: async ({ prisma: prisma_, params }) => {
         const user = await prisma_.user.findUniqueOrThrow({

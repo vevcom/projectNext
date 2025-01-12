@@ -1,5 +1,5 @@
 import 'server-only'
-import { DestroyCompanyAuther } from './Authers'
+import { destroyCompanyAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
 
@@ -7,7 +7,7 @@ export const destroyCompany = ServiceMethod({
     paramsSchema: z.object({
         id: z.number()
     }),
-    auther: DestroyCompanyAuther,
+    auther: destroyCompanyAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { id } }) => {
         await prisma.company.delete({

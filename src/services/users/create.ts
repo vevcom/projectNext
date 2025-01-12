@@ -1,5 +1,5 @@
 import 'server-only'
-import { CreateUserAuther } from './Authers'
+import { createUserAuther } from './authers'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
@@ -8,7 +8,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createUser = ServiceMethod({
     dataValidation: createUserValidation,
-    auther: CreateUserAuther,
+    auther: createUserAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, data }) => {
         const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')

@@ -1,6 +1,6 @@
 import 'server-only'
 import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
-import { ReadJobAdAuther } from './Authers'
+import { readJobAdAuther } from './authers'
 import { CompanyRelationIncluder } from '@/career/companies/ConfigVars'
 import { ServerError } from '@/services/error'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -25,7 +25,7 @@ export const readJobAd = ServiceMethod({
             }),
         ]),
     }),
-    auther: ReadJobAdAuther,
+    auther: readJobAdAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { idOrName } }): Promise<ExpandedJobAd> => {
         const jobAd = await prisma.jobAd.findUnique({
@@ -54,7 +54,7 @@ export const readJobAd = ServiceMethod({
  * @returns SimpleJobAd[] - all jobAds with coverImage
  */
 export const readActiveJobAds = ServiceMethod({
-    auther: ReadJobAdAuther,
+    auther: readJobAdAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
@@ -91,7 +91,7 @@ export const readInactiveJobAdsPage = ServiceMethod({
             type: z.nativeEnum(JobType).nullable(),
         }),
     ), // Created from ReadPageInput<number, JobAdInactiveCursor, JobAdInactiveDetails>
-    auther: ReadJobAdAuther,
+    auther: readJobAdAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({

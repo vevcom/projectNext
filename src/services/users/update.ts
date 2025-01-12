@@ -7,7 +7,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
-import { UpdateUserAuther } from './Authers'
+import { updateUserAuther } from './authers'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -24,7 +24,7 @@ import type { RegisterNewEmailType, UserFiltered } from './Types'
 export const updateUser = ServiceMethod({
     paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
     dataValidation: updateUserValidation,
-    auther: UpdateUserAuther,
+    auther: updateUserAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
         where: params,

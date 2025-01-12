@@ -1,5 +1,5 @@
 import 'server-only'
-import { DestroyJobAdAuther } from './Authers'
+import { destroyJobAdAuther } from './authers'
 import { destroyArticle } from '@/services/cms/articles/destroy'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
@@ -14,7 +14,7 @@ export const destroyJobAd = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: DestroyJobAdAuther,
+    auther: destroyJobAdAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { id } }) => {
         const jobAd = await prisma.jobAd.delete({

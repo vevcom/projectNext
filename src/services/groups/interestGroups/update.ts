@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateInterestGroupValidation } from './validation'
-import { UpdateInterestGroupAuther } from './Auther'
+import { updateInterestGroupAuther } from './Auther'
 import { readInterestGroup } from './read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
@@ -10,7 +10,7 @@ export const updateInterestGroup = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateInterestGroupValidation,
-    auther: UpdateInterestGroupAuther,
+    auther: updateInterestGroupAuther,
     dynamicAuthFields: async ({ params }) => ({
         groupId: (
             await readInterestGroup.newClient().execute({

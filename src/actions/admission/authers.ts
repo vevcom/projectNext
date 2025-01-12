@@ -1,5 +1,5 @@
 import { RequirePermissioAndUser } from '@/auth/auther/RequirePermissionAndUser'
 
-export const CreateAdmissionTrialAuther = RequirePermissioAndUser.staticFields({
+export const createAdmissionTrialAuther = RequirePermissioAndUser.staticFields({
     permission: 'ADMISSION_TRIAL_CREATE',
 })

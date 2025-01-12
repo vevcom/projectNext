@@ -1,11 +1,11 @@
 import 'server-only'
 import { createEventTagValidation } from './validation'
-import { CreateEventTagAuther } from './Authers'
+import { createEventTagAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createEventTag = ServiceMethod({
     dataValidation: createEventTagValidation,
-    auther: CreateEventTagAuther,
+    auther: createEventTagAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, data: { color, ...data } }) => {
         const colorR = parseInt(color.slice(1, 3), 16)

@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateEventTagValidation } from './validation'
-import { UpdateEventTagAuther } from './Authers'
+import { updateEventTagAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
 
@@ -9,7 +9,7 @@ export const updateEventTag = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateEventTagValidation,
-    auther: UpdateEventTagAuther,
+    auther: updateEventTagAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { id }, data: { color, ...data } }) => {
         const colorR = color ? parseInt(color.slice(1, 3), 16) : undefined

@@ -1,6 +1,6 @@
 import 'server-only'
 import { createEventValidation } from './validation'
-import { CreateEventAuther } from './Authers'
+import { createEventAuther } from './authers'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid'
 
 export const createEvent = ServiceMethod({
     dataValidation: createEventValidation,
-    auther: CreateEventAuther,
+    auther: createEventAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, data }) => {
         const cmsParagraph = await createCmsParagraph({ name: uuid() })

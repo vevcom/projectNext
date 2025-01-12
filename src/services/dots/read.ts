@@ -1,6 +1,6 @@
 import 'server-only'
 import { DotWrapperWithDotsIncluder } from './ConfigVars'
-import { ReadDotAuther, ReadDotForUserAuther } from './Authers'
+import { readDotAuther, readDotForUserAuther } from './authers'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -12,7 +12,7 @@ import { z } from 'zod'
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
 export const readDotsForUser = ServiceMethod({
-    auther: ReadDotForUserAuther,
+    auther: readDotForUserAuther,
     dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
@@ -34,7 +34,7 @@ export const readDotsForUser = ServiceMethod({
 })
 
 export const readDotWrappersForUser = ServiceMethod({
-    auther: ReadDotForUserAuther,
+    auther: readDotForUserAuther,
     dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
@@ -59,7 +59,7 @@ export const readDotWrappersForUser = ServiceMethod({
 })
 
 export const readDotsPage = ServiceMethod({
-    auther: ReadDotAuther,
+    auther: readDotAuther,
     dynamicAuthFields: () => ({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),

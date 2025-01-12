@@ -4,7 +4,7 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
-import { DestroyCompanyAuther, UpdateCompanyAuther } from '@/services/career/companies/Authers'
+import { destroyCompanyAuther, updateCompanyAuther } from '@/services/career/companies/authers'
 import Form from '@/components/Form/Form'
 import { updateComanyAction } from '@/actions/career/companies/update'
 import { destroyCompanyAction } from '@/actions/career/companies/destroy'
@@ -39,8 +39,8 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = UpdateCompanyAuther.dynamicFields({}).auth(session)
-    const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
+    const canUpdate = updateCompanyAuther.dynamicFields({}).auth(session)
+    const canDestroy = destroyCompanyAuther.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             { asClient ?

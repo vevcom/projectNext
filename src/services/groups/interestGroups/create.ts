@@ -1,12 +1,12 @@
 import 'server-only'
 import { createInterestGroupValidation } from './validation'
-import { CreateInterestGroupAuther } from './Auther'
+import { createInterestGroupAuther } from './Auther'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createInterestGroup = ServiceMethod({
     dataValidation: createInterestGroupValidation,
-    auther: CreateInterestGroupAuther,
+    auther: createInterestGroupAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, data }) => {
         const { order } = await readCurrentOmegaOrder()

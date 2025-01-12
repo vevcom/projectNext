@@ -2,14 +2,14 @@ import 'server-only'
 import { DOT_BASE_DURATION } from './ConfigVars'
 import { createDotValidation } from './validation'
 // import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { CreateDotAuther } from './Authers'
+import { createDotAuther } from './authers'
 import { readDotsForUser } from './read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
 
 export const createDot = ServiceMethod({
     dataValidation: createDotValidation,
-    auther: CreateDotAuther,
+    auther: createDotAuther,
     dynamicAuthFields: ({ data }) => ({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),

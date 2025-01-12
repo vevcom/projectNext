@@ -1,5 +1,5 @@
 import 'server-only'
-import { DestroyEventTagAuther } from './Authers'
+import { destroyEventTagAuther } from './authers'
 import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
@@ -8,7 +8,7 @@ export const destroyEventTag = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: DestroyEventTagAuther,
+    auther: destroyEventTagAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => {
         const tag = await prisma.eventTag.findUniqueOrThrow({

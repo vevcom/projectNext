@@ -1,6 +1,6 @@
 import 'server-only'
 import { CompanyRelationIncluder } from './ConfigVars'
-import { ReadCompanyAuther } from './Authers'
+import { readCompanyAuther } from './authers'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -16,7 +16,7 @@ export const readCompanyPage = ServiceMethod({
             name: z.string().optional(),
         }),
     ), // Created from ReadPageInput<number, CompanyCursor, CompanyDetails>
-    auther: ReadCompanyAuther,
+    auther: readCompanyAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => await prisma.company.findMany({
         ...cursorPageingSelection(params.paging.page),
