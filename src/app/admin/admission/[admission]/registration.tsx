@@ -20,7 +20,7 @@ export default function RegisterAdmissiontrial({
         <OmegaIdReader
             publicKey={omegaIdPublicKey}
             successCallback={async (userId) => {
-                const results = await createAdmissionTrialAction(admission, userId)
+                const results = await createAdmissionTrialAction({ admission }, { userId })
 
                 let msg = results.success ?
                     `${results.data.user.firstname} ${results.data.user.lastname} er registrert` :
@@ -42,7 +42,7 @@ export default function RegisterAdmissiontrial({
         <h4>Registrer manuelt</h4>
         <Form
             submitText="Registrer"
-            action={createAdmissionTrialAction.bind(null, admission)}
+            action={createAdmissionTrialAction.bind(null, { admission })}
         >
             <TextInput name="userId" label="userId" />
         </Form>

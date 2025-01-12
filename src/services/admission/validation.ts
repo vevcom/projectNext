@@ -5,26 +5,16 @@ import type { ValidationTypes } from '@/services/Validation'
 
 export const baseAdmissionTrialValidation = new ValidationBase({
     type: {
-        admission: z.nativeEnum(Admission),
-        userId: z.number().or(z.string()),
-        registeredBy: z.number()
+        userId: z.coerce.number(),
     },
     details: {
-        admission: z.nativeEnum(Admission),
-        userId: z.number(),
-        registeredBy: z.number(),
+        userId: z.coerce.number(),
     }
 })
 
 export const createAdmissionTrialValidation = baseAdmissionTrialValidation.createValidation({
-    keys: [
-        'admission',
-        'userId',
-        'registeredBy',
-    ],
-    transformer: data => ({
-        ...data,
-        userId: Number(data.userId)
-    }),
+    keys: ['userId'],
+    transformer: data => data,
 })
+
 export type CreateAdmissionTrialType = ValidationTypes<typeof createAdmissionTrialValidation>
