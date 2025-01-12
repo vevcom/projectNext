@@ -3,28 +3,11 @@ import { Smorekopp } from './error'
 import { prismaCall } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
+import type { ExtractDetailedType, ValidationType, ValidationTypeUnknown } from './Validation'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { z } from 'zod'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
-
-// TODO: These three types should really be defined in Validation.ts or somewhere else, not here.
-export type Validation<GeneralData, DetailedData> = {
-    detailedValidate: (data: DetailedData | unknown) => DetailedData,
-    typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
-}
-
-export type TypeValidateReturn<
-    DetailedType
-> = {
-    success: true,
-    data: DetailedType,
-} | {
-    success: false,
-    error: z.ZodError,
-}
-
-export type ExtractDetailedType<V extends Validation<unknown, unknown>> = ReturnType<V['detailedValidate']>
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -47,7 +30,7 @@ export type PrismaPossibleTransaction<
  */
 export type ServiceMethodParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined,
+    DataValidation extends ValidationType<unknown, unknown> | undefined,
 > = (
     ParamsSchema extends undefined ? object : { params: z.infer<NonNullable<ParamsSchema>> }
 ) & (
@@ -66,7 +49,7 @@ export type ServiceMethodParamsDataUnsafe = {
 export type ServiceMethodArguments<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined,
+    DataValidation extends ValidationType<unknown, unknown> | undefined,
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
@@ -77,7 +60,7 @@ export type ServiceMethodArguments<
  */
 export type ServiceMethodExecuteArgs<
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined,
+    DataValidation extends ValidationTypeUnknown | undefined,
 > = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
@@ -100,7 +83,7 @@ export type ServiceMethodConfig<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined,
+    DataValidation extends ValidationTypeUnknown | undefined,
 > = ({
     paramsSchema?: ParamsSchema,
     dataValidation?: DataValidation,
@@ -127,11 +110,11 @@ export type ServiceMethodConfig<
  * TypeScript is smart enough to infer the behaviour of the return functons without the need to excplitly
  * type the return type of the ServiceMethod function, but it is done so for the sake of clarity.
  */
-export type ServiceMethodReturn<
+export type ServiceMethodType<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined,
+    DataValidation extends ValidationTypeUnknown | undefined,
 > = {
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
@@ -147,7 +130,7 @@ export type ServiceMethodReturn<
      */
     newClient: () => (
         ReturnType<
-            ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, DataValidation>['client']
+            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation>['client']
         >
     ),
     paramsSchema?: ParamsSchema,
@@ -174,10 +157,10 @@ export function ServiceMethod<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
+    DataValidation extends ValidationTypeUnknown | undefined = undefined,
 >(
     config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataValidation>,
-): ServiceMethodReturn<OpensTransaction, Return, ParamsSchema, DataValidation> {
+): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation> {
     // Simple utility function to check if the expected arguments are present.
     // I.e. if the params/data are present when they should be and vice versa.
     // This is needed to help typescript infer the correct types for the arguments.

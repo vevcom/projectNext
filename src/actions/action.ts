@@ -3,30 +3,27 @@ import { createZodActionError } from './error'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
+import type { ExtractDetailedType, ValidationTypeUnknown } from '@/services/Validation'
 import type { ActionReturn } from './Types'
-import type {
-    ExtractDetailedType,
-    ServiceMethodReturn,
-    Validation
-} from '@/services/ServiceMethod'
+import type { ServiceMethodType } from '@/services/ServiceMethod'
 import type { z } from 'zod'
 
 // This function is overloaded to allow for different combinations of parameters and data.
 
 export function action<Return>(
-    serviceMethod: ServiceMethodReturn<boolean, Return, undefined, undefined>
+    serviceMethod: ServiceMethodType<boolean, Return, undefined, undefined>
 ): () => Promise<ActionReturn<Return>>
 
 export function action<Return, ParamsSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, undefined>
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined>
 ): (params: z.infer<ParamsSchema>) => Promise<ActionReturn<Return>>
 
-export function action<Return, DataValidation extends Validation<unknown, unknown>>(
-    serviceMethod: ServiceMethodReturn<boolean, Return, undefined, DataValidation>
+export function action<Return, DataValidation extends ValidationTypeUnknown>(
+    serviceMethod: ServiceMethodType<boolean, Return, undefined, DataValidation>
 ): (data: ExtractDetailedType<DataValidation> | FormData) => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataValidation extends Validation<unknown, unknown>>(
-    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
+export function action<Return, ParamsSchema extends z.ZodTypeAny, DataValidation extends ValidationTypeUnknown>(
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>
 ): (params: z.infer<ParamsSchema>, data: ExtractDetailedType<DataValidation> | FormData) => Promise<ActionReturn<Return>>
 
 /**
@@ -38,9 +35,9 @@ export function action<Return, ParamsSchema extends z.ZodTypeAny, DataValidation
 export function action<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends Validation<unknown, unknown> | undefined = undefined,
+    DataValidation extends ValidationTypeUnknown | undefined = undefined,
 >(
-    serviceMethod: ServiceMethodReturn<boolean, Return, ParamsSchema, DataValidation>
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>
 ) {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service method will validate the parameter and data before it is used.
