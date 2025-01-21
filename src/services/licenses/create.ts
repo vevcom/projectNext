@@ -1,13 +1,11 @@
 import 'server-only'
-import { ServiceMethodHandler } from "@/services/ServiceMethodHandler"
 import { createLicenseValidation } from './validation'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 export const create = ServiceMethodHandler({
     withData: true,
     validation: createLicenseValidation,
-    handler: async (prisma, _, data) => {
-        return await prisma.license.create({
-            data,
-        })
-    },
+    handler: async (prisma, _, data) => await prisma.license.create({
+        data,
+    }),
 })

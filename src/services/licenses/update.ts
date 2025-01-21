@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateLicenseValidation } from './validation'
-import { ServiceMethodHandler } from '../ServiceMethodHandler'
+import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 
 export const update = ServiceMethodHandler({
     withData: true,

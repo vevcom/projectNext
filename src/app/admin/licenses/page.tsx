@@ -1,13 +1,13 @@
 import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readLicensesAction } from '@/actions/licenses/read'
-import Link from 'next/link'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import Form from '@/app/_components/Form/Form'
 import { destroyLicenseAction } from '@/actions/licenses/destroy'
 import { createLicenseAction } from '@/actions/licenses/create'
 import TextInput from '@/UI/TextInput'
 import { updateLicenseAction } from '@/actions/licenses/update'
+import Link from 'next/link'
 
 export default async function Licenses() {
     const licenses = unwrapActionReturn(await readLicensesAction.bind(null, {})())
@@ -36,37 +36,37 @@ export default async function Licenses() {
                                 </Link>
                             </td>
                             <td>
-                            <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
-                                <Form
-                                    action={updateLicenseAction.bind(null, { id: license.id })}
-                                    title='Endre lisens'
-                                    submitText='Endre'
-                                >
-                                    <TextInput name='name' label='Navn' defaultValue={license.name} />
-                                    <TextInput name='link' label='Link' defaultValue={license.link} />
-                                </Form>
+                                <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
+                                    <Form
+                                        action={updateLicenseAction.bind(null, { id: license.id })}
+                                        title="Endre lisens"
+                                        submitText="Endre"
+                                    >
+                                        <TextInput name="name" label="Navn" defaultValue={license.name} />
+                                        <TextInput name="link" label="Link" defaultValue={license.link} />
+                                    </Form>
 
-                                <Form 
-                                    action={destroyLicenseAction.bind(null, { id: license.id })}
-                                    submitText="Slett"
-                                    submitColor="red"
-                                    refreshOnSuccess
-                                />
-                            </SettingsHeaderItemPopUp>
+                                    <Form
+                                        action={destroyLicenseAction.bind(null, { id: license.id })}
+                                        submitText="Slett"
+                                        submitColor="red"
+                                        refreshOnSuccess
+                                    />
+                                </SettingsHeaderItemPopUp>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            
+
             <Form
                 action={createLicenseAction.bind(null, {})}
-                title='Lag ny lisens'
-                submitText='Lag'
+                title="Lag ny lisens"
+                submitText="Lag"
                 refreshOnSuccess
             >
-                <TextInput name='name' label='Navn' />
-                <TextInput name='link' label='Link' />
+                <TextInput name="name" label="Navn" />
+                <TextInput name="link" label="Link" />
             </Form>
         </div>
     )

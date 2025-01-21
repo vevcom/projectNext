@@ -18,7 +18,7 @@ export const baseLicenseValidation = new ValidationBase({
         )
     }
 })
- 
+
 export const createLicenseValidation = baseLicenseValidation.createValidation({
     keys: ['name', 'link'],
     transformer: data => data

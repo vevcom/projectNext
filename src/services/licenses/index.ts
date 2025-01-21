@@ -1,10 +1,10 @@
 import 'server-only'
 import { destroy } from './destroy'
 import { readAll } from './read'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { CreateLicenseAuther, DestroyLicenseAuther, UpdateLicenseAuther } from './Authers'
 import { create } from './create'
 import { update } from './update'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Licenses = {
     readAll: ServiceMethod({
