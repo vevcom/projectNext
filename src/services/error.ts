@@ -61,6 +61,11 @@ export const errorCodes = [
         httpCode: 401,
         defaultMessage: 'Du er ikke innlogget',
     },
+    {
+        name: 'DANGEROUS OPERATION',
+        httpCode: 400,
+        defaultMessage: 'Operasjonen er for farlig',
+    }
 ] as const
 
 export type ErrorCode = typeof errorCodes[number]['name']
