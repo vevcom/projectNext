@@ -2,4 +2,4 @@
 import { Licenses } from "@/services/licenses"
 import { ActionNoData } from "../Action"
 
-export const destroyLicense = ActionNoData(Licenses.destroy)
+export const destroyLicenseAction = ActionNoData(Licenses.destroy)

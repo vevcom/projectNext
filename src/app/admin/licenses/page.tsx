@@ -4,9 +4,10 @@ import { readLicensesAction } from '@/actions/licenses/read'
 import Link from 'next/link'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import Form from '@/app/_components/Form/Form'
-import { destroyLicense } from '@/actions/licenses/destroy'
+import { destroyLicenseAction } from '@/actions/licenses/destroy'
 import { createLicenseAction } from '@/actions/licenses/create'
-import TextInput from '@/app/_components/UI/TextInput'
+import TextInput from '@/UI/TextInput'
+import { updateLicenseAction } from '@/actions/licenses/update'
 
 export default async function Licenses() {
     const licenses = unwrapActionReturn(await readLicensesAction.bind(null, {})())
@@ -36,8 +37,17 @@ export default async function Licenses() {
                             </td>
                             <td>
                             <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
+                                <Form
+                                    action={updateLicenseAction.bind(null, { id: license.id })}
+                                    title='Endre lisens'
+                                    submitText='Endre'
+                                >
+                                    <TextInput name='name' label='Navn' defaultValue={license.name} />
+                                    <TextInput name='link' label='Link' defaultValue={license.link} />
+                                </Form>
+
                                 <Form 
-                                    action={destroyLicense.bind(null, { id: license.id })}
+                                    action={destroyLicenseAction.bind(null, { id: license.id })}
                                     submitText="Slett"
                                     submitColor="red"
                                     refreshOnSuccess
