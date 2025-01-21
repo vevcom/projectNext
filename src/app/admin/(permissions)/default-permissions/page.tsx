@@ -14,20 +14,25 @@ export default async function Defaults() {
     const defaultPermissions = defaultPermissionsRes.data
 
     return (
-        <Form submitText="Lagre" action={updateDefaultPermissionsAction}>
-            <DisplayAllPermissions renderBesidePermission={
-                permission => (
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="permissions"
-                            value={permission}
-                            defaultChecked={defaultPermissions.includes(permission)}
-                        />
-                    </label>
-                )
-            }
-            />
-        </Form>
+        <>
+            <h1>Standard Tilganger</h1>
+            <i>Dette er tilganger alle har på nettsiden uavhengig av innlogging og gruppeafiliasjoner</i>
+            <Form submitText="Lagre" action={updateDefaultPermissionsAction}>
+                <DisplayAllPermissions renderBesidePermission={
+                    permission => (
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="permissions"
+                                value={permission}
+                                defaultChecked={defaultPermissions.includes(permission)}
+                            />
+                        </label>
+                    )
+                }
+                />
+            </Form>
+        </>
+
     )
 }

@@ -2,6 +2,8 @@ import 'server-only'
 import { destroy } from './destroy'
 import { readAll } from './read'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { CreateLicenseAuther, DestroyLicenseAuther } from './Authers'
+import { create } from './create'
 
 export const Licenses = {
     readAll: ServiceMethod({
@@ -12,6 +14,15 @@ export const Licenses = {
     destroy: ServiceMethod({
         withData: false,
         serviceMethodHandler: destroy,
-        hasAuther: false,
+        hasAuther: true,
+        auther: DestroyLicenseAuther,
+        dynamicFields: () => ({}),
     }),
+    create: ServiceMethod({
+        withData: true,
+        serviceMethodHandler: create,
+        hasAuther: true,
+        auther: CreateLicenseAuther,
+        dynamicFields: () => ({}),
+    })
 } as const
