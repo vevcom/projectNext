@@ -62,9 +62,9 @@ export const errorCodes = [
         defaultMessage: 'Du er ikke innlogget',
     },
     {
-        name: 'DANGEROUS OPERATION',
+        name: 'UNPERMITTED CASCADE',
         httpCode: 400,
-        defaultMessage: 'Operasjonen er for farlig',
+        defaultMessage: 'Du kan ikke slette denne ressursen fordi den er tilknyttet andre ressurser',
     }
 ] as const
 

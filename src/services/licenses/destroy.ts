@@ -18,7 +18,7 @@ export const destroy = ServiceMethodHandler({
         })
         if (imagesOfLicense.length > 0) {
             throw new ServerError(
-                'DANGEROUS OPERATION', 
+                'UNPERMITTED CASCADE', 
                 'Lisensen har bilder tilknyttet - slett bildene først eller endre lisensen på bildene'
             )
         }
