@@ -31,6 +31,7 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
     }
 }
 
+//TODO: Remove prismaCall and use prismaErrorWrapper instead
 export async function prismaErrorWrapper<T>(
     call: () => Promise<T>,
 ) {
