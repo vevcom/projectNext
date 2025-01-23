@@ -4,6 +4,7 @@ import { destroyThemeAction } from '@/actions/themes/destroy'
 import React from 'react'
 import type { Theme as ThemeT } from '@prisma/client'
 import { generateSCSSVariables } from '@/lib/themes/GenerateSCSSVariables'
+import { updateThemeAction } from '@/actions/themes/update'
 
 
 type PropTypes = {
@@ -36,6 +37,13 @@ export default function Theme({
                 </div>
             </div>
             <div className={styles.buttonGroup}>
+                <Form 
+                    action={updateThemeAction.bind(null, { id: theme.id })} 
+                    refreshOnSuccess
+                    submitText='Edit'
+                    submitColor="secondary"
+                    confirmation={{confirm: false}}
+                />
                 <Form 
                     action={destroyThemeAction.bind(null, { id: theme.id })} 
                     refreshOnSuccess

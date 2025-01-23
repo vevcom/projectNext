@@ -3,7 +3,7 @@
 .themeList {
   padding: 10px;
   margin: 10px 0;
-  background: linear-gradient(135deg, var(--primaryLight), var(--secondaryLight));
+  background: var(--primaryLightLighten);
   color: var(--secondaryDark);
   border-radius: 8px;
   transition: background 0.3s ease;
@@ -77,4 +77,9 @@
 }
 .secondary .dark > div:nth-child(3) {
   background-color: var(--secondaryDarkDarken);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: left;
 }
