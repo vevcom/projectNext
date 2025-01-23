@@ -1,7 +1,7 @@
 import 'server-only'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { readProductByBarcodeValidation } from '@/services/shop/validation'
-import { Smorekopp } from '@/services/error'
+import { ServerError } from '@/services/error'
 import type { ExtendedProduct } from './Types'
 
 export const readProducts = ServiceMethodHandler({
@@ -30,7 +30,7 @@ export const readProductByBarCode = ServiceMethodHandler({
     validation: readProductByBarcodeValidation,
     handler: async (prisma, _, data): Promise<ExtendedProduct | null> => {
         if (!data.barcode) {
-            throw new Smorekopp('BAD PARAMETERS', 'Barcode is required.')
+            throw new ServerError('BAD PARAMETERS', 'Barcode is required.')
         }
 
         const results = await prisma.product.findUnique({
@@ -48,7 +48,7 @@ export const readProductByBarCode = ServiceMethodHandler({
         })
 
         if (!results || results.ShopProduct.length === 0) {
-            throw new Smorekopp(
+            throw new ServerError(
                 'NOT FOUND',
                 `Could not find any prduct with barcode ${data.barcode} in shop ${data.shopId}.`
             )

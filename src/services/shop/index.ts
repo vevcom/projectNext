@@ -15,8 +15,8 @@ import { readProduct, readProductByBarCode, readProducts } from './product/read'
 import { createProduct, createProductForShop, createShopProductConnection } from './product/create'
 import { createPurchaseByStudentCard } from './purchase/create'
 import { updateProduct, updateProductForShop } from './product/update'
-import { readUser } from '../users/read'
-import { readPermissionsOfUser } from '../permissionRoles/read'
+import { readUser } from '@/services/users/read'
+import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Shop = {

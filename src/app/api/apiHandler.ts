@@ -1,6 +1,6 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
-import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import { getHttpErrorCode, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
 import type { SessionNoUser } from '@/auth/Session'
 import type { ServiceMethod } from '@/services/ServiceTypes'
@@ -28,7 +28,7 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         const result = await handle(session)
         return createApiResponse(result)
     } catch (error: unknown) {
-        if (error instanceof Smorekopp || error instanceof ServerError) {
+        if (error instanceof Smorekopp) {
             return createApiErrorRespone(error.errorCode, error.errors)
         }
         if (error instanceof Error) {

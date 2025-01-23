@@ -1,5 +1,5 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionAndDynamicPermissions } from '@/auth/auther/RequirePermissionAndDynamicPermission'
+import { RequirePermissionAndDynamicPermission } from '@/auth/auther/RequirePermissionAndDynamicPermission'
 
 export const ReadShops = RequirePermission.staticFields({ permission: 'SHOP_READ' })
 export const ReadShop = RequirePermission.staticFields({ permission: 'SHOP_READ' })
@@ -12,7 +12,7 @@ export const UpdateProduct = RequirePermission.staticFields({ permission: 'PRODU
 
 // export const CreateProductForShop = RequirePermission.staticFields({ permission: ['PRODUCT_READ'] })
 
-export const CreatePurchaseByStudentCard = RequirePermissionAndDynamicPermissions.staticFields({
+export const CreatePurchaseByStudentCard = RequirePermissionAndDynamicPermission.staticFields({
     permission: 'PURCHASE_CREATE_ONBEHALF',
     dynamicPermission: 'PURCHASE_CREATE',
 })
