@@ -12,7 +12,7 @@ export abstract class QueryParam<Type> {
         return `${this.name}=${encodeURIComponent(this.encode(value))}`
     }
     abstract decodeValue(value: string | string[] | undefined): Type | null
-    public decode(searchParams: SearchParamsServerSide['searchParams']): Type | null {
+    public decode(searchParams: Awaited<SearchParamsServerSide['searchParams']>): Type | null {
         if (!searchParams) {
             return null
         }
