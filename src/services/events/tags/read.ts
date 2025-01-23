@@ -1,5 +1,6 @@
 import 'server-only'
 import { SpecialEventTagsConfig } from './ConfigVars'
+import { readAllEventTagsAuther, readEventTagAuther, readSpecialEventTagAuther } from './authers'
 import logger from '@/lib/logger'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { SpecialEventTags } from '@prisma/client'
@@ -9,7 +10,8 @@ export const readEventTag = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: 'NO_AUTH',
+    auther: readEventTagAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
         where: {
             id
@@ -21,7 +23,8 @@ export const readSpecialEventTag = ServiceMethod({
     paramsSchema: z.object({
         special: z.nativeEnum(SpecialEventTags),
     }),
-    auther: 'NO_AUTH',
+    auther: readSpecialEventTagAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params: { special } }) => {
         const tag = await prisma.eventTag.findUnique({
             where: {
@@ -42,6 +45,7 @@ export const readSpecialEventTag = ServiceMethod({
 })
 
 export const readAllEventTags = ServiceMethod({
-    auther: 'NO_AUTH',
+    auther: readAllEventTagsAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma }) => await prisma.eventTag.findMany()
 })

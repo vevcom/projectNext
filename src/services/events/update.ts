@@ -1,5 +1,6 @@
 import 'server-only'
 import { updateEventValidation } from './validation'
+import { updateEventAuther } from './authers'
 import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
@@ -9,7 +10,8 @@ export const updateEvent = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateEventValidation,
-    auther: 'NO_AUTH', // Temp
+    auther: updateEventAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params, data: { tagIds, ...data } }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }

@@ -1,11 +1,13 @@
 import 'server-only'
+import { readAdmissionTrialsAuther } from './auth'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { prismaCall } from '@/services/prismaCall'
 import { z } from 'zod'
 import type { AdmissionTrial } from '@prisma/client'
 
 export const readUserAdmissionTrials = ServiceMethod({
-    auther: 'NO_AUTH',
+    auther: readAdmissionTrialsAuther,
+    dynamicAuthFields: () => ({}),
     paramsSchema: z.object({
         userId: z.number(),
     }),

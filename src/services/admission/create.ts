@@ -1,6 +1,7 @@
 import 'server-only'
 import { createAdmissionTrialValidation } from './validation'
 import { readUserAdmissionTrials } from './read'
+import { createAdmissionTrialAuther } from './auth'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { userFilterSelection } from '@/services/users/ConfigVars'
@@ -9,7 +10,8 @@ import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
 export const createAdmissionTrial = ServiceMethod({
-    auther: 'NO_AUTH',
+    auther: createAdmissionTrialAuther,
+    dynamicAuthFields: () => ({}),
     paramsSchema: z.object({
         admission: z.nativeEnum(Admission),
     }),

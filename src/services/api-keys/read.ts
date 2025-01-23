@@ -1,7 +1,7 @@
 import 'server-only'
 import { apiKeyFilterSelection } from './ConfigVars'
 import { updateApiKeyIfExpired } from './update'
-import { adminApiKeyAuther } from './authers'
+import { adminApiKeyAuther, readApiKeyHashedAndEncryptedAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
@@ -42,7 +42,8 @@ export const readApiKey = ServiceMethod({
 })
 
 export const readApiKeyHashedAndEncrypted = ServiceMethod({
-    auther: 'NO_AUTH', // TODO: Should no auth be used for server only services?
+    auther: readApiKeyHashedAndEncryptedAuther,
+    dynamicAuthFields: () => ({}),
     paramsSchema: z.number(),
     method: async ({ prisma, params: id }) => {
         const apiKey = await prisma.apiKey.findUniqueOrThrow({

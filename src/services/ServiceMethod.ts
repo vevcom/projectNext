@@ -91,16 +91,13 @@ export type ServiceMethodConfig<
     method: (
         args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation>
     ) => Return | Promise<Return>,
-} & (
-    {
+} & {
         auther: AutherStaticFieldsBound<DynamicFields>,
         dynamicAuthFields: (
             paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
         ) => DynamicFields | Promise<DynamicFields>,
-    } | {
-        auther: 'NO_AUTH',
     }
-))
+)
 
 /**
  * This is the return type of the ServiceMethod function. It contains a client function that can be used
@@ -145,7 +142,7 @@ export type ServiceMethodType<
  * If dataValidation is defined, the service method expects data.
  *
  * @param config - The configuration for the service method.
- * @param config.auther - The auther that will be used to authorize the user. Specify 'NO_AUTH' for no authorization.
+ * @param config.auther - The auther that will be used to authorize the user.
  * @param config.dynamicAuthFields - A function that returns the dynamic auth fields that will be used to authorize the user.
  * @param config.method - The method that will be called when the service method is executed.
  * @param config.paramsSchema - The zod schema that will be used to validate the params that is passed to the service method.
@@ -208,7 +205,7 @@ export function ServiceMethod<
 
             // Then, authorize user.
             // This has to be done after the validation because the auther might use the data to authorize the user.
-            if (!args.bypassAuth && config.auther !== 'NO_AUTH') {
+            if (!args.bypassAuth) {
                 const authRes = config.auther
                     .dynamicFields(await config.dynamicAuthFields(args))
                     .auth(args.session ?? Session.empty())

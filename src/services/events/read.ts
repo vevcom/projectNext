@@ -1,5 +1,6 @@
 import 'server-only'
 import { eventFilterSeletion } from './ConfigVars'
+import { readArchivedEventsPageAuther, readCurrentEventsAuther, readEventAuther } from './authers'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServiceMethod } from '@/services/ServiceMethod'
@@ -11,7 +12,8 @@ export const readEvent = ServiceMethod({
         order: z.number(),
         name: z.string(),
     }),
-    auther: 'NO_AUTH', // Temp
+    auther: readEventAuther, // Temp
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: {
@@ -56,7 +58,8 @@ export const readCurrentEvents = ServiceMethod({
     paramsSchema: z.object({
         tags: z.array(z.string()).nullable(),
     }),
-    auther: 'NO_AUTH', // Temp
+    auther: readCurrentEventsAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             select: {
@@ -96,8 +99,9 @@ export const readArchivedEventsPage = ServiceMethod({
             name: z.string().optional(),
             tags: z.array(z.string()).nullable(),
         }),
-    ), // ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-    auther: 'NO_AUTH', // Temp
+    ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+    auther: readArchivedEventsPageAuther,
+    dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             ...cursorPageingSelection(params.paging.page),
