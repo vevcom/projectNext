@@ -1,5 +1,5 @@
 import 'server-only'
-import { create, createBad, createMany } from './create'
+import { create, createSourceless, createMany } from './create'
 import { readPage, read, readSpecial } from './read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
@@ -14,9 +14,9 @@ export const Images = {
         serviceMethodHandler: createMany,
         hasAuther: false // TODO: add auth - visibilty
     }),
-    createBad: ServiceMethod({
+    createSourceless: ServiceMethod({
         withData: false,
-        serviceMethodHandler: createBad,
+        serviceMethodHandler: createSourceless,
         hasAuther: false // TODO: add auth - visibilty
     }),
     readPage: ServiceMethod({

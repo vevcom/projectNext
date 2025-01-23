@@ -1,5 +1,5 @@
 import 'server-only'
-import { createBad } from './create'
+import { createSourceless } from './create'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServerError } from '@/services/error'
@@ -60,7 +60,9 @@ export const readSpecial = ServiceMethodHandler({
         })
 
         if (!image) {
-            return await createBad.client(prisma).execute({ params: { name: special, special }, session })
+            return await createSourceless.client(prisma).execute(
+                { params: { name: special, special }, session }
+            )
         }
         return image
     }

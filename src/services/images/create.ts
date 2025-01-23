@@ -84,16 +84,20 @@ export const createMany = ServiceMethodHandler({
 
 /**
  * WARNING: This function should only be used in extreme cases
- * Creats  bad image this should really only happen in worst case scenario
- * Ads it to the standard collection
+ * Creates bad image this should really only happen in worst case scenario
+ * where the server has lost a image and needs to be replaced with a bad image.
+ * A bad image is an image that has no correct fsLocation attributes.
  * @param name - the name of the image
  * @param config - the config for the image (special)
  */
-export const createBad = ServiceMethodHandler({
+export const createSourceless = ServiceMethodHandler({
     withData: false,
     handler: async (prisma, { name, special }: { name: string, special: SpecialImage }) => {
         const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
-        logger.warn('creating a bad image, this should only happen in extreme cases.')
+        logger.warn(`
+            creating a bad image, Something has caused the server to lose a neccesary image. 
+            It was replaced with a image model with no correct fsLocation atrributes.
+        `)
         return await prisma.image.create({
             data: {
                 name,
