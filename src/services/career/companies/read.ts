@@ -15,7 +15,7 @@ export const readCompanyPage = ServiceMethod({
         z.object({
             name: z.string().optional(),
         }),
-    ), // Created from ReadPageInput<number, CompanyCursor, CompanyDetails>
+    ),
     auther: readCompanyAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }) => await prisma.company.findMany({

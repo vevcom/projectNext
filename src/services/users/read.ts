@@ -141,25 +141,6 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
     return await prismaCall(() => prisma.user.findFirst({ where }))
 }
 
-// export async function readUserProfile(username: string): Promise<Profile> {
-//     const defaultProfileImage = await readSpecialImage('DEFAULT_PROFILE_IMAGE')
-//     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
-//         where: { username: username.toLowerCase() },
-//         select: {
-//             ...userFilterSelection,
-//             bio: true,
-//             image: true,
-//         },
-//     })).then(u => ({
-//         ...u,
-//         image: u.image || defaultProfileImage
-//     }))
-//     const memberships = await readMembershipsOfUser(user.id)
-//     const permissions = await readPermissionsOfUser(user.id)
-
-//     return { user, memberships, permissions }
-// }
-
 export const readUserProfile = ServiceMethod({
     paramsSchema: z.object({
         username: z.string(),

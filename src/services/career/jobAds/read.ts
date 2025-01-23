@@ -90,7 +90,7 @@ export const readInactiveJobAdsPage = ServiceMethod({
             name: z.string().nullable(),
             type: z.nativeEnum(JobType).nullable(),
         }),
-    ), // Created from ReadPageInput<number, JobAdInactiveCursor, JobAdInactiveDetails>
+    ),
     auther: readJobAdAuther,
     dynamicAuthFields: () => ({}),
     method: async ({ prisma, params }): Promise<SimpleJobAd[]> => {

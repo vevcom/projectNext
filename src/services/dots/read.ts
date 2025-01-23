@@ -70,7 +70,7 @@ export const readDotsPage = ServiceMethod({
             userId: z.number().nullable(),
             onlyActive: z.boolean(),
         }),
-    ), // Created from ReadPageInput<number, DotCursor, DotDetails> TODO: Maybe refactor to be more reusable?
+    ),
     method: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
         ...cursorPageingSelection(params.paging.page),
         where: {
