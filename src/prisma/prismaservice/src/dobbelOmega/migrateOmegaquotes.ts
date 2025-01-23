@@ -1,5 +1,8 @@
+import { vevenIdToPnId } from './IdMapper'
+import logger from '@/src/logger'
+import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven, Quotes } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
 
 /**
@@ -11,28 +14,39 @@ import type { Limits } from './migrationLimits'
 export default async function migrateOmegaquotes(
     pnPrisma: PrismaClientPn,
     vevenPrisma: PrismaClientVeven,
+    userIdMap: IdMapper,
     limits: Limits
 ) {
     const omegaquotes = await vevenPrisma.quotes.findMany({
         take: limits.omegaquotes ? limits.omegaquotes : undefined,
     })
 
-    //TODO: link to a user??? user migration not done yet and must be done early in the migration process
-    const user = await pnPrisma.user.create({
-        data: {
-            email: '',
-            firstname: 'Omegaquotes migrator',
-            lastname: 'Migratorson',
-            username: 'omegaquotesMigrator',
-        },
-    })
+    // Remove all quotes without a PosterId.
+    // There exists no quotes without a PosterId in the database, except three tests
+    const omegaquoteFiltered = omegaquotes.reduce((acc, quote) => {
+        const PosterId = quote.PosterId
+        if (PosterId) {
+            acc.push({ ...quote, PosterId })
+        } else {
+            logger.warn('Quote without PosterId found', quote)
+        }
+        return acc
+    }, [] as (Quotes & { PosterId: number })[]).reduce((acc, quote) => {
+        const pnPosterId = vevenIdToPnId(userIdMap, quote.PosterId)
+        if (!pnPosterId) {
+            logger.warn(`No user in PN found for quote - was the user with vevenId ${quote.PosterId} migrated`, quote)
+            return acc
+        }
+        acc.push({ ...quote, PosterId: pnPosterId })
+        return acc
+    }, [] as (Quotes & { PosterId: number })[])
 
     await pnPrisma.omegaQuote.createMany({
-        data: omegaquotes.map(quote => ({
+        data: omegaquoteFiltered.map(quote => ({
             quote: quote.quote,
             author: quote.author,
             timestamp: quote.timestamp || new Date(),
-            userPosterId: user.id,
+            userPosterId: quote.PosterId,
         })),
     })
 
