@@ -145,8 +145,7 @@ export const readUserProfile = ServiceMethod({
     paramsSchema: z.object({
         username: z.string(),
     }),
-    auther: readUserAuther,
-    dynamicAuthFields: ({ params }) => ({ username: params.username }),
+    auther: ({ params }) => readUserAuther.dynamicFields({ username: params.username }),
     method: async ({ prisma: prisma_, params }) => {
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username.toLowerCase() },

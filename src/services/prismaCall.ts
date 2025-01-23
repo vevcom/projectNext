@@ -9,9 +9,9 @@ const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
 
 /**
  * A function that translates prisma calls into ServerErorrs if they throw errors
- * 
+ *
  * THIS FUNCTION HAS BEEN DEPRECATED IN FAVOR OF prismaErrorWrapper
- * 
+ *
  * @deprecated
  * @param call - A async prisma function to call.
  * @returns
@@ -33,12 +33,12 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
 
 /**
  * A function that wraps a prisma call in a try catch block and throws a ServerError if it fails.
- * 
+ *
  * @param call - The function to be wrapped
- * @returns 
+ * @returns
  */
 export async function prismaErrorWrapper<T>(
-    call: () => Promise<T>,
+    call: () => T | Promise<T>,
 ) {
     return await prismaCall(call)
 }

@@ -11,8 +11,7 @@ import { v4 as uuid } from 'uuid'
 
 export const createEvent = ServiceMethod({
     dataValidation: createEventValidation,
-    auther: createEventAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createEventAuther.dynamicFields({}),
     method: async ({ prisma, data }) => {
         const cmsParagraph = await createCmsParagraph({ name: uuid() })
         const cmsImage = await createCmsImage({ name: uuid() })

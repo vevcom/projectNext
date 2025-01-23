@@ -6,8 +6,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createInterestGroup = ServiceMethod({
     dataValidation: createInterestGroupValidation,
-    auther: createInterestGroupAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createInterestGroupAuther.dynamicFields({}),
     method: async ({ prisma, data }) => {
         const { order } = await readCurrentOmegaOrder()
 

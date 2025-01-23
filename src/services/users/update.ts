@@ -24,8 +24,7 @@ import type { RegisterNewEmailType, UserFiltered } from './Types'
 export const updateUser = ServiceMethod({
     paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
     dataValidation: updateUserValidation,
-    auther: updateUserAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => updateUserAuther.dynamicFields({}),
     method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
         where: params,
         data

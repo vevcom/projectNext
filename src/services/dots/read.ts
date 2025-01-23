@@ -12,8 +12,7 @@ import { z } from 'zod'
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
 export const readDotsForUser = ServiceMethod({
-    auther: readDotForUserAuther,
-    dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
+    auther: ({ params }) => readDotForUserAuther.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
@@ -34,8 +33,7 @@ export const readDotsForUser = ServiceMethod({
 })
 
 export const readDotWrappersForUser = ServiceMethod({
-    auther: readDotForUserAuther,
-    dynamicAuthFields: ({ params }) => ({ userId: params.userId }),
+    auther: ({ params }) => readDotForUserAuther.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
@@ -59,8 +57,7 @@ export const readDotWrappersForUser = ServiceMethod({
 })
 
 export const readDotsPage = ServiceMethod({
-    auther: readDotAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readDotAuther.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
         z.object({

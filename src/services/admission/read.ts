@@ -6,8 +6,7 @@ import { z } from 'zod'
 import type { AdmissionTrial } from '@prisma/client'
 
 export const readUserAdmissionTrials = ServiceMethod({
-    auther: readAdmissionTrialsAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readAdmissionTrialsAuther.dynamicFields({}),
     paramsSchema: z.object({
         userId: z.number(),
     }),

@@ -5,8 +5,7 @@ import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
 export const destroyApiKey = ServiceMethod({
-    auther: adminApiKeyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => adminApiKeyAuther.dynamicFields({}),
     paramsSchema: z.number(),
     opensTransaction: true,
     method: async ({ prisma, params: id }): Promise<void> => {

@@ -7,8 +7,7 @@ export const destroyEvent = ServiceMethod({
     paramsSchema: z.object({
         id: z.number()
     }),
-    auther: destroyEventAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => destroyEventAuther.dynamicFields({}),
     method: async ({ prisma, params }) => {
         await prisma.event.delete({
             where: {

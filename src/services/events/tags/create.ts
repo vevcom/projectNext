@@ -5,8 +5,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createEventTag = ServiceMethod({
     dataValidation: createEventTagValidation,
-    auther: createEventTagAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createEventTagAuther.dynamicFields({}),
     method: async ({ prisma, data: { color, ...data } }) => {
         const colorR = parseInt(color.slice(1, 3), 16)
         const colorG = parseInt(color.slice(3, 5), 16)

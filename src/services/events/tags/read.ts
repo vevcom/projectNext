@@ -10,8 +10,7 @@ export const readEventTag = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: readEventTagAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readEventTagAuther.dynamicFields({}),
     method: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
         where: {
             id
@@ -23,8 +22,7 @@ export const readSpecialEventTag = ServiceMethod({
     paramsSchema: z.object({
         special: z.nativeEnum(SpecialEventTags),
     }),
-    auther: readSpecialEventTagAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readSpecialEventTagAuther.dynamicFields({}),
     method: async ({ prisma, params: { special } }) => {
         const tag = await prisma.eventTag.findUnique({
             where: {
@@ -45,7 +43,6 @@ export const readSpecialEventTag = ServiceMethod({
 })
 
 export const readAllEventTags = ServiceMethod({
-    auther: readAllEventTagsAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readAllEventTagsAuther.dynamicFields({}),
     method: async ({ prisma }) => await prisma.eventTag.findMany()
 })

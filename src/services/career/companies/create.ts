@@ -7,8 +7,7 @@ import { v4 as uuid } from 'uuid'
 
 export const createCompany = ServiceMethod({
     dataValidation: createCompanyValidation,
-    auther: createCompanyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createCompanyAuther.dynamicFields({}),
     method: async ({ prisma, data }) => {
         //TODO: tranaction when createCmsImage is service method.
         const logo = await createCmsImage({ name: uuid() })

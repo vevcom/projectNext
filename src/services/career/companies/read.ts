@@ -16,8 +16,7 @@ export const readCompanyPage = ServiceMethod({
             name: z.string().optional(),
         }),
     ),
-    auther: readCompanyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readCompanyAuther.dynamicFields({}),
     method: async ({ prisma, params }) => await prisma.company.findMany({
         ...cursorPageingSelection(params.paging.page),
         where: {

@@ -7,8 +7,7 @@ export const destroyInterestGroup = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: destroyInterestGroupAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => destroyInterestGroupAuther.dynamicFields({}),
     opensTransaction: true,
     method: async ({ prisma, params: { id } }) => {
         await prisma.$transaction(async tx => {

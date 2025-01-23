@@ -1,6 +1,6 @@
 import 'server-only'
 import { Smorekopp } from './error'
-import { prismaCall } from './prismaCall'
+import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
 import type { ExtractDetailedType, ValidationType, ValidationTypeUnknown } from './Validation'
@@ -84,20 +84,19 @@ export type ServiceMethodConfig<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationTypeUnknown | undefined,
-> = ({
+> = {
     paramsSchema?: ParamsSchema,
     dataValidation?: DataValidation,
     opensTransaction?: OpensTransaction,
+    auther: (
+        paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
+    ) => // Todo: Make prettier type for returntype of dynamic fields
+        | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
+        | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>, 
     method: (
         args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation>
     ) => Return | Promise<Return>,
-} & {
-        auther: AutherStaticFieldsBound<DynamicFields>,
-        dynamicAuthFields: (
-            paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
-        ) => DynamicFields | Promise<DynamicFields>,
-    }
-)
+}
 
 /**
  * This is the return type of the ServiceMethod function. It contains a client function that can be used
@@ -206,9 +205,7 @@ export function ServiceMethod<
             // Then, authorize user.
             // This has to be done after the validation because the auther might use the data to authorize the user.
             if (!args.bypassAuth) {
-                const authRes = config.auther
-                    .dynamicFields(await config.dynamicAuthFields(args))
-                    .auth(args.session ?? Session.empty())
+                const authRes = (await config.auther((args))).auth(args.session ?? Session.empty())
 
                 if (!authRes.authorized) {
                     throw new Smorekopp(authRes.status)
@@ -216,7 +213,7 @@ export function ServiceMethod<
             }
 
             // Finally, call the method.
-            return prismaCall(() => config.method({
+            return prismaErrorWrapper(() => config.method({
                 ...args,
                 prisma,
                 session: args.session ?? Session.empty(),

@@ -9,8 +9,7 @@ export const updateCompany = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateCompanyValidation,
-    auther: updateCompanyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => updateCompanyAuther.dynamicFields({}),
     method: async ({ prisma, params: { id }, data }) => {
         await prisma.company.update({
             where: { id },

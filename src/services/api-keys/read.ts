@@ -8,8 +8,7 @@ import { z } from 'zod'
 import type { ApiKeyFiltered } from './Types'
 
 export const readApiKeys = ServiceMethod({
-    auther: adminApiKeyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => adminApiKeyAuther.dynamicFields({}),
     method: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
         const apiKeys = await prisma.apiKey.findMany({
             select: apiKeyFilterSelection,
@@ -24,8 +23,7 @@ export const readApiKeys = ServiceMethod({
 })
 
 export const readApiKey = ServiceMethod({
-    auther: adminApiKeyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => adminApiKeyAuther.dynamicFields({}),
     paramsSchema: z.union([z.number(), z.string()]),
     method: async ({ prisma, params: idOrName }): Promise<ApiKeyFiltered> => {
         const apiKey = await prisma.apiKey.findUnique({
@@ -42,8 +40,7 @@ export const readApiKey = ServiceMethod({
 })
 
 export const readApiKeyHashedAndEncrypted = ServiceMethod({
-    auther: readApiKeyHashedAndEncryptedAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readApiKeyHashedAndEncryptedAuther.dynamicFields({}),
     paramsSchema: z.number(),
     method: async ({ prisma, params: id }) => {
         const apiKey = await prisma.apiKey.findUniqueOrThrow({

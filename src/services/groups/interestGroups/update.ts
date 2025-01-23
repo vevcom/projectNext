@@ -10,14 +10,13 @@ export const updateInterestGroup = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateInterestGroupValidation,
-    auther: updateInterestGroupAuther,
-    dynamicAuthFields: async ({ params }) => ({
+    auther: async ({ params }) => updateInterestGroupAuther.dynamicFields({
         groupId: (
             await readInterestGroup.newClient().execute({
                 params: { id: params.id },
                 session: null,
-            }).then(interestGroup => interestGroup.groupId)
-        )
+            })
+        ).groupId,
     }),
     method: async ({ prisma, params: { id }, data }) => prisma.interestGroup.update({
         where: { id },

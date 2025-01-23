@@ -10,8 +10,7 @@ import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
 export const createAdmissionTrial = ServiceMethod({
-    auther: createAdmissionTrialAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createAdmissionTrialAuther.dynamicFields({}),
     paramsSchema: z.object({
         admission: z.nativeEnum(Admission),
     }),

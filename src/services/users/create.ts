@@ -8,8 +8,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createUser = ServiceMethod({
     dataValidation: createUserValidation,
-    auther: createUserAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createUserAuther.dynamicFields({}),
     method: async ({ prisma, data }) => {
         const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
         const omegaOrder = await readCurrentOmegaOrder()

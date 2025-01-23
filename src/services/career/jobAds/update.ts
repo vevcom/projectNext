@@ -9,8 +9,7 @@ export const updateJobAd = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateJobAdValidation,
-    auther: updateJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => updateJobAdAuther.dynamicFields({}),
     method: async ({ prisma, params: { id }, data }) => await prisma.jobAd.update({
         where: { id },
         data,

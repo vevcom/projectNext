@@ -9,8 +9,7 @@ export const readSpecialCmsLink = ServiceMethod({
     paramsSchema: z.object({
         special: z.nativeEnum(SpecialCmsLink),
     }),
-    auther: readSpecialCmsLinkAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readSpecialCmsLinkAuther.dynamicFields({}),
     method: async ({ prisma, params: { special } }) => {
         const cmsLink = await prisma.cmsLink.findUnique({
             where: { special }

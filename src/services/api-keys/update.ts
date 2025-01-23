@@ -10,8 +10,7 @@ import { z } from 'zod'
 import type { ApiKey } from '@prisma/client'
 
 export const updateApiKey = ServiceMethod({
-    auther: adminApiKeyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => adminApiKeyAuther.dynamicFields({}),
     paramsSchema: z.number(),
     dataValidation: updateApiKeyValidation,
     method: async ({ prisma, params: id, data }): Promise<void> => {

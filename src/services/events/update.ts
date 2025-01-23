@@ -10,8 +10,7 @@ export const updateEvent = ServiceMethod({
         id: z.number(),
     }),
     dataValidation: updateEventValidation,
-    auther: updateEventAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => updateEventAuther.dynamicFields({}),
     method: async ({ prisma, params, data: { tagIds, ...data } }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: { id: params.id }

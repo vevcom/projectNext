@@ -9,8 +9,7 @@ import crypto from 'crypto'
 import type { ApiKeyFilteredWithKey } from './Types'
 
 export const createApiKey = ServiceMethod({
-    auther: adminApiKeyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => adminApiKeyAuther.dynamicFields({}),
     dataValidation: createApiKeyValidation,
     method: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
         const NODE_ENV = process.env.NODE_ENV

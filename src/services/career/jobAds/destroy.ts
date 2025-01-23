@@ -14,8 +14,7 @@ export const destroyJobAd = ServiceMethod({
     paramsSchema: z.object({
         id: z.number(),
     }),
-    auther: destroyJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => destroyJobAdAuther.dynamicFields({}),
     method: async ({ prisma, params: { id } }) => {
         const jobAd = await prisma.jobAd.delete({
             where: { id },

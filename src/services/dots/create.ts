@@ -9,8 +9,7 @@ import { z } from 'zod'
 
 export const createDot = ServiceMethod({
     dataValidation: createDotValidation,
-    auther: createDotAuther,
-    dynamicAuthFields: ({ data }) => ({ userId: data.userId }),
+    auther: ({ data }) => createDotAuther.dynamicFields({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),
     }),

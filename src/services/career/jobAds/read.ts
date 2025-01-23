@@ -25,8 +25,7 @@ export const readJobAd = ServiceMethod({
             }),
         ]),
     }),
-    auther: readJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readJobAdAuther.dynamicFields({}),
     method: async ({ prisma, params: { idOrName } }): Promise<ExpandedJobAd> => {
         const jobAd = await prisma.jobAd.findUnique({
             where: typeof idOrName === 'number' ? {
@@ -54,8 +53,7 @@ export const readJobAd = ServiceMethod({
  * @returns SimpleJobAd[] - all jobAds with coverImage
  */
 export const readActiveJobAds = ServiceMethod({
-    auther: readJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readJobAdAuther.dynamicFields({}),
     method: async ({ prisma }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
             orderBy: {
@@ -91,8 +89,7 @@ export const readInactiveJobAdsPage = ServiceMethod({
             type: z.nativeEnum(JobType).nullable(),
         }),
     ),
-    auther: readJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readJobAdAuther.dynamicFields({}),
     method: async ({ prisma, params }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
             ...cursorPageingSelection(params.paging.page),

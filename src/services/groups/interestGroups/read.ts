@@ -6,8 +6,7 @@ import { z } from 'zod'
 import type { ExpandedInterestGroup } from './Types'
 
 export const readAllInterestGroups = ServiceMethod({
-    auther: readInterestGroupAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readInterestGroupAuther.dynamicFields({}),
     method: async ({ prisma }): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
         include: {
             articleSection: {
@@ -26,8 +25,7 @@ export const readInterestGroup = ServiceMethod({
         id: z.number().optional(),
         shortName: z.string().optional(),
     }),
-    auther: readInterestGroupAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readInterestGroupAuther.dynamicFields({}),
     method: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
         where: {
             id,

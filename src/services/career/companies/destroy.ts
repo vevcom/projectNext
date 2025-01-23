@@ -7,8 +7,7 @@ export const destroyCompany = ServiceMethod({
     paramsSchema: z.object({
         id: z.number()
     }),
-    auther: destroyCompanyAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => destroyCompanyAuther.dynamicFields({}),
     method: async ({ prisma, params: { id } }) => {
         await prisma.company.delete({
             where: {

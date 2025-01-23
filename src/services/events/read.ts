@@ -12,8 +12,7 @@ export const readEvent = ServiceMethod({
         order: z.number(),
         name: z.string(),
     }),
-    auther: readEventAuther, // Temp
-    dynamicAuthFields: () => ({}),
+    auther: () => readEventAuther.dynamicFields({}),
     method: async ({ prisma, params }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: {
@@ -58,8 +57,7 @@ export const readCurrentEvents = ServiceMethod({
     paramsSchema: z.object({
         tags: z.array(z.string()).nullable(),
     }),
-    auther: readCurrentEventsAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readCurrentEventsAuther.dynamicFields({}),
     method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             select: {
@@ -100,8 +98,7 @@ export const readArchivedEventsPage = ServiceMethod({
             tags: z.array(z.string()).nullable(),
         }),
     ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-    auther: readArchivedEventsPageAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => readArchivedEventsPageAuther.dynamicFields({}),
     method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             ...cursorPageingSelection(params.paging.page),

@@ -7,8 +7,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createJobAd = ServiceMethod({
     dataValidation: createJobAdValidation,
-    auther: createJobAdAuther,
-    dynamicAuthFields: () => ({}),
+    auther: () => createJobAdAuther.dynamicFields({}),
     method: async ({ prisma, data: { articleName, companyId, ...data } }) => {
         const article = await createArticle({ name: articleName })
 
