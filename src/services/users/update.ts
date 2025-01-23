@@ -217,7 +217,7 @@ export const registerStudentCardInQueue = ServiceMethodHandler({
     withData: false,
     handler: async (_prisma, { userId }: { userId: number }) => {
         const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
-        await _prisma.registerStudentCard.upsert({
+        await _prisma.registerStudentCardQueue.upsert({
             where: {
                 userId,
             },
@@ -241,7 +241,7 @@ export const connectStudentCard = ServiceMethodHandler({
     validation: connectStudentCardValidation,
     wantsToOpenTransaction: true,
     handler: async (_prisma, _, data) => {
-        const currentQueue = await _prisma.registerStudentCard.findMany({
+        const currentQueue = await _prisma.registerStudentCardQueue.findMany({
             where: {
                 expiry: {
                     gt: new Date(),
@@ -262,7 +262,7 @@ export const connectStudentCard = ServiceMethodHandler({
 
         const userId = currentQueue[0].userId
         const result = await _prisma.$transaction([
-            _prisma.registerStudentCard.delete({
+            _prisma.registerStudentCardQueue.delete({
                 where: {
                     userId,
                 }

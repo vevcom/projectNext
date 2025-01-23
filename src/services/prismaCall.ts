@@ -16,7 +16,7 @@ export async function prismaCall<T>(call: () => Promise<T>): Promise<T> {
     try {
         return await call()
     } catch (error) {
-        if (error instanceof ServerError || error instanceof Smorekopp) {
+        if (error instanceof Smorekopp) {
             throw error
         }
 

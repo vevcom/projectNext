@@ -34,9 +34,9 @@ model User {
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
   EventRegistration         EventRegistration[]
 
-  dots                DotWrapper[]          @relation(name: "dot_user")
-  dotsAccused         DotWrapper[]          @relation(name: "dot_accuser")
-  registerStudentCard registerStudentCard[]
+  dots                     DotWrapper[]               @relation(name: "dot_user")
+  dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
+  registerStudentCardQueue RegisterStudentCardQueue[]
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
@@ -66,7 +66,7 @@ model FeideAccount {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model registerStudentCard {
+model RegisterStudentCardQueue {
   userId Int      @id
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiry DateTime

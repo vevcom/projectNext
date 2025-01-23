@@ -7,13 +7,16 @@ import {
     ReadProduct,
     ReadShop,
     ReadShops,
-    UpdateProduct } from './Authers'
+    UpdateProduct
+} from './Authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
 import { readProduct, readProductByBarCode, readProducts } from './product/read'
 import { createProduct, createProductForShop, createShopProductConnection } from './product/create'
 import { createPurchaseByStudentCard } from './purchase/create'
 import { updateProduct, updateProductForShop } from './product/update'
+import { readUser } from '../users/read'
+import { readPermissionsOfUser } from '../permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const Shop = {
@@ -91,7 +94,13 @@ export const Shop = {
         withData: true,
         hasAuther: true,
         auther: CreatePurchaseByStudentCard,
-        dynamicFields: () => ({}),
+        dynamicFieldsAsync: async ({ data }) => {
+            const user = await readUser({
+                studentCard: data.studentCard,
+            })
+            await readPermissionsOfUser(user.id)
+            return { permissions: [] }
+        },
         serviceMethodHandler: createPurchaseByStudentCard,
     }),
     createShopProductConnection: ServiceMethod({

@@ -129,6 +129,7 @@ type readUserWhere = {
     username?: string,
     id?: number,
     email?: string,
+    studentCard?: string,
 }
 
 export async function readUser(where: readUserWhere): Promise<User> {
