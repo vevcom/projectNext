@@ -147,6 +147,10 @@ export const readUserProfile = ServiceMethod({
     }),
     auther: ({ params }) => readUserAuther.dynamicFields({ username: params.username }),
     method: async ({ prisma: prisma_, params }) => {
+        const defaultProfileImage = await readSpecialImage.client(prisma).execute({
+            params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            session: null, //TODO: pass session
+        })
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username.toLowerCase() },
             select: {
@@ -156,7 +160,7 @@ export const readUserProfile = ServiceMethod({
             },
         }).then(async u => ({
             ...u,
-            image: u.image || await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+            image: u.image || defaultProfileImage,
         }))
 
         const memberships = await readMembershipsOfUser(user.id)

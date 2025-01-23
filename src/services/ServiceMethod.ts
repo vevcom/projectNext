@@ -92,7 +92,7 @@ export type ServiceMethodConfig<
         paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
     ) => // Todo: Make prettier type for returntype of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
-        | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>, 
+        | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
     method: (
         args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation>
     ) => Return | Promise<Return>,

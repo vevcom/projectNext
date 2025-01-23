@@ -1,4 +1,4 @@
-import { ServerError } from './error'
+import { ServerError, Smorekopp } from './error'
 import { Prisma } from '@prisma/client'
 import type { ServerErrorCode } from './error'
 
@@ -20,6 +20,10 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
     try {
         return await call()
     } catch (error) {
+        if (error instanceof Smorekopp) {
+            throw error
+        }
+
         if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
             console.error(error)
             throw new ServerError('UNKNOWN ERROR', 'unknown error')
@@ -31,6 +35,7 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
     }
 }
 
+//TODO: Remove prismaCall and use prismaErrorWrapper instead
 /**
  * A function that wraps a prisma call in a try catch block and throws a ServerError if it fails.
  *

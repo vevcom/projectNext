@@ -8,7 +8,9 @@ export default async function Committees() {
     if (!res.success) throw new Error(`Kunne ikke hente komiteer - ${res.errorCode}`)
     const committees = res.data
 
-    const strandardCommitteeLogoRes = await readSpecialImageAction('DAFAULT_COMMITTEE_LOGO')
+    const strandardCommitteeLogoRes = await readSpecialImageAction.bind(
+        null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+    )()
     const standardCommitteeLogo = strandardCommitteeLogoRes.success ? strandardCommitteeLogoRes.data : null
 
     return (

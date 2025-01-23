@@ -1,7 +1,7 @@
 import { updateCommitteeValidation } from './validation'
 import prisma from '@/prisma'
-import { readSpecialImage } from '@/services/images/read'
 import { prismaCall } from '@/services/prismaCall'
+import { readSpecialImage } from '@/services/images/read'
 import type { ExpandedCommittee } from './Types'
 import type { UpdateCommitteeTypes } from './validation'
 
@@ -13,7 +13,9 @@ export async function updateCommittee(
 
     let defaultLogoImageId: number
     if (!logoImageId) {
-        defaultLogoImageId = (await readSpecialImage('DAFAULT_COMMITTEE_LOGO')).id
+        defaultLogoImageId = await readSpecialImage.client(prisma).execute({
+            params: { special: 'DAFAULT_COMMITTEE_LOGO' }, session: null //TODO: pass session
+        }).then(res => res.id)
     }
 
     return await prismaCall(() => prisma.committee.update({

@@ -139,6 +139,8 @@ enum Permission {
   COMPANY_ADMIN
 
   DOTS_ADMIN
+
+  LICENSE_ADMIN
 }
 
 model Role {
