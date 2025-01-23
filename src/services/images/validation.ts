@@ -19,6 +19,8 @@ export const baseImageValidation = new ValidationBase({
         name: z.string().optional(),
         alt: z.string(),
         files: zfd.repeatable(z.array(z.instanceof(File))),
+        licenseId: z.string().optional(),
+        credit: z.string().optional(),
     },
     details: {
         file: imageFileSchema,
@@ -31,27 +33,37 @@ export const baseImageValidation = new ValidationBase({
             files => files.every(file => allowedExtImageUpload.includes(file.type.split('/')[1])),
             `File type must be one of ${allowedExtImageUpload.join(', ')}`
         ),
+        licenseId: z.number().optional(),
+        credit: z.string().optional(),
     }
 })
 
 export const createImageValidation = baseImageValidation.createValidation({
-    keys: ['name', 'alt', 'file'],
-    transformer: data => data
+    keys: ['name', 'alt', 'file', 'licenseId', 'credit'],
+    transformer,
 })
 export type CreateImageTypes = ValidationTypes<typeof createImageValidation>
 
 export const createImagesValidation = baseImageValidation.createValidation({
-    keys: ['files'],
-    transformer: data => data,
+    keys: ['files', 'credit', 'licenseId'],
+    transformer,
     refiner: {
-        fcn: data => data.files.length < maxNumberOfImagesInOneBatch && data.files.length > 0,
+        fcn: data => data.files.length <= maxNumberOfImagesInOneBatch && data.files.length > 0,
         message: `Du kan bare laste opp mellom 1 og ${maxNumberOfImagesInOneBatch} bilder av gangen`
     }
 })
 export type CreateImagesTypes = ValidationTypes<typeof createImagesValidation>
 
 export const updateImageValidation = baseImageValidation.createValidation({
-    keys: ['name', 'alt'],
-    transformer: data => data
+    keys: ['name', 'alt', 'credit', 'licenseId'],
+    transformer,
 })
 export type UpdateImageTypes = ValidationTypes<typeof updateImageValidation>
+
+function transformer<Data>(data: Data & { licenseId?: string }) {
+    if (data.licenseId === undefined) return { ...data, licenseId: undefined }
+    return {
+        ...data,
+        licenseId: data.licenseId === 'NULL' ? undefined : parseInt(data.licenseId, 10)
+    }
+}

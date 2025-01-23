@@ -1,5 +1,5 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
-import { readSpecialImage } from '@/services/images/read'
+import { Images } from '@/services/images'
 import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
@@ -140,7 +140,10 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
 }
 
 export async function readUserProfile(username: string): Promise<Profile> {
-    const defaultProfileImage = await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+    const defaultProfileImage = await Images.readSpecial.client(prisma).execute({
+        params: { special: 'DEFAULT_PROFILE_IMAGE' },
+        session: null, //TODO: pass session
+    })
     const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
         where: { username: username.toLowerCase() },
         select: {
@@ -160,7 +163,7 @@ export async function readUserProfile(username: string): Promise<Profile> {
 
 export const readProfile = ServiceMethodHandler({
     withData: false,
-    handler: async (prisma_, params: {username: string}) => {
+    handler: async (prisma_, params: {username: string}, session) => {
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username.toLowerCase() },
             select: {
@@ -170,7 +173,10 @@ export const readProfile = ServiceMethodHandler({
             },
         }).then(async u => ({
             ...u,
-            image: u.image || await readSpecialImage('DEFAULT_PROFILE_IMAGE')
+            image: u.image || await Images.readSpecial.client(prisma_).execute({
+                params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                session,
+            })
         }))
 
         const memberships = await readMembershipsOfUser(user.id)

@@ -61,6 +61,11 @@ export const errorCodes = [
         httpCode: 401,
         defaultMessage: 'Du er ikke innlogget',
     },
+    {
+        name: 'UNPERMITTED CASCADE',
+        httpCode: 400,
+        defaultMessage: 'Du kan ikke slette denne ressursen fordi den er tilknyttet andre ressurser',
+    }
 ] as const
 
 export type ErrorCode = typeof errorCodes[number]['name']

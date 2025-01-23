@@ -12,9 +12,15 @@ import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction('ENGINEER')
-    const eventImageRes = await readSpecialImageAction('FAIR')
-    const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
+    const jobAdImageRes = await readSpecialImageAction.bind(null, {
+        special: 'MACHINE'
+    })()
+    const eventImageRes = await readSpecialImageAction.bind(null, {
+        special: 'FAIR'
+    })()
+    const comanyImageRes = await readSpecialImageAction.bind(null, {
+        special: 'REALFAGSBYGGET'
+    })()
     const conactorCmsLinkRes = await readSpecialCmsLinkAction.bind(
         null, { special: 'CAREER_LINK_TO_CONTACTOR' }
     )()
@@ -37,6 +43,7 @@ export default async function CareerLandingPage() {
                 <span className={styles.links}>
                     <Link href="/career/jobads">
                         { jobAdImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={jobAdImage} /> : <></> }
                         <h2>Jobbanonser</h2>
@@ -45,12 +52,14 @@ export default async function CareerLandingPage() {
                         companyPresentationEventTag ? [companyPresentationEventTag.name] : []
                     )}`}>
                         { eventImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={eventImage} /> : <></> }
                         <h2>Bedriftpresentasjoner</h2>
                     </Link>
                     <Link href="/career/companies">
                         { companyImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={companyImage} /> : <></> }
                         <h2>Bedrifter</h2>

@@ -37,7 +37,7 @@ export default async function CmsImage({
 }: PropTypes) {
     let image = cmsImage.image
     if (!image) {
-        const defaultRes = await readSpecialImageAction('DEFAULT_IMAGE')
+        const defaultRes = await readSpecialImageAction.bind(null, { special: 'DEFAULT_IMAGE' })()
         if (!defaultRes.success) return <SrcImage src={fallbackImage} {...props}/>
         image = defaultRes.data
     }

@@ -8,9 +8,9 @@ enum SpecialImage {
   LOGO_WHITE_TEXT
   MAGISK_HATT
   HOVEDBYGGNINGEN
-  R1
-  SKYSCRAPER
-  ENGINEER
+  BOOKS
+  REALFAGSBYGGET
+  MACHINE
   FAIR
 }
 
@@ -26,11 +26,25 @@ model Image {
   collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
   collectionId            Int
+  credit                  String?
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
+  license                 License?         @relation(fields: [licenseName, licenseLink], references: [name, link])
+  licenseName             String?
+  licenseLink             String?
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
+}
+
+model License {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  link String
+
+  images Image[]
+
+  @@unique([name, link])
 }
 
 enum SpecialCollection {

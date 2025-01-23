@@ -148,7 +148,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
                 success={success}
                 generalErrors={generalErrors}
                 confirmation={confirmation}
-                className={buttonClassName}
+                className={`${buttonClassName} ${styles.submitButton}`}
             >
                 {submitText}
             </SubmitButton>

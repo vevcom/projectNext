@@ -11,7 +11,7 @@ type PropTypes = {
 export default function ImageListImage({ image }: PropTypes) {
     return (
         <div className={styles.ImageListImage}>
-            <ImageComponent smallSize width={200} image={image} />
+            <ImageComponent hideCopyRight smallSize width={200} image={image} />
             <SelectImageDisplay image={image} />
             <ImageSelectionButton image={image} />
         </div>
