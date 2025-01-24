@@ -1,9 +1,10 @@
 import RegisterStudentCardButton from './RegisterStudentCardButton'
-import { getProfileForAdmin, type PropTypes } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
+import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
+import type { PropTypes } from '@/app/users/[username]/page'
 import Image from '@/components/Image/Image'
 
-export default async function UserSettings(props: PropTypes) {
-    const { profile } = await getProfileForAdmin(props, 'settings')
+export default async function UserSettings({ params }: PropTypes) {
+    const { profile } = await getProfileForAdmin(await params, 'settings')
 
     return (
         <div>

@@ -44,7 +44,7 @@ export function apiHandler<
     DataValidation extends ValidationTypeUnknown | undefined = undefined,
 >({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataValidation>) {
     // TODO: I think I will rewrite this to be easier to read
-    return async (req: Request, { params: rawParams }: { params: RawParams }) =>
+    return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
             if (serviceMethod.dataValidation) {
                 try {
@@ -53,20 +53,20 @@ export function apiHandler<
                     const parse = serviceMethod.dataValidation.typeValidate(rawdata)
                     if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.errors)
                     return serviceMethod.newClient().executeUnsafe({
-                        params: params ? params(rawParams) : undefined,
+                        params: params ? params(await rawParams) : undefined,
                         data: parse.data,
                         session,
                     })
-                } catch (e) {
-                    if (e instanceof SyntaxError) {
+                } catch (error) {
+                    if (error instanceof SyntaxError) {
                         throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
                     }
-                    throw e
+                    throw error
                 }
             }
 
             return serviceMethod.newClient().executeUnsafe({
-                params: params ? params(rawParams) : undefined,
+                params: params ? params(await rawParams) : undefined,
                 data: undefined,
                 session,
             })

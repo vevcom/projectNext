@@ -13,24 +13,24 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
 import type { MailListTypes } from '@/services/mail/Types'
 
-export default async function MailFlowPage({
-    params
-}: {
-    params: {
+type PropTypes = {
+    params: Promise<{
         filter: string,
         id: string,
-    }
-}) {
-    if (!MailListTypeArray.includes(params.filter as MailListTypes)) {
+    }>
+}
+
+export default async function MailFlowPage({ params }: PropTypes) {
+    if (!MailListTypeArray.includes((await params).filter as MailListTypes)) {
         notFound()
     }
 
-    const id = Number(params.id)
+    const id = Number((await params).id)
     if (!id || id <= 0) {
         notFound()
     }
 
-    const filter = params.filter as MailListTypes
+    const filter = (await params).filter as MailListTypes
 
     const [results, mailOptions] = await Promise.all([
         readMailFlowAction(filter, id),

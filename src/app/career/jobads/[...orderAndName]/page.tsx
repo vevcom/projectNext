@@ -21,19 +21,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         orderAndName: string[]
-    }
+    }>
 }
 
 
 export default async function JobAd({ params }: PropTypes) {
-    if (params.orderAndName.length !== 2) notFound()
-    const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
-    const name = decodeURIComponent(params.orderAndName[1])
+    if ((await params).orderAndName.length !== 2) notFound()
+    const order = parseInt(decodeURIComponent((await params).orderAndName[0]), 10)
+    const name = decodeURIComponent((await params).orderAndName[1])
     const session = await Session.fromNextAuth()
     const jobAdRes = await readJobAdAction({ idOrName: { articleName: name, order } })
     if (!jobAdRes.success) {
+        //TODO: Handle error in idiomatic way
         if (jobAdRes.errorCode === 'NOT FOUND') notFound()
         throw new Error('Failed to read jobAd')
     }
