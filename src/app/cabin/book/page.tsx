@@ -1,14 +1,14 @@
-import CabinCalendar from './CabinCalendar'
+import SpecialCmsParagraph from '@/app/_components/Cms/CmsParagraph/SpecialCmsParagraph'
+import StateWrapper from './stateWrapper'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 
 export default function CabinBooking() {
-    const bookingUntil = new Date()
-    bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
-    console.log(bookingUntil)
     return <PageWrapper
         title="Heutte Booking"
     >
-        <CabinCalendar startDate={new Date()} bookingUntil={bookingUntil} />
+        <StateWrapper />
+
+        <SpecialCmsParagraph special="CABIN_CONTRACT" />
     </PageWrapper>
 }

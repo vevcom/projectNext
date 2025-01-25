@@ -167,7 +167,11 @@ export const seedSpecialCmsParagraphConfig: CmsParagraphSeedSpecialConfig = {
     CAREER_INFO: {
         name: 'career_info',
         file: 'career/career_info.md'
-    }
+    },
+    CABIN_CONTRACT: {
+        name: 'cabin_contract',
+        file: 'cabin/cabin_contract.md'
+    },
 }
 
 
