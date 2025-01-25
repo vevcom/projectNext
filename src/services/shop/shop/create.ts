@@ -1,7 +1,7 @@
 import 'server-only'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { createShopValidation } from '@/services/shop/validation'
-import { createShopAuther } from '../authers'
+import { createShopAuther } from '@/services/shop/authers'
 
 
 export const createShop = ServiceMethod({

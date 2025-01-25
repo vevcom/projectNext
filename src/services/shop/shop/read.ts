@@ -1,8 +1,8 @@
 import 'server-only'
-import type { ExtendedShop } from './Types'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { readShopAuther, readShopsAuther } from '../authers'
+import { readShopAuther, readShopsAuther } from '@/services/shop/authers'
 import { z } from 'zod'
+import type { ExtendedShop } from './Types'
 
 export const readShops = ServiceMethod({
     auther: () => readShopsAuther.dynamicFields({}),

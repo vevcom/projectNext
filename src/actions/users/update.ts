@@ -2,7 +2,14 @@
 import { action } from '@/actions/action'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail, updateUser, registerStudentCardInQueue } from '@/services/users/update'
+import {
+    registerUser,
+    updateUserPassword,
+    verifyUserEmail,
+    registerNewEmail,
+    updateUser,
+    registerStudentCardInQueue
+} from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
     registerUserValidation,
@@ -12,7 +19,6 @@ import {
 import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
 import { ServerError } from '@/services/error'
 import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
-import { User } from '@/services/users'
 import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { RegisterUserTypes } from '@/services/users/validation'
