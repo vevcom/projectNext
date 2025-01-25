@@ -10,10 +10,16 @@ import { useUser } from '@/auth/useUser'
 import { createCabinBookinUserAttachedAction } from '@/actions/cabin'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useState } from 'react'
+import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType } from '@prisma/client'
+import Test from './Test'
 
-export default function StateWrapper() {
+export default function StateWrapper({
+    cabinAvailability,
+}: {
+    cabinAvailability: BookingFiltered[]
+}) {
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
 
@@ -28,6 +34,7 @@ export default function StateWrapper() {
             bookingUntil={bookingUntil}
             defaultDateRange={dateRange}
             intervalChangeCallback={setDateRange}
+            bookings={cabinAvailability}
         />
 
         <Form

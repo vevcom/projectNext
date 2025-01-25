@@ -3,6 +3,7 @@ import styles from './CabinCalendar.module.scss'
 import { dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { ReactNode } from 'react'
 import type { Record } from '@prisma/client/runtime/library'
 
@@ -31,6 +32,7 @@ enum Selection {
 type Day = {
     date: Date,
     selection?: Selection,
+    bookingSelection?: Selection,
 }
 
 type Week = {
@@ -47,7 +49,12 @@ function createNullArray(num: number): null[] {
     return Array.from({ length: num }).map(() => null)
 }
 
-function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRange): (Week | string)[] {
+function generateCalendarData(
+    startDate: Date,
+    endDate: Date,
+    dateRange: DateRange,
+    bookings: BookingFiltered[]
+): (Week | string)[] {
     const firstDayOfMonth = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1))
 
     const stopAtMonth = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth() + 1, 1))
@@ -89,6 +96,30 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
                 }
             }
 
+            let bookingSelection: undefined | Selection
+
+            bookings.forEach(booking => {
+                if (datesEqual(thisDate, booking.start)) {
+                    if (bookingSelection === undefined) {
+                        bookingSelection = Selection.START
+                    } else if (bookingSelection === Selection.END) {
+                        bookingSelection = Selection.INRANGE
+                    }
+                } else if (datesEqual(thisDate, booking.end)) {
+                    if (bookingSelection === undefined) {
+                        bookingSelection = Selection.END
+                    } else if (bookingSelection === Selection.START) {
+                        bookingSelection = Selection.INRANGE
+                    }
+                } else {
+                    const inRange = dateLessThan(booking.start, thisDate) && dateLessThan(thisDate, booking.end)
+
+                    if (inRange) {
+                        bookingSelection = Selection.INRANGE
+                    }
+                }
+            })
+
             if (lastMonth !== thisDate.getUTCMonth()) {
                 lastMonth = thisDate.getUTCMonth()
                 if (!dateLessThan(thisDate, stopAtMonth)) {
@@ -111,6 +142,7 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
             days.push({
                 date: thisDate,
                 selection,
+                bookingSelection,
             })
         }
 
@@ -135,15 +167,17 @@ export default function CabinCalendar({
     bookingUntil,
     intervalChangeCallback,
     defaultDateRange,
+    bookings,
 }: {
     startDate: Date,
     bookingUntil: Date,
     intervalChangeCallback?: (dateRange: DateRange) => void,
-    defaultDateRange?: DateRange
+    defaultDateRange?: DateRange,
+    bookings?: BookingFiltered[],
 }) {
     const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange ?? {})
     const [lastChangeWasStart, setLastChangeWasStart] = useState(false)
-    const [weeks, setWeeks] = useState(generateCalendarData(startDate, bookingUntil, dateRange))
+    const [weeks, setWeeks] = useState(generateCalendarData(startDate, bookingUntil, dateRange, bookings ?? []))
 
     function callback(day: Day) {
         if (datesEqual(day.date, dateRange.start) || datesEqual(day.date, dateRange.end)) return
@@ -167,7 +201,7 @@ export default function CabinCalendar({
         setDateRange(newDateRange)
         if (intervalChangeCallback) intervalChangeCallback(newDateRange)
         setLastChangeWasStart(shouldChangeStart)
-        setWeeks(generateCalendarData(startDate, bookingUntil, newDateRange))
+        setWeeks(generateCalendarData(startDate, bookingUntil, newDateRange, bookings ?? []))
     }
 
     return <div
@@ -222,7 +256,7 @@ function CalendarDay({
     day: Day,
     callback: (sourceDay: Day) => void
 }) {
-    const classList: string[] = [styles.day, styles.exists]
+    const classList: string[] = [styles.front]
 
     const selectionMap: Record<Selection, string> = {
         [Selection.START]: styles.start,
@@ -237,10 +271,16 @@ function CalendarDay({
 
     classList.push(getSelectionStyle(day.selection))
 
-    return <div
-        className={classList.join(' ')}
-        onMouseDown={() => callback(day)}
-    >
-        <div className={styles.dateNumber}>{day.date.getDate()}</div>
+    return <div className={`${styles.day} ${styles.exists}`}>
+        <div
+            className={classList.join(' ')}
+            onMouseDown={() => callback(day)}
+        >
+            <div className={styles.dateNumber}>{day.date.getDate()}</div>
+        </div>
+        <div className={`${styles.behind} ${getSelectionStyle(day.bookingSelection)}`}>
+            <div className={styles.left} />
+            <div className={styles.right} />
+        </div>
     </div>
 }

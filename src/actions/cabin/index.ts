@@ -5,6 +5,7 @@ import { readReleasePeriods } from '@/services/cabin/releasePeriod/read'
 import { updateReleasePeriod } from '@/services/cabin/releasePeriod/update'
 import { deleteReleasePeriod } from '@/services/cabin/releasePeriod/delete'
 import { createCabinBookingUserAttached } from '@/services/cabin/booking/create'
+import { readCabinAvailability } from '@/services/cabin/booking/read'
 
 export const createReleasePeriodAction = action(createReleasePeriod)
 export const readReleasePeriodsAction = action(readReleasePeriods)
@@ -12,3 +13,4 @@ export const updateReleasePeriodAction = action(updateReleasePeriod)
 export const deleteReleasePeriodAction = action(deleteReleasePeriod)
 
 export const createCabinBookinUserAttachedAction = action(createCabinBookingUserAttached)
+export const readCabinAvailabilityAction = action(readCabinAvailability)
