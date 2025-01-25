@@ -28,7 +28,6 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         return createApiResponse(result)
     } catch (error: unknown) {
         if (error instanceof Smorekopp) {
-            console.log("heihei", error)
             return createApiErrorRespone(error.errorCode, error.errors)
         }
         if (error instanceof Error) {
