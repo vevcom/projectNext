@@ -11,9 +11,17 @@ import { PurchaseMethod } from '@prisma/client'
 
 export const createPurchaseByStudentCard = ServiceMethod({
     auther: async (args) => {
-        const user = await readUser({
-            studentCard: args.data.studentCard,
-        })
+        let user
+        try {
+            user = await readUser({
+                studentCard: args.data.studentCard,
+            })
+        } catch (e) {
+            if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
+                throw new ServerError('NOT FOUND', 'Ingen brukere er koblet til studentkortet.')
+            }
+            throw e
+        }
         const permissions = await readPermissionsOfUser(user.id)
         return createPurchaseByStudentCardAuther.dynamicFields({
             permissions,
@@ -21,14 +29,16 @@ export const createPurchaseByStudentCard = ServiceMethod({
     },
     dataValidation: createPurchaseFromStudentCardValidation,
     method: async ({ prisma, data }) => {
+        if (data.products.length === 0) {
+            throw new ServerError('BAD PARAMETERS', 'The list of products to buy cannot be empty')
+        }
+
         const user = await prisma.user.findUniqueOrThrow({
             where: {
                 studentCard: data.studentCard,
             },
             select: userFilterSelection
         })
-
-        if (data.products.length === 0) throw new ServerError('BAD PARAMETERS', 'The list of product to buy cannot be empty')
 
         // Find the price of the different products
         const productPrices = await prisma.shopProduct.findMany({
@@ -50,6 +60,11 @@ export const createPurchaseByStudentCard = ServiceMethod({
         )
 
         // TODO: Create money transaction from sourceAccount to the account to the shop
+        const productList = data.products.map(product => ({
+            productId: product.id,
+            quantity: product.quantity,
+            price: productPriceMap[product.id] ?? 0
+        }))
 
         await prisma.purchase.create({
             data: {
@@ -61,11 +76,7 @@ export const createPurchaseByStudentCard = ServiceMethod({
                 method: PurchaseMethod.STUDENT_CARD,
                 PurchaseProduct: {
                     createMany: {
-                        data: data.products.map(product => ({
-                            productId: product.id,
-                            quantity: product.quantity,
-                            price: productPriceMap[product.id] ?? 0
-                        }))
+                        data: productList,
                     }
                 }
             }
@@ -76,6 +87,7 @@ export const createPurchaseByStudentCard = ServiceMethod({
         return {
             remainingBalance: 15100,
             user,
+            productList,
         }
     }
 })
