@@ -28,6 +28,7 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         return createApiResponse(result)
     } catch (error: unknown) {
         if (error instanceof Smorekopp) {
+            console.log("heihei", error)
             return createApiErrorRespone(error.errorCode, error.errors)
         }
         if (error instanceof Error) {
@@ -49,7 +50,7 @@ export function apiHandler<
             const rawdata = await req.json().catch(console.log)
 
             if (!serviceMethod.dataValidation) {
-                throw new ServerError('SERVER ERROR', 'Tjeneren mottok data, men den mangler validering for dataen.')
+                throw new ServerError('BAD DATA', 'Tjeneren mottok data, men den mangler validering for dataen.')
             }
 
             const parse = serviceMethod.dataValidation.typeValidate(rawdata)

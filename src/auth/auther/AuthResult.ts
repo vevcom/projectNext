@@ -6,14 +6,16 @@ export type AuthStatus = 'AUTHORIZED' | 'UNAUTHORIZED' | 'AUTHORIZED_NO_USER' | 
 
 export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const Authorized extends boolean> {
     public session: SessionType<UserGuatantee>
+    private errorMessage?: string
     private authorized_: Authorized
     public get authorized() {
         return this.authorized_
     }
 
-    public constructor(session: SessionType<UserGuatantee>, authorized: Authorized) {
+    public constructor(session: SessionType<UserGuatantee>, authorized: Authorized, errorMessage?: string) {
         this.session = session
         this.authorized_ = authorized
+        this.errorMessage = errorMessage
     }
 
     public get status(): AuthStatus {
@@ -25,6 +27,10 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
 
         if (typeof this.session.apiKeyId === 'number') return 'UNAUTHORIZED'
         return 'UNAUTHENTICATED'
+    }
+
+    public get getErrorMessage(): string | undefined {
+        return this.errorMessage
     }
 
     public requireAuthorized({ returnUrlIfFail }: { returnUrlIfFail: string }) : AuthResult<UserGuatantee, true> {

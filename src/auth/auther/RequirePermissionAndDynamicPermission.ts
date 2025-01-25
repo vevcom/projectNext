@@ -5,21 +5,25 @@ export const RequirePermissionAndDynamicPermission = AutherFactory<
     {
         permission: Permission,
         dynamicPermission: Permission,
+        errorMessage?: string
     },
     {
         permissions: Permission[],
     },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'
 >(({ session, staticFields, dynamicFields }) => {
-    if (!dynamicFields.permissions.includes(staticFields.dynamicPermission)) {
+    if (!session.permissions.includes(staticFields.permission)) {
         return {
             success: false,
             session
         }
     }
 
+    const dynamicPermissionsPassed = dynamicFields.permissions.includes(staticFields.dynamicPermission)
+
     return {
-        success: session.permissions.includes(staticFields.permission),
-        session
+        success: dynamicPermissionsPassed,
+        session,
+        errorMessage: dynamicPermissionsPassed ? undefined : staticFields.errorMessage
     }
 })

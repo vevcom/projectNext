@@ -34,13 +34,16 @@ export function AutherFactory<
         dynamicFields: DynamicFields
     }) => UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED' ? ({
         success: true,
-        session: SessionUser
+        session: SessionUser,
+        errorMessage?: string,
     } | {
         success: false,
         session: SessionMaybeUser
+        errorMessage?: string,
     }) : ({
         success: boolean,
         session: SessionMaybeUser
+        errorMessage?: string,
     }))
 ): Auther<StaticFields, DynamicFields, UserRequieredOut> {
     return {
@@ -49,14 +52,14 @@ export function AutherFactory<
                 dynamicFields: (dynamicFields) => (
                     {
                         auth: (session) => {
-                            const { session: sessionOut, success } = authCheck({
+                            const { session: sessionOut, success, errorMessage } = authCheck({
                                 session, staticFields, dynamicFields
                             })
                             if (success) {
                                 return new AuthResult(sessionOut, true)
                             }
 
-                            return new AuthResult(sessionOut, false)
+                            return new AuthResult(sessionOut, false, errorMessage)
                         }
                     }
                 )

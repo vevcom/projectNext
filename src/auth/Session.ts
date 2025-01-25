@@ -88,14 +88,29 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const defaultPermissions = await readDefaultPermissions()
         if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
         const { id, key } = decodeApiKey(keyAndIdEncoded)
-        const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted.newClient().execute({
-            session: null,
-            params: id
-        })
+
+        const INVALID_API_KEY_MESSAGE = 'Api nøkkelen er ikke valid'
+
+        let apiKeyFetch
+
+        try {
+            apiKeyFetch = await readApiKeyHashedAndEncrypted.newClient().execute({
+                session: null,
+                params: id
+            })
+        } catch (e) {
+            if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
+                throw new ServerError('INVALID API KEY', INVALID_API_KEY_MESSAGE)
+            }
+            throw e
+        }
+
+        const { keyHashEncrypted, active, permissions } = apiKeyFetch
+
         if (!active) throw new ServerError('INVALID API KEY', 'Api nøkkelen har utløpt')
 
         const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)
-        if (!success) throw new ServerError('INVALID API KEY', 'Api nøkkelen er ikke valid')
+        if (!success) throw new ServerError('INVALID API KEY', INVALID_API_KEY_MESSAGE)
 
         return new Session<'NO_USER'>({
             user: null,

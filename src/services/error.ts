@@ -17,6 +17,11 @@ export const errorCodes = [
         defaultMessage: 'Feil i parametrene',
     },
     {
+        name: 'BAD DATA',
+        httpCode: 400,
+        defaultMessage: 'Feil i dataen',
+    },
+    {
         name: 'UNKNOWN ERROR',
         httpCode: 500,
         defaultMessage: 'En ukjent feil har oppstått',
