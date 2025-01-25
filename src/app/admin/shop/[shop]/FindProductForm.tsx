@@ -16,7 +16,7 @@ export default function FindProductForm({
     if (products.length === 0) return <></>
 
     return <Form
-        action={createShopProductConnectionAction.bind(null, {})}
+        action={createShopProductConnectionAction}
         submitText="Legg til produkt"
     >
         <SelectNumber name="productId" label="Produkt" options={products.map(product => ({

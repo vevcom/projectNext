@@ -1,47 +1,42 @@
-import {
-    ConnectUserStudentCardAuther,
-    CreateUserAuther,
-    ReadUserAuther,
-    RegisterStudentCardInQueueAuther,
-    UpdateUserAuther } from './Authers'
 import { readProfile } from './read'
 import { connectStudentCard, registerStudentCardInQueue, update } from './update'
 import { create } from './create'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { connectUserStudentCardAuther, createUserAuther, readUserAuther, registerStudentCardInQueueAuther, updateUserAuther } from './authers'
 
 export const User = {
     readProfile: ServiceMethod({
         serviceMethodHandler: readProfile,
         hasAuther: true,
-        auther: ReadUserAuther,
+        auther: readUserAuther,
         withData: false,
         dynamicFields: ({ params }) => ({ username: params.username })
     }),
     update: ServiceMethod({
         serviceMethodHandler: update,
         hasAuther: true,
-        auther: UpdateUserAuther,
+        auther: updateUserAuther,
         withData: true,
         dynamicFields: () => ({})
     }),
     create: ServiceMethod({
         serviceMethodHandler: create,
         hasAuther: true,
-        auther: CreateUserAuther,
+        auther: createUserAuther,
         withData: true,
         dynamicFields: () => ({}),
     }),
     registerStudentCardInQueue: ServiceMethod({
         serviceMethodHandler: registerStudentCardInQueue,
         hasAuther: true,
-        auther: RegisterStudentCardInQueueAuther,
+        auther: registerStudentCardInQueueAuther,
         withData: false,
         dynamicFields: params => params.params,
     }),
     connectStudentCard: ServiceMethod({
         serviceMethodHandler: connectStudentCard,
         hasAuther: true,
-        auther: ConnectUserStudentCardAuther,
+        auther: connectUserStudentCardAuther,
         withData: true,
         dynamicFields: () => ({}),
     })

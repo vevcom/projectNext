@@ -152,6 +152,7 @@ enum Permission {
   PURCHASE_CREATE
   PURCHASE_CREATE_ONBEHALF
 
+  LICENSE_ADMIN
 }
 
 model Role {

@@ -1,17 +1,17 @@
 import { EditProductForShopForm } from './EditProductForShopForm'
 import styles from './page.module.scss'
 import FindProductForm from './FindProductForm'
-import { readProducts, readShop } from '@/actions/shop'
+import { readProductsAction, readShopAction } from '@/actions/shop'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayPrice } from '@/lib/money/convert'
+import { sortObjectsByName } from '@/lib/sortObjects'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import type { Product } from '@prisma/client'
-import { sortObjectsByName } from '@/lib/sortObjects'
 
 export default async function Shop(params: {
     params: {
@@ -21,13 +21,13 @@ export default async function Shop(params: {
     const shopId = parseInt(params.params.shop, 10)
     if (isNaN(shopId)) notFound()
 
-    const shopData = unwrapActionReturn(await readShop({
+    const shopData = unwrapActionReturn(await readShopAction({
         shopId,
     }))
 
     if (!shopData) notFound()
 
-    const allProducts = unwrapActionReturn(await readProducts({}))
+    const allProducts = unwrapActionReturn(await readProductsAction())
     let unconnectedProducts: Product[] = []
     if (allProducts) {
         const existingProductIds = new Set(shopData.products.map(p => p.id))

@@ -1,25 +1,24 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
-import { getHttpErrorCode, Smorekopp } from '@/services/error'
+import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
+import type { ValidationTypeUnknown } from '@/services/Validation'
+import type { ServiceMethodType } from '@/services/ServiceMethod'
 import type { SessionNoUser } from '@/auth/Session'
-import type { ServiceMethod } from '@/services/ServiceTypes'
+import type { z } from 'zod'
 
 type APIHandler<
-    WithValidation extends boolean,
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
     RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataValidation extends ValidationTypeUnknown | undefined,
 > = {
-    serviceMethod: ServiceMethod<
-        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction, NoAuther
-    >
-    params: (rawparams: RawParams) => Params
-}
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>,
+} & (ParamsSchema extends undefined ? {
+    params?: undefined,
+} : {
+    params: (rawparams: RawParams) => z.infer<NonNullable<ParamsSchema>>,
+})
 
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
     try {
@@ -39,82 +38,30 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
 }
 
 export function apiHandler<
-    Return,
     RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->(
-    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
-): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
-
-export function apiHandler<
     Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->({
-    serviceMethod,
-    params
-}: APIHandler<
-    true,
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction,
-    NoAuther
->): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
-
-export function apiHandler<
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->({
-    serviceMethod,
-    params
-}: | APIHandler<
-    true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther
-    >
-    | APIHandler<
-    false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther
-    >
-
-) {
-    // TODO: I think I will rewrite this so it is simpler to read
-    if (serviceMethod.withData) {
-        return async (req: Request, { params: rawParams }: { params: RawParams }) =>
-            await apiHandlerGeneric<Return>(req, async session => {
-                const rawdata = await req.json().catch(console.log)
-                const parse = serviceMethod.typeValidate(rawdata)
-                if (!parse.success) {
-                    throw new Smorekopp('BAD PARAMETERS', parse.error.errors)
-                }
-                const data = parse.data
-
-                return serviceMethod.client('NEW').execute({
-                    params: params(rawParams),
-                    data,
-                    session,
-                }, { withAuth: true })
-            })
-    }
-
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataValidation extends ValidationTypeUnknown | undefined = undefined,
+>({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataValidation>) {
+    // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: RawParams }) =>
-        await apiHandlerGeneric(req, session =>
-            serviceMethod.client('NEW').execute({
-                params: params(rawParams),
-                session
-            }, { withAuth: true })
-        )
+        await apiHandlerGeneric<Return>(req, async session => {
+            const rawdata = await req.json().catch(console.log)
+
+            if (!serviceMethod.dataValidation) {
+                throw new ServerError('SERVER ERROR', 'Tjeneren mottok data, men den mangler validering for dataen.')
+            }
+
+            const parse = serviceMethod.dataValidation.typeValidate(rawdata)
+            if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.errors)
+            const data = parse.data
+
+            return serviceMethod.newClient().executeUnsafe({
+                params: params ? params(rawParams) : undefined,
+                data,
+                session,
+            })
+        })
 }
 
 function createApiErrorRespone(errorCode: ErrorCode, message: string | ErrorMessage[]) {

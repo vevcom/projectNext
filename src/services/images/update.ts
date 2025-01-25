@@ -9,11 +9,14 @@ export async function updateImage(
     imageId: number,
     rawdata: UpdateImageTypes['Detailed']
 ): Promise<Image> {
-    const data = updateImageValidation.detailedValidate(rawdata)
+    const { licenseId, ...data } = updateImageValidation.detailedValidate(rawdata)
     return await prismaCall(() => prisma.image.update({
         where: {
             id: imageId,
         },
-        data
+        data: {
+            license: licenseId ? { connect: { id: licenseId } } : undefined,
+            ...data,
+        }
     }))
 }

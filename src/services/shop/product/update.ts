@@ -1,13 +1,15 @@
 import 'server-only'
 import { convertBarcode } from './create'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { updateProductForShopValidation, updateProductValidation } from '@/services/shop/validation'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { updateProductAuther } from '@/services/shop/authers'
+import { z } from 'zod'
 
 
-export const updateProduct = ServiceMethodHandler({
-    withData: true,
-    validation: updateProductValidation,
-    handler: async (prisma, _, data) => prisma.product.update({
+export const updateProduct = ServiceMethod({
+    auther: () => updateProductAuther.dynamicFields({}),
+    dataValidation: updateProductValidation,
+    method: async ({ prisma, data }) => prisma.product.update({
         where: {
             id: data.productId,
         },
@@ -19,13 +21,16 @@ export const updateProduct = ServiceMethodHandler({
     })
 })
 
-export const updateProductForShop = ServiceMethodHandler({
-    withData: true,
-    validation: updateProductForShopValidation,
-    wantsToOpenTransaction: true,
-    handler: async (prisma, { shopId, productId }: { shopId: number, productId: number }, data) => prisma.product.update({
+export const updateProductForShop = ServiceMethod({
+    auther: () => updateProductAuther.dynamicFields({}),
+    dataValidation: updateProductForShopValidation,
+    paramsSchema: z.object({
+        shopId: z.number(),
+        productId: z.number(),
+    }),
+    method: async ({ prisma, params, data }) => prisma.product.update({
         where: {
-            id: productId,
+            id: params.productId,
         },
         data: {
             name: data.name.toUpperCase(),
@@ -35,8 +40,8 @@ export const updateProductForShop = ServiceMethodHandler({
                 update: {
                     where: {
                         shopId_productId: {
-                            shopId,
-                            productId
+                            shopId: params.shopId,
+                            productId: params.productId,
                         },
                     },
                     data: {

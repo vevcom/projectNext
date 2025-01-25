@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import ProductForm from '@/app/admin/product/productForm'
-import { readProduct } from '@/actions/shop'
+import { readProductAction } from '@/actions/shop'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { v4 as uuid } from 'uuid'
@@ -14,7 +14,7 @@ export default async function ProductPage({
         productId: number
     }
 }) {
-    const product = unwrapActionReturn(await readProduct({ productId: Number(params.productId) }))
+    const product = unwrapActionReturn(await readProductAction({ productId: Number(params.productId) }))
 
     return <PageWrapper
         title={product.name}

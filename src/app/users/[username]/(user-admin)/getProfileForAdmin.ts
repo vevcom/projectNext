@@ -1,6 +1,6 @@
 import { readUserProfileAction } from '@/actions/users/read'
 import { Session } from '@/auth/Session'
-import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import { userProfileUpdateAuther } from '@/services/users/authers'
 import { notFound, redirect } from 'next/navigation'
 
 export type PropTypes = {
@@ -22,7 +22,7 @@ export async function getProfileForAdmin({ params }: PropTypes, adminPage: strin
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}/${adminPage}`) //This throws.
     }
-    UserProfileUpdateAuther
+    userProfileUpdateAuther
         .dynamicFields({ username: params.username })
         .auth(session)
         .requireAuthorized({ returnUrlIfFail: `/users/${params.username}/${adminPage}` })

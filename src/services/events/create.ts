@@ -1,17 +1,18 @@
 import 'server-only'
 import { createEventValidation } from './validation'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createEventAuther } from './authers'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { v4 as uuid } from 'uuid'
 
-export const create = ServiceMethodHandler({
-    withData: true,
-    validation: createEventValidation,
-    handler: async (prisma, _, data) => {
+export const createEvent = ServiceMethod({
+    dataValidation: createEventValidation,
+    auther: () => createEventAuther.dynamicFields({}),
+    method: async ({ prisma, data }) => {
         const cmsParagraph = await createCmsParagraph({ name: uuid() })
         const cmsImage = await createCmsImage({ name: uuid() })
 

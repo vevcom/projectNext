@@ -11,6 +11,7 @@ import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
+import { bindParams } from '@/actions/bind'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -29,7 +30,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? updateEventAction.bind(null, { id: event.id }) : createEventAction
+    const action = event ? bindParams(updateEventAction, { id: event.id }) : createEventAction
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)

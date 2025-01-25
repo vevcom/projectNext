@@ -1,17 +1,22 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { readProductByBarcodeValidation } from '@/services/shop/validation'
 import { ServerError } from '@/services/error'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readProductAuther } from '@/services/shop/authers'
+import { z } from 'zod'
 import type { ExtendedProduct } from './Types'
 
-export const readProducts = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => await prisma.product.findMany()
+export const readProducts = ServiceMethod({
+    auther: () => readProductAuther.dynamicFields({}),
+    method: async ({ prisma }) => await prisma.product.findMany()
 })
 
-export const readProduct = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: { productId: number }) => await prisma.product.findUniqueOrThrow({
+export const readProduct = ServiceMethod({
+    auther: () => readProductAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        productId: z.number(),
+    }),
+    method: async ({ prisma, params }) => await prisma.product.findUniqueOrThrow({
         where: {
             id: params.productId
         },
@@ -25,10 +30,10 @@ export const readProduct = ServiceMethodHandler({
     })
 })
 
-export const readProductByBarCode = ServiceMethodHandler({
-    withData: true,
-    validation: readProductByBarcodeValidation,
-    handler: async (prisma, _, data): Promise<ExtendedProduct | null> => {
+export const readProductByBarCode = ServiceMethod({
+    auther: () => readProductAuther.dynamicFields({}),
+    dataValidation: readProductByBarcodeValidation,
+    method: async ({ prisma, data }): Promise<ExtendedProduct | null> => {
         if (!data.barcode) {
             throw new ServerError('BAD PARAMETERS', 'Barcode is required.')
         }

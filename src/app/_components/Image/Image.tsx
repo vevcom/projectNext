@@ -1,6 +1,9 @@
 import styles from './Image.module.scss'
-import type { ImageProps } from 'next/image'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCopyright } from '@fortawesome/free-solid-svg-icons'
 import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
+import type { ImageProps } from 'next/image'
 
 export type ImageSizeOptions = ImageSize | 'ORIGINAL'
 
@@ -10,6 +13,10 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     alt?: string,
     smallSize?: boolean,
     imageContainerClassName?: string,
+    creditPlacement?: 'top' | 'bottom',
+    hideCredit?: boolean,
+    hideCopyRight?: boolean,
+    disableLinkingToLicense?: boolean,
 } & (
     | { imageSize?: never, smallSize?: never, largeSize?: boolean }
     | { imageSize?: never, smallSize?: boolean, largeSize?: never }
@@ -24,6 +31,12 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
  * @param smallSize - (optional) if true, the image will be the small size
  * @param largeSize - (optional) if true, the image will be the large size
  * @param imageSize - (optional) the size of the image
+ * @param imageContainerClassName - (optional) the class name of the
+ * @param creditPlacement - (optional) the placement of the credit
+ * @param hideCredit - (optional) if true, the credit will be hidden
+ * @param hideCopyRight - (optional) if true, the copy right will be hidden
+ * @param disableLinkingToLicense - (optional) if true, the license will not be linked rather
+ * the name will be disblayed alone
  * @param props - the rest of the props to pass to the img tag
  */
 export default function Image({
@@ -34,6 +47,10 @@ export default function Image({
     largeSize,
     imageSize,
     imageContainerClassName,
+    creditPlacement = 'bottom',
+    hideCredit = false,
+    hideCopyRight = false,
+    disableLinkingToLicense = false,
     ...props
 }: PropTypes) {
     let url = `/store/images/${image.fsLocationMediumSize}`
@@ -65,6 +82,17 @@ export default function Image({
                 alt={alt || image.alt}
                 src={url}
             />
+            {image.credit && !hideCredit && <p className={`${styles.credit} ${styles[creditPlacement]}`}>{image.credit}</p>}
+            {!hideCopyRight && image.licenseLink && (
+                <div className={styles.license}>
+                    {disableLinkingToLicense ? <p>{image.licenseName}</p> : (
+                        <Link href={image.licenseLink} target="_blank" referrerPolicy="no-referrer">
+                            {image.licenseName}
+                        </Link>
+                    )}
+                    <FontAwesomeIcon icon={faCopyright}/>
+                </div>
+            )}
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import { createProduct, updateProduct } from '@/actions/shop'
+import { createProductAction, updateProductAction } from '@/actions/shop'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 import type { Product } from '@prisma/client'
@@ -10,8 +10,8 @@ export default function ProductForm({
     product?: Product
 }) {
     const submitForm = product
-        ? updateProduct.bind(null, {})
-        : createProduct.bind(null, {})
+        ? updateProductAction
+        : createProductAction
     return <Form
         action={submitForm}
         submitText={product ? 'Oppdater produkt' : 'Lag nytt produkt'}

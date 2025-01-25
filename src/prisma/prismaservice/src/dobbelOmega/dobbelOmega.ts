@@ -7,8 +7,8 @@ import migrateArticles from './migateArticles'
 import migrateMailAliases from './migrateMailAlias'
 import migrateEvents from './migrateEvents'
 import migrateUsers from './migrateUsers'
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import manifest from '@/src/logger'
+import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 
 /**

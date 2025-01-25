@@ -8,7 +8,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { studentCardRegistrationExpiry, userFilterSelection } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { connectUserStudentCardAuther, registerStudentCardInQueueAuther, updateUserAuther } from './authers'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -17,13 +17,16 @@ import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
 
-export const update = ServiceMethodHandler({
-    withData: true,
-    validation: updateUserValidation,
-    handler: (prisma_, params: { id: number } | { username: string }, data) => prisma_.user.update({
+export const updateUser = ServiceMethod({
+    paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
+    dataValidation: updateUserValidation,
+    auther: () => updateUserAuther.dynamicFields({}),
+    method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
         where: params,
         data
     })
@@ -213,13 +216,18 @@ export async function verifyUserEmail(id: number, email: string): Promise<UserFi
     }))
 }
 
-export const registerStudentCardInQueue = ServiceMethodHandler({
-    withData: false,
-    handler: async (_prisma, { userId }: { userId: number }) => {
+export const registerStudentCardInQueue = ServiceMethod({
+    paramsSchema: z.object({
+        userId: z.number(),
+    }),
+    auther: (args) => registerStudentCardInQueueAuther.dynamicFields({
+        userId: args.params.userId,
+    }),
+    method: async (args) => {
         const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
-        await _prisma.registerStudentCardQueue.upsert({
+        await args.prisma.registerStudentCardQueue.upsert({
             where: {
-                userId,
+                userId: args.params.userId,
             },
             update: {
                 expiry: new Date(expiry),
@@ -227,7 +235,7 @@ export const registerStudentCardInQueue = ServiceMethodHandler({
             create: {
                 user: {
                     connect: {
-                        id: userId,
+                        id: args.params.userId,
                     },
                 },
                 expiry: new Date(expiry),
@@ -236,12 +244,12 @@ export const registerStudentCardInQueue = ServiceMethodHandler({
     }
 })
 
-export const connectStudentCard = ServiceMethodHandler({
-    withData: true,
-    validation: connectStudentCardValidation,
-    wantsToOpenTransaction: true,
-    handler: async (_prisma, _, data) => {
-        const currentQueue = await _prisma.registerStudentCardQueue.findMany({
+export const connectStudentCard = ServiceMethod({
+    auther: () => connectUserStudentCardAuther.dynamicFields({}),
+    dataValidation: connectStudentCardValidation,
+    opensTransaction: true,
+    method: async (args) => {
+        const currentQueue = await args.prisma.registerStudentCardQueue.findMany({
             where: {
                 expiry: {
                     gt: new Date(),
@@ -261,18 +269,18 @@ export const connectStudentCard = ServiceMethodHandler({
         }
 
         const userId = currentQueue[0].userId
-        const result = await _prisma.$transaction([
-            _prisma.registerStudentCardQueue.delete({
+        const result = await args.prisma.$transaction([
+            args.prisma.registerStudentCardQueue.delete({
                 where: {
                     userId,
                 }
             }),
-            _prisma.user.update({
+            args.prisma.user.update({
                 where: {
                     id: userId,
                 },
                 data: {
-                    studentCard: data.studentCard,
+                    studentCard: args.data.studentCard,
                 },
                 select: userFilterSelection,
             })

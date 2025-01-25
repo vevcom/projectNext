@@ -2,7 +2,7 @@
 
 import ProductForm from './productForm'
 import styles from './page.module.scss'
-import { readProducts } from '@/actions/shop'
+import { readProductsAction } from '@/actions/shop'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 
 export default async function ProductPage() {
-    const products = unwrapActionReturn(await readProducts(null))
+    const products = unwrapActionReturn(await readProductsAction())
 
     return <PageWrapper
         title="Produkter"

@@ -473,6 +473,14 @@ export const PermissionConfig = {
         name: 'Kan ta betalt i en butikk',
         description: 'Kan belaste andre brukerkontoer, når de handler i en butikk.',
         category: 'shop'
+    },
+    LICENSE_ADMIN: {
+        name: 'Lisensadministrator',
+        description: `
+            kan administrere lisenser. Alle som eier et bilde kan 
+            legge til en lisens uavhengig av denne tillatelsen
+        `,
+        category: 'diverse admin'
     }
 } satisfies Record<Permission, PermissionInfo>
 

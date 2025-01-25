@@ -1,16 +1,26 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createPurchaseByStudentCardAuther } from '@/services/shop/authers'
 import { createPurchaseFromStudentCardValidation } from '@/services/shop/validation'
 import { ServerError } from '@/services/error'
 import { userFilterSelection } from '@/services/users/ConfigVars'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readUser } from '@/services/users/read'
+import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { PurchaseMethod } from '@prisma/client'
 
 
-export const createPurchaseByStudentCard = ServiceMethodHandler({
-    withData: true,
-    wantsToOpenTransaction: false,
-    validation: createPurchaseFromStudentCardValidation,
-    handler: async (prisma, _, data) => {
+export const createPurchaseByStudentCard = ServiceMethod({
+    auther: async (args) => {
+        const user = await readUser({
+            studentCard: args.data.studentCard,
+        })
+        const permissions = await readPermissionsOfUser(user.id)
+        return createPurchaseByStudentCardAuther.dynamicFields({
+            permissions,
+        })
+    },
+    dataValidation: createPurchaseFromStudentCardValidation,
+    method: async ({ prisma, data }) => {
         const user = await prisma.user.findUniqueOrThrow({
             where: {
                 studentCard: data.studentCard,

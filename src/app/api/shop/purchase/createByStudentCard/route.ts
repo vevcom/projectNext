@@ -1,9 +1,8 @@
 'use server'
 import { apiHandler } from '@/app/api/apiHandler'
-import { Shop } from '@/services/shop'
+import { createPurchaseByStudentCard } from '@/services/shop/purchase/create'
 
 
 export const POST = apiHandler({
-    serviceMethod: Shop.createPurchaseByStudentCard,
-    params: () => ({}),
+    serviceMethod: createPurchaseByStudentCard,
 })

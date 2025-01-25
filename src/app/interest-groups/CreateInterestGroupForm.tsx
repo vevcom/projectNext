@@ -9,7 +9,7 @@ export default function CreateInterestGroupForm() {
             <h2>Lag interessegruppe</h2>
             <Form
                 refreshOnSuccess
-                action={createInterestGroupAction.bind(null, {})}
+                action={createInterestGroupAction}
                 submitText="Lag interessegruppe"
             >
                 <TextInput name="name" label="Navn" />

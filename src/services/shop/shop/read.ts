@@ -1,17 +1,23 @@
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import 'server-only'
 import type { ExtendedShop } from './Types'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readShopAuther, readShopsAuther } from '../authers'
+import { z } from 'zod'
 
-export const readShops = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => prisma.shop.findMany()
+export const readShops = ServiceMethod({
+    auther: () => readShopsAuther.dynamicFields({}),
+    method: async ({ prisma }) => prisma.shop.findMany()
 })
 
-export const readShop = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { shopId }: { shopId: number }): Promise<ExtendedShop | null> => {
+export const readShop = ServiceMethod({
+    paramsSchema: z.object({
+        shopId: z.number(),
+    }),
+    auther: () => readShopAuther.dynamicFields({}),
+    method: async ({ prisma, params }): Promise<ExtendedShop | null> => {
         const results = await prisma.shop.findFirst({
             where: {
-                id: shopId
+                id: params.shopId
             },
             include: {
                 ShopProduct: {

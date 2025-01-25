@@ -8,7 +8,7 @@ import {
     ReadShop,
     ReadShops,
     UpdateProduct
-} from './Authers'
+} from './authers'
 import { readShop, readShops } from './shop/read'
 import { createShop } from './shop/create'
 import { readProduct, readProductByBarCode, readProducts } from './product/read'
@@ -18,6 +18,8 @@ import { updateProduct, updateProductForShop } from './product/update'
 import { readUser } from '@/services/users/read'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
+
+// TODO: This file should be deleted
 
 export const Shop = {
     readShops: ServiceMethod({

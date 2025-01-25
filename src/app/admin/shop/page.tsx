@@ -1,7 +1,7 @@
 'use server'
 import ShopForm from './shopForm'
 import styles from './page.module.scss'
-import { readShops } from '@/actions/shop'
+import { readShopsAction } from '@/actions/shop'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid'
 
 
 export default async function Shop() {
-    const shops = unwrapActionReturn(await readShops(null))
+    const shops = unwrapActionReturn(await readShopsAction())
 
     return <PageWrapper
         title="Butikker"

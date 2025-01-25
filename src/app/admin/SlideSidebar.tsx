@@ -15,7 +15,8 @@ import {
     faPaperPlane,
     faSchool,
     faDotCircle,
-    faShop
+    faShop,
+    faListDots,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -191,6 +192,18 @@ const navigations = [
             },
         ]
     },
+    {
+        header: {
+            title: 'Annet',
+            icon: faListDots
+        },
+        links: [
+            {
+                title: 'Lisenser',
+                href: '/admin/licenses'
+            },
+        ]
+    }
 ] satisfies {
     header: {
         icon: IconDefinition

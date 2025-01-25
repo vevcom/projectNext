@@ -7,7 +7,7 @@ import type { ImageCursor, ImageDetails } from '@/services/images/Types'
 
 export type PageSizeImage = 30
 const fetcher = async (x: ReadPageInput<PageSizeImage, ImageCursor, ImageDetails>) => {
-    const ret = await readImagesPageAction(x)
+    const ret = await readImagesPageAction({ paging: x })
     return ret
 }
 

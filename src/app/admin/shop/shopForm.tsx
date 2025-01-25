@@ -1,11 +1,11 @@
-import { createShop } from '@/actions/shop'
+import { createShopAction } from '@/actions/shop'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 
 
 export default function ShopForm() {
     return <Form
-        action={createShop.bind(null, {})}
+        action={createShopAction}
         submitText="Lag ny butikk"
         refreshOnSuccess
     >

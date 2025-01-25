@@ -1,9 +1,11 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import {
     createProductForShopValidation,
     createProductValidation,
     createShopProductConnectionValidation } from '@/services/shop/validation'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { createProductAuther, createShopProductConnectionAuther } from '@/services/shop/authers'
+import { z } from 'zod'
 
 export function convertBarcode(barcode?: string | number) {
     if (typeof barcode === 'string' || typeof barcode === 'number') {
@@ -15,11 +17,10 @@ export function convertBarcode(barcode?: string | number) {
     return null
 }
 
-export const createProduct = ServiceMethodHandler({
-    withData: true,
-    validation: createProductValidation,
-    wantsToOpenTransaction: true,
-    handler: async (prisma, _, data) => prisma.product.create({
+export const createProduct = ServiceMethod({
+    auther: () => createProductAuther.dynamicFields({}),
+    dataValidation: createProductValidation,
+    method: async ({ prisma, data }) => prisma.product.create({
         data: {
             ...data,
             barcode: convertBarcode(data.barcode),
@@ -28,11 +29,13 @@ export const createProduct = ServiceMethodHandler({
     })
 })
 
-export const createProductForShop = ServiceMethodHandler({
-    withData: true,
-    validation: createProductForShopValidation,
-    wantsToOpenTransaction: true,
-    handler: async (prisma, { shopId }: { shopId: number }, data) => prisma.product.create({
+export const createProductForShop = ServiceMethod({
+    auther: () => createProductAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        shopId: z.number(),
+    }),
+    dataValidation: createProductForShopValidation,
+    method: async ({ prisma, params, data }) => prisma.product.create({
         data: {
             name: data.name.toUpperCase(),
             description: data.description,
@@ -42,7 +45,7 @@ export const createProductForShop = ServiceMethodHandler({
                     price: data.price,
                     shop: {
                         connect: {
-                            id: shopId,
+                            id: params.shopId,
                         },
                     },
                 },
@@ -51,10 +54,10 @@ export const createProductForShop = ServiceMethodHandler({
     })
 })
 
-export const createShopProductConnection = ServiceMethodHandler({
-    withData: true,
-    validation: createShopProductConnectionValidation,
-    handler: async (prisma, _, data) => prisma.shopProduct.create({
+export const createShopProductConnection = ServiceMethod({
+    auther: () => createShopProductConnectionAuther.dynamicFields({}),
+    dataValidation: createShopProductConnectionValidation,
+    method: async ({ prisma, data }) => prisma.shopProduct.create({
         data: {
             shop: {
                 connect: {

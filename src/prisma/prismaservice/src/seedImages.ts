@@ -1,4 +1,4 @@
-import { seedImageConfig, seedSpecialImageConfig } from './seedImagesConfig'
+import { seedImageConfig, seedSpecialImageConfig, seedLicenseConfig } from './seedImagesConfig'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
 import { readdir, copyFile } from 'fs/promises'
@@ -25,6 +25,11 @@ export const imageStoreLocation = join(__dirname, '..', 'store', 'images')
  * @param pisama - the prisma client
  */
 export default async function seedImages(prisma: PrismaClient) {
+    // Seed all licenses
+    await prisma.license.createMany({
+        data: seedLicenseConfig
+    })
+
     const files = await readdir(standardLocation)
 
     //Get the to bjects to a common format
@@ -93,6 +98,12 @@ export default async function seedImages(prisma: PrismaClient) {
             data: {
                 name: image.name,
                 alt: image.alt,
+                credit: image.credit,
+                license: image.license ? {
+                    connect: {
+                        name: image.license
+                    }
+                } : undefined,
                 fsLocationOriginal,
                 fsLocationSmallSize,
                 fsLocationMediumSize,
