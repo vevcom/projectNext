@@ -15,7 +15,8 @@ import {
     faPaperPlane,
     faSchool,
     faDotCircle,
-    faHouse
+    faHouse,
+    faListDots
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -188,6 +189,18 @@ const navigations = [
             {
                 title: 'Rom',
                 href: '/admin/cabin-room',
+            },
+        ]
+    },
+    {
+        header: {
+            title: 'Annet',
+            icon: faListDots
+        },
+        links: [
+            {
+                title: 'Lisenser',
+                href: '/admin/licenses'
             },
         ]
     }

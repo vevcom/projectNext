@@ -1,46 +1,54 @@
 import 'server-only'
 import { createAdmissionTrialValidation } from './validation'
 import { readUserAdmissionTrials } from './read'
-import { prismaCall } from '@/services/prismaCall'
+import { createAdmissionTrialAuther } from './auth'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
-import prisma from '@/prisma'
 import { userFilterSelection } from '@/services/users/ConfigVars'
 import { Admission } from '@prisma/client'
-import type { CreateAdmissionTrialType } from './validation'
+import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
-export async function createAdmissionTrial(
-    data: CreateAdmissionTrialType['Detailed']
-): Promise<ExpandedAdmissionTrail> {
-    const parse = createAdmissionTrialValidation.detailedValidate(data)
-
-    const results = await prismaCall(() => prisma.admissionTrial.create({
-        data: {
-            user: {
-                connect: {
-                    id: parse.userId,
+export const createAdmissionTrial = ServiceMethod({
+    auther: () => createAdmissionTrialAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        admission: z.nativeEnum(Admission),
+    }),
+    dataValidation: createAdmissionTrialValidation,
+    method: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
+        const results = await prisma.admissionTrial.create({
+            data: {
+                user: {
+                    connect: {
+                        id: data.userId,
+                    },
                 },
-            },
-            registeredBy: {
-                connect: {
-                    id: parse.registeredBy,
+                registeredBy: {
+                    connect: {
+                        id: session.user?.id,
+                    },
                 },
+                admission: params.admission,
             },
-            admission: parse.admission,
-        },
-        include: {
-            user: {
-                select: userFilterSelection
+            include: {
+                user: {
+                    select: userFilterSelection
+                }
             }
+        })
+
+        // check if user has taken all admissions
+        const userTrials = await readUserAdmissionTrials.newClient().execute({
+            session,
+            params: {
+                userId: data.userId
+            },
+        })
+
+        if (Object.keys(Admission).length === userTrials.length) {
+            updateUserOmegaMembershipGroup(data.userId, 'MEMBER', true)
         }
-    }))
 
-    // check if user has taken all admissions
-    const userTrials = await readUserAdmissionTrials(parse.userId)
-
-    if (Object.keys(Admission).length === userTrials.length) {
-        updateUserOmegaMembershipGroup(parse.userId, 'MEMBER', true)
+        return results
     }
-
-    return results
-}
+})

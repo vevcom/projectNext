@@ -1,7 +1,8 @@
 'use server'
+import { action } from '@/actions/action'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail } from '@/services/users/update'
+import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail, updateUser } from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
     registerUserValidation,
@@ -11,28 +12,11 @@ import {
 import { verifyResetPasswordToken } from '@/services/auth/resetPassword'
 import { ServerError } from '@/services/error'
 import { verifyVerifyEmailToken } from '@/services/auth/verifyEmail'
-import { User } from '@/services/users'
-import { Session } from '@/auth/Session'
 import type { RegisterNewEmailType, UserFiltered } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { User as UserT } from '@prisma/client'
-import type { UpdateUserTypes, RegisterUserTypes } from '@/services/users/validation'
+import type { RegisterUserTypes } from '@/services/users/validation'
 
-export async function updateUserAction(
-    id: number,
-    rawdata: FormData | UpdateUserTypes['Type']
-): Promise<ActionReturn<UserT>> {
-    //TODO: Permission check
-    const parse = User.update.typeValidate(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-
-    return await safeServerCall(async () => User.update.client('NEW').execute({
-        params: { id },
-        data,
-        session: await Session.fromNextAuth(),
-    }, { withAuth: true }))
-}
+export const updateUserAction = action(updateUser)
 
 export async function registerNewEmailAction(rawdata: FormData): Promise<ActionReturn<RegisterNewEmailType>> {
     const { user, authorized, status } = await getUser({

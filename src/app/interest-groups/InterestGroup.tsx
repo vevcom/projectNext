@@ -2,7 +2,7 @@ import styles from './InterestGroup.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
-import { DestroyInterestGroupAuther, UpdateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
+import { destroyInterestGroupAuther, updateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
 import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
@@ -15,8 +15,8 @@ type PropTypes = {
 }
 
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
-    const canUpdate = UpdateInterestGroupAuther.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
-    const canDestroy = DestroyInterestGroupAuther.dynamicFields({}).auth(session)
+    const canUpdate = updateInterestGroupAuther.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
+    const canDestroy = destroyInterestGroupAuther.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
 
@@ -34,9 +34,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}
-                                            action={updateInterestGroupAction.bind(
-                                                null, { id: interestGroup.id }
-                                            )}
+                                            action={updateInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
                                             submitText="Endre"
                                         >
                                             <TextInput
@@ -58,9 +56,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                     <Form
                                         refreshOnSuccess
                                         closePopUpOnSuccess={PopUpKey}
-                                        action={destroyInterestGroupAction.bind(
-                                            null, { id: interestGroup.id }
-                                        )}
+                                        action={destroyInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{

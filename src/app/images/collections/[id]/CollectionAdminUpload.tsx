@@ -6,6 +6,8 @@ import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
+import TextInput from '@/app/_components/UI/TextInput'
+import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
@@ -31,12 +33,16 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         const doneFiles: FileWithStatus[] = []
 
         const useFileName = data.get('useFileName') === 'on'
+        const credit = typeof data.get('credit') === 'string' ? data.get('credit') : undefined
+        const licenseId = typeof data.get('licenseId') === 'string' ? data.get('licenseId') : undefined
 
         let res: ActionReturn<void> = { success: true, data: undefined }
         setProgress(0)
         const progressIncrement = 1 / batches.length
         for (const batch of batches) {
             const formData = new FormData()
+            if (credit) formData.append('credit', credit)
+            if (licenseId) formData.append('licenseId', licenseId)
             batch.forEach(file => {
                 formData.append('files', file.file)
             })
@@ -46,7 +52,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 }
                 return file
             }))
-            res = await createImagesAction.bind(null, useFileName).bind(null, collectionId)(formData)
+            res = await createImagesAction({ useFileName, collectionId }, formData)
             if (res.success) {
                 doneFiles.push(...batch)
                 setFiles(files.map(file => {
@@ -82,6 +88,8 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
             action={handleBatchedUpload}
         >
             <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
+            <TextInput name="credit" label="Kreditering" />
+            <LicenseChooser />
             <Slider label="Bruk filnavn som navn" name="useFileName" />
             {
                 progress ? <ProgressBar progress={progress} /> : <></>

@@ -3,9 +3,8 @@ import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { getUser } from '@/auth/getUser'
 import { readGroupsExpanded } from '@/services/groups/read'
-import { readUserPage } from '@/services/users/read'
+import { readUserPage, readUserProfile } from '@/services/users/read'
 import { Session } from '@/auth/Session'
-import { User } from '@/services/users'
 import type { ExpandedGroup } from '@/services/groups/Types'
 import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -38,9 +37,9 @@ export async function readUserPageAction<const PageSize extends number>(
 export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
     const session = await Session.fromNextAuth()
 
-    return safeServerCall(() => User.readProfile.client('NEW').execute({
+    return safeServerCall(() => readUserProfile.newClient().execute({
         session, params: { username }
-    }, { withAuth: true }))
+    }))
 }
 
 export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {

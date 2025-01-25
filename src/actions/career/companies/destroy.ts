@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Companies } from '@/services/career/companies'
+import { action } from '@/actions/action'
+import { destroyCompany } from '@/services/career/companies/destroy'
 
-export const destroyCompanyAction = ActionNoData(Companies.destory)
+export const destroyCompanyAction = action(destroyCompany)

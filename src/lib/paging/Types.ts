@@ -9,8 +9,7 @@ export type Page<PageSize extends number, Cursor> = {
     cursor: null
 })
 
-
-export type ReadPageInput<PageSize extends number, Cursor, InputDetailType = undefined> = {
+export type ReadPageInput<PageSize extends number, Cursor, InputDetails = undefined> = {
     page: Page<PageSize, Cursor>,
-    details: InputDetailType,
+    details: InputDetails,
 }

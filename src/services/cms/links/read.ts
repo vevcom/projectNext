@@ -1,11 +1,16 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { readSpecialCmsLinkAuther } from './authers'
 import logger from '@/lib/logger'
-import type { SpecialCmsLink } from '@prisma/client'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { SpecialCmsLink } from '@prisma/client'
+import { z } from 'zod'
 
-export const readSpecial = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { special }: {special: SpecialCmsLink}) => {
+export const readSpecialCmsLink = ServiceMethod({
+    paramsSchema: z.object({
+        special: z.nativeEnum(SpecialCmsLink),
+    }),
+    auther: () => readSpecialCmsLinkAuther.dynamicFields({}),
+    method: async ({ prisma, params: { special } }) => {
         const cmsLink = await prisma.cmsLink.findUnique({
             where: { special }
         })

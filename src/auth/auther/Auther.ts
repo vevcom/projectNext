@@ -5,7 +5,7 @@ export type UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_RE
 
 export type AutherStaticFieldsBound<
     DynamicFields extends object,
-    UserRequieredOut extends UserRequieredOutOpt,
+    UserRequieredOut extends UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED',
 > = {
     dynamicFields: (dynamicFields: DynamicFields) => {
         auth: (session: SessionMaybeUser) => UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED'

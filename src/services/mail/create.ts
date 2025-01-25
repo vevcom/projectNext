@@ -20,7 +20,6 @@ import type {
     CreateMailingListUserType
 } from './validation'
 
-
 export async function createAliasMailingListRelation(
     rawdata: CreateAliasMailingListType['Detailed']
 ): Promise<MailAliasMailingList> {

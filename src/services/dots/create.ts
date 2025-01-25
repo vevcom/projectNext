@@ -1,17 +1,23 @@
 import 'server-only'
-import { Dots } from '.'
 import { DOT_BASE_DURATION } from './ConfigVars'
 import { createDotValidation } from './validation'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createDotAuther } from './authers'
+import { readDotsForUser } from './read'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const create = ServiceMethodHandler({
-    withData: true,
-    validation: createDotValidation,
-    wantsToOpenTransaction: true,
-    handler: async (prisma, params: { accuserId: number }, { value, ...data }, session) => {
-        const activeDots = await Dots.readForUser.client(prisma).execute(
-            { params: { userId: data.userId, onlyActive: true }, session }, { withAuth: true }
-        )
+export const createDot = ServiceMethod({
+    dataValidation: createDotValidation,
+    auther: ({ data }) => createDotAuther.dynamicFields({ userId: data.userId }),
+    paramsSchema: z.object({
+        accuserId: z.number(),
+    }),
+    opensTransaction: true,
+    method: async ({ prisma, params, data: { value, ...data }, session }) => {
+        const activeDots = await readDotsForUser.client(prisma).execute({
+            params: { userId: data.userId, onlyActive: true },
+            session,
+        })
 
         const dotData : { expiresAt: Date }[] = []
         let prevExpiresAt = activeDots.length > 0 ? activeDots[activeDots.length - 1].expiresAt : new Date()

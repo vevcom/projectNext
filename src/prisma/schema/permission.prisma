@@ -145,6 +145,8 @@ enum Permission {
   CABIN_BOOKING_CREATE
   CABIN_BOOKING_ADMIN
   CABIN_ADMIN
+
+  LICENSE_ADMIN
 }
 
 model Role {

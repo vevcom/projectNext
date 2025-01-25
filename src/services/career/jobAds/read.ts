@@ -1,23 +1,32 @@
 import 'server-only'
 import { jobAdArticleRealtionsIncluder, simpleJobAdArticleRealtionsIncluder } from './ConfigVars'
+import { readJobAdAuther } from './authers'
 import { CompanyRelationIncluder } from '@/career/companies/ConfigVars'
 import { ServerError } from '@/services/error'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import type { ExpandedJobAd, JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from './Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { z } from 'zod'
+import { JobType } from '@prisma/client'
+import type { ExpandedJobAd, SimpleJobAd } from './Types'
 
 /**
  * This handler reads a jobAd by id or articleName and order
  * @param idOrName - id or articleName and order of jobAd to read (id or {articleName: string, order: number})
  * @returns ExpandedJobAd - the jobAd and its article
  */
-export const read = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { idOrName }: { idOrName: number | {
-        articleName: string
-        order: number
-    } }): Promise<ExpandedJobAd> => {
+export const readJobAd = ServiceMethod({
+    paramsSchema: z.object({
+        idOrName: z.union([
+            z.number(),
+            z.object({
+                articleName: z.string(),
+                order: z.number(),
+            }),
+        ]),
+    }),
+    auther: () => readJobAdAuther.dynamicFields({}),
+    method: async ({ prisma, params: { idOrName } }): Promise<ExpandedJobAd> => {
         const jobAd = await prisma.jobAd.findUnique({
             where: typeof idOrName === 'number' ? {
                 id: idOrName
@@ -43,9 +52,9 @@ export const read = ServiceMethodHandler({
  * This handler reads all active jobAds
  * @returns SimpleJobAd[] - all jobAds with coverImage
  */
-export const readActive = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma): Promise<SimpleJobAd[]> => {
+export const readActiveJobAds = ServiceMethod({
+    auther: () => readJobAdAuther.dynamicFields({}),
+    method: async ({ prisma }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
             orderBy: {
                 article: {
@@ -69,11 +78,19 @@ export const readActive = ServiceMethodHandler({
  * This handler reads a page of inactive jobAds
  * @param paging - the page to read, includes details to filter by name (articleName) and the type.
  */
-export const readInactivePage = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: {
-        paging: ReadPageInput<number, JobAdInactiveCursor, JobAdInactiveDetails>
-    }): Promise<SimpleJobAd[]> => {
+export const readInactiveJobAdsPage = ServiceMethod({
+    paramsSchema: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            name: z.string().nullable(),
+            type: z.nativeEnum(JobType).nullable(),
+        }),
+    ),
+    auther: () => readJobAdAuther.dynamicFields({}),
+    method: async ({ prisma, params }): Promise<SimpleJobAd[]> => {
         const jobAds = await prisma.jobAd.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
