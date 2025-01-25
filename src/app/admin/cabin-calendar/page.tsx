@@ -1,15 +1,15 @@
 'use server'
 import PageStateWrapper from './PageStateWrapper'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
-import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readReleasePeriodsAction } from '@/actions/cabin'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 
 
 export default async function CabinCalendarPage() {
-    const releaseGroups = unwrapActionReturn(await readReleasePeriodsAction(null))
+    const releasePeriods = unwrapActionReturn(await readReleasePeriodsAction())
     return <PageWrapper
         title="Heutte Kalender"
     >
-        <PageStateWrapper bookingPeriods={[]} releaseGroups={releaseGroups} />
+        <PageStateWrapper releasePeriods={releasePeriods} />
     </PageWrapper>
 }

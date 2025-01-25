@@ -186,10 +186,6 @@ const navigations = [
                 title: 'Kalender',
                 href: '/admin/cabin-calendar',
             },
-            {
-                title: 'Rom',
-                href: '/admin/cabin-room',
-            },
         ]
     },
     {

@@ -41,7 +41,7 @@ export const createCabinBookingUserAttached = ServiceMethod({
                 },
                 type: 'CABIN',
                 start: data.start,
-                end: data.start,
+                end: data.end,
                 tenantNotes: data.tenantNotes,
                 // TODO: Add cabin as a product.
             }
@@ -53,14 +53,14 @@ async function cabinAvailable(prisma: PrismaClient | Prisma.TransactionClient, s
     const results = await prisma.booking.findMany({
         where: {
             start: {
-                lte: endDate,
+                lt: endDate,
             },
             end: {
-                gte: startDate,
+                gt: startDate,
             },
         }
     })
-    return results.length > 0
+    return results.length === 0
 }
 
 async function getLatestReleaseDate(prisma: PrismaClient | Prisma.TransactionClient) {
