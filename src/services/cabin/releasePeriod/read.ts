@@ -1,8 +1,9 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readReleasePeriodAuther } from '@/services/cabin/authers'
 
-export const readReleasePeriods = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => await prisma.releasePeriod.findMany()
+export const readReleasePeriods = ServiceMethod({
+    auther: () => readReleasePeriodAuther.dynamicFields({}),
+    method: async ({ prisma }) => await prisma.releasePeriod.findMany()
 })
 

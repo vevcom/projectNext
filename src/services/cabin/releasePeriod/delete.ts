@@ -1,10 +1,15 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { deleteReleasePeriodAuther } from '@/services/cabin/authers'
+import { z } from 'zod'
 
 
-export const deleteReleasePeriod = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: { id: number }) => prisma.releasePeriod.delete({
+export const deleteReleasePeriod = ServiceMethod({
+    auther: () => deleteReleasePeriodAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    method: async ({ prisma, params }) => prisma.releasePeriod.delete({
         where: {
             id: params.id,
         }
