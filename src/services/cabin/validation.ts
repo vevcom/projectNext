@@ -1,4 +1,4 @@
-import { dateLessThan } from '@/lib/dates/comparison'
+import { dateLessThan, dateLessThanOrEqualTo } from '@/lib/dates/comparison'
 import { ValidationBase } from '@/services/Validation'
 import { BookingType } from '@prisma/client'
 import { z } from 'zod'
@@ -10,11 +10,17 @@ const baseCabinValidation = new ValidationBase({
         releaseTime: z.string(),
         releaseUntil: z.string(),
         type: z.nativeEnum(BookingType),
-        start: z.string().date(),
-        end: z.string().date(),
-        name: z.string(),
+        start: z.coerce.string().date(),
+        end: z.coerce.string().date(),
+        firstname: z.string(),
+        lastname: z.string(),
+        mobile: z.string(),
         capacity: z.coerce.number(),
+        tenantNotes: z.string().optional(),
         notes: z.string().optional(),
+        acceptedTerms: z.literal('on', {
+            errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+        }),
     },
     details: {
         id: z.coerce.number(),
@@ -24,15 +30,22 @@ const baseCabinValidation = new ValidationBase({
         type: z.nativeEnum(BookingType),
         start: z.date(),
         end: z.date(),
-        name: z.string().min(2).max(20),
+        firstname: z.string().min(2).max(20),
+        lastname: z.string().min(2).max(20),
+        mobile: z.string(),
         capacity: z.coerce.number().int().min(0),
-        notes: z.string().max(20).optional(),
+        tenantNotes: z.string().optional(),
+        notes: z.string().optional(),
+        acceptedTerms: z.literal('on', {
+            errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+        }),
     }
 })
 
 const refiner = {
-    fcn: (data: { start: Date, end: Date }) => dateLessThan(data.start, data.end),
-    message: 'Start dato må være før sluttdato.'
+    fcn: (data: { start: Date, end: Date }) =>
+        dateLessThan(data.start, data.end) && dateLessThanOrEqualTo(new Date(), data.start),
+    message: 'Start dato må være før sluttdato. Start daten må være i ramtiden'
 }
 
 const releasePeriodRefiner = {
@@ -58,5 +71,15 @@ export const updateReleasePeriodValidation = baseCabinValidation.createValidatio
         releaseTime: new Date(data.releaseTime),
     }),
     refiner: releasePeriodRefiner,
+})
+
+export const createCabinBookingUserAttachedValidation = baseCabinValidation.createValidation({
+    keys: ['start', 'end', 'tenantNotes', 'acceptedTerms'],
+    transformer: data => ({
+        ...data,
+        start: new Date(data.start),
+        end: new Date(data.end),
+    }),
+    refiner,
 })
 

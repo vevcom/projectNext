@@ -38,7 +38,7 @@ type Week = {
     number: number,
 }
 
-type DateRange = {
+export type DateRange = {
     start?: Date,
     end?: Date,
 }
@@ -132,12 +132,16 @@ function generateCalendarData(startDate: Date, endDate: Date, dateRange: DateRan
 
 export default function CabinCalendar({
     startDate,
-    bookingUntil
+    bookingUntil,
+    intervalChangeCallback,
+    defaultDateRange,
 }: {
     startDate: Date,
     bookingUntil: Date,
+    intervalChangeCallback?: (dateRange: DateRange) => void,
+    defaultDateRange?: DateRange
 }) {
-    const [dateRange, setDateRange] = useState<DateRange>({})
+    const [dateRange, setDateRange] = useState<DateRange>(defaultDateRange ?? {})
     const [lastChangeWasStart, setLastChangeWasStart] = useState(false)
     const [weeks, setWeeks] = useState(generateCalendarData(startDate, bookingUntil, dateRange))
 
@@ -161,6 +165,7 @@ export default function CabinCalendar({
             }
         }
         setDateRange(newDateRange)
+        if (intervalChangeCallback) intervalChangeCallback(newDateRange)
         setLastChangeWasStart(shouldChangeStart)
         setWeeks(generateCalendarData(startDate, bookingUntil, newDateRange))
     }

@@ -29,3 +29,7 @@ export function dateLessThan(lhs: Date, rhs: Date) {
     if (lhs.getUTCDate() < rhs.getUTCDate()) return true
     return false
 }
+
+export function dateLessThanOrEqualTo(lhs: Date, rhs: Date) {
+    return datesEqual(lhs, rhs) || dateLessThan(lhs, rhs)
+}

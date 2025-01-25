@@ -7,7 +7,10 @@ import TextInput from '@/app/_components/UI/TextInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import { useUser } from '@/auth/useUser'
+import { createCabinBookinUserAttachedAction } from '@/actions/cabin'
+import { getZodDateString } from '@/lib/dates/formatting'
 import { useState } from 'react'
+import type { DateRange } from './CabinCalendar'
 import type { BookingType } from '@prisma/client'
 
 export default function StateWrapper() {
@@ -15,15 +18,25 @@ export default function StateWrapper() {
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
 
     const [bookingType, setBookingType] = useState<BookingType>('CABIN')
+    const [dateRange, setDateRange] = useState<DateRange>({})
 
     const user = useUser()
 
     return <>
-        <CabinCalendar startDate={new Date()} bookingUntil={bookingUntil} />
+        <CabinCalendar
+            startDate={new Date()}
+            bookingUntil={bookingUntil}
+            defaultDateRange={dateRange}
+            intervalChangeCallback={setDateRange}
+        />
 
         <Form
+            action={createCabinBookinUserAttachedAction.bind(null, { userId: user.user?.id ?? -1 })}
             submitText="Book hytta"
         >
+            <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} />
+            <input type="hidden" name="end" value={getZodDateString(dateRange.end) ?? ''} />
+
             <RadioLarge
                 name="Select type"
                 options={[
@@ -53,7 +66,7 @@ export default function StateWrapper() {
 
             <TextInput name="tenantNotes" label="Notater til utleier" />
 
-            <Checkbox name="AcceptTerms" label="Jeg godtar vilkårene under" />
+            <Checkbox name="acceptedTerms" label="Jeg godtar vilkårene under" />
 
         </Form>
 
