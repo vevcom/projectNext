@@ -1,10 +1,15 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { destroyLicenseAuther } from './Authers'
 import { ServerError } from '@/services/error'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export const destroy = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: { id: number }) => {
+export const destroyLicense = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: () => destroyLicenseAuther.dynamicFields({}),
+    method: async ({ prisma, params }) => {
         const { name: licenseName } = await prisma.license.findUniqueOrThrow({
             where: { id: params.id },
             select: { name: true }

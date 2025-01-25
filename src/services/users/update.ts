@@ -7,7 +7,7 @@ import {
     verifyUserEmailValidation
 } from './validation'
 import { userFilterSelection } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { updateUserAuther } from './authers'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -16,13 +16,16 @@ import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 import type { RegisterUserTypes, UpdateUserPasswordTypes, VerifyEmailType } from './validation'
 import type { RegisterNewEmailType, UserFiltered } from './Types'
 
-export const update = ServiceMethodHandler({
-    withData: true,
-    validation: updateUserValidation,
-    handler: (prisma_, params: { id: number } | { username: string }, data) => prisma_.user.update({
+export const updateUser = ServiceMethod({
+    paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
+    dataValidation: updateUserValidation,
+    auther: () => updateUserAuther.dynamicFields({}),
+    method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
         where: params,
         data
     })

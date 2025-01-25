@@ -1,7 +1,7 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { EventTags } from '@/services/events/tags'
+import { action } from '@/actions/action'
+import { readAllEventTags, readEventTag, readSpecialEventTag } from '@/services/events/tags/read'
 
-export const readEventTagsAction = ActionNoData(EventTags.readAll)
-export const readSpecialEventTagAction = ActionNoData(EventTags.readSpecial)
-export const readEventTagAction = ActionNoData(EventTags.read)
+export const readEventTagsAction = action(readAllEventTags)
+export const readSpecialEventTagAction = action(readSpecialEventTag)
+export const readEventTagAction = action(readEventTag)

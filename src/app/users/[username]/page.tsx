@@ -7,7 +7,7 @@ import { sexConfig } from '@/services/users/ConfigVars'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
-import { UserProfileUpdateAuther } from '@/services/users/Authers'
+import { userProfileUpdateAuther } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -48,7 +48,7 @@ export default async function User({ params }: PropTypes) {
         return res.data
     })
 
-    const { authorized: canAdministrate } = UserProfileUpdateAuther.dynamicFields(
+    const { authorized: canAdministrate } = userProfileUpdateAuther.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 

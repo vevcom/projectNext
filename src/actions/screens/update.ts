@@ -1,5 +1,5 @@
 'use server'
-import { AdminScreenAuther } from './Authers'
+import { adminScreenAuther } from './authers'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { updateScreenValidation, type UpdateScreenTypes } from '@/services/screens/validation'
@@ -10,7 +10,7 @@ import type { ActionReturn } from '@/actions/Types'
 import type { ScreenPageMoveDirection } from '@/services/screens/Types'
 
 export async function updateScreenAction(id: number, formdata: UpdateScreenTypes['Type']): Promise<ActionReturn<Screen>> {
-    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
+    const authRes = adminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     const parse = updateScreenValidation.typeValidate(formdata)
@@ -24,7 +24,7 @@ export async function movePageInScreenAction(
     id: {screen: number, page: number},
     direction: ScreenPageMoveDirection
 ): Promise<ActionReturn<void>> {
-    const authRes = AdminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
+    const authRes = adminScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => movePageInScreen(id, direction))

@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
-import { Companies } from '@/services/career/companies'
+import { action } from '@/actions/action'
+import { createCompany } from '@/services/career/companies/create'
 
-export const createCompanyAction = Action(Companies.create)
+export const createCompanyAction = action(createCompany)

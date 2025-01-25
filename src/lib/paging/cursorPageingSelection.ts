@@ -13,7 +13,7 @@ export function cursorPageingSelection<const PageSize extends number, Cursor>(
 ): {
     take: number,
     skip: number,
-    cursor?: Cursor,
+    cursor?: NonNullable<Cursor>,
 } {
     return page.cursor ? {
         cursor: page.cursor,

@@ -52,7 +52,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 }
                 return file
             }))
-            res = await createImagesAction.bind(null, { useFileName, collectionId })(formData)
+            res = await createImagesAction({ useFileName, collectionId }, formData)
             if (res.success) {
                 doneFiles.push(...batch)
                 setFiles(files.map(file => {

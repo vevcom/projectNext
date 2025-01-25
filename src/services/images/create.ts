@@ -2,11 +2,13 @@ import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
 import { createImagesValidation, createImageValidation } from './validation'
 import { allowedExtImageUpload, avifOptions, imageSizes } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createImageAuther } from './authers'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import sharp from 'sharp'
-import type { SpecialImage } from '@prisma/client'
+import { SpecialImage } from '@prisma/client'
+import { z } from 'zod'
 
 /**
  * Creates an image.
@@ -15,10 +17,13 @@ import type { SpecialImage } from '@prisma/client'
  * All images are saved as avif (except the original).
  * @param collectionId - The id of the collection to add the image to
  */
-export const create = ServiceMethodHandler({
-    withData: true,
-    validation: createImageValidation,
-    handler: async (prisma, { collectionId }: { collectionId: number }, data) => {
+export const createImage = ServiceMethod({
+    auther: () => createImageAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        collectionId: z.number(),
+    }),
+    dataValidation: createImageValidation,
+    method: async ({ prisma, params: { collectionId }, data }) => {
         const { file, ...meta } = data
         const buffer = Buffer.from(await file.arrayBuffer())
         const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifOptions).toBuffer()
@@ -62,18 +67,22 @@ export const create = ServiceMethodHandler({
  * Creates many images from files.
  * The method will resize the images to the correct sizes and save them to the store.
  */
-export const createMany = ServiceMethodHandler({
-    withData: true,
-    validation: createImagesValidation,
-    handler: async (
+export const createManyImages = ServiceMethod({
+    auther: () => createImageAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        useFileName: z.boolean(),
+        collectionId: z.number(),
+    }),
+    dataValidation: createImagesValidation,
+    method: async ({
         prisma,
-        { useFileName, collectionId }: { useFileName: boolean, collectionId: number },
+        params: { useFileName, collectionId },
         data,
-        session
-    ) => {
+        session,
+    }) => {
         for (const file of data.files) {
             const name = useFileName ? file.name.split('.')[0] : undefined
-            await create.client(prisma).execute({
+            await createImage.client(prisma).execute({
                 params: { collectionId },
                 data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
                 session
@@ -90,9 +99,13 @@ export const createMany = ServiceMethodHandler({
  * @param name - the name of the image
  * @param config - the config for the image (special)
  */
-export const createSourceless = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { name, special }: { name: string, special: SpecialImage }) => {
+export const createSourcelessImage = ServiceMethod({
+    auther: () => createImageAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        name: z.string(),
+        special: z.nativeEnum(SpecialImage),
+    }),
+    method: async ({ prisma, params: { name, special } }) => {
         const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
         logger.warn(`
             creating a bad image, Something has caused the server to lose a neccesary image. 

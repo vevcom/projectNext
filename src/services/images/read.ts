@@ -1,20 +1,28 @@
 import 'server-only'
-import { createSourceless } from './create'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { createSourcelessImage } from './create'
+import { readImageAuther, readImagePageAuther, readSpecialImageAuther } from './authers'
+import { ServiceMethod } from '@/services/ServiceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServerError } from '@/services/error'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { SpecialImage } from '@prisma/client'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { ImageDetails, ImageCursor } from '@/services/images/Types'
+import { z } from 'zod'
 
 /**
  * Reads a page of images in a collection by collectionId.
  */
-export const readPage = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: {
-        paging: ReadPageInput<number, ImageCursor, ImageDetails>
-    }) => {
+export const readImagePage = ServiceMethod({
+    auther: () => readImagePageAuther.dynamicFields({}),
+    paramsSchema: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            collectionId: z.number(),
+        }),
+    ),
+    method: async ({ prisma, params }) => {
         const { collectionId } = params.paging.details
         return await prisma.image.findMany({
             where: {
@@ -28,9 +36,12 @@ export const readPage = ServiceMethodHandler({
 /**
  * Reads an image by id.
  */
-export const read = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { id }: { id: number }) => {
+export const readImage = ServiceMethod({
+    auther: () => readImageAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    method: async ({ prisma, params: { id } }) => {
         const image = await prisma.image.findUnique({
             where: {
                 id,
@@ -46,13 +57,12 @@ export const read = ServiceMethodHandler({
  * Reads a special image by name (special atr.).
  * In the case that the special image does not exist (bad state) a "bad" image will be created.
  */
-export const readSpecial = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { special }: { special: SpecialImage }, session) => {
-        if (!Object.values(SpecialImage).includes(special)) {
-            throw new ServerError('BAD PARAMETERS', 'Bildet er ikke spesielt')
-        }
-
+export const readSpecialImage = ServiceMethod({
+    auther: () => readSpecialImageAuther.dynamicFields({}),
+    paramsSchema: z.object({
+        special: z.nativeEnum(SpecialImage)
+    }),
+    method: async ({ prisma, params: { special }, session }) => {
         const image = await prisma.image.findUnique({
             where: {
                 special,
@@ -60,7 +70,7 @@ export const readSpecial = ServiceMethodHandler({
         })
 
         if (!image) {
-            return await createSourceless.client(prisma).execute(
+            return await createSourcelessImage.client(prisma).execute(
                 { params: { name: special, special }, session }
             )
         }

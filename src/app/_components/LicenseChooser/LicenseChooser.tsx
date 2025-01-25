@@ -1,7 +1,7 @@
 'use client'
 import styles from './LicenseChooser.module.scss'
 import { SelectNumberPossibleNULL } from '@/UI/Select'
-import { readLicensesAction } from '@/actions/licenses/read'
+import { readAllLicensesAction } from '@/actions/licenses/read'
 import useActionCall from '@/hooks/useActionCall'
 import { useCallback } from 'react'
 
@@ -15,7 +15,7 @@ type PropTypes = {
  * @returns A component to choose a license
  */
 export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
-    const action = useCallback(readLicensesAction.bind(null, {}), [readLicensesAction])
+    const action = useCallback(readAllLicensesAction, [readAllLicensesAction])
     const { data } = useActionCall(action)
 
     const defaultLicenseId = data?.find(license => license.name === defaultLicenseName)?.id

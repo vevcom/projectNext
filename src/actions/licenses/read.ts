@@ -1,7 +1,6 @@
 'use server'
 
-import { ActionNoData } from '@/actions/Action'
-import { Licenses } from '@/services/licenses'
+import { readAllLicenses } from '@/services/licenses/read'
+import { action } from '@/actions/action'
 
-
-export const readLicensesAction = ActionNoData(Licenses.readAll)
+export const readAllLicensesAction = action(readAllLicenses)

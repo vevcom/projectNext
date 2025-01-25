@@ -9,7 +9,7 @@ type PropTypes = {
 }
 
 export default function ShowAndEditName({ event }: PropTypes) {
-    const updateAction = updateEventAction.bind(null, { id: event.id })
+    const updateAction = updateEventAction.bind(null, ({ id: event.id }))
 
     return (
         <EditableTextField

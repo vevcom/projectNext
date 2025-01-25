@@ -1,7 +1,8 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { readAllLicensesAuther } from './Authers'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
-export const readAll = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => await prisma.license.findMany()
+export const readAllLicenses = ServiceMethod({
+    auther: () => readAllLicensesAuther.dynamicFields({}),
+    method: async ({ prisma }) => await prisma.license.findMany()
 })

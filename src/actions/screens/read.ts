@@ -1,5 +1,5 @@
 'use server'
-import { ReadScreenAuther } from './Authers'
+import { readScreenAuther } from './authers'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
 import { readScreen, readScreens } from '@/services/screens/read'
@@ -8,14 +8,14 @@ import type { Screen } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
 
 export async function readScreenAction(id: number): Promise<ActionReturn<Screen>> {
-    const authRes = ReadScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
+    const authRes = readScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => readScreen(id))
 }
 
 export async function readScreensAction(): Promise<ActionReturn<Screen[]>> {
-    const authRes = ReadScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
+    const authRes = readScreenAuther.dynamicFields({}).auth(await Session.fromNextAuth())
     if (!authRes.authorized) return createActionError(authRes.status)
 
     return await safeServerCall(() => readScreens())

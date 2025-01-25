@@ -1,6 +1,6 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
-import { Images } from '@/services/images'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { readUserAuther } from './authers'
+import { readSpecialImage } from '@/services/images/read'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -8,7 +8,9 @@ import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
-import type { UserDetails, UserCursor, Profile, UserPagingReturn } from './Types'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
+import type { UserDetails, UserCursor, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { User } from '@prisma/client'
 
@@ -139,31 +141,16 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
     return await prismaCall(() => prisma.user.findFirst({ where }))
 }
 
-export async function readUserProfile(username: string): Promise<Profile> {
-    const defaultProfileImage = await Images.readSpecial.client(prisma).execute({
-        params: { special: 'DEFAULT_PROFILE_IMAGE' },
-        session: null, //TODO: pass session
-    })
-    const user = await prismaCall(() => prisma.user.findUniqueOrThrow({
-        where: { username: username.toLowerCase() },
-        select: {
-            ...userFilterSelection,
-            bio: true,
-            image: true,
-        },
-    })).then(u => ({
-        ...u,
-        image: u.image || defaultProfileImage
-    }))
-    const memberships = await readMembershipsOfUser(user.id)
-    const permissions = await readPermissionsOfUser(user.id)
-
-    return { user, memberships, permissions }
-}
-
-export const readProfile = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma_, params: {username: string}, session) => {
+export const readUserProfile = ServiceMethod({
+    paramsSchema: z.object({
+        username: z.string(),
+    }),
+    auther: ({ params }) => readUserAuther.dynamicFields({ username: params.username }),
+    method: async ({ prisma: prisma_, params }) => {
+        const defaultProfileImage = await readSpecialImage.client(prisma).execute({
+            params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            session: null, //TODO: pass session
+        })
         const user = await prisma_.user.findUniqueOrThrow({
             where: { username: params.username.toLowerCase() },
             select: {
@@ -173,10 +160,7 @@ export const readProfile = ServiceMethodHandler({
             },
         }).then(async u => ({
             ...u,
-            image: u.image || await Images.readSpecial.client(prisma_).execute({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session,
-            })
+            image: u.image || defaultProfileImage,
         }))
 
         const memberships = await readMembershipsOfUser(user.id)

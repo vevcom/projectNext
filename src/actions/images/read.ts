@@ -1,19 +1,19 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Images } from '@/services/images'
 
+import { readImage, readImagePage, readSpecialImage } from '@/services/images/read'
+import { action } from '@/actions/action'
 
 /**
  * Read one page of images.
  */
-export const readImagesPageAction = ActionNoData(Images.readPage)
+export const readImagesPageAction = action(readImagePage)
 
 /**
  * Read one image.
 */
-export const readImageAction = ActionNoData(Images.read)
+export const readImageAction = action(readImage)
 
 /**
  * Read one special image.
  */
-export const readSpecialImageAction = ActionNoData(Images.readSpecial)
+export const readSpecialImageAction = action(readSpecialImage)

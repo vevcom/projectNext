@@ -1,16 +1,16 @@
 import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readLicensesAction } from '@/actions/licenses/read'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import Form from '@/app/_components/Form/Form'
 import { destroyLicenseAction } from '@/actions/licenses/destroy'
 import { createLicenseAction } from '@/actions/licenses/create'
 import TextInput from '@/UI/TextInput'
 import { updateLicenseAction } from '@/actions/licenses/update'
+import { readAllLicensesAction } from '@/actions/licenses/read'
 import Link from 'next/link'
 
 export default async function Licenses() {
-    const licenses = unwrapActionReturn(await readLicensesAction.bind(null, {})())
+    const licenses = unwrapActionReturn(await readAllLicensesAction())
 
     return (
         <div className={styles.wrapper}>
@@ -60,7 +60,7 @@ export default async function Licenses() {
             </table>
 
             <Form
-                action={createLicenseAction.bind(null, {})}
+                action={createLicenseAction}
                 title="Lag ny lisens"
                 submitText="Lag"
                 refreshOnSuccess

@@ -1,7 +1,7 @@
 'use server'
-import { Action } from '@/actions/Action'
-import { Images } from '@/services/images'
+import { createImage, createManyImages } from '@/services/images/create'
+import { action } from '@/actions/action'
 
-export const createImageAction = Action(Images.create)
+export const createImageAction = action(createImage)
 
-export const createImagesAction = Action(Images.createMany)
+export const createImagesAction = action(createManyImages)
