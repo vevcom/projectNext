@@ -5,15 +5,15 @@ model ReleasePeriod {
 }
 
 model CabinProductPrice {
-  id                Int          @id @default(autoincrement())
-  description       String
-  product           CabinProduct @relation(fields: [cabinProductId], references: [id])
-  cabinProductId    Int
-  price             Int
-  validFrom         DateTime     @db.Date
-  validCronInterval String       @default("* * *")
-  memberGroup       Group        @relation(fields: [groupId], references: [id])
-  groupId           Int
+  id             Int          @id @default(autoincrement())
+  description    String
+  product        CabinProduct @relation(fields: [cabinProductId], references: [id])
+  cabinProductId Int
+  price          Int
+  validFrom      DateTime     @db.Date
+  cronInterval   String       @default("* * *")
+  memberGroup    Group?       @relation(fields: [groupId], references: [id])
+  groupId        Int?
 }
 
 model CabinProduct {

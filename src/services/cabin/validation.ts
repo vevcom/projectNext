@@ -19,6 +19,10 @@ const baseCabinValidation = new ValidationBase({
         tenantNotes: z.string().optional(),
         notes: z.string().optional(),
         name: z.string(),
+        description: z.string(),
+        price: z.coerce.number(),
+        validFrom: z.string().date(),
+        cronInterval: z.string().optional(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
@@ -38,6 +42,10 @@ const baseCabinValidation = new ValidationBase({
         tenantNotes: z.string().optional(),
         notes: z.string().optional(),
         name: z.string().min(5),
+        description: z.string().min(2).max(20),
+        price: z.coerce.number().min(0),
+        validFrom: z.date(),
+        cronInterval: z.string().optional(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
@@ -51,7 +59,7 @@ const refiner = {
 }
 
 const releasePeriodRefiner = {
-    fcn: (data: { releaseTime: Date, releaseUntil: Date}) => dateLessThan(data.releaseTime, data.releaseUntil),
+    fcn: (data: { releaseTime: Date, releaseUntil: Date }) => dateLessThan(data.releaseTime, data.releaseUntil),
     message: 'Slipp tiden må være før slutten av perioden som slippes.'
 }
 
@@ -88,4 +96,12 @@ export const createCabinBookingUserAttachedValidation = baseCabinValidation.crea
 export const createCabinProductValidation = baseCabinValidation.createValidation({
     keys: ['name', 'type', 'amount'],
     transformer: data => data,
+})
+
+export const createCabinProductPriceValidation = baseCabinValidation.createValidation({
+    keys: ['description', 'price', 'validFrom', 'cronInterval'],
+    transformer: data => ({
+        ...data,
+        validFrom: new Date(data.validFrom),
+    })
 })

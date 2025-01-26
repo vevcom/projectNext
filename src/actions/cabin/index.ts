@@ -6,8 +6,8 @@ import { updateReleasePeriod } from '@/services/cabin/releasePeriod/update'
 import { deleteReleasePeriod } from '@/services/cabin/releasePeriod/delete'
 import { createCabinBookingUserAttached } from '@/services/cabin/booking/create'
 import { readCabinAvailability } from '@/services/cabin/booking/read'
-import { readCabinProducts } from '@/services/cabin/product/read'
-import { createCabinProduct } from '@/services/cabin/product/create'
+import { readCabinProduct, readCabinProducts } from '@/services/cabin/product/read'
+import { createCabinProduct, createCabinProductPrice } from '@/services/cabin/product/create'
 
 export const createReleasePeriodAction = action(createReleasePeriod)
 export const readReleasePeriodsAction = action(readReleasePeriods)
@@ -18,4 +18,6 @@ export const createCabinBookinUserAttachedAction = action(createCabinBookingUser
 export const readCabinAvailabilityAction = action(readCabinAvailability)
 
 export const readCabinProductsAction = action(readCabinProducts)
+export const readCabinProductAction = action(readCabinProduct)
 export const createCabinProductAction = action(createCabinProduct)
+export const createCabinProductpriceAction = action(createCabinProductPrice)

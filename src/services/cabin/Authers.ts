@@ -21,3 +21,7 @@ export const readCabinProductAuther = RequirePermission.staticFields({
 export const createCabinProductAuther = RequirePermission.staticFields({
     permission: 'CABIN_PRODUCTS_ADMIN'
 })
+
+export const createCabinProductPriceAuther = RequirePermission.staticFields({
+    permission: 'CABIN_PRODUCTS_ADMIN'
+})

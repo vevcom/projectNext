@@ -5,6 +5,7 @@ import { readCabinProductsAction } from '@/actions/cabin'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { v4 as uuid } from 'uuid'
+import Link from 'next/link'
 
 export default async function CabinProducs() {
     const products = unwrapActionReturn(await readCabinProductsAction())
@@ -26,11 +27,14 @@ export default async function CabinProducs() {
                 </tr>
             </thead>
             <tbody>
-                {products.map(product => <tr key={uuid()}>
-                    <td>{product.name}</td>
-                    <td>{product.type}</td>
-                    <td>{product.amount}</td>
-                </tr>)}
+                {products.map(product => <Link key={uuid()} href={`/admin/cabin-product/${product.id}`}>
+                    <tr>
+                        <td>{product.name}</td>
+                        <td>{product.type}</td>
+                        <td>{product.amount}</td>
+                    </tr>
+                </Link>
+                )}
             </tbody>
         </table>
     </PageWrapper>

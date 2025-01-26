@@ -188,7 +188,7 @@ const navigations = [
             },
             {
                 title: 'Produkter',
-                href: '/admin/cabin-products',
+                href: '/admin/cabin-product',
             },
         ]
     },
