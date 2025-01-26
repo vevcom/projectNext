@@ -186,6 +186,10 @@ const navigations = [
                 title: 'Kalender',
                 href: '/admin/cabin-calendar',
             },
+            {
+                title: 'Produkter',
+                href: '/admin/cabin-products',
+            },
         ]
     },
     {

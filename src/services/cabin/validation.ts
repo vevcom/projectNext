@@ -15,9 +15,10 @@ const baseCabinValidation = new ValidationBase({
         firstname: z.string(),
         lastname: z.string(),
         mobile: z.string(),
-        capacity: z.coerce.number(),
+        amount: z.coerce.number(),
         tenantNotes: z.string().optional(),
         notes: z.string().optional(),
+        name: z.string(),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
@@ -33,9 +34,10 @@ const baseCabinValidation = new ValidationBase({
         firstname: z.string().min(2).max(20),
         lastname: z.string().min(2).max(20),
         mobile: z.string(),
-        capacity: z.coerce.number().int().min(0),
+        amount: z.coerce.number().int().min(0),
         tenantNotes: z.string().optional(),
         notes: z.string().optional(),
+        name: z.string().min(5),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
         }),
@@ -83,3 +85,7 @@ export const createCabinBookingUserAttachedValidation = baseCabinValidation.crea
     refiner,
 })
 
+export const createCabinProductValidation = baseCabinValidation.createValidation({
+    keys: ['name', 'type', 'amount'],
+    transformer: data => data,
+})

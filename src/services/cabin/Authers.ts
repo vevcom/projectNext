@@ -13,3 +13,11 @@ export const createCabinBookingUserAttachedAuther = RequirePermissionAndUserId.s
 export const readBookingsAuther = RequirePermission.staticFields({
     permission: 'CABIN_BOOKING_CREATE'
 })
+
+export const readCabinProductAuther = RequirePermission.staticFields({
+    permission: 'CABIN_CALENDAR_READ'
+})
+
+export const createCabinProductAuther = RequirePermission.staticFields({
+    permission: 'CABIN_PRODUCTS_ADMIN'
+})

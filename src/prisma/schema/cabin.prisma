@@ -6,6 +6,7 @@ model ReleasePeriod {
 
 model CabinProductPrice {
   id                Int          @id @default(autoincrement())
+  description       String
   product           CabinProduct @relation(fields: [cabinProductId], references: [id])
   cabinProductId    Int
   price             Int
@@ -19,7 +20,7 @@ model CabinProduct {
   id                Int                 @id @default(autoincrement())
   name              String
   type              BookingType
-  capacity          Int
+  amount            Int
   CabinProductPrice CabinProductPrice[]
   BookingProduct    BookingProduct[]
 }

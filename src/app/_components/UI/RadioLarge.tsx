@@ -24,6 +24,7 @@ export default function RadioLarge<ValueType extends string>({
                     type="radio"
                     name={name}
                     id={id}
+                    value={option.value}
                     defaultChecked={defaultValue ? defaultValue === option.value : false}
                     onChange={() => {
                         if (onChange) {
