@@ -1,8 +1,10 @@
 'use client'
 import styles from './CabinCalendar.module.scss'
-import { dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
+import { dateInInterval, dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import { date } from 'zod'
+import { start } from 'repl'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { ReactNode } from 'react'
 import type { Record } from '@prisma/client/runtime/library'
@@ -162,6 +164,59 @@ function generateCalendarData(
     return ret
 }
 
+function dateInBooking(date: Date, bookings: BookingFiltered[], dateIsStart: boolean) {
+    for (let i = 0; i < bookings.length; i++) {
+        if (dateInInterval(date, bookings[i].start, bookings[i].end, dateIsStart, !dateIsStart)) {
+            return true
+        }
+    }
+    return false
+}
+
+function bookingCollides(dateRange: DateRange, bookings: BookingFiltered[]) {
+    if (!dateRange.start || !dateRange.end) return false
+
+    const startDate = dateRange.start
+    const endDate = dateRange.end
+    return bookings.some(booking => dateLessThan(booking.start, endDate) && dateLessThan(startDate, booking.end))
+}
+
+function preventBookingCollision(dateRange: DateRange, bookings: BookingFiltered[], lastChangeWasStart: boolean) {
+    if (!dateRange.start || !dateRange.end) return dateRange
+
+    if (!dateLessThan(dateRange.start, dateRange.end)) {
+        return {
+            start: lastChangeWasStart ? dateRange.start : undefined,
+            end: lastChangeWasStart ? undefined : dateRange.end,
+        }
+    }
+
+    // lastChangeWasStart => we can change the end date => end downwards
+
+    if (lastChangeWasStart) {
+        if (bookingCollides(dateRange, bookings)) {
+            const newEnd = new Date(dateRange.end)
+            newEnd.setUTCDate(newEnd.getUTCDate() - 1)
+            return preventBookingCollision({
+                start: dateRange.start,
+                end: newEnd
+            }, bookings, lastChangeWasStart)
+        }
+        return dateRange
+    }
+
+    if (bookingCollides(dateRange, bookings)) {
+        const newStart = new Date(dateRange.start)
+        newStart.setUTCDate(newStart.getUTCDate() + 1)
+        return preventBookingCollision({
+            start: newStart,
+            end: dateRange.end
+        }, bookings, lastChangeWasStart)
+    }
+
+    return dateRange
+}
+
 export default function CabinCalendar({
     startDate,
     bookingUntil,
@@ -182,10 +237,13 @@ export default function CabinCalendar({
     function callback(day: Day) {
         if (datesEqual(day.date, dateRange.start) || datesEqual(day.date, dateRange.end)) return
 
+
         let newDateRange: DateRange = {}
         let shouldChangeStart = !lastChangeWasStart
         if (dateRange.start && day.date < dateRange.start) shouldChangeStart = true
         if (dateRange.end && day.date > dateRange.end) shouldChangeStart = false
+
+        if (dateInBooking(day.date, bookings ?? [], shouldChangeStart)) return
 
         if (shouldChangeStart) {
             newDateRange = {
@@ -198,6 +256,9 @@ export default function CabinCalendar({
                 end: day.date,
             }
         }
+
+        newDateRange = preventBookingCollision(newDateRange, bookings ?? [], shouldChangeStart)
+
         setDateRange(newDateRange)
         if (intervalChangeCallback) intervalChangeCallback(newDateRange)
         setLastChangeWasStart(shouldChangeStart)

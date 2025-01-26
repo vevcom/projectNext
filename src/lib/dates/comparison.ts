@@ -33,3 +33,18 @@ export function dateLessThan(lhs: Date, rhs: Date) {
 export function dateLessThanOrEqualTo(lhs: Date, rhs: Date) {
     return datesEqual(lhs, rhs) || dateLessThan(lhs, rhs)
 }
+
+/**
+ * Test if a date is in the interval [start, end>
+ * @param date - The date to test
+ * @param start - The start of the interval
+ * @param end - The end of the interval
+ * @param startInclusive - If the start of the interval is inclusive, default true
+ * @param endInclusive - If the end of the interval is inclusive, default false
+ * @returns boolean
+ */
+export function dateInInterval(date: Date, start: Date, end: Date, startInclusive = true, endInclusive = false) {
+    const startCmp = startInclusive ? dateLessThanOrEqualTo : dateLessThan
+    const endCmp = endInclusive ? dateLessThanOrEqualTo : dateLessThan
+    return startCmp(start, date) && endCmp(date, end)
+}

@@ -13,7 +13,6 @@ import { useState } from 'react'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType } from '@prisma/client'
-import Test from './Test'
 
 export default function StateWrapper({
     cabinAvailability,
