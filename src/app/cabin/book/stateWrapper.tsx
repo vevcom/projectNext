@@ -16,8 +16,10 @@ import type { BookingType } from '@prisma/client'
 
 export default function StateWrapper({
     cabinAvailability,
+    releaseUntil,
 }: {
-    cabinAvailability: BookingFiltered[]
+    cabinAvailability: BookingFiltered[],
+    releaseUntil: Date,
 }) {
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
@@ -30,7 +32,7 @@ export default function StateWrapper({
     return <>
         <CabinCalendar
             startDate={new Date()}
-            bookingUntil={bookingUntil}
+            bookingUntil={releaseUntil}
             defaultDateRange={dateRange}
             intervalChangeCallback={setDateRange}
             bookings={cabinAvailability}

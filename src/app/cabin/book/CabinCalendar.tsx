@@ -57,6 +57,12 @@ function generateCalendarData(
     dateRange: DateRange,
     bookings: BookingFiltered[]
 ): (Week | string)[] {
+    const bookingsAdjusted = bookings ?? []
+    bookingsAdjusted.push({
+        type: 'CABIN',
+        start: endDate,
+        end: new Date(endDate.getUTCFullYear(), endDate.getUTCMonth() + 1, endDate.getUTCDate())
+    })
     const firstDayOfMonth = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1))
 
     const stopAtMonth = new Date(Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth() + 1, 1))
@@ -100,7 +106,7 @@ function generateCalendarData(
 
             let bookingSelection: undefined | Selection
 
-            bookings.forEach(booking => {
+            bookingsAdjusted.forEach(booking => {
                 if (datesEqual(thisDate, booking.start)) {
                     if (bookingSelection === undefined) {
                         bookingSelection = Selection.START
