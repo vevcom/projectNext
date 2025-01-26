@@ -1,5 +1,8 @@
 services:
     projectnext:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
         build:
             target: prod
         volumes:
@@ -9,11 +12,17 @@ services:
             replicas: 8
 
     db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
         restart: always
         volumes:
             - proddb:/var/lib/postgresql/data
 
     prisma:
+        extends:
+            file: docker-compose.base.yml
+            service: prisma
         build:
             target: prod
         volumes:
@@ -21,7 +30,9 @@ services:
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
 
     nginx:
-        image: nginx:1.21.3-alpine
+        extends:
+            file: docker-compose.base.yml
+            service: nginx
         restart: always
         ports:
             - 80:80
@@ -35,8 +46,6 @@ services:
             - store:/usr/store:ro
             - ./certs/conf:/etc/letsencrypt:ro
             - ./certs/www/:/var/www/certbot:ro
-        depends_on:
-            - projectnext
 
     certbot:
         image: certbot/certbot:latest

@@ -1,3 +1,7 @@
+# This file is used to define the base services that are shared between dev, test and prod.
+# The services are then extended in the environment-specific files.
+# This way, we can avoid duplicating the configuration for the shared services.
+
 services:
     projectnext:
         build:
@@ -31,8 +35,6 @@ services:
 
     db:
         image: postgres:16.0-alpine
-        ports:
-            - 5432:5432
         environment:
             POSTGRES_DB: ${DB_NAME}
             POSTGRES_USER: ${DB_USERNAME}
@@ -66,3 +68,8 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+
+    nginx:
+        image: nginx:1.21.3-alpine
+        depends_on:
+            - projectnext

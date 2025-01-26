@@ -1,4 +1,7 @@
 services:
     projectnext:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
         build:
             target: test

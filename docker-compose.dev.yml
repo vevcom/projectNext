@@ -1,5 +1,8 @@
 services:
     projectnext:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
         ports:
             - 3000:3000
         build:
@@ -14,10 +17,18 @@ services:
             - dotnext:/usr/src/app/.next
 
     db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
+        ports:
+            - 5432:5432
         volumes:
             - devdb:/var/lib/postgresql/data
 
     prisma:
+        extends:
+            file: docker-compose.base.yml
+            service: prisma
         build:
             target: dev
         volumes:
@@ -26,14 +37,14 @@ services:
             - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
 
     nginx:
-        image: nginx:1.21.3-alpine
+        extends:
+            file: docker-compose.base.yml
+            service: nginx
         ports:
             - 80:80
         volumes:
             - ${PROJECT_ROOT:-.}/containers/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
             - devstore:/usr/store
-        depends_on:
-            - projectnext
 
 volumes:
     devdb:
