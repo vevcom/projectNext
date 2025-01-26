@@ -19,6 +19,7 @@ import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
 import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
 import { PrismaClient } from '@/generated/pn'
+import seedCabin from './seedCabin'
 
 async function seed() {
     const prisma = new PrismaClient()
@@ -34,6 +35,7 @@ async function seed() {
     await seedStudyProgramme(prisma)
     await seedOmegaMembershipGroups(prisma)
     await seedClasses(prisma)
+    await seedCabin(prisma)
     console.log('seed standard done')
 
     const shouldMigrate = process.env.MIGRATE_FROM_VEVEN === 'true'

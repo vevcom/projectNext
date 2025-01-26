@@ -24,14 +24,23 @@ export default async function CabinProduct({
             <UpdateCabinProductPriceForm productId={product.id} />
         </AddHeaderItemPopUp>}
     >
-        <p>kanskje en måte å redigere på som en HeaderItem?</p>
+        <div className={styles.infoDiv}>
+            <p>kanskje en måte å redigere på som en HeaderItem?</p>
 
-        <p>
-            Lurer du på hva Cron er?
-            Det brukes for å angi generelle tidsintervaller.
-            For å enkelt forstå den besøk <Link href="https://crontab.guru/">crontab.guru</Link>.
-            Siden tidspunkter ikke har noe å si, ser vi bare på de tre siste uttrykkene (day of month, month, day fo week)
-        </p>
+            <p>
+                Lurer du på hva Cron er?
+                Det brukes for å angi generelle tidsintervaller.
+                For å enkelt forstå den besøk <Link href="https://crontab.guru/">crontab.guru</Link>.
+                Siden tidspunkter ikke har noe å si,
+                ser vi bare på de tre siste uttrykkene (day of month, month, day fo week)
+            </p>
+
+            <p>
+                Brukeren vil få den billigste prisen der brukeren oppfyller alle kravene under.
+                Det vil si at dersom flere av reglene for priser matcher, får brukeren den billigste.
+            </p>
+
+        </div>
 
         <table className={styles.table}>
             <thead>
