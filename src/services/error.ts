@@ -17,6 +17,11 @@ export const errorCodes = [
         defaultMessage: 'Feil i parametrene',
     },
     {
+        name: 'BAD DATA',
+        httpCode: 400,
+        defaultMessage: 'Feil i dataen',
+    },
+    {
         name: 'UNKNOWN ERROR',
         httpCode: 500,
         defaultMessage: 'En ukjent feil har oppstått',
@@ -104,4 +109,11 @@ export class ServerError extends Smorekopp<ServerErrorCode> {
         super(errorCode, errors)
         this.serviceCausedError = serviceCausedError
     }
+}
+
+export function getHttpErrorCode(errorType: ErrorCode): number {
+    for (const error of errorCodes) {
+        if (error.name === errorType) return error.httpCode
+    }
+    return 500
 }

@@ -1,6 +1,6 @@
 import 'server-only'
 import { updateLicenseValidation } from './validation'
-import { updateLicenseAuther } from './Authers'
+import { updateLicenseAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
 

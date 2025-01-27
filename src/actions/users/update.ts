@@ -2,7 +2,14 @@
 import { action } from '@/actions/action'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
-import { registerUser, updateUserPassword, verifyUserEmail, registerNewEmail, updateUser } from '@/services/users/update'
+import {
+    registerUser,
+    updateUserPassword,
+    verifyUserEmail,
+    registerNewEmail,
+    updateUser,
+    registerStudentCardInQueue
+} from '@/services/users/update'
 import { getUser } from '@/auth/getUser'
 import {
     registerUserValidation,
@@ -76,3 +83,5 @@ export async function verifyUserEmailAction(token: string): Promise<ActionReturn
         return await verifyUserEmail(userId, email)
     })
 }
+
+export const registerStudentCardInQueueAction = action(registerStudentCardInQueue)

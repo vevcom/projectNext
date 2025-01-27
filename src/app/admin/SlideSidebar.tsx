@@ -15,7 +15,8 @@ import {
     faPaperPlane,
     faSchool,
     faDotCircle,
-    faListDots
+    faShop,
+    faListDots,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -172,6 +173,22 @@ const navigations = [
             {
                 title: 'Frysperioder',
                 href: '/admin/dots-freeze-periods'
+            },
+        ]
+    },
+    {
+        header: {
+            icon: faShop,
+            title: 'Shop'
+        },
+        links: [
+            {
+                title: 'Butikker',
+                href: '/admin/shop'
+            },
+            {
+                title: 'Produkter',
+                href: '/admin/product'
             },
         ]
     },

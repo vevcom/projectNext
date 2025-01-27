@@ -173,7 +173,7 @@ export function ServiceMethod<
             // First, validate parameters (if any).
             if (args.params) {
                 if (!config.paramsSchema) {
-                    throw new Smorekopp('SERVER ERROR', 'Service method recieved params, but has no params schema.')
+                    throw new Smorekopp('BAD PARAMETERS', 'Service method recieved params, but has no params schema.')
                 }
 
                 // TODO: Decide if this should be a validation or a schema.
@@ -190,7 +190,7 @@ export function ServiceMethod<
             // Then, validate data (if any).
             if (args.data) {
                 if (!config.dataValidation) {
-                    throw new Smorekopp('SERVER ERROR', 'Service method recieved validation, but has no validation.')
+                    throw new Smorekopp('BAD DATA', 'Service method recieved validation, but has no validation.')
                 }
 
                 args.data = config.dataValidation.detailedValidate(args.data)
@@ -208,7 +208,7 @@ export function ServiceMethod<
                 const authRes = (await config.auther((args))).auth(args.session ?? Session.empty())
 
                 if (!authRes.authorized) {
-                    throw new Smorekopp(authRes.status)
+                    throw new Smorekopp(authRes.status, authRes.getErrorMessage)
                 }
             }
 

@@ -14,6 +14,7 @@ export const permissionCategories = [
     'notifikasjoner',
     'mail',
     'skjermer',
+    'shop',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -196,6 +197,12 @@ export const PermissionConfig = {
         name: 'Oppdatere bruker',
         description: 'kan oppdatere bruker',
         category: 'brukere',
+    },
+    USERS_CONNECT_STUDENT_CARD: {
+        name: 'Koble studentkort til andre brukere',
+        // eslint-disable-next-line max-len
+        description: 'Kan legge til andre personer i registreringskøen for å registrere et kort og kan registrere et kort på en person',
+        category: 'brukere'
     },
     IMAGE_ADMIN: {
         name: 'Bildeadministrator',
@@ -436,6 +443,36 @@ export const PermissionConfig = {
         name: 'Prikkadministrator',
         description: 'kan administrere prikker',
         category: 'brukere'
+    },
+    SHOP_READ: {
+        name: 'Les butikker',
+        description: 'kan lese butikker',
+        category: 'shop'
+    },
+    SHOP_ADMIN: {
+        name: 'Butikk administrator',
+        description: 'Kan administrere alle butikker',
+        category: 'shop'
+    },
+    PRODUCT_READ: {
+        name: 'Les produkter',
+        description: 'Kan lese produkter',
+        category: 'shop'
+    },
+    PRODUCT_ADMIN: {
+        name: 'Produkt administrator',
+        description: 'Kan administrare alle produkter',
+        category: 'shop'
+    },
+    PURCHASE_CREATE: {
+        name: 'Gjennomfør kjøp',
+        description: 'Kan gjennomføre et kjøp i en butikk',
+        category: 'shop'
+    },
+    PURCHASE_CREATE_ONBEHALF: {
+        name: 'Kan ta betalt i en butikk',
+        description: 'Kan belaste andre brukerkontoer, når de handler i en butikk.',
+        category: 'shop'
     },
     LICENSE_ADMIN: {
         name: 'Lisensadministrator',

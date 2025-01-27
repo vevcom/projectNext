@@ -1,6 +1,6 @@
 import 'server-only'
 import { createLicenseValidation } from './validation'
-import { createLicenseAuther } from './Authers'
+import { createLicenseAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const createLicense = ServiceMethod({

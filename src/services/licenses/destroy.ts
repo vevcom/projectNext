@@ -1,5 +1,5 @@
 import 'server-only'
-import { destroyLicenseAuther } from './Authers'
+import { destroyLicenseAuther } from './authers'
 import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'

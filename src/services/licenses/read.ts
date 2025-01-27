@@ -1,5 +1,5 @@
 import 'server-only'
-import { readAllLicensesAuther } from './Authers'
+import { readAllLicensesAuther } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export const readAllLicenses = ServiceMethod({
