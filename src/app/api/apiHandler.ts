@@ -46,15 +46,17 @@ export function apiHandler<
     // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: RawParams }) =>
         await apiHandlerGeneric<Return>(req, async session => {
-            let data
-
             if (serviceMethod.dataValidation) {
                 try {
                     const rawdata = await req.json()
 
                     const parse = serviceMethod.dataValidation.typeValidate(rawdata)
                     if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.errors)
-                    data = parse.data
+                    return serviceMethod.newClient().executeUnsafe({
+                        params: params ? params(rawParams) : undefined,
+                        data: parse.data,
+                        session,
+                    })
                 } catch (e) {
                     if (e instanceof SyntaxError) {
                         throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
@@ -65,7 +67,7 @@ export function apiHandler<
 
             return serviceMethod.newClient().executeUnsafe({
                 params: params ? params(rawParams) : undefined,
-                data,
+                data: undefined,
                 session,
             })
         })
