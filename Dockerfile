@@ -1,5 +1,11 @@
-FROM node:22-alpine AS base
+FROM node:22-alpine3.20 AS base
 WORKDIR /usr/src/app
+
+# Expose Next.js port
+EXPOSE 3000
+
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Install node packages
 COPY package*.json ./
@@ -16,18 +22,25 @@ COPY public public
 COPY next-env.d.t[s] next.config.js tsconfig.json ./
 
 ############################################################
-FROM node:22-alpine AS prod
-WORKDIR /usr/src/app
+FROM base AS prod
+
+ENV NODE_ENV=production
 
 COPY src src
-COPY --from=base /usr/src/app/ .
 
 RUN npm run build
 CMD ["npm", "run", "start"]
 ############################################################
-FROM node:22-alpine AS dev
-WORKDIR /usr/src/app
+FROM base AS test
 
-COPY --from=base /usr/src/app/ .
+ENV NODE_ENV=test
+
+# Tests are currently not implemented so this is just a placeholder
+
+CMD ["npm", "run", "test"]
+############################################################
+FROM base AS dev
+
+ENV NODE_ENV=development
 
 CMD ["npm", "run", "dev"]
