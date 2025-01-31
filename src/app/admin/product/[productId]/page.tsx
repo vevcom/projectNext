@@ -7,14 +7,14 @@ import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 import { displayPrice } from '@/lib/money/convert'
 
-export default async function ProductPage({
-    params
-}: {
-    params: {
+type PropTypes = {
+    params: Promise<{
         productId: number
-    }
-}) {
-    const product = unwrapActionReturn(await readProductAction({ productId: Number(params.productId) }))
+    }>
+}
+
+export default async function ProductPage({ params }: PropTypes) {
+    const product = unwrapActionReturn(await readProductAction({ productId: Number((await params).productId) }))
 
     return <PageWrapper
         title={product.name}
