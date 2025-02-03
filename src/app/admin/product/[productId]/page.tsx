@@ -3,9 +3,9 @@ import ProductForm from '@/app/admin/product/productForm'
 import { readProductAction } from '@/actions/shop'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
+import { displayPrice } from '@/lib/money/convert'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
-import { displayPrice } from '@/lib/money/convert'
 
 export default async function ProductPage({
     params
