@@ -11,8 +11,8 @@ const eventSchemaFields = z.object({
 
     takesRegistration: z.boolean(),
     places: z.number().int().optional(),
-    registrationStart: z.string().optional().transform((val) => val ? new Date(val) : undefined),
-    registrationEnd: z.string().optional().transform((val) => val ? new Date(val) : undefined),
+    registrationStart: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
+    registrationEnd: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
 
     tagIds: zfd.repeatable(z.coerce.number().array())
 })

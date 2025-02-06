@@ -30,12 +30,9 @@ export type PrismaPossibleTransaction<
  */
 export type ServiceMethodParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationType<unknown, unknown> | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = (
     ParamsSchema extends undefined ? object : { params: z.infer<NonNullable<ParamsSchema>> }
-) & (
-    DataValidation extends undefined ? object : { data: ExtractDetailedType<NonNullable<DataValidation>> }
 ) & (
     DataSchema extends undefined ? object : { data: z.infer<NonNullable<DataSchema>> }
 )
@@ -52,24 +49,22 @@ export type ServiceMethodParamsDataUnsafe = {
 export type ServiceMethodArguments<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationType<unknown, unknown> | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
-} & ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
+} & ServiceMethodParamsData<ParamsSchema, DataSchema>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
  */
 export type ServiceMethodExecuteArgs<
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationTypeUnknown | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
-} & ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
+} & ServiceMethodParamsData<ParamsSchema, DataSchema>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -89,24 +84,17 @@ export type ServiceMethodConfig<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationTypeUnknown | undefined,
 > = {
     paramsSchema?: ParamsSchema,
-} & ({
-    dataValidation?: DataValidation,
-    dataSchema?: undefined,
-} | {
     dataSchema?: DataSchema,
-    dataValidation?: undefined,
-}) & {
     opensTransaction?: OpensTransaction,
     auther: (
-        paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
+        paramsData: ServiceMethodParamsData<ParamsSchema, DataSchema>
     ) => // Todo: Make prettier type for returntype of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
         | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
     method: (
-        args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation, DataSchema>
+        args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataSchema>
     ) => Return | Promise<Return>,
 }
 
@@ -122,7 +110,6 @@ export type ServiceMethodType<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationTypeUnknown | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = {
     /**
@@ -131,7 +118,7 @@ export type ServiceMethodType<
      * @param client
      */
     client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
-        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema>) => Promise<Return>,
+        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema>) => Promise<Return>,
         executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe) => Promise<Return>,
     },
     /**
@@ -139,11 +126,11 @@ export type ServiceMethodType<
      */
     newClient: () => (
         ReturnType<
-            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation, DataSchema>['client']
+            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataSchema>['client']
         >
     ),
     paramsSchema?: ParamsSchema,
-    dataValidation?: DataValidation,
+    dataSchema?: DataSchema,
 }
 
 /**
@@ -158,7 +145,7 @@ export type ServiceMethodType<
  * @param config.dynamicAuthFields - A function that returns the dynamic auth fields that will be used to authorize the user.
  * @param config.method - The method that will be called when the service method is executed.
  * @param config.paramsSchema - The zod schema that will be used to validate the params that is passed to the service method.
- * @param config.dataValidation - The validation that will be used to validate the data that is passed to the service method.
+ * @param config.dataSchema - The zod schema that will be used to validate the data that is passed to the service method.
  * @param [config.opensTransaction=false] - Whether or not the service method opens a transaction. (Just for correct typing)
  */
 export function ServiceMethod<
@@ -167,18 +154,17 @@ export function ServiceMethod<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends ValidationTypeUnknown | undefined = undefined,
 >(
-    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataSchema, DataValidation>,
-): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation, DataSchema> {
+    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataSchema>,
+): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataSchema> {
     // Simple utility function to check if the expected arguments are present.
     // I.e. if the params/data are present when they should be and vice versa.
     // This is needed to help typescript infer the correct types for the arguments.
     const expectedArgsArePresent = (
         args: ServiceMethodExecuteArgsUnsafe
-    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema> => {
+    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataSchema> => {
         const paramsMatch = Boolean(args.params) === Boolean(config.paramsSchema)
-        const dataMatches = Boolean(args.data) === (config.dataValidation ? Boolean(config.dataValidation) : Boolean(config.dataSchema))
+        const dataMatches = Boolean(args.data) === Boolean(config.dataSchema)
         return paramsMatch && dataMatches
     }
 
@@ -203,14 +189,12 @@ export function ServiceMethod<
 
             // Then, validate data (if any).
             if (args.data) {
-                if (!config.dataValidation) {
-                    if (!config.dataSchema) {
-                        throw new Smorekopp('BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.')
-                    }
-                    args.data = config.dataSchema.parse(args.data)
-                } else {
-                    args.data = config.dataValidation.detailedValidate(args.data)
-                }
+                if (!config.dataSchema) {
+                    throw new Smorekopp(
+                        'BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.'
+                    )
+                } 
+                args.data =  config.dataSchema.parse(args.data)
             }
 
             // Then, determine if the correct properties are present.
@@ -239,7 +223,7 @@ export function ServiceMethod<
 
         return {
             executeUnsafe,
-            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema>) => executeUnsafe(args),
+            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema>) => executeUnsafe(args),
         }
     }
 
@@ -247,6 +231,6 @@ export function ServiceMethod<
         client,
         newClient: () => client(globalPrisma),
         paramsSchema: config.paramsSchema,
-        dataValidation: config.dataValidation,
+        dataSchema: config.dataSchema,
     }
 }
