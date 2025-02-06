@@ -31,10 +31,13 @@ export type PrismaPossibleTransaction<
 export type ServiceMethodParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationType<unknown, unknown> | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = (
     ParamsSchema extends undefined ? object : { params: z.infer<NonNullable<ParamsSchema>> }
 ) & (
     DataValidation extends undefined ? object : { data: ExtractDetailedType<NonNullable<DataValidation>> }
+) & (
+    DataSchema extends undefined ? object : { data: z.infer<NonNullable<DataSchema>> }
 )
 
 // TODO: Refactor into maybe one type? Or maybe something more concise?
@@ -50,10 +53,11 @@ export type ServiceMethodArguments<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationType<unknown, unknown> | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
-} & ServiceMethodParamsData<ParamsSchema, DataValidation>
+} & ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -61,10 +65,11 @@ export type ServiceMethodArguments<
 export type ServiceMethodExecuteArgs<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationTypeUnknown | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
-} & ServiceMethodParamsData<ParamsSchema, DataValidation>
+} & ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -83,18 +88,25 @@ export type ServiceMethodConfig<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationTypeUnknown | undefined,
 > = {
     paramsSchema?: ParamsSchema,
+} & ({
     dataValidation?: DataValidation,
+    dataSchema?: undefined,
+} | {
+    dataSchema?: DataSchema,
+    dataValidation?: undefined,
+}) & {
     opensTransaction?: OpensTransaction,
     auther: (
-        paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation>
+        paramsData: ServiceMethodParamsData<ParamsSchema, DataValidation, DataSchema>
     ) => // Todo: Make prettier type for returntype of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
         | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
     method: (
-        args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation>
+        args: ServiceMethodArguments<OpensTransaction, ParamsSchema, DataValidation, DataSchema>
     ) => Return | Promise<Return>,
 }
 
@@ -111,6 +123,7 @@ export type ServiceMethodType<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataValidation extends ValidationTypeUnknown | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
@@ -118,7 +131,7 @@ export type ServiceMethodType<
      * @param client
      */
     client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
-        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation>) => Promise<Return>,
+        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema>) => Promise<Return>,
         executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe) => Promise<Return>,
     },
     /**
@@ -126,7 +139,7 @@ export type ServiceMethodType<
      */
     newClient: () => (
         ReturnType<
-            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation>['client']
+            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation, DataSchema>['client']
         >
     ),
     paramsSchema?: ParamsSchema,
@@ -153,18 +166,19 @@ export function ServiceMethod<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
     DataValidation extends ValidationTypeUnknown | undefined = undefined,
 >(
-    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataValidation>,
-): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation> {
+    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataSchema, DataValidation>,
+): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataValidation, DataSchema> {
     // Simple utility function to check if the expected arguments are present.
     // I.e. if the params/data are present when they should be and vice versa.
     // This is needed to help typescript infer the correct types for the arguments.
     const expectedArgsArePresent = (
         args: ServiceMethodExecuteArgsUnsafe
-    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataValidation> => {
+    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema> => {
         const paramsMatch = Boolean(args.params) === Boolean(config.paramsSchema)
-        const dataMatches = Boolean(args.data) === Boolean(config.dataValidation)
+        const dataMatches = Boolean(args.data) === (config.dataValidation ? Boolean(config.dataValidation) : Boolean(config.dataSchema))
         return paramsMatch && dataMatches
     }
 
@@ -190,10 +204,13 @@ export function ServiceMethod<
             // Then, validate data (if any).
             if (args.data) {
                 if (!config.dataValidation) {
-                    throw new Smorekopp('BAD DATA', 'Service method recieved validation, but has no validation.')
+                    if (!config.dataSchema) {
+                        throw new Smorekopp('BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.')
+                    }
+                    args.data = config.dataSchema.parse(args.data)
+                } else {
+                    args.data = config.dataValidation.detailedValidate(args.data)
                 }
-
-                args.data = config.dataValidation.detailedValidate(args.data)
             }
 
             // Then, determine if the correct properties are present.
@@ -222,7 +239,7 @@ export function ServiceMethod<
 
         return {
             executeUnsafe,
-            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation>) => executeUnsafe(args),
+            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataValidation, DataSchema>) => executeUnsafe(args),
         }
     }
 

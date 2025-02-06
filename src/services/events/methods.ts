@@ -1,5 +1,5 @@
 import 'server-only'
-import { createEventValidation, updateEventValidation } from './validation'
+import { eventSchemas } from './schemas'
 import { eventFilterSeletion } from './ConfigVars'
 import { eventAuthers } from './authers'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
@@ -15,7 +15,7 @@ import { z } from 'zod'
 
 export const eventMethods = {
     create: ServiceMethod({
-        dataValidation: createEventValidation,
+        dataSchema: eventSchemas.create,
         auther: () => eventAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
@@ -186,7 +186,7 @@ export const eventMethods = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataValidation: updateEventValidation,
+        dataSchema: eventSchemas.update,
         auther: () => eventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({

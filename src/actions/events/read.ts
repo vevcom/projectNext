@@ -1,14 +1,9 @@
 'use server'
 import { action } from '@/actions/action'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { Session } from '@/auth/Session'
-import { readArchivedEventsPage, readCurrentEvents, readEvent } from '@/services/events/read'
+import { eventMethods } from '@/services/events/methods'
 
-export const readCurrentEventsAction = action(readCurrentEvents)
+export const readCurrentEventsAction = action(eventMethods.readManyCurrent)
 
-export async function readEventAction(params: {order: number, name: string}) {
-    const session = await Session.fromNextAuth()
-    return await safeServerCall(() => readEvent.newClient().execute({ params, session }))
-}
+export const readEventAction = action(eventMethods.read)
 
-export const readArchivedEventsPageAction = action(readArchivedEventsPage)
+export const readArchivedEventsPageAction = action(eventMethods.readManyArchivedPage)
