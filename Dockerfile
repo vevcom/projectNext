@@ -35,7 +35,9 @@ FROM base AS test
 
 ENV NODE_ENV=test
 
-# Tests are currently not implemented so this is just a placeholder
+COPY src src
+COPY tests tests
+COPY jest.config.ts ./
 
 CMD ["npm", "run", "test"]
 ############################################################
