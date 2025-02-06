@@ -1,8 +1,9 @@
 import { Admission } from '@prisma/client'
 
-export const AdmissionDisplayNames = {
-    PLIKTTIAENESTE: 'Plikttiaeneste',
-    PROEVELSEN: 'Proevelsen',
-} satisfies Record<Admission, string>
-
-export const AdmissionsArray = Object.values(Admission)
+export const admissionConfig = {
+    displayNames: {
+        PLIKTTIAENESTE: 'Plikttiaeneste',
+        PROEVELSEN: 'Proevelsen',
+    } satisfies Record<Admission, string>,
+    array: Object.values(Admission),
+} as const

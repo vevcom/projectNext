@@ -2,6 +2,8 @@ import { ServerError } from './error'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
+//TODO: Delete all :(
+
 /**
  * Type for the objects that is used to make sure the  two detailed and type schemas have the same keys
  */

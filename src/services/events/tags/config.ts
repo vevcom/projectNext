@@ -16,4 +16,4 @@ export const eventTagsConfig = {
         colorG: number;
         colorB: number;
     }>
-}
+} as const
