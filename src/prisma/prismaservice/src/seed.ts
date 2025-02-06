@@ -18,9 +18,9 @@ import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
 import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
-import { PrismaClient } from '@/generated/pn'
 import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
+import { PrismaClient } from '@/generated/pn'
 
 async function seed() {
     const prisma = new PrismaClient()
