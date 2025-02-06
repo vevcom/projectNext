@@ -17,7 +17,7 @@ type PropTypes = SearchParamsServerSide
 export default async function Events({
     searchParams
 }: PropTypes) {
-    const tagNames = QueryParams.eventTags.decode(searchParams)
+    const tagNames = QueryParams.eventTags.decode(await searchParams)
 
     const currentEventsResponse = await readCurrentEventsAction({ tags: tagNames })
     const eventTagsResponse = await readEventTagsAction()

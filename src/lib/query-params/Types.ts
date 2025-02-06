@@ -1,3 +1,3 @@
 export type SearchParamsServerSide = {
-    searchParams?: { [key: string]: string | string[] | undefined }
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }

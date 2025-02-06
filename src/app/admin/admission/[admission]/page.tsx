@@ -8,16 +8,16 @@ import { type Admission as AdmissionType } from '@prisma/client'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         admission: AdmissionType
-    }
+    }>
 }
 
 export default async function AdmissionTrials({ params }: PropTypes) {
-    if (!AdmissionsArray.includes(params.admission)) {
+    if (!AdmissionsArray.includes((await params).admission)) {
         notFound()
     }
-    const admission = params.admission
+    const admission = (await params).admission
 
     const publicKey = await readOmegaJWTPublicKey()
 

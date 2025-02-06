@@ -1,7 +1,7 @@
 'use client'
 import styles from './SlideSidebar.module.scss'
 import useOnNavigation from '@/hooks/useOnNavigation'
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -249,7 +249,7 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
                 <aside className={styles.sidebar}>
                     {
                         navigations.map(navigation => (
-                            <>
+                            <Fragment key={navigation.header.title}>
                                 <h3 className={styles.header}>
                                     <FontAwesomeIcon icon={navigation.header.icon} />
                                     {navigation.header.title}
@@ -265,7 +265,7 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
                                         </Link>
                                     ))
                                 }
-                            </>
+                            </Fragment>
                         ))
                     }
                 </aside>

@@ -17,10 +17,10 @@ type PropTypes = SearchParamsServerSide
 
 export default async function page({ searchParams }: PropTypes) {
     const pageSize = 10 satisfies PageSizeCompany
-    const name = QueryParams.companyName.decode(searchParams) ?? undefined
-    // TODO: Decide how getting session in pages should be done. Are we going away form useUser/getUser?
+    const name = QueryParams.companyName.decode(await searchParams) ?? undefined
+
     const session = await Session.fromNextAuth()
-    const res = await readCompanyPageAction({
+    const res = await readCompanyPageAction.bind(null, {
         paging: {
             page: {
                 page: 0,
@@ -31,7 +31,7 @@ export default async function page({ searchParams }: PropTypes) {
                 name
             },
         },
-    })
+    })()
     const serverRenderedData = res.success ? res.data : []
 
     return (

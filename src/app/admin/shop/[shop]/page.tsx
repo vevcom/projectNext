@@ -13,12 +13,14 @@ import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import type { Product } from '@prisma/client'
 
-export default async function Shop(params: {
-    params: {
+type PropTypes = {
+    params: Promise<{
         shop: string
-    }
-}) {
-    const shopId = parseInt(params.params.shop, 10)
+    }>
+}
+
+export default async function Shop({ params }: PropTypes) {
+    const shopId = parseInt((await params).shop, 10)
     if (isNaN(shopId)) notFound()
 
     const shopData = unwrapActionReturn(await readShopAction({

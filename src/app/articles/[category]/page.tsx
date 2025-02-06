@@ -1,13 +1,13 @@
 import styles from './page.module.scss'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         category: string
-    },
+    }>,
 }
 
 export default async function ArticleCategory({ params }: PropTypes) {
-    const category = decodeURIComponent(params.category)
+    const category = decodeURIComponent((await params).category)
     return (
         <div className={styles.wrapper}>
             <h2>{category.toUpperCase()}</h2>
