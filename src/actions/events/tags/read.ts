@@ -1,7 +1,7 @@
 'use server'
 import { action } from '@/actions/action'
-import { readAllEventTags, readEventTag, readSpecialEventTag } from '@/services/events/tags/read'
+import { eventTagMethods } from '@/services/events/tags/methods'
 
-export const readEventTagsAction = action(readAllEventTags)
-export const readSpecialEventTagAction = action(readSpecialEventTag)
-export const readEventTagAction = action(readEventTag)
+export const readEventTagsAction = action(eventTagMethods.readAll)
+export const readSpecialEventTagAction = action(eventTagMethods.readSpecial)
+export const readEventTagAction = action(eventTagMethods.read)

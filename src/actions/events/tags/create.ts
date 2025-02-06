@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { createEventTag } from '@/services/events/tags/create'
+import { eventTagMethods } from '@/services/events/tags/methods'
 
-export const createEventTagAction = action(createEventTag)
+export const createEventTagAction = action(eventTagMethods.create)

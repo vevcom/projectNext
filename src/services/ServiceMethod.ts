@@ -193,8 +193,8 @@ export function ServiceMethod<
                     throw new Smorekopp(
                         'BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.'
                     )
-                } 
-                args.data =  config.dataSchema.parse(args.data)
+                }
+                args.data = config.dataSchema.parse(args.data)
             }
 
             // Then, determine if the correct properties are present.
