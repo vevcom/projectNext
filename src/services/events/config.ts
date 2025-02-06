@@ -2,17 +2,17 @@ import { createSelection } from '@/services/createSelection'
 import { EventCanView } from '@prisma/client'
 import type { Event } from '@prisma/client'
 
-export const CanBeViewdByConfig = {
+const canBeViewdBy = {
     ALL: { label: 'Alle' },
-    CAN_REGISTER: { label: 'Alle som kan melde seg på' },
+    CAN_REGISTER: { label: 'Alle som kan melde seg på' }
 } satisfies Record<EventCanView, { label: string }>
 
-export const CanBeViewdByOptions = Object.values(EventCanView).map(opt => ({
+const canBeViewdByOptions = Object.values(EventCanView).map(opt => ({
     value: opt,
-    label: CanBeViewdByConfig[opt].label
+    label: canBeViewdBy[opt].label
 }))
 
-export const eventFieldsToExpose = [
+const fieldsToExpose = [
     'id',
     'name',
     'order',
@@ -25,4 +25,12 @@ export const eventFieldsToExpose = [
     'takesRegistration'
 ] as const satisfies (keyof Event)[]
 
-export const eventFilterSeletion = createSelection(eventFieldsToExpose)
+const filterSeletion = createSelection(fieldsToExpose)
+
+export const eventConfig = {
+    canBeViewdBy,
+    canBeViewdByOptions,
+    filterSeletion,
+    fieldsToExpose,
+} as const
+

@@ -1,6 +1,6 @@
 import 'server-only'
 import { eventSchemas } from './schemas'
-import { eventFilterSeletion } from './ConfigVars'
+import { eventConfig } from './config'
 import { eventAuthers } from './authers'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
@@ -112,7 +112,7 @@ export const eventMethods = {
         method: async ({ prisma, params }) => {
             const events = await prisma.event.findMany({
                 select: {
-                    ...eventFilterSeletion,
+                    ...eventConfig.filterSeletion,
                     coverImage: {
                         include: {
                             image: true
@@ -163,7 +163,7 @@ export const eventMethods = {
                     eventTagEvents: eventTagSelector(params.paging.details.tags)
                 },
                 select: {
-                    ...eventFilterSeletion,
+                    ...eventConfig.filterSeletion,
                     coverImage: {
                         include: {
                             image: true
