@@ -11,8 +11,8 @@ import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 type PropTypes = SearchParamsServerSide
 
 export default async function Dots({ searchParams }: PropTypes) {
-    const onlyActive = QueryParams.onlyActive.decode(searchParams) ?? false
-    const userId = QueryParams.userId.decode(searchParams)
+    const onlyActive = QueryParams.onlyActive.decode(await searchParams) ?? false
+    const userId = QueryParams.userId.decode(await searchParams)
 
     return (
         <div className={styles.wrapper}>

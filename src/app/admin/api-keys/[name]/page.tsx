@@ -11,13 +11,13 @@ import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 import Date from '@/app/_components/Date/Date'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         name: string
-    }
+    }>
 }
 
 export default async function ApiKeyAdmin({ params }: PropTypes) {
-    const res = await readApiKeyAction(decodeURIComponent(params.name))
+    const res = await readApiKeyAction(decodeURIComponent((await params).name))
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'En feil har oppstått')
     const apiKey = res.data
 

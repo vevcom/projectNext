@@ -1,18 +1,20 @@
 import ResetPasswordForm from './resetpasswordForm'
 import { verifyResetPasswordTokenAction } from '@/actions/auth/resetPassword'
+import { QueryParams } from '@/lib/query-params/queryParams'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
-type PropTypes = {
-    searchParams: Record<string, string | string[] | undefined>
-}
+type PropTypes = SearchParamsServerSide
 
 export default async function ResetPassword({ searchParams }: PropTypes) {
-    if (!searchParams.token || typeof searchParams.token !== 'string') {
+    const token = QueryParams.token.decode(await searchParams)
+
+    if (!token) {
         return <>
             <h1>Ops</h1>
             <p>Token mangler</p>
         </>
     }
-    const verify = await verifyResetPasswordTokenAction(searchParams.token)
+    const verify = await verifyResetPasswordTokenAction(token)
 
     if (!verify.success) {
         const errorMessage = verify.error?.map(e => e.message).join('\n') ?? 'JWT er ugyldig'
@@ -23,5 +25,5 @@ export default async function ResetPassword({ searchParams }: PropTypes) {
         </>
     }
 
-    return <ResetPasswordForm token={searchParams.token} />
+    return <ResetPasswordForm token={token} />
 }

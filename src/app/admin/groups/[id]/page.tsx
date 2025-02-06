@@ -9,13 +9,13 @@ import { readGroupExpandedAction } from '@/actions/groups/read'
 import Link from 'next/link'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
 export default async function GroupAdmin({ params }: PropTypes) {
-    const groupRes = await readGroupExpandedAction(parseInt(params.id, 10))
+    const groupRes = await readGroupExpandedAction(parseInt((await params).id, 10))
     if (!groupRes.success) throw new Error('Failed to load group')
     const group = groupRes.data
 

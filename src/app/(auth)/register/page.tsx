@@ -4,14 +4,11 @@ import { getUser } from '@/auth/getUser'
 import { verifyUserEmailAction } from '@/actions/users/update'
 import { readUser } from '@/services/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { QueryParams } from '@/lib/query-params/queryParams'
 import { notFound, redirect } from 'next/navigation'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
-type PropTypes = {
-    searchParams: {
-        token?: string,
-        callbackUrl?: string,
-    }
-}
+type PropTypes = SearchParamsServerSide
 
 export default async function Register({ searchParams }: PropTypes) {
     const { user, authorized } = await getUser({
@@ -22,8 +19,11 @@ export default async function Register({ searchParams }: PropTypes) {
     let userId = user?.id
     let shouldLogOut = false
 
-    if (typeof searchParams.token === 'string') {
-        const verify = await verifyUserEmailAction(searchParams.token)
+    const token = QueryParams.token.decode(await searchParams)
+    const callbackUrl = QueryParams.callbackUrl.decode(await searchParams)
+
+    if (token) {
+        const verify = await verifyUserEmailAction(token)
         if (!verify.success) {
             redirect('./register')
         }
@@ -43,7 +43,7 @@ export default async function Register({ searchParams }: PropTypes) {
     }
 
     if (updatedUser.data.acceptedTerms) {
-        redirect(searchParams.callbackUrl ?? '/users/me')
+        redirect(callbackUrl ?? '/users/me')
     }
 
     if (!updatedUser.data.emailVerified) {

@@ -15,19 +15,19 @@ import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 
-type PropTypes = {
-    params: {
+export type PropTypes = {
+    params: Promise<{
         username: string
-    },
+    }>,
 }
 
 export default async function User({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
-    if (params.username === 'me') {
+    if ((await params).username === 'me') {
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}`) //This throws.
     }
-    const profileRes = await readUserProfileAction(params.username)
+    const profileRes = await readUserProfileAction((await params).username)
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
@@ -52,7 +52,7 @@ export default async function User({ params }: PropTypes) {
         { username: profile.user.username }
     ).auth(session)
 
-    const showOmegaId = session.user?.username === params.username
+    const showOmegaId = session.user?.username === (await params).username
 
     return (
         <div className={styles.wrapper}>

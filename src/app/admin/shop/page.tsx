@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
 
-export default async function Shop() {
+export default async function Shops() {
     const shops = unwrapActionReturn(await readShopsAction())
 
     return <PageWrapper

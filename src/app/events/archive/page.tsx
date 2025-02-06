@@ -14,7 +14,7 @@ type PropTypes = SearchParamsServerSide
 export default async function EventArchive({
     searchParams
 }: PropTypes) {
-    const selectedTagNames = QueryParams.eventTags.decode(searchParams)
+    const selectedTagNames = QueryParams.eventTags.decode(await searchParams)
     const eventTagsResponse = await readEventTagsAction()
     if (!eventTagsResponse.success) {
         throw new Error('Failed to read current events')
@@ -47,7 +47,7 @@ export default async function EventArchive({
             <EventArchivePagingProvider serverRenderedData={[]} startPage={{
                 page: 0,
                 pageSize: 12
-            }} details={{ tags: QueryParams.eventTags.decode(searchParams) }}>
+            }} details={{ tags: QueryParams.eventTags.decode(await searchParams) }}>
                 <EventArchiveList />
             </EventArchivePagingProvider>
         </EventsLandingLayout>
