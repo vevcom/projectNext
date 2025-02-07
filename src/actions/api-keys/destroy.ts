@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { destroyApiKey } from '@/services/api-keys/destroy'
+import { apiKeyMethods } from '@/services/api-keys/methods'
 
-export const destroyApiKeyAction = action(destroyApiKey)
+export const destroyApiKeyAction = action(apiKeyMethods.destroy)

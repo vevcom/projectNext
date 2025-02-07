@@ -1,6 +1,6 @@
 import { authOptions } from './authoptions'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'
-import { readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
+import { apiKeyMethods } from '@/services/api-keys/methods'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
@@ -94,8 +94,9 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         let apiKeyFetch
 
         try {
-            apiKeyFetch = await readApiKeyHashedAndEncrypted.newClient().execute({
+            apiKeyFetch = await apiKeyMethods.readWithHash.newClient().execute({
                 session: null,
+                bypassAuth: true,
                 params: id
             })
         } catch (e) {

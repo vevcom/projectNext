@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { updateApiKey } from '@/services/api-keys/update'
+import { apiKeyMethods } from '@/services/api-keys/methods'
 
-export const updateApiKeyAction = action(updateApiKey)
+export const updateApiKeyAction = action(apiKeyMethods.update)

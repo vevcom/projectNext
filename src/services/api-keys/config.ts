@@ -1,7 +1,8 @@
 import { createSelection } from '@/services/createSelection'
 import type { ApiKey } from '@prisma/client'
 
-export const apiKeyFieldsToExpose = [
+
+const fieldsToExpose = [
     'id',
     'active',
     'createdAt',
@@ -11,6 +12,10 @@ export const apiKeyFieldsToExpose = [
     'expiresAt'
 ] as const satisfies (keyof ApiKey)[]
 
-export const KeyLength = 32
+export const filterSelection = createSelection([...fieldsToExpose])
 
-export const apiKeyFilterSelection = createSelection([...apiKeyFieldsToExpose])
+export const apiKeysConfig = {
+    fieldsToExpose,
+    filterSelection,
+    keyLength: 32,
+}
