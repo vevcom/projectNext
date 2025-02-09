@@ -64,8 +64,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return new Session<'NO_USER'>({ user: null, permissions: [], memberships: [] })
     }
 
-    public static async fromJsObject(jsObject: SessionMaybeUser): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
-        if (jsObject instanceof Session) return jsObject
+    public static fromJsObject(jsObject: SessionMaybeUser): Session<'NO_USER'> | Session<'HAS_USER'> {
         return new Session(jsObject)
     }
 
