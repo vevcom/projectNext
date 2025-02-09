@@ -2,12 +2,12 @@ import 'server-only'
 import { Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
+import { Session } from '@/auth/Session'
 import type { ExtractDetailedType, ValidationType, ValidationTypeUnknown } from './Validation'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
-import { Session } from '@/auth/Session'
 import type { z } from 'zod'
-import { AutherStaticFieldsBound } from '@/auth/auther/Auther'
+import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -135,11 +135,11 @@ export type ServiceMethodType<
 
 /**
  * Wrapper for creating service methods. It handles validation, authorization, and errors for you.
- * 
+ *
  * Whether or not a service method expects params and/or data is inferred from the configuration.
  * If paramsSchema is defined, the service method expects params.
  * If dataValidation is defined, the service method expects data.
- * 
+ *
  * @param config - The configuration for the service method.
  * @param config.auther - The auther that will be used to authorize the user.
  * @param config.dynamicAuthFields - A function that returns the dynamic auth fields that will be used to authorize the user.

@@ -1,11 +1,12 @@
 import { Session } from '@/auth/Session'
 import { createJobAd } from '@/services/career/jobAds/create'
 import { Smorekopp } from '@/services/error'
-import { afterEach, beforeAll, describe, expect, test } from '@jest/globals'
-import type { CreateJobAdTypes, UpdateJobAdTypes } from '@/services/career/jobAds/validation'
 import { readJobAd } from '@/services/career/jobAds/read'
 import { destroyJobAd } from '@/services/career/jobAds/destroy'
 import { updateJobAd } from '@/services/career/jobAds/update'
+import prisma from '@/prisma'
+import { afterEach, beforeAll, describe, expect, test } from '@jest/globals'
+import type { CreateJobAdTypes, UpdateJobAdTypes } from '@/services/career/jobAds/validation'
 
 // NOTE: This is file contains a lot of boiler plate which should be refactored to be more reusable.
 // This is only the first step in wrinting our tests.
@@ -96,7 +97,7 @@ describe('job ads', () => {
             params: {
                 id: createRes.id,
             },
-            data: UPDATED_JOB_AD, 
+            data: UPDATED_JOB_AD,
             session: Session.empty(),
         })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
@@ -118,7 +119,7 @@ describe('job ads', () => {
             params: {
                 id: createRes.id,
             },
-            data: UPDATED_JOB_AD, 
+            data: UPDATED_JOB_AD,
             session,
         })
 
@@ -150,6 +151,6 @@ describe('job ads', () => {
         await destroyJobAd.newClient().execute({ params: { id: createRes.id }, session })
 
         const count = await prisma.jobAd.count()
-        expect(count).toBe(1)
+        expect(count).toBe(0)
     })
 })
