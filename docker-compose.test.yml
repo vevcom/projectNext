@@ -5,7 +5,8 @@ services:
             service: projectnext
         build:
             target: test
-    test-db:
+        tty: true
+    db:
         extends:
             file: docker-compose.base.yml
             service: db
