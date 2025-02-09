@@ -6,9 +6,6 @@ services:
         build:
             target: test
         tty: true # Allows for colorized output
-        depends_on: # Prisma container doesn't exist for tests
-            db:
-                condition: service_healthy
     
     db:
         extends:

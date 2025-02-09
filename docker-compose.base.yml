@@ -30,8 +30,8 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-            prisma:
-                condition: service_completed_successfully
+            # Since prisma service is not needed by test, then dev and prod must
+            # specify the prisma service as a dependency in their respective files
 
     db:
         image: postgres:16.0-alpine
