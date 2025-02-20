@@ -1,6 +1,6 @@
 import 'server-only'
 import { interestGroupAuthers } from './authers'
-import { interestGroupSchemas } from './validation'
+import { interestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'

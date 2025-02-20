@@ -1,7 +1,7 @@
 'use server'
 import { action } from '@/actions/action'
-import { readDotsPage, readDotWrappersForUser } from '@/services/dots/read'
+import { dotMethods } from '@/services/dots/methods'
 
-export const readDotPageAction = action(readDotsPage)
+export const readDotPageAction = action(dotMethods.readPage)
 
-export const readDotWrappersForUserAction = action(readDotWrappersForUser)
+export const readDotWrappersForUserAction = action(dotMethods.readWrappersForUser)

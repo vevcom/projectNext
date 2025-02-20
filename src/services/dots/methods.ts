@@ -1,18 +1,58 @@
 import 'server-only'
-import { DotWrapperWithDotsIncluder } from './ConfigVars'
-import { readDotAuther, readDotForUserAuther } from './authers'
-import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { dotConfig } from './config'
+import { dotAuthers } from './authers'
+import { dotSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
+import { dot } from 'node:test/reporters'
+
+const create = ServiceMethod({
+    dataSchema: dotSchemas.create,
+    auther: ({ data }) => dotAuthers.create.dynamicFields({ userId: data.userId }),
+    paramsSchema: z.object({
+        accuserId: z.number(),
+    }),
+    opensTransaction: true,
+    method: async ({ prisma, params, data: { value, ...data }, session }) => {
+        const activeDots = await readForUser.client(prisma).execute({
+            params: { userId: data.userId, onlyActive: true },
+            session,
+        })
+
+        const dotData : { expiresAt: Date }[] = []
+        let prevExpiresAt = activeDots.length > 0 ? activeDots[activeDots.length - 1].expiresAt : new Date()
+        for (let i = 0; i < value; i++) {
+            //TODO: Take freezes into account
+            const expiresAt = new Date(prevExpiresAt.getTime() + dotConfig.baseDuration)
+            dotData.push({ expiresAt })
+            prevExpiresAt = expiresAt
+        }
+        await prisma.$transaction(async tx => {
+            const wrapper = await tx.dotWrapper.create({
+                data: {
+                    ...data,
+                    accuserId: params.accuserId
+                }
+            })
+            await tx.dot.createMany({
+                data: dotData.map(dd => ({
+                    ...dd,
+                    dotWrapperId: wrapper.id
+                }))
+            })
+        })
+    }
+})
 
 /**
  * This method reads all dots for a user
  * @param userId - The user id to read dots for
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
-export const readDotsForUser = ServiceMethod({
-    auther: ({ params }) => readDotForUserAuther.dynamicFields({ userId: params.userId }),
+const readForUser = ServiceMethod({
+    auther: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
@@ -32,8 +72,8 @@ export const readDotsForUser = ServiceMethod({
     })
 })
 
-export const readDotWrappersForUser = ServiceMethod({
-    auther: ({ params }) => readDotForUserAuther.dynamicFields({ userId: params.userId }),
+const readWrappersForUser = ServiceMethod({
+    auther: ({ params }) => dotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
@@ -42,7 +82,7 @@ export const readDotWrappersForUser = ServiceMethod({
             where: {
                 userId
             },
-            include: DotWrapperWithDotsIncluder,
+            include: dotConfig.wrapperWithDotsIncluder,
         })
 
         return wrappers.sort((a, b) => {
@@ -56,8 +96,8 @@ export const readDotWrappersForUser = ServiceMethod({
     }
 })
 
-export const readDotsPage = ServiceMethod({
-    auther: () => readDotAuther.dynamicFields({}),
+const readPage = ServiceMethod({
+    auther: () => dotAuthers.readPage.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
         z.object({
@@ -85,12 +125,19 @@ export const readDotsPage = ServiceMethod({
                 username: 'asc'
             }
         },
-        include: DotWrapperWithDotsIncluder,
+        include: dotConfig.wrapperWithDotsIncluder,
     })).map(wrapper => ({
         ...wrapper,
         dots: extendWithActive(wrapper.dots)
     }))
 })
+
+export const dotMethods = {
+    create,
+    readForUser,
+    readWrappersForUser,
+    readPage,
+} as const
 
 function extendWithActive<T extends { expiresAt: Date }>(dots: T[]) {
     return dots.map(dot => ({
