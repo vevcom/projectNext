@@ -161,7 +161,7 @@ export const readUserWithBalance = ServiceMethod({
         })
 
         return {
-            balance: 12300,
+            balance: 191900,
             user,
         }
     }

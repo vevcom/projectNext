@@ -85,7 +85,7 @@ export const createPurchaseByStudentCard = ServiceMethod({
         // TODO: Return remaining balance in account
 
         return {
-            remainingBalance: 15100,
+            remainingBalance: 191900,
             user,
             productList,
         }
