@@ -1,7 +1,7 @@
 'use server'
 import { action } from '@/actions/action'
-import { readActiveJobAds, readInactiveJobAdsPage, readJobAd } from '@/services/career/jobAds/read'
+import { jobAdMethods } from '@/services/career/jobAds/methods'
 
-export const readJobAdAction = action(readJobAd)
-export const readActiveJobAdsAction = action(readActiveJobAds)
-export const readInactiveJobAdsPageAction = action(readInactiveJobAdsPage)
+export const readJobAdAction = action(jobAdMethods.read)
+export const readActiveJobAdsAction = action(jobAdMethods.readActive)
+export const readInactiveJobAdsPageAction = action(jobAdMethods.readInactivePage)

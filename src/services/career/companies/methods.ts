@@ -1,7 +1,7 @@
 import 'server-only'
 import { companySchemas } from './schemas'
 import { companyAuthers } from './authers'
-import { companyConfig } from './ConfigVars'
+import { companyConfig } from './config'
 import { createCmsImage } from '@/services/cms/images/create'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
