@@ -142,6 +142,31 @@ export async function readUserOrNull(where: readUserWhere): Promise<User | null>
     return await prismaCall(() => prisma.user.findFirst({ where }))
 }
 
+export const readUserWithBalance = ServiceMethod({
+    auther: ({ params }) => readUserAuther.dynamicFields({
+        username: params.username || '',
+    }),
+    paramsSchema: z.object({
+        username: z.string().optional(),
+        id: z.number().optional(),
+        email: z.string().optional(),
+        studentCard: z.string().optional(),
+    }),
+    method: async ({ prisma: prisma_, params }) => {
+        const user = await prisma_.user.findFirstOrThrow({
+            where: params,
+            include: {
+                image: true,
+            }
+        })
+
+        return {
+            balance: 12300,
+            user,
+        }
+    }
+})
+
 export const readUserProfile = ServiceMethod({
     paramsSchema: z.object({
         username: z.string(),
