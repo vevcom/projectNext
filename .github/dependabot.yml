@@ -25,3 +25,12 @@ updates:
       major:
         update-types:
         - "major"
+
+  - package-exosysten: docker
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "node"
+        versions: [ "23.x" ]
+
