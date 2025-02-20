@@ -2,11 +2,11 @@
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readCompanyPageAction } from '@/actions/career/companies/read'
 import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 
 export type PageSizeCompany = 10
 const fetcher = async (x: ReadPageInput<PageSizeCompany, CompanyCursor, CompanyDetails>) => {
-    const ret = await readCompanyPageAction.bind(null, { paging: x })()
+    const ret = await readCompanyPageAction({ paging: x })
     return ret
 }
 

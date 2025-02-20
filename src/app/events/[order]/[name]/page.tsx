@@ -1,34 +1,36 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
-import { readEvent } from '@/actions/events/read'
+import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
-import { displayDate } from '@/dates/displayDate'
+import { displayDate } from '@/lib/dates/displayDate'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
-import { destroyEvent } from '@/actions/events/destroy'
+import { destroyEventAction } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { bindParams } from '@/actions/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         order: string,
         name: string
-    }
+    }>
 }
 
 export default async function Event({ params }: PropTypes) {
-    const eventRes = await readEvent({
-        name: decodeURIComponent(params.name),
-        order: parseInt(params.order, 10)
+    const eventRes = await readEventAction({
+        name: decodeURIComponent((await params).name),
+        order: parseInt((await params).order, 10)
     })
-    const tagsRes = await readEventTagsAction.bind(null, {})()
+    const tagsRes = await readEventTagsAction()
     if (!eventRes.success || !tagsRes.success) {
+        //TODO: Handle error in idiomatic way
         throw new Error('Failed to read event')
     }
     const event = eventRes.data
@@ -55,7 +57,7 @@ export default async function Event({ params }: PropTypes) {
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
                         <Form
-                            action={destroyEvent.bind(null, { id: event.id })}
+                            action={bindParams(destroyEventAction, { id: event.id })}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}

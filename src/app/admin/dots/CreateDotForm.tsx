@@ -45,7 +45,7 @@ export default function CreateDotForm() {
                 </PopUp>
             </div>
             <Form
-                action={createDotAction.bind(null, { accuserId: session.user.id })}
+                action={createDotAction.bind(null, ({ accuserId: session.user.id }))}
                 submitText="Lag prikk"
                 refreshOnSuccess
             >

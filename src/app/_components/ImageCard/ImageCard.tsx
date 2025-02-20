@@ -18,7 +18,7 @@ export default function ImageCard({ image, title, children, href, className }: P
             <div className={styles.image}>
                 {
                     image && (
-                        <Image width={240} image={image} />
+                        <Image disableLinkingToLicense creditPlacement="top" width={240} image={image} />
                     )
                 }
             </div>

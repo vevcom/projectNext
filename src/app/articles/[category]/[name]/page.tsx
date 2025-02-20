@@ -4,16 +4,16 @@ import { readArticleAction } from '@/cms/articles/read'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         category: string
         name: string
-    },
+    }>,
 }
 
 export default async function ArticleCategorArticley({ params }: PropTypes) {
     //This fixes æ, ø, å and spaces in the url
-    const name = decodeURIComponent(params.name)
-    const category = decodeURIComponent(params.category)
+    const name = decodeURIComponent((await params).name)
+    const category = decodeURIComponent((await params).category)
     const res = await readArticleAction({
         name,
         category

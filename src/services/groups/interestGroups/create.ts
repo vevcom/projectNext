@@ -1,26 +1,32 @@
-import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import 'server-only'
+import { createInterestGroupValidation } from './validation'
+import { createInterestGroupAuther } from './Auther'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import type { ExpandedInterestGroup } from './Types'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
-type CreateInterestGroupArgs = {
-    name: string,
-    shortName: string,
-}
+export const createInterestGroup = ServiceMethod({
+    dataValidation: createInterestGroupValidation,
+    auther: () => createInterestGroupAuther.dynamicFields({}),
+    method: async ({ prisma, data }) => {
+        const { order } = await readCurrentOmegaOrder()
 
-export async function createInterestGroup({ name, shortName }: CreateInterestGroupArgs): Promise<ExpandedInterestGroup> {
-    const order = (await readCurrentOmegaOrder()).order
-
-    return await prismaCall(() => prisma.interestGroup.create({
-        data: {
-            name,
-            shortName,
-            group: {
-                create: {
-                    groupType: 'INTEREST_GROUP',
-                    order,
+        await prisma.interestGroup.create({
+            data: {
+                ...data,
+                articleSection: {
+                    create: {
+                        cmsImage: {},
+                        cmsParagraph: {},
+                        cmsLink: {},
+                    }
+                },
+                group: {
+                    create: {
+                        groupType: 'INTEREST_GROUP',
+                        order,
+                    }
                 }
             }
-        }
-    }))
-}
+        })
+    }
+})

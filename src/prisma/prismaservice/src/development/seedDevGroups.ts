@@ -3,7 +3,7 @@ import type { PrismaClient } from '@/generated/pn'
 export default async function seedDevGroups(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({
         where: {
-            username: 'Harambe104'
+            username: 'harambe'
         }
     })
 
@@ -125,6 +125,13 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         data: {
             name: `Interessegruppe ${i}`,
             shortName: `IG${i}`,
+            articleSection: {
+                create: {
+                    cmsImage: { create: {} },
+                    cmsParagraph: { create: {} },
+                    cmsLink: { create: {} },
+                }
+            },
             group: {
                 create: {
                     groupType: 'INTEREST_GROUP',

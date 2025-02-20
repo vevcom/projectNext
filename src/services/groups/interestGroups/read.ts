@@ -1,21 +1,40 @@
-import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import 'server-only'
+import { readInterestGroupAuther } from './Auther'
+import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 import type { ExpandedInterestGroup } from './Types'
 
-export async function readInterestGroups(): Promise<ExpandedInterestGroup[]> {
-    return await prismaCall(() => prisma.interestGroup.findMany())
-}
+export const readAllInterestGroups = ServiceMethod({
+    auther: () => readInterestGroupAuther.dynamicFields({}),
+    method: async ({ prisma }): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
+        include: {
+            articleSection: {
+                include: articleSectionsRealtionsIncluder,
+            },
+        },
+        orderBy: [
+            { name: 'asc' },
+            { id: 'asc' },
+        ]
+    })
+})
 
-type ReadInterestGroupArgs = {
-    id?: number,
-    shortName?: string,
-}
-
-export async function readInterestGroup({ id, shortName }: ReadInterestGroupArgs): Promise<ExpandedInterestGroup> {
-    return await prismaCall(() => prisma.interestGroup.findUniqueOrThrow({
+export const readInterestGroup = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number().optional(),
+        shortName: z.string().optional(),
+    }),
+    auther: () => readInterestGroupAuther.dynamicFields({}),
+    method: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
         where: {
             id,
             shortName,
+        },
+        include: {
+            articleSection: {
+                include: articleSectionsRealtionsIncluder,
+            },
         }
-    }))
-}
+    })
+})

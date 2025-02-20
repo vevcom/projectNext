@@ -4,14 +4,11 @@ import { getUser } from '@/auth/getUser'
 import { verifyUserEmailAction } from '@/actions/users/update'
 import { readUser } from '@/services/users/read'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { QueryParams } from '@/lib/query-params/queryParams'
 import { notFound, redirect } from 'next/navigation'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
-type PropTypes = {
-    searchParams: {
-        token?: string,
-        callbackUrl?: string,
-    }
-}
+type PropTypes = SearchParamsServerSide
 
 export default async function Register({ searchParams }: PropTypes) {
     const { user, authorized } = await getUser({
@@ -19,41 +16,39 @@ export default async function Register({ searchParams }: PropTypes) {
         shouldRedirect: false,
     })
 
-    if (typeof searchParams.token === 'string') {
-        const verify = await verifyUserEmailAction(searchParams.token)
+    let userId = user?.id
+    let shouldLogOut = false
+
+    const token = QueryParams.token.decode(await searchParams)
+    const callbackUrl = QueryParams.callbackUrl.decode(await searchParams)
+
+    if (token) {
+        const verify = await verifyUserEmailAction(token)
         if (!verify.success) {
-            console.log(verify)
-            return <p>Token er ugyldig</p>
+            redirect('./register')
         }
 
         if (user && verify.data.id !== user.id) {
-            // TODO: Logout
-            console.log('Should logout')
+            shouldLogOut = true
         }
 
-        console.log(verify)
-
-        //TODO: Login the correct user
-        // See https://github.com/nextauthjs/next-auth/discussions/5334
-    }
-
-    if (!authorized || !user) {
+        userId = verify.data.id
+    } else if (!authorized || !user) {
         return notFound()
     }
 
-    //TODO: change to action.
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
+    const updatedUser = await safeServerCall(() => readUser({ id: userId }))
     if (!updatedUser.success) {
         return notFound()
     }
 
     if (updatedUser.data.acceptedTerms) {
-        redirect(searchParams.callbackUrl ?? 'users/me')
+        redirect(callbackUrl ?? '/users/me')
     }
 
     if (!updatedUser.data.emailVerified) {
         redirect('/register-email')
     }
 
-    return <RegistrationForm />
+    return <RegistrationForm userData={updatedUser.data} shouldLogOut={shouldLogOut} />
 }

@@ -7,11 +7,11 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import type { PropTypes } from './getProfileForAdmin'
+import type { PropTypes } from '@/app/users/[username]/page'
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
     const session = await Session.fromNextAuth()
-    let username = params.username
+    let username = (await params).username
     if (username === 'me') {
         if (!session.user) return notFound()
         username = session.user.username

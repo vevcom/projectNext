@@ -3,13 +3,13 @@ import { readCommitteeArticleAction } from '@/actions/groups/committees/read'
 import Article from '@/components/Cms/Article/Article'
 
 export type PropTypes = {
-    params: {
+    params: Promise<{
         shortName: string
-    }
+    }>
 }
 
 export default async function committeeArticle({ params }: PropTypes) {
-    const committeeArticleRes = await readCommitteeArticleAction(params.shortName)
+    const committeeArticleRes = await readCommitteeArticleAction((await params).shortName)
     if (!committeeArticleRes.success) throw new Error('Kunne ikke hente komitéartikkel')
     const article = committeeArticleRes.data
 

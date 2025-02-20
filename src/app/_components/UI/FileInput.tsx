@@ -1,5 +1,4 @@
 'use client'
-
 import styles from './FileInput.module.scss'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'

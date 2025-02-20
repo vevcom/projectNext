@@ -28,8 +28,8 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
     }: PropTypes<ValueType>) {
         const id = uuid()
 
-        const optionElements = options.map(
-            (option) => <option
+        const optionElements = options.map(option =>
+            <option
                 key={option.key ?? uuid()}
                 value={option.value}
             >
@@ -44,6 +44,7 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
                     {...props}
                     id={id}
                     name={name}
+                    defaultValue={defaultValue}
                     {
                         ...(value ? { value } : { defaultValue })
                     }

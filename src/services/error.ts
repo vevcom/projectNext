@@ -17,6 +17,11 @@ export const errorCodes = [
         defaultMessage: 'Feil i parametrene',
     },
     {
+        name: 'BAD DATA',
+        httpCode: 400,
+        defaultMessage: 'Feil i dataen',
+    },
+    {
         name: 'UNKNOWN ERROR',
         httpCode: 500,
         defaultMessage: 'En ukjent feil har oppstått',
@@ -61,6 +66,11 @@ export const errorCodes = [
         httpCode: 401,
         defaultMessage: 'Du er ikke innlogget',
     },
+    {
+        name: 'UNPERMITTED CASCADE',
+        httpCode: 400,
+        defaultMessage: 'Du kan ikke slette denne ressursen fordi den er tilknyttet andre ressurser',
+    }
 ] as const
 
 export type ErrorCode = typeof errorCodes[number]['name']
@@ -99,4 +109,11 @@ export class ServerError extends Smorekopp<ServerErrorCode> {
         super(errorCode, errors)
         this.serviceCausedError = serviceCausedError
     }
+}
+
+export function getHttpErrorCode(errorType: ErrorCode): number {
+    for (const error of errorCodes) {
+        if (error.name === errorType) return error.httpCode
+    }
+    return 500
 }

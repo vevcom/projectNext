@@ -10,7 +10,7 @@ import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionP
 export default async function Images() {
     const { user } = await getUser()
 
-    const isAdmin = user?.username === 'Harambe104' //TODO: temp
+    const isAdmin = user?.username === 'harambe' //TODO: temp
     const pageSize: PageSizeImageCollection = 12
 
     const collectionPage = await readImageCollectionsPageAction({

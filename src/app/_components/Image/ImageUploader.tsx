@@ -2,6 +2,8 @@ import Form from '@/components/Form/Form'
 import { createImageAction } from '@/actions/images/create'
 import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
+import { bindParams } from '@/actions/bind'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
 type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
@@ -22,12 +24,14 @@ export default function ImageUploader({ collectionId, ...formProps }: PropTypes)
         <Form
             title="last opp bilde"
             submitText="last opp"
-            action={createImageAction.bind(null, collectionId)}
+            action={bindParams(createImageAction, { collectionId })}
             closePopUpOnSuccess="UploadImages"
             {...formProps}
         >
             <TextInput color="black" label="navn" name="name" />
             <TextInput color="black" label="alternativ tekst" name="alt" />
+            <TextInput color="black" label="Kreditert" name="credit" />
+            <LicenseChooser />
             <FileInput label="fil" name="file" color="primary" />
         </Form>
     )

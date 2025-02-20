@@ -144,7 +144,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Intressegrupper',
-        href: '/infopages/interessegrupper',
+        href: '/interest-groups',
         show: 'all',
         icon: faGamepad,
     },

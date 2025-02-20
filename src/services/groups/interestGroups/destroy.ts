@@ -1,11 +1,22 @@
-import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
-import type { ExpandedInterestGroup } from './Types'
+import 'server-only'
+import { destroyInterestGroupAuther } from './Auther'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
 
-export async function destroyInterestGroup(id: number): Promise<ExpandedInterestGroup> {
-    return await prismaCall(() => prisma.interestGroup.delete({
-        where: {
-            id,
-        },
-    }))
-}
+export const destroyInterestGroup = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: () => destroyInterestGroupAuther.dynamicFields({}),
+    opensTransaction: true,
+    method: async ({ prisma, params: { id } }) => {
+        await prisma.$transaction(async tx => {
+            const intrestGroup = await tx.interestGroup.delete({
+                where: { id }
+            })
+            await tx.group.delete({
+                where: { id: intrestGroup.groupId }
+            })
+        })
+    }
+})

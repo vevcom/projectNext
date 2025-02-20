@@ -1,14 +1,19 @@
 import 'server-only'
 import { eventFilterSeletion } from './ConfigVars'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
-import { getOsloTime } from '@/dates/getOsloTime'
-import type { ReadPageInput } from '@/services/paging/Types'
-import type { EventArchiveCursor, EventArchiveDetails } from './Types'
+import { readArchivedEventsPageAuther, readCurrentEventsAuther, readEventAuther } from './authers'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { getOsloTime } from '@/lib/dates/getOsloTime'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { z } from 'zod'
 
-export const read = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: {order: number, name: string}) => {
+export const readEvent = ServiceMethod({
+    paramsSchema: z.object({
+        order: z.number(),
+        name: z.string(),
+    }),
+    auther: () => readEventAuther.dynamicFields({}),
+    method: async ({ prisma, params }) => {
         const event = await prisma.event.findUniqueOrThrow({
             where: {
                 order_name: {
@@ -47,9 +52,13 @@ const eventTagSelector = (tags: string[] | null) => (tags ? {
     }
 } : undefined)
 
-export const readCurrent = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: { tags: string[] | null }) => {
+
+export const readCurrentEvents = ServiceMethod({
+    paramsSchema: z.object({
+        tags: z.array(z.string()).nullable(),
+    }),
+    auther: () => readCurrentEventsAuther.dynamicFields({}),
+    method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             select: {
                 ...eventFilterSeletion,
@@ -78,11 +87,19 @@ export const readCurrent = ServiceMethodHandler({
     }
 })
 
-export const readArchivedPage = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: {
-        paging: ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-    }) => {
+export const readArchivedEventsPage = ServiceMethod({
+    paramsSchema: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            name: z.string().optional(),
+            tags: z.array(z.string()).nullable(),
+        }),
+    ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+    auther: () => readArchivedEventsPageAuther.dynamicFields({}),
+    method: async ({ prisma, params }) => {
         const events = await prisma.event.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {

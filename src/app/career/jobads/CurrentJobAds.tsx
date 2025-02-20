@@ -9,7 +9,7 @@ type PropTypes = {
  * @param not - pass it not: a id of a jobad to exclude from the list
  */
 export default async function CurrentJobAds({ not }: PropTypes) {
-    const res = await readActiveJobAdsAction.bind(null, {})()
+    const res = await readActiveJobAdsAction()
     if (!res.success) {
         throw res.error ?
             new Error(res.error[0].message) :

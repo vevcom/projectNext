@@ -36,7 +36,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         await Promise.all(ln.map(async (l, j) => {
             await prisma.user.upsert({
                 where: {
-                    email: `${f}.${l}@${f}${l}.io`
+                    username: `${f}${i}${j}`
                 },
                 update: {
 
@@ -46,6 +46,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     lastname: l,
                     email: uuid(),
                     username: `${f}${i}${j}`,
+                    studentCard: `${f}-${i}-${j}`,
                     credentials: {
                         create: {
                             passwordHash,
@@ -59,7 +60,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     const harambeImage = await prisma.image.findFirst({
         where: {
-            name: 'Harambe104'
+            name: 'harambe'
         }
     })
     if (!harambeImage) {
@@ -77,8 +78,9 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Harambe',
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
-            username: 'Harambe104',
+            username: 'harambe',
             bio: 'Harambe did nothing wrong',
+            studentCard: 'harambeCard',
             credentials: {
                 create: {
                     passwordHash,
@@ -104,7 +106,8 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Vever',
             lastname: 'Vevsen',
             email: 'vever@vevcom.com',
-            username: 'Vever104',
+            username: 'vever',
+            studentCard: 'vever',
             credentials: {
                 create: {
                     passwordHash: 'password',
@@ -117,7 +120,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     console.log(vever)
 }
 
-// WE NEED TO FIND A BETTER WAY TO SHARE CODE BETWEEN PRISMA SERVICE AND NEXT
+// TODO: WE NEED TO FIND A BETTER WAY TO SHARE CODE BETWEEN PRISMA SERVICE AND NEXT
 
 const ENCRYPTION_ALGORITHM = 'aes-256-cbc'
 const IV_LENGTH = 16 // IV = Initalization Vector

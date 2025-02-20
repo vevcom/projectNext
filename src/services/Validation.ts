@@ -241,3 +241,25 @@ export type ValidationTypes<V> = V extends Validation<infer Type, infer Detailed
         Detailed: PureTsTypeOfSchema<Detailed, true>
     } : never;
 
+// The type of the Validation class
+export type ValidationType<GeneralData, DetailedData> = {
+    detailedValidate: (data: DetailedData | unknown) => DetailedData,
+    typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
+}
+
+// The return type of the typeValidate method in Validation
+export type TypeValidateReturn<
+    DetailedType
+> = {
+    success: true,
+    data: DetailedType,
+} | {
+    success: false,
+    error: z.ZodError,
+}
+
+// Extract the type of the detailed schema from a Validation
+export type ExtractDetailedType<V extends ValidationType<unknown, unknown>> = ReturnType<V['detailedValidate']>
+
+// Utility type for a generic Valdiation which can be extended
+export type ValidationTypeUnknown = ValidationType<unknown, unknown>

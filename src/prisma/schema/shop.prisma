@@ -1,0 +1,59 @@
+model Shop {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  createdAt   DateTime      @default(now())
+  purchase    Purchase[]
+  ShopProduct ShopProduct[]
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  description     String            @default("")
+  barcode         String?           @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  ShopProduct     ShopProduct[]
+  PurchaseProduct PurchaseProduct[]
+}
+
+model ShopProduct {
+  shop      Shop    @relation(fields: [shopId], references: [id])
+  shopId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  price  Int
+  active Boolean @default(true)
+
+  @@id([shopId, productId])
+}
+
+enum PurchaseMethod {
+  WEB
+  STUDENT_CARD
+  OMEGA_ID
+}
+
+model Purchase {
+  id              Int               @id @default(autoincrement())
+  timestamp       DateTime          @default(now())
+  method          PurchaseMethod
+  shop            Shop              @relation(fields: [shopId], references: [id])
+  shopId          Int
+  // transaction Transaction @relation(field: [acountId], references: [id])
+  PurchaseProduct PurchaseProduct[]
+}
+
+model PurchaseProduct {
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId Int
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
+
+  quantity Int
+  price    Int
+
+  @@id([purchaseId, productId])
+}

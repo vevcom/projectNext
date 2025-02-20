@@ -3,9 +3,11 @@ import { SEX } from '@prisma/client'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/services/Validation'
 
+export const studentCardZodValidation = z.string()
+
 const baseUserValidation = new ValidationBase({
     type: {
-        username: z.string(),
+        username: z.string().toLowerCase(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string(),
         emailVerified: z.string().optional().nullable(),
@@ -13,6 +15,7 @@ const baseUserValidation = new ValidationBase({
         firstname: z.string(),
         lastname: z.string(),
         allergies: z.string().optional().nullable(),
+        studentCard: studentCardZodValidation,
         password: z.string(),
         confirmPassword: z.string(),
         acceptedTerms: z.literal('on', {
@@ -20,7 +23,7 @@ const baseUserValidation = new ValidationBase({
         }),
     },
     details: {
-        username: z.string().max(50).min(2),
+        username: z.string().max(50).min(2).toLowerCase(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),
         emailVerified: z.string().datetime({}).optional().nullable(),
@@ -28,7 +31,11 @@ const baseUserValidation = new ValidationBase({
         firstname: z.string().max(50).min(2),
         lastname: z.string().max(50).min(2),
         allergies: z.string().max(150).optional().nullable(),
-        password: z.string().max(50).min(12),
+        studentCard: studentCardZodValidation,
+        password: z.string().max(50).min(12, {
+            // eslint-disable-next-line
+            message: 'Passoret må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
+        }),
         confirmPassword: z.string().max(50).min(12),
         acceptedTerms: z.literal('on', {
             errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
@@ -106,3 +113,7 @@ export const verifyUserEmailValidation = baseUserValidation.createValidation({
 
 export type verifyUserEmailTypes = ValidationTypes<typeof verifyUserEmailValidation>
 
+export const connectStudentCardValidation = baseUserValidation.createValidation({
+    keys: ['studentCard'],
+    transformer: data => data,
+})

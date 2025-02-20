@@ -1,28 +1,24 @@
 'use client'
 import styles from './OmegaIdElement.module.scss'
+import { useUser } from '@/auth/useUser'
 import { generateOmegaIdAction } from '@/actions/omegaid/generate'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
+import { compressOmegaId } from '@/services/omegaid/compress'
 import { useQRCode } from 'next-qrcode'
 import { useEffect, useState } from 'react'
 
 const EXPIRY_THRESHOLD = 60
 
-type PropTypes = {
+export default function OmegaIdElement({ token }: {
     token: string,
-}
-
-export default function OmegaIdElement({ token }: PropTypes) {
+}) {
     const [tokenState, setTokenState] = useState(token)
+
+    const { user } = useUser()
 
     const { SVG } = useQRCode()
 
-    const JWTPayload = readJWTPayload<{
-        gn?: string,
-        sn?: string,
-    }>(token)
-
-    const firstname = JWTPayload.gn ?? ''
-    const lastname = JWTPayload.sn ?? ''
+    const JWTPayload = readJWTPayload(tokenState)
 
     const [expiryTime, setExpiryTime] = useState(new Date((JWTPayload.exp - EXPIRY_THRESHOLD) * 1000))
 
@@ -46,11 +42,15 @@ export default function OmegaIdElement({ token }: PropTypes) {
         return () => clearInterval(interval)
     })
 
-    return <div className={styles.OmegaIdElement}>
-        <SVG
-            text={tokenState}
-        />
+    if (!user) return <p>Could not load OmegaID, since the user is not loggedin.</p>
 
-        <p>{firstname} {lastname}</p>
+    return <div className={styles.OmegaIdElement}>
+        <h2>Omega ID</h2>
+        <SVG
+            text={compressOmegaId(tokenState)}
+        />
+        <h2>{user.firstname} {user.lastname}</h2>
+        <h4>{user.username}</h4>
+        <h4>{user.id}</h4>
     </div>
 }
