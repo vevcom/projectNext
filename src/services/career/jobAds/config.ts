@@ -2,6 +2,14 @@ import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { JobType } from '@prisma/client'
 import type { Prisma } from '@prisma/client'
 
+const typeConfig = {
+    FULL_TIME: { label: 'Heltid' },
+    PART_TIME: { label: 'Deltid' },
+    INTERNSHIP: { label: 'Internship' },
+    OTHER: { label: 'Annet' },
+    CONTRACT: { label: 'Kontrakt' },
+} satisfies Record<JobType, { label: string }>
+
 export const jobAdConfig = {
     relationIncluder: {
         article: {
@@ -25,15 +33,9 @@ export const jobAdConfig = {
             }
         }
     } satisfies Prisma.JobAdInclude,
-    typeConfig: {
-        FULL_TIME: { label: 'Heltid' },
-        PART_TIME: { label: 'Deltid' },
-        INTERNSHIP: { label: 'Internship' },
-        OTHER: { label: 'Annet' },
-        CONTRACT: { label: 'Kontrakt' },
-    } satisfies Record<JobType, { label: string }>,
+    typeConfig,
     options: Object.values(JobType).map((opt): { value: JobType, label: string } => ({
         value: opt,
-        label: jobAdConfig.typeConfig[opt].label
+        label: typeConfig[opt].label
     }))
 } as const

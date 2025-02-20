@@ -1,5 +1,5 @@
 import 'server-only'
-import { Smorekopp } from './error'
+import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
@@ -7,6 +7,7 @@ import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { z } from 'zod'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
+import { zfd } from 'zod-form-data'
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -193,7 +194,11 @@ export function ServiceMethod<
                         'BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.'
                     )
                 }
-                args.data = config.dataSchema.parse(args.data)
+                const parse = zfd.formData(config.dataSchema).safeParse(args.data)
+                if (!parse.success) {
+                    throw new ParseError(parse)
+                }
+                args.data = parse.data
             }
 
             // Then, determine if the correct properties are present.
@@ -229,7 +234,5 @@ export function ServiceMethod<
     return {
         client,
         newClient: () => client(globalPrisma),
-        paramsSchema: config.paramsSchema,
-        dataSchema: config.dataSchema,
     }
 }
