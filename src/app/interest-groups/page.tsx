@@ -4,8 +4,8 @@ import { readInterestGroupsAction } from '@/actions/groups/interestGroups/read'
 import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { createInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 import { Session } from '@/auth/Session'
+import { createInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 
 export default async function InterestGroups() {
     const session = await Session.fromNextAuth()

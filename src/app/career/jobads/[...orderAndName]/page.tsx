@@ -7,7 +7,6 @@ import CompanySelectionProvider from '@/contexts/CompanySelection'
 import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
 import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
-import { JobTypeConfig } from '@/services/career/jobAds/ConfigVars'
 import { Session } from '@/auth/Session'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,6 +18,7 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
+import { JobTypeConfig } from '@/services/career/jobAds/ConfigVars'
 
 type PropTypes = {
     params: Promise<{

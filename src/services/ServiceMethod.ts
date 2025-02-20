@@ -3,11 +3,11 @@ import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
+import { zfd } from 'zod-form-data'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { z } from 'zod'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
-import { zfd } from 'zod-form-data'
 
 /**
  * This is the type for the prisma client that is passed to the service method.

@@ -9,7 +9,6 @@ import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
-import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 import Slider from '@/app/_components/UI/Slider'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
@@ -17,6 +16,7 @@ import { bindParams } from '@/actions/bind'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/career/jobAds/Types'
+import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
