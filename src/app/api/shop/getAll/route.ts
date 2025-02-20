@@ -1,5 +1,3 @@
-'use server'
-
 import { apiHandler } from '@/app/api/apiHandler'
 import { readShops } from '@/services/shop/shop/read'
 
