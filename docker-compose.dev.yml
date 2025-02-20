@@ -15,6 +15,9 @@ services:
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
+        depends_on:
+            prisma:
+                condition: service_completed_successfully
 
     db:
         extends:

@@ -8,6 +8,9 @@ services:
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
+        depends_on:
+            prisma:
+                condition: service_completed_successfully
         deploy:
             replicas: 8
 

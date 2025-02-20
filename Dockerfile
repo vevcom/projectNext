@@ -35,12 +35,15 @@ FROM base AS test
 
 ENV NODE_ENV=test
 
-# Tests are currently not implemented so this is just a placeholder
+COPY jest.config.ts ./
+# src and tests are expected to be binded in test
 
 CMD ["npm", "run", "test"]
 ############################################################
 FROM base AS dev
 
 ENV NODE_ENV=development
+
+# src and tests are expected to be binded in dev
 
 CMD ["npm", "run", "dev"]
