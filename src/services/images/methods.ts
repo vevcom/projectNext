@@ -2,16 +2,16 @@ import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
 import { ImageConfig } from './config'
 import { ImageAuthers } from './authers'
+import { ImageSchemas } from './schemas'
+import { ServerError } from '@/services/error'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
 import { SpecialImage } from '@prisma/client'
 import { z } from 'zod'
-import { ImageSchemas } from './schemas'
-import { ServerError } from '../error'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
-import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 
 
 export namespace ImageMethods {
@@ -33,14 +33,14 @@ export namespace ImageMethods {
             const buffer = Buffer.from(await file.arrayBuffer())
             const avifBuffer = await sharp(buffer).toFormat('avif').avif(ImageConfig.avifConvertionOptions).toBuffer()
             const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' })
-    
+
             const uploadPromises = [
                 createOneInStore(avifFile, ['avif'], ImageConfig.sizes.small),
                 createOneInStore(avifFile, ['avif'], ImageConfig.sizes.medium),
                 createOneInStore(avifFile, ['avif'], ImageConfig.sizes.large),
                 createFile(file, 'images', [...ImageConfig.allowedExtUpload]),
             ]
-    
+
             const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
             const fsLocationSmallSize = smallSize.fsLocation
             const fsLocationMediumSize = mediumSize.fsLocation
@@ -94,7 +94,7 @@ export namespace ImageMethods {
             }
         }
     })
-    
+
     /**
      * WARNING: This function should only be used in extreme cases, Therefore it is not exported.
      * Creates bad image this should really only happen in worst case scenario
@@ -149,7 +149,7 @@ export namespace ImageMethods {
                     id,
                 },
             })
-    
+
             if (!image) throw new ServerError('NOT FOUND', 'Image not found')
             return image
         }
@@ -214,17 +214,15 @@ export namespace ImageMethods {
             id: z.number(),
         }),
         dataSchema: ImageSchemas.update,
-        method: async ({ prisma, params: { id }, data }) => {
-            return await prisma.image.update({
-                where: {
-                    id,
-                },
-                data: {
-                    license: data.licenseId ? { connect: { id: data.licenseId } } : undefined,
-                    ...data,
-                }
-            })
-        }
+        method: async ({ prisma, params: { id }, data }) => await prisma.image.update({
+            where: {
+                id,
+            },
+            data: {
+                license: data.licenseId ? { connect: { id: data.licenseId } } : undefined,
+                ...data,
+            }
+        })
     })
 
     export const destroy = ServiceMethod({
@@ -240,9 +238,9 @@ export namespace ImageMethods {
             })
             if (!image) throw new ServerError('NOT FOUND', `Bilde med id ${id} ikke funnet`)
             if (image.special) throw new ServerError('BAD PARAMETERS', `Bilde med id ${id} er spesielt og kan ikke slettes`)
-        
+
             //TODO: remove the image from store
-        
+
             return await prisma.image.delete({
                 where: {
                     id,
@@ -250,7 +248,7 @@ export namespace ImageMethods {
             })
         }
     })
-    
+
     /**
      * Creates one image from a file.
      * @param file - The file to create the image from

@@ -1,6 +1,5 @@
 import { maxNumberOfGroupsInFilter, standardMembershipSelection, userFilterSelection } from './ConfigVars'
 import { readUserAuther } from './authers'
-import { readSpecialImage } from '@/services/images/read'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -9,6 +8,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import type { UserDetails, UserCursor, UserPagingReturn } from './Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
@@ -148,7 +148,7 @@ export const readUserProfile = ServiceMethod({
     }),
     auther: ({ params }) => readUserAuther.dynamicFields({ username: params.username }),
     method: async ({ prisma: prisma_, params }) => {
-        const defaultProfileImage = await readSpecialImage.client(prisma).execute({
+        const defaultProfileImage = await ImageMethods.readSpecial.client(prisma).execute({
             params: { special: 'DEFAULT_PROFILE_IMAGE' },
             session: null, //TODO: pass session
         })

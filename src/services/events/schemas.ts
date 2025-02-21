@@ -9,12 +9,12 @@ export namespace EventSchemas {
         eventStart: z.string().transform((val) => new Date(val)),
         eventEnd: z.string().transform((val) => new Date(val)),
         canBeViewdBy: z.nativeEnum(EventCanView),
-    
+
         takesRegistration: z.boolean(),
         places: z.number().int().optional(),
         registrationStart: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
         registrationEnd: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
-    
+
         tagIds: zfd.repeatable(z.coerce.number().array())
     })
 

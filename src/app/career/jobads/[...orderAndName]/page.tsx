@@ -18,7 +18,7 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { JobTypeConfig } from '@/services/career/jobAds/ConfigVars'
+import { jobAdConfig } from '@/services/career/jobAds/config'
 
 type PropTypes = {
     params: Promise<{
@@ -48,7 +48,7 @@ export default async function JobAd({ params }: PropTypes) {
                             <li>
                                 <FontAwesomeIcon icon={faSuitcase} />
                                 <h3>Stillingstype</h3>
-                                <p>{JobTypeConfig[jobAd.type].label}</p>
+                                <p>{jobAdConfig.typeConfig[jobAd.type].label}</p>
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={jobAd.active ? faCheckCircle : faXmarkCircle} />

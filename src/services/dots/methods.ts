@@ -6,7 +6,32 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
-import { dot } from 'node:test/reporters'
+
+/**
+ * This method reads all dots for a user
+ * @param userId - The user id to read dots for
+ * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
+ */
+const readForUser = ServiceMethod({
+    auther: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
+    paramsSchema: z.object({
+        userId: z.number(),
+        onlyActive: z.boolean(),
+    }),
+    method: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
+        where: {
+            wrapper: {
+                userId,
+            },
+            expiresAt: onlyActive ? {
+                gt: new Date()
+            } : undefined,
+        },
+        orderBy: {
+            expiresAt: 'asc'
+        }
+    })
+})
 
 const create = ServiceMethod({
     dataSchema: dotSchemas.create,
@@ -44,32 +69,6 @@ const create = ServiceMethod({
             })
         })
     }
-})
-
-/**
- * This method reads all dots for a user
- * @param userId - The user id to read dots for
- * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
- */
-const readForUser = ServiceMethod({
-    auther: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
-    paramsSchema: z.object({
-        userId: z.number(),
-        onlyActive: z.boolean(),
-    }),
-    method: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
-        where: {
-            wrapper: {
-                userId,
-            },
-            expiresAt: onlyActive ? {
-                gt: new Date()
-            } : undefined,
-        },
-        orderBy: {
-            expiresAt: 'asc'
-        }
-    })
 })
 
 const readWrappersForUser = ServiceMethod({

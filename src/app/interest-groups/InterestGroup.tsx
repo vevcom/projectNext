@@ -2,12 +2,12 @@ import styles from './InterestGroup.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
-import { destroyInterestGroupAuther, updateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
 import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
+import { destroyInterestGroupAuther, updateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 
 type PropTypes = {
     interestGroup: ExpandedInterestGroup

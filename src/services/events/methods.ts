@@ -70,7 +70,7 @@ export namespace EventMethods {
             return event
         }
     })
-    export const read =ServiceMethod({
+    export const read = ServiceMethod({
         paramsSchema: z.object({
             order: z.number(),
             name: z.string(),
@@ -245,16 +245,16 @@ export namespace EventMethods {
             })
         }
     })
+}
 
-    function eventTagSelector(tags: string[] | null) {
-        return tags ? {
-            some: {
-                tag: {
-                    name: {
-                        in: tags
-                    }
+function eventTagSelector(tags: string[] | null) {
+    return tags ? {
+        some: {
+            tag: {
+                name: {
+                    in: tags
                 }
             }
-        } : undefined
-    }    
+        }
+    } : undefined
 }

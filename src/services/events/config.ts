@@ -7,12 +7,12 @@ export namespace EventConfig {
         ALL: { label: 'Alle' },
         CAN_REGISTER: { label: 'Alle som kan melde seg på' }
     } satisfies Record<EventCanView, { label: string }>
-    
+
     export const canBeViewdByOptions = Object.values(EventCanView).map(opt => ({
         value: opt,
         label: canBeViewdBy[opt].label
     }))
-    
+
     export const fieldsToExpose = [
         'id',
         'name',
@@ -25,7 +25,7 @@ export namespace EventConfig {
         'canBeViewdBy',
         'takesRegistration'
     ] as const satisfies (keyof Event)[]
-    
+
     export const filterSeletion = createSelection(fieldsToExpose)
 }
 

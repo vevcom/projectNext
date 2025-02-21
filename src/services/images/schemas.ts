@@ -2,8 +2,8 @@ import { ImageConfig } from '@/services/images/config'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
-export namespace ImageSchemas  {
-    const maxFileSizeMb = Math.round(ImageConfig.maxFileSize / 1024 / 1024) 
+export namespace ImageSchemas {
+    const maxFileSizeMb = Math.round(ImageConfig.maxFileSize / 1024 / 1024)
     export const fileSchema = z.instanceof(File).refine(
         file => file.size < ImageConfig.maxFileSize, `File size must be less than ${maxFileSizeMb}mb`
     ).refine(
@@ -25,7 +25,7 @@ export namespace ImageSchemas  {
             `Du kan bare laste opp mellom 1 og ${ImageConfig.maxNumberInOneBatch} bilder av gangen`
         ),
         licenseId: z.string().optional().transform(
-            value => value === 'NULL' || value === undefined ? undefined : parseInt(value, 10)
+            value => (value === 'NULL' || value === undefined ? undefined : parseInt(value, 10))
         ),
         credit: z.string().optional(),
     })
@@ -37,7 +37,7 @@ export namespace ImageSchemas  {
         licenseId: true,
         credit: true,
     })
-    export const createMany =imageSchemaFields.pick({
+    export const createMany = imageSchemaFields.pick({
         files: true,
         licenseId: true,
         credit: true,

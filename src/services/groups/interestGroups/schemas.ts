@@ -12,15 +12,15 @@ export namespace InterestGroupSchemas {
         ).max(
             10, 'Kortnavn kan ha maks 10 tegn'
         ).trim(),
-    });
+    })
 
     export const create = interestGroupSchemaFields.pick({
         name: true,
         shortName: true,
-    });
+    })
 
     export const update = interestGroupSchemaFields.partial().pick({
         name: true,
         shortName: true,
-    });
+    })
 }

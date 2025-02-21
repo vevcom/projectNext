@@ -2,4 +2,4 @@
 import { action } from '@/actions/action'
 import { InterestGroupMethods } from '@/services/groups/interestGroups/methods'
 
-export const readInterestGroupsAction = action(InterestGroupMethods.read)
+export const readInterestGroupsAction = action(InterestGroupMethods.readMany)
