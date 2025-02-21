@@ -1,12 +1,13 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { createSourcelessImage } from './methods'
 
-//TODO: Implement authers
-export const imageAuthers = {
-    create: RequireNothing.staticFields({}),
-    createMany: RequireNothing.staticFields({}),
-    createSourcelessImage: RequireNothing.staticFields({}),
-    readPage: RequireNothing.staticFields({}),
-    read: RequireNothing.staticFields({}),
-    readSpecial: RequireNothing.staticFields({}),
-} as const
+//TODO: Implement proper authers
+export namespace ImageAuthers {
+    export const create = RequireNothing.staticFields({})
+    export const createMany = RequireNothing.staticFields({})
+    export const createSourcelessImage = RequireNothing.staticFields({})
+    export const read = RequireNothing.staticFields({})
+    export const readPage = RequireNothing.staticFields({})
+    export const readSpecial = RequireNothing.staticFields({})
+    export const update = RequireNothing.staticFields({})
+    export const destroy = RequireNothing.staticFields({})
+}

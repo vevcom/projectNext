@@ -1,10 +1,5 @@
 'use server'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { destroyImage } from '@/services/images/destroy'
-import type { Image } from '@prisma/client'
-import type { ActionReturn } from '@/actions/Types'
+import { action } from "@/actions/action"
+import { ImageMethods } from "@/services/images/methods"
 
-export async function destroyImageAction(imageId: number): Promise<ActionReturn<Image>> {
-    //TODO: add auth
-    return await safeServerCall(() => destroyImage(imageId))
-}
+export const destroyImageAction = action(ImageMethods.destroy)
