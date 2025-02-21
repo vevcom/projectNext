@@ -1,7 +1,7 @@
 import type { SpecialEventTags } from '@prisma/client'
 
-export const eventTagsConfig = {
-    specials: {
+export namespace EventTagsConfig {
+    export const specials = {
         COMPANY_PRESENTATION: {
             name: 'Bedpress',
             description: 'Bedpress',
@@ -16,4 +16,4 @@ export const eventTagsConfig = {
         colorG: number;
         colorB: number;
     }>
-} as const
+}

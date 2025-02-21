@@ -1,7 +1,7 @@
 import 'server-only'
-import { eventSchemas } from './schemas'
-import { eventConfig } from './config'
-import { eventAuthers } from './authers'
+import { EventSchemas } from './schemas'
+import { EventConfig } from './config'
+import { EventAuthers } from './authers'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
@@ -13,10 +13,10 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
-export const eventMethods = {
-    create: ServiceMethod({
-        dataSchema: eventSchemas.create,
-        auther: () => eventAuthers.create.dynamicFields({}),
+export namespace EventMethods {
+    export const create = ServiceMethod({
+        dataSchema: EventSchemas.create,
+        auther: () => EventAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
@@ -69,13 +69,13 @@ export const eventMethods = {
             })
             return event
         }
-    }),
-    read: ServiceMethod({
+    })
+    export const read =ServiceMethod({
         paramsSchema: z.object({
             order: z.number(),
             name: z.string(),
         }),
-        auther: () => eventAuthers.read.dynamicFields({}),
+        auther: () => EventAuthers.read.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
@@ -103,16 +103,16 @@ export const eventMethods = {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }
         }
-    }),
-    readManyCurrent: ServiceMethod({
+    })
+    export const readManyCurrent = ServiceMethod({
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
         }),
-        auther: () => eventAuthers.readManyCurrent.dynamicFields({}),
+        auther: () => EventAuthers.readManyCurrent.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const events = await prisma.event.findMany({
                 select: {
-                    ...eventConfig.filterSeletion,
+                    ...EventConfig.filterSeletion,
                     coverImage: {
                         include: {
                             image: true
@@ -136,8 +136,8 @@ export const eventMethods = {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
-    }),
-    readManyArchivedPage: ServiceMethod({
+    })
+    export const readManyArchivedPage = ServiceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -148,7 +148,7 @@ export const eventMethods = {
                 tags: z.array(z.string()).nullable(),
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-        auther: () => eventAuthers.readManyArchivedPage.dynamicFields({}),
+        auther: () => EventAuthers.readManyArchivedPage.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
@@ -163,7 +163,7 @@ export const eventMethods = {
                     eventTagEvents: eventTagSelector(params.paging.details.tags)
                 },
                 select: {
-                    ...eventConfig.filterSeletion,
+                    ...EventConfig.filterSeletion,
                     coverImage: {
                         include: {
                             image: true
@@ -181,13 +181,13 @@ export const eventMethods = {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
-    }),
-    update: ServiceMethod({
+    })
+    export const update = ServiceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: eventSchemas.update,
-        auther: () => eventAuthers.update.dynamicFields({}),
+        dataSchema: EventSchemas.update,
+        auther: () => EventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: { id: params.id }
@@ -231,12 +231,12 @@ export const eventMethods = {
             })
             return eventUpdate
         }
-    }),
-    destroy: ServiceMethod({
+    })
+    export const destroy = ServiceMethod({
         paramsSchema: z.object({
             id: z.number()
         }),
-        auther: () => eventAuthers.destroy.dynamicFields({}),
+        auther: () => EventAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             await prisma.event.delete({
                 where: {
@@ -244,17 +244,17 @@ export const eventMethods = {
                 }
             })
         }
-    }),
-} as const
+    })
 
-function eventTagSelector(tags: string[] | null) {
-    return tags ? {
-        some: {
-            tag: {
-                name: {
-                    in: tags
+    function eventTagSelector(tags: string[] | null) {
+        return tags ? {
+            some: {
+                tag: {
+                    name: {
+                        in: tags
+                    }
                 }
             }
-        }
-    } : undefined
+        } : undefined
+    }    
 }

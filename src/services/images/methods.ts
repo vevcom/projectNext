@@ -1,28 +1,21 @@
 import 'server-only'
 import { readSpecialImageCollection } from './collections/read'
-import { createImagesValidation, createImageValidation } from './validation'
 import { allowedExtImageUpload, avifOptions, imageSizes } from './ConfigVars'
-import { createImageAuther } from './authers'
+import { imageAuthers } from './authers'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import sharp from 'sharp'
 import { SpecialImage } from '@prisma/client'
 import { z } from 'zod'
+import { imageSchemas } from './schemas'
 
-/**
- * Creates an image.
- * The method will resize the image to the correct sizes and save it to the store.
- * It will also save the original image to the store.
- * All images are saved as avif (except the original).
- * @param collectionId - The id of the collection to add the image to
- */
-export const createImage = ServiceMethod({
-    auther: () => createImageAuther.dynamicFields({}),
+const create = ServiceMethod({
+    auther: () => imageAuthers.create.dynamicFields({}),
     paramsSchema: z.object({
         collectionId: z.number(),
     }),
-    dataValidation: createImageValidation,
+    dataSchema: imageSchemas.create,
     method: async ({ prisma, params: { collectionId }, data }) => {
         const { file, ...meta } = data
         const buffer = Buffer.from(await file.arrayBuffer())
@@ -63,17 +56,13 @@ export const createImage = ServiceMethod({
     }
 })
 
-/**
- * Creates many images from files.
- * The method will resize the images to the correct sizes and save them to the store.
- */
-export const createManyImages = ServiceMethod({
-    auther: () => createImageAuther.dynamicFields({}),
+const createMany = ServiceMethod({
+    auther: () => imageAuthers.createMany.dynamicFields({}),
     paramsSchema: z.object({
         useFileName: z.boolean(),
         collectionId: z.number(),
     }),
-    dataValidation: createImagesValidation,
+    dataSchema: imageSchemas.createMany,
     method: async ({
         prisma,
         params: { useFileName, collectionId },
@@ -82,7 +71,7 @@ export const createManyImages = ServiceMethod({
     }) => {
         for (const file of data.files) {
             const name = useFileName ? file.name.split('.')[0] : undefined
-            await createImage.client(prisma).execute({
+            await create.client(prisma).execute({
                 params: { collectionId },
                 data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
                 session
@@ -91,16 +80,8 @@ export const createManyImages = ServiceMethod({
     }
 })
 
-/**
- * WARNING: This function should only be used in extreme cases
- * Creates bad image this should really only happen in worst case scenario
- * where the server has lost a image and needs to be replaced with a bad image.
- * A bad image is an image that has no correct fsLocation attributes.
- * @param name - the name of the image
- * @param config - the config for the image (special)
- */
-export const createSourcelessImage = ServiceMethod({
-    auther: () => createImageAuther.dynamicFields({}),
+const createSourcelessImage = ServiceMethod({
+    auther: () => imageAuthers.createSourcelessImage.dynamicFields({}),
     paramsSchema: z.object({
         name: z.string(),
         special: z.nativeEnum(SpecialImage),
@@ -131,6 +112,35 @@ export const createSourcelessImage = ServiceMethod({
     }
 })
 
+export namespace ImageMethods {
+    
+}
+
+export const imageMethods = {
+    /**
+     * Creates an image.
+     * The method will resize the image to the correct sizes and save it to the store.
+     * It will also save the original image to the store.
+     * All images are saved as avif (except the original).
+     * @param collectionId - The id of the collection to add the image to
+     */
+    create,
+    /**
+     * Creates many images from files.
+     * The method will resize the images to the correct sizes and save them to the store.
+     */
+    createMany,
+    /**
+     * WARNING: This function should only be used in extreme cases
+     * Creates bad image this should really only happen in worst case scenario
+     * where the server has lost a image and needs to be replaced with a bad image.
+     * A bad image is an image that has no correct fsLocation attributes.
+     * @param name - the name of the image
+     * @param config - the config for the image (special)
+     */
+    createSourcelessImage,
+}
+
 /**
  * Creates one image from a file.
  * @param file - The file to create the image from
@@ -145,4 +155,3 @@ export async function createOneInStore(file: File, allowedExt: string[], size: n
     }).toBuffer())
     return ret
 }
-

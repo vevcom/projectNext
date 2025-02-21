@@ -1,12 +1,12 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 
-export const eventAuthers = {
-    create: RequirePermission.staticFields({ permission: 'EVENT_CREATE' }),
+export namespace EventAuthers {
+    export const create = RequirePermission.staticFields({ permission: 'EVENT_CREATE' })
     // TODO: Replace below with proper authers
-    read: RequireNothing.staticFields({}),
-    readManyCurrent: RequireNothing.staticFields({}),
-    readManyArchivedPage: RequireNothing.staticFields({}),
-    update: RequireNothing.staticFields({}),
-    destroy: RequireNothing.staticFields({}),
-} as const
+    export const read = RequireNothing.staticFields({})
+    export const readManyCurrent = RequireNothing.staticFields({})
+    export const readManyArchivedPage = RequireNothing.staticFields({})
+    export const update = RequireNothing.staticFields({})
+    export const destroy = RequireNothing.staticFields({})
+}

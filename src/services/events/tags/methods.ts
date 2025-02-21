@@ -1,31 +1,31 @@
 import 'server-only'
-import { eventTagAuthers } from './authers'
-import { eventTagsConfig } from './config'
-import { eventTagSchemas } from './schemas'
-import { eventAuthers } from '@/services/events/authers'
+import { EventTagAuthers } from './authers'
+import { EventTagsConfig } from './config'
+import { EventTagSchemas } from './schemas'
+import { EventAuthers } from '@/services/events/authers'
 import logger from '@/lib/logger'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { SpecialEventTags } from '@prisma/client'
 import { z } from 'zod'
 
-export const eventTagMethods = {
-    read: ServiceMethod({
+export namespace EventTagMethods {
+    export const read = ServiceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: () => eventTagAuthers.read.dynamicFields({}),
+        auther: () => EventTagAuthers.read.dynamicFields({}),
         method: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
             where: {
                 id
             }
         })
-    }),
-    readSpecial: ServiceMethod({
+    })
+    export const readSpecial = ServiceMethod({
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialEventTags),
         }),
-        auther: () => eventTagAuthers.readSpecial.dynamicFields({}),
+        auther: () => EventTagAuthers.readSpecial.dynamicFields({}),
         method: async ({ prisma, params: { special } }) => {
             const tag = await prisma.eventTag.findUnique({
                 where: {
@@ -37,20 +37,20 @@ export const eventTagMethods = {
                 return await prisma.eventTag.create({
                     data: {
                         special,
-                        ...eventTagsConfig.specials[special]
+                        ...EventTagsConfig.specials[special]
                     }
                 })
             }
             return tag
         }
-    }),
-    readAll: ServiceMethod({
-        auther: () => eventTagAuthers.readAll.dynamicFields({}),
+    })
+    export const readAll = ServiceMethod({
+        auther: () => EventTagAuthers.readAll.dynamicFields({}),
         method: async ({ prisma }) => await prisma.eventTag.findMany()
-    }),
-    create: ServiceMethod({
-        dataSchema: eventTagSchemas.create,
-        auther: () => eventTagAuthers.create.dynamicFields({}),
+    })
+    export const create = ServiceMethod({
+        dataSchema: EventTagSchemas.create,
+        auther: () => EventTagAuthers.create.dynamicFields({}),
         method: async ({ prisma, data: { color, ...data } }) => {
             const colorR = parseInt(color.slice(1, 3), 16)
             const colorG = parseInt(color.slice(3, 5), 16)
@@ -64,13 +64,13 @@ export const eventTagMethods = {
                 }
             })
         }
-    }),
-    update: ServiceMethod({
+    })
+    export const update = ServiceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: eventTagSchemas.update,
-        auther: () => eventAuthers.update.dynamicFields({}),
+        dataSchema: EventTagSchemas.update,
+        auther: () => EventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params: { id }, data: { color, ...data } }) => {
             const colorR = color ? parseInt(color.slice(1, 3), 16) : undefined
             const colorG = color ? parseInt(color.slice(3, 5), 16) : undefined
@@ -87,12 +87,12 @@ export const eventTagMethods = {
                 }
             })
         }
-    }),
-    destroy: ServiceMethod({
+    })
+    export const destroy = ServiceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: () => eventAuthers.destroy.dynamicFields({}),
+        auther: () => EventAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const tag = await prisma.eventTag.findUniqueOrThrow({
                 where: { id: params.id }
@@ -104,5 +104,5 @@ export const eventTagMethods = {
                 where: { id: params.id }
             })
         }
-    }),
-} as const
+    })
+}

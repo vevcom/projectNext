@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { eventMethods } from '@/services/events/methods'
+import { EventMethods } from '@/services/events/methods'
 
-export const updateEventAction = action(eventMethods.update)
+export const updateEventAction = action(EventMethods.update)
