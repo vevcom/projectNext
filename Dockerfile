@@ -1,4 +1,7 @@
-FROM node:22-alpine3.20 AS base
+ARG NODE_VERSION="22.14"
+ARG ALPINE_VERSION="3.20"
+
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 WORKDIR /usr/src/app
 
 # Expose Next.js port
