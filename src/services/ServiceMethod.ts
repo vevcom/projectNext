@@ -234,5 +234,7 @@ export function ServiceMethod<
     return {
         client,
         newClient: () => client(globalPrisma),
+        dataSchema: config.dataSchema,
+        paramsSchema: config.paramsSchema,
     }
 }
