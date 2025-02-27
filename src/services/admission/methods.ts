@@ -9,7 +9,7 @@ import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
 export namespace AdmissionMethods {
-    const readTrial = ServiceMethod({
+    export const readTrial = ServiceMethod({
         auther: () => AdmissionAuthers.readTrial.dynamicFields({}),
         paramsSchema: z.object({
             userId: z.number(),
@@ -20,7 +20,7 @@ export namespace AdmissionMethods {
             }
         })
     })
-    const createTrial = ServiceMethod({
+    export const createTrial = ServiceMethod({
         auther: () => AdmissionAuthers.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),

@@ -3,43 +3,6 @@ import { convertPrice } from '@/lib/money/convert'
 import { ValidationBase, type ValidationTypes } from '@/services/Validation'
 import { z } from 'zod'
 
-const productsZodObject = z.array(z.object({
-    id: z.number().int(),
-    quantity: z.number().int().min(1)
-}))
-
-const baseShopValidation = new ValidationBase({
-    type: {
-        shopId: z.coerce.number().int(),
-        name: z.string(),
-        description: z.string(),
-        price: z.number().or(z.string()),
-        studentCard: studentCardZodValidation,
-        products: productsZodObject,
-        barcode: z.string().or(z.number()).optional(),
-        active: z.boolean().or(z.enum(['on'])).optional(),
-        productId: z.coerce.number().int(),
-    },
-    details: {
-        shopId: z.coerce.number().int(),
-        name: z.string().min(3),
-        description: z.string(),
-        price: z.number().int().min(1),
-        studentCard: studentCardZodValidation,
-        products: productsZodObject,
-        barcode: z.string().or(z.number()).optional(),
-        active: z.boolean(),
-        productId: z.coerce.number().int(),
-    }
-})
-
-export const createShopValidation = baseShopValidation.createValidation({
-    keys: ['name', 'description'],
-    transformer: data => data,
-})
-
-export const updateShopValidation = createShopValidation
-
 export const createProductValidation = baseShopValidation.createValidation({
     keys: ['name', 'description', 'barcode'],
     transformer: data => data,
@@ -76,7 +39,6 @@ export const createPurchaseFromStudentCardValidation = baseShopValidation.create
     keys: ['shopId', 'products', 'studentCard'],
     transformer: data => data,
 })
-export type CreatePurchaseFromStudnetCardType = ValidationTypes<typeof createPurchaseFromStudentCardValidation>
 
 export const createShopProductConnectionValidation = baseShopValidation.createValidation({
     keys: ['shopId', 'productId', 'price'],
@@ -85,3 +47,31 @@ export const createShopProductConnectionValidation = baseShopValidation.createVa
         price: convertPrice(data.price)
     })
 })
+
+export namespace ShopSchemas {
+    const productsZodObject = z.array(z.object({
+        id: z.number().int(),
+        quantity: z.number().int().min(1)
+    }))
+    const fields = z.object({
+        shopId: z.coerce.number().int(),
+        name: z.string().min(3),
+        description: z.string(),
+        price: z.number().int().min(1),
+        studentCard: studentCardZodValidation,
+        products: productsZodObject,
+        barcode: z.string().or(z.number()).optional(),
+        active: z.boolean().or(z.enum(['on'])).optional().transform((val) => val === 'on' || val === true),
+        productId: z.coerce.number().int(),
+    })
+
+    export const createShop = fields.pick({
+        name: true,
+        description: true,
+    })
+
+    export const updateShop = fields.pick({
+        name: true,
+        description: true,
+    })
+}

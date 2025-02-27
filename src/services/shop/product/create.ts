@@ -19,7 +19,7 @@ export function convertBarcode(barcode?: string | number) {
 
 export const createProduct = ServiceMethod({
     auther: () => createProductAuther.dynamicFields({}),
-    dataValidation: createProductValidation,
+    dataSchema: createProductValidation,
     method: async ({ prisma, data }) => prisma.product.create({
         data: {
             ...data,
