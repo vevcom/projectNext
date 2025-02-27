@@ -1,10 +1,12 @@
 import styles from './page.module.scss'
 import CreateLockerForm from './CreateLockerForm'
-import { readLockerLocations } from '@/services/lockers/location/read'
+import { readAllLockerLocationsAction as readAllLockerLocationsAction } from '@/actions/lockers/location/read'
 
 
 export default async function Locker() {
-    const locations = await readLockerLocations()
+    const res = await readAllLockerLocationsAction()
+    if (!res.success) throw Error(':(')
+    const locations = res.data
 
     return (
         <div className={styles.wrapper}>
