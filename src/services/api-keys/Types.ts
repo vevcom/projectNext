@@ -1,4 +1,4 @@
-import type { apiKeysConfig } from './ConfigVars'
+import type { apiKeysConfig } from './config'
 import type { ApiKey } from '@prisma/client'
 
 export type ApiKeyFiltered = Pick<ApiKey, typeof apiKeysConfig.fieldsToExpose[number]>

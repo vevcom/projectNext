@@ -210,7 +210,7 @@ export function ServiceMethod<
             // Then, authorize user.
             // This has to be done after the validation because the auther might use the data to authorize the user.
             if (!args.bypassAuth) {
-                const authRes = (await config.auther((args))).auth(args.session ?? Session.empty())
+                const authRes = (await config.auther(args)).auth(args.session ?? Session.empty())
 
                 if (!authRes.authorized) {
                     throw new Smorekopp(authRes.status, authRes.getErrorMessage)

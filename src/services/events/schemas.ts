@@ -3,7 +3,7 @@ import { zfd } from 'zod-form-data'
 import { EventCanView } from '@prisma/client'
 
 export namespace EventSchemas {
-    const eventSchemaFields = z.object({
+    const schemaFields = z.object({
         name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),
         order: z.number().int().optional(),
         eventStart: z.string().transform((val) => new Date(val)),
@@ -18,7 +18,7 @@ export namespace EventSchemas {
         tagIds: zfd.repeatable(z.coerce.number().array())
     })
 
-    export const create = eventSchemaFields.pick({
+    export const create = schemaFields.pick({
         name: true,
         order: true,
         eventStart: true,
@@ -30,7 +30,7 @@ export namespace EventSchemas {
         registrationEnd: true,
         tagIds: true,
     })
-    export const update = eventSchemaFields.partial().pick({
+    export const update = schemaFields.partial().pick({
         name: true,
         order: true,
         eventStart: true,
