@@ -1,6 +1,6 @@
 import 'server-only'
 import { ServerError } from '@/services/error'
-import { readUser } from '@/services/users/read'
+import { UserMethods } from '../users/methods'
 import { verifyJWT } from '@/jwt/jwt'
 
 export async function verifyResetPasswordToken(token: string): Promise<{
@@ -11,8 +11,10 @@ export async function verifyResetPasswordToken(token: string): Promise<{
     if (payload.sub && payload.iat) {
         const userId = Number(payload.sub)
 
-        const user = await readUser({
-            id: userId,
+        const user = await UserMethods.read.newClient().execute({
+            params: { id: userId },
+            session: null,
+            bypassAuth: true
         })
 
         if (user.updatedAt <= new Date(payload.iat * 1000)) {

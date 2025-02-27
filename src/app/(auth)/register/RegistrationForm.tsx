@@ -1,11 +1,11 @@
 'use client'
-import { registerOwnUser } from '@/actions/users/update'
+import { registerUser } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { useUser } from '@/auth/useUser'
-import { sexConfig } from '@/services/users/ConfigVars'
+import { UserConfig } from '@/services/users/config'
 import { SEX, type User } from '@prisma/client'
 import { signIn, signOut } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
@@ -36,13 +36,13 @@ export default function RegistrationForm({
 
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
-        label: sexConfig[sex].label
+        label: UserConfig.sexConfig[sex].label
     }))
 
     return <Form
         title="Ekstra brukerinformasjon"
         submitText="Fullfør registrering"
-        action={registerOwnUser}
+        action={registerUser.bind(null, { id: userAuth.user?.id })}
         successCallback={() => signIn('credentials', {
             username: lastUsername,
             password: lastPassword,

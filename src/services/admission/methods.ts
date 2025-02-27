@@ -3,7 +3,7 @@ import { AdmissionSchemas } from './schemas'
 import { AdmissionAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
-import { userFilterSelection } from '@/services/users/ConfigVars'
+import { UserConfig } from '@/services/users/config'
 import { Admission } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
@@ -43,7 +43,7 @@ export namespace AdmissionMethods {
                 },
                 include: {
                     user: {
-                        select: userFilterSelection
+                        select: UserConfig.filterSelection
                     }
                 }
             })
