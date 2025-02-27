@@ -1,25 +1,26 @@
 import 'server-only'
 import { UserAuthers } from './authers'
+import { UserConfig } from './config'
+import { readMembershipsOfUser } from '@/services/groups/memberships/read'
+import { readPermissionsOfUser } from '@/services/permissionRoles/read'
+import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
+import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
+import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
+import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { UserSchemas } from '@/services/users/schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { z } from 'zod'
 import { ImageMethods } from '@/services/images/methods'
-import { UserConfig } from './config'
-import { readMembershipsOfUser } from '../groups/memberships/read'
-import { readPermissionsOfUser } from '../permissionRoles/read'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import { UserPagingReturn } from './Types'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/password'
-import { NTNUEmailDomain } from '../mail/mailAddressExternal/ConfigVars'
-import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
-import { createDefaultSubscriptions } from '../notifications/subscription/create'
-import { updateUserOmegaMembershipGroup } from '../groups/omegaMembershipGroups/update'
+import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
+import { z } from 'zod'
+import type { UserPagingReturn } from './Types'
 
 export namespace UserMethods {
     export const create = ServiceMethod({
@@ -48,6 +49,7 @@ export namespace UserMethods {
             return user
         }
     })
+
     export const read = ServiceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
@@ -61,6 +63,7 @@ export namespace UserMethods {
             select: UserConfig.filterSelection
         })
     })
+
     export const readOrNull = ServiceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
@@ -74,6 +77,7 @@ export namespace UserMethods {
             select: UserConfig.filterSelection
         })
     })
+
     export const readProfile = ServiceMethod({
         paramsSchema: z.object({
             username: z.string(),
@@ -95,13 +99,14 @@ export namespace UserMethods {
                 ...u,
                 image: u.image || defaultProfileImage,
             }))
-    
+
             const memberships = await readMembershipsOfUser(user.id)
             const permissions = await readPermissionsOfUser(user.id)
-    
+
             return { user, memberships, permissions }
         }
     })
+
     export const readPage = ServiceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -243,14 +248,14 @@ export namespace UserMethods {
                 },
                 take: 1,
             })
-    
+
             if (currentQueue.length === 0) {
                 throw new ServerError(
                     'NOT FOUND',
                     `No user has placed them selves in the registration queue at ${process.env.DOMAIN}`
                 )
             }
-    
+
             const userId = currentQueue[0].userId
             const result = await prisma.$transaction([
                 prisma.registerStudentCardQueue.delete({
@@ -268,17 +273,16 @@ export namespace UserMethods {
                     select: UserConfig.filterSelection,
                 })
             ])
-    
+
             return result[1]
         }
     })
+
     export const registerStudentCardInQueue = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        auther: (args) => UserAuthers.registerStudentCardInQueue.dynamicFields({
-            userId: args.params.userId,
-        }),
+        auther: ({ params }) => UserAuthers.registerStudentCardInQueue.dynamicFields(params),
         method: async (args) => {
             const expiry = (new Date()).getTime() + UserConfig.studentCardRegistrationExpiry * 60 * 1000
             await args.prisma.registerStudentCardQueue.upsert({
@@ -302,18 +306,41 @@ export namespace UserMethods {
 
     export const verifyEmail = ServiceMethod({
         paramsSchema: z.object({
-            id: z.number(),
+            token: z.string(),
         }),
-        dataSchema: UserSchemas.verifyEmail,
-        auther: () => UserAuthers.verifyEmail.dynamicFields({}),
-        method: async ({ prisma, params, data }) => {
+        auther: ({ params }) => UserAuthers.verifyEmail.dynamicFields(params),
+        method: async ({ prisma, params }) => {
+            // INFO: Safe to parse unsafe since the auther has verified the token.
+            const payload = readJWTPayload(params.token)
+
+            if (!payload.sub || !payload.email || !payload.iat) {
+                throw new ServerError('JWT INVALID', 'The JWT does not contain the mandatory fields')
+            }
+
+            const userId = Number(payload.sub)
+            const email = String(payload.email)
+
+            const iat = new Date(payload.iat * 1000)
+
+            const user = await UserMethods.read.client(prisma).execute({
+                params: {
+                    id: userId,
+                },
+                session: null,
+                bypassAuth: true,
+            })
+
+            if (iat < user.updatedAt) {
+                throw new ServerError('JWT INVALID', 'The user has changed since the token was generated.')
+            }
+
             return await prisma.user.update({
                 where: {
-                    id: params.id,
+                    id: userId,
                 },
                 data: {
-                    ...data,
                     emailVerified: new Date(),
+                    email,
                 },
                 select: UserConfig.filterSelection
             })
@@ -328,6 +355,43 @@ export namespace UserMethods {
             where: params,
             data
         })
+    })
+
+    export const resetPassword = ServiceMethod({
+        paramsSchema: z.object({
+            token: z.string()
+        }),
+        dataSchema: UserSchemas.updatePassword,
+        auther: ({ params }) => UserAuthers.resetPassword.dynamicFields(params),
+        method: async ({ prisma, params, data }) => {
+            // INFO: Safe to parse unsafe since the auther has verified the token.
+            const payload = readJWTPayload(params.token)
+
+            if (!payload.sub || !payload.iat) {
+                throw new ServerError('JWT INVALID', 'The forgot password JWT is not valid')
+            }
+
+            const userId = Number(payload.sub)
+
+            const user = await UserMethods.read.client(prisma).execute({
+                params: { id: userId },
+                session: null,
+                bypassAuth: true
+            })
+
+            if (user.updatedAt > new Date(payload.iat * 1000)) {
+                throw new ServerError('JWT INVALID', 'The password has already been changed')
+            }
+
+            UserMethods.updatePassword.client(prisma).execute({
+                params: {
+                    id: userId,
+                },
+                data,
+                session: null,
+                bypassAuth: true,
+            })
+        }
     })
 
     export const updatePassword = ServiceMethod({
@@ -359,7 +423,6 @@ export namespace UserMethods {
         auther: ({ params }) => UserAuthers.registerNewEmail.dynamicFields({ userId: params.id }),
         dataSchema: UserSchemas.registerNewEmail,
         method: async ({ prisma, params, data }) => {
-    
             const storedUser = await prisma.user.findUniqueOrThrow({
                 where: {
                     id: params.id,
@@ -373,10 +436,10 @@ export namespace UserMethods {
                     }
                 }
             })
-        
+
             // This test may not be needed if we let users change their email later. Maybe just remove this check
             if (storedUser.emailVerified) throw new ServerError('BAD PARAMETERS', 'Brukeren er allerede verifisert')
-        
+
             if (data.email === storedUser.feideAccount?.email) {
                 await prisma.user.update({
                     where: {
@@ -386,22 +449,22 @@ export namespace UserMethods {
                         emailVerified: (new Date()).toISOString()
                     }
                 })
-        
+
                 return {
                     verified: true,
                     email: data.email,
                 }
             }
-        
+
             if (data.email.endsWith(`@${NTNUEmailDomain}`)) {
                 throw new ServerError(
                     'BAD PARAMETERS',
                     `Den nye e-posten må være din ${NTNUEmailDomain}-e-post, eller en personlig e-post.`
                 )
             }
-        
+
             await sendVerifyEmail(storedUser, data.email)
-        
+
             return {
                 verified: false,
                 email: data.email,
@@ -428,7 +491,7 @@ export namespace UserMethods {
             const { sex, password, mobile, allergies } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
-        
+
             const storedUser = await prisma.user.findUnique({
                 where: {
                     id: params.id,
@@ -457,13 +520,13 @@ export namespace UserMethods {
                     }
                 },
             })
-        
+
             if (!storedUser) throw new ServerError('NOT FOUND', 'Could not find the user with the specified id.')
-        
+
             if (storedUser.acceptedTerms) throw new ServerError('DUPLICATE', 'Brukeren er allerede registrert.')
-        
+
             const passwordHash = await hashAndEncryptPassword(password)
-        
+
             const results = await prisma.$transaction([
                 prisma.user.update({
                     where: {
@@ -494,7 +557,7 @@ export namespace UserMethods {
                     },
                 })
             ])
-        
+
             try {
                 await createDefaultSubscriptions(params.id)
             } catch (error) {
@@ -502,18 +565,18 @@ export namespace UserMethods {
                     // Duplicate subscriptions doen't do anything, and it will make development easier.
                     // In addition will this tolerate if we invalidate a users accepted terms,
                     // without deleting the user's subscriptions
-        
+
                     throw error
                 }
             }
-        
+
             const partOfOmega = storedUser.memberships.reduce(
                 (acc, val) => acc || (val.group.studyProgramme?.partOfOmega === true),
                 false
             )
-        
+
             await updateUserOmegaMembershipGroup(params.id, partOfOmega ? 'SOELLE' : 'EXTERNAL', true)
-        
+
             return results[0]
         }
     })
@@ -536,3 +599,4 @@ export namespace UserMethods {
         }
     })
 }
+

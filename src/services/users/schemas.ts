@@ -27,7 +27,7 @@ export namespace UserSchemas {
         fcn: (data: { password?: string, confirmPassword?: string }) => data.password === data.confirmPassword,
         message: 'Passordene må være like'
     }
-    
+
     export const create = fields.pick({
         email: true,
         firstname: true,
@@ -44,22 +44,18 @@ export namespace UserSchemas {
     })
 
     export const register = fields.pick({
-        mobile: true, 
-        allergies: true, 
-        password: true, 
-        confirmPassword: true, 
-        sex: true, 
-        acceptedTerms: true, 
+        mobile: true,
+        allergies: true,
+        password: true,
+        confirmPassword: true,
+        sex: true,
+        acceptedTerms: true,
     }).refine(refinePassword.fcn, refinePassword.message)
 
     export const updatePassword = z.object({
         password: z.string().max(50).min(12),
         confirmPassword: z.string().max(50).min(12),
     }).refine(refinePassword.fcn, refinePassword.message)
-
-    export const verifyEmail = z.object({
-        email: z.string().email(),
-    })
 
     export const registerNewEmail = z.object({
         email: z.string().email(),

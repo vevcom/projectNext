@@ -5,6 +5,7 @@ export namespace UserConfig {
     export const maxNumberOfGroupsInFilter = 7
     export const studentCardRegistrationExpiry = 2 // minutter
 
+    // TODO: This needs to be divived into seperate filters, depending on how much information is needed
     export const fieldsToExpose = [
         'id',
         'username',
@@ -17,6 +18,7 @@ export namespace UserConfig {
         'updatedAt',
         'acceptedTerms',
         'sex',
+        'allergies',
     ] as const satisfies (keyof User)[]
 
     export const filterSelection = createSelection([...fieldsToExpose])

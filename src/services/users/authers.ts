@@ -1,3 +1,4 @@
+import { RequireJWT } from '@/auth/auther/RequireJWT'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 import { RequireUserFieldOrPermission } from '@/auth/auther/RequireUserFieldOrPermission'
@@ -15,9 +16,11 @@ export namespace UserAuthers {
     export const registerStudentCardInQueue =
     RequireUserIdOrPermission.staticFields({ permission: 'USERS_CONNECT_STUDENT_CARD' })
     export const registerNewEmail = RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' })
-    export const verifyEmail = RequireNothing.staticFields({})
     export const updatePassword = RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' })
     export const update = RequirePermission.staticFields({ permission: 'USERS_UPDATE' })
     export const register = RequireUserId.staticFields({})
     export const destroy = RequirePermission.staticFields({ permission: 'USERS_DESTROY' })
+
+    export const verifyEmail = RequireJWT.staticFields({ audience: 'verifyemail' })
+    export const resetPassword = RequireJWT.staticFields({ audience: 'resetpassword' })
 }

@@ -11,7 +11,7 @@ export default function ResetPasswordForm({ token }: PropTypes) {
     return <Form
         title="Nullstill passord"
         submitText="Endre passord"
-        action={resetPasswordAction.bind(null, token)}
+        action={resetPasswordAction.bind(null, { token })}
         navigateOnSuccess="/login"
     >
         <TextInput name="password" type="password" label="Passord" />
