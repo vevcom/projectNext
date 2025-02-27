@@ -16,4 +16,4 @@ export const readLockerAction = action(LockerMethods.read)
  * @param readPageInput - The page data
  * @returns A Promise that resolves to an ActionReturn containing a LockerWithReservation list
  */
-export const readLockerPageAction = action(LockerMethods.read)
+export const readLockerPageAction = action(LockerMethods.readPage)

@@ -20,7 +20,6 @@ export namespace LockerReservationMethods {
     export const create = ServiceMethod({
         auther: () => LockerReservationAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
-            userId: z.number(),
             lockerId: z.number(),
         }),
         dataValidation: lockerReservationValidation,
@@ -36,11 +35,15 @@ export namespace LockerReservationMethods {
                 }
             }
 
+            if (!session.user) {
+                throw new Smorekopp('UNAUTHORIZED', 'Du må være logget inn for å reservere et skap.')
+            }
+
             return await prisma.lockerReservation.create({
                 data: {
                     groupId: data.groupId,
                     endDate: data.endDate,
-                    userId: params.userId,
+                    userId: session.user.id,
                     lockerId: params.lockerId,
                 }
             })
@@ -92,7 +95,7 @@ export namespace LockerReservationMethods {
                 }
             })
 
-            if (id !== reservation.userId) {
+            if (session.user && session.user.id !== reservation.userId) {
                 throw new Smorekopp('UNAUTHORIZED', 'Bruker har ikke tilgang til å endre reservasjonen.')
             }
 
@@ -111,7 +114,10 @@ export namespace LockerReservationMethods {
                 where: {
                     id,
                 },
-                data,
+                data: {
+                    groupId: data.groupId,
+                    endDate: data.endDate,
+                }
             })
         },
     })

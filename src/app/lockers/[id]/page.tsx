@@ -24,7 +24,7 @@ export default async function Locker({ params }: PropTypes) {
 
     const lockerId = parseInt((await params).id, 10)
 
-    const locker = await readLockerAction(lockerId)
+    const locker = await readLockerAction({ id: lockerId })
     if (!locker.success) {
         return <LockerNotFound />
     }

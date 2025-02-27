@@ -6,6 +6,7 @@ import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { bindParams } from '@/actions/bind'
 
 type PropTypes = {
     reservationId: number,
@@ -29,7 +30,7 @@ export default function UpdateLockerReservationForm({ reservationId, groupsFormD
             successCallback={refresh}
             title="Oppdater skapreservasjon"
             submitText="Oppdater"
-            action={updateLockerReservationAction.bind(null, reservationId)}
+            action={bindParams(updateLockerReservationAction, { id: reservationId })}
         >
             <SelectString
                 label="Reserver for"

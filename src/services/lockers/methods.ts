@@ -43,9 +43,13 @@ export namespace LockerMethods {
     export const create = ServiceMethod({
         auther: () => LockerAuthers.create.dynamicFields({}),
         dataValidation: createLockerValidation,
-        method: ({ data }) => prisma.locker.create({
-            data,
-        })
+        method: async ({ data }) => {
+            console.log(data)
+            return await prisma.locker.create({
+                data,
+            })
+        }
+
     })
 
     /**
@@ -88,7 +92,7 @@ export namespace LockerMethods {
             z.object({
                 id: z.number(),
             }),
-            z.undefined(),
+            z.any(),
         ),
         method: async ({ params }) => {
             const lockers = await prisma.locker.findMany({
