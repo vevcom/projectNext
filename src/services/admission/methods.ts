@@ -1,6 +1,6 @@
 import 'server-only'
-import { admissionSchemas } from './schemas'
-import { admissionAuthers } from './authers'
+import { AdmissionSchemas } from './schemas'
+import { AdmissionAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { userFilterSelection } from '@/services/users/ConfigVars'
@@ -8,13 +8,24 @@ import { Admission } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
-export const admissionMethods = {
-    createTrial: ServiceMethod({
-        auther: () => admissionAuthers.createTrial.dynamicFields({}),
+export namespace AdmissionMethods {
+    const readTrial = ServiceMethod({
+        auther: () => AdmissionAuthers.readTrial.dynamicFields({}),
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
+        method: async ({ prisma, params: { userId } }) => await prisma.admissionTrial.findMany({
+            where: {
+                userId,
+            }
+        })
+    })
+    const createTrial = ServiceMethod({
+        auther: () => AdmissionAuthers.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),
         }),
-        dataSchema: admissionSchemas.createTrial,
+        dataSchema: AdmissionSchemas.createTrial,
         method: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
             const results = await prisma.admissionTrial.create({
                 data: {
@@ -38,7 +49,7 @@ export const admissionMethods = {
             })
 
             // check if user has taken all admissions
-            const userTrials = await admissionMethods.readTrial.newClient().execute({
+            const userTrials = await readTrial.newClient().execute({
                 session,
                 params: {
                     userId: data.userId
@@ -51,16 +62,5 @@ export const admissionMethods = {
 
             return results
         }
-    }),
-    readTrial: ServiceMethod({
-        auther: () => admissionAuthers.readTrial.dynamicFields({}),
-        paramsSchema: z.object({
-            userId: z.number(),
-        }),
-        method: async ({ prisma, params: { userId } }) => await prisma.admissionTrial.findMany({
-            where: {
-                userId,
-            }
-        })
     })
-} as const
+}

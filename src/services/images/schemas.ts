@@ -10,7 +10,7 @@ export namespace ImageSchemas {
         file => ImageConfig.allowedExtUpload.includes(file.type.split('/')[1]),
         `File type must be one of ${ImageConfig.allowedExtUpload.join(', ')}`
     )
-    const imageSchemaFields = z.object({
+    const fields = z.object({
         file: fileSchema,
         name: z.string().max(50, 'max length in 50').min(2, 'min length is 2').optional(),
         alt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
@@ -30,19 +30,19 @@ export namespace ImageSchemas {
         credit: z.string().optional(),
     })
 
-    export const create = imageSchemaFields.pick({
+    export const create = fields.pick({
         name: true,
         alt: true,
         file: true,
         licenseId: true,
         credit: true,
     })
-    export const createMany = imageSchemaFields.pick({
+    export const createMany = fields.pick({
         files: true,
         licenseId: true,
         credit: true,
     })
-    export const update = imageSchemaFields.pick({
+    export const update = fields.pick({
         name: true,
         alt: true,
         credit: true,

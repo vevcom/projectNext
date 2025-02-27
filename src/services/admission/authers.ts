@@ -1,9 +1,9 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequirePermissioAndUser } from '@/auth/auther/RequirePermissionAndUser'
 
-export const admissionAuthers = {
-    createTrial: RequirePermissioAndUser.staticFields({
+export namespace AdmissionAuthers {
+    export const createTrial = RequirePermissioAndUser.staticFields({
         permission: 'ADMISSION_TRIAL_CREATE',
-    }),
-    readTrial: RequireNothing.staticFields({})
+    })
+    export const readTrial = RequireNothing.staticFields({})
 }
