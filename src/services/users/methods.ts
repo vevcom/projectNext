@@ -1,12 +1,12 @@
 import 'server-only'
 import { UserAuthers } from './authers'
 import { UserConfig } from './config'
-import { readMembershipsOfUser } from '../groups/memberships/read'
-import { readPermissionsOfUser } from '../permissionRoles/read'
-import { NTNUEmailDomain } from '../mail/mailAddressExternal/ConfigVars'
-import { sendVerifyEmail } from '../notifications/email/systemMail/verifyEmail'
-import { createDefaultSubscriptions } from '../notifications/subscription/create'
-import { updateUserOmegaMembershipGroup } from '../groups/omegaMembershipGroups/update'
+import { readMembershipsOfUser } from '@/services/groups/memberships/read'
+import { readPermissionsOfUser } from '@/services/permissionRoles/read'
+import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
+import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
+import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
+import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
@@ -18,6 +18,7 @@ import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/password'
+import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
 import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
 
@@ -48,6 +49,7 @@ export namespace UserMethods {
             return user
         }
     })
+
     export const read = ServiceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
@@ -61,6 +63,7 @@ export namespace UserMethods {
             select: UserConfig.filterSelection
         })
     })
+
     export const readOrNull = ServiceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
@@ -74,6 +77,7 @@ export namespace UserMethods {
             select: UserConfig.filterSelection
         })
     })
+
     export const readProfile = ServiceMethod({
         paramsSchema: z.object({
             username: z.string(),
@@ -102,6 +106,7 @@ export namespace UserMethods {
             return { user, memberships, permissions }
         }
     })
+
     export const readPage = ServiceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -272,13 +277,12 @@ export namespace UserMethods {
             return result[1]
         }
     })
+
     export const registerStudentCardInQueue = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        auther: (args) => UserAuthers.registerStudentCardInQueue.dynamicFields({
-            userId: args.params.userId,
-        }),
+        auther: ({ params }) => UserAuthers.registerStudentCardInQueue.dynamicFields(params),
         method: async (args) => {
             const expiry = (new Date()).getTime() + UserConfig.studentCardRegistrationExpiry * 60 * 1000
             await args.prisma.registerStudentCardQueue.upsert({
@@ -302,20 +306,45 @@ export namespace UserMethods {
 
     export const verifyEmail = ServiceMethod({
         paramsSchema: z.object({
-            id: z.number(),
+            token: z.string(),
         }),
-        dataSchema: UserSchemas.verifyEmail,
-        auther: () => UserAuthers.verifyEmail.dynamicFields({}),
-        method: async ({ prisma, params, data }) => await prisma.user.update({
-            where: {
-                id: params.id,
-            },
-            data: {
-                ...data,
-                emailVerified: new Date(),
-            },
-            select: UserConfig.filterSelection
-        })
+        auther: ({ params }) => UserAuthers.verifyEmail.dynamicFields(params),
+        method: async ({ prisma, params }) => {
+            // INFO: Safe to parse unsafe since the auther has verified the token.
+            const payload = readJWTPayload(params.token)
+
+            if (!payload.sub || !payload.email || !payload.iat) {
+                throw new ServerError('JWT INVALID', 'The JWT does not contain the mandatory fields')
+            }
+
+            const userId = Number(payload.sub)
+            const email = String(payload.email)
+
+            const iat = new Date(payload.iat * 1000)
+
+            const user = await UserMethods.read.client(prisma).execute({
+                params: {
+                    id: userId,
+                },
+                session: null,
+                bypassAuth: true,
+            })
+
+            if (iat < user.updatedAt) {
+                throw new ServerError('JWT INVALID', 'The user has changed since the token was generated.')
+            }
+
+            return await prisma.user.update({
+                where: {
+                    id: userId,
+                },
+                data: {
+                    emailVerified: new Date(),
+                    email,
+                },
+                select: UserConfig.filterSelection
+            })
+        }
     })
 
     export const update = ServiceMethod({
@@ -326,6 +355,43 @@ export namespace UserMethods {
             where: params,
             data
         })
+    })
+
+    export const resetPassword = ServiceMethod({
+        paramsSchema: z.object({
+            token: z.string()
+        }),
+        dataSchema: UserSchemas.updatePassword,
+        auther: ({ params }) => UserAuthers.resetPassword.dynamicFields(params),
+        method: async ({ prisma, params, data }) => {
+            // INFO: Safe to parse unsafe since the auther has verified the token.
+            const payload = readJWTPayload(params.token)
+
+            if (!payload.sub || !payload.iat) {
+                throw new ServerError('JWT INVALID', 'The forgot password JWT is not valid')
+            }
+
+            const userId = Number(payload.sub)
+
+            const user = await UserMethods.read.client(prisma).execute({
+                params: { id: userId },
+                session: null,
+                bypassAuth: true
+            })
+
+            if (user.updatedAt > new Date(payload.iat * 1000)) {
+                throw new ServerError('JWT INVALID', 'The password has already been changed')
+            }
+
+            UserMethods.updatePassword.client(prisma).execute({
+                params: {
+                    id: userId,
+                },
+                data,
+                session: null,
+                bypassAuth: true,
+            })
+        }
     })
 
     export const updatePassword = ServiceMethod({

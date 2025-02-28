@@ -57,10 +57,6 @@ export namespace UserSchemas {
         confirmPassword: z.string().max(50).min(12),
     }).refine(refinePassword.fcn, refinePassword.message)
 
-    export const verifyEmail = z.object({
-        email: z.string().email(),
-    })
-
     export const registerNewEmail = z.object({
         email: z.string().email(),
     })
