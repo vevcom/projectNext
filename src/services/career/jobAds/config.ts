@@ -2,22 +2,22 @@ import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { JobType } from '@prisma/client'
 import type { Prisma } from '@prisma/client'
 
-const typeConfig = {
-    FULL_TIME: { label: 'Heltid' },
-    PART_TIME: { label: 'Deltid' },
-    INTERNSHIP: { label: 'Internship' },
-    OTHER: { label: 'Annet' },
-    CONTRACT: { label: 'Kontrakt' },
-} satisfies Record<JobType, { label: string }>
 
-export const jobAdConfig = {
-    relationIncluder: {
+export namespace JobAdConfig {
+    export const type = {
+        FULL_TIME: { label: 'Heltid' },
+        PART_TIME: { label: 'Deltid' },
+        INTERNSHIP: { label: 'Internship' },
+        OTHER: { label: 'Annet' },
+        CONTRACT: { label: 'Kontrakt' },
+    } satisfies Record<JobType, { label: string }>
+    export const relationIncluder = {
         article: {
             include: articleRealtionsIncluder
         },
         company: true
-    } satisfies Prisma.JobAdInclude,
-    simpleRelationIncluder: {
+    } as const satisfies Prisma.JobAdInclude
+    export const simpleRelationIncluder = {
         company: {
             select: {
                 name: true,
@@ -32,10 +32,9 @@ export const jobAdConfig = {
                 }
             }
         }
-    } satisfies Prisma.JobAdInclude,
-    typeConfig,
-    options: Object.values(JobType).map((opt): { value: JobType, label: string } => ({
+    } as const satisfies Prisma.JobAdInclude
+    export const options = Object.values(JobType).map((opt): { value: JobType, label: string } => ({
         value: opt,
-        label: typeConfig[opt].label
+        label: type[opt].label
     }))
-} as const
+}

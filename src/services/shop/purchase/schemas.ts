@@ -1,5 +1,5 @@
-import { studentCardZodValidation } from '@/services/users/validation'
 import { z } from 'zod'
+import { studentCardZodValidation } from '@/services/users/validation'
 
 export namespace PurchaseSchemas {
     const productsZodObject = z.array(z.object({

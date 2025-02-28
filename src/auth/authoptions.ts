@@ -6,11 +6,11 @@ import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
-import { readUser } from '@/services/users/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import { readUser } from '@/services/users/read'
 
 export const authOptions: AuthOptions = {
     providers: [

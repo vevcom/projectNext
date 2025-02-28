@@ -23,10 +23,10 @@ export namespace ApiKeyMethods {
             if (!apiKey) {
                 throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
             }
-    
+
             if (!apiKey.expiresAt || apiKey.expiresAt > new Date()) return { active: apiKey.active }
             logger.info('Deactivating expired api key', { id: apiKey.id })
-    
+
             const updated = await prisma.apiKey.update({
                 where: { id: apiKey.id },
                 data: { active: false },

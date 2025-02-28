@@ -1,6 +1,6 @@
 import 'server-only'
-import { ServerError } from '@/services/error'
 import { UserMethods } from '../users/methods'
+import { ServerError } from '@/services/error'
 import { verifyJWT } from '@/jwt/jwt'
 
 export async function verifyResetPasswordToken(token: string): Promise<{

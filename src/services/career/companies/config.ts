@@ -1,11 +1,11 @@
 import type { Prisma } from '@prisma/client'
 
-export const companyConfig = {
-    relationIncluder: {
+export namespace CompanyConfig {
+    export const relationIncluder = {
         logo: {
             include: {
                 image: true
             }
         }
-    } satisfies Prisma.CompanyInclude
-} as const
+    } as const satisfies Prisma.CompanyInclude
+}

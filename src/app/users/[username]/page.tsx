@@ -3,7 +3,6 @@ import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
-import { sexConfig } from '@/services/users/ConfigVars'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
@@ -14,6 +13,7 @@ import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
+import { sexConfig } from '@/services/users/ConfigVars'
 
 export type PropTypes = {
     params: Promise<{

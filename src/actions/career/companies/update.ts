@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { companyMethods } from '@/services/career/companies/methods'
+import { CompanyMethods } from '@/services/career/companies/methods'
 
-export const updateComanyAction = action(companyMethods.update)
+export const updateComanyAction = action(CompanyMethods.update)

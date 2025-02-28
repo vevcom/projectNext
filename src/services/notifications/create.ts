@@ -2,12 +2,12 @@ import 'server-only'
 import { createNotificaionValidation } from './validation'
 import { allMethodsOn, notificationMethods } from './Types'
 import { dispathMethod } from './dispatch'
-import { userFilterSelection } from '@/services/users/ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedNotificationChannel } from './Types'
 import type { Notification, SpecialNotificationChannel } from '@prisma/client'
 import type { CreateNotificationType } from './validation'
+import { userFilterSelection } from '@/services/users/ConfigVars'
 
 /**
  * Creates a notification. To dispatch and create a notification, use dispatchNotification()

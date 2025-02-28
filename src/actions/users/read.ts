@@ -1,12 +1,12 @@
 'use server'
-import { action } from '@/actions/action'
-import { getUser } from '@/auth/getUser'
-import { ExpandedGroup } from '@/services/groups/Types'
-import { UserMethods } from '@/services/users/methods'
-import { ActionReturn } from '../Types'
 import { createActionError } from '../error'
 import { safeServerCall } from '../safeServerCall'
+import { action } from '@/actions/action'
+import { getUser } from '@/auth/getUser'
+import { UserMethods } from '@/services/users/methods'
 import { readGroupsExpanded } from '@/services/groups/read'
+import type { ExpandedGroup } from '@/services/groups/Types'
+import type { ActionReturn } from '../Types'
 
 /**
  * A action to read a page of users with the given details (filtering)
