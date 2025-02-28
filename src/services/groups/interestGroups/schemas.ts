@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export namespace InterestGroupSchemas {
-    const interestGroupSchemaFields = z.object({
+    const fields = z.object({
         name: z.string().min(
             3, 'Navn må ha minst 3 tegn'
         ).max(
@@ -14,12 +14,12 @@ export namespace InterestGroupSchemas {
         ).trim(),
     })
 
-    export const create = interestGroupSchemaFields.pick({
+    export const create = fields.pick({
         name: true,
         shortName: true,
     })
 
-    export const update = interestGroupSchemaFields.partial().pick({
+    export const update = fields.partial().pick({
         name: true,
         shortName: true,
     })

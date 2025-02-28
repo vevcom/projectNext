@@ -1,9 +1,9 @@
 'use server'
 
 import { apiHandler } from '@/api/apiHandler'
-import { connectStudentCard } from '@/services/users/update'
+import { UserMethods } from '@/services/users/methods'
 
 
 export const POST = apiHandler({
-    serviceMethod: connectStudentCard,
+    serviceMethod: UserMethods.connectStudentCard
 })

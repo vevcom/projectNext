@@ -53,7 +53,7 @@ export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends bo
  * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
  * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
  * All keys in the one schema must be in the other schema.
- *
+ * @deprecated
  * @method createValidation creates a new validation with a subset of the keys and a tranformer
  * that should transform the type returned by parsing the type schema to the type detailed schema expects.
  * @method createValidationPartial Same as above but make all entries in type and detailed schema optional.
@@ -121,6 +121,7 @@ export class ValidationBase<
  * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
  * @method typeValidate validates the type schema
  * @method detailedValidate validates the detailed schema
+ * @deprecated
  */
 export class Validation<
     Type extends z.ZodRawShape,
@@ -175,6 +176,7 @@ export class Validation<
 
 /**
  * Same as Validation but all entries in type and detailed schema are optional.
+ * @deprecated
  * @method typeValidate validates the type schema (in a partial way)
  * @method detailedValidate validates the detailed schema (in a partial way
  */

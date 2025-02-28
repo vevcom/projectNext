@@ -1,13 +1,11 @@
-'use server'
+import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
 import { getUser } from '@/auth/getUser'
 import { verifyUserEmailAction } from '@/actions/users/update'
-import { safeServerCall } from '@/actions/safeServerCall'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import { notFound, redirect } from 'next/navigation'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
 type PropTypes = SearchParamsServerSide
 

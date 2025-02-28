@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export namespace LicenseSchemas {
-    const schemaFields = z.object({
+    const fields = z.object({
         name: z.string().min(
             5, 'Navn må være minst 5 tegn langt'
         ).max(
@@ -11,11 +11,11 @@ export namespace LicenseSchemas {
             1, 'Link må være minst 1 tegn langt'
         )
     })
-    export const create = schemaFields.pick({
+    export const create = fields.pick({
         name: true,
         link: true,
     })
-    export const update = schemaFields.partial().pick({
+    export const update = fields.partial().pick({
         name: true,
         link: true,
     })

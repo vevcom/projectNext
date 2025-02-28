@@ -1,6 +1,6 @@
 import 'server-only'
 import { ApiKeyAuthers } from './authers'
-import { ApiKeysConfig } from './config'
+import { ApiKeyConfig } from './config'
 import { ApiKeySchemas } from './schemas'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
 import { encodeApiKey } from './apiKeyEncoder'
@@ -44,7 +44,7 @@ export namespace ApiKeyMethods {
             const NODE_ENV = process.env.NODE_ENV
             const prepend = NODE_ENV === 'production' ? 'prod' : 'dev'
 
-            const key = prepend + crypto.randomBytes(ApiKeysConfig.keyLength - prepend.length).toString('hex')
+            const key = prepend + crypto.randomBytes(ApiKeyConfig.keyLength - prepend.length).toString('hex')
             const keyHashEncrypted = await apiKeyHashAndEncrypt(key)
 
             const apiKey = await prisma.apiKey.create({
@@ -53,7 +53,7 @@ export namespace ApiKeyMethods {
                     name: data.name,
                     active: true,
                 },
-                select: ApiKeysConfig.filterSelection
+                select: ApiKeyConfig.filterSelection
             })
             return { ...apiKey, key: encodeApiKey({ key, id: apiKey.id }) }
         }
@@ -67,7 +67,7 @@ export namespace ApiKeyMethods {
                     id: typeof idOrName === 'number' ? idOrName : undefined,
                     name: typeof idOrName === 'string' ? idOrName : undefined
                 },
-                select: ApiKeysConfig.filterSelection
+                select: ApiKeyConfig.filterSelection
             })
 
             if (!apiKey) throw new ServerError('BAD PARAMETERS', 'Api key does not exist')
@@ -85,7 +85,7 @@ export namespace ApiKeyMethods {
         auther: () => ApiKeyAuthers.readMany.dynamicFields({}),
         method: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
             const apiKeys = await prisma.apiKey.findMany({
-                select: ApiKeysConfig.filterSelection,
+                select: ApiKeyConfig.filterSelection,
                 orderBy: [
                     { active: 'desc' },
                     { name: 'asc' }

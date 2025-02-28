@@ -1,6 +1,6 @@
 import 'server-only'
 import { EventTagAuthers } from './authers'
-import { EventTagsConfig } from './config'
+import { EvantTagConfig } from './config'
 import { EventTagSchemas } from './schemas'
 import { EventAuthers } from '@/services/events/authers'
 import logger from '@/lib/logger'
@@ -37,7 +37,7 @@ export namespace EventTagMethods {
                 return await prisma.eventTag.create({
                     data: {
                         special,
-                        ...EventTagsConfig.specials[special]
+                        ...EvantTagConfig.specials[special]
                     }
                 })
             }

@@ -1,4 +1,4 @@
-import { JWT_ISSUER } from '@/auth/ConfigVars'
+import { JWT_ISSUER } from '@/lib/jwt/ConfigVars'
 import type { ActionReturn, ActionReturnError } from '@/actions/Types'
 import type { OmegaIdJWT } from '@/services/omegaid/Types'
 

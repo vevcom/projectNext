@@ -2,11 +2,11 @@ import { RequirePermission } from '@/auth/auther/RequirePermission'
 import { RequirePermissionAndUserId } from '@/auth/auther/RequirePermissionAndUserId'
 import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
 
-export const dotAuthers = {
-    create: RequirePermissionAndUserId.staticFields({ permission: 'DOTS_ADMIN' }),
-    update: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    destroy: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    readForUser: RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    readPage: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    readWrapperForUser: RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' }),
-} as const
+export namespace DotAuthers {
+    export const create = RequirePermissionAndUserId.staticFields({ permission: 'DOTS_ADMIN' })
+    export const update = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
+    export const destroy = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
+    export const readForUser = RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' })
+    export const readPage = RequirePermission.staticFields({ permission: 'DOTS_ADMIN' })
+    export const readWrapperForUser = RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' })
+}

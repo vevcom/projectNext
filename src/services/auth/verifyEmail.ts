@@ -1,5 +1,5 @@
 import 'server-only'
-import { readUser } from '@/services/users/read'
+import { UserMethods } from '@/services/users/methods'
 import { verifyJWT } from '@/jwt/jwt'
 import { ServerError } from '@/services/error'
 
@@ -16,8 +16,10 @@ export async function verifyVerifyEmailToken(token: string): Promise<{
 
         const iat = new Date(payload.iat * 1000)
 
-        const user = await readUser({
-            id: userId,
+        const user = await UserMethods.read.newClient().execute({
+            params: { id: userId },
+            session: null,
+            bypassAuth: true,
         })
 
         if (iat < user.updatedAt) {

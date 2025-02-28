@@ -3,12 +3,12 @@ import { emailValidationExpiration } from './ConfigVars'
 import { VerifyEmailTemplate } from '@/services/notifications/email/templates/verifyEmail'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { generateJWT } from '@/jwt/jwt'
-import { verifyEmailValidation } from '@/services/users/validation'
+import { UserSchemas } from '@/services/users/schemas'
 import type { UserFiltered } from '@/services/users/Types'
 
 // TODO: Fix this with new validation
 export async function sendVerifyEmail(user: UserFiltered, email: string) {
-    const parse = verifyEmailValidation.detailedValidate({ email })
+    const parse = UserSchemas.verifyEmail.parse({ email })
 
     const jwt = generateJWT('verifyemail', {
         email: parse.email,

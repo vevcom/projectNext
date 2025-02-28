@@ -1,5 +1,5 @@
+import { UserSchemas } from '@/services/users/schemas'
 import { z } from 'zod'
-import { studentCardZodValidation } from '@/services/users/validation'
 
 export namespace PurchaseSchemas {
     const productsZodObject = z.array(z.object({
@@ -9,7 +9,7 @@ export namespace PurchaseSchemas {
 
     const fields = z.object({
         shopId: z.coerce.number().int(),
-        studentCard: studentCardZodValidation,
+        studentCard: UserSchemas.studentCardZodValidation,
         products: productsZodObject,
     })
 

@@ -1,9 +1,7 @@
-'use server'
 import EmailRegistrationForm from './EmailregistrationForm'
 import { getUser } from '@/auth/getUser'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { readUser } from '@/services/users/read'
 import { notFound, redirect } from 'next/navigation'
+import { readUserAction } from '@/actions/users/read'
 
 export default async function Registeremail() {
     const { authorized, user } = await getUser({
@@ -11,8 +9,9 @@ export default async function Registeremail() {
     })
 
     if (!authorized) notFound()
+    
+    const updatedUser = await readUserAction({ id: user.id })
 
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
     if (!updatedUser.success) {
         return notFound()
     }

@@ -52,16 +52,20 @@ export namespace UserSchemas {
         acceptedTerms: true,
     }).refine(refinePassword.fcn, refinePassword.message)
 
-    export const updatePassword = z.object({
-        password: z.string().max(50).min(12),
-        confirmPassword: z.string().max(50).min(12),
+    export const updatePassword = fields.pick({
+        password: true,
+        confirmPassword: true,
     }).refine(refinePassword.fcn, refinePassword.message)
 
-    export const registerNewEmail = z.object({
-        email: z.string().email(),
+    export const registerNewEmail = fields.pick({
+        email: true,
     })
 
-    export const connectStudentCard = z.object({
-        studentCard: studentCardZodValidation,
+    export const connectStudentCard = fields.pick({
+        studentCard: true,
+    })
+
+    export const verifyEmail = fields.pick({
+        email: true,
     })
 }

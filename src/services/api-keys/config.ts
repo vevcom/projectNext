@@ -2,7 +2,7 @@ import { createSelection } from '@/services/createSelection'
 import type { ApiKey } from '@prisma/client'
 
 
-export namespace ApiKeysConfig {
+export namespace ApiKeyConfig {
     export const fieldsToExpose = [
         'id',
         'active',

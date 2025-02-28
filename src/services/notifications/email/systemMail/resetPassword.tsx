@@ -2,7 +2,7 @@ import 'server-only'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'
-import { readUser } from '@/services/users/read'
+import { UserMethods } from '@/services/users/methods'
 import { ServerError } from '@/services/error'
 import { emailValidation } from '@/services/notifications/validation'
 
@@ -10,8 +10,10 @@ export async function sendResetPasswordMail(email: string) {
     const parse = emailValidation.detailedValidate({ email })
 
     try {
-        const user = await readUser({
-            email: parse.email,
+        const user = await UserMethods.read.newClient().execute({
+            params: { email: parse.email },
+            session: null,
+            bypassAuth: true,
         })
 
         const jwt = generateJWT('resetpassword', {

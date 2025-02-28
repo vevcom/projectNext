@@ -1,21 +1,24 @@
+import 'server-only'
 import { PurchaseAuthers } from './authers'
 import { PurchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { readUser } from '@/services/users/read'
-import 'server-only'
-import { userFilterSelection } from '@/services/users/ConfigVars'
+import { UserMethods } from '@/services/users/methods'
+import { UserConfig } from '@/services/users/config'
 import { PurchaseMethod } from '@prisma/client'
 
 export namespace PurchaseMethods {
-
     export const createByStudentCard = ServiceMethod({
         auther: async ({ data }) => {
             let user
             try {
-                user = await readUser({
-                    studentCard: data.studentCard,
+                user = await UserMethods.read.newClient().execute({
+                    params: {
+                        studentCard: data.studentCard,
+                    },
+                    session: null,
+                    bypassAuth: true,
                 })
             } catch (e) {
                 if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
@@ -38,7 +41,7 @@ export namespace PurchaseMethods {
                 where: {
                     studentCard: data.studentCard,
                 },
-                select: userFilterSelection
+                select: UserConfig.filterSelection
             })
 
             // Find the price of the different products

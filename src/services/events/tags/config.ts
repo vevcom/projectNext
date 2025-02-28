@@ -1,6 +1,6 @@
 import type { SpecialEventTags } from '@prisma/client'
 
-export namespace EventTagsConfig {
+export namespace EvantTagConfig {
     export const specials = {
         COMPANY_PRESENTATION: {
             name: 'Bedpress',

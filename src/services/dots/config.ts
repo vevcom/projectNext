@@ -1,8 +1,9 @@
 import type { Prisma } from '@prisma/client'
 
-export const dotConfig = {
-    baseDuration: 1000 * 60 * 60 * 24 * 14, // 14 days
-    wrapperWithDotsIncluder: {
+export namespace DotConfig {
+    const baseDurationDays = 14
+    export const baseDuration = 1000 * 60 * 60 * 24 * baseDurationDays
+    export const wrapperWithDotsIncluder = {
         dots: {
             orderBy: {
                 expiresAt: 'desc'
@@ -22,5 +23,5 @@ export const dotConfig = {
                 username: true
             }
         }
-    } satisfies Prisma.DotWrapperInclude,
-} as const
+    } as const satisfies Prisma.DotWrapperInclude
+}

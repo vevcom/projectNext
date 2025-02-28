@@ -1,7 +1,7 @@
 import 'server-only'
-import { dotConfig } from './config'
-import { dotAuthers } from './authers'
-import { dotSchemas } from './schemas'
+import { DotConfig } from './config'
+import { DotAuthers } from './authers'
+import { DotSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -13,7 +13,7 @@ import { z } from 'zod'
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
 const readForUser = ServiceMethod({
-    auther: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
+    auther: ({ params }) => DotAuthers.readForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
@@ -34,8 +34,8 @@ const readForUser = ServiceMethod({
 })
 
 const create = ServiceMethod({
-    dataSchema: dotSchemas.create,
-    auther: ({ data }) => dotAuthers.create.dynamicFields({ userId: data.userId }),
+    dataSchema: DotSchemas.create,
+    auther: ({ data }) => DotAuthers.create.dynamicFields({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),
     }),
@@ -50,7 +50,7 @@ const create = ServiceMethod({
         let prevExpiresAt = activeDots.length > 0 ? activeDots[activeDots.length - 1].expiresAt : new Date()
         for (let i = 0; i < value; i++) {
             //TODO: Take freezes into account
-            const expiresAt = new Date(prevExpiresAt.getTime() + dotConfig.baseDuration)
+            const expiresAt = new Date(prevExpiresAt.getTime() + DotConfig.baseDuration)
             dotData.push({ expiresAt })
             prevExpiresAt = expiresAt
         }
@@ -72,7 +72,7 @@ const create = ServiceMethod({
 })
 
 const readWrappersForUser = ServiceMethod({
-    auther: ({ params }) => dotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
+    auther: ({ params }) => DotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
@@ -81,7 +81,7 @@ const readWrappersForUser = ServiceMethod({
             where: {
                 userId
             },
-            include: dotConfig.wrapperWithDotsIncluder,
+            include: DotConfig.wrapperWithDotsIncluder,
         })
 
         return wrappers.sort((a, b) => {
@@ -96,7 +96,7 @@ const readWrappersForUser = ServiceMethod({
 })
 
 const readPage = ServiceMethod({
-    auther: () => dotAuthers.readPage.dynamicFields({}),
+    auther: () => DotAuthers.readPage.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
         z.object({
@@ -124,7 +124,7 @@ const readPage = ServiceMethod({
                 username: 'asc'
             }
         },
-        include: dotConfig.wrapperWithDotsIncluder,
+        include: DotConfig.wrapperWithDotsIncluder,
     })).map(wrapper => ({
         ...wrapper,
         dots: extendWithActive(wrapper.dots)

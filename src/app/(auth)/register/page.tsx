@@ -1,11 +1,10 @@
-'use server'
 import RegistrationForm from './RegistrationForm'
 import { getUser } from '@/auth/getUser'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import { notFound, redirect } from 'next/navigation'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readUserAction } from '@/actions/users/read'
+import { notFound, redirect } from 'next/navigation'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
 type PropTypes = SearchParamsServerSide
 
