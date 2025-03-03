@@ -1,4 +1,3 @@
-import { RequireJWT } from '@/auth/auther/RequireJWT'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 import { RequireUserFieldOrPermission } from '@/auth/auther/RequireUserFieldOrPermission'
 import { RequireUserId } from '@/auth/auther/RequireUserId'
@@ -24,7 +23,4 @@ export namespace UserAuthers {
 
     export const register = RequireUserId.staticFields({})
     export const destroy = RequirePermission.staticFields({ permission: 'USERS_DESTROY' })
-
-    export const verifyEmail = RequireJWT.staticFields({ audience: 'verifyemail' })
-    export const resetPassword = RequireJWT.staticFields({ audience: 'resetpassword' })
 }

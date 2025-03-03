@@ -4,35 +4,21 @@ import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
-import { useUser } from '@/auth/useUser'
 import { UserConfig } from '@/services/users/config'
 import { SEX, type User } from '@prisma/client'
-import { signIn, signOut } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 export default function RegistrationForm({
     userData,
-    shouldLogOut,
 }: {
-    userData: Pick<User, 'mobile' | 'allergies' | 'sex'>,
-    shouldLogOut?: boolean
+    userData: Pick<User, 'id' | 'username' | 'mobile' | 'allergies' | 'sex'>,
 }) {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
-    const userAuth = useUser({
-        userRequired: true,
-        shouldRedirect: true,
-    })
-
-    if (shouldLogOut) {
-        signOut({
-            redirect: false
-        })
-    }
-
-    const lastUsername = userAuth.user?.username
-    let lastPassword: string = ''
+    const [lastPassword, setLastPassword] = useState('')
 
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
@@ -42,9 +28,9 @@ export default function RegistrationForm({
     return <Form
         title="Ekstra brukerinformasjon"
         submitText="Fullfør registrering"
-        action={registerUser.bind(null, { id: userAuth.user?.id })}
+        action={registerUser.bind(null, { id: userData.id })}
         successCallback={() => signIn('credentials', {
-            username: lastUsername,
+            username: userData.username,
             password: lastPassword,
             redirect: true,
             callbackUrl
@@ -52,7 +38,7 @@ export default function RegistrationForm({
     >
         <TextInput label="Telefonnummer" name="mobile" defaultValue={userData.mobile ?? ''} />
         <TextInput label="Allergier / diett" name="allergies" defaultValue={userData.allergies ?? ''} />
-        <TextInput type="password" label="Passord" name="password" onChange={(e) => { lastPassword = e.target.value }} />
+        <TextInput type="password" label="Passord" name="password" onChange={(e) => { setLastPassword(e.target.value) }} />
         <TextInput type="password" label="Gjenta passord" name="confirmPassword" />
         <SelectString label="Kjønn" name="sex" options={sexOptions} defaultValue={userData.sex ?? undefined} />
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />

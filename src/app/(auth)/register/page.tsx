@@ -33,5 +33,5 @@ export default async function Register({ searchParams }: PropTypes) {
         redirect(`/register-email${linkEnding}`)
     }
 
-    return <RegistrationForm userData={updatedUser} shouldLogOut={false} />
+    return <RegistrationForm userData={updatedUser} />
 }

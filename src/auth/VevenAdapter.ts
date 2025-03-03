@@ -105,7 +105,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUser(id) {
             console.log('get id')
 
-            const user = await UserMethods.readOrNull.newClient().execute({ 
+            const user = await UserMethods.readOrNull.newClient().execute({
                 params: { id: Number(id) },
                 session: null,
                 bypassAuth: true,
@@ -117,7 +117,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUserByEmail(email) {
             console.log('get email')
             console.log(email)
-            const user = await UserMethods.readOrNull.newClient().execute({ 
+            const user = await UserMethods.readOrNull.newClient().execute({
                 params: { email },
                 session: null,
                 bypassAuth: true,

@@ -21,6 +21,7 @@ export async function safeServerCall<T>(call: () => Promise<T>): Promise<ActionR
             return createZodActionError(error.parseError)
         }
         if (error instanceof Smorekopp) {
+            console.log(error)
             return createActionError(error.errorCode, error.errors)
         }
         return createActionError('UNKNOWN ERROR', 'unknown error')

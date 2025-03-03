@@ -181,6 +181,9 @@ export function ServiceMethod<
                 const paramsParse = config.paramsSchema.safeParse(args.params)
 
                 if (!paramsParse.success) {
+                    console.log(config.paramsSchema)
+                    console.log(args.params)
+                    console.log(paramsParse) // TODO: This needs to be returned to give good error message.
                     throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service method.')
                 }
 

@@ -4,7 +4,7 @@ import { z } from 'zod'
 export namespace UserSchemas {
     export const studentCardZodValidation = z.string()
 
-    const fields = z.object({
+    export const fields = z.object({
         username: z.string().max(50).min(2).toLowerCase(),
         sex: z.nativeEnum(SEX).optional().nullable(),
         email: z.string().max(200).min(2).email(),

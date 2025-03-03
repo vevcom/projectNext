@@ -1,7 +1,7 @@
 import EmailRegistrationForm from './EmailregistrationForm'
 import { getUser } from '@/auth/getUser'
-import { notFound, redirect } from 'next/navigation'
 import { readUserAction } from '@/actions/users/read'
+import { notFound, redirect } from 'next/navigation'
 
 export default async function Registeremail() {
     const { authorized, user } = await getUser({
@@ -9,7 +9,7 @@ export default async function Registeremail() {
     })
 
     if (!authorized) notFound()
-    
+
     const updatedUser = await readUserAction({ id: user.id })
 
     if (!updatedUser.success) {
@@ -24,5 +24,5 @@ export default async function Registeremail() {
         redirect('/register')
     }
 
-    return <EmailRegistrationForm />
+    return <EmailRegistrationForm user={updatedUser.data} />
 }

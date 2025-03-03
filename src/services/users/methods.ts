@@ -9,7 +9,6 @@ import { createDefaultSubscriptions } from '@/services/notifications/subscriptio
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { UserSchemas } from '@/services/users/schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ImageMethods } from '@/services/images/methods'
@@ -18,7 +17,7 @@ import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/password'
-import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
 
@@ -73,7 +72,10 @@ export namespace UserMethods {
         }),
         auther: ({ params }) => UserAuthers.read.dynamicFields(params),
         method: async ({ prisma, params }) => await prisma.user.findUnique({
-            where: { id: params.id },
+            where: {
+                id: params.id, // This is a bit wierd, but now ts is satisfied.
+                ...params
+            },
             select: UserConfig.filterSelection
         })
     })
@@ -304,49 +306,6 @@ export namespace UserMethods {
         }
     })
 
-    export const verifyEmail = ServiceMethod({
-        paramsSchema: z.object({
-            token: z.string(),
-        }),
-        auther: ({ params }) => UserAuthers.verifyEmail.dynamicFields(params),
-        method: async ({ prisma, params }) => {
-            // INFO: Safe to parse unsafe since the auther has verified the token.
-            const payload = readJWTPayload(params.token)
-
-            if (!payload.sub || !payload.email || !payload.iat) {
-                throw new ServerError('JWT INVALID', 'The JWT does not contain the mandatory fields')
-            }
-
-            const userId = Number(payload.sub)
-            const email = String(payload.email)
-
-            const iat = new Date(payload.iat * 1000)
-
-            const user = await UserMethods.read.client(prisma).execute({
-                params: {
-                    id: userId,
-                },
-                session: null,
-                bypassAuth: true,
-            })
-
-            if (iat < user.updatedAt) {
-                throw new ServerError('JWT INVALID', 'The user has changed since the token was generated.')
-            }
-
-            return await prisma.user.update({
-                where: {
-                    id: userId,
-                },
-                data: {
-                    emailVerified: new Date(),
-                    email,
-                },
-                select: UserConfig.filterSelection
-            })
-        }
-    })
-
     export const update = ServiceMethod({
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: UserSchemas.update,
@@ -357,42 +316,6 @@ export namespace UserMethods {
         })
     })
 
-    export const resetPassword = ServiceMethod({
-        paramsSchema: z.object({
-            token: z.string()
-        }),
-        dataSchema: UserSchemas.updatePassword,
-        auther: ({ params }) => UserAuthers.resetPassword.dynamicFields(params),
-        method: async ({ prisma, params, data }) => {
-            // INFO: Safe to parse unsafe since the auther has verified the token.
-            const payload = readJWTPayload(params.token)
-
-            if (!payload.sub || !payload.iat) {
-                throw new ServerError('JWT INVALID', 'The forgot password JWT is not valid')
-            }
-
-            const userId = Number(payload.sub)
-
-            const user = await UserMethods.read.client(prisma).execute({
-                params: { id: userId },
-                session: null,
-                bypassAuth: true
-            })
-
-            if (user.updatedAt > new Date(payload.iat * 1000)) {
-                throw new ServerError('JWT INVALID', 'The password has already been changed')
-            }
-
-            UserMethods.updatePassword.client(prisma).execute({
-                params: {
-                    id: userId,
-                },
-                data,
-                session: null,
-                bypassAuth: true,
-            })
-        }
-    })
 
     export const updatePassword = ServiceMethod({
         paramsSchema: z.object({

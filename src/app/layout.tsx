@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: PropTypes) {
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
     const profile = session?.user ?
-        unwrapActionReturn(await readUserProfileAction(session?.user.username)) : null
+        unwrapActionReturn(await readUserProfileAction(session?.user)) : null
 
     return (
         <html lang="en">

@@ -1,6 +1,6 @@
 import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
 import { getUser } from '@/auth/getUser'
-import { verifyUserEmailAction } from '@/actions/users/update'
+import { verifyEmailAction } from '@/actions/auth/auth'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { notFound, redirect } from 'next/navigation'
@@ -21,7 +21,7 @@ export default async function Register({ searchParams }: PropTypes) {
     })
 
     const userId = user?.id
-    const updatedUser = unwrapActionReturn(await verifyUserEmailAction({ token }))
+    const updatedUser = unwrapActionReturn(await verifyEmailAction({ token }))
 
     if (!userId) {
         return <EmailVerifiedWrapper>

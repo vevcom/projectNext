@@ -1,5 +1,5 @@
 'use client'
-import { resetPasswordAction } from '@/actions/auth/resetPassword'
+import { sendResetPasswordEmailAction } from '@/actions/auth/auth'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useState } from 'react'
@@ -12,7 +12,7 @@ export default function ResetPassword() {
         <Form
             submitText="Send e-post"
             title="Glemt passord"
-            action={resetPasswordAction}
+            action={sendResetPasswordEmailAction}
             successCallback={(email) => {
                 setFeedback(`
                     Hvis e-posten finnes i databasen, er en e-post er sendt til ${email} med instruksjoner for

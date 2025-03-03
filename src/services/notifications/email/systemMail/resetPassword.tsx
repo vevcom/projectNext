@@ -20,7 +20,7 @@ export async function sendResetPasswordMail(email: string) {
             sub: user.id,
         }, 60 * 60)
 
-        const link = `${process.env.DOMAIN}/auth/reset-password?token=${jwt}`
+        const link = `${process.env.DOMAIN}/reset-password-form?token=${jwt}`
 
         await sendSystemMail(user.email, 'Glemt passord', <ResetPasswordTemplate user={user} link={link} />)
 
