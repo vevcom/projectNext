@@ -1,4 +1,3 @@
-'use server'
 import { apiHandler } from '@/app/api/apiHandler'
 import { PurchaseMethods } from '@/services/shop/purchase/methods'
 

@@ -1,5 +1,3 @@
-'use server'
-
 import { apiHandler } from '@/api/apiHandler'
 import { UserMethods } from '@/services/users/methods'
 

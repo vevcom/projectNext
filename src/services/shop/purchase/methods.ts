@@ -92,7 +92,7 @@ export namespace PurchaseMethods {
             // TODO: Return remaining balance in account
 
             return {
-                remainingBalance: 15100,
+                remainingBalance: 191900,
                 user,
                 productList,
             }

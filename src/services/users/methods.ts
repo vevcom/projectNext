@@ -503,6 +503,30 @@ export namespace UserMethods {
             return results[0]
         }
     })
+    export const readUserWithBalance = ServiceMethod({
+        auther: ({ params }) => UserAuthers.read.dynamicFields({
+            username: params.username || '',
+        }),
+        paramsSchema: z.object({
+            username: z.string().optional(),
+            id: z.number().optional(),
+            email: z.string().optional(),
+            studentCard: z.string().optional(),
+        }),
+        method: async ({ prisma: prisma_, params }) => {
+            const user = await prisma_.user.findFirstOrThrow({
+                where: params,
+                include: {
+                    image: true,
+                }
+            })
+
+            return {
+                balance: 191900,
+                user,
+            }
+        }
+    })
 
     //TODO: Make soft delete?
     /**
