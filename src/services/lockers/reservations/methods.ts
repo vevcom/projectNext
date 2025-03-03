@@ -5,7 +5,6 @@ import { LockerReservationAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readUsersOfGroups } from '@/services/groups/read'
 import { Smorekopp } from '@/services/error'
-import prisma from '@/prisma'
 import { z } from 'zod'
 
 export namespace LockerReservationMethods {
@@ -23,7 +22,8 @@ export namespace LockerReservationMethods {
             lockerId: z.number(),
         }),
         dataValidation: lockerReservationValidation,
-        method: async ({ session, data, params }) => {
+        method: async ({ prisma, session, data, params }) => {
+            // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
                 const groupUsers = await readUsersOfGroups([{ groupId: data.groupId, admin: false }])
@@ -63,7 +63,7 @@ export namespace LockerReservationMethods {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: ({ params: { id } }) => prisma.lockerReservation.findUniqueOrThrow({
+        method: ({ prisma, params: { id } }) => prisma.lockerReservation.findUniqueOrThrow({
             where: {
                 id,
             },
@@ -84,7 +84,8 @@ export namespace LockerReservationMethods {
             id: z.number(),
         }),
         dataValidation: lockerReservationValidation,
-        method: async ({ session, data, params: { id } }) => {
+        method: async ({ prisma, session, data, params: { id } }) => {
+            // TODO: Use authers for authing in stead of this
             // Verify that the user updating is the creator of the reservation
             const reservation = await prisma.lockerReservation.findUniqueOrThrow({
                 where: {

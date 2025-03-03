@@ -3,7 +3,6 @@ import { lockerReservationIncluder } from './reservations/config'
 import { createLockerValidation } from './validation'
 import { LockerAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import prisma from '@/prisma'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -43,7 +42,7 @@ export namespace LockerMethods {
     export const create = ServiceMethod({
         auther: () => LockerAuthers.create.dynamicFields({}),
         dataValidation: createLockerValidation,
-        method: async ({ data }) => {
+        method: async ({ prisma, data }) => {
             console.log(data)
             return await prisma.locker.create({
                 data,
@@ -53,7 +52,7 @@ export namespace LockerMethods {
     })
 
     /**
-     * Reads a locker.
+     * Reads a locker. Expired locker reservations are updated when reading. 
      *
      * @param id - The id of the locker.
      *
@@ -64,7 +63,7 @@ export namespace LockerMethods {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ params: { id } }) => {
+        method: async ({ prisma, params: { id } }) => {
             const locker = await prisma.locker.findUniqueOrThrow({
                 where: {
                     id,
@@ -79,7 +78,7 @@ export namespace LockerMethods {
     })
 
     /**
-     * Reads a page of lockers.
+     * Reads a page of lockers. Expired locker reservations are updated when reading. 
      *
      * @param paging - The paging data.
      *
@@ -94,7 +93,7 @@ export namespace LockerMethods {
             }),
             z.any(),
         ),
-        method: async ({ params }) => {
+        method: async ({ prisma, params }) => {
             const lockers = await prisma.locker.findMany({
                 ...cursorPageingSelection(params.paging.page),
                 orderBy: {
@@ -103,9 +102,7 @@ export namespace LockerMethods {
                 include: lockerReservationIncluder,
             })
 
-            for (const locker of lockers) {
-                await updateLockerReservationIfExpired(locker)
-            }
+            await Promise.all(lockers.map(updateLockerReservationIfExpired))
 
             return lockers
         }
