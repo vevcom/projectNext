@@ -1,4 +1,6 @@
 import { AuthAuthers } from './authers'
+import { AuthSchemas } from './schemas'
+import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { UserMethods } from '@/services/users/methods'
@@ -6,8 +8,6 @@ import { UserConfig } from '@/services/users/config'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
 import { UserSchemas } from '@/services/users/schemas'
 import { z } from 'zod'
-import { AuthSchemas } from './schemas'
-import { sendResetPasswordMail } from '../notifications/email/systemMail/resetPassword'
 
 export namespace AuthMethods {
 
