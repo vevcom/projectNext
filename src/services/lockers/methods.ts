@@ -7,9 +7,10 @@ import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
+import type { Prisma } from '@prisma/client'
 import type { LockerWithReservation } from '@/services/lockers/Types'
 
-export async function updateLockerReservationIfExpired(locker: LockerWithReservation) {
+export async function updateLockerReservationIfExpired(prisma: Prisma.TransactionClient, locker: LockerWithReservation) {
     if (!locker.LockerReservation.length) return
 
     const reservation = locker.LockerReservation[0]
@@ -52,7 +53,7 @@ export namespace LockerMethods {
     })
 
     /**
-     * Reads a locker. Expired locker reservations are updated when reading. 
+     * Reads a locker. Expired locker reservations are updated when reading.
      *
      * @param id - The id of the locker.
      *
@@ -71,14 +72,14 @@ export namespace LockerMethods {
                 include: lockerReservationIncluder
             })
 
-            await updateLockerReservationIfExpired(locker)
+            await updateLockerReservationIfExpired(prisma, locker)
 
             return locker
         }
     })
 
     /**
-     * Reads a page of lockers. Expired locker reservations are updated when reading. 
+     * Reads a page of lockers. Expired locker reservations are updated when reading.
      *
      * @param paging - The paging data.
      *
@@ -102,7 +103,7 @@ export namespace LockerMethods {
                 include: lockerReservationIncluder,
             })
 
-            await Promise.all(lockers.map(updateLockerReservationIfExpired))
+            await Promise.all(lockers.map((locker) => updateLockerReservationIfExpired(prisma, locker)))
 
             return lockers
         }

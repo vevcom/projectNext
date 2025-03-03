@@ -28,6 +28,6 @@ export namespace LockerLocationMethods {
      */
     export const readAll = ServiceMethod({
         auther: () => LockerLocationAuthers.readAll.dynamicFields({}),
-        method: async () => prisma.lockerLocation.findMany()
+        method: async ({ prisma }) => prisma.lockerLocation.findMany()
     })
 }
