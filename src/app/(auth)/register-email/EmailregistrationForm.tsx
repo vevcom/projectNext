@@ -27,7 +27,6 @@ export default function EmailRegistrationForm({
             // action={registerNewEmailAction.bind(null, { id: user.id })}
             action={actionToCall}
             successCallback={(data) => {
-                console.log(data)
                 if (data) {
                     if (data.verified) {
                         push(`/register?callbackUrl=${callbackUrl}`)
