@@ -12,6 +12,10 @@ import crypto from 'crypto'
 import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './Types'
 
 export namespace ApiKeyMethods {
+    /**
+     * Updates the active status of an api key if it has expired, i.e. if the expiresAt date is in the past.
+     * This method is used when reading api keys to ensure that the active status is correct.
+     */
     const updateIfExpired = ServiceMethod({
         auther: () => ApiKeyAuthers.updateIfExpired.dynamicFields({}),
         paramsSchema: z.object({
@@ -131,15 +135,16 @@ export namespace ApiKeyMethods {
         auther: () => ApiKeyAuthers.update.dynamicFields({}),
         paramsSchema: z.number(),
         dataSchema: ApiKeySchemas.update,
-        method: async ({ prisma, params: id, data }): Promise<void> => {
+        method: async ({ prisma, params: id, data }) => {
             if (data.active && data.expiresAt && data.expiresAt < new Date()) {
                 throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
             }
 
-            await prisma.apiKey.update({
+            const { name } = await prisma.apiKey.update({
                 where: { id },
                 data,
             })
+            return { name }
         },
     })
     export const destroy = ServiceMethod({
