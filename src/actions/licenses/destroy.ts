@@ -1,6 +1,5 @@
 'use server'
-
 import { action } from '@/actions/action'
-import { destroyLicense } from '@/services/licenses/destroy'
+import { LicenseMethods } from '@/services/licenses/methods'
 
-export const destroyLicenseAction = action(destroyLicense)
+export const destroyLicenseAction = action(LicenseMethods.destroy)

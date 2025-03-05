@@ -8,9 +8,9 @@ import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
 import type { ReactNode } from 'react'
 
 export type PropTypes = {
-    params: {
+    params: Promise<{
         shortName: string
-    },
+    }>,
     children: ReactNode
 }
 
@@ -35,7 +35,7 @@ export default async function Committee({ params, children }: PropTypes) {
                         { children }
                     </div>
                     <aside className={styles.navContainer}>
-                        <Nav shortName={params.shortName} />
+                        <Nav shortName={(await params).shortName} />
                     </aside>
                 </div>
             </PageWrapper>

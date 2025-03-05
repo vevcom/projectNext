@@ -2,6 +2,7 @@
 
 import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
 import StudyProgrammeTableBody from './studyProgrammeTable'
+import styles from './page.module.scss'
 import { readStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
@@ -35,15 +36,17 @@ export default async function StudyProgrammes() {
             )
         }
     >
-        <table>
+        <table className={styles.table}>
             <thead>
-                {canEdit && <th>Rediger</th>}
-                <th>Navn</th>
-                <th>Kode</th>
-                <th>Institutt kode</th>
-                <th>Start år</th>
-                <th>Lengde på studiet</th>
-                <th>Del av Omega</th>
+                <tr>
+                    {canEdit && <th>Rediger</th>}
+                    <th>Navn</th>
+                    <th>Kode</th>
+                    <th>Institutt kode</th>
+                    <th>Start år</th>
+                    <th>Lengde på studiet</th>
+                    <th>Del av Omega</th>
+                </tr>
             </thead>
             <StudyProgrammeTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
         </table>

@@ -21,6 +21,7 @@ model User {
   updatedAt         DateTime            @updatedAt // is also updated manually
   image             Image?              @relation(fields: [imageId], references: [id])
   imageId           Int?
+  studentCard       String?             @unique
   LockerReservation LockerReservation[]
   omegaQuote        OmegaQuote[]
   memberships       Membership[]
@@ -33,8 +34,9 @@ model User {
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
   EventRegistration         EventRegistration[]
 
-  dots        DotWrapper[] @relation(name: "dot_user")
-  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+  dots                     DotWrapper[]               @relation(name: "dot_user")
+  dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
+  registerStudentCardQueue RegisterStudentCardQueue[]
 
   cabinBooking        Booking[] @relation()
 
@@ -64,4 +66,10 @@ model FeideAccount {
   issuedAt    DateTime
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RegisterStudentCardQueue {
+  userId Int      @id
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiry DateTime
 }

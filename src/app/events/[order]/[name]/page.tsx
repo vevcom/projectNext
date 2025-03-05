@@ -17,19 +17,20 @@ import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-
 import Link from 'next/link'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         order: string,
         name: string
-    }
+    }>
 }
 
 export default async function Event({ params }: PropTypes) {
     const eventRes = await readEventAction({
-        name: decodeURIComponent(params.name),
-        order: parseInt(params.order, 10)
+        name: decodeURIComponent((await params).name),
+        order: parseInt((await params).order, 10)
     })
     const tagsRes = await readEventTagsAction()
     if (!eventRes.success || !tagsRes.success) {
+        //TODO: Handle error in idiomatic way
         throw new Error('Failed to read event')
     }
     const event = eventRes.data

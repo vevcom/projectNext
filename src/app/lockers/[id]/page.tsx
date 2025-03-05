@@ -9,9 +9,9 @@ import { checkGroupValidity, inferGroupName, readGroupsOfUser } from '@/services
 
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
 export default async function Locker({ params }: PropTypes) {
@@ -22,7 +22,7 @@ export default async function Locker({ params }: PropTypes) {
     })
     if (!authorized) return Error(status)
 
-    const lockerId = parseInt(params.id, 10)
+    const lockerId = parseInt((await params).id, 10)
 
     const locker = await readLockerAction(lockerId)
     if (!locker.success) {
@@ -58,7 +58,7 @@ export default async function Locker({ params }: PropTypes) {
     return (
         <PageWrapper title="Skapreservasjon">
             <div className={styles.lockerCard}>
-                <h2>Skap nr. {params.id}</h2>
+                <h2>Skap nr. {(await params).id}</h2>
                 <p>{locker.data.building} {locker.data.floor}. etasje</p>
                 {
                     isReserved

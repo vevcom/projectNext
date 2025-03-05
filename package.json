@@ -7,7 +7,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo Success!",
+    "docker:dev": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.dev.yml up --build",
+    "docker:test": "touch .env && docker-compose --env-file .env.default --env-file .env -f docker-compose.test.yml run --rm --build projectnext",
+    "docker:prod": "docker-compose --env-file .env -f docker-compose.test.yml up --build"
   },
   "prisma": {
     "schema": "src/prisma/schema"
@@ -25,7 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "jsqr": "^1.4.0",
     "luxon": "^3.5.0",
-    "next": "^14.2.5",
+    "next": "^15.0.3",
     "next-auth": "^4.24.11",
     "next-qrcode": "^2.5.1",
     "nodemailer": "^6.9.16",

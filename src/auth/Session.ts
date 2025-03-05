@@ -1,6 +1,6 @@
 import { authOptions } from './authoptions'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'
-import { readApiKeyHashedAndEncrypted } from '@/services/api-keys/read'
+import { ApiKeyMethods } from '@/services/api-keys/methods'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
@@ -17,6 +17,7 @@ export type SessionType<UserGuarantee extends UserGuaranteeOption> = {
     ),
     permissions: Permission[],
     memberships: MembershipFiltered[],
+    apiKeyId?: number,
 }
 
 export type SessionUser = SessionType<'HAS_USER'>
@@ -42,6 +43,10 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return this.session.memberships
     }
 
+    public get apiKeyId() {
+        return this.session.apiKeyId
+    }
+
     /**
      * This functions makes sure the Session class can be sent to the client
      * @returns A javascript object representation of the session
@@ -50,7 +55,8 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return {
             user: this.user,
             permissions: this.permissions,
-            memberships: this.memberships
+            memberships: this.memberships,
+            apiKeyId: this.apiKeyId,
         }
     }
 
@@ -82,21 +88,38 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const defaultPermissions = await readDefaultPermissions()
         if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
         const { id, key } = decodeApiKey(keyAndIdEncoded)
-        const { keyHashEncrypted, active, permissions } = await readApiKeyHashedAndEncrypted.newClient().execute({
-            session: null,
-            params: id
-        })
+
+        const INVALID_API_KEY_MESSAGE = 'Api nøkkelen er ikke valid'
+
+        let apiKeyFetch
+
+        try {
+            apiKeyFetch = await ApiKeyMethods.readWithHash.newClient().execute({
+                session: null,
+                bypassAuth: true,
+                params: id
+            })
+        } catch (e) {
+            if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
+                throw new ServerError('INVALID API KEY', INVALID_API_KEY_MESSAGE)
+            }
+            throw e
+        }
+
+        const { keyHashEncrypted, active, permissions } = apiKeyFetch
+
         if (!active) throw new ServerError('INVALID API KEY', 'Api nøkkelen har utløpt')
 
         const success = await apiKeyDecryptAndCompare(key, keyHashEncrypted)
-        if (!success) throw new ServerError('INVALID API KEY', 'Api nøkkelen er ikke valid')
+        if (!success) throw new ServerError('INVALID API KEY', INVALID_API_KEY_MESSAGE)
 
         return new Session<'NO_USER'>({
             user: null,
             permissions: [...defaultPermissions, ...permissions].filter(
                 (permission, i, ps) => ps.indexOf(permission) === i
             ),
-            memberships: []
+            memberships: [],
+            apiKeyId: id,
         })
     }
 }

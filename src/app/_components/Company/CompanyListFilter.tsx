@@ -6,6 +6,7 @@ import { QueryParams } from '@/lib/query-params/queryParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
+import { v4 as uuid } from 'uuid'
 
 type PropTypes = {
     currentName: string
@@ -20,7 +21,7 @@ export default function CompanyListFilter({ currentName }: PropTypes) {
     return (
         <span className={styles.CompanyListFilter}>
             <FontAwesomeIcon icon={faSearch} />
-            <TextInput onChange={(e) => setNameFilter(e.target.value)} defaultValue={currentName} label="navn" />
+            <TextInput id={uuid()} onChange={(e) => setNameFilter(e.target.value)} defaultValue={currentName} label="navn" />
         </span>
     )
 }

@@ -37,7 +37,7 @@ export default function LogIn() {
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
         })}>Logg inn med Feide</BorderButton>
         <br />
-        <Link href="/reset-password" className={styles.resetPasswordLink}>Glemt passord?</Link>
+        <Link href="/send-reset-password-email" className={styles.resetPasswordLink}>Glemt passord?</Link>
         <p>Er det første gang du logger inn? Da er det bare å logge inn med feide for å lage en bruker.</p>
     </>
 }

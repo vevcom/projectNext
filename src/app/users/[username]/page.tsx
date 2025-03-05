@@ -3,31 +3,31 @@ import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
-import { sexConfig } from '@/services/users/ConfigVars'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
-import { userProfileUpdateAuther } from '@/services/users/authers'
+import { UserAuthers } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
+import { UserConfig } from '@/services/users/config'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 
-type PropTypes = {
-    params: {
+export type PropTypes = {
+    params: Promise<{
         username: string
-    },
+    }>,
 }
 
 export default async function User({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
-    if (params.username === 'me') {
+    if ((await params).username === 'me') {
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}`) //This throws.
     }
-    const profileRes = await readUserProfileAction(params.username)
+    const profileRes = await readUserProfileAction({ username: (await params).username })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
@@ -48,11 +48,11 @@ export default async function User({ params }: PropTypes) {
         return res.data
     })
 
-    const { authorized: canAdministrate } = userProfileUpdateAuther.dynamicFields(
+    const { authorized: canAdministrate } = UserAuthers.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 
-    const showOmegaId = session.user?.username === params.username
+    const showOmegaId = session.user?.username === (await params).username
 
     return (
         <div className={styles.wrapper}>
@@ -91,7 +91,8 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr/>
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title} uudaf {order}´dis orden i Sanctus Omega Broderskab
+                            {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
+                            uudaf {order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>
                     <div className={styles.leftSection}>

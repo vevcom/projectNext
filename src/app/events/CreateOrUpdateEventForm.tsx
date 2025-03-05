@@ -7,7 +7,7 @@ import Slider from '@/components/UI/Slider'
 import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
+import { EventConfig } from '@/services/events/config'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
@@ -53,7 +53,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"
                     name="canBeViewdBy"
-                    options={CanBeViewdByOptions}
+                    options={EventConfig.canBeViewdByOptions}
                     defaultValue={event?.canBeViewdBy}
                 />
                 <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>

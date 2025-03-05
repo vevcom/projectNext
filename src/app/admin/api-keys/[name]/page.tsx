@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
+import UpdateApiKeyForm from './UpdateApiKeyForm'
 import { readApiKeyAction } from '@/actions/api-keys/read'
-import { updateApiKeyAction } from '@/actions/api-keys/update'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Form from '@/components/Form/Form'
 import DateInput from '@/components/UI/DateInput'
@@ -11,13 +11,13 @@ import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 import Date from '@/app/_components/Date/Date'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         name: string
-    }
+    }>
 }
 
 export default async function ApiKeyAdmin({ params }: PropTypes) {
-    const res = await readApiKeyAction(decodeURIComponent(params.name))
+    const res = await readApiKeyAction(decodeURIComponent((await params).name))
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'En feil har oppstått')
     const apiKey = res.data
 
@@ -34,11 +34,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
 
                 <div className={styles.admin}>
                     <h2>Endre på nøkkel</h2>
-                    <Form
-                        action={updateApiKeyAction.bind(null, apiKey.id)}
-                        submitText="Oppdater"
-                        refreshOnSuccess
-                    >
+                    <UpdateApiKeyForm id={apiKey.id}>
                         <TextInput name="name" label="Navn" defaultValue={apiKey.name} />
                         <Slider label="Aktiv" name="active" defaultChecked={apiKey.active} />
                         <DateInput includeTime
@@ -55,7 +51,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                             />
                         )}
                         />
-                    </Form>
+                    </UpdateApiKeyForm>
                     <Form
                         submitText="Slett nøkkel"
                         action={destroyApiKeyAction.bind(null, apiKey.id)}

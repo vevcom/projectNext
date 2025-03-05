@@ -12,9 +12,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         yearAndName: string[]
-    }
+    }>
 }
 
 export default async function Ombul({ params }: PropTypes) {
@@ -23,9 +23,9 @@ export default async function Ombul({ params }: PropTypes) {
         shouldRedirect: true,
     })
 
-    const year = parseInt(decodeURIComponent(params.yearAndName[0]), 10)
-    const name = decodeURIComponent(params.yearAndName[1])
-    if (!year || !name || params.yearAndName.length > 2) notFound()
+    const year = parseInt(decodeURIComponent((await params).yearAndName[0]), 10)
+    const name = decodeURIComponent((await params).yearAndName[1])
+    if (!year || !name || (await params).yearAndName.length > 2) notFound()
     const ombulRes = await readOmbulAction({
         name,
         year
