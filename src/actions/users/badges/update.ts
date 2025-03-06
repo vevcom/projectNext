@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
-import { Badges } from '@/services/users/badges'
+import { action } from '@/actions/action'
+import { updateBadge } from '@/services/users/badges/update'
 
-export const updateBadgeAction = Action(Badges.update)
+export const updateBadgeAction = action(updateBadge)

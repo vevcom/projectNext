@@ -1,9 +1,14 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { ReadBadgeAuther } from './Authers'
+import { z } from 'zod'
 
-export const read = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, { id }: { id: number }) => await prisma.badge.findUniqueOrThrow({
+export const readBadge = ServiceMethod({
+    paramsSchema: z.object({
+            id: z.number(),
+        }),
+    auther: () => ReadBadgeAuther.dynamicFields({}),
+    method: async ({prisma, params: { id }}) => await prisma.badge.findUniqueOrThrow({
         where: {
             id
         },
@@ -13,15 +18,14 @@ export const read = ServiceMethodHandler({
     })
 })
 
-export const readAll = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma) => await prisma.badge.findMany({
+export const readAllBadges = ServiceMethod({
+    auther: () => ReadBadgeAuther.dynamicFields({}),
+    method: async ({prisma}) => await prisma.badge.findMany({
         include: {
             cmsImage: {include: {image: true}}
         }, 
         orderBy: {
             id: "asc"
         },
-    
     })
 })

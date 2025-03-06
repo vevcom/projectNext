@@ -1,6 +1,6 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Badges } from '@/services/users/badges'
+import { action } from '@/actions/action'
+import { readAllBadges,readBadge } from '@/services/users/badges/read'
 
-export const readAllBadgesAction = ActionNoData(Badges.readAll)
-export const readBadgeAction = ActionNoData(Badges.read)
+export const readAllBadgesAction = action(readAllBadges)
+export const readBadgeAction = action(readBadge)

@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Badges } from '@/services/users/badges'
+import { action } from '@/actions/action'
+import { destroyBadge } from '@/services/users/badges/destroy'
 
-export const destroyBadgeAction = ActionNoData(Badges.destroy)
+export const destroyBadgeAction = action(destroyBadge)

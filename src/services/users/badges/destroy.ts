@@ -1,11 +1,16 @@
 import 'server-only'
-import { ServiceMethodHandler } from '@/services/ServiceMethodHandler'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { z } from 'zod'
+import { AdminBadgeAuther } from './Authers'
 
-export const destroy = ServiceMethodHandler({
-    withData: false,
-    handler: async (prisma, params: { id: number }) => {
+export const destroyBadge = ServiceMethod({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    auther: () => AdminBadgeAuther.dynamicFields({}),
+    method: async ({prisma, params: { id }}) => {
         await prisma.badge.delete({
-            where: { id: params.id }
+            where: { id }
         })
     }
 })
