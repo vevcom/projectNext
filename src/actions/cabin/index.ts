@@ -11,6 +11,8 @@ export const deleteReleasePeriodAction = action(CabinReleasePeriodMethods.destro
 
 export const createCabinBookinUserAttachedAction = action(CabinBookingMethods.createCabinBookingUserAttached)
 export const readCabinAvailabilityAction = action(CabinBookingMethods.readAvailability)
+export const readCabinBookingsAction = action(CabinBookingMethods.readMany)
+export const readCabinBookingAction = action(CabinBookingMethods.read)
 
 export const readCabinProductsAction = action(CabinProductMethods.readMany)
 export const readCabinProductAction = action(CabinProductMethods.read)

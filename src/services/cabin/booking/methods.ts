@@ -6,6 +6,7 @@ import 'server-only'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
+import { UserConfig } from '@/services/users/config'
 
 
 export namespace CabinBookingMethods {
@@ -56,7 +57,7 @@ export namespace CabinBookingMethods {
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        auther: ({ params }) => CabinBookingAuthers.createCabinBookingUserAttachedAuther.dynamicFields({
+        auther: ({ params }) => CabinBookingAuthers.createUserAttached.dynamicFields({
             userId: params.userId,
         }),
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
@@ -102,7 +103,7 @@ export namespace CabinBookingMethods {
     })
 
     export const readAvailability = ServiceMethod({
-        auther: () => CabinBookingAuthers.readBookingsAuther.dynamicFields({}),
+        auther: () => CabinBookingAuthers.readAvailability.dynamicFields({}),
         method: async ({ prisma }) => {
             const results = await prisma.booking.findMany({
                 select: CabinBookingConfig.bookingFilerSelection,
@@ -127,6 +128,36 @@ export namespace CabinBookingMethods {
 
             return results
         }
+    })
+
+    export const readMany = ServiceMethod({
+        auther: () => CabinBookingAuthers.readMany.dynamicFields({}),
+        method: ({ prisma }) => prisma.booking.findMany({
+            orderBy: {
+                start: 'asc',
+            }
+        }), // TODO: Pager
+    })
+
+    export const read = ServiceMethod({
+        auther: () => CabinBookingAuthers.read.dynamicFields({}),
+        paramsSchema: z.object({
+            id: z.number(),
+        }),
+        method: ({ prisma, params }) => prisma.booking.findUniqueOrThrow({
+            where: params,
+            include: {
+                user: {
+                    select: UserConfig.filterSelection,
+                },
+                BookingProduct: {
+                    include: {
+                        product: true,
+                    }
+                },
+                event: true,
+            }
+        })
     })
 
 

@@ -191,6 +191,10 @@ const navigations = [
                 title: 'Produkter',
                 href: '/admin/cabin-product',
             },
+            {
+                title: 'Bookinger',
+                href: '/admin/cabin-booking',
+            },
         ]
     },
     {
