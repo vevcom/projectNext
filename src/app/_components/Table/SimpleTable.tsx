@@ -10,7 +10,7 @@ export default function SimpleTable<T extends string[]>({
 }: {
     header: T,
     body: Array<[...T]>,
-    links: T,
+    links?: T,
 }) {
     return <table className={styles.table}>
         <thead>
@@ -19,12 +19,14 @@ export default function SimpleTable<T extends string[]>({
             </tr>
         </thead>
         <tbody>
-            {body.map((row, i) => <Link key={uuid()} href={links[i]}>
+            {links ? body.map((row, i) => <Link key={uuid()} href={links[i]}>
                 <tr>
                     {row.map(item => <td key={uuid()}>{item}</td>)}
                 </tr>
             </Link>
-            )}
+            ) : body.map(row => <tr key={uuid()}>
+                {row.map(item => <td key={uuid()}>{item}</td>)}
+            </tr>)}
         </tbody>
     </table>
 }

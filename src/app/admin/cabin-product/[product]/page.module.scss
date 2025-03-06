@@ -1,9 +1,5 @@
 @use "@/styles/ohma";
 
-.table {
-    @include ohma.table();
-}
-
 .infoDiv {
     p {
         margin-top: 1rem;

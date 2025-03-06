@@ -5,8 +5,9 @@ import { readCabinProductAction } from '@/actions/cabin'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
-import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
+import SimpleTable from '@/app/_components/Table/SimpleTable'
+import { displayPrice } from '@/lib/money/convert'
 
 export default async function CabinProduct({
     params,
@@ -42,25 +43,21 @@ export default async function CabinProduct({
 
         </div>
 
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    <th>Beskrivelse</th>
-                    <th>Pris</th>
-                    <th>Gyldig fra</th>
-                    <th>Gruppe id</th>
-                    <th>Cron intervall</th>
-                </tr>
-            </thead>
-            <tbody>
-                {product.CabinProductPrice.map(priceObject => <tr key={uuid()}>
-                    <td>{priceObject.description}</td>
-                    <td>{priceObject.price}</td>
-                    <td>{displayDate(priceObject.validFrom, false)}</td>
-                    <td>{priceObject.groupId}</td>
-                    <td>{priceObject.cronInterval}</td>
-                </tr>)}
-            </tbody>
-        </table>
+        <SimpleTable
+            header={[
+                'Beskrivelse',
+                'Pris',
+                'gyldig fra',
+                'Gruppe id',
+                'Cron intervall'
+            ]}
+            body={product.CabinProductPrice.map(priceObj => [
+                priceObj.description,
+                displayPrice(priceObj.price),
+                displayDate(priceObj.validFrom, false),
+                priceObj.groupId?.toString() ?? '',
+                priceObj.cronInterval ?? '',
+            ])}
+        />
     </PageWrapper>
 }
