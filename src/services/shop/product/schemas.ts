@@ -1,3 +1,4 @@
+import { zpn } from '@/lib/fields/zpn'
 import { convertPrice } from '@/lib/money/convert'
 import { z } from 'zod'
 
@@ -8,7 +9,7 @@ export namespace ProductSchemas {
         description: z.string(),
         price: z.coerce.number().int().min(1).transform((val) => convertPrice(val)),
         barcode: z.string().or(z.number()).optional(),
-        active: z.boolean().or(z.enum(['on'])).optional().transform((val) => val === 'on' || val === true),
+        active: zpn.checkboxOrBoolean({ label: 'Active' }),
         productId: z.coerce.number().int(),
     })
 
