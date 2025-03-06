@@ -1,14 +1,17 @@
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
+import { zpn } from '@/lib/fields/zpn'
 
 export namespace JobAdSchemas {
     const fields = z.object({
-        companyId: z.number().int().positive().int(),
+        companyId: z.coerce.number({
+            errorMap: () => ({ message: 'Velg en bedrift' }),
+        }).int().positive().int(),
         articleName: z.string().max(50, 'max lengde 50').min(2, 'min lengde 2'),
         description: z.string().max(200, 'max lengde 200').min(2, 'min lengde 2').or(z.literal('')),
         type: z.nativeEnum(JobType),
         applicationDeadline: z.coerce.date().optional(),
-        active: z.boolean(),
+        active: zpn.checkboxOrBoolean({ label: 'Aktiv' }),
         location: z.string().optional(),
     })
     export const create = fields.pick({
