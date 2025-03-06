@@ -1,9 +1,10 @@
-import { Session } from "@/auth/Session";
-import { createApiKey } from "@/services/api-keys/create";
-import { readApiKey } from "@/services/api-keys/read";
-import { updateApiKey } from "@/services/api-keys/update";
-import { Smorekopp } from "@/services/error";
-import { afterEach, describe, expect, test } from "@jest/globals";
+import { Session } from '@/auth/Session'
+import { createApiKey } from '@/services/api-keys/create'
+import { readApiKey } from '@/services/api-keys/read'
+import { updateApiKey } from '@/services/api-keys/update'
+import { Smorekopp } from '@/services/error'
+import prisma from '@/prisma'
+import { afterEach, describe, expect, test } from '@jest/globals'
 
 afterEach(async () => {
     await prisma.apiKey.deleteMany()
@@ -67,8 +68,8 @@ describe('api keys', () => {
             session: null,
         })
         expect(createdApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
-        expect(await prisma.apiKey.count()).toEqual(0);
- 
+        expect(await prisma.apiKey.count()).toEqual(0)
+
         const readApiKeyPromise = readApiKey.newClient().execute({
             params: 1,
             session: null,
