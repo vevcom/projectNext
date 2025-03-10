@@ -10,7 +10,7 @@ import Checkbox from '@/app/_components/UI/Checkbox'
 import { useUser } from '@/auth/useUser'
 import { createCabinBookinUserAttachedAction } from '@/actions/cabin'
 import { getZodDateString } from '@/lib/dates/formatting'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
@@ -35,7 +35,7 @@ export default function StateWrapper({
 
     const user = useUser()
 
-    return <>
+    const calendar = useMemo(() => (
         <CabinCalendar
             startDate={new Date()}
             bookingUntil={releaseUntil}
@@ -43,14 +43,26 @@ export default function StateWrapper({
             intervalChangeCallback={setDateRange}
             bookings={cabinAvailability}
         />
+    ), [cabinAvailability, releaseUntil, dateRange])
+
+    const priceCalculator = useMemo(() => (
+        <CabinPriceCalculator
+            product={selectedProduct}
+            startDate={dateRange.start}
+            endDate={dateRange.end}
+        />
+    ), [selectedProduct, dateRange])
+
+    return <>
+        { calendar }
 
         <Form
             action={createCabinBookinUserAttachedAction.bind(null, { userId: user.user?.id ?? -1 })}
             submitText="Book hytta"
         >
-            <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} />
-            <input type="hidden" name="end" value={getZodDateString(dateRange.end) ?? ''} />
-            <input type="hidden" name="type" value={bookingType} />
+            <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} readOnly />
+            <input type="hidden" name="end" value={getZodDateString(dateRange.end) ?? ''} readOnly />
+            <input type="hidden" name="type" value={bookingType} readOnly />
 
             <RadioLarge
                 name="Select type"
@@ -64,23 +76,46 @@ export default function StateWrapper({
                         label: 'Enkelt seng'
                     }
                 ]}
-                defaultValue={bookingType}
-                onChange={setBookingType}
+                value={bookingType}
+                onChange={(newType) => {
+                    setBookingType(newType)
+                    const newProduct = cabinProducts.find(product => product.type === newType)
+                    if (newProduct) {
+                        setSelectedProduct(newProduct)
+                    }
+                }}
             />
 
             <SelectCabinProduct
                 type={bookingType}
                 value={selectedProduct}
                 cabinProducts={cabinProducts}
-                callback={setSelectedProduct}
+                onChange={setSelectedProduct}
             />
 
-            {selectedProduct?.name}
+            { priceCalculator }
 
-
-            <TextInput name="firstname" label="Fornavn" value={user.user?.firstname} disabled={!!user.user} />
-            <TextInput name="lastnamee" label="Etternavn" value={user.user?.lastname} disabled={!!user.user} />
-            <TextInput name="mobile" label="Telefonnummer" value={user.user?.mobile ?? undefined} disabled={!!user.user} />
+            <TextInput
+                name="firstname"
+                label="Fornavn"
+                defaultValue={user.user?.firstname ?? ''}
+                disabled={!!user.user}
+                readOnly={!!user.user}
+            />
+            <TextInput
+                name="lastname"
+                label="Etternavn"
+                defaultValue={user.user?.lastname ?? ''}
+                disabled={!!user.user}
+                readOnly={!!user.user}
+            />
+            <TextInput
+                name="mobile"
+                label="Telefonnummer"
+                defaultValue={user.user?.mobile ?? ''}
+                disabled={!!user.user}
+                readOnly={!!user.user}
+            />
 
             <NumberInput name="memberParticipant" label="Antall som er medlem i Omega" defaultValue={0} />
             <NumberInput name="ExternalParticipant" label="Antall som ikke er medlem i Omega" defaultValue={0} />
@@ -90,12 +125,6 @@ export default function StateWrapper({
             <Checkbox name="acceptedTerms" label="Jeg godtar vilkårene under" />
 
         </Form>
-
-        <CabinPriceCalculator
-            dateRange={dateRange}
-            type={bookingType}
-            cabinProducts={cabinProducts}
-        />
 
     </>
 }

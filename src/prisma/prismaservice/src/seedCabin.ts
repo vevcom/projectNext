@@ -10,21 +10,21 @@ export default async function seedCabin(prisma: PrismaClient) {
             type: 'CABIN',
             CabinProductPrice: [
                 {
-                    description: 'Man-Fre',
-                    cronInterval: '* * 1-5',
+                    description: 'Søn-Tors',
+                    cronInterval: '* * 0-4',
                     price: 100000,
                     validFrom: new Date(),
                 },
                 {
                     description: 'Helg',
-                    cronInterval: '* * 0,6',
+                    cronInterval: '* * 5-6',
                     price: 235000,
                     validFrom: new Date(),
                 },
             ]
         },
         {
-            name: 'seng (120cm)',
+            name: 'Seng (120cm)',
             amount: 3,
             type: 'BED',
             CabinProductPrice: [{

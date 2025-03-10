@@ -6,12 +6,12 @@ import type { BookingType } from '@prisma/client'
 export default function SelectCabinProduct({
     cabinProducts,
     type,
-    callback,
+    onChange,
     value,
 }: {
     cabinProducts: CabinProductConfig.CabinProductExtended[],
     type: BookingType,
-    callback: (product: CabinProductConfig.CabinProductExtended) => void
+    onChange: (product: CabinProductConfig.CabinProductExtended) => void
     value?: CabinProductConfig.CabinProductExtended,
 }) {
     const relevantProducts = cabinProducts.filter(product => product.type === type)
@@ -23,7 +23,6 @@ export default function SelectCabinProduct({
     }
 
     if (relevantProducts.length === 1) {
-        callback(relevantProducts[0])
         return <></>
     }
 
@@ -31,7 +30,6 @@ export default function SelectCabinProduct({
     if (value) {
         indexOfValue = relevantProducts.map(product => product.id).indexOf(value.id)
         if (indexOfValue === -1) {
-            callback(relevantProducts[0])
             return <></>
         }
     }
@@ -42,9 +40,9 @@ export default function SelectCabinProduct({
             label: product.name,
             value: i
         }))}
-        defaultValue={indexOfValue}
+        value={indexOfValue}
         onChange={(index) => {
-            callback(relevantProducts[index])
+            onChange(relevantProducts[index])
         }}
     />
 }

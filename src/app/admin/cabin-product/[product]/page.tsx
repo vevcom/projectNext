@@ -29,11 +29,11 @@ export default async function CabinProduct({
             <p>kanskje en måte å redigere på som en HeaderItem?</p>
 
             <p>
-                Lurer du på hva Cron er?
-                Det brukes for å angi generelle tidsintervaller.
-                For å enkelt forstå den besøk <Link href="https://crontab.guru/">crontab.guru</Link>.
-                Siden tidspunkter ikke har noe å si,
-                ser vi bare på de tre siste uttrykkene (day of month, month, day fo week)
+                Her bruker vi en egen syntax til å skrive et tidsintervall en pris er gyldig i.
+                Syntax er inspirert fra Cron, der vi kun inkluderer de siste tre delene for å holde oss til datoer.
+                For å lese mer se her:  <Link href="https://crontab.guru/">crontab.guru</Link>.
+                Siden vi har implemtert denne parsingen selv, er syntace litt begrenset.
+                De tre feltene som vi har implementert er (<i>day of month</i>, <i>month</i>, <i>day of week</i>).
             </p>
 
             <p>

@@ -1,7 +1,6 @@
 
 import styles from './SimpleTable.module.scss'
 import Link from 'next/link'
-import { v4 as uuid } from 'uuid'
 
 export default function SimpleTable<T extends string[]>({
     header,
@@ -15,17 +14,17 @@ export default function SimpleTable<T extends string[]>({
     return <table className={styles.table}>
         <thead>
             <tr>
-                {header.map(item => <th key={uuid()}>{item}</th>)}
+                {header.map((item, i) => <th key={i}>{item}</th>)}
             </tr>
         </thead>
         <tbody>
-            {links ? body.map((row, i) => <Link key={uuid()} href={links[i]}>
+            {links ? body.map((row, i) => <Link key={i} href={links[i]}>
                 <tr>
-                    {row.map(item => <td key={uuid()}>{item}</td>)}
+                    {row.map((item, j) => <td key={j}>{item}</td>)}
                 </tr>
             </Link>
-            ) : body.map(row => <tr key={uuid()}>
-                {row.map(item => <td key={uuid()}>{item}</td>)}
+            ) : body.map((row, i) => <tr key={i}>
+                {row.map((item, j) => <td key={j}>{item}</td>)}
             </tr>)}
         </tbody>
     </table>

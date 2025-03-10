@@ -1,3 +1,4 @@
+import { convertPrice } from '@/lib/money/convert'
 import { BookingType } from '@prisma/client'
 import { z } from 'zod'
 
@@ -8,8 +9,8 @@ export namespace CabinProductSchemas {
         amount: z.coerce.number().int().min(0),
         name: z.string().min(5),
         description: z.string().min(2).max(20),
-        price: z.coerce.number().min(0),
-        validFrom: z.date(),
+        price: z.coerce.number().min(0).transform((val) => convertPrice(val)),
+        validFrom: z.coerce.date(),
         cronInterval: z.string().optional(),
     })
 
