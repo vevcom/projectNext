@@ -92,7 +92,7 @@ export namespace CabinBookingMethods {
                             id: params.userId,
                         },
                     },
-                    type: 'CABIN',
+                    type: data.type,
                     start: data.start,
                     end: data.end,
                     tenantNotes: data.tenantNotes,

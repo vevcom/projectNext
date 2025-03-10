@@ -1,5 +1,5 @@
 'use client'
-import { createCabinProductpriceAction } from '@/actions/cabin'
+import { createCabinProductPriceAction } from '@/actions/cabin'
 import Form from '@/app/_components/Form/Form'
 import DateInput from '@/app/_components/UI/DateInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
@@ -12,7 +12,7 @@ export function UpdateCabinProductPriceForm({
     productId: number
 }) {
     return <Form
-        action={createCabinProductpriceAction.bind(null, { cabinProductId: productId })}
+        action={createCabinProductPriceAction.bind(null, { cabinProductId: productId })}
         submitText="Legg til pris"
     >
         <TextInput name="description" label="Beskrivelse" />

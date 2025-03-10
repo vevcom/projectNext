@@ -2,7 +2,7 @@ import styles from './RadioLarge.module.scss'
 import { v4 as uuid } from 'uuid'
 
 
-export default function RadioLarge<ValueType extends string>({
+export default function RadioLarge<ValueType extends number | string>({
     name,
     options,
     defaultValue,

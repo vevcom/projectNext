@@ -5,9 +5,9 @@ import { readCabinProductAction } from '@/actions/cabin'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
-import Link from 'next/link'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { displayPrice } from '@/lib/money/convert'
+import Link from 'next/link'
 
 export default async function CabinProduct({
     params,

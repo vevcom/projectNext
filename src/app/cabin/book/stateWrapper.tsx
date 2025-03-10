@@ -1,6 +1,7 @@
 'use client'
 
 import CabinCalendar from './CabinCalendar'
+import CabinPriceCalculator from './CabinPriceCalculator'
 import RadioLarge from '@/app/_components/UI/RadioLarge'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
@@ -10,22 +11,27 @@ import { useUser } from '@/auth/useUser'
 import { createCabinBookinUserAttachedAction } from '@/actions/cabin'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useState } from 'react'
+import type { CabinProductConfig } from '@/services/cabin/product/config'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType } from '@prisma/client'
+import SelectCabinProduct from './SelectCabinProduct'
 
 export default function StateWrapper({
     cabinAvailability,
     releaseUntil,
+    cabinProducts,
 }: {
     cabinAvailability: BookingFiltered[],
     releaseUntil: Date,
+    cabinProducts: CabinProductConfig.CabinProductExtended[],
 }) {
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
 
     const [bookingType, setBookingType] = useState<BookingType>('CABIN')
     const [dateRange, setDateRange] = useState<DateRange>({})
+    const [selectedProduct, setSelectedProduct] = useState<CabinProductConfig.CabinProductExtended | undefined>()
 
     const user = useUser()
 
@@ -44,6 +50,7 @@ export default function StateWrapper({
         >
             <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} />
             <input type="hidden" name="end" value={getZodDateString(dateRange.end) ?? ''} />
+            <input type="hidden" name="type" value={bookingType} />
 
             <RadioLarge
                 name="Select type"
@@ -61,9 +68,15 @@ export default function StateWrapper({
                 onChange={setBookingType}
             />
 
-            {bookingType === 'BED' && <>
-                Bred og god 120 seng eller smal køyeseng???? Her må man kunne velge flere.
-            </>}
+            <SelectCabinProduct
+                type={bookingType}
+                value={selectedProduct}
+                cabinProducts={cabinProducts}
+                callback={setSelectedProduct}
+            />
+
+            {selectedProduct?.name}
+
 
             <TextInput name="firstname" label="Fornavn" value={user.user?.firstname} disabled={!!user.user} />
             <TextInput name="lastnamee" label="Etternavn" value={user.user?.lastname} disabled={!!user.user} />
@@ -77,6 +90,12 @@ export default function StateWrapper({
             <Checkbox name="acceptedTerms" label="Jeg godtar vilkårene under" />
 
         </Form>
+
+        <CabinPriceCalculator
+            dateRange={dateRange}
+            type={bookingType}
+            cabinProducts={cabinProducts}
+        />
 
     </>
 }

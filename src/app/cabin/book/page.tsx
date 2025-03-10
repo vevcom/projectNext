@@ -2,7 +2,7 @@ import StateWrapper from './stateWrapper'
 import SpecialCmsParagraph from '@/app/_components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readCabinAvailabilityAction, readReleasePeriodsAction } from '@/actions/cabin'
+import { readCabinAvailabilityAction, readCabinProductsAction, readReleasePeriodsAction } from '@/actions/cabin'
 import type { ReleasePeriod } from '@prisma/client'
 import { displayDate } from '@/lib/dates/displayDate'
 
@@ -31,6 +31,7 @@ export default async function CabinBooking() {
     const releasePeriods = unwrapActionReturn(await readReleasePeriodsAction())
     const releaseUntil = findCurrentReleasePeriod(releasePeriods)
     const nextReleasePeriod = findNextReleasePeriod(releasePeriods)
+    const cabinProducts = unwrapActionReturn(await readCabinProductsAction())
     return <PageWrapper
         title="Heutte Booking"
     >
@@ -40,7 +41,11 @@ export default async function CabinBooking() {
                 da slippes bookinger fram til {displayDate(nextReleasePeriod.releaseUntil, false)}
             </p>
         }
-        <StateWrapper cabinAvailability={cabinAvailability} releaseUntil={releaseUntil} />
+        <StateWrapper
+            cabinAvailability={cabinAvailability}
+            releaseUntil={releaseUntil}
+            cabinProducts={cabinProducts}
+        />
 
         <SpecialCmsParagraph special="CABIN_CONTRACT" />
     </PageWrapper>
