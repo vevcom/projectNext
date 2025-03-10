@@ -10,6 +10,8 @@ type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | '
 }
 
 /**
+ * If no value is given, i.e. it is just one on/off checkbox. The SelectAsCheckbox component is used
+ * so that the checkbox submits 'off' and not undefined when not checked.
  * @param label - The label shown to user (optional)
  * @param children - If given, the children will be clickable as part of checkbox
  * @returns
@@ -22,13 +24,19 @@ function Checkbox({ label, children, ...props }: PropTypes) {
             {
                 children ? (
                     <label className={styles.inputAndChildren}>
-                        <SelectAsCheckbox id={inputId} {...props} />
+                        {props.value === undefined ? 
+                          <SelectAsCheckbox id={inputId} {...props} /> 
+                          : <input id={inputId} {...props} type="checkbox" />
+                        }
                         { children }
                         {label ? label : <></>}
                     </label>
                 ) : (
                     <>
-                        <SelectAsCheckbox id={inputId} {...props} />
+                        {props.value === undefined ? 
+                          <SelectAsCheckbox id={inputId} {...props} /> 
+                          : <input id={inputId} {...props} type="checkbox" />
+                        }
                         {label && <label htmlFor={inputId}>{ label }</label>}
                     </>
                 )
