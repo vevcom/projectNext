@@ -1,6 +1,5 @@
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { displayPrice } from '@/lib/money/convert'
-import { useMemo } from 'react'
 import type { Record } from '@prisma/client/runtime/library'
 import type { CabinProductPrice } from '@prisma/client'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
@@ -45,7 +44,6 @@ function createArrayFromRange(start: number, end: number) {
 }
 
 function numberInCronExpression(number: number, cronExpressionPart: string) {
-    console.log('CRON PART PARSING:', number, cronExpressionPart)
     // I guess the cron is parsed in this order: comma, step, range
     const commaSplit = cronExpressionPart.split(',')
 
@@ -78,10 +76,8 @@ function numberInCronExpression(number: number, cronExpressionPart: string) {
         if (parts.length > 2) {
             throw new Error('The cron expression is invalid. Containing an invalid /')
         }
-        console.log('Commapart', commaPart)
 
         let result = parseCronRange(parts[0])
-        console.log('Range result', result)
 
         if (parts.length === 2) {
             const divisor = parseInt(parts[1], 10)
@@ -98,7 +94,6 @@ function numberInCronExpression(number: number, cronExpressionPart: string) {
 function dateMatchCron(day: Date, cronExpression: string) {
     // Croninterval syntac: (day of month, month, day of week)
     const cronParsed = divideCronString(cronExpression)
-    console.log('Cronparsed: ', cronParsed)
 
     if (!numberInCronExpression(day.getUTCDate(), cronParsed[0])) return false
     if (!numberInCronExpression(day.getUTCMonth() + 1, cronParsed[1])) return false
@@ -106,15 +101,17 @@ function dateMatchCron(day: Date, cronExpression: string) {
     return true
 }
 
-function matchPriceForDay(day: Date, prices: CabinProductPrice[]) {
+function matchPriceForDay(day: Date, omegaShare: number, prices: CabinProductPrice[]) {
     const filtered = prices.filter(price => {
         if (price.validFrom > day) {
-            console.log('Price is not valid yet')
+            return false
+        }
+
+        if (price.omegaShare > omegaShare) {
             return false
         }
 
         if (!dateMatchCron(day, price.cronInterval)) {
-            console.log('Price does not match cron', price.cronInterval)
             return false
         }
 
@@ -122,9 +119,6 @@ function matchPriceForDay(day: Date, prices: CabinProductPrice[]) {
     })
 
     if (filtered.length === 0) {
-        console.log('ERROR LOOOG')
-        console.log(prices.length)
-        console.log(prices)
         throw new Error(`No available price for the day ${day}`)
     }
 
@@ -133,14 +127,23 @@ function matchPriceForDay(day: Date, prices: CabinProductPrice[]) {
     return sorted[0]
 }
 
-function findPrices(startDate: Date, endDate: Date, product: CabinProductConfig.CabinProductExtended) {
+function findPrices(
+    startDate: Date,
+    endDate: Date,
+    numberOfMembers: number,
+    numberOfNonMembers: number,
+    product: CabinProductConfig.CabinProductExtended
+) {
     const dateArray = getDateArray(startDate, endDate)
+    let omegaShare = Math.ceil(numberOfMembers / (numberOfMembers + numberOfNonMembers) * 100)
+    if (isNaN(omegaShare)) {
+        omegaShare = 0
+    }
 
     const pricesHistogram: Record<number, number> = {}
 
     for (const day of dateArray) {
-        console.log('MATCHING PRICE FOR DAY', day)
-        const price = matchPriceForDay(day, product.CabinProductPrice)
+        const price = matchPriceForDay(day, omegaShare, product.CabinProductPrice)
         if (pricesHistogram[price.id] === undefined) {
             pricesHistogram[price.id] = 0
         }
@@ -154,22 +157,20 @@ export default function CabinPriceCalculator({
     product,
     startDate,
     endDate,
+    numberOfMembers,
+    numberOfNonMembers,
 }: {
     product?: CabinProductConfig.CabinProductExtended,
     startDate?: Date,
     endDate?: Date,
+    numberOfMembers: number,
+    numberOfNonMembers: number,
 }) {
-    console.log(product)
-    console.log(startDate)
-    console.log(endDate)
-
-    console.log('Hei')
-
     let priceHist: Record<number, number> = {}
     let totalPrice = 0
 
     if (product && startDate && endDate) {
-        priceHist = findPrices(startDate, endDate, product)
+        priceHist = findPrices(startDate, endDate, numberOfMembers, numberOfNonMembers, product)
 
         totalPrice = Object.entries(priceHist).reduce((acc, [priceId, count]) => {
             const price = product.CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))
@@ -177,6 +178,10 @@ export default function CabinPriceCalculator({
 
             return acc + price.price * count
         }, 0)
+
+        if (product.type === 'BED') {
+            totalPrice *= (numberOfMembers + numberOfNonMembers)
+        }
     }
 
     return <div>
@@ -197,6 +202,9 @@ export default function CabinPriceCalculator({
                 ]
             })}
         />
+        {product?.type === 'BED' &&
+            <p>Antall personer {numberOfMembers + numberOfNonMembers}, tabellen over gjelder per person.</p>
+        }
         <p>Total pris {displayPrice(totalPrice)}</p>
     </div>
 }

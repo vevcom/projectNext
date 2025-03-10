@@ -12,7 +12,8 @@ model CabinProductPrice {
   price          Int
   validFrom      DateTime     @db.Date
   cronInterval   String       @default("* * *")
-  memberGroup    Group?       @relation(fields: [groupId], references: [id])
+  omegaShare     Int
+  Group          Group?       @relation(fields: [groupId], references: [id])
   groupId        Int?
 }
 

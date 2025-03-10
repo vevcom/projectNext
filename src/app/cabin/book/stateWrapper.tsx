@@ -33,6 +33,9 @@ export default function StateWrapper({
     const [dateRange, setDateRange] = useState<DateRange>({})
     const [selectedProduct, setSelectedProduct] = useState<CabinProductConfig.CabinProductExtended | undefined>()
 
+    const [numberOfMembers, setNumberOfMembers] = useState(0)
+    const [numberOfNonMembers, setNumberOfNonMembers] = useState(0)
+
     const user = useUser()
 
     const calendar = useMemo(() => (
@@ -50,8 +53,10 @@ export default function StateWrapper({
             product={selectedProduct}
             startDate={dateRange.start}
             endDate={dateRange.end}
+            numberOfMembers={numberOfMembers}
+            numberOfNonMembers={numberOfNonMembers}
         />
-    ), [selectedProduct, dateRange])
+    ), [selectedProduct, dateRange, numberOfMembers, numberOfNonMembers])
 
     return <>
         { calendar }
@@ -117,8 +122,28 @@ export default function StateWrapper({
                 readOnly={!!user.user}
             />
 
-            <NumberInput name="memberParticipant" label="Antall som er medlem i Omega" defaultValue={0} />
-            <NumberInput name="ExternalParticipant" label="Antall som ikke er medlem i Omega" defaultValue={0} />
+            <NumberInput
+                name="memberParticipant"
+                label="Antall som er medlem i Omega"
+                value={numberOfMembers}
+                onChange={(e) => {
+                    const value = Number(e.target.value)
+                    if (value >= 0) {
+                        setNumberOfMembers(value)
+                    }
+                }}
+            />
+            <NumberInput
+                name="ExternalParticipant"
+                label="Antall som ikke er medlem i Omega"
+                value={numberOfNonMembers}
+                onChange={(e) => {
+                    const value = Number(e.target.value)
+                    if (value >= 0) {
+                        setNumberOfNonMembers(value)
+                    }
+                }}
+            />
 
             <TextInput name="tenantNotes" label="Notater til utleier" />
 
