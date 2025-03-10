@@ -14,7 +14,6 @@ export type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'na
  * as checkboxes do in html.
  * It also does not show the select input to the user
  * It also does submit the checkbox, but under the name name + 'Checkbox'
- * @returns 
  */
 export default function SelectAsCheckbox({ name, children, ...props }: PropTypes) {
     const selectRef = useRef<HTMLSelectElement | null>(null)
@@ -34,6 +33,12 @@ export default function SelectAsCheckbox({ name, children, ...props }: PropTypes
         }
     }, [props.checked, selectRef])
 
+    useEffect(() => {
+        if (selectRef.current) {
+            selectRef.current.value = props.defaultChecked ? 'on' : 'off'
+        }
+    }, [props.defaultChecked, selectRef])
+
     return (
         <>
             <input 
@@ -44,9 +49,9 @@ export default function SelectAsCheckbox({ name, children, ...props }: PropTypes
                 onChange={handleChange} 
             />
             {children}
-            <select ref={selectRef} name={name} className={styles.hiddenSelect}>
-                <option value="on" />
-                <option value="off" />
+            <select defaultValue={props.defaultChecked ? 'on' : 'off'}  ref={selectRef} name={name} className={styles.hiddenSelect}>
+                <option value="on" >on</option>
+                <option value="off" >off</option>
             </select>
         </>
     )
