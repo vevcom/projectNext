@@ -104,7 +104,7 @@ export default async function User({ params }: PropTypes) {
                         <div className={styles.buttons}>
                             {canAdministrate && <Link href={`/users/${profile.user.username}/settings`}>
                                 <BorderButton color="secondary">
-                                    <p>Instillinger</p>
+                                    <p>Innstillinger</p>
                                 </BorderButton>
                             </Link>}
                             {profile.user.id === session?.user?.id && (
@@ -113,10 +113,8 @@ export default async function User({ params }: PropTypes) {
                                         <p>Logg ut</p>
                                     </BorderButton>
                                 </Link>
-                            )
-                            }
+                            )}
                         </div>
-
                     </div>
                     <div className={styles.profileMain}>
                         {(profile.user.bio !== '') &&

@@ -33,6 +33,8 @@
     "@prisma/client": "^6.1.0",
     "@react-email/components": "^0.0.31",
     "@react-email/render": "^1.0.3",
+    "@stripe/react-stripe-js": "^3.3.0",
+    "@stripe/stripe-js": "^5.9.2",
     "bcrypt": "^5.1.1",
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.2",
