@@ -54,13 +54,13 @@ export default function UserNavigation({ profile }: PropTypes) {
                     <FontAwesomeIcon icon={faQrcode} />
                     <p>OmegaId</p>
                 </Link>
-                <Link href="/users/me/money">
+                <Link href="/users/me/account">
                     <FontAwesomeIcon icon={faMoneyBill} />
                     <p>Konto</p>
                 </Link>
                 <Link href="/users/me/settings">
                     <FontAwesomeIcon icon={faCog} />
-                    <p>Instillinger</p>
+                    <p>Innstillinger</p>
                 </Link>
             </div>
         </div>

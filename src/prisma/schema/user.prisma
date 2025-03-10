@@ -27,6 +27,7 @@ model User {
   memberships       Membership[]
   credentials       Credentials?
   feideAccount      FeideAccount?
+  ledgerAccount     LedgerAccount?
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]

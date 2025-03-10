@@ -1,0 +1,41 @@
+enum LedgerAccountType {
+  USER
+  GROUP
+}
+
+model LedgerAccount {
+  id                  Int           @id @default(autoincrement())
+  user                User?         @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  userId              Int?          @unique
+  group               Group?        @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  groupId             Int?          @unique
+  type                LedgerAccountType
+  payoutAccountNumber String? // For display only
+  inTransactions      Transaction[] @relation("TransactionToAccount")
+  outTransactions     Transaction[] @relation("TransactionFromAccount")
+  // products            Product[]
+}
+
+enum TransactionType {
+  DEPOSIT
+  PURCHASE
+  REFUND
+  PAYOUT
+}
+
+model Transaction {
+  id            Int      @id @default(autoincrement())
+  amount        Decimal
+  fromAccount   LedgerAccount? @relation(fields: [fromAccountId], references: [id], name: "TransactionFromAccount", onDelete: Restrict, onUpdate: Cascade)
+  fromAccountId Int?
+  toAccount     LedgerAccount? @relation(fields: [toAccountId], references: [id], name: "TransactionToAccount", onDelete: Restrict, onUpdate: Cascade)
+  toAccountId   Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  transactionType TransactionType
+  // deposit         Deposit?
+  // purchases       Purchase[]
+  // refunds         Refund[]
+  // payout          Payout?
+}
