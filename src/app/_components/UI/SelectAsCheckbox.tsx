@@ -23,6 +23,7 @@ export default function SelectAsCheckbox({ name, children, ...props }: PropTypes
      * Make sure the select is kept up to date with the checkbox
      */
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        props.onChange?.(e)
         const select = e.target.checked ? 'on' : 'off'
         if (selectRef.current) selectRef.current.value = select
     }, [selectRef])
