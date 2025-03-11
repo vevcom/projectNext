@@ -1,6 +1,6 @@
 "use server"
 
 import { action } from "@/actions/action";
-import { Deposits } from "@/services/ledger/transactions/deposits/methods";
+import { DepositMethods } from "@/services/ledger/transactions/deposits/methods";
 
-export const createDeposit = action(Deposits.create)
+export const createDeposit = action(DepositMethods.create)

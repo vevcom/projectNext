@@ -3,7 +3,7 @@ import { ServiceMethod } from "@/services/ServiceMethod";
 import { z } from "zod";
 import { createDepositValidation } from "./validation";
 
-export namespace Deposits {
+export namespace DepositMethods {
     export const create = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({

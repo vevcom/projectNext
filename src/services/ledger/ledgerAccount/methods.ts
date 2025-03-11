@@ -5,7 +5,7 @@ import { ServerError } from "@/services/error";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 
-export namespace LedgerAccount {
+export namespace LedgerAccountMethods {
     /**
      * Creates a new ledger account for given user or group.
      * 
@@ -110,7 +110,7 @@ export namespace LedgerAccount {
                     },
                     where,
                 })
-                return result._sum.amount ?? new Prisma.Decimal(0)
+                return result._sum.amount ?? 0
             }
     
             const [totalIn, totalOut] = await Promise.all([
@@ -118,7 +118,7 @@ export namespace LedgerAccount {
                 sumTransactions({ fromAccountId: params.id }),
             ])
 
-            return totalIn.minus(totalOut)
+            return (totalIn - totalOut) / 100
         }
     })
 }

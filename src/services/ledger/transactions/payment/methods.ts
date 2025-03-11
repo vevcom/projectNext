@@ -1,31 +1,36 @@
 import { RequireNothing } from "@/auth/auther/RequireNothing";
 import { ServiceMethod } from "@/services/ServiceMethod";
 import { z } from "zod";
-import { createPayoutValidation } from "./validation";
-import { LedgerAccountMethods } from "../../ledgerAccount/methods";
+import { LedgerAccountMethods } from "@/services/ledger/ledgerAccount/methods";
 import { ServerError } from "@/services/error";
+import { createPaymentValidation } from "./validation";
 
-export namespace PayoutMethods {
+export namespace PaymentMethods {
     export const create = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
-            accountId: z.number(),
+            fromAccountId: z.number(),
         }),
-        dataValidation: createPayoutValidation,
+        dataValidation: createPaymentValidation,
         opensTransaction: true,
         method: async ({ prisma, session, params, data }) => {
+            if (params.fromAccountId === data.toAccountId) {
+                throw new ServerError('BAD DATA', 'Overføring til samme konto er ikke tillat.')
+            }
+
             return prisma.$transaction(async (tx) => {
-                const payout = await tx.transaction.create({
+                await tx.transaction.create({
                     data: {
-                        transactionType: 'PAYOUT',
-                        fromAccountId: params.accountId,
+                        transactionType: 'PAYMENT',
+                        fromAccountId: params.fromAccountId,
+                        toAccountId: data.toAccountId,
                         amount: data.amount,
-                    }
+                    },
                 })
 
                 const newBalancee = await LedgerAccountMethods.calculateBalance.client(tx).execute({
                     params: {
-                        id: params.accountId,
+                        id: params.fromAccountId,
                     },
                     session,
                 })
