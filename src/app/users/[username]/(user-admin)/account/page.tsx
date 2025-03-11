@@ -1,8 +1,10 @@
 import { bindParams } from "@/actions/bind"
 import { calculateLedgerAccountBalance, readLedgerAccount } from "@/actions/ledger/ledgerAccount"
 import { createDeposit } from "@/actions/ledger/transactions/deposits"
+import { createPayment } from "@/actions/ledger/transactions/payments"
 import { createPayout } from "@/actions/ledger/transactions/payouts"
 import Form from "@/app/_components/Form/Form"
+import NumberInput from "@/app/_components/UI/NumberInput"
 import TextInput from "@/app/_components/UI/TextInput"
 import { unwrapActionReturn } from "@/app/redirectToErrorPage"
 import { getUser } from "@/auth/getUser"
@@ -39,16 +41,22 @@ export default async function Account() {
 
     return <div>
         <h2>Konto</h2>
-        <p>Balanse: <b>{balance}</b> kluengede muent</p>
+        <p>Balanse: <b>{balance.toFixed(2)}</b> kluengede muent</p>
         <br />
         <h3>Innskudd</h3>
-        <Form action={bindParams(createDeposit, { accountId: account.id })}>
-            <TextInput label="Sum" name="amount"/>
+        <Form refreshOnSuccess={true} submitText="Sett inn" action={bindParams(createDeposit, { accountId: account.id })}>
+            <NumberInput label="Sum" name="amount" min="0"/>
+        </Form>
+        <br />
+        <h3>Betaling</h3>
+        <Form refreshOnSuccess={true} submitText="Sett inn" action={bindParams(createPayment, { fromAccountId: account.id })}>
+            <NumberInput label="Sum" name="amount" min="0"/>
+            <NumberInput label="Målkonto" name="toAccountId" min="0"/>
         </Form>
         <br />
         <h3>Utbetaling</h3>
-        <Form action={bindParams(createPayout, { accountId: account.id })}>
-            <TextInput label="Sum" name="amount"/>
+        <Form refreshOnSuccess={true} submitText="Utbetal" action={bindParams(createPayout, { accountId: account.id })}>
+            <NumberInput label="Sum" name="amount" min="0"/>
         </Form>
         <br />
         <h3>Transaksjoner</h3>

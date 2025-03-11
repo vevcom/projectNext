@@ -18,14 +18,14 @@ model LedgerAccount {
 
 enum TransactionType {
   DEPOSIT
-  PURCHASE
+  PAYMENT
   REFUND
   PAYOUT
 }
 
 model Transaction {
   id            Int      @id @default(autoincrement())
-  amount        Decimal
+  amount        Int // In øre
   fromAccount   LedgerAccount? @relation(fields: [fromAccountId], references: [id], name: "TransactionFromAccount", onDelete: Restrict, onUpdate: Cascade)
   fromAccountId Int?
   toAccount     LedgerAccount? @relation(fields: [toAccountId], references: [id], name: "TransactionToAccount", onDelete: Restrict, onUpdate: Cascade)
