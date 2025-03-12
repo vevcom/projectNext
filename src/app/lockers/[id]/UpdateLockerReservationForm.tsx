@@ -1,9 +1,10 @@
 'use client'
-import { updateLockerReservationAction } from '@/actions/lockers/reservations/update'
+import { updateLockerReservationAction } from '@/actions/lockers/reservations'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
+import { bindParams } from '@/actions/bind'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -29,7 +30,7 @@ export default function UpdateLockerReservationForm({ reservationId, groupsFormD
             successCallback={refresh}
             title="Oppdater skapreservasjon"
             submitText="Oppdater"
-            action={updateLockerReservationAction.bind(null, reservationId)}
+            action={bindParams(updateLockerReservationAction, { id: reservationId })}
         >
             <SelectString
                 label="Reserver for"

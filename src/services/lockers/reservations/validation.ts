@@ -2,7 +2,6 @@ import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/services/Validation'
 
-
 export const baseLockerReservationValidation = new ValidationBase({
     type: {
         groupId: z.string(),
@@ -15,7 +14,6 @@ export const baseLockerReservationValidation = new ValidationBase({
         endDate: z.date().nullable()
     }
 })
-
 
 export const lockerReservationValidation = baseLockerReservationValidation.createValidation({
     keys: [

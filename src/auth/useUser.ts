@@ -77,6 +77,9 @@ export type ClientAuthStatus = UseUserReturnType['status']
 *
 * @returns The user (always returned if `shouldRedirect` and `userRequired` is true).
 * The auth status, and if the user is authorized (i.e. if the user fufilles the given requirements)
+*
+* @deprecated - Deprecated as the new service mehtod system handles this.
+* For getting the user in the app router a utility function will be developed.
 */
 // Overloading is required here to get correct typehinting base on if required is true or false in options.
 export function useUser<UserRequired extends boolean = false>(
