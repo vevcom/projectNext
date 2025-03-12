@@ -112,7 +112,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             studentCard: 'vever',
             credentials: {
                 create: {
-                    passwordHash: 'password',
+                    passwordHash,
                 },
             },
             emailVerified: new Date(),
