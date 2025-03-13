@@ -1,6 +1,6 @@
 'use server'
 import { action } from '@/actions/action'
-import { readApiKey, readApiKeys } from '@/services/api-keys/read'
+import { ApiKeyMethods } from '@/services/api-keys/methods'
 
-export const readApiKeysAction = action(readApiKeys)
-export const readApiKeyAction = action(readApiKey)
+export const readApiKeysAction = action(ApiKeyMethods.readMany)
+export const readApiKeyAction = action(ApiKeyMethods.read)

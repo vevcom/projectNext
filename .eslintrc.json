@@ -35,6 +35,8 @@
             "error",
             "never"
         ],
+        // Allow the use of namespaces
+        "@typescript-eslint/no-namespace": "off",
         // suggest using arrow functions as callbacks
         "prefer-arrow-callback": "error",
         // suggest using template literals instead of string concatenation

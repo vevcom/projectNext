@@ -1,8 +1,8 @@
-import type { eventFieldsToExpose } from './ConfigVars'
+import type { EventConfig } from './config'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { Event, EventTag } from '@prisma/client'
 
-export type EventFiltered = Pick<Event, typeof eventFieldsToExpose[number]>
+export type EventFiltered = Pick<Event, typeof EventConfig.fieldsToExpose[number]>
 
 export type EventExpanded = EventFiltered & {
     coverImage: Pick<ExpandedCmsImage, 'image'>

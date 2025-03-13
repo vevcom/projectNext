@@ -1,11 +1,11 @@
 import 'server-only'
 import { readJWTPart } from './jwtReadUnsecure'
-import { JWT_ISSUER } from '@/auth/ConfigVars'
+import { JWT_ISSUER } from '@/jwt/ConfigVars'
 import { ServerError } from '@/services/error'
 import { JsonWebTokenError, TokenExpiredError, sign, verify } from 'jsonwebtoken'
 import type jwt from 'jsonwebtoken'
 import type { JwtPayloadType } from './validation'
-import type { OmegaJWTAudience } from '@/auth/Types'
+import type { OmegaJWTAudience } from '@/jwt/Types'
 
 
 // See https://www.rfc-editor.org/rfc/rfc7519#section-4.1 for the

@@ -1,6 +1,8 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 
-export const createLicenseAuther = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
-export const readAllLicensesAuther = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
-export const updateLicenseAuther = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
-export const destroyLicenseAuther = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
+export namespace LicenseAuthers {
+    export const create = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
+    export const read = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
+    export const update = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
+    export const destroy = RequirePermission.staticFields({ permission: 'LICENSE_ADMIN' })
+}

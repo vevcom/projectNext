@@ -6,7 +6,7 @@ import { createJobAdAction } from '@/actions/career/jobAds/create'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
-import { JobTypeOptions } from '@/services/career/jobAds/ConfigVars'
+import { JobAdConfig } from '@/services/career/jobAds/config'
 import DateInput from '@/components/UI/DateInput'
 import { v4 as uuid } from 'uuid'
 
@@ -23,7 +23,7 @@ export default function CreateJobAdForm() {
                 <TextInput label="Beskrivelse" name="description" key={uuid()}/>
                 <TextInput label="Sted" name="location" key={uuid()}/>
                 <SelectedCompany />
-                <SelectString options={JobTypeOptions} label="Type" name="type" key={uuid()}/>
+                <SelectString options={JobAdConfig.options} label="Type" name="type" key={uuid()}/>
                 <DateInput includeTime label="Søknadsfrist" name="applicationDeadline"/>
             </Form>
             <CompanyChooser className={styles.companyList} />

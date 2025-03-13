@@ -1,6 +1,5 @@
 import { ServerError } from '@/services/error'
 
-
 /**
  * This function encodes the key and id into a single string
  * This is the string that is used by clients to authenticate

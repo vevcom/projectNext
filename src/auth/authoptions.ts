@@ -6,8 +6,8 @@ import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
 import prisma from '@/prisma'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
-import { readUser } from '@/services/users/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
+import { UserMethods } from '@/services/users/methods'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
@@ -127,7 +127,11 @@ export const authOptions: AuthOptions = {
                 }
                 // Trigger is undefined for subsequent calls
                 case undefined: {
-                    const dbUser = await readUser({ id: token.user.id })
+                    const dbUser = await UserMethods.read.newClient().execute({
+                        params: { id: token.user.id },
+                        session: null,
+                        bypassAuth: true,
+                    })
 
                     // Check if the user data that is on the jwt was changed
                     // after the token was created. If so get new data from db.
@@ -161,7 +165,11 @@ export const authOptions: AuthOptions = {
 
             return {
                 provider,
-                user: await readUser({ id: userId }),
+                user: await UserMethods.read.newClient().execute({
+                    params: { id: userId },
+                    session: null,
+                    bypassAuth: true,
+                }),
                 permissions: await readPermissionsOfUser(userId),
                 memberships: await readMembershipsOfUser(userId),
             }

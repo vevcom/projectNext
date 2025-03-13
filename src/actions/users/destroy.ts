@@ -1,15 +1,11 @@
 'use server'
-import { safeServerCall } from '@/actions/safeServerCall'
-import { destroyUser } from '@/services/users/destroy'
-import type { ActionReturn } from '@/actions/Types'
-import type { User } from '@prisma/client'
+import { action } from '@/actions/action'
+import { UserMethods } from '@/services/users/methods'
 
 /**
  * Action to destroy a user by the given id
  * @param id - The id of the user to destroy
  * @returns
  */
-export async function destroyUserAction(id: number): Promise<ActionReturn<User>> {
-    return await safeServerCall(() => destroyUser(id))
-}
+export const destroyUserAction = action(UserMethods.destroy)
 

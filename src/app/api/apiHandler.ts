@@ -2,7 +2,6 @@ import 'server-only'
 import { Session } from '@/auth/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { ValidationTypeUnknown } from '@/services/Validation'
 import type { ServiceMethodType } from '@/services/ServiceMethod'
 import type { SessionNoUser } from '@/auth/Session'
 import type { z } from 'zod'
@@ -11,9 +10,9 @@ type APIHandler<
     RawParams,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
-    DataValidation extends ValidationTypeUnknown | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>,
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>,
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {
@@ -41,20 +40,18 @@ export function apiHandler<
     RawParams,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends ValidationTypeUnknown | undefined = undefined,
->({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataValidation>) {
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+>({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
     // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
-            if (serviceMethod.dataValidation) {
+            if (serviceMethod.dataSchema) {
                 try {
                     const rawdata = await req.json()
 
-                    const parse = serviceMethod.dataValidation.typeValidate(rawdata)
-                    if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.errors)
                     return serviceMethod.newClient().executeUnsafe({
                         params: params ? params(await rawParams) : undefined,
-                        data: parse.data,
+                        data: rawdata,
                         session,
                     })
                 } catch (error) {

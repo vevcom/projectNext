@@ -1,9 +1,6 @@
 import 'server-only'
-import { createZodActionError } from './error'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
-import { Smorekopp } from '@/services/error'
-import type { ExtractDetailedType, ValidationTypeUnknown } from '@/services/Validation'
 import type { ActionReturn } from './Types'
 import type { ServiceMethodType } from '@/services/ServiceMethod'
 import type { z } from 'zod'
@@ -18,13 +15,13 @@ export function action<Return, ParamsSchema extends z.ZodTypeAny>(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined>
 ): (params: z.infer<ParamsSchema>) => Promise<ActionReturn<Return>>
 
-export function action<Return, DataValidation extends ValidationTypeUnknown>(
-    serviceMethod: ServiceMethodType<boolean, Return, undefined, DataValidation>
-): (data: ExtractDetailedType<DataValidation> | FormData) => Promise<ActionReturn<Return>>
+export function action<Return, DataSchema extends z.ZodTypeAny | undefined>(
+    serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema>
+): (data: z.infer<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataValidation extends ValidationTypeUnknown>(
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>
-): (params: z.infer<ParamsSchema>, data: ExtractDetailedType<DataValidation> | FormData) => Promise<ActionReturn<Return>>
+export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny | undefined>(
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>
+): (params: z.infer<ParamsSchema>, data: z.infer<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
 
 /**
  * Turn a service method into suitable function for an action.
@@ -35,9 +32,9 @@ export function action<Return, ParamsSchema extends z.ZodTypeAny, DataValidation
 export function action<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataValidation extends ValidationTypeUnknown | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined
 >(
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataValidation>
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>
 ) {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service method will validate the parameter and data before it is used.
@@ -52,17 +49,6 @@ export function action<
         // a FormData instance, even if no data is being sent.
         if (data instanceof FormData && data.entries().next().done) {
             data = undefined
-        }
-
-        // Validate data if it's present.
-        if (data) {
-            if (!serviceMethod.dataValidation) {
-                throw new Smorekopp('SERVER ERROR', 'Action recieved data, but service method has no validation.')
-            }
-
-            const parse = serviceMethod.dataValidation.typeValidate(data)
-            if (!parse.success) return createZodActionError(parse)
-            data = parse.data
         }
 
         return safeServerCall(() => serviceMethod.newClient().executeUnsafe({ session, params, data }))

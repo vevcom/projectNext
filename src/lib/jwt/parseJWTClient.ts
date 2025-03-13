@@ -1,9 +1,9 @@
 'use client'
 
 import { readJWTPayload } from './jwtReadUnsecure'
-import { JWT_ISSUER } from '@/auth/ConfigVars'
 import { createActionError } from '@/actions/error'
-import type { OmegaJWTAudience } from '@/auth/Types'
+import { JWT_ISSUER } from '@/jwt/ConfigVars'
+import type { OmegaJWTAudience } from '@/jwt/Types'
 import type { ActionReturn } from '@/actions/Types'
 
 /**

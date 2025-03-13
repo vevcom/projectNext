@@ -1,5 +1,5 @@
 'use server'
 import { action } from '@/actions/action'
-import { readCompanyPage } from '@/services/career/companies/read'
+import { CompanyMethods } from '@/services/career/companies/methods'
 
-export const readCompanyPageAction = action(readCompanyPage)
+export const readCompanyPageAction = action(CompanyMethods.readPage)

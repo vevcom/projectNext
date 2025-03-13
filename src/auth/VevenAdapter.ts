@@ -2,8 +2,8 @@ import 'server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
-import { readUserOrNull } from '@/services/users/read'
-import { userFilterSelection } from '@/services/users/ConfigVars'
+import { UserMethods } from '@/services/users/methods'
+import { UserConfig } from '@/services/users/config'
 import type { UserFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
@@ -96,7 +96,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                     username,
                     emailVerified: null,
                 },
-                select: userFilterSelection,
+                select: UserConfig.filterSelection,
             })
 
             return convertToAdapterUser(createdUser)
@@ -105,7 +105,11 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUser(id) {
             console.log('get id')
 
-            const user = await readUserOrNull({ id: Number(id) })
+            const user = await UserMethods.readOrNull.newClient().execute({
+                params: { id: Number(id) },
+                session: null,
+                bypassAuth: true,
+            })
 
             return user && convertToAdapterUser(user)
         },
@@ -113,7 +117,11 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUserByEmail(email) {
             console.log('get email')
             console.log(email)
-            const user = await readUserOrNull({ email })
+            const user = await UserMethods.readOrNull.newClient().execute({
+                params: { email },
+                session: null,
+                bypassAuth: true,
+            })
 
             if (user) {
                 return convertToAdapterUser(user)
@@ -125,7 +133,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 },
                 include: {
                     user: {
-                        select: userFilterSelection,
+                        select: UserConfig.filterSelection,
                     },
                 },
             })
@@ -157,7 +165,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                     firstname: user.firstname,
                     lastname: user.lastname,
                 },
-                select: userFilterSelection,
+                select: UserConfig.filterSelection,
             })
 
             return convertToAdapterUser(updatedUser)

@@ -1,5 +1,6 @@
 'use server'
 import { action } from '@/actions/action'
-import { destroyInterestGroup } from '@/services/groups/interestGroups/destroy'
+import { InterestGroupMethods } from '@/services/groups/interestGroups/methods'
 
-export const destroyInterestGroupAction = action(destroyInterestGroup)
+
+export const destroyInterestGroupAction = action(InterestGroupMethods.destroy)

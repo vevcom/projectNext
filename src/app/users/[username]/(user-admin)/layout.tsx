@@ -16,7 +16,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
         if (!session.user) return notFound()
         username = session.user.username
     }
-    const { user } = unwrapActionReturn(await readUserProfileAction(username))
+    const { user } = unwrapActionReturn(await readUserProfileAction({ username }))
     return (
         <PageWrapper title={`${user.firstname} ${user.lastname} Admin`}>
             <Link href={`/users/${username}`} className={styles.toProfile}>

@@ -1,6 +1,5 @@
 'use server'
-
-import { readAllLicenses } from '@/services/licenses/read'
 import { action } from '@/actions/action'
+import { LicenseMethods } from '@/services/licenses/methods'
 
-export const readAllLicensesAction = action(readAllLicenses)
+export const readAllLicensesAction = action(LicenseMethods.readAll)

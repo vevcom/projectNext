@@ -4,7 +4,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { createArticle } from '@/services/cms/articles/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import { readSpecialImage } from '@/services/images/read'
+import { ImageMethods } from '@/services/images/methods'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
 
@@ -12,7 +12,7 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
     let defaultLogoImageId: number
     if (!logoImageId) {
-        defaultLogoImageId = await readSpecialImage.client(prisma).execute({
+        defaultLogoImageId = await ImageMethods.readSpecial.client(prisma).execute({
             params: { special: 'DAFAULT_COMMITTEE_LOGO' }, session: null //TODO: pass session
         }).then(res => res.id)
     }

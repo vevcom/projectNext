@@ -4,7 +4,7 @@ import { readEventTagsAction } from '@/actions/events/tags/read'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import { createEventTagAuther, destroyEventTagAuther, updateEventTagAuther } from '@/services/events/tags/authers'
+import { EventTagAuthers } from '@/services/events/tags/authers'
 import { Session } from '@/auth/Session'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
@@ -24,9 +24,9 @@ export default async function EventArchive({
 
     const session = await Session.fromNextAuth()
 
-    const canUpdate = updateEventTagAuther.dynamicFields({}).auth(session)
-    const canCreate = createEventTagAuther.dynamicFields({}).auth(session)
-    const canDestroy = destroyEventTagAuther.dynamicFields({}).auth(session)
+    const canUpdate = EventTagAuthers.update.dynamicFields({}).auth(session)
+    const canCreate = EventTagAuthers.create.dynamicFields({}).auth(session)
+    const canDestroy = EventTagAuthers.destroy.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout page="EVENT_ARCHIVE" title="Hvad Der Har Hendt" headerLinks={[

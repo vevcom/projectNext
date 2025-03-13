@@ -2,12 +2,12 @@
 import styles from './CollectionAdminUpload.module.scss'
 import Dropzone from '@/components/UI/Dropzone'
 import { createImagesAction } from '@/actions/images/create'
-import { maxNumberOfImagesInOneBatch } from '@/services/images/ConfigVars'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import TextInput from '@/app/_components/UI/TextInput'
 import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
+import { ImageConfig } from '@/services/images/config'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/actions/Types'
@@ -24,7 +24,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
     const handleBatchedUpload = useCallback(async (data: FormData) => {
         // split files into batches of maxNumberOfImagesInOneBatch
         const batches = files.reduce((acc, file, index) => {
-            if (index % maxNumberOfImagesInOneBatch === 0) {
+            if (index % ImageConfig.maxNumberInOneBatch === 0) {
                 acc.push([])
             }
             acc[acc.length - 1].push(file)

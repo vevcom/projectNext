@@ -1,6 +1,5 @@
 'use server'
-
 import { action } from '@/actions/action'
-import { destroyEvent } from '@/services/events/destroy'
+import { EventMethods } from '@/services/events/methods'
 
-export const destroyEventAction = action(destroyEvent)
+export const destroyEventAction = action(EventMethods.destroy)

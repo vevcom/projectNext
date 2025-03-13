@@ -216,7 +216,7 @@ export default function ImageDisplay() {
                                 title="Rediger metadata"
                                 successCallback={reload}
                                 submitText="oppdater"
-                                action={updateImageAction.bind(null, image.id)}
+                                action={updateImageAction.bind(null, { id: image.id })}
                                 closePopUpOnSuccess="EditImage"
                             >
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
@@ -227,7 +227,7 @@ export default function ImageDisplay() {
                             <Form
                                 className={styles.deleteImage}
                                 successCallback={reload}
-                                action={destroyImageAction.bind(null, image.id)}
+                                action={destroyImageAction.bind(null, { id: image.id })}
                                 submitText="slett"
                                 submitColor="red"
                                 confirmation={{

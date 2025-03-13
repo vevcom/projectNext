@@ -1,3 +1,4 @@
+import type { SafeParseError } from 'zod'
 import type { AuthStatus } from '@/auth/getUser'
 
 export const errorCodes = [
@@ -108,6 +109,14 @@ export class ServerError extends Smorekopp<ServerErrorCode> {
     constructor(errorCode: ServerErrorCode, errors: string | ErrorMessage[], serviceCausedError?: string) {
         super(errorCode, errors)
         this.serviceCausedError = serviceCausedError
+    }
+}
+
+export class ParseError<Input> extends Smorekopp<'BAD PARAMETERS'> {
+    public parseError: SafeParseError<Input>
+    constructor(parseError: SafeParseError<Input>) {
+        super('BAD PARAMETERS', 'Bad parameters')
+        this.parseError = parseError
     }
 }
 
