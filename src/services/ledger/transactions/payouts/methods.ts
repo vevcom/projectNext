@@ -2,7 +2,7 @@ import { RequireNothing } from "@/auth/auther/RequireNothing";
 import { ServiceMethod } from "@/services/ServiceMethod";
 import { z } from "zod";
 import { createPayoutValidation } from "./validation";
-import { LedgerAccountMethods } from "../../ledgerAccount/methods";
+import { LedgerAccountMethods } from "@/services/ledger/ledgerAccount/methods";
 import { ServerError } from "@/services/error";
 
 export namespace PayoutMethods {
@@ -15,9 +15,20 @@ export namespace PayoutMethods {
         opensTransaction: true,
         method: async ({ prisma, session, params, data }) => {
             return prisma.$transaction(async (tx) => {
+                const originalBalancee = await LedgerAccountMethods.calculateBalance.client(tx).execute({
+                    params: {
+                        id: params.accountId,
+                    },
+                    session,
+                })
+
+                const feesToYoink = Math.round((data.amount / originalBalancee.total) * originalBalancee.fees)
+
                 const payout = await tx.transaction.create({
                     data: {
-                        transactionType: 'PAYOUT',
+                        status: 'SUCCEEDED',
+                        type: 'PAYOUT',
+                        fee: feesToYoink,
                         fromAccountId: params.accountId,
                         amount: data.amount,
                     }
@@ -30,9 +41,15 @@ export namespace PayoutMethods {
                     session,
                 })
 
-                if (newBalancee < 0) {
+                if (newBalancee.total < 0) {
                     throw new ServerError('BAD DATA', 'Kontoen har ikke nok penger for å utføre tranaksjonen.')
                 }
+
+                if (newBalancee.fees < 0) {
+                    throw new ServerError('BAD DATA', 'Dette burde ikke være mulig...')
+                }
+
+                return payout
             })
         },
     })

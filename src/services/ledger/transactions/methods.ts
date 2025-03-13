@@ -24,6 +24,10 @@ export namespace TransactionMethods {
                         { toAccountId: params.paging.details.accountId },
                     ]
                 },  
+                include: {
+                    deposit: true,
+                    payout: true,
+                },
                 orderBy: {
                     createdAt: 'desc',
                 },

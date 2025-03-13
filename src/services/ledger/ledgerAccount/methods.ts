@@ -107,18 +107,28 @@ export namespace LedgerAccountMethods {
                 const result = await prisma.transaction.aggregate({
                     _sum: {
                         amount: true,
+                        fee: true,
                     },
-                    where,
+                    where: {
+                        ...where,
+                        status: 'SUCCEEDED',
+                    },
                 })
-                return result._sum.amount ?? 0
+                return {
+                    total: result._sum.amount ?? 0,
+                    fees: result._sum.fee ?? 0,
+                }
             }
     
-            const [totalIn, totalOut] = await Promise.all([
+            const [sumIn, sumOut] = await Promise.all([
                 sumTransactions({ toAccountId: params.id }),
                 sumTransactions({ fromAccountId: params.id }),
             ])
 
-            return (totalIn - totalOut) / 100
+            return {
+                total: sumIn.total - sumOut.total,
+                fees: sumIn.fees - sumOut.fees,
+            }
         }
     })
 }

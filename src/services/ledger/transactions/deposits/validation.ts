@@ -4,7 +4,7 @@ import type { ValidationTypes } from '@/services/Validation'
 
 const baseDepositValidation = new ValidationBase({
     details: {
-        amount: z.coerce.number().int().positive(),
+        amount: z.coerce.number().int().positive().gte(minimumAmount, `Innskudd må være på minst ${minimumAmount}.`),
     },
     type: {
         amount: z.coerce.number(),
