@@ -4,7 +4,7 @@ import FindProductForm from './FindProductForm'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { displayPrice } from '@/lib/money/convert'
+import { displayAmount } from '@/lib/currency/convert'
 import { sortObjectsByName } from '@/lib/sortObjects'
 import { readShopAction, readProductsAction } from '@/services/shop/actions'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
@@ -75,7 +75,7 @@ export default async function Shop({ params }: PropTypes) {
                     </td>
                     <td>{product.name}</td>
                     <td>{product.description}</td>
-                    <td>{displayPrice(product.price, false)}</td>
+                    <td>{displayAmount(product.price, false)}</td>
                 </tr>)}
             </tbody>
         </table>
