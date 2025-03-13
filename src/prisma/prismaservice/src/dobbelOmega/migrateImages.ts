@@ -188,13 +188,13 @@ async function fetchAllImagesAndUploadToStore<X extends {
         manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
         const ext = image.originalName.split('.').pop() || ''
         const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
-            + `?url=/store/images/${image.name}.${ext}`
+            + `?url=${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.name}.${ext}`
         const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
-            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
+            + `${imageSizes.medium}/${image.name}?url=${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.name}.${ext}`
         const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
-            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
+            + `${imageSizes.small}/${image.name}?url=${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.name}.${ext}`
         const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
-            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
+            + `${imageSizes.large}/${image.name}?url=${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.name}.${ext}`
         const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
         const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
         const fsLocationSmallSize = await fetchImageAndUploadToStore(fsLocationSmallOldVev)

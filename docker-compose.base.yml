@@ -71,5 +71,5 @@ services:
 
     nginx:
         image: nginx:1.21.3-alpine
-        depends_on:
-            - projectnext
+        # depends_on:
+        #     - projectnext

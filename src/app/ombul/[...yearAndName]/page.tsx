@@ -33,7 +33,7 @@ export default async function Ombul({ params }: PropTypes) {
     if (!ombulRes.success) notFound()
     const ombul = ombulRes.data
 
-    const path = `/store/ombul/${ombul.fsLocation}`
+    const path = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/ombul/${ombul.fsLocation}`
 
     const canUpdate = permissions.includes('OMBUL_UPDATE')
 

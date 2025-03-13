@@ -17,6 +17,18 @@ const nextConfig = {
     eslint: {
         dirs: ['src', 'tests'],
     },
+   
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: '80',
+                pathname: '/store/**',
+                search: '',
+            },
+        ],
+    }
 }
 
 

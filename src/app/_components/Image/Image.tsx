@@ -53,27 +53,27 @@ export default function Image({
     disableLinkingToLicense = false,
     ...props
 }: PropTypes) {
-    let url = `/store/images/${image.fsLocationMediumSize}`
+    let url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationMediumSize}`
     if (imageSize) {
         switch (imageSize) {
             case 'SMALL':
-                url = `/store/images/${image.fsLocationSmallSize}`
+                url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationSmallSize}`
                 break
             case 'MEDIUM':
-                url = `/store/images/${image.fsLocationMediumSize}`
+                url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationMediumSize}`
                 break
             case 'LARGE':
-                url = `/store/images/${image.fsLocationLargeSize}`
+                url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationLargeSize}`
                 break
             case 'ORIGINAL':
-                url = `/store/images/${image.fsLocationOriginal}`
+                url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationOriginal}`
                 break
             default:
                 break
         }
     } else {
-        if (smallSize) url = `/store/images/${image.fsLocationSmallSize}`
-        if (largeSize) url = `/store/images/${image.fsLocationLargeSize}`
+        if (smallSize) url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationSmallSize}`
+        if (largeSize) url = `${process.env.NEXT_PUBLIC_STORE_DOMAIN}/store/images/${image.fsLocationLargeSize}`
     }
     return (
         <div style={{ width: `${width}px` }} className={`${styles.Image} ${imageContainerClassName}`}>
