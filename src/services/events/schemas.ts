@@ -1,6 +1,5 @@
 import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
 import { EventCanView } from '@prisma/client'
 
 export namespace EventSchemas {
@@ -16,7 +15,7 @@ export namespace EventSchemas {
         registrationStart: zpn.date({ label: 'Påmelding start' }).optional(),
         registrationEnd: zpn.date({ label: 'Påmelding slutt' }).optional(),
 
-        tagIds: zfd.repeatable(z.coerce.number().array())
+        tagIds: zpn.numberListCheckboxFriendly({ label: 'tags' })
     })
 
     export const create = fields.pick({

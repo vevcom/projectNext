@@ -9,6 +9,7 @@ import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions
 import Slider from '@/components/UI/Slider'
 import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 import Date from '@/app/_components/Date/Date'
+import Checkbox from '@/app/_components/UI/Checkbox'
 
 type PropTypes = {
     params: Promise<{
@@ -44,8 +45,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                             defaultValue={apiKey.expiresAt ?? undefined}
                         />
                         <DisplayAllPermissions renderBesidePermission={permission => (
-                            <input
-                                type="checkbox"
+                            <Checkbox
                                 name="permissions"
                                 value={permission}
                                 defaultChecked={apiKey.permissions.includes(permission)}

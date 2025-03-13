@@ -107,6 +107,7 @@ export default function EventTagsAdmin({
                                         }
                                         {canDestroy && <span className={styles.destroy}>
                                             <Form
+                                                closePopUpOnSuccess={`EventTagPopUp${tag.id}`}
                                                 refreshOnSuccess
                                                 action={bindParams(destroyEventTagAction, ({ id: tag.id }))}
                                                 submitColor="red"

@@ -24,13 +24,13 @@ function Checkbox({ label, children, ...props }: PropTypes) {
             {
                 children ? (
                     <label className={styles.inputAndChildren}>
-                        <input id={inputId} {...props} type="checkbox" />
+                        <input id={inputId} {...props} type="checkbox" className={styles.input} />
                         {children}
                         {label ? label : <></>}
                     </label>
                 ) : (
                     <>
-                        <input id={inputId} {...props} type="checkbox" />
+                        <input id={inputId} {...props} type="checkbox" className={styles.input} />
                         {label && <label htmlFor={inputId}>{ label }</label>}
                     </>
                 )

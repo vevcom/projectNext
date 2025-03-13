@@ -96,8 +96,6 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
 
         const res = await action(formData)
 
-        console.log(res)
-
         if (res.success) {
             setSuccess(true)
             successCallback?.(res.data)
