@@ -9,7 +9,7 @@ type PropTypes = {
 }
 
 /**
- * Wrapper for a form calling updateApiKeyAction on submit - does not contain any fields as 
+ * Wrapper for a form calling updateApiKeyAction on submit - does not contain any fields as
  * they should be servere side rendered
  * On success navigates to the updated api key by name.
  */

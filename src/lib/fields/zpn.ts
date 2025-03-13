@@ -1,4 +1,5 @@
-import { z, ZodAny, ZodTypeAny } from "zod"
+import { z, ZodAny } from 'zod'
+import type { ZodTypeAny } from 'zod'
 
 type Field<T extends { label: string }> = (args: T) => ZodTypeAny
 
@@ -8,13 +9,13 @@ export namespace zpn {
      * Note that it is assumed to be a SelectAsCheckbox in the frontend so one can distinguish
      * between 'off' and undefined.
      */
-    export const checkboxOrBoolean: Field<{ 
-        label: string 
+    export const checkboxOrBoolean: Field<{
+        label: string
     }> = ({ }) => z.union([
         z.boolean(),
         z.literal('on'),
         z.literal('off')
-    ]).transform(value => value === 'on' ? true : value === 'off' ? false : value)
+    ]).transform(value => (value === 'on' ? true : value === 'off' ? false : value))
 
     export const date: Field<{
         label: string

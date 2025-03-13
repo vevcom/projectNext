@@ -1,6 +1,6 @@
 import styles from './Checkbox.module.scss'
+import CheckboxFieldPresent from './CheckboxFieldPresent'
 import type { InputHTMLAttributes, ReactNode } from 'react'
-import SelectAsCheckbox from './SelectAsCheckbox'
 
 type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'name' | 'id'> & {
     label?: string,
@@ -24,23 +24,18 @@ function Checkbox({ label, children, ...props }: PropTypes) {
             {
                 children ? (
                     <label className={styles.inputAndChildren}>
-                        {props.value === undefined ? 
-                          <SelectAsCheckbox id={inputId} {...props} /> 
-                          : <input id={inputId} {...props} type="checkbox" />
-                        }
-                        { children }
+                        <input id={inputId} {...props} type="checkbox" />
+                        {children}
                         {label ? label : <></>}
                     </label>
                 ) : (
                     <>
-                        {props.value === undefined ? 
-                          <SelectAsCheckbox id={inputId} {...props} /> 
-                          : <input id={inputId} {...props} type="checkbox" />
-                        }
+                        <input id={inputId} {...props} type="checkbox" />
                         {label && <label htmlFor={inputId}>{ label }</label>}
                     </>
                 )
             }
+            <CheckboxFieldPresent name={props.name} />
         </div>
     )
 }

@@ -1,7 +1,7 @@
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import { EventCanView } from '@prisma/client'
-import { zpn } from '@/lib/fields/zpn'
 
 export namespace EventSchemas {
     const fields = z.object({

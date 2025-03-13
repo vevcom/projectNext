@@ -37,7 +37,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                     <UpdateApiKeyForm id={apiKey.id}>
                         <TextInput name="name" label="Navn" defaultValue={apiKey.name} />
                         <Slider label="Aktiv" name="active" defaultChecked={apiKey.active} />
-                        <DateInput 
+                        <DateInput
                             includeTime
                             name="expiresAt"
                             label="Utløpsdato"

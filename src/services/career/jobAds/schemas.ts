@@ -1,6 +1,6 @@
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
-import { zpn } from '@/lib/fields/zpn'
 
 export namespace JobAdSchemas {
     const fields = z.object({
