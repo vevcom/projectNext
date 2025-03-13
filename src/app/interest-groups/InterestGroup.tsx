@@ -30,7 +30,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                             {
                                 canUpdate.authorized && (
                                     <>
-                                        <h2>Update interest group</h2>
+                                        <h2>Oppdater interessegruppe</h2>
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}
