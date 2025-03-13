@@ -21,7 +21,8 @@ export namespace PaymentMethods {
             return prisma.$transaction(async (tx) => {
                 await tx.transaction.create({
                     data: {
-                        transactionType: 'PAYMENT',
+                        status: 'SUCCEEDED',
+                        type: 'PAYMENT',
                         fromAccountId: params.fromAccountId,
                         toAccountId: data.toAccountId,
                         amount: data.amount,
@@ -35,8 +36,12 @@ export namespace PaymentMethods {
                     session,
                 })
 
-                if (newBalancee < 0) {
+                if (newBalancee.total < 0) {
                     throw new ServerError('BAD DATA', 'Kontoen har ikke nok penger for å utføre tranaksjonen.')
+                }
+
+                if (newBalancee.fees < 0) {
+                    throw new ServerError('BAD DATA', 'Kontoen skylder ikke nok avgifter for å utføre transaksjonsgebyret.')
                 }
             })
         },

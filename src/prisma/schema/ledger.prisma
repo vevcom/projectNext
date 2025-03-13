@@ -4,16 +4,22 @@ enum LedgerAccountType {
 }
 
 model LedgerAccount {
-  id                  Int           @id @default(autoincrement())
-  user                User?         @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  userId              Int?          @unique
-  group               Group?        @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  groupId             Int?          @unique
+  id                  Int               @id @default(autoincrement())
+  user                User?             @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  userId              Int?              @unique
+  group               Group?            @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  groupId             Int?              @unique
   type                LedgerAccountType
   payoutAccountNumber String? // For display only
-  inTransactions      Transaction[] @relation("TransactionToAccount")
-  outTransactions     Transaction[] @relation("TransactionFromAccount")
+  inTransactions      Transaction[]     @relation("TransactionToAccount")
+  outTransactions     Transaction[]     @relation("TransactionFromAccount")
   // products            Product[]
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
 }
 
 enum TransactionType {
@@ -24,18 +30,50 @@ enum TransactionType {
 }
 
 model Transaction {
-  id            Int      @id @default(autoincrement())
+  id            Int               @id @default(autoincrement())
   amount        Int // In øre
-  fromAccount   LedgerAccount? @relation(fields: [fromAccountId], references: [id], name: "TransactionFromAccount", onDelete: Restrict, onUpdate: Cascade)
+  fee           Int? // Also in øre
+  fromAccount   LedgerAccount?    @relation(fields: [fromAccountId], references: [id], name: "TransactionFromAccount", onDelete: Restrict, onUpdate: Cascade)
   fromAccountId Int?
-  toAccount     LedgerAccount? @relation(fields: [toAccountId], references: [id], name: "TransactionToAccount", onDelete: Restrict, onUpdate: Cascade)
+  toAccount     LedgerAccount?    @relation(fields: [toAccountId], references: [id], name: "TransactionToAccount", onDelete: Restrict, onUpdate: Cascade)
   toAccountId   Int?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  transactionType TransactionType
-  // deposit         Deposit?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  status        TransactionStatus
+  type          TransactionType
+  deposit       Deposit?
   // purchases       Purchase[]
   // refunds         Refund[]
-  // payout          Payout?
+  payout        Payout?
+}
+
+enum DepositType {
+  MANUAL
+  STRIPE
+  VIPPS // Not implemented yet
+}
+
+model Deposit {
+  transaction   Transaction    @relation(fields: [transactionId], references: [id])
+  transactionId Int            @unique
+  type          DepositType
+  stripeDeposit StripeDeposit?
+}
+
+model StripeDeposit {
+  deposit               Deposit @relation(fields: [transactionId], references: [transactionId])
+  transactionId          Int     @unique
+  paymentIntentId String  @unique
+  clientSecret    String  @unique
+}
+
+// TODO: Implement Vipps deposit
+// model VippsDeposit {
+//   ...
+// }
+
+model Payout {
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int         @unique
+  accountNumber String // For display only
 }

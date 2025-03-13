@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.TransactionRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: ohma.$gap;
+    background-color: ohma.$colors-gray-300;
+    // border: 2px solid ohma.$colors-gray-300;
+    border-radius: ohma.$rounding;
+    margin-bottom: ohma.$gap;
+}
