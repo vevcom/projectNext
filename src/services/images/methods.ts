@@ -83,7 +83,9 @@ export namespace ImageMethods {
             data,
             session,
         }) => {
+            console.log('data', data)
             for (const file of data.files) {
+                console.log('file', file)
                 const name = useFileName ? file.name.split('.')[0] : undefined
                 await create.client(prisma).execute({
                     params: { collectionId },
