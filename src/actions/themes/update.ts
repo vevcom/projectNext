@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
-import { Themes } from '@/services/themes'
+import { ThemeMethods } from '@/services/themes/methods'
+import { action } from '@/actions/action'
 
-export const updateThemeAction = Action(Themes.update)
+export const updateThemeAction = action(ThemeMethods.update)

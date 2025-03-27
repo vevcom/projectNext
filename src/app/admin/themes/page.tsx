@@ -9,7 +9,7 @@ import { destroyThemeAction } from '@/actions/themes/destroy'
 import Theme from '@/app/_components/Theme/Theme'
 
 export default async function ThemesAdmin() {
-    const res = await readThemesAction.bind(null, {})()
+    const res = await readThemesAction()
     if (!res.success) throw new Error('Kunne ikke hente temaer')
     const themes = res.data
 

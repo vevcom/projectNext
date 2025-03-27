@@ -1,5 +1,5 @@
 'use server'
-import { ActionNoData } from '../Action'
-import { Themes } from '@/services/themes'
+import { ThemeMethods } from '@/services/themes/methods'
+import { action } from '@/actions/action'
 
-export const destroyThemeAction = ActionNoData(Themes.destroy)
+export const destroyThemeAction = action(ThemeMethods.destroy)

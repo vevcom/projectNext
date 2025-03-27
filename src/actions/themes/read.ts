@@ -1,6 +1,6 @@
 'use server'
-import { ActionNoData } from '@/actions/Action'
-import { Themes } from '@/services/themes'
+import { ThemeMethods } from '@/services/themes/methods'
+import { action } from '@/actions/action'
 
-export const readThemesAction = ActionNoData(Themes.readAll)
-export const readThemeAction = ActionNoData(Themes.read)
+export const readThemesAction = action(ThemeMethods.readAll)
+export const readThemeAction = action(ThemeMethods.read)
