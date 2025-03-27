@@ -1,8 +1,7 @@
 import 'server-only'
 import { apiHandler } from '@/api/apiHandler'
-import { User } from '@/services/users'
+import { UserMethods } from '@/services/users/methods'
 
 export const POST = apiHandler({
-    serviceMethod: User.create,
-    params: () => undefined
+    serviceMethod: UserMethods.create
 })

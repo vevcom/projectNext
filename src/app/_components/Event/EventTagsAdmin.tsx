@@ -9,6 +9,7 @@ import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { destroyEventTagAction } from '@/actions/events/tags/destroy'
+import { bindParams } from '@/actions/bind'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
 
@@ -52,7 +53,7 @@ export default function EventTagsAdmin({
             {
                 canCreate && (
                     <span className={styles.create}>
-                        <Form refreshOnSuccess action={createEventTagAction.bind(null, {})} submitText="Lag">
+                        <Form refreshOnSuccess action={createEventTagAction} submitText="Lag">
                             <TextInput name="name" label="Navn" />
                             <Textarea name="description" label="Beskrivelse" />
                             <ColorInput name="color" label="Farge"/>
@@ -79,7 +80,7 @@ export default function EventTagsAdmin({
                                         {canUpdate && <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess
-                                                action={updateEventTagAction.bind(null, { id: tag.id })}
+                                                action={bindParams(updateEventTagAction, ({ id: tag.id }))}
                                                 submitText="Oppdater"
                                             >
                                                 <TextInput
@@ -106,8 +107,9 @@ export default function EventTagsAdmin({
                                         }
                                         {canDestroy && <span className={styles.destroy}>
                                             <Form
+                                                closePopUpOnSuccess={`EventTagPopUp${tag.id}`}
                                                 refreshOnSuccess
-                                                action={destroyEventTagAction.bind(null, { id: tag.id })}
+                                                action={bindParams(destroyEventTagAction, ({ id: tag.id }))}
                                                 submitColor="red"
                                                 confirmation={{
                                                     confirm: true,

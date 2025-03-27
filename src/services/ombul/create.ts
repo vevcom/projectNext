@@ -5,7 +5,7 @@ import { readSpecialImageCollection } from '@/services/images/collections/read'
 import { createCmsImage } from '@/services/cms/images/create'
 import prisma from '@/prisma'
 import { createFile } from '@/services/store/createFile'
-import { createImage } from '@/services/images/create'
+import { ImageMethods } from '@/services/images/methods'
 import type { CreateOmbulTypes } from './validation'
 import type { Ombul } from '@prisma/client'
 
@@ -42,11 +42,16 @@ export async function createOmbul(
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
 
-    const coverImage = await createImage({
-        name: fsLocation,
-        alt: `cover of ${config.name}`,
-        collectionId: ombulCoverCollection.id,
-        file: cover,
+    const coverImage = await ImageMethods.create.client(prisma).execute({
+        params: {
+            collectionId: ombulCoverCollection.id,
+        },
+        data: {
+            name: fsLocation,
+            alt: `cover of ${config.name}`,
+            file: cover,
+        },
+        session: null
     })
 
     const cmsCoverImage = await createCmsImage({ name: fsLocation }, coverImage)

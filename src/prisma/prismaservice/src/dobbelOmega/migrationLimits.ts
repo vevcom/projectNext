@@ -8,7 +8,9 @@ export function getLimits() {
         numberOffFullImageCollections: 3,
         omegaquotes: null,
         articles: 300,
-        mailaliases: null,
+        mailaliases: 0,
+        events: 100,
+        users: 100,
     }
     const nullObj: { [key in keyof typeof limits]: null } = {
         ombul: null,
@@ -16,6 +18,8 @@ export function getLimits() {
         omegaquotes: null,
         articles: null,
         mailaliases: null,
+        events: null,
+        users: null,
     }
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'

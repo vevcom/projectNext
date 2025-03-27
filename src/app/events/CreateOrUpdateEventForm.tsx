@@ -7,10 +7,11 @@ import Slider from '@/components/UI/Slider'
 import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { CanBeViewdByOptions } from '@/services/events/ConfigVars'
+import { EventConfig } from '@/services/events/config'
 import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
+import { bindParams } from '@/actions/bind'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -29,7 +30,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? updateEventAction.bind(null, { id: event.id }) : createEventAction
+    const action = event ? bindParams(updateEventAction, { id: event.id }) : createEventAction
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)
@@ -37,7 +38,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
 
     return (
         <div className={styles.CreateOrUpdateEventForm}>
-            <h1>Oppdater Hendelse</h1>
+            <h1>{event ? 'Endre' : 'Opprett'} arrangement</h1>
             <Form
                 closePopUpOnSuccess="EditEvent"
                 action={action}
@@ -52,7 +53,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"
                     name="canBeViewdBy"
-                    options={CanBeViewdByOptions}
+                    options={EventConfig.canBeViewdByOptions}
                     defaultValue={event?.canBeViewdBy}
                 />
                 <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>

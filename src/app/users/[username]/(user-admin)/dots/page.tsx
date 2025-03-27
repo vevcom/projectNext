@@ -1,13 +1,20 @@
 import styles from './page.module.scss'
-import { readDotWrapperForUser } from '@/actions/dots/read'
+
+import { readDotWrappersForUserAction } from '@/actions/dots/read'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { getProfileForAdmin, type PropTypes } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
+import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Date from '@/components/Date/Date'
 
-export default async function UserDotAdmin(params: PropTypes) {
-    const { profile } = await getProfileForAdmin(params, 'dots')
+type PropTypes = {
+    params: Promise<{
+        username: string
+    }>
+}
+
+export default async function UserDotAdmin({ params }: PropTypes) {
+    const { profile } = await getProfileForAdmin(await params, 'dots')
     const dotWrappers = unwrapActionReturn(
-        await readDotWrapperForUser.bind(null, { userId: profile.user.id, onlyActive: false })()
+        await readDotWrappersForUserAction({ userId: profile.user.id })
     )
 
     return (

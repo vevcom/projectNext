@@ -4,7 +4,7 @@ import { createActionError } from '@/actions/error'
 import { readLocker, readLockerPage, updateLockerReservationIfExpired } from '@/services/lockers/read'
 import { getUser } from '@/auth/getUser'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 import type { LockerWithReservation, LockerCursor } from '@/services/lockers/Types'
 
 /**

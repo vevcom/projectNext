@@ -1,25 +1,23 @@
 import 'server-only'
 import { Session } from '@/auth/Session'
-import { ServerError, Smorekopp } from '@/services/error'
-import type { ErrorCode } from '@/services/error'
+import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import type { ErrorCode, ErrorMessage } from '@/services/error'
+import type { ServiceMethodType } from '@/services/ServiceMethod'
 import type { SessionNoUser } from '@/auth/Session'
-import type { ServiceMethod } from '@/services/ServiceTypes'
+import type { z } from 'zod'
 
 type APIHandler<
-    WithValidation extends boolean,
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
     RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
-    serviceMethod: ServiceMethod<
-        WithValidation, TypeValidationType, DetailedValidationType, Params, Return, WantsToOpenTransaction, NoAuther
-    >
-    params: (rawparams: RawParams) => Params
-}
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>,
+} & (ParamsSchema extends undefined ? {
+    params?: undefined,
+} : {
+    params: (rawparams: RawParams) => z.infer<NonNullable<ParamsSchema>>,
+})
 
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
     try {
@@ -29,7 +27,7 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
         return createApiResponse(result)
     } catch (error: unknown) {
         if (error instanceof Smorekopp) {
-            return createApiErrorRespone(error.errorCode, error.errors.length ? error.errors[0].message : error.errorCode)
+            return createApiErrorRespone(error.errorCode, error.errors)
         }
         if (error instanceof Error) {
             return createApiErrorRespone('UNKNOWN ERROR', error.message)
@@ -39,86 +37,53 @@ async function apiHandlerGeneric<Return>(req: Request, handle: (session: Session
 }
 
 export function apiHandler<
-    Return,
     RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->(
-    config: APIHandler<false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther>
-): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
-
-export function apiHandler<
     Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->({
-    serviceMethod,
-    params
-}: APIHandler<
-    true,
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction,
-    NoAuther
->): (req: Request, paramObject: { params: RawParams }) => Promise<Response>
-
-export function apiHandler<
-    Return,
-    TypeValidationType,
-    DetailedValidationType,
-    RawParams,
-    Params,
-    WantsToOpenTransaction extends boolean,
-    NoAuther extends boolean
->({
-    serviceMethod,
-    params
-}: | APIHandler<
-    true, Return, TypeValidationType, DetailedValidationType, RawParams, Params, WantsToOpenTransaction, NoAuther
-    >
-    | APIHandler<
-    false, Return, void, void, RawParams, Params, WantsToOpenTransaction, NoAuther
-    >
-
-) {
-    return serviceMethod.withData ? async (req: Request, { params: rawParams }: { params: RawParams }) =>
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+>({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
+    // TODO: I think I will rewrite this to be easier to read
+    return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
-            const rawdata = await req.json().catch(console.log)
-            const parse = serviceMethod.typeValidate(rawdata)
-            if (!parse.success) throw new ServerError('BAD PARAMETERS', 'Dårlig data')
-            const data = parse.data
+            if (serviceMethod.dataSchema) {
+                try {
+                    const rawdata = await req.json()
 
-            return serviceMethod.client('NEW').execute({
-                params: params(rawParams),
-                data,
+                    return serviceMethod.newClient().executeUnsafe({
+                        params: params ? params(await rawParams) : undefined,
+                        data: rawdata,
+                        session,
+                    })
+                } catch (error) {
+                    if (error instanceof SyntaxError) {
+                        throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
+                    }
+                    throw error
+                }
+            }
+
+            return serviceMethod.newClient().executeUnsafe({
+                params: params ? params(await rawParams) : undefined,
+                data: undefined,
                 session,
-            }, { withAuth: true })
-        }) : async (req: Request, { params: rawParams }: { params: RawParams }) =>
-        await apiHandlerGeneric(req, session =>
-            serviceMethod.client('NEW').execute({
-                params: params(rawParams),
-                session }, { withAuth: true }
-            )
-        )
+            })
+        })
 }
 
-function createApiErrorRespone(errorCode: ErrorCode, message: string) {
+function createApiErrorRespone(errorCode: ErrorCode, message: string | ErrorMessage[]) {
+    const errors: ErrorMessage[] = Array.isArray(message) ? message : [{
+        message,
+    }]
+
     return new Response(JSON.stringify({
         errorCode,
-        message
+        errors,
     }), {
-        status: 500 //TODO:
+        status: getHttpErrorCode(errorCode)
     })
 }
 
 function createApiResponse<Return>(res: Return) {
-    return Response.json(JSON.stringify(res), { status: 200 })
+    const data = res ? JSON.stringify(res) : ''
+    return Response.json(data, { status: 200 })
 }

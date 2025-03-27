@@ -8,9 +8,9 @@ import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
 import type { ReactNode } from 'react'
 
 export type PropTypes = {
-    params: {
+    params: Promise<{
         shortName: string
-    },
+    }>,
     children: ReactNode
 }
 
@@ -19,7 +19,9 @@ export default async function Committee({ params, children }: PropTypes) {
 
     let committeeLogo = committee.logoImage.image
     if (!committeeLogo) {
-        const res = await readSpecialImageAction('DAFAULT_COMMITTEE_LOGO')
+        const res = await readSpecialImageAction.bind(
+            null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+        )()
         if (!res.success) throw new Error('Kunne ikke finne standard komitelogo')
         committeeLogo = res.data
     }
@@ -33,7 +35,7 @@ export default async function Committee({ params, children }: PropTypes) {
                         { children }
                     </div>
                     <aside className={styles.navContainer}>
-                        <Nav shortName={params.shortName} />
+                        <Nav shortName={(await params).shortName} />
                     </aside>
                 </div>
             </PageWrapper>

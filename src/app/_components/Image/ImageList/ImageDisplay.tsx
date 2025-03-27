@@ -11,10 +11,12 @@ import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
+import Link from 'next/link'
 import type { ImageSizeOptions } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
 
@@ -132,7 +134,6 @@ export default function ImageDisplay() {
     }
 
     if (!image) return <></>
-    console.log(image)
 
     return (
         <div className={styles.ImageDisplay}>
@@ -167,13 +168,28 @@ export default function ImageDisplay() {
             </button>
             <div className={styles.currentImage}>
                 <h1>{image.name}</h1>
-                <i>{image.alt}</i>
+                <i>Alt-tekst: {image.alt}</i>
                 <i>Type: {getCurrentType(image, displayContext.imageSize)}</i>
+                <i>Kreditert: {image.credit ?? 'ingen'}</i>
+                <i>Lisens: {
+                    image.licenseLink ?
+                        <Link
+                            href={image.licenseLink}
+                            target="_blank"
+                            referrerPolicy="no-referrer"
+                        >
+                            {image.licenseName}
+                        </Link>
+                        : 'ingen'
+                }
+                </i>
                 {
                     pagingContext.loading ? (
                         <div className={styles.loading}></div>
                     ) : (
                         <Image
+                            hideCredit
+                            hideCopyRight
                             width={200}
                             imageSize={displayContext.imageSize}
                             image={image}
@@ -192,26 +208,26 @@ export default function ImageDisplay() {
             </div>
             {
                 canEdit && (
-                    <PopUp PopUpKey="EditImage" showButtonContent={
-                        <div className={styles.openImageAdmin}>
-                            <FontAwesomeIcon icon={faCog}/>
-                        </div>
+                    <PopUp PopUpKey="EditImage" showButtonClass={styles.openImageAdmin} showButtonContent={
+                        <FontAwesomeIcon icon={faCog}/>
                     }>
                         <div className={styles.admin}>
                             <Form
                                 title="Rediger metadata"
                                 successCallback={reload}
                                 submitText="oppdater"
-                                action={updateImageAction.bind(null, image.id)}
+                                action={updateImageAction.bind(null, { id: image.id })}
                                 closePopUpOnSuccess="EditImage"
                             >
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
                                 <TextInput name="alt" label="alt" defaultValue={image.alt} />
+                                <TextInput name="credit" label="kreditert" defaultValue={image.credit || ''} />
+                                <LicenseChooser defaultLicenseName={image.licenseName} />
                             </Form>
                             <Form
                                 className={styles.deleteImage}
                                 successCallback={reload}
-                                action={destroyImageAction.bind(null, image.id)}
+                                action={destroyImageAction.bind(null, { id: image.id })}
                                 submitText="slett"
                                 submitColor="red"
                                 confirmation={{

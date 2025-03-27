@@ -2,10 +2,10 @@
 import { QRCodeReaderConfig } from './ConfigVars'
 import styles from './OmegaIdReader.module.scss'
 import { parseJWT } from '@/jwt/parseJWTClient'
+import { decompressOmegaId } from '@/services/omegaid/compress'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import type { OmegaId } from '@/services/omegaid/Types'
 
 /**
  * Renders a component for reading OmegaId QR codes.
@@ -26,7 +26,7 @@ export default function OmegaIdReader({
     debounceThreshold,
     singleRead,
 }: {
-    successCallback: (user: OmegaId, token: string) => Promise<{
+    successCallback: (user: number, token: string) => Promise<{
         success: boolean,
         text: string,
     }>,
@@ -51,11 +51,17 @@ export default function OmegaIdReader({
         let lastReadTime = 0
         let lastReadUserId = -1
 
-        html5QrcodeScanner.render(async (token) => {
-            const parse = await parseJWT(token, publicKey, expiryOffset ?? 100)
+        html5QrcodeScanner.render(async (rawToken) => {
+            const token = decompressOmegaId(rawToken)
+            if (!token.success) {
+                setFeedBack({
+                    status: 'ERROR',
+                    text: 'Ugyldig QR kode'
+                })
+                return
+            }
+            const parse = await parseJWT(token.data, publicKey, expiryOffset ?? 100, 'omegaid')
             if (!parse.success) {
-                console.log(parse)
-
                 const msg = parse.error?.map(e => e.message).join(' / ') ?? 'Ukjent feil'
 
                 setFeedBack({
@@ -65,7 +71,7 @@ export default function OmegaIdReader({
                 return
             }
 
-            const userId = parse.data.id
+            const userId = parse.data
 
             if (userId === lastReadUserId && Date.now() - lastReadTime < (debounceThreshold ?? 5000)) {
                 lastReadTime = Date.now()
@@ -77,7 +83,7 @@ export default function OmegaIdReader({
                 text: '...',
             })
 
-            const results = await successCallback(parse.data, token)
+            const results = await successCallback(userId, token.data)
 
             if (results.success && (singleRead ?? false)) {
                 html5QrcodeScanner.clear()

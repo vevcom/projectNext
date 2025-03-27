@@ -7,13 +7,13 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import School from '@/components/School/School'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         shortname: string
-    }
+    }>
 }
 
 export default async function SchoolAdmin({ params }: PropTypes) {
-    const shortname = decodeURIComponent(params.shortname)
+    const shortname = decodeURIComponent((await params).shortname)
 
     const res = await readSchoolAction(shortname)
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'Unknown error')

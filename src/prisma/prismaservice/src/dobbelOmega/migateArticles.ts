@@ -1,4 +1,5 @@
 import { vevenIdToPnId } from './IdMapper'
+import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './IdMapper'
@@ -84,23 +85,7 @@ export default async function migrateArticles(
             }
         })
 
-        // The order is assumed to change 1. september, calculate by createdAt
-        // 1. september 1914 = order 1, 1. september 1915 = order 2, ...
-        let orderPublished = new Date(article.createdAt).getFullYear() - 1914
-        if (new Date(article.createdAt).getMonth() < 8) {
-            orderPublished--
-        }
-        await pnPrisma.omegaOrder.upsert({
-            where: {
-                order: orderPublished,
-            },
-            update: {
-                order: orderPublished,
-            },
-            create: {
-                order: orderPublished,
-            }
-        })
+        const orderPublished = await upsertOrderBasedOnDate(pnPrisma, article.createdAt)
 
         return {
             ...articlePn,

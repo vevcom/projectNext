@@ -7,15 +7,15 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         orderAndName: string[]
-    }
+    }>
 }
 
 export default async function NewsArticle({ params }: PropTypes) {
-    const order = parseInt(decodeURIComponent(params.orderAndName[0]), 10)
-    const name = decodeURIComponent(params.orderAndName[1])
-    if (!order || !name || params.orderAndName.length > 2) notFound()
+    const order = parseInt(decodeURIComponent((await params).orderAndName[0]), 10)
+    const name = decodeURIComponent((await params).orderAndName[1])
+    if (!order || !name || (await params).orderAndName.length > 2) notFound()
     const res = await readNewsAction({
         articleName: name,
         order,

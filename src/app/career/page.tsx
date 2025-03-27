@@ -12,15 +12,12 @@ import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction('ENGINEER')
-    const eventImageRes = await readSpecialImageAction('FAIR')
-    const comanyImageRes = await readSpecialImageAction('SKYSCRAPER')
-    const conactorCmsLinkRes = await readSpecialCmsLinkAction.bind(
-        null, { special: 'CAREER_LINK_TO_CONTACTOR' }
-    )()
-    const companyPresentationEventTagRes = await readSpecialEventTagAction.bind(
-        null, { special: 'COMPANY_PRESENTATION' }
-    )()
+    const jobAdImageRes = await readSpecialImageAction({ special: 'MACHINE' })
+    const eventImageRes = await readSpecialImageAction({ special: 'FAIR' })
+    const comanyImageRes = await readSpecialImageAction({ special: 'REALFAGSBYGGET' })
+    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ special: 'CAREER_LINK_TO_CONTACTOR' })
+    const companyPresentationEventTagRes = await readSpecialEventTagAction({ special: 'COMPANY_PRESENTATION' })
+
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null
     const companyImage = comanyImageRes.success ? comanyImageRes.data : null
@@ -37,6 +34,7 @@ export default async function CareerLandingPage() {
                 <span className={styles.links}>
                     <Link href="/career/jobads">
                         { jobAdImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={jobAdImage} /> : <></> }
                         <h2>Jobbanonser</h2>
@@ -45,12 +43,14 @@ export default async function CareerLandingPage() {
                         companyPresentationEventTag ? [companyPresentationEventTag.name] : []
                     )}`}>
                         { eventImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={eventImage} /> : <></> }
                         <h2>Bedriftpresentasjoner</h2>
                     </Link>
                     <Link href="/career/companies">
                         { companyImage ? <Image
+                            disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={companyImage} /> : <></> }
                         <h2>Bedrifter</h2>

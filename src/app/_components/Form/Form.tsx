@@ -135,8 +135,14 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         return
     }
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const formData = new FormData(event.currentTarget)
+        await actionWithError(formData)
+    }
+
     return (
-        <form className={`${styles.Form} ${className}`} {...props} action={actionWithError}>
+        <form className={`${styles.Form} ${className}`} {...props} onSubmit={handleSubmit}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (
@@ -148,7 +154,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
                 success={success}
                 generalErrors={generalErrors}
                 confirmation={confirmation}
-                className={buttonClassName}
+                className={`${buttonClassName} ${styles.submitButton}`}
             >
                 {submitText}
             </SubmitButton>

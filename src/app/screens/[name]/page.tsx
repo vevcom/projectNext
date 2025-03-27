@@ -1,13 +1,13 @@
 import styles from './page.module.scss'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         name: string
-    }
+    }>
 }
 
 export default async function screen({ params }: PropTypes) {
-    decodeURIComponent(params.name)
+    decodeURIComponent((await params).name)
 
     return (
         <div className={styles.wrapper}>

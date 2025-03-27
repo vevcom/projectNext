@@ -10,22 +10,24 @@ import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
 export default async function Collection({ params }: PropTypes) {
     const pageSize: PageSizeImage = 30
 
-    const readCollection = await readImageCollectionAction(Number(params.id))
+    const readCollection = await readImageCollectionAction(Number((await params).id))
     if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 
-    const readImages = await readImagesPageAction({
-        page: { pageSize, page: 0, cursor: null },
-        details: { collectionId: collection.id }
-    })
+    const readImages = await readImagesPageAction.bind(null, {
+        paging: {
+            page: { pageSize, page: 0, cursor: null },
+            details: { collectionId: collection.id }
+        }
+    })()
     if (!readImages.success) notFound()
     const images = readImages.data
 

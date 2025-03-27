@@ -1,6 +1,6 @@
 'use server'
 
-import { ActionNoData } from '@/actions/Action'
-import { CmsLinks } from '@/services/cms/links'
+import { action } from '@/actions/action'
+import { readSpecialCmsLink } from '@/services/cms/links/read'
 
-export const readSpecialCmsLinkAction = ActionNoData(CmsLinks.readSpacial)
+export const readSpecialCmsLinkAction = action(readSpecialCmsLink)

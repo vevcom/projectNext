@@ -1,13 +1,13 @@
 import { ValidationBase } from '@/services/Validation'
 import { maxOmbulFileSize } from '@/services/ombul/ConfigVars'
-import { imageFileSchema } from '@/services/images/validation'
+import { ImageSchemas } from '@/services/images/schemas'
 import { z } from 'zod'
 import type { ValidationTypes } from '@/services/Validation'
 
 export const baseOmbulValidation = new ValidationBase({
     type: {
         ombulFile: z.instanceof(File),
-        ombulCoverImage: imageFileSchema,
+        ombulCoverImage: ImageSchemas.fileSchema,
         year: z.string().optional(),
         issueNumber: z.string().optional(),
         name: z.string(),
@@ -15,7 +15,7 @@ export const baseOmbulValidation = new ValidationBase({
     },
     details: {
         ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),
-        ombulCoverImage: imageFileSchema,
+        ombulCoverImage: ImageSchemas.fileSchema,
         year: z.number().refine(val =>
             (val === undefined) || (val >= 1919 && val <= (new Date()).getFullYear()),
         'Må være mellom 1919 og nåværende år'

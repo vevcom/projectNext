@@ -4,10 +4,11 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
-import { DestroyCompanyAuther, UpdateCompanyAuther } from '@/services/career/companies/Authers'
 import Form from '@/components/Form/Form'
 import { updateComanyAction } from '@/actions/career/companies/update'
 import { destroyCompanyAction } from '@/actions/career/companies/destroy'
+import { bindParams } from '@/actions/bind'
+import { CompanyAuthers } from '@/services/career/companies/authers'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
 
@@ -38,11 +39,11 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = UpdateCompanyAuther.dynamicFields({}).auth(session)
-    const canDestroy = DestroyCompanyAuther.dynamicFields({}).auth(session)
+    const canUpdate = CompanyAuthers.update.dynamicFields({}).auth(session)
+    const canDestroy = CompanyAuthers.destroy.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
-            { asClient ?
+            {asClient ?
                 <CmsImageClient
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}
@@ -64,7 +65,7 @@ export default function Company({
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
-                                action={updateComanyAction.bind(null, { id: company.id })}
+                                action={bindParams(updateComanyAction, { id: company.id })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Lagre"
@@ -73,7 +74,7 @@ export default function Company({
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
                             <Form
-                                action={destroyCompanyAction.bind(null, { id: company.id })}
+                                action={bindParams(destroyCompanyAction, { id: company.id })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Slett"

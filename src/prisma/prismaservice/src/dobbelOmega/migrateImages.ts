@@ -1,4 +1,5 @@
 import { vevenIdToPnId, type IdMapper } from './IdMapper'
+import manifest from '@/src/logger'
 import { imageSizes, imageStoreLocation } from '@/src/seedImages'
 import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
@@ -37,8 +38,12 @@ export default async function migrateImages(
                 create: {
                     purpose: 'IMAGE',
                     published: true,
-                    regularLevel: {},
-                    adminLevel: {},
+                    regularLevel: {
+                        create: {}
+                    },
+                    adminLevel: {
+                        create: {}
+                    },
                 }
             }
         },
@@ -51,19 +56,37 @@ export default async function migrateImages(
     })
     if (!ombulCollection) throw new Error('No ombul collection found for seeding images')
 
+    const profileCollection = await pnPrisma.imageCollection.findUnique({
+        where: {
+            special: 'PROFILEIMAGES',
+        },
+    })
+    if (!profileCollection) throw new Error('No profile collection found for seeding images')
+
     const images = await vevenPrisma.images.findMany({
         include: {
             Ombul: true,
             Articles: true,
+            Events: true,
         }
     })
 
+    // Find what the profile collection is on veven
+    const vevenProfileCollection = await vevenPrisma.imageGroups.findFirstOrThrow({
+        where: {
+            name: 'Profilbilder',
+        },
+    })
+
+    manifest.info(`Before filter: ${images.length} images`)
     const imagesWithCollection = images.map(image => {
         let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (!collectionId) {
             collectionId = garbageCollection.id
+        } else if (image.ImageGroupId === vevenProfileCollection.id) {
+            collectionId = profileCollection.id
         }
         return {
             ...image,
@@ -71,43 +94,18 @@ export default async function migrateImages(
         }
     }).filter(image => {
         //Apply limits
-        if (!limits.numberOffFullImageCollections) return true
+        if (limits.numberOffFullImageCollections === null) return true
         if (image.Ombul.length) return true
         if (image.Articles.length) return true
+        if (image.Events.length) return true
         if (image.collectionId === ombulCollection.id) return true
+        if (image.collectionId === profileCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false
     })
+    manifest.info(`After filter: ${imagesWithCollection.length} images`)
 
-    const imagesWithCollectionAndFs = await Promise.all(imagesWithCollection.map(async (image) => {
-        const ext = image.originalName.split('.').pop() || ''
-        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
-            + `?url=/store/images/${image.name}.${ext}`
-        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
-            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
-            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
-            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const [fsLocationSmallSize, fsLocationMediumSize, fsLocationLargeSize, fsLocationOriginal] = await Promise.all([
-            fetchImageAndUploadToStore(fsLocationSmallOldVev),
-            fetchImageAndUploadToStore(fsLocationMediumOldVev),
-            fetchImageAndUploadToStore(fsLocationLargeOldVev),
-            fetchImageAndUploadToStore(fsLocationDefaultOldVev),
-        ])
-        if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
-            console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
-            return null
-        }
-
-        return {
-            ...image,
-            fsLocationSmallSize,
-            fsLocationMediumSize,
-            fsLocationLargeSize,
-            fsLocationOriginal,
-        }
-    }))
+    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection)
 
     //correct names if there are duplicates
     const namesTaken: { name: string, times: number }[] = []
@@ -160,6 +158,66 @@ export default async function migrateImages(
         migrateImageIdMap.push({ vevenId: image.id, pnId })
     }))
     return migrateImageIdMap
+}
+
+type Locations = {
+    fsLocationOriginal: string,
+    fsLocationSmallSize: string,
+    fsLocationMediumSize: string,
+    fsLocationLargeSize: string
+}
+
+async function fetchAllImagesAndUploadToStore<X extends {
+    originalName: string,
+    name: string,
+    id: number
+}>(images: X[]): Promise<((X & Locations) | null)[]> {
+    const ret: ((X & Locations) | null)[] = []
+    let imageCounter = 1
+    const batchSize = 1200
+    const imageBatches = images.reduce((acc, image) => {
+        if (acc[acc.length - 1].length >= batchSize) {
+            acc.push([image])
+        } else {
+            acc[acc.length - 1].push(image)
+        }
+        return acc
+    }, [[]] as X[][])
+
+    const uploadOne = async (image: X) => {
+        manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
+        const ext = image.originalName.split('.').pop() || ''
+        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
+            + `?url=/store/images/${image.name}.${ext}`
+        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
+            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
+            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
+            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
+        const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
+        const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
+        const fsLocationSmallSize = await fetchImageAndUploadToStore(fsLocationSmallOldVev)
+        const fsLocationLargeSize = await fetchImageAndUploadToStore(fsLocationLargeOldVev)
+        if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
+            console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
+            ret.push(null)
+        } else {
+            ret.push({
+                ...image,
+                fsLocationSmallSize,
+                fsLocationMediumSize,
+                fsLocationOriginal,
+                fsLocationLargeSize
+            })
+        }
+    }
+
+
+    for (const imageBatch of imageBatches) {
+        await Promise.all(imageBatch.map(uploadOne))
+    }
+    return ret
 }
 
 /**

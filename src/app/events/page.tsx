@@ -6,8 +6,9 @@ import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEventsAction } from '@/actions/events/read'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/actions/events/tags/read'
-import { CreateEventTagAuther, DestroyEventTagAuther, UpdateEventTagAuther } from '@/services/events/tags/Authers'
+import { EventTagAuthers } from '@/services/events/tags/authers'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { Session } from '@/auth/Session'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
@@ -16,21 +17,27 @@ type PropTypes = SearchParamsServerSide
 export default async function Events({
     searchParams
 }: PropTypes) {
-    const tagNames = QueryParams.eventTags.decode(searchParams)
+    const tagNames = QueryParams.eventTags.decode(await searchParams)
 
-    const currentEventsResponse = await readCurrentEventsAction.bind(null, { tags: tagNames })()
-    const eventTagsResponse = await readEventTagsAction.bind(null, {})()
-    if (!currentEventsResponse.success || !eventTagsResponse.success) {
+    const currentEventsResponse = await readCurrentEventsAction({ tags: tagNames })
+    const eventTagsResponse = await readEventTagsAction()
+
+    if (!currentEventsResponse.success) {
         throw new Error('Failed to read current events')
     }
+    if (!eventTagsResponse.success) {
+        throw new Error('Failed to read event tags')
+    }
     const { data: currentEvents } = currentEventsResponse
-    const { data: eventTags, session } = eventTagsResponse
+    const { data: eventTags } = eventTagsResponse
 
     const currentTags = tagNames ? eventTags.filter(tag => tagNames.includes(tag.name)) : []
 
-    const canUpdate = UpdateEventTagAuther.dynamicFields({}).auth(session)
-    const canCreate = CreateEventTagAuther.dynamicFields({}).auth(session)
-    const canDestroy = DestroyEventTagAuther.dynamicFields({}).auth(session)
+    const session = await Session.fromNextAuth()
+
+    const canUpdate = EventTagAuthers.update.dynamicFields({}).auth(session)
+    const canCreate = EventTagAuthers.create.dynamicFields({}).auth(session)
+    const canDestroy = EventTagAuthers.destroy.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[

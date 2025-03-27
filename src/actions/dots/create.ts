@@ -1,5 +1,5 @@
 'use server'
-import { Action } from '@/actions/Action'
-import { Dots } from '@/services/dots'
+import { action } from '@/actions/action'
+import { dotMethods } from '@/services/dots/methods'
 
-export const createDotAction = Action(Dots.create)
+export const createDotAction = action(dotMethods.create)

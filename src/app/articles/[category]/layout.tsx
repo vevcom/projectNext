@@ -5,14 +5,14 @@ import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         category: string
-    }
+    }>,
     children: ReactNode,
 }
 
 export default async function ArticleCategoryLayout({ params, children }: PropTypes) {
-    const categoryName = decodeURIComponent(params.category)
+    const categoryName = decodeURIComponent((await params).category)
     const res = await readArticleCategoryAction(categoryName)
     if (!res.success) return notFound()
     const category = res.data

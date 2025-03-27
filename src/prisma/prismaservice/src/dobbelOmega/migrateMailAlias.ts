@@ -8,6 +8,7 @@ export default async function migrateMailAliases(
     vevenPrisma: PrismaClientVeven,
     limits: Limits,
 ) {
+    if (limits.mailaliases === 0) return
     const aliases = await vevenPrisma.mailAliases.findMany({
         take: limits.mailaliases ?? undefined,
         include: {
