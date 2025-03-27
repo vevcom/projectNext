@@ -24,6 +24,9 @@ export default async function Register({ searchParams }: PropTypes) {
     const updatedUser = unwrapActionReturn(await verifyEmailAction({ token }))
 
     if (!userId) {
+        // TODO: If the user arrives here by an invitation email
+        // or from another verify email email, we should log the user inn,
+        // not just ask the user to do so. Escpecially since invited users can't login with feide.
         return <EmailVerifiedWrapper>
             <Link href="/login">Logg inn</Link>
         </EmailVerifiedWrapper>

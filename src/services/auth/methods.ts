@@ -69,13 +69,16 @@ export namespace AuthMethods {
 
             const userId = Number(payload.sub)
 
-            const user = await UserMethods.read.client(prisma).execute({
-                params: { id: userId },
-                session: null,
-                bypassAuth: true
+            const user = await prisma.user.findUniqueOrThrow({
+                where: {
+                    id: userId,
+                },
+                select: {
+                    credentials: true
+                }
             })
 
-            if (user.updatedAt > new Date(payload.iat * 1000)) {
+            if (user.credentials && user.credentials?.credentialsUpdatedAt > new Date(payload.iat * 1000)) {
                 throw new ServerError('JWT INVALID', 'The password has already been changed')
             }
 
@@ -110,9 +113,12 @@ export namespace AuthMethods {
         dataSchema: AuthSchemas.sendResetPasswordEmail,
         auther: () => AuthAuthers.sendResetPasswordEmail.dynamicFields({}),
         method: async ({ prisma, data, session }) => {
+            console.log(data)
             try {
                 const user = await UserMethods.read.client(prisma).executeUnsafe({
-                    data,
+                    params: {
+                        email: data.email
+                    },
                     session,
                     bypassAuth: true,
                 })
@@ -120,7 +126,7 @@ export namespace AuthMethods {
                 sendResetPasswordMail(user.email)
             } catch (err) {
                 console.log(err)
-                throw err
+                return data.email
             }
 
             return data.email

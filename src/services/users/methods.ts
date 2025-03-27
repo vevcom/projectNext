@@ -22,6 +22,10 @@ import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
 
 export namespace UserMethods {
+    /**
+     * This Method creates an user by invitation, and sends the invitation email.
+     * WARNING: This should not be used to create users registered by Feide.
+     */
     export const create = ServiceMethod({
         dataSchema: UserSchemas.create,
         auther: () => UserAuthers.create.dynamicFields({}),
@@ -44,6 +48,9 @@ export namespace UserMethods {
             })
 
             setTimeout(() => sendUserInvitationEmail(user), 1000)
+            // The timeout is here to make sure the user is fully created before we send the email.
+            // If we don't wait the validation token will be generated first, and will not be valid since
+            // the user has changed after the token was generated.
 
             return user
         }
@@ -58,7 +65,10 @@ export namespace UserMethods {
         }),
         auther: ({ params }) => UserAuthers.read.dynamicFields(params),
         method: async ({ prisma, params }) => await prisma.user.findUniqueOrThrow({
-            where: { id: params.id },
+            where: {
+                id: params.id,
+                ...params
+            },
             select: UserConfig.filterSelection
         })
     })

@@ -27,6 +27,7 @@ services:
             JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
             JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
             JWT_SECRET: ${JWT_SECRET}
+            SERVER_LINK_PREFIX: ${SERVER_LINK_PREFIX}
         depends_on:
             db:
                 condition: service_healthy
