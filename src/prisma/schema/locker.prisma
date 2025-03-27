@@ -24,7 +24,7 @@ model LockerReservation {
   locker    Locker    @relation(fields: [lockerId], references: [id])
   user      User      @relation(fields: [userId], references: [id])
   group     Group?    @relation(fields: [groupId], references: [id])
-  lockerId  Int
+  lockerId  Int       @unique
   userId    Int
   groupId   Int?
   createdAt DateTime  @default(now())
