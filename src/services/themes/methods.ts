@@ -9,6 +9,8 @@ export namespace ThemeMethods {
         auther: () => ThemeAuthers.create.dynamicFields({}),
         dataSchema: ThemeSchemas.create,
         method: async ({ data }) => {
+            console.log(data)
+
             if (!/^#([0-9A-F]{3}){1,2}$/i.test(data.primaryLight)) {
                 throw new Error('Invalid hex color code')
             }
@@ -37,7 +39,7 @@ export namespace ThemeMethods {
 
             return await prisma.theme.create({
                 data: {
-                    ...data,
+                    name: data.name,
                     primaryLightR,
                     primaryLightG,
                     primaryLightB,
@@ -92,7 +94,7 @@ export namespace ThemeMethods {
                         id: params.id
                     },
                     data: {
-                        ...data,
+                        name: data.name,
                         primaryLightR,
                         primaryLightG,
                         primaryLightB,

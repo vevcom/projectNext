@@ -17,7 +17,7 @@ export default async function ThemesAdmin() {
         <div>
             <h1>Themes Admin</h1>
             <Form
-                action={createThemeAction.bind(null, {})}
+                action={createThemeAction}
                 submitText="Lag nytt tema"
                 refreshOnSuccess
             >
