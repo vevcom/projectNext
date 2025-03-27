@@ -101,13 +101,13 @@ function dateMatchCron(day: Date, cronExpression: string) {
     return true
 }
 
-function matchPriceForDay(day: Date, omegaShare: number, prices: CabinProductPrice[]) {
+function matchPriceForDay(day: Date, memberShare: number, prices: CabinProductPrice[]) {
     const filtered = prices.filter(price => {
         if (price.validFrom > day) {
             return false
         }
 
-        if (price.omegaShare > omegaShare) {
+        if (price.memberShare > memberShare) {
             return false
         }
 
@@ -135,15 +135,15 @@ function findPrices(
     product: CabinProductConfig.CabinProductExtended
 ) {
     const dateArray = getDateArray(startDate, endDate)
-    let omegaShare = Math.ceil(numberOfMembers / (numberOfMembers + numberOfNonMembers) * 100)
-    if (isNaN(omegaShare)) {
-        omegaShare = 0
+    let memberShare = Math.ceil(numberOfMembers / (numberOfMembers + numberOfNonMembers) * 100)
+    if (isNaN(memberShare)) {
+        memberShare = 0
     }
 
     const pricesHistogram: Record<number, number> = {}
 
     for (const day of dateArray) {
-        const price = matchPriceForDay(day, omegaShare, product.CabinProductPrice)
+        const price = matchPriceForDay(day, memberShare, product.CabinProductPrice)
         if (pricesHistogram[price.id] === undefined) {
             pricesHistogram[price.id] = 0
         }

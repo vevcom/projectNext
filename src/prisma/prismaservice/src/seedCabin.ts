@@ -14,28 +14,28 @@ export default async function seedCabin(prisma: PrismaClient) {
                     cronInterval: '* * 0-4',
                     price: 100000,
                     validFrom: new Date(),
-                    omegaShare: 0,
+                    memberShare: 0,
                 },
                 {
                     description: 'Helg (>50% Omega)',
                     cronInterval: '* * 5-6',
                     price: 470000 * 0.5,
                     validFrom: new Date(),
-                    omegaShare: 50,
+                    memberShare: 50,
                 },
                 {
                     description: 'Helg (med Omega)',
                     cronInterval: '* * 5-6',
                     price: 470000 * 0.75,
                     validFrom: new Date(),
-                    omegaShare: 1,
+                    memberShare: 1,
                 },
                 {
                     description: 'Helg',
                     cronInterval: '* * 5-6',
                     price: 470000,
                     validFrom: new Date(),
-                    omegaShare: 0,
+                    memberShare: 0,
                 },
             ]
         },
@@ -48,7 +48,7 @@ export default async function seedCabin(prisma: PrismaClient) {
                 cronInterval: '* * *',
                 price: 25000,
                 validFrom: new Date(),
-                omegaShare: 0,
+                memberShare: 0,
             }]
         },
         {
@@ -60,7 +60,7 @@ export default async function seedCabin(prisma: PrismaClient) {
                 cronInterval: '* * *',
                 price: 15000,
                 validFrom: new Date(),
-                omegaShare: 0,
+                memberShare: 0,
             }]
         }
     ]

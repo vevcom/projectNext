@@ -2,6 +2,7 @@
 
 import CabinCalendar from './CabinCalendar'
 import CabinPriceCalculator from './CabinPriceCalculator'
+import SelectCabinProduct from './SelectCabinProduct'
 import RadioLarge from '@/app/_components/UI/RadioLarge'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
@@ -15,7 +16,6 @@ import type { CabinProductConfig } from '@/services/cabin/product/config'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType } from '@prisma/client'
-import SelectCabinProduct from './SelectCabinProduct'
 
 export default function StateWrapper({
     cabinAvailability,
@@ -29,9 +29,16 @@ export default function StateWrapper({
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
 
+    const cabinProduct = cabinProducts.find(product => product.type === 'CABIN')
+    if (!cabinProduct) {
+        throw new Error('No product with type CABIN.')
+    }
+
     const [bookingType, setBookingType] = useState<BookingType>('CABIN')
     const [dateRange, setDateRange] = useState<DateRange>({})
-    const [selectedProduct, setSelectedProduct] = useState<CabinProductConfig.CabinProductExtended | undefined>()
+    const [selectedProduct, setSelectedProduct] = useState<CabinProductConfig.CabinProductExtended>(
+        cabinProduct
+    )
 
     const [numberOfMembers, setNumberOfMembers] = useState(0)
     const [numberOfNonMembers, setNumberOfNonMembers] = useState(0)
@@ -59,7 +66,7 @@ export default function StateWrapper({
     ), [selectedProduct, dateRange, numberOfMembers, numberOfNonMembers])
 
     return <>
-        { calendar }
+        {calendar}
 
         <Form
             action={createCabinBookinUserAttachedAction.bind(null, { userId: user.user?.id ?? -1 })}
@@ -98,7 +105,7 @@ export default function StateWrapper({
                 onChange={setSelectedProduct}
             />
 
-            { priceCalculator }
+            {priceCalculator}
 
             <TextInput
                 name="firstname"
