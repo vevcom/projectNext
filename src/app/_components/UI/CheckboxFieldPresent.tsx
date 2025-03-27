@@ -24,6 +24,7 @@ export default function CheckboxFieldPresent({ name }: PropTypes) {
             name={name}
             value={FIELD_IS_PRESENT_VALUE}
             checked={true}
+            onChange={() => {}}
             className={styles.hidden}
         />
     )

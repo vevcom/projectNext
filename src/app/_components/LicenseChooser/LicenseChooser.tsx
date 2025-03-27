@@ -3,7 +3,7 @@ import styles from './LicenseChooser.module.scss'
 import { SelectNumberPossibleNULL } from '@/UI/Select'
 import { readAllLicensesAction } from '@/actions/licenses/read'
 import useActionCall from '@/hooks/useActionCall'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type PropTypes = {
     defaultLicenseName?: string | null
@@ -18,7 +18,14 @@ export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
     const action = useCallback(readAllLicensesAction, [readAllLicensesAction])
     const { data } = useActionCall(action)
 
-    const defaultLicenseId = data?.find(license => license.name === defaultLicenseName)?.id
+    const [licenseId, setLicenseId] = useState<number | 'NULL'>('NULL')
+    useEffect(() => {
+        if (!defaultLicenseName)  return
+        const license = data?.find(license => license.name === defaultLicenseName)
+        if (license) {
+            setLicenseId(license.id)
+        }
+    }, [defaultLicenseName, data])
 
     return (
         <SelectNumberPossibleNULL
@@ -31,7 +38,8 @@ export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
                     ...(data?.map(license => ({ value: license.id, label: license.name })) ?? [])
                 ] as const
             }
-            defaultValue={defaultLicenseId ?? 'NULL'}
+            value={licenseId}
+            onChange={setLicenseId}
         />
     )
 }

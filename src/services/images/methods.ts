@@ -13,7 +13,6 @@ import sharp from 'sharp'
 import { SpecialImage } from '@prisma/client'
 import { z } from 'zod'
 
-
 export namespace ImageMethods {
     /**
      * Creates an image.
@@ -214,15 +213,20 @@ export namespace ImageMethods {
             id: z.number(),
         }),
         dataSchema: ImageSchemas.update,
-        method: async ({ prisma, params: { id }, data }) => await prisma.image.update({
-            where: {
-                id,
-            },
-            data: {
-                license: data.licenseId ? { connect: { id: data.licenseId } } : undefined,
-                ...data,
-            }
-        })
+        method: async ({ prisma, params: { id }, data: { licenseId, ...data } }) => {
+            console.log('lic', licenseId)
+            return await prisma.image.update({
+                where: {
+                    id,
+                },
+                data: {
+                    license: licenseId !== undefined ? { 
+                        ...(licenseId ?  { connect: { id: licenseId } }: { disconnect: true })
+                    } : undefined,
+                    ...data,
+                }
+            }) 
+        }
     })
 
     export const destroy = ServiceMethod({
