@@ -1,7 +1,7 @@
 import 'server-only'
 import { lockerReservationIncluder } from './reservations/config'
-import { createLockerValidation } from './validation'
 import { LockerAuthers } from './authers'
+import { LockersSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -42,7 +42,7 @@ export namespace LockerMethods {
      */
     export const create = ServiceMethod({
         auther: () => LockerAuthers.create.dynamicFields({}),
-        dataValidation: createLockerValidation,
+        dataSchema: LockersSchemas.create,
         method: async ({ prisma, data }) => {
             console.log(data)
             return await prisma.locker.create({

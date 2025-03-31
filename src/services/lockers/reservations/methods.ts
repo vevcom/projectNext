@@ -1,7 +1,7 @@
 
 import 'server-only'
-import { lockerReservationValidation } from './validation'
 import { LockerReservationAuthers } from './authers'
+import { LockerReservationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readUsersOfGroups } from '@/services/groups/read'
 import { Smorekopp } from '@/services/error'
@@ -21,7 +21,7 @@ export namespace LockerReservationMethods {
         paramsSchema: z.object({
             lockerId: z.number(),
         }),
-        dataValidation: lockerReservationValidation,
+        dataSchema: LockerReservationSchemas.create,
         method: async ({ prisma, session, data, params }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
@@ -83,7 +83,7 @@ export namespace LockerReservationMethods {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataValidation: lockerReservationValidation,
+        dataSchema: LockerReservationSchemas.update,
         method: async ({ prisma, session, data, params: { id } }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that the user updating is the creator of the reservation
