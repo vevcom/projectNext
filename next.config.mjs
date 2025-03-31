@@ -3,7 +3,7 @@ import path from 'path'
 
 const nextConfig = {
     sassOptions: {
-        includePaths: [path.join(__dirname, 'src/styles')],
+        includePaths: [path.join(import.meta.dirname, 'src/styles')],
     },
 
     // fix error with react-pdf use of canvas
@@ -24,5 +24,4 @@ const nextConfig = {
     },
 }
 
-
-module.exports = nextConfig
+export default nextConfig

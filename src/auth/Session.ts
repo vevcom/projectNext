@@ -96,7 +96,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
             apiKeyFetch = await ApiKeyMethods.readWithHash.newClient().execute({
                 session: null,
                 bypassAuth: true,
-                params: id
+                params: { id }
             })
         } catch (e) {
             if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {

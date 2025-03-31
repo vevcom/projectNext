@@ -20,8 +20,8 @@ export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
 
     const [licenseId, setLicenseId] = useState<number | 'NULL'>('NULL')
     useEffect(() => {
-        if (!defaultLicenseName)  return
-        const license = data?.find(license => license.name === defaultLicenseName)
+        if (!defaultLicenseName) return
+        const license = data?.find(licns => licns.name === defaultLicenseName)
         if (license) {
             setLicenseId(license.id)
         }

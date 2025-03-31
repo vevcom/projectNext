@@ -222,12 +222,12 @@ export namespace ImageMethods {
                     id,
                 },
                 data: {
-                    license: licenseId !== undefined ? { 
-                        ...(licenseId ?  { connect: { id: licenseId } }: { disconnect: true })
+                    license: licenseId !== undefined ? {
+                        ...(licenseId ? { connect: { id: licenseId } } : { disconnect: true })
                     } : undefined,
                     ...data,
                 }
-            }) 
+            })
         }
     })
 

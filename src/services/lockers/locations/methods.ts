@@ -12,7 +12,7 @@ export namespace LockerLocationMethods {
      */
     export const create = ServiceMethod({
         auther: () => LockerLocationAuthers.create.dynamicFields({}),
-        dataValidation: createLockerLocationValidation,
+        dataSchema: createLockerLocationValidation,
         method: async ({ prisma, data }) => prisma.lockerLocation.create({
             data: {
                 building: data.building,

@@ -64,4 +64,6 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
 
 export const SelectString = SelectConstructor((value: string) => value)
 export const SelectNumber = SelectConstructor((value: string) => Number(value))
-export const SelectNumberPossibleNULL = SelectConstructor<number | 'NULL'>((value: string) => (value === 'NULL' ? 'NULL' : Number(value)))
+export const SelectNumberPossibleNULL = SelectConstructor<number | 'NULL'>(
+    (value: string) => (value === 'NULL' ? 'NULL' : Number(value))
+)

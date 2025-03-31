@@ -19,7 +19,8 @@ export namespace zpn {
 
     /**
      * This field is used to represent a list of enums that could be checkboxes in frontend with values as the enum values
-     * In the array it is also allowd to have the value FIELD_IS_PRESENT_VALUE so that the server can detect that the field is present
+     * In the array it is also allowd to have the value FIELD_IS_PRESENT_VALUE
+     * so that the server can detect that the field is present
      * @returns
      */
     export const enumListCheckboxFriendly = <T extends EnumLike>({ enum: enumValues }: {
@@ -41,7 +42,8 @@ export namespace zpn {
 
     /**
      * This field is used to represent a list of numbers that could be checkboxes in frontend with values as the numbers
-     * In the array it is also allowd to have the value FIELD_IS_PRESENT_VALUE so that the server can detect that the field is present
+     * In the array it is also allowd to have the value FIELD_IS_PRESENT_VALUE
+     * so that the server can detect that the field is present
      */
     export const numberListCheckboxFriendly = ({ }: { label: string }) => z.union([
         z.number().array(), // mosltly for the backend
@@ -55,7 +57,10 @@ export namespace zpn {
         return filtered
     })
 
-    export const date = ({ label }: { label: string }) => z.string().transform((val) => new Date(val)).refine((date) => !isNaN(date.getTime()), {
-        message: `${label} er i innvalid`,
-    })
+    export const date = ({ label }: { label: string }) =>
+        z.string()
+            .transform((val) => new Date(val))
+            .refine((datetime) => !isNaN(datetime.getTime()), {
+                message: `${label} er i innvalid`,
+            })
 }
