@@ -3,8 +3,6 @@ services:
         extends:
             file: docker-compose.base.yml
             service: projectnext
-        ports:
-            - 3000:3000
         build:
             target: dev
         volumes:
@@ -48,6 +46,8 @@ services:
         volumes:
             - ${PROJECT_ROOT:-.}/containers/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
             - devstore:/usr/store
+        depends_on:
+            - projectnext
 
 volumes:
     devdb:

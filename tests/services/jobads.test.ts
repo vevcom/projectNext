@@ -44,8 +44,7 @@ describe('job ads', () => {
         expect(JobadMethods.create.newClient().execute({
             data: CREATE_JOB_AD,
             session: Session.empty()
-        }))
-            .rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
+        })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
         const count = await prisma.jobAd.count()
         expect(count).toBe(0)

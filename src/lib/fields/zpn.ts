@@ -58,9 +58,12 @@ export namespace zpn {
     })
 
     export const date = ({ label }: { label: string }) =>
-        z.string()
-            .transform((val) => new Date(val))
-            .refine((datetime) => !isNaN(datetime.getTime()), {
-                message: `${label} er i innvalid`,
-            })
+        z.union([
+            z.string()
+                .transform((val) => new Date(val))
+                .refine((datetime) => !isNaN(datetime.getTime()), {
+                    message: `${label} er i innvalid`,
+                }),
+            z.date()
+        ])
 }
