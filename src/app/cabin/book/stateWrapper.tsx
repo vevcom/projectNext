@@ -2,7 +2,7 @@
 
 import CabinCalendar from './CabinCalendar'
 import CabinPriceCalculator from './CabinPriceCalculator'
-import SelectCabinProduct from './SelectCabinProduct'
+import SelectBedProducts from './SelectBedProduct'
 import RadioLarge from '@/app/_components/UI/RadioLarge'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
@@ -33,12 +33,15 @@ export default function StateWrapper({
     if (!cabinProduct) {
         throw new Error('No product with type CABIN.')
     }
+    const bedProducts = cabinProducts.filter(product => product.type === 'BED')
 
     const [bookingType, setBookingType] = useState<BookingType>('CABIN')
     const [dateRange, setDateRange] = useState<DateRange>({})
-    const [selectedProduct, setSelectedProduct] = useState<CabinProductConfig.CabinProductExtended>(
-        cabinProduct
+
+    const [selectedProducts, setSelectedProducts] = useState<CabinProductConfig.CabinProductExtended[]>(
+        [cabinProduct]
     )
+    const [bedAmounts, setBedAmounts] = useState<number[]>(Array(bedProducts.length).fill(0))
 
     const [numberOfMembers, setNumberOfMembers] = useState(0)
     const [numberOfNonMembers, setNumberOfNonMembers] = useState(0)
@@ -57,13 +60,14 @@ export default function StateWrapper({
 
     const priceCalculator = useMemo(() => (
         <CabinPriceCalculator
-            product={selectedProduct}
+            products={selectedProducts}
+            productAmounts={bookingType === 'BED' ? bedAmounts : [1]}
             startDate={dateRange.start}
             endDate={dateRange.end}
             numberOfMembers={numberOfMembers}
             numberOfNonMembers={numberOfNonMembers}
         />
-    ), [selectedProduct, dateRange, numberOfMembers, numberOfNonMembers])
+    ), [selectedProducts, bedAmounts, dateRange, numberOfMembers, numberOfNonMembers])
 
     return <>
         {calendar}
@@ -91,19 +95,46 @@ export default function StateWrapper({
                 value={bookingType}
                 onChange={(newType) => {
                     setBookingType(newType)
-                    const newProduct = cabinProducts.find(product => product.type === newType)
-                    if (newProduct) {
-                        setSelectedProduct(newProduct)
+                    if (newType === 'CABIN') {
+                        setSelectedProducts([cabinProduct])
+                    } else {
+                        setSelectedProducts(bedProducts)
                     }
                 }}
             />
 
-            <SelectCabinProduct
-                type={bookingType}
-                value={selectedProduct}
-                cabinProducts={cabinProducts}
-                onChange={setSelectedProduct}
-            />
+            {bookingType === 'BED' && <>
+                <SelectBedProducts
+                    amounts={bedAmounts}
+                    bedProducts={bedProducts}
+                    onChange={setBedAmounts}
+                />
+            </>}
+
+            {bookingType === 'CABIN' && <>
+                <NumberInput
+                    name="memberParticipant"
+                    label="Antall som er medlem i Omega"
+                    value={numberOfMembers}
+                    onChange={(e) => {
+                        const value = Number(e.target.value)
+                        if (value >= 0) {
+                            setNumberOfMembers(value)
+                        }
+                    }}
+                />
+                <NumberInput
+                    name="ExternalParticipant"
+                    label="Antall som ikke er medlem i Omega"
+                    value={numberOfNonMembers}
+                    onChange={(e) => {
+                        const value = Number(e.target.value)
+                        if (value >= 0) {
+                            setNumberOfNonMembers(value)
+                        }
+                    }}
+                />
+            </>}
 
             {priceCalculator}
 
@@ -127,29 +158,6 @@ export default function StateWrapper({
                 defaultValue={user.user?.mobile ?? ''}
                 disabled={!!user.user}
                 readOnly={!!user.user}
-            />
-
-            <NumberInput
-                name="memberParticipant"
-                label="Antall som er medlem i Omega"
-                value={numberOfMembers}
-                onChange={(e) => {
-                    const value = Number(e.target.value)
-                    if (value >= 0) {
-                        setNumberOfMembers(value)
-                    }
-                }}
-            />
-            <NumberInput
-                name="ExternalParticipant"
-                label="Antall som ikke er medlem i Omega"
-                value={numberOfNonMembers}
-                onChange={(e) => {
-                    const value = Number(e.target.value)
-                    if (value >= 0) {
-                        setNumberOfNonMembers(value)
-                    }
-                }}
             />
 
             <TextInput name="tenantNotes" label="Notater til utleier" />

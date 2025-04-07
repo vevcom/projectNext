@@ -154,57 +154,67 @@ function findPrices(
 }
 
 export default function CabinPriceCalculator({
-    product,
+    products,
+    productAmounts,
     startDate,
     endDate,
     numberOfMembers,
     numberOfNonMembers,
 }: {
-    product?: CabinProductConfig.CabinProductExtended,
+    products: CabinProductConfig.CabinProductExtended[],
+    productAmounts: number[],
     startDate?: Date,
     endDate?: Date,
     numberOfMembers: number,
     numberOfNonMembers: number,
 }) {
-    let priceHist: Record<number, number> = {}
+    if (products.length !== productAmounts.length) {
+        throw new Error('The products and product amounts must be the same length')
+    }
+    const priceHist: (Record<number, number>)[] = []
     let totalPrice = 0
 
-    if (product && startDate && endDate) {
-        priceHist = findPrices(startDate, endDate, numberOfMembers, numberOfNonMembers, product)
+    if (startDate && endDate) {
+        for (let i = 0; i < products.length; i++) {
+            priceHist.push(findPrices(startDate, endDate, numberOfMembers, numberOfNonMembers, products[i]))
 
-        totalPrice = Object.entries(priceHist).reduce((acc, [priceId, count]) => {
-            const price = product.CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))
-            if (!price) throw new Error('Price is not found')
+            totalPrice += Object.entries(priceHist[i]).reduce((acc, [priceId, count]) => {
+                const price = products[i].CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))
+                if (!price) throw new Error('Price is not found')
 
-            return acc + price.price * count
-        }, 0)
+                return acc + price.price * count * productAmounts[i]
+            }, 0)
+        }
+    }
 
-        if (product.type === 'BED') {
-            totalPrice *= (numberOfMembers + numberOfNonMembers)
+    let tableBody: string[][] = []
+    for (let i = 0; i < priceHist.length; i++) {
+        const product = products[i]
+        const histogram = priceHist[i]
+        if (productAmounts[i] > 0) {
+            tableBody = tableBody.concat(
+                Object.entries(histogram).map(([priceId, count]) => {
+                    const price = product.CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))
+                    if (!price) throw new Error('Price is not found')
+
+                    const displayName = product.name + (price.description ? ` (${price.description})` : '')
+
+                    return [
+                        displayName,
+                        displayPrice(price.price),
+                        (count * productAmounts[i]).toString(),
+                        displayPrice(price.price * count * productAmounts[i])
+                    ]
+                })
+            )
         }
     }
 
     return <div>
         <SimpleTable
-            header={['Produkt', 'Pris', 'Antall', 'Total Pris']}
-            body={Object.entries(priceHist).map(([priceId, count]) => {
-                if (!product) throw new Error('Product is not found')
-                const price = product.CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))
-                if (!price) throw new Error('Price is not found')
-
-                const displayName = product.name + (price.description ? ` (${price.description})` : '')
-
-                return [
-                    displayName,
-                    displayPrice(price.price),
-                    count.toString(),
-                    displayPrice(price.price * count)
-                ]
-            })}
+            header={['Produkt', 'Pris per natt', 'Antall', 'Total Pris']}
+            body={tableBody}
         />
-        {product?.type === 'BED' &&
-            <p>Antall personer {numberOfMembers + numberOfNonMembers}, tabellen over gjelder per person.</p>
-        }
         <p>Total pris {displayPrice(totalPrice)}</p>
     </div>
 }
