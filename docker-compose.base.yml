@@ -50,26 +50,6 @@ services:
             timeout: 0.5s
             retries: 60
 
-    prisma:
-        build:
-            context: ${PROJECT_ROOT:-.}/src/prisma
-            dockerfile: ${PROJECT_ROOT:-.}/prismaservice/Dockerfile
-            args:
-                SHOULD_MIGRATE: ${VEVEN_DB_URI}
-        environment:
-            DB_URI: ${DB_URI}
-            MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
-            VEVEN_STORE_URL: ${VEVEN_STORE_URL}
-            VEVEN_DB_URI: ${VEVEN_DB_URI}
-            MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
-            PASSWORD_SALT_ROUNDS: ${PASSWORD_SALT_ROUNDS}
-            PASSWORD_ENCRYPTION_KEY: ${PASSWORD_ENCRYPTION_KEY}
-            API_KEY_SALT_ROUNDS: ${API_KEY_SALT_ROUNDS}
-            API_KEY_ENCRYPTION_KEY: ${API_KEY_ENCRYPTION_KEY}
-        depends_on:
-            db:
-                condition: service_healthy
-
     nginx:
         image: nginx:1.21.3-alpine
         depends_on:

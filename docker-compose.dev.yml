@@ -13,9 +13,6 @@ services:
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
-        depends_on:
-            prisma:
-                condition: service_completed_successfully
 
     db:
         extends:
@@ -25,17 +22,6 @@ services:
             - 5432:5432
         volumes:
             - devdb:/var/lib/postgresql/data
-
-    prisma:
-        extends:
-            file: docker-compose.base.yml
-            service: prisma
-        build:
-            target: dev
-        volumes:
-            - ${PROJECT_ROOT:-.}/src/prisma/schema:/usr/src/app/schema
-            - devstore:/usr/src/app/prismaservice/store
-            - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
 
     nginx:
         extends:
