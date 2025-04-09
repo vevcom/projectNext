@@ -1,4 +1,4 @@
-import { FIELD_IS_PRESENT_VALUE } from '@/app/_components/UI/CheckboxFieldPresent'
+import { FIELD_IS_PRESENT_VALUE } from './config'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { EnumLike } from 'zod'

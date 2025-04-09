@@ -1,10 +1,6 @@
+'use client'
 import styles from './CheckboxFieldPresent.module.scss'
-
-/**
- * The value that is submitted when the checkbox is present. Used to distinguish between
- * a field not being present and being present but non of values being checked.
- */
-export const FIELD_IS_PRESENT_VALUE = 'PN_FIELD_IS_PRESENT'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
 
 type PropTypes = {
     name: string
@@ -24,7 +20,7 @@ export default function CheckboxFieldPresent({ name }: PropTypes) {
             name={name}
             value={FIELD_IS_PRESENT_VALUE}
             checked={true}
-            onChange={() => {}}
+            onChange={() => { }}
             className={styles.hidden}
         />
     )
