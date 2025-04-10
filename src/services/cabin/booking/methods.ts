@@ -5,8 +5,9 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import 'server-only'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ServerError } from '@/services/error'
-import { z } from 'zod'
 import { UserConfig } from '@/services/users/config'
+import { z } from 'zod'
+import { BookingType } from '@prisma/client'
 
 
 export namespace CabinBookingMethods {
@@ -53,13 +54,12 @@ export namespace CabinBookingMethods {
         }
     })
 
-    export const createCabinBookingUserAttached = ServiceMethod({
+    export const createCabinBookingWithUser = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number(),
+            bookingType: z.nativeEnum(BookingType)
         }),
-        auther: ({ params }) => CabinBookingAuthers.createUserAttached.dynamicFields({
-            userId: params.userId,
-        }),
+        auther: ServerOnlyAuther,
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
         method: async ({ prisma, params, data, session }) => {
             // TODO: Prevent Race conditions
@@ -92,7 +92,7 @@ export namespace CabinBookingMethods {
                             id: params.userId,
                         },
                     },
-                    type: data.type,
+                    type: params.bookingType,
                     start: data.start,
                     end: data.end,
                     tenantNotes: data.tenantNotes,
@@ -100,6 +100,46 @@ export namespace CabinBookingMethods {
                 }
             })
         }
+    })
+
+    export const createCabinBookingUserAttached = ServiceMethod({
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
+        auther: ({ params }) => CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({
+            userId: params.userId,
+        }),
+        dataSchema: CabinBookingSchemas.createBookingUserAttached,
+        method: async ({ prisma, params, data, session }) =>
+            createCabinBookingWithUser.client(prisma).execute({
+                params: {
+                    userId: params.userId,
+                    bookingType: BookingType.CABIN,
+                },
+                data,
+                session,
+                bypassAuth: true,
+            })
+    })
+
+    export const createBedBookingUserAttached = ServiceMethod({
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
+        auther: ({ params }) => CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({
+            userId: params.userId,
+        }),
+        dataSchema: CabinBookingSchemas.createBookingUserAttached,
+        method: async ({ prisma, params, data, session }) =>
+            createCabinBookingWithUser.client(prisma).execute({
+                params: {
+                    userId: params.userId,
+                    bookingType: BookingType.BED,
+                },
+                data,
+                session,
+                bypassAuth: true,
+            })
     })
 
     export const readAvailability = ServiceMethod({

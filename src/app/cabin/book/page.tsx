@@ -3,8 +3,10 @@ import SpecialCmsParagraph from '@/app/_components/Cms/CmsParagraph/SpecialCmsPa
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readCabinAvailabilityAction, readCabinProductsAction, readReleasePeriodsAction } from '@/actions/cabin'
-import type { ReleasePeriod } from '@prisma/client'
 import { displayDate } from '@/lib/dates/displayDate'
+import { Session } from '@/auth/Session'
+import type { ReleasePeriod } from '@prisma/client'
+import { CabinBookingAuthers } from '@/services/cabin/booking/authers'
 
 function findCurrentReleasePeriod(releasePeriods: ReleasePeriod[]) {
     const filtered = releasePeriods.filter(releasePeriod => {
@@ -32,6 +34,9 @@ export default async function CabinBooking() {
     const releaseUntil = findCurrentReleasePeriod(releasePeriods)
     const nextReleasePeriod = findNextReleasePeriod(releasePeriods)
     const cabinProducts = unwrapActionReturn(await readCabinProductsAction())
+    const session = await Session.fromNextAuth()
+    const canBookCabin = CabinBookingAuthers.createCabinBookingUserAttached.dynamicFields({}).auth(session)
+    const canBookBed = CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({}).auth(session)
     return <PageWrapper
         title="Heutte Booking"
     >
@@ -45,6 +50,8 @@ export default async function CabinBooking() {
             cabinAvailability={cabinAvailability}
             releaseUntil={releaseUntil}
             cabinProducts={cabinProducts}
+            canBookCabin={canBookCabin.authorized}
+            canBookBed={canBookBed.authorized}
         />
 
         <SpecialCmsParagraph special="CABIN_CONTRACT" />

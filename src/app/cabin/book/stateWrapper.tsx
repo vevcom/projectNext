@@ -21,10 +21,14 @@ export default function StateWrapper({
     cabinAvailability,
     releaseUntil,
     cabinProducts,
+    canBookCabin,
+    canBookBed,
 }: {
     cabinAvailability: BookingFiltered[],
     releaseUntil: Date,
     cabinProducts: CabinProductConfig.CabinProductExtended[],
+    canBookCabin: boolean,
+    canBookBed: boolean,
 }) {
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
@@ -35,11 +39,11 @@ export default function StateWrapper({
     }
     const bedProducts = cabinProducts.filter(product => product.type === 'BED')
 
-    const [bookingType, setBookingType] = useState<BookingType>('CABIN')
+    const [bookingType, setBookingType] = useState<BookingType>(canBookCabin ? 'CABIN' : 'BED')
     const [dateRange, setDateRange] = useState<DateRange>({})
 
     const [selectedProducts, setSelectedProducts] = useState<CabinProductConfig.CabinProductExtended[]>(
-        [cabinProduct]
+        canBookCabin ? [cabinProduct] : bedProducts
     )
     const [bedAmounts, setBedAmounts] = useState<number[]>(Array(bedProducts.length).fill(0))
 
@@ -69,6 +73,12 @@ export default function StateWrapper({
         />
     ), [selectedProducts, bedAmounts, dateRange, numberOfMembers, numberOfNonMembers])
 
+    if (!canBookCabin && !canBookBed) {
+        return <>Du kan ikke booke hytta.</>
+    }
+
+    const canChangeBookingType = canBookCabin && canBookBed
+
     return <>
         {calendar}
 
@@ -80,28 +90,31 @@ export default function StateWrapper({
             <input type="hidden" name="end" value={getZodDateString(dateRange.end) ?? ''} readOnly />
             <input type="hidden" name="type" value={bookingType} readOnly />
 
-            <RadioLarge
-                name="Select type"
-                options={[
-                    {
-                        value: 'CABIN',
-                        label: 'Hele hytta',
-                    },
-                    {
-                        value: 'BED',
-                        label: 'Enkelt seng'
-                    }
-                ]}
-                value={bookingType}
-                onChange={(newType) => {
-                    setBookingType(newType)
-                    if (newType === 'CABIN') {
-                        setSelectedProducts([cabinProduct])
-                    } else {
-                        setSelectedProducts(bedProducts)
-                    }
-                }}
-            />
+            {canChangeBookingType &&
+                <RadioLarge
+                    name="Select type"
+                    options={[
+                        {
+                            value: 'CABIN',
+                            label: 'Hele hytta',
+                        },
+                        {
+                            value: 'BED',
+                            label: 'Enkelt seng'
+                        }
+                    ]}
+                    value={bookingType}
+                    onChange={(newType) => {
+                        setBookingType(newType)
+                        if (newType === 'CABIN') {
+                            setSelectedProducts([cabinProduct])
+                        } else {
+                            setSelectedProducts(bedProducts)
+                        }
+                    }}
+                />
+
+            }
 
             {bookingType === 'BED' && <>
                 <SelectBedProducts
