@@ -5,8 +5,8 @@ import { z } from 'zod'
 export namespace CabinReleasePeriodSchemas {
     const fields = z.object({
         id: z.coerce.number(),
-        releaseTime: z.date(),
-        releaseUntil: z.date(),
+        releaseTime: z.coerce.date(),
+        releaseUntil: z.coerce.date(),
     })
 
     const releasePeriodRefiner = {

@@ -2,7 +2,7 @@ import type { CabinProduct, CabinProductPrice, PrismaClient } from '@/generated/
 
 export default async function seedCabin(prisma: PrismaClient) {
     const products: (Omit<CabinProduct, 'id'> & {
-        CabinProductPrice: (Omit<CabinProductPrice, 'id' | 'cabinProductId' | 'groupId'> & { groupId?: number })[]
+        CabinProductPrice: (Omit<CabinProductPrice, 'id' | 'cabinProductId' | 'pricePeriodId'>)[]
     })[] = [
         {
             name: 'Hele hytta',
@@ -13,28 +13,24 @@ export default async function seedCabin(prisma: PrismaClient) {
                     description: 'Søn-Tors',
                     cronInterval: '* * 0-4',
                     price: 100000,
-                    validFrom: new Date(),
                     memberShare: 0,
                 },
                 {
                     description: 'Helg (>50% Omega)',
                     cronInterval: '* * 5-6',
                     price: 470000 * 0.5,
-                    validFrom: new Date(),
                     memberShare: 50,
                 },
                 {
                     description: 'Helg (med Omega)',
                     cronInterval: '* * 5-6',
                     price: 470000 * 0.75,
-                    validFrom: new Date(),
                     memberShare: 1,
                 },
                 {
                     description: 'Helg',
                     cronInterval: '* * 5-6',
                     price: 470000,
-                    validFrom: new Date(),
                     memberShare: 0,
                 },
             ]
@@ -47,7 +43,6 @@ export default async function seedCabin(prisma: PrismaClient) {
                 description: '',
                 cronInterval: '* * *',
                 price: 25000,
-                validFrom: new Date(),
                 memberShare: 0,
             }]
         },
@@ -59,11 +54,16 @@ export default async function seedCabin(prisma: PrismaClient) {
                 description: '',
                 cronInterval: '* * *',
                 price: 15000,
-                validFrom: new Date(),
                 memberShare: 0,
             }]
         }
     ]
+
+    const pricePeriod = await prisma.pricePeriod.create({
+        data: {
+            validFrom: new Date()
+        }
+    })
 
     await Promise.all(products.map(product =>
         prisma.cabinProduct.create({
@@ -72,7 +72,10 @@ export default async function seedCabin(prisma: PrismaClient) {
                 amount: product.amount,
                 type: product.type,
                 CabinProductPrice: {
-                    create: product.CabinProductPrice
+                    create: product.CabinProductPrice.map(price => ({
+                        ...price,
+                        pricePeriodId: pricePeriod.id
+                    }))
                 }
             }
         })

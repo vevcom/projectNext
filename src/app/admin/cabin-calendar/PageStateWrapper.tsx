@@ -5,13 +5,16 @@ import CabinCalendar from '@/app/_components/cabinCalendar/CabinCalendar'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
-import type { ReleasePeriod } from '@prisma/client'
+import type { PricePeriod, ReleasePeriod } from '@prisma/client'
+import PricePeriodForm from './PricePeriodForm'
 
 
 export default function PageStateWrapper({
     releasePeriods,
+    pricePeriods,
 }: {
     releasePeriods: ReleasePeriod[],
+    pricePeriods: PricePeriod[],
 }) {
     return <>
 
@@ -36,6 +39,27 @@ export default function PageStateWrapper({
                 {releasePeriods.map(period => <tr key={uuid()}>
                     <td>{displayDate(period.releaseTime, false)}</td>
                     <td>{displayDate(period.releaseUntil, false)}</td>
+                </tr>)}
+            </tbody>
+        </table>
+
+        <PopUp
+            PopUpKey="CreateNewPricePeriod"
+            showButtonContent="Ny Pris Periode"
+            showButtonClass={styles.button}
+        >
+            <PricePeriodForm />
+        </PopUp>
+
+        <table className={styles.table}>
+            <thead>
+                <tr>
+                    <th>Start dato</th>
+                </tr>
+            </thead>
+            <tbody>
+                {pricePeriods.map(period => <tr key={uuid()}>
+                    <td>{displayDate(period.validFrom, false)}</td>
                 </tr>)}
             </tbody>
         </table>

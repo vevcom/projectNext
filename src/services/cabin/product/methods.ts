@@ -3,6 +3,8 @@ import { CabinProductSchemas } from './schemas'
 import { CabinProductConfig } from './config'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import 'server-only'
+import { ServerError } from '@/services/error'
+import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
 import { z } from 'zod'
 
 export namespace CabinProductMethods {
@@ -19,14 +21,36 @@ export namespace CabinProductMethods {
         auther: () => CabinProductAuthers.createPrice.dynamicFields({}),
         paramsSchema: z.object({
             cabinProductId: z.number(),
+            pricePeriodId: z.number(),
         }),
         dataSchema: CabinProductSchemas.createProductPrice,
-        method: ({ prisma, params, data }) => prisma.cabinProductPrice.create({
-            data: {
-                ...data,
-                cabinProductId: params.cabinProductId,
+        method: async ({ prisma, params, data, session }) => {
+            const [pricePeriod, releasePeriod] = await Promise.all([
+                prisma.pricePeriod.findUniqueOrThrow({
+                    where: {
+                        id: params.pricePeriodId,
+                    }
+                }),
+                CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
+                    bypassAuth: true,
+                    session
+                })
+            ])
+
+            if (releasePeriod && pricePeriod.validFrom <= releasePeriod.releaseUntil) {
+                throw new ServerError('BAD PARAMETERS', 'Cannot change prices for a product that is released')
             }
-        })
+
+            const result = await prisma.cabinProductPrice.create({
+                data: {
+                    ...data,
+                    cabinProductId: params.cabinProductId,
+                    pricePeriodId: params.pricePeriodId
+                }
+            })
+
+            return result
+        }
     })
 
     export const readMany = ServiceMethod({

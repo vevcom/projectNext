@@ -33,6 +33,21 @@ export namespace CabinReleasePeriodMethods {
         })
     })
 
+    export const getCurrentReleasePeriod = ServiceMethod({
+        auther: () => CabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
+        method: async ({ prisma }) => prisma.releasePeriod.findFirst({
+            where: {
+                releaseTime: {
+                    lte: new Date(),
+                }
+            },
+            orderBy: {
+                releaseUntil: 'desc',
+            },
+            take: 1
+        })
+    })
+
     export const update = ServiceMethod({
         auther: () => CabinReleasePeriodAuthers.updateReleasePeriodAuther.dynamicFields({}),
         dataSchema: CabinReleasePeriodSchemas.updateReleasePeriod,
