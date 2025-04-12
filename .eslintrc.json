@@ -180,7 +180,7 @@
         // disallow use of the Array constructor
         "no-array-constructor": "error",
         // disallow use of the continue statement
-        "no-continue": "warn",
+        // "no-continue": "warn",
         // disallow if as the only statement in an else block
         "no-lonely-if": "error",
         // disallow mixed spaces and tabs for indentation
@@ -512,7 +512,8 @@
                 "prefer": "type-imports"
             }
         ],
-
+        // allow use of namespaces
+        "@typescript-eslint/no-namespace": "off",
         //SOME ODD OPTIONS:
         // suggest using the spread operator instead of .apply()
         "prefer-spread": "error",

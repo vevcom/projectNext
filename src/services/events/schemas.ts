@@ -1,21 +1,21 @@
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
 import { EventCanView } from '@prisma/client'
 
 export namespace EventSchemas {
     const fields = z.object({
         name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),
-        order: z.number().int().optional(),
-        eventStart: z.string().transform((val) => new Date(val)),
-        eventEnd: z.string().transform((val) => new Date(val)),
+        order: z.coerce.number().int().optional(),
+        eventStart: zpn.date({ label: 'Starttid' }),
+        eventEnd: zpn.date({ label: 'Sluttid' }),
         canBeViewdBy: z.nativeEnum(EventCanView),
 
-        takesRegistration: z.boolean(),
-        places: z.number().int().optional(),
-        registrationStart: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
-        registrationEnd: z.string().optional().transform((val) => (val ? new Date(val) : undefined)),
+        takesRegistration: zpn.checkboxOrBoolean({ label: 'Tar påmelding' }),
+        places: z.coerce.number().int().optional(),
+        registrationStart: zpn.date({ label: 'Påmelding start' }).optional(),
+        registrationEnd: zpn.date({ label: 'Påmelding slutt' }).optional(),
 
-        tagIds: zfd.repeatable(z.coerce.number().array())
+        tagIds: zpn.numberListCheckboxFriendly({ label: 'tags' })
     })
 
     export const create = fields.pick({

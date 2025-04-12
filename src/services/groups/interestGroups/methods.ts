@@ -79,6 +79,7 @@ export namespace InterestGroupMethods {
                 await read.newClient().execute({
                     params: { id: params.id },
                     session: null,
+                    bypassAuth: true,
                 })
             ).groupId,
         }),

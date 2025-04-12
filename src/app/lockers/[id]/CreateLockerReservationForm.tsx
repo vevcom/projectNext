@@ -1,9 +1,10 @@
 'use client'
-import { createLockerReservationAction } from '@/actions/lockers/reservations/create'
+import { createLockerReservationAction } from '@/actions/lockers/reservations'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
+import { bindParams } from '@/actions/bind'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -29,7 +30,7 @@ export default function LockerReservationForm({ lockerId, groupsFormData }: Prop
             successCallback={refresh}
             title="Reserver skap"
             submitText="Reserver"
-            action={createLockerReservationAction.bind(null, lockerId)}
+            action={bindParams(createLockerReservationAction, { lockerId })}
         >
             <SelectString
                 label="Reserver for"

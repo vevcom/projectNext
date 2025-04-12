@@ -57,10 +57,8 @@ enum Permission {
   STUDY_PROGRAMME_DESTROY
 
   // Lockers
-  LOCKER_READ
-  LOCKER_CREATE
-  LOCKERRESERVATION_CREATE
-  LOCKERRESERVATION_UPDATE
+  LOCKER_ADMIN
+  LOCKER_USE
 
   // CMS permissions - it overrides the visibility of things
   CMS_ADMIN
@@ -131,15 +129,18 @@ enum Permission {
   SCREEN_READ
   SCREEN_ADMIN
 
+  // Omega course catalouge
   SCHOOLS_READ
   SCHOOLS_ADMIN
 
   COURSES_READ
   COURSES_ADMIN
 
+  // Omega job ads
   COMPANY_READ
   COMPANY_ADMIN
 
+  // Dots
   DOTS_ADMIN
 
   // Cabin
@@ -160,6 +161,7 @@ enum Permission {
   PURCHASE_CREATE
   PURCHASE_CREATE_ONBEHALF
 
+  // Image licenses
   LICENSE_ADMIN
 }
 

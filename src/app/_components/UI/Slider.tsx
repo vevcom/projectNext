@@ -1,7 +1,8 @@
+import CheckboxFieldPresent from './CheckboxFieldPresent'
 import styles from './Slider.module.scss'
 import type { PropTypes as TextInputPropTypes } from './TextInput'
 
-type PropTypes = Omit<TextInputPropTypes, 'type'>
+type PropTypes = Omit<TextInputPropTypes, 'type'> & { name: string }
 
 /**
  * This is really a regular checkbox styled as a slider
@@ -13,8 +14,9 @@ export default function Slider({ label, name, color = 'secondary', ...props }: P
     return (
         <label className={`${styles.Slider} ${styles[color]}`}>
             <p className={styles.label}>{label}</p>
-            <input {...props} name={name} type="checkbox" />
-            <span className={styles.slider}></span>
+            <input type="checkbox" name={name} {...props} id={props.id ?? `id_for_${name}`} />
+            <div className={styles.slider} />
+            <CheckboxFieldPresent name={name} />
         </label>
     )
 }

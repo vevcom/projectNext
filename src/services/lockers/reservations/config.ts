@@ -1,3 +1,5 @@
+import type { Prisma } from '@prisma/client'
+
 export const lockerReservationIncluder = {
     LockerReservation: {
         where: {
@@ -25,4 +27,4 @@ export const lockerReservationIncluder = {
             }
         }
     }
-}
+} satisfies Prisma.LockerInclude

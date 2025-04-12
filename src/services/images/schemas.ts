@@ -24,8 +24,15 @@ export namespace ImageSchemas {
             files => files.length <= ImageConfig.maxNumberInOneBatch && files.length > 0,
             `Du kan bare laste opp mellom 1 og ${ImageConfig.maxNumberInOneBatch} bilder av gangen`
         ),
-        licenseId: z.string().optional().transform(
-            value => (value === 'NULL' || value === undefined ? undefined : parseInt(value, 10))
+        licenseId: z.union([
+            z.string().optional(),
+            z.coerce.number().optional().or(z.literal('NULL')),
+        ]).transform(
+            value => {
+                if (typeof value === 'string' && value === 'NULL') return null
+                if (typeof value === 'string') return parseInt(value, 10)
+                return value
+            }
         ),
         credit: z.string().optional(),
     })
@@ -42,7 +49,7 @@ export namespace ImageSchemas {
         licenseId: true,
         credit: true,
     })
-    export const update = fields.pick({
+    export const update = fields.partial().pick({
         name: true,
         alt: true,
         credit: true,

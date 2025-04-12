@@ -45,8 +45,8 @@ export function action<
     const actionUnsafe = async (params?: unknown, data?: unknown) => {
         const session = await Session.fromNextAuth()
 
-        // Treate empty form data as undefined. This is required because the form component will always send a FormData,
-        // even if no data is being sent.
+        // Treat empty form data as undefined. This is required because the form component will always send
+        // a FormData instance, even if no data is being sent.
         if (data instanceof FormData && data.entries().next().done) {
             data = undefined
         }

@@ -1,3 +1,4 @@
+import { zpn } from '@/lib/fields/zpn'
 import { SEX } from '@prisma/client'
 import { z } from 'zod'
 
@@ -19,9 +20,9 @@ export namespace UserSchemas {
             message: 'Passoret må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
         }),
         confirmPassword: z.string().max(50).min(12),
-        acceptedTerms: z.literal('on', {
-            errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
-        }),
+        acceptedTerms: zpn.checkboxOrBoolean({
+            label: 'Accepted terms',
+        }).refine(value => value, 'Du må godta vilkårene for å bruke siden.'),
     })
     const refinePassword = {
         fcn: (data: { password?: string, confirmPassword?: string }) => data.password === data.confirmPassword,

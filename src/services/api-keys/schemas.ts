@@ -1,13 +1,13 @@
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
-import { zfd } from 'zod-form-data'
 import { Permission } from '@prisma/client'
 
 export namespace ApiKeySchemas {
     const fields = z.object({
         name: z.string().min(10, 'minimum lengde 10').max(100, 'maksimum lengde 100'),
         expiresAt: z.coerce.date().optional(),
-        active: z.literal('on').optional().transform(val => val === 'on'),
-        permissions: zfd.repeatable(z.nativeEnum(Permission).array())
+        active: zpn.checkboxOrBoolean({ label: 'Aktiv' }),
+        permissions: zpn.enumListCheckboxFriendly({ label: 'Tillatelser', enum: Permission })
     })
     export const create = fields.pick({
         name: true,

@@ -72,6 +72,9 @@ export type AuthStatus = GetUserReturnType['status']
  *
  * @returns The user object and auth status
  * (either `AUTHORIZED`, `AUTHORIZED_NO_USER`, `UNAUTHENTICATED`, or `UNAUTHORIZED`).
+ *
+ * @deprecated - Deprecated as the new service mehtod system handles this.
+ * For getting the user in the app router a utility function will be developed.
  */
 // This function is overloaded to get correct typing for when required is set to true or false.
 export async function getUser<UserRequired extends boolean = false>(

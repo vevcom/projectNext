@@ -3,7 +3,7 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readLockerAction } from '@/actions/lockers/read'
+import { readLockerAction } from '@/actions/lockers/lockers'
 import { getUser } from '@/auth/getUser'
 import { checkGroupValidity, inferGroupName, readGroupsOfUser } from '@/services/groups/read'
 
@@ -18,13 +18,13 @@ export default async function Locker({ params }: PropTypes) {
     const { user, status, authorized } = await getUser({
         userRequired: true,
         shouldRedirect: true,
-        requiredPermissions: [['LOCKER_READ']],
+        requiredPermissions: [['LOCKER_USE']],
     })
     if (!authorized) return Error(status)
 
     const lockerId = parseInt((await params).id, 10)
 
-    const locker = await readLockerAction(lockerId)
+    const locker = await readLockerAction({ id: lockerId })
     if (!locker.success) {
         return <LockerNotFound />
     }

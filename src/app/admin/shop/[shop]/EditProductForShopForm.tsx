@@ -1,3 +1,4 @@
+'use client'
 import { createProductForShopAction, updateProductForShopAction } from '@/actions/shop/product'
 import Form from '@/app/_components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'

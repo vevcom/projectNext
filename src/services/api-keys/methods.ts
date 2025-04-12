@@ -64,12 +64,12 @@ export namespace ApiKeyMethods {
     })
     export const read = ServiceMethod({
         auther: () => ApiKeyAuthers.read.dynamicFields({}),
-        paramsSchema: z.union([z.number(), z.string()]),
-        method: async ({ prisma, params: idOrName }): Promise<ApiKeyFiltered> => {
+        paramsSchema: z.union([z.object({ id: z.number() }), z.object({ name: z.string() })]),
+        method: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
             const apiKey = await prisma.apiKey.findUnique({
                 where: {
-                    id: typeof idOrName === 'number' ? idOrName : undefined,
-                    name: typeof idOrName === 'string' ? idOrName : undefined
+                    id: 'id' in params ? params.id : undefined,
+                    name: 'name' in params ? params.name : undefined,
                 },
                 select: ApiKeyConfig.filterSelection
             })
@@ -108,10 +108,12 @@ export namespace ApiKeyMethods {
     })
     export const readWithHash = ServiceMethod({
         auther: () => ApiKeyAuthers.readWithHash.dynamicFields({}),
-        paramsSchema: z.number(),
-        method: async ({ prisma, params: id }) => {
+        paramsSchema: z.object({
+            id: z.number(),
+        }),
+        method: async ({ prisma, params }) => {
             const apiKey = await prisma.apiKey.findUniqueOrThrow({
-                where: { id },
+                where: { id: params.id },
                 select: {
                     keyHashEncrypted: true,
                     active: true,
@@ -133,15 +135,17 @@ export namespace ApiKeyMethods {
     })
     export const update = ServiceMethod({
         auther: () => ApiKeyAuthers.update.dynamicFields({}),
-        paramsSchema: z.number(),
+        paramsSchema: z.object({
+            id: z.number(),
+        }),
         dataSchema: ApiKeySchemas.update,
-        method: async ({ prisma, params: id, data }) => {
+        method: async ({ prisma, params, data }) => {
             if (data.active && data.expiresAt && data.expiresAt < new Date()) {
                 throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
             }
 
             const { name } = await prisma.apiKey.update({
-                where: { id },
+                where: { id: params.id },
                 data,
             })
             return { name }
@@ -149,12 +153,14 @@ export namespace ApiKeyMethods {
     })
     export const destroy = ServiceMethod({
         auther: () => ApiKeyAuthers.destroy.dynamicFields({}),
-        paramsSchema: z.number(),
+        paramsSchema: z.object({
+            id: z.number(),
+        }),
         opensTransaction: true,
-        method: async ({ prisma, params: id }): Promise<void> => {
+        method: async ({ prisma, params }): Promise<void> => {
             await prisma.$transaction(async (tx) => {
                 const apiKey = await tx.apiKey.findUniqueOrThrow({
-                    where: { id },
+                    where: { id: params.id },
                     select: { active: true }
                 })
 
@@ -163,7 +169,7 @@ export namespace ApiKeyMethods {
                 }
 
                 await tx.apiKey.delete({
-                    where: { id }
+                    where: { id: params.id }
                 })
             })
         }

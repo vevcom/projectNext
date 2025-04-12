@@ -410,25 +410,15 @@ export const PermissionConfig = {
         description: 'kan administrere emner',
         category: 'brukere',
     },
-    LOCKER_READ: {
-        name: 'Les skap',
-        description: 'kan lese skapdata',
+    LOCKER_USE: {
+        name: 'Bruke skap',
+        description: 'kan opprette skapreservasjoner',
         category: 'brukere'
     },
-    LOCKER_CREATE: {
-        name: 'Lag skap',
-        description: 'kan lage skap',
+    LOCKER_ADMIN: {
+        name: 'Administrere skap',
+        description: 'kan opprette og slette reservasjoner på veiene av andre samt opprette og slette selve skapene',
         category: 'diverse admin'
-    },
-    LOCKERRESERVATION_CREATE: {
-        name: 'Lag skapreservasjon',
-        description: 'kan lage skapreservasjoner',
-        category: 'brukere'
-    },
-    LOCKERRESERVATION_UPDATE: {
-        name: 'Oppdatere skapreservasjoner',
-        description: 'kan oppdatere skapreservasjoner',
-        category: 'brukere'
     },
     COMPANY_ADMIN: {
         name: 'Bedriftsadministrator',

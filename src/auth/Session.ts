@@ -64,8 +64,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         return new Session<'NO_USER'>({ user: null, permissions: [], memberships: [] })
     }
 
-    public static async fromJsObject(jsObject: SessionMaybeUser): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
-        if (jsObject instanceof Session) return jsObject
+    public static fromJsObject(jsObject: SessionMaybeUser): Session<'NO_USER'> | Session<'HAS_USER'> {
         return new Session(jsObject)
     }
 
@@ -97,7 +96,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
             apiKeyFetch = await ApiKeyMethods.readWithHash.newClient().execute({
                 session: null,
                 bypassAuth: true,
-                params: id
+                params: { id }
             })
         } catch (e) {
             if (e instanceof ServerError && e.errorCode === 'NOT FOUND') {
