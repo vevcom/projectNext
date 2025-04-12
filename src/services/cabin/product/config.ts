@@ -14,4 +14,8 @@ export namespace CabinProductConfig {
     export type CabinProductExtended = Prisma.CabinProductGetPayload<{
         include: typeof includer
     }>
+
+    export type CabinProductPriceExtended = Prisma.CabinProductPriceGetPayload<{
+        include: typeof includer.CabinProductPrice.include
+    }>
 }

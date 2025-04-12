@@ -1,7 +1,7 @@
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { displayPrice } from '@/lib/money/convert'
+import type { PricePeriod } from '@prisma/client'
 import type { Record } from '@prisma/client/runtime/library'
-import type { CabinProductPrice } from '@prisma/client'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
 
 function getDateArray(start: Date, end: Date) {
@@ -101,9 +101,19 @@ function dateMatchCron(day: Date, cronExpression: string) {
     return true
 }
 
-function matchPriceForDay(day: Date, memberShare: number, prices: CabinProductPrice[]) {
+function matchPriceForDay(
+    day: Date,
+    memberShare: number,
+    pricePeriods: PricePeriod[],
+    prices: CabinProductConfig.CabinProductPriceExtended[]
+) {
+    const currentPricePeriod = pricePeriods.findLast(period => period.validFrom <= day)
+    if (!currentPricePeriod) {
+        throw new Error('Could not find a price period for all the selected days')
+    }
+
     const filtered = prices.filter(price => {
-        if (price.validFrom > day) {
+        if (price.pricePeriodId !== currentPricePeriod.id) {
             return false
         }
 
@@ -132,6 +142,7 @@ function findPrices(
     endDate: Date,
     numberOfMembers: number,
     numberOfNonMembers: number,
+    pricePeriods: PricePeriod[],
     product: CabinProductConfig.CabinProductExtended
 ) {
     const dateArray = getDateArray(startDate, endDate)
@@ -143,7 +154,7 @@ function findPrices(
     const pricesHistogram: Record<number, number> = {}
 
     for (const day of dateArray) {
-        const price = matchPriceForDay(day, memberShare, product.CabinProductPrice)
+        const price = matchPriceForDay(day, memberShare, pricePeriods, product.CabinProductPrice)
         if (pricesHistogram[price.id] === undefined) {
             pricesHistogram[price.id] = 0
         }
@@ -154,6 +165,7 @@ function findPrices(
 }
 
 export default function CabinPriceCalculator({
+    pricePeriods,
     products,
     productAmounts,
     startDate,
@@ -161,6 +173,7 @@ export default function CabinPriceCalculator({
     numberOfMembers,
     numberOfNonMembers,
 }: {
+    pricePeriods: PricePeriod[],
     products: CabinProductConfig.CabinProductExtended[],
     productAmounts: number[],
     startDate?: Date,
@@ -176,7 +189,7 @@ export default function CabinPriceCalculator({
 
     if (startDate && endDate) {
         for (let i = 0; i < products.length; i++) {
-            priceHist.push(findPrices(startDate, endDate, numberOfMembers, numberOfNonMembers, products[i]))
+            priceHist.push(findPrices(startDate, endDate, numberOfMembers, numberOfNonMembers, pricePeriods, products[i]))
 
             totalPrice += Object.entries(priceHist[i]).reduce((acc, [priceId, count]) => {
                 const price = products[i].CabinProductPrice.find(prodPrice => prodPrice.id === parseInt(priceId, 10))

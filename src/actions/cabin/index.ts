@@ -12,6 +12,7 @@ export const deleteReleasePeriodAction = action(CabinReleasePeriodMethods.destro
 
 export const createPricePeriodAction = action(CabinPricePeriodMethods.create)
 export const readPricePeriodsAction = action(CabinPricePeriodMethods.readMany)
+export const readPublicPricePeriodsAction = action(CabinPricePeriodMethods.readPublicPeriods)
 
 export const createCabinBookinUserAttachedAction = action(CabinBookingMethods.createCabinBookingUserAttached)
 export const createBedBookinUserAttachedAction = action(CabinBookingMethods.createBedBookingUserAttached)

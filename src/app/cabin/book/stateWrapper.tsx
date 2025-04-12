@@ -15,7 +15,7 @@ import { useMemo, useState } from 'react'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { DateRange } from './CabinCalendar'
-import type { BookingType } from '@prisma/client'
+import type { BookingType, PricePeriod } from '@prisma/client'
 
 export default function StateWrapper({
     cabinAvailability,
@@ -23,12 +23,14 @@ export default function StateWrapper({
     cabinProducts,
     canBookCabin,
     canBookBed,
+    pricePeriods,
 }: {
     cabinAvailability: BookingFiltered[],
     releaseUntil: Date,
     cabinProducts: CabinProductConfig.CabinProductExtended[],
     canBookCabin: boolean,
     canBookBed: boolean,
+    pricePeriods: PricePeriod[]
 }) {
     const bookingUntil = new Date()
     bookingUntil.setUTCMonth(bookingUntil.getUTCMonth() + 4)
@@ -64,6 +66,7 @@ export default function StateWrapper({
 
     const priceCalculator = useMemo(() => (
         <CabinPriceCalculator
+            pricePeriods={pricePeriods}
             products={selectedProducts}
             productAmounts={bookingType === 'BED' ? bedAmounts : [1]}
             startDate={dateRange.start}

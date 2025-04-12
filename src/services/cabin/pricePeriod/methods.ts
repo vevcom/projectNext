@@ -77,6 +77,42 @@ export namespace CabinPricePeriodMethods {
         method: async ({ prisma }) => prisma.pricePeriod.findMany()
     })
 
+    export const readPublicPeriods = ServiceMethod({
+        auther: () => CabinPricePeriodAuthers.readPublicPeriods.dynamicFields({}),
+        method: async ({ prisma, session }) => {
+            const releaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
+                bypassAuth: true,
+                session,
+            })
+
+            const [currentPeriod, futurePeriods] = await Promise.all([
+                prisma.pricePeriod.findFirstOrThrow({
+                    where: {
+                        validFrom: {
+                            lte: new Date(),
+                        },
+                    },
+                    orderBy: {
+                        validFrom: 'desc',
+                    },
+                    take: 1,
+                }),
+                prisma.pricePeriod.findMany({
+                    where: {
+                        validFrom: {
+                            gt: new Date(),
+                            ...(releaseDate ? {
+                                lt: releaseDate.releaseUntil,
+                            } : {})
+                        }
+                    }
+                })
+            ])
+
+            return [currentPeriod, ...futurePeriods]
+        }
+    })
+
     export const update = ServiceMethod({
         auther: () => CabinPricePeriodAuthers.update.dynamicFields({}),
         dataSchema: CabinPricePeriodSchemas.updatePricePeriod,
