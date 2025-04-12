@@ -9,7 +9,7 @@ function divideCronString(cronExpression: string) {
         }
     }
 
-    if (ret.length !== 3) throw new Error('The cron string is invalid')
+    if (ret.length !== 3) throw new Error('The cron string is invalid, it needs three parts.')
 
     return ret
 }
@@ -25,6 +25,9 @@ function createArrayFromRange(start: number, end: number) {
 }
 
 function numberInCronExpression(number: number, cronExpressionPart: string) {
+    if (!cronExpressionPart.match(/^[\*\d\-\,\/]+$/)) {
+        throw new Error('The cron expression is invalid. Can only contain numbers, *, - and /')
+    }
     // I guess the cron is parsed in this order: comma, step, range
     const commaSplit = cronExpressionPart.split(',')
 

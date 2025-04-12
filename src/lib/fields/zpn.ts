@@ -2,6 +2,7 @@ import { FIELD_IS_PRESENT_VALUE } from './config'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { EnumLike } from 'zod'
+import { dateMatchCron } from '../dates/cron'
 
 export namespace zpn {
     /**
@@ -67,4 +68,22 @@ export namespace zpn {
                 }),
             z.date()
         ])
+
+    export const simpleCronExpression = () => z.string().superRefine((inp, ctx) => {
+        try {
+            dateMatchCron(new Date(), inp)
+        } catch (e) {
+            if (e instanceof Error) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: e.message,
+                })
+            } else {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'En uventet feil oppsto under parsing av cron uttrykket.',
+                })
+            }
+        }
+    })
 }
