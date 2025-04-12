@@ -4,11 +4,11 @@ model ReleasePeriod {
   releaseUntil DateTime @db.Date
 }
 
-// model PricePeriod {
-//   id                Int                 @id @default(autoincrement())
-//   validFrom         DateTime            @db.Date
-//   CabinProductPrice CabinProductPrice[]
-// }
+model PricePeriod {
+  id                Int                 @id @default(autoincrement())
+  validFrom         DateTime            @db.Date
+  CabinProductPrice CabinProductPrice[]
+}
 
 model CabinProductPrice {
   id             Int          @id @default(autoincrement())
@@ -16,11 +16,10 @@ model CabinProductPrice {
   product        CabinProduct @relation(fields: [cabinProductId], references: [id])
   cabinProductId Int
   price          Int
-  validFrom      DateTime     @db.Date
   cronInterval   String       @default("* * *")
   memberShare    Int
-  // PricePeriod    PricePeriod  @relation(fields: [pricePeriodId], references: [id])
-  // pricePeriodId  Int
+  PricePeriod    PricePeriod  @relation(fields: [pricePeriodId], references: [id])
+  pricePeriodId  Int
 }
 
 model CabinProduct {

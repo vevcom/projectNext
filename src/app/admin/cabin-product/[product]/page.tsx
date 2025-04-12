@@ -22,7 +22,7 @@ export default async function CabinProduct({
     return <PageWrapper
         title={product.name}
         headerItem={<AddHeaderItemPopUp PopUpKey="AddCabinProductPrice">
-            <UpdateCabinProductPriceForm productId={product.id} />
+            <UpdateCabinProductPriceForm productId={product.id} productType={product.type} />
         </AddHeaderItemPopUp>}
     >
         <div className={styles.infoDiv}>
@@ -48,14 +48,14 @@ export default async function CabinProduct({
                 'Beskrivelse',
                 'Pris',
                 'gyldig fra',
-                'Gruppe id',
+                'Andel i Omega',
                 'Cron intervall'
             ]}
             body={product.CabinProductPrice.map(priceObj => [
                 priceObj.description,
                 displayPrice(priceObj.price),
                 displayDate(priceObj.validFrom, false),
-                priceObj.groupId?.toString() ?? '',
+                priceObj.memberShare.toString(),
                 priceObj.cronInterval ?? '',
             ])}
         />

@@ -24,7 +24,7 @@ export namespace CabinProductMethods {
         method: ({ prisma, params, data }) => prisma.cabinProductPrice.create({
             data: {
                 ...data,
-                cabinProductId: params.cabinProductId
+                cabinProductId: params.cabinProductId,
             }
         })
     })

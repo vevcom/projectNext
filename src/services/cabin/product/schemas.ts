@@ -7,11 +7,12 @@ export namespace CabinProductSchemas {
     const fields = z.object({
         type: z.nativeEnum(BookingType),
         amount: z.coerce.number().int().min(0),
-        name: z.string().min(5),
-        description: z.string().min(2).max(20),
+        name: z.string().min(2),
+        description: z.string().min(0).max(20),
         price: z.coerce.number().min(0).transform((val) => convertPrice(val)),
         validFrom: z.coerce.date(),
         cronInterval: z.string().optional(),
+        memberShare: z.coerce.number().min(0).max(100),
     })
 
     export const createProduct = fields.pick({
@@ -23,8 +24,8 @@ export namespace CabinProductSchemas {
     export const createProductPrice = fields.pick({
         description: true,
         price: true,
-        validFrom: true,
         cronInterval: true,
+        memberShare: true,
     })
 }
 
