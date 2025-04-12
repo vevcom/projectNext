@@ -1,11 +1,10 @@
 import type { CabinProduct, CabinProductPrice, PrismaClient } from '@/generated/pn'
 
 export default async function seedCabin(prisma: PrismaClient) {
-    const products: (CabinProduct & {
+    const products: (Omit<CabinProduct, 'id' > & {
         CabinProductPrice: (Omit<CabinProductPrice, 'id' | 'cabinProductId' | 'pricePeriodId'>)[]
     })[] = [
         {
-            id: 1,
             name: 'Hele hytta',
             amount: 1,
             type: 'CABIN',
@@ -37,7 +36,6 @@ export default async function seedCabin(prisma: PrismaClient) {
             ]
         },
         {
-            id: 2,
             name: 'Seng (120cm)',
             amount: 3,
             type: 'BED',
@@ -49,7 +47,6 @@ export default async function seedCabin(prisma: PrismaClient) {
             }]
         },
         {
-            id: 3,
             name: 'Køye seng (90cm)',
             amount: 14,
             type: 'BED',
@@ -92,16 +89,18 @@ export default async function seedCabin(prisma: PrismaClient) {
         }
     })
 
-    await Promise.all(products.map(product =>
-        prisma.cabinProductPrice.createMany({
-            data: product.CabinProductPrice.map(productPrice => ({
-                ...productPrice,
-                price: productPrice.price * 1.5,
+    const allProductPrices = await prisma.cabinProductPrice.findMany()
+    await Promise.all(allProductPrices.map(price =>
+        prisma.cabinProductPrice.create({
+            data: {
+                ...price,
+                id: undefined,
                 pricePeriodId: secondPricePeriod.id,
-                cabinProductId: product.id,
-            }))
+                price: price.price * 1.5
+            }
         })
     ))
+
 
     await prisma.releasePeriod.create({
         data: {

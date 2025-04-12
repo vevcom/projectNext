@@ -1,6 +1,7 @@
 
 import styles from './SimpleTable.module.scss'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 
 export default function SimpleTable<T extends string[]>({
     header,
@@ -8,7 +9,7 @@ export default function SimpleTable<T extends string[]>({
     links,
 }: {
     header: T,
-    body: Array<[...T]>,
+    body: Array<{ [K in keyof T]: ReactNode }>,
     links?: T,
 }) {
     return <table className={styles.table}>

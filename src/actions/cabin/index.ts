@@ -11,6 +11,7 @@ export const updateReleasePeriodAction = action(CabinReleasePeriodMethods.update
 export const deleteReleasePeriodAction = action(CabinReleasePeriodMethods.destroy)
 
 export const createPricePeriodAction = action(CabinPricePeriodMethods.create)
+export const destoryPricePeriodAction = action(CabinPricePeriodMethods.destroy)
 export const readPricePeriodsAction = action(CabinPricePeriodMethods.readMany)
 export const readPublicPricePeriodsAction = action(CabinPricePeriodMethods.readPublicPeriods)
 export const readUnreleasedPricePeriodsAction = action(CabinPricePeriodMethods.readUnreleasedPeriods)

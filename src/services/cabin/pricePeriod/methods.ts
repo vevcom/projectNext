@@ -67,9 +67,24 @@ export namespace CabinPricePeriodMethods {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => prisma.pricePeriod.delete({
-            where: params,
-        })
+        method: async ({ prisma, params, session }) => {
+            const currentReleasePeriod = await CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
+                bypassAuth: true,
+                session,
+            })
+
+            const pricePeriod = await prisma.pricePeriod.findUniqueOrThrow({
+                where: params,
+            })
+
+            if (currentReleasePeriod && pricePeriod.validFrom <= currentReleasePeriod.releaseUntil) {
+                throw new ServerError('BAD PARAMETERS', 'Kan ikke slette en pris periode som er publisert.')
+            }
+
+            return await prisma.pricePeriod.delete({
+                where: params,
+            })
+        }
     })
 
     export const readMany = ServiceMethod({

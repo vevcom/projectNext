@@ -18,7 +18,7 @@ model CabinProductPrice {
   price          Int
   cronInterval   String       @default("* * *")
   memberShare    Int
-  PricePeriod    PricePeriod  @relation(fields: [pricePeriodId], references: [id])
+  PricePeriod    PricePeriod  @relation(fields: [pricePeriodId], references: [id], onDelete: Cascade)
   pricePeriodId  Int
 }
 
