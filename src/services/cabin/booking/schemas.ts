@@ -1,4 +1,5 @@
 import { dateLessThan, dateLessThanOrEqualTo } from '@/lib/dates/comparison'
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 
 
@@ -7,8 +8,11 @@ export namespace CabinBookingSchemas {
         start: z.coerce.date(),
         end: z.coerce.date(),
         tenantNotes: z.string().optional(),
-        acceptedTerms: z.literal('on', {
-            errorMap: () => ({ message: 'Du må godta vilkårene for å bruk siden.' }),
+        numberOfMembers: z.coerce.number().min(0),
+        numberOfNonMembers: z.coerce.number().min(0),
+        acceptedTerms: zpn.checkboxOrBoolean({
+            label: '',
+            message: 'Du må godta vilkårene for å bruk siden.'
         })
     })
 
@@ -23,6 +27,8 @@ export namespace CabinBookingSchemas {
         end: true,
         tenantNotes: true,
         acceptedTerms: true,
+        numberOfMembers: true,
+        numberOfNonMembers: true,
     }).refine(startEndDateRefiner.fcn, startEndDateRefiner.message)
 }
 

@@ -9,7 +9,7 @@ import TextInput from '@/app/_components/UI/TextInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import { useUser } from '@/auth/useUser'
-import { createCabinBookinUserAttachedAction } from '@/actions/cabin'
+import { createBedBookingUserAttachedAction, createCabinBookingUserAttachedAction } from '@/actions/cabin'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useMemo, useState } from 'react'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
@@ -86,7 +86,23 @@ export default function StateWrapper({
         {calendar}
 
         <Form
-            action={createCabinBookinUserAttachedAction.bind(null, { userId: user.user?.id ?? -1 })}
+            action={
+                bookingType === 'CABIN' ?
+                    createCabinBookingUserAttachedAction.bind(null, {
+                        userId: user.user?.id ?? -1,
+                        bookingProducts: [{
+                            cabinProductId: cabinProduct.id,
+                            quantity: 1,
+                        }]
+                    }) :
+                    createBedBookingUserAttachedAction.bind(null, {
+                        userId: user.user?.id ?? -1,
+                        bookingProducts: bedProducts.map((product, index) => ({
+                            cabinProductId: product.id,
+                            quantity: bedAmounts[index],
+                        })).filter(product => product.quantity > 0)
+                    })
+            }
             submitText="Book hytta"
         >
             <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} readOnly />
@@ -119,17 +135,9 @@ export default function StateWrapper({
 
             }
 
-            {bookingType === 'BED' && <>
-                <SelectBedProducts
-                    amounts={bedAmounts}
-                    bedProducts={bedProducts}
-                    onChange={setBedAmounts}
-                />
-            </>}
-
-            {bookingType === 'CABIN' && <>
+            {bookingType === 'CABIN' ? <>
                 <NumberInput
-                    name="memberParticipant"
+                    name="numberOfMembers"
                     label="Antall som er medlem i Omega"
                     value={numberOfMembers}
                     onChange={(e) => {
@@ -140,7 +148,7 @@ export default function StateWrapper({
                     }}
                 />
                 <NumberInput
-                    name="ExternalParticipant"
+                    name="numberOfNonMembers"
                     label="Antall som ikke er medlem i Omega"
                     value={numberOfNonMembers}
                     onChange={(e) => {
@@ -149,6 +157,17 @@ export default function StateWrapper({
                             setNumberOfNonMembers(value)
                         }
                     }}
+                />
+            </> : <>
+                <input type="hidden" name="numberOfMembers" value={0} />
+                <input type="hidden" name="numberOfNonMembers" value={0} />
+            </>}
+
+            {bookingType === 'BED' && <>
+                <SelectBedProducts
+                    amounts={bedAmounts}
+                    bedProducts={bedProducts}
+                    onChange={setBedAmounts}
                 />
             </>}
 

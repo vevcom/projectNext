@@ -41,8 +41,12 @@ export default async function CabinBooking() {
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
     const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
     const session = await Session.fromNextAuth()
-    const canBookCabin = CabinBookingAuthers.createCabinBookingUserAttached.dynamicFields({}).auth(session)
-    const canBookBed = CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({}).auth(session)
+    const canBookCabin = CabinBookingAuthers.createCabinBookingUserAttached.dynamicFields({
+        userId: session.user?.id ?? -1,
+    }).auth(session)
+    const canBookBed = CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({
+        userId: session.user?.id ?? -1,
+    }).auth(session)
     return <PageWrapper
         title="Heutte Booking"
     >

@@ -54,6 +54,8 @@ model Booking {
   end                DateTime         @db.Date // Exclusive
   user               User?            @relation(fields: [userId], references: [id])
   userId             Int?
+  numberOfMembers    Int
+  numberOfNonMembers Int
   notes              String?
   tenantNotes        String           @default("")
   // transaction Transaction

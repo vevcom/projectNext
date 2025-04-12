@@ -4,6 +4,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import 'server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
+import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 
 export namespace CabinReleasePeriodMethods {
 

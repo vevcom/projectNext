@@ -1,12 +1,12 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionAndUser } from '@/auth/auther/RequirePermissionAndUser'
+import { RequirePermissionAndUserId } from '@/auth/auther/RequirePermissionAndUserId'
 
 export namespace CabinBookingAuthers {
-    export const createCabinBookingUserAttached = RequirePermissionAndUser.staticFields({
+    export const createCabinBookingUserAttached = RequirePermissionAndUserId.staticFields({
         permission: 'CABIN_BOOKING_CABIN_CREATE'
     })
 
-    export const createBedBookingUserAttached = RequirePermissionAndUser.staticFields({
+    export const createBedBookingUserAttached = RequirePermissionAndUserId.staticFields({
         permission: 'CABIN_BOOKING_BED_CREATE'
     })
 
