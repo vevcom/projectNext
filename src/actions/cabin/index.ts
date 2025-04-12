@@ -8,7 +8,7 @@ import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/method
 export const createReleasePeriodAction = action(CabinReleasePeriodMethods.create)
 export const readReleasePeriodsAction = action(CabinReleasePeriodMethods.readMany)
 export const updateReleasePeriodAction = action(CabinReleasePeriodMethods.update)
-export const deleteReleasePeriodAction = action(CabinReleasePeriodMethods.destroy)
+export const destroyReleasePeriodAction = action(CabinReleasePeriodMethods.destroy)
 
 export const createPricePeriodAction = action(CabinPricePeriodMethods.create)
 export const destoryPricePeriodAction = action(CabinPricePeriodMethods.destroy)

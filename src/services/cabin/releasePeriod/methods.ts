@@ -36,9 +36,19 @@ export namespace CabinReleasePeriodMethods {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => prisma.releasePeriod.delete({
-            where: params,
-        })
+        method: async ({ prisma, params }) => {
+            const releasePeriod = await prisma.releasePeriod.findUniqueOrThrow({
+                where: params,
+            })
+
+            if (releasePeriod.releaseTime < new Date()) {
+                throw new ServerError('BAD PARAMETERS', 'Kan ikke slette en slippgruppe som har blitt publisert.')
+            }
+
+            return await prisma.releasePeriod.delete({
+                where: params,
+            })
+        }
     })
 
     export const readMany = ServiceMethod({
