@@ -1,17 +1,34 @@
 import { CabinReleasePeriodAuthers } from './authers'
+import { CabinReleasePeriodSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import 'server-only'
+import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import { CabinReleasePeriodSchemas } from './schemas'
 
 export namespace CabinReleasePeriodMethods {
 
     export const create = ServiceMethod({
         auther: () => CabinReleasePeriodAuthers.createReleasePeriodAuther.dynamicFields({}),
         dataSchema: CabinReleasePeriodSchemas.createReleasePeriod,
-        method: async ({ prisma, data }) => prisma.releasePeriod.create({
-            data,
-        })
+        method: async ({ prisma, data }) => {
+            const latestReleasePeriod = await prisma.releasePeriod.findFirst({
+                orderBy: {
+                    releaseTime: 'desc',
+                },
+            })
+
+            if (latestReleasePeriod && latestReleasePeriod.releaseTime > data.releaseTime) {
+                throw new ServerError('BAD DATA', 'En ny slippdato må slippes senere den den gjeldene siste slippdatoen.')
+            }
+
+            if (latestReleasePeriod && latestReleasePeriod.releaseUntil >= data.releaseUntil) {
+                throw new ServerError('BAD DATA', 'Et nytt slipp, må slippe flere datoer enn det forrige slippet.')
+            }
+
+            await prisma.releasePeriod.create({
+                data,
+            })
+        }
     })
 
     export const destroy = ServiceMethod({
