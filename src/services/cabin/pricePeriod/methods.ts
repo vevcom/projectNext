@@ -24,9 +24,41 @@ export namespace CabinPricePeriodMethods {
                 )
             }
 
-            return await prisma.pricePeriod.create({
-                data,
+            const latestPricePeriod = await prisma.pricePeriod.findFirst({
+                orderBy: {
+                    validFrom: 'desc',
+                },
+                take: 1,
             })
+
+            if (latestPricePeriod && latestPricePeriod.validFrom >= data.validFrom) {
+                throw new ServerError('BAD DATA', 'Kan ikke sette en pris periode til å være gyldig før en annen periode.')
+            }
+
+            const result = await prisma.pricePeriod.create({
+                data: {
+                    validFrom: data.validFrom
+                }
+            })
+
+            if (data.copyPreviousPrices && latestPricePeriod) {
+                const products = await prisma.cabinProductPrice.findMany({
+                    where: {
+                        pricePeriodId: latestPricePeriod.id,
+                    }
+                })
+                console.log(products)
+
+                await prisma.cabinProductPrice.createMany({
+                    data: products.map(product => ({
+                        ...product,
+                        id: undefined,
+                        pricePeriodId: result.id,
+                    }))
+                })
+            }
+
+            return result
         }
     })
 

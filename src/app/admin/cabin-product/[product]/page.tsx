@@ -54,7 +54,7 @@ export default async function CabinProduct({
             body={product.CabinProductPrice.map(priceObj => [
                 priceObj.description,
                 displayPrice(priceObj.price),
-                displayDate(priceObj.validFrom, false),
+                displayDate(priceObj.PricePeriod.validFrom, false),
                 priceObj.memberShare.toString(),
                 priceObj.cronInterval ?? '',
             ])}
