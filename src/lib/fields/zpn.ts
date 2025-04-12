@@ -12,6 +12,7 @@ export namespace zpn {
         z.boolean(), // mosltly for the backend
         zfd.repeatable(z.literal('on').or(z.literal(FIELD_IS_PRESENT_VALUE)).array()) // mostly for the frontend (forms)
     ]).transform(value => {
+        console.log('RECEIVED VALUE', value)
         if (typeof value === 'boolean') return value
         if (value.includes('on')) return true
         return false

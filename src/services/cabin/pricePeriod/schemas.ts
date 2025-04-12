@@ -1,10 +1,11 @@
+import { zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 
 export namespace CabinPricePeriodSchemas {
     const fields = z.object({
         id: z.coerce.number(),
         validFrom: z.coerce.date(),
-        copyPreviousPrices: z.literal('on').optional().transform(val => val === 'on'),
+        copyPreviousPrices: zpn.checkboxOrBoolean({ label: '' }),
     })
 
     export const createPricePeriod = fields.pick({

@@ -12,6 +12,6 @@ export default function PricePeriodForm() {
         submitText="Lag ny pris periode"
     >
         <DateInput name="validFrom" label="Start dato" />
-        <Checkbox name="copyFromPreviousPrices" label="Kopier tidligere priser." defaultChecked={true} />
+        <Checkbox name="copyPreviousPrices" label="Kopier tidligere priser." defaultChecked />
     </Form>
 }
