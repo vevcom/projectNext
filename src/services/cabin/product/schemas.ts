@@ -13,6 +13,7 @@ export namespace CabinProductSchemas {
         validFrom: z.coerce.date(),
         cronInterval: z.string().optional(),
         memberShare: z.coerce.number().min(0).max(100),
+        pricePeriodId: z.coerce.number(),
     })
 
     export const createProduct = fields.pick({
@@ -26,6 +27,7 @@ export namespace CabinProductSchemas {
         price: true,
         cronInterval: true,
         memberShare: true,
+        pricePeriodId: true,
     })
 }
 

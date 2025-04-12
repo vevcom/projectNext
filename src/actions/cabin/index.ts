@@ -13,6 +13,7 @@ export const deleteReleasePeriodAction = action(CabinReleasePeriodMethods.destro
 export const createPricePeriodAction = action(CabinPricePeriodMethods.create)
 export const readPricePeriodsAction = action(CabinPricePeriodMethods.readMany)
 export const readPublicPricePeriodsAction = action(CabinPricePeriodMethods.readPublicPeriods)
+export const readUnreleasedPricePeriodsAction = action(CabinPricePeriodMethods.readUnreleasedPeriods)
 
 export const createCabinBookinUserAttachedAction = action(CabinBookingMethods.createCabinBookingUserAttached)
 export const createBedBookinUserAttachedAction = action(CabinBookingMethods.createBedBookingUserAttached)
@@ -21,6 +22,7 @@ export const readCabinBookingsAction = action(CabinBookingMethods.readMany)
 export const readCabinBookingAction = action(CabinBookingMethods.read)
 
 export const readCabinProductsAction = action(CabinProductMethods.readMany)
+export const readCabinProductsActiveAction = action(CabinProductMethods.readActive)
 export const readCabinProductAction = action(CabinProductMethods.read)
 export const createCabinProductAction = action(CabinProductMethods.create)
 export const createCabinProductPriceAction = action(CabinProductMethods.createPrice)

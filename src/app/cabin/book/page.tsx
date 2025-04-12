@@ -4,7 +4,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import {
     readCabinAvailabilityAction,
-    readCabinProductsAction,
+    readCabinProductsActiveAction,
     readPublicPricePeriodsAction,
     readReleasePeriodsAction
 } from '@/actions/cabin'
@@ -39,7 +39,7 @@ export default async function CabinBooking() {
     const releaseUntil = findCurrentReleasePeriod(releasePeriods)
     const nextReleasePeriod = findNextReleasePeriod(releasePeriods)
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
-    const cabinProducts = unwrapActionReturn(await readCabinProductsAction())
+    const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
     const session = await Session.fromNextAuth()
     const canBookCabin = CabinBookingAuthers.createCabinBookingUserAttached.dynamicFields({}).auth(session)
     const canBookBed = CabinBookingAuthers.createBedBookingUserAttached.dynamicFields({}).auth(session)

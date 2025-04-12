@@ -113,6 +113,23 @@ export namespace CabinPricePeriodMethods {
         }
     })
 
+    export const readUnreleasedPeriods = ServiceMethod({
+        auther: () => CabinPricePeriodAuthers.read.dynamicFields({}),
+        method: async ({ prisma, session }) => {
+            const releaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
+                bypassAuth: true,
+                session,
+            })
+            return prisma.pricePeriod.findMany({
+                where: {
+                    validFrom: {
+                        gte: releaseDate?.releaseUntil,
+                    }
+                }
+            })
+        }
+    })
+
     export const update = ServiceMethod({
         auther: () => CabinPricePeriodAuthers.update.dynamicFields({}),
         dataSchema: CabinPricePeriodSchemas.updatePricePeriod,

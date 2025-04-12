@@ -6,6 +6,7 @@ import 'server-only'
 import { ServerError } from '@/services/error'
 import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
 import { z } from 'zod'
+import { CabinPricePeriodMethods } from '../pricePeriod/methods'
 
 export namespace CabinProductMethods {
 
@@ -21,14 +22,13 @@ export namespace CabinProductMethods {
         auther: () => CabinProductAuthers.createPrice.dynamicFields({}),
         paramsSchema: z.object({
             cabinProductId: z.number(),
-            pricePeriodId: z.number(),
         }),
         dataSchema: CabinProductSchemas.createProductPrice,
         method: async ({ prisma, params, data, session }) => {
             const [pricePeriod, releasePeriod] = await Promise.all([
                 prisma.pricePeriod.findUniqueOrThrow({
                     where: {
-                        id: params.pricePeriodId,
+                        id: data.pricePeriodId,
                     }
                 }),
                 CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
@@ -45,7 +45,6 @@ export namespace CabinProductMethods {
                 data: {
                     ...data,
                     cabinProductId: params.cabinProductId,
-                    pricePeriodId: params.pricePeriodId
                 }
             })
 
@@ -58,6 +57,29 @@ export namespace CabinProductMethods {
         method: ({ prisma }) => prisma.cabinProduct.findMany({
             include: CabinProductConfig.includer,
         }),
+    })
+
+    export const readActive = ServiceMethod({
+        auther: () => CabinProductAuthers.read.dynamicFields({}),
+        method: async ({ prisma, session }) => {
+            const pricePeriods = await CabinPricePeriodMethods.readPublicPeriods.client(prisma).execute({
+                bypassAuth: true,
+                session,
+            })
+
+            return await prisma.cabinProduct.findMany({
+                where: {
+                    CabinProductPrice: {
+                        some: {
+                            pricePeriodId: {
+                                in: pricePeriods.map(period => period.id)
+                            }
+                        }
+                    }
+                },
+                include: CabinProductConfig.includer,
+            })
+        },
     })
 
     export const read = ServiceMethod({

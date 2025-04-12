@@ -2,17 +2,24 @@
 import { createCabinProductPriceAction } from '@/actions/cabin'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
+import { SelectNumber } from '@/app/_components/UI/Select'
 import TextInput from '@/app/_components/UI/TextInput'
-import type { BookingType } from '@prisma/client'
+import { displayDate } from '@/lib/dates/displayDate'
+import type { BookingType, PricePeriod } from '@prisma/client'
 
 
 export function UpdateCabinProductPriceForm({
     productId,
     productType,
+    pricePeriods,
 }: {
     productId: number
     productType: BookingType,
+    pricePeriods: PricePeriod[],
 }) {
+    if (pricePeriods.length === 0) {
+        return <p>Det er ingen prisperioder som ikke er sluppet enda. Lag en ny pris periode før du oppdaterer prisene.</p>
+    }
     return <Form
         action={createCabinProductPriceAction.bind(null, { cabinProductId: productId })}
         submitText="Legg til pris"
@@ -26,5 +33,13 @@ export function UpdateCabinProductPriceForm({
         {productType !== 'CABIN' &&
             <input type="hidden" name="memberShare" value={0} />
         }
+        <SelectNumber
+            options={pricePeriods.map(period => ({
+                value: period.id,
+                label: displayDate(period.validFrom, false),
+            }))}
+            name="pricePeriodId"
+            label="Pris periode"
+        />
     </Form>
 }
