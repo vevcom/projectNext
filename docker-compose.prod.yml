@@ -22,16 +22,6 @@ services:
         volumes:
             - proddb:/var/lib/postgresql/data
 
-    prisma:
-        extends:
-            file: docker-compose.base.yml
-            service: prisma
-        build:
-            target: prod
-        volumes:
-            - store:/usr/src/app/prismaservice/store
-            - dobbelOmegaManifest:/usr/src/app/prismaservice/dobbelOmegaManifest
-
     nginx:
         extends:
             file: docker-compose.base.yml

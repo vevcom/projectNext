@@ -1,7 +1,7 @@
 import { seedImageConfig, seedSpecialImageConfig, seedLicenseConfig } from './seedImagesConfig'
 import { v4 as uuid } from 'uuid'
 import sharp from 'sharp'
-import { readdir, copyFile } from 'fs/promises'
+import { readdir, copyFile, mkdir } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@prisma/client'
@@ -16,7 +16,7 @@ export const imageSizes = {
 }
 
 const standardLocation = join(__dirname, '..', 'standard_store', 'images')
-export const imageStoreLocation = join('usr', 'src', 'app', 'store', 'images')
+export const imageStoreLocation = join(__dirname, '..', '..', '..', '..', 'store', 'images')
 
 /**
  * This functions seeds all images in standard_store/images,
@@ -29,6 +29,8 @@ export default async function seedImages(prisma: PrismaClient) {
     await prisma.license.createMany({
         data: seedLicenseConfig
     })
+
+    await mkdir(imageStoreLocation, { recursive: true })
 
     const files = await readdir(standardLocation)
 
