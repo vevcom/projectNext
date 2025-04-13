@@ -5,8 +5,8 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import 'server-only'
 import { ServerError } from '@/services/error'
 import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { CabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
 import { z } from 'zod'
-import { CabinPricePeriodMethods } from '../pricePeriod/methods'
 
 export namespace CabinProductMethods {
 
