@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevCompanies(prisma: PrismaClient) {
     await Promise.all(Array.from({ length: 100 }, (_, i) => prisma.company.create({

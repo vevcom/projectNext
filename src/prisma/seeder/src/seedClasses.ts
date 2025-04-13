@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/prisma/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 /**
  * Seeds classes and omega membership groups.

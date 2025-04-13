@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
     const fn = [

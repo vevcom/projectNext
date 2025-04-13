@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import type { Limits } from './migrationLimits'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
 /**

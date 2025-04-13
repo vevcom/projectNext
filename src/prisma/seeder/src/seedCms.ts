@@ -12,7 +12,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { dirname, join } from 'path'
 import { readFile } from 'fs/promises'
-import type { PrismaClient, SpecialCmsImage, SpecialCmsParagraph } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
 

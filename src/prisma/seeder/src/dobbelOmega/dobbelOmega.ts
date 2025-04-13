@@ -9,7 +9,7 @@ import migrateEvents from './migrateEvents'
 import migrateUsers from './migrateUsers'
 import manifest from '@/seeder/src/logger'
 import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 
 /**
  * !DobbelOmega!

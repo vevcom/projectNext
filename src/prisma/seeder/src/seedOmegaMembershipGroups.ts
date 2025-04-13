@@ -1,4 +1,4 @@
-import { OmegaMembershipLevel, type PrismaClient } from '@/generated/pn'
+import { OmegaMembershipLevel, type PrismaClient } from '@prisma/client'
 
 export default async function seedOmegaMembershipGroups(prisma: PrismaClient) {
     const levels = Object.values(OmegaMembershipLevel)

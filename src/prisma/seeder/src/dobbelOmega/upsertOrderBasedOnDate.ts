@@ -1,4 +1,4 @@
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 
 /**
  * Veven did not have the consept of omegaOrder. This function infers the order based on a date and

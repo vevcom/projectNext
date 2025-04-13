@@ -3,7 +3,7 @@ import type {
     ImageSize,
     SpecialCmsImage,
     SpecialCmsParagraph,
-} from '@/generated/pn'
+} from '@prisma/client'
 
 
 export type SeedCmsImage = {

@@ -1,5 +1,5 @@
 import type { IdMapper } from './IdMapper'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 
 /**

@@ -1,5 +1,5 @@
-import { SpecialCollection } from '@/generated/pn'
-import type { PrismaClient, SpecialVisibilityPurpose } from '@/generated/pn'
+import { SpecialCollection } from '@prisma/client'
+import type { PrismaClient, SpecialVisibilityPurpose } from '@prisma/client'
 
 export const specialCollectionsVisibility = {
     OMBULCOVERS: {

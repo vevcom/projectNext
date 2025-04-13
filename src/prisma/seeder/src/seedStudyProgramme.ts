@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 export default async function seedStudyProgramme(prisma: PrismaClient) {
     await prisma.studyProgramme.create({

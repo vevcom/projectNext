@@ -1,7 +1,7 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, vevenIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
-import type { PrismaClient as PrismaClientPn, SEX } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn, SEX } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven, enum_Users_sex as SEXVEVEN } from '@/generated/veven'
 import type { Limits } from './migrationLimits'
 

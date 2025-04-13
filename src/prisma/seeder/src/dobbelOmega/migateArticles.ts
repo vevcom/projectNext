@@ -1,6 +1,6 @@
 import { vevenIdToPnId } from './IdMapper'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
-import type { PrismaClient as PrismaClientPn } from '@/generated/pn'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'

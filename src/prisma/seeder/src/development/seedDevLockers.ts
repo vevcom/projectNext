@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 const buildings = ['G-Blokk', 'Test-Blokk']
 const floors = [1, 2, 3]

@@ -1,4 +1,4 @@
-import type { SpecialImage, SpecialCollection } from '@/generated/pn'
+import type { SpecialImage, SpecialCollection } from '@prisma/client'
 
 type LicenseSeed = {
     name: string,

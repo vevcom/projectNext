@@ -1,4 +1,4 @@
-import type { Permission, SpecialVisibilityPurpose, PrismaClient } from '@/generated/pn'
+import type { Permission, SpecialVisibilityPurpose, PrismaClient } from '@prisma/client'
 
 const SpecialVisibilityConfig = {
     OMBUL: {

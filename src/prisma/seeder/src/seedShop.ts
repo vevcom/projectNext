@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 export const FRIDGE_NAME = 'Koigeskabet'
 

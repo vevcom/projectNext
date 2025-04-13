@@ -20,7 +20,7 @@ import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
 import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
-import { PrismaClient } from '@/prisma/generated/pn'
+import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
     shouldMigrate: boolean,

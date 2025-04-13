@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@/generated/pn'
+import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevGroups(prisma: PrismaClient) {
     const user = await prisma.user.findUnique({
