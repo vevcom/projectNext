@@ -3,19 +3,19 @@ import 'next-auth/adapters'
 
 import type { MembershipFiltered } from '@/services/groups/Types'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserAuthFiltered } from '@/services/users/Types'
 
 declare module 'next-auth' {
     // Normally we dissallow typing with empty objects, but in this case we
     // need to extend the User object with additional properties. The User
     // object is defined in next-auth, and we need to extend it with the
-    // properties from UserFiltered. So for this case we allow it.
+    // properties from UserAuthFiltered. So for this case we allow it.
     //
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface User extends Partial<UserFiltered> {}
+    interface User extends Partial<UserAuthFiltered> {}
 
     interface Session {
-        user: UserFiltered,
+        user: UserAuthFiltered,
         permissions: Permission[],
         memberships: MembershipFiltered[],
     }
@@ -24,7 +24,7 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
     interface JWT {
         provider: 'credentials' | 'feide',
-        user: UserFiltered,
+        user: UserAuthFiltered,
         permissions: Permission[],
         memberships: MembershipFiltered[],
 

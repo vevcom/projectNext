@@ -1,6 +1,6 @@
 import { dispatchEmailNotifications } from './email/dispatch'
 import { dispatchPushNotifications } from './push/dispath'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserContactInfoFiltered, UserNameFiltered } from '@/services/users/Types'
 import type { Notification } from '@prisma/client'
 import type { ExpandedNotificationChannel, notificationMethods } from './Types'
 
@@ -11,10 +11,10 @@ export const dispathMethod = {
     push: dispatchPushNotifications,
 } satisfies Record<
     typeof notificationMethods[number],
-    ((channel: ExpandedNotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<void>)
+    ((channel: ExpandedNotificationChannel, notification: Notification, users: UserContactInfoFiltered[]) => Promise<void>)
 >
 
-export function repalceSpecialSymbols(text: string, user: UserFiltered) {
+export function repalceSpecialSymbols(text: string, user: UserNameFiltered) {
     return text
         .replaceAll('%u', user.username)
         .replaceAll('%n', user.firstname)
