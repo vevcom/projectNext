@@ -3,8 +3,6 @@ import styles from './CabinCalendar.module.scss'
 import { dateInInterval, dateLessThan, datesEqual, getWeekNumber } from '@/lib/dates/comparison'
 import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { date } from 'zod'
-import { start } from 'repl'
 import type { BookingFiltered } from '@/services/cabin/booking/Types'
 import type { ReactNode } from 'react'
 import type { Record } from '@prisma/client/runtime/library'
@@ -51,6 +49,13 @@ function createNullArray(num: number): null[] {
     return Array.from({ length: num }).map(() => null)
 }
 
+/**
+ * Generate data in teh calendar.
+ * This includes generating a n array of weeks,
+ * Where the week contains all the days in the week, and the state of that day
+ * The state of the day can be beginning, end or middle of a range.
+ * And a range can have different types
+ */
 function generateCalendarData(
     startDate: Date,
     endDate: Date,
@@ -58,10 +63,18 @@ function generateCalendarData(
     bookings: BookingFiltered[]
 ): (Week | string)[] {
     const bookingsAdjusted = bookings ?? []
+
+    // This will mark everything outside the booking period as booked
     bookingsAdjusted.push({
         type: 'CABIN',
         start: endDate,
         end: new Date(endDate.getUTCFullYear(), endDate.getUTCMonth() + 1, endDate.getUTCDate())
+    })
+    const earliesBookableDay = dateLessThan(new Date(), startDate) ? startDate : new Date()
+    bookingsAdjusted.push({
+        type: 'CABIN',
+        start: new Date(startDate.getUTCFullYear(), startDate.getUTCMonth() - 1, startDate.getUTCDate()),
+        end: earliesBookableDay,
     })
     const firstDayOfMonth = new Date(Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), 1))
 
