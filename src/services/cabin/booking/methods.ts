@@ -335,7 +335,8 @@ export namespace CabinBookingMethods {
         method: ({ prisma }) => prisma.booking.findMany({
             orderBy: {
                 start: 'asc',
-            }
+            },
+            include: CabinBookingConfig.bookingIncluder,
         }), // TODO: Pager
     })
 

@@ -78,6 +78,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Harambe',
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
+            mobile: '12345678',
             username: 'harambe',
             bio: 'Harambe did nothing wrong',
             studentCard: 'harambeCard',
@@ -91,6 +92,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     id: harambeImage.id
                 }
             },
+            emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
     })
@@ -106,6 +108,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             firstname: 'Vever',
             lastname: 'Vevsen',
             email: 'vever@vevcom.com',
+            mobile: '98765432',
             username: 'vever',
             studentCard: 'vever',
             credentials: {
@@ -113,6 +116,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     passwordHash: 'password',
                 },
             },
+            emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
     })
