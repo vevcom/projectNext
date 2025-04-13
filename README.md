@@ -10,6 +10,12 @@ For getting started please refer to our [Getting Started Guide](https://github.c
 Have the docker deamon running, then run:
 
 ```bash
+npm run docker:dev
+```
+
+or run
+
+```bash
 docker compose -f docker-compose.dev.yml up --build
 ```
 
@@ -38,7 +44,7 @@ in the projectnext container
 Seeding happens automaticly in devlopment. If you want to reseed the database without restarting the docker container, run the following command. This will remove all data from the database, and then seed all the data afterwards.
 
 ```bash
-npm run reseed
+npm run docker:seed
 ```
 
 #### Reinstalling node_modules
@@ -56,7 +62,7 @@ inside projectnext-container
 This project is not meant to be deployed, but a build can be made by running
 
 ```bash
-docker compose up --build
+docker compose -f docker-compose.prod.yml up --build
 ```
 
 ## Lint
@@ -75,8 +81,10 @@ npm run lint -- --fix
 
 ## Migration from omegaweb basic
 
-To migrate the data from omegaweb-basic, run the following command inside the projectnext container
+To migrate the data from omegaweb-basic, run the following command inside the projectnext container.
 
 ```bash
 npm run dobbelOmega-run
 ```
+
+If you are connected to our test database on openStack, make sure to be on the ntnu network to be able to connect.

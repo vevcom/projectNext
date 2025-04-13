@@ -11,8 +11,7 @@ EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Install node packages
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
 # Generate prisma client
