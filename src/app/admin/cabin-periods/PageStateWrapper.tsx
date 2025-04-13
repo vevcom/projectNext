@@ -2,7 +2,6 @@
 import styles from './page.module.scss'
 import ReleasePeriodForm from './ReleasePeriodForm'
 import PricePeriodForm from './PricePeriodForm'
-import CabinCalendar from '@/app/_components/cabinCalendar/CabinCalendar'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import { displayDate } from '@/lib/dates/displayDate'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
@@ -26,8 +25,6 @@ export default function PageStateWrapper({
     }
 
     return <>
-
-        <CabinCalendar date={new Date()} bookingPeriods={[]} />
 
         <PopUp
             PopUpKey="CreateNewReleasePeriod"

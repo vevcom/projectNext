@@ -184,8 +184,8 @@ const navigations = [
         },
         links: [
             {
-                title: 'Kalender',
-                href: '/admin/cabin-calendar',
+                title: 'Perioder',
+                href: '/admin/cabin-periods',
             },
             {
                 title: 'Produkter',

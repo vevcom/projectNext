@@ -10,7 +10,7 @@ export default async function CabinCalendarPage() {
     const pricePeriods = unwrapActionReturn(await readPricePeriodsAction())
 
     return <PageWrapper
-        title="Heutte Kalender"
+        title="Heutte perioder"
     >
         <PageStateWrapper
             releasePeriods={releasePeriods}
