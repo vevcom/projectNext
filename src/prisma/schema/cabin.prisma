@@ -54,6 +54,8 @@ model Booking {
   end                DateTime         @db.Date // Exclusive
   user               User?            @relation(fields: [userId], references: [id])
   userId             Int?
+  guestUser          CabinGuest?      @relation(fields: [guestUserId], references: [id])
+  guestUserId        Int?
   numberOfMembers    Int
   numberOfNonMembers Int
   notes              String?
@@ -64,4 +66,15 @@ model Booking {
   event              Event?           @relation(fields: [eventId], references: [id])
   eventId            Int?
   BookingProduct     BookingProduct[]
+}
+
+model CabinGuest {
+  id        Int       @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String
+  mobile    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Booking   Booking[]
 }

@@ -52,6 +52,11 @@ export default async function CabinBooking({
                         {booking.event.name}
                     </Link>)
                 }
+                {booking.guestUser && <>
+                    { trHelper('Gjest', `${booking.guestUser.firstname} ${booking.guestUser.lastname}`) }
+                    { trHelper('E-post', booking.guestUser.email) }
+                    { trHelper('Telefonnummer', booking.guestUser.mobile) }
+                </>}
             </tbody>
         </table>
 

@@ -18,6 +18,8 @@ export const readUnreleasedPricePeriodsAction = action(CabinPricePeriodMethods.r
 
 export const createCabinBookingUserAttachedAction = action(CabinBookingMethods.createCabinBookingUserAttached)
 export const createBedBookingUserAttachedAction = action(CabinBookingMethods.createBedBookingUserAttached)
+export const createCabinBookingNoUserAction = action(CabinBookingMethods.createCabinBookingNoUser)
+export const createBedBookingNoUserAction = action(CabinBookingMethods.createBedBookingNoUser)
 export const readCabinAvailabilityAction = action(CabinBookingMethods.readAvailability)
 export const readCabinBookingsAction = action(CabinBookingMethods.readMany)
 export const readCabinBookingAction = action(CabinBookingMethods.read)

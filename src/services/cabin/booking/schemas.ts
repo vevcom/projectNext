@@ -10,6 +10,10 @@ export namespace CabinBookingSchemas {
         tenantNotes: z.string().optional(),
         numberOfMembers: z.coerce.number().min(0),
         numberOfNonMembers: z.coerce.number().min(0),
+        firstname: z.string().min(2),
+        lastname: z.string().min(2),
+        email: z.string().email(),
+        mobile: z.string().regex(/^\+?\d{4,20}$/, { message: 'Skriv kun tall, uten mellomrom.' }),
         acceptedTerms: zpn.checkboxOrBoolean({
             label: '',
             message: 'Du må godta vilkårene for å bruk siden.'
@@ -29,6 +33,17 @@ export namespace CabinBookingSchemas {
         acceptedTerms: true,
         numberOfMembers: true,
         numberOfNonMembers: true,
+    }).refine(startEndDateRefiner.fcn, startEndDateRefiner.message)
+
+    export const createBookingNoUser = fields.pick({
+        start: true,
+        end: true,
+        tenantNotes: true,
+        acceptedTerms: true,
+        firstname: true,
+        lastname: true,
+        email: true,
+        mobile: true,
     }).refine(startEndDateRefiner.fcn, startEndDateRefiner.message)
 }
 

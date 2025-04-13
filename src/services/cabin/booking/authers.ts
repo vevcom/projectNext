@@ -6,7 +6,15 @@ export namespace CabinBookingAuthers {
         permission: 'CABIN_BOOKING_CABIN_CREATE'
     })
 
+    export const createCabinBookingNoUser = RequirePermission.staticFields({
+        permission: 'CABIN_BOOKING_CABIN_CREATE'
+    })
+
     export const createBedBookingUserAttached = RequirePermissionAndUserId.staticFields({
+        permission: 'CABIN_BOOKING_BED_CREATE'
+    })
+
+    export const createBedBookingNoUser = RequirePermission.staticFields({
         permission: 'CABIN_BOOKING_BED_CREATE'
     })
 

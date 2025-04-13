@@ -43,9 +43,8 @@ export namespace CabinBookingMethods {
     }))
 
 
-    export const createCabinBookingWithUser = ServiceMethod({
+    const create = ServiceMethod({
         paramsSchema: z.object({
-            userId: z.number(),
             bookingType: z.nativeEnum(BookingType),
             bookingProducts: bookingProductParams,
         }),
@@ -138,13 +137,8 @@ export namespace CabinBookingMethods {
             const totalPrice = calculateTotalCabinBookingPrice(priceObjects)
             console.log('TOTAL PRICE FOR THE BOOKING:', totalPrice)
 
-            await prisma.booking.create({
+            return await prisma.booking.create({
                 data: {
-                    user: {
-                        connect: {
-                            id: params.userId,
-                        },
-                    },
                     type: params.bookingType,
                     start: data.start,
                     end: data.end,
@@ -162,6 +156,37 @@ export namespace CabinBookingMethods {
         }
     })
 
+    const createBookingWithUser = ServiceMethod({
+        paramsSchema: z.object({
+            userId: z.number(),
+            bookingType: z.nativeEnum(BookingType),
+            bookingProducts: bookingProductParams,
+        }),
+        auther: ServerOnlyAuther,
+        dataSchema: CabinBookingSchemas.createBookingUserAttached,
+        method: async ({ prisma, params, data, session }) => {
+            const result = await create.client(prisma).execute({
+                params,
+                data,
+                session,
+                bypassAuth: true,
+            })
+
+            await prisma.booking.update({
+                where: {
+                    id: result.id,
+                },
+                data: {
+                    user: {
+                        connect: {
+                            id: params.userId,
+                        }
+                    }
+                }
+            })
+        }
+    })
+
     export const createCabinBookingUserAttached = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number(),
@@ -172,7 +197,7 @@ export namespace CabinBookingMethods {
         }),
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
         method: async ({ prisma, params, data, session }) =>
-            createCabinBookingWithUser.client(prisma).execute({
+            createBookingWithUser.client(prisma).execute({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.CABIN,
@@ -194,7 +219,7 @@ export namespace CabinBookingMethods {
         }),
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
         method: async ({ prisma, params, data, session }) =>
-            createCabinBookingWithUser.client(prisma).execute({
+            createBookingWithUser.client(prisma).execute({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.BED,
@@ -204,6 +229,77 @@ export namespace CabinBookingMethods {
                 session,
                 bypassAuth: true,
             })
+    })
+
+    const createBookingNoUser = ServiceMethod({
+        paramsSchema: z.object({
+            bookingType: z.nativeEnum(BookingType),
+            bookingProducts: bookingProductParams,
+        }),
+        auther: ServerOnlyAuther,
+        dataSchema: CabinBookingSchemas.createBookingNoUser,
+        method: async ({ prisma, params, data, session }) => {
+            const result = await create.client(prisma).execute({
+                params,
+                data: {
+                    ...data,
+                    numberOfMembers: 0,
+                    numberOfNonMembers: 0,
+                },
+                session,
+                bypassAuth: true,
+            })
+
+            await prisma.booking.update({
+                where: {
+                    id: result.id,
+                },
+                data: {
+                    guestUser: {
+                        create: {
+                            firstname: data.firstname,
+                            lastname: data.lastname,
+                            email: data.email,
+                            mobile: data.mobile,
+                        }
+                    }
+                }
+            })
+        }
+    })
+
+    export const createCabinBookingNoUser = ServiceMethod({
+        paramsSchema: z.object({
+            bookingProducts: bookingProductParams,
+        }),
+        auther: () => CabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}),
+        dataSchema: CabinBookingSchemas.createBookingNoUser,
+        method: async ({ prisma, params, data, session }) => createBookingNoUser.client(prisma).execute({
+            params: {
+                bookingType: BookingType.CABIN,
+                bookingProducts: params.bookingProducts,
+            },
+            data,
+            session,
+            bypassAuth: true,
+        })
+    })
+
+    export const createBedBookingNoUser = ServiceMethod({
+        paramsSchema: z.object({
+            bookingProducts: bookingProductParams,
+        }),
+        auther: () => CabinBookingAuthers.createBedBookingNoUser.dynamicFields({}),
+        dataSchema: CabinBookingSchemas.createBookingNoUser,
+        method: async ({ prisma, params, data, session }) => createBookingNoUser.client(prisma).execute({
+            params: {
+                bookingType: BookingType.BED,
+                bookingProducts: params.bookingProducts,
+            },
+            data,
+            session,
+            bypassAuth: true,
+        })
     })
 
     export const readAvailability = ServiceMethod({
@@ -250,17 +346,7 @@ export namespace CabinBookingMethods {
         }),
         method: ({ prisma, params }) => prisma.booking.findUniqueOrThrow({
             where: params,
-            include: {
-                user: {
-                    select: UserConfig.filterSelection,
-                },
-                BookingProduct: {
-                    include: {
-                        product: true,
-                    }
-                },
-                event: true,
-            }
+            include: CabinBookingConfig.bookingIncluder,
         })
     })
 

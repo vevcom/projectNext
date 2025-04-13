@@ -9,7 +9,12 @@ import TextInput from '@/app/_components/UI/TextInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import { useUser } from '@/auth/useUser'
-import { createBedBookingUserAttachedAction, createCabinBookingUserAttachedAction } from '@/actions/cabin'
+import {
+    createBedBookingNoUserAction,
+    createBedBookingUserAttachedAction,
+    createCabinBookingNoUserAction,
+    createCabinBookingUserAttachedAction
+} from '@/actions/cabin'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useMemo, useState } from 'react'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
@@ -74,7 +79,7 @@ export default function StateWrapper({
             numberOfMembers={numberOfMembers}
             numberOfNonMembers={numberOfNonMembers}
         />
-    ), [selectedProducts, bedAmounts, dateRange, numberOfMembers, numberOfNonMembers])
+    ), [selectedProducts, bedAmounts, dateRange, numberOfMembers, numberOfNonMembers, bookingType, pricePeriods])
 
     if (!canBookCabin && !canBookBed) {
         return <>Du kan ikke booke hytta.</>
@@ -82,27 +87,53 @@ export default function StateWrapper({
 
     const canChangeBookingType = canBookCabin && canBookBed
 
+    function submitFormAction() {
+        if (!cabinProduct) {
+            throw new Error('Could not find the cabin product.')
+        }
+
+        if (!user.user) {
+            if (bookingType === 'CABIN') {
+                return createCabinBookingNoUserAction.bind(null, {
+                    bookingProducts: [{
+                        cabinProductId: cabinProduct.id,
+                        quantity: 1,
+                    }]
+                })
+            }
+
+            return createBedBookingNoUserAction.bind(null, {
+                bookingProducts: bedProducts.map((product, index) => ({
+                    cabinProductId: product.id,
+                    quantity: bedAmounts[index],
+                })).filter(product => product.quantity > 0)
+            })
+        }
+
+        if (bookingType === 'CABIN') {
+            return createCabinBookingUserAttachedAction.bind(null, {
+                userId: user.user?.id ?? -1,
+                bookingProducts: [{
+                    cabinProductId: cabinProduct.id,
+                    quantity: 1,
+                }]
+            })
+        }
+
+        return createBedBookingUserAttachedAction.bind(null, {
+            userId: user.user?.id ?? -1,
+            bookingProducts: bedProducts.map((product, index) => ({
+                cabinProductId: product.id,
+                quantity: bedAmounts[index],
+            })).filter(product => product.quantity > 0)
+        })
+    }
+
     return <>
         {calendar}
 
         <Form
-            action={
-                bookingType === 'CABIN' ?
-                    createCabinBookingUserAttachedAction.bind(null, {
-                        userId: user.user?.id ?? -1,
-                        bookingProducts: [{
-                            cabinProductId: cabinProduct.id,
-                            quantity: 1,
-                        }]
-                    }) :
-                    createBedBookingUserAttachedAction.bind(null, {
-                        userId: user.user?.id ?? -1,
-                        bookingProducts: bedProducts.map((product, index) => ({
-                            cabinProductId: product.id,
-                            quantity: bedAmounts[index],
-                        })).filter(product => product.quantity > 0)
-                    })
-            }
+            action={submitFormAction()}
             submitText="Book hytta"
         >
             <input type="hidden" name="start" value={getZodDateString(dateRange.start) ?? ''} readOnly />
@@ -135,7 +166,7 @@ export default function StateWrapper({
 
             }
 
-            {bookingType === 'CABIN' ? <>
+            {(bookingType === 'CABIN' && user.user) ? <>
                 <NumberInput
                     name="numberOfMembers"
                     label="Antall som er medlem i Omega"
@@ -184,6 +215,13 @@ export default function StateWrapper({
                 name="lastname"
                 label="Etternavn"
                 defaultValue={user.user?.lastname ?? ''}
+                disabled={!!user.user}
+                readOnly={!!user.user}
+            />
+            <TextInput
+                name="email"
+                label="E-post"
+                defaultValue={user.user?.email ?? ''}
                 disabled={!!user.user}
                 readOnly={!!user.user}
             />
