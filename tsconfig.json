@@ -42,5 +42,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/prisma/prismaserviceOLD"]
+  "exclude": ["node_modules"]
 }
