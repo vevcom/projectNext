@@ -12,7 +12,8 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { dirname, join } from 'path'
 import { readFile } from 'fs/promises'
-import type { PrismaClient } from '@prisma/client'
+import { fileURLToPath } from 'url'
+import type { PrismaClient, SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,
@@ -21,7 +22,6 @@ import type {
     SeedArticle,
     SeedCategories
 } from './seedCmsConfig'
-import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -107,7 +107,7 @@ async function seedCmsImage(
 }
 
 async function seedCmsParagraph(
-    cmssparagraph: SeedCmsParagraph & {special?: SpecialCmsParagraph | null},
+    cmssparagraph: SeedCmsParagraph & { special?: SpecialCmsParagraph | null },
     prisma: PrismaClient
 ) {
     const contentMd = await readFile(join(__dirname, '..', 'cms_paragraphs', cmssparagraph.file), 'utf-8')
@@ -193,7 +193,7 @@ async function seedArticleSection(
     })
 }
 
-async function seedArticle(article: SeedArticle & {id: number}, prisma: PrismaClient) {
+async function seedArticle(article: SeedArticle & { id: number }, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>

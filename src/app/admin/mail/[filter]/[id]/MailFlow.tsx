@@ -14,7 +14,7 @@ import type { MailFlowObject, MailListTypes } from '@/services/mail/Types'
 
 type DestroyFunction = null | ((id: number) => Promise<ActionReturn<null>>)
 
-export default async function MailFlow({
+export default function MailFlow({
     filter,
     id,
     data,
