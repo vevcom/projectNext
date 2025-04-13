@@ -33,6 +33,14 @@ npx prisma generate
 
 in the projectnext container
 
+#### Seeding
+
+Seeding happens automaticly in devlopment. If you want to reseed the database without restarting the docker container, run the following command. This will remove all data from the database, and then seed all the data afterwards.
+
+```bash
+npm run reseed
+```
+
 #### Reinstalling node_modules
 
 Since we are using volumes in dev, the dev container should keep itself up to date with your working directory. But you will need to reinstall packages manually in projectnext upon changing package.json. Run:
@@ -63,4 +71,12 @@ To auto-fix linting errors run
 
 ```bash
 npm run lint -- --fix
+```
+
+## Migration from omegaweb basic
+
+To migrate the data from omegaweb-basic, run the following command inside the projectnext container
+
+```bash
+npm run dobbelOmega-run
 ```

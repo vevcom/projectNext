@@ -1,4 +1,3 @@
-import 'server-only'
 import { hashAndEncrypter } from '@/lib/crypto/hashAndEncrypter'
 
 export const {
