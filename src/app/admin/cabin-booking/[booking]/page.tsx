@@ -16,12 +16,12 @@ function trHelper(key: string, value: React.ReactNode) {
 export default async function CabinBooking({
     params
 }: {
-    params: {
+    params: Promise<{
         booking: string,
-    }
+    }>
 }) {
     const booking = unwrapActionReturn(await readCabinBookingAction({
-        id: Number(params.booking)
+        id: parseInt(decodeURIComponent((await params).booking), 10)
     }))
 
     return <PageWrapper

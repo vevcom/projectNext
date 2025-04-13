@@ -12,12 +12,12 @@ import Link from 'next/link'
 export default async function CabinProduct({
     params,
 }: {
-    params: {
+    params: Promise<{
         product: string
-    }
+    }>
 }) {
     const product = unwrapActionReturn(await readCabinProductAction({
-        id: parseInt(params.product, 10),
+        id: parseInt(decodeURIComponent((await params).product), 10),
     }))
     const pricePeriods = unwrapActionReturn(await readUnreleasedPricePeriodsAction())
 
