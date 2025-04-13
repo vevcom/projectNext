@@ -69,7 +69,7 @@ export namespace UserMethods {
                 id: params.id,
                 ...params
             },
-            select: UserConfig.filterSelection
+            select: UserConfig.filterAllSelection, // TODO: This should maybe not need all the fields
         })
     })
 
@@ -86,7 +86,7 @@ export namespace UserMethods {
                 id: params.id, // This is a bit wierd, but now ts is satisfied.
                 ...params
             },
-            select: UserConfig.filterSelection
+            select: UserConfig.filterAllSelection, // TODO: This should maybe not need all the fields
         })
     })
 
@@ -103,13 +103,11 @@ export namespace UserMethods {
             const user = await prisma.user.findUniqueOrThrow({
                 where: { username: params.username.toLowerCase() },
                 select: {
-                    ...UserConfig.filterSelection,
-                    bio: true,
-                    image: true,
+                    ...UserConfig.filterProfileSelection,
                 },
             }).then(async u => ({
                 ...u,
-                image: u.image || defaultProfileImage,
+                image: u.image ? u.image : defaultProfileImage,
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
@@ -154,7 +152,7 @@ export namespace UserMethods {
             const users = await prisma.user.findMany({
                 ...cursorPageingSelection(page),
                 select: {
-                    ...UserConfig.filterSelection,
+                    ...UserConfig.filterNameSelection,
                     memberships: {
                         select: {
                             admin: true,
@@ -282,7 +280,7 @@ export namespace UserMethods {
                     data: {
                         studentCard: data.studentCard,
                     },
-                    select: UserConfig.filterSelection,
+                    select: UserConfig.filterNameSelection,
                 })
             ])
 
@@ -322,7 +320,8 @@ export namespace UserMethods {
         auther: () => UserAuthers.update.dynamicFields({}),
         method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
             where: params,
-            data
+            data,
+            select: UserConfig.filterNameSelection,
         })
     })
 
@@ -361,7 +360,7 @@ export namespace UserMethods {
                     id: params.id,
                 },
                 select: {
-                    ...UserConfig.filterSelection,
+                    ...UserConfig.filterAuthSelection,
                     feideAccount: {
                         select: {
                             email: true,
@@ -430,14 +429,12 @@ export namespace UserMethods {
                     id: params.id,
                 },
                 select: {
-                    acceptedTerms: true,
-                    email: true,
+                    ...UserConfig.filterAuthSelection,
                     feideAccount: {
                         select: {
                             email: true,
                         },
                     },
-                    emailVerified: true,
                     memberships: {
                         select: {
                             group: {
@@ -471,7 +468,7 @@ export namespace UserMethods {
                         mobile,
                         allergies,
                     },
-                    select: UserConfig.filterSelection
+                    select: UserConfig.filterAuthSelection,
                 }),
                 prisma.credentials.upsert({
                     where: {
@@ -526,9 +523,7 @@ export namespace UserMethods {
         method: async ({ prisma: prisma_, params }) => {
             const user = await prisma_.user.findFirstOrThrow({
                 where: params,
-                include: {
-                    image: true,
-                }
+                include: UserConfig.filterProfileSelection,
             })
 
             return {
@@ -551,7 +546,8 @@ export namespace UserMethods {
             await prisma.user.delete({
                 where: {
                     id: params.id,
-                }
+                },
+                select: UserConfig.filterContactInfoSelection,
             })
         }
     })

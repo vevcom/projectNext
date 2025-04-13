@@ -1,13 +1,13 @@
 import 'server-only'
 
 import { Html } from '@react-email/components'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserNameFiltered } from '@/services/users/Types'
 
 export function ResetPasswordTemplate({
     user,
     link,
 }: {
-    user: UserFiltered,
+    user: UserNameFiltered,
     link: string,
 }) {
     return (

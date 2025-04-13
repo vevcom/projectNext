@@ -7,7 +7,7 @@ import { readMailAliases } from '@/services/mail/alias/read'
 import { readMailingLists } from '@/services/mail/list/read'
 import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
 import { getUser } from '@/auth/getUser'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserContactInfoFiltered } from '@/services/users/Types'
 import type { MailListTypes } from '@/services/mail/Types'
 import type { MailingList, MailAlias, MailAddressExternal } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -35,7 +35,7 @@ export async function readMailOptions(): Promise<ActionReturn<{
     alias: MailAlias[],
     mailingList: MailingList[],
     mailaddressExternal: MailAddressExternal[],
-    users: UserFiltered[],
+    users: UserContactInfoFiltered[],
 }>> {
     const { authorized, status } = await getUser({
         requiredPermissions: [

@@ -1,12 +1,11 @@
-import { generateJWT } from '@/jwt/jwt'
-import type { UserFiltered } from '@/services/users/Types'
 import 'server-only'
 import { userInvitationExpiration } from './ConfigVars'
+import { generateJWT } from '@/jwt/jwt'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { UserInvitationTemplate } from '@/services/notifications/email/templates/userInvitation'
+import type { UserContactInfoFiltered } from '@/services/users/Types'
 
-
-export async function sendUserInvitationEmail(user: UserFiltered) {
+export async function sendUserInvitationEmail(user: UserContactInfoFiltered) {
     const jwt = generateJWT('verifyemail', {
         sub: user.id,
         email: user.email,

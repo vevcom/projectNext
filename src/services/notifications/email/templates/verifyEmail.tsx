@@ -1,13 +1,13 @@
 import 'server-only'
 
 import { Html } from '@react-email/components'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserContactInfoFiltered } from '@/services/users/Types'
 
 export function VerifyEmailTemplate({
     user,
     link,
 }: {
-    user: UserFiltered,
+    user: UserContactInfoFiltered,
     link: string,
 }) {
     return (

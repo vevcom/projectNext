@@ -77,7 +77,7 @@ export async function dispatchNotification(data: CreateNotificationType['Detaile
                         select: allMethodsOn,
                     },
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: UserConfig.filterContactInfoSelection,
                     },
                 },
             },

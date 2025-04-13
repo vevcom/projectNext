@@ -1,8 +1,22 @@
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { UserConfig } from './config'
-import type { OmegaMembershipLevel, User, Image, Permission } from '@prisma/client'
+import type { Image, OmegaMembershipLevel, Permission, Prisma } from '@prisma/client'
 
-export type UserFiltered = Pick<User, typeof UserConfig.fieldsToExpose[number]>
+export type UserNameFiltered = Prisma.UserGetPayload<{
+    select: typeof UserConfig.filterNameSelection
+}>
+export type UserContactInfoFiltered = Prisma.UserGetPayload<{
+    select: typeof UserConfig.filterContactInfoSelection
+}>
+export type UserProfileFiltered = Prisma.UserGetPayload<{
+    select: typeof UserConfig.filterProfileSelection
+}>
+export type UserAuthFiltered = Prisma.UserGetPayload<{
+    select: typeof UserConfig.filterAuthSelection
+}>
+export type UserAllFiltered = Prisma.UserGetPayload<{
+    select: typeof UserConfig.filterAllSelection
+}>
 
 export type StandardMembeships = {
     class?: number
@@ -10,7 +24,7 @@ export type StandardMembeships = {
     membershipType?: OmegaMembershipLevel
 }
 
-export type UserPagingReturn = UserFiltered & StandardMembeships & {
+export type UserPagingReturn = UserNameFiltered & StandardMembeships & {
     selectedGroupInfo?: {
         title?: string
         admin?: boolean
@@ -45,7 +59,7 @@ export type UserCursor = {
 }
 
 export type Profile = {
-    user: UserFiltered & { image: Image, bio: string },
+    user: Omit<UserProfileFiltered, 'image'> & { image: Image },
     memberships: MembershipFiltered[],
     permissions: Permission[],
 }
