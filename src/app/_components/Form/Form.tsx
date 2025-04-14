@@ -3,7 +3,7 @@ import styles from './Form.module.scss'
 import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
 import { PopUpContext } from '@/contexts/PopUp'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { Children, useContext, useEffect, useState } from 'react'
+import React, { Children, useContext, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/contexts/PopUp'
@@ -135,8 +135,14 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
         return
     }
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        const formData = new FormData(event.currentTarget)
+        await actionWithError(formData)
+    }
+
     return (
-        <form className={`${styles.Form} ${className}`} {...props} action={actionWithError}>
+        <form className={`${styles.Form} ${className}`} {...props} onSubmit={handleSubmit}>
             {title && <h2>{title}</h2>}
             {
                 inputs.map(({ input, errors }, i) => (

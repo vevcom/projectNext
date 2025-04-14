@@ -2,36 +2,30 @@
 import { registerNewEmailAction } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { useUser } from '@/auth/useUser'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
+import type { UserFiltered } from '@/services/users/Types'
 
-export default function EmailRegistrationForm() {
+export default function EmailRegistrationForm({
+    user
+}: {
+    user: UserFiltered
+}) {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
-    const [feedback, setFeedback] = useState<string | null>(null)
-
     const { push } = useRouter()
 
-    const userAuth = useUser({
-        userRequired: true,
-        shouldRedirect: true,
-    })
+    const [feedback, setFeedback] = useState<string | null>(null)
 
-    if (userAuth.user?.acceptedTerms) {
-        push(callbackUrl)
-    }
-
-    if (userAuth.user?.emailVerified) {
-        push(`/register?callbackUrl=${callbackUrl}`)
-    }
+    const actionToCall = registerNewEmailAction.bind(null, { id: user.id })
 
     return <>
         <Form
             title="Sett e-posten din"
             submitText="Verifiser e-post"
-            action={registerNewEmailAction}
+            // action={registerNewEmailAction.bind(null, { id: user.id })}
+            action={actionToCall}
             successCallback={(data) => {
                 if (data) {
                     if (data.verified) {
@@ -50,9 +44,9 @@ export default function EmailRegistrationForm() {
                 Du kan bruke ntnu-e-posten din,
                 men vær oppmerksom på at du mister tilgang til denne når du er ferdig å studere.
             </p>
-            <TextInput label="E-post" name="email" defaultValue={userAuth.user?.email}/>
+            <TextInput label="E-post" name="email" defaultValue={user.email} />
         </Form>
 
-        { feedback && <p>{ feedback }</p> }
+        {feedback && <p>{feedback}</p>}
     </>
 }

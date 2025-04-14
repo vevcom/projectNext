@@ -2,10 +2,10 @@ import styles from './InterestGroup.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
-import { destroyInterestGroupAuther, updateInterestGroupAuther } from '@/services/groups/interestGroups/Auther'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
 import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
+import { InterestGroupAuthers } from '@/services/groups/interestGroups/authers'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
 
@@ -15,8 +15,8 @@ type PropTypes = {
 }
 
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
-    const canUpdate = updateInterestGroupAuther.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
-    const canDestroy = destroyInterestGroupAuther.dynamicFields({}).auth(session)
+    const canUpdate = InterestGroupAuthers.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
+    const canDestroy = InterestGroupAuthers.destroy.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
 
@@ -30,7 +30,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                             {
                                 canUpdate.authorized && (
                                     <>
-                                        <h2>Update interest group</h2>
+                                        <h2>Oppdater interessegruppe</h2>
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}

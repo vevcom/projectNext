@@ -34,7 +34,7 @@ model Event {
 }
 
 model EventTagEvent {
-  event   Event    @relation(fields: [eventId], references: [id])
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId Int
   tag     EventTag @relation(fields: [tagId], references: [id])
   tagId   Int

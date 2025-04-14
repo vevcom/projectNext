@@ -1,5 +1,5 @@
 import { LockerLocationAuthers } from './authers'
-import { createLockerLocationValidation } from './validation'
+import { LockersSchemas } from '@/services/lockers/schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 
 export namespace LockerLocationMethods {
@@ -12,7 +12,7 @@ export namespace LockerLocationMethods {
      */
     export const create = ServiceMethod({
         auther: () => LockerLocationAuthers.create.dynamicFields({}),
-        dataValidation: createLockerLocationValidation,
+        dataSchema: LockersSchemas.createLocation,
         method: async ({ prisma, data }) => prisma.lockerLocation.create({
             data: {
                 building: data.building,

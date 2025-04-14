@@ -1,7 +1,6 @@
 import { apiHandler } from '@/app/api/apiHandler'
-import { readShops } from '@/services/shop/shop/read'
-
+import { ShopMethods } from '@/services/shop/shop/methods'
 
 export const GET = apiHandler({
-    serviceMethod: readShops,
+    serviceMethod: ShopMethods.readMany,
 })

@@ -1,5 +1,5 @@
 'use client'
-import { createShopProductConnectionAction } from '@/actions/shop'
+import { createShopProductConnectionAction } from '@/actions/shop/product'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import { SelectNumber } from '@/app/_components/UI/Select'

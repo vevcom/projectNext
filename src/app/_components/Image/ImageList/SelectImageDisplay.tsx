@@ -29,7 +29,6 @@ export default function SelectImageDisplay({ image }: PropTypes) {
 
     return (
         <button onClick={() => {
-            console.log('Setting image to display')
             imageDisplayContext.setImage(image)
         }} />
     )

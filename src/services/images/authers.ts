@@ -1,8 +1,13 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 
-// TODO: Proper authers for images
-export const createImageAuther = RequireNothing.staticFields({})
-
-export const readImagePageAuther = RequireNothing.staticFields({})
-export const readImageAuther = RequireNothing.staticFields({})
-export const readSpecialImageAuther = RequireNothing.staticFields({})
+//TODO: Implement proper authers
+export namespace ImageAuthers {
+    export const create = RequireNothing.staticFields({})
+    export const createMany = RequireNothing.staticFields({})
+    export const createSourcelessImage = RequireNothing.staticFields({})
+    export const read = RequireNothing.staticFields({})
+    export const readPage = RequireNothing.staticFields({})
+    export const readSpecial = RequireNothing.staticFields({})
+    export const update = RequireNothing.staticFields({})
+    export const destroy = RequireNothing.staticFields({})
+}

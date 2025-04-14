@@ -4,11 +4,11 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
-import { destroyCompanyAuther, updateCompanyAuther } from '@/services/career/companies/authers'
 import Form from '@/components/Form/Form'
 import { updateComanyAction } from '@/actions/career/companies/update'
 import { destroyCompanyAction } from '@/actions/career/companies/destroy'
 import { bindParams } from '@/actions/bind'
+import { CompanyAuthers } from '@/services/career/companies/authers'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
 
@@ -39,11 +39,11 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = updateCompanyAuther.dynamicFields({}).auth(session)
-    const canDestroy = destroyCompanyAuther.dynamicFields({}).auth(session)
+    const canUpdate = CompanyAuthers.update.dynamicFields({}).auth(session)
+    const canDestroy = CompanyAuthers.destroy.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
-            { asClient ?
+            {asClient ?
                 <CmsImageClient
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}

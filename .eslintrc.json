@@ -35,6 +35,8 @@
             "error",
             "never"
         ],
+        // Allow the use of namespaces
+        "@typescript-eslint/no-namespace": "off",
         // suggest using arrow functions as callbacks
         "prefer-arrow-callback": "error",
         // suggest using template literals instead of string concatenation
@@ -178,7 +180,7 @@
         // disallow use of the Array constructor
         "no-array-constructor": "error",
         // disallow use of the continue statement
-        "no-continue": "warn",
+        // "no-continue": "warn",
         // disallow if as the only statement in an else block
         "no-lonely-if": "error",
         // disallow mixed spaces and tabs for indentation

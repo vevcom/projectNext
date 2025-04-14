@@ -1,5 +1,5 @@
-import { createActionError } from './error'
-import { Smorekopp } from '@/services/error'
+import { createActionError, createZodActionError } from './error'
+import { ParseError, Smorekopp } from '@/services/error'
 import type { ActionReturn } from './Types'
 
 /**
@@ -17,6 +17,9 @@ export async function safeServerCall<T>(call: () => Promise<T>): Promise<ActionR
             data
         }
     } catch (error) {
+        if (error instanceof ParseError) {
+            return createZodActionError(error.parseError)
+        }
         if (error instanceof Smorekopp) {
             return createActionError(error.errorCode, error.errors)
         }

@@ -1,9 +1,7 @@
 import { Session } from '@/auth/Session'
-import { createApiKey } from '@/services/api-keys/create'
-import { readApiKey } from '@/services/api-keys/read'
-import { updateApiKey } from '@/services/api-keys/update'
 import { Smorekopp } from '@/services/error'
 import prisma from '@/prisma'
+import { ApiKeyMethods } from '@/services/api-keys/methods'
 import { afterEach, describe, expect, test } from '@jest/globals'
 
 afterEach(async () => {
@@ -18,7 +16,7 @@ describe('api keys', () => {
             user: null,
         })
 
-        const createdApiKey = await createApiKey.newClient().execute({
+        const createdApiKey = await ApiKeyMethods.create.newClient().execute({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -30,8 +28,8 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        const readApiKeyResult = await readApiKey.newClient().execute({
-            params: createdApiKey.id,
+        const readApiKeyResult = await ApiKeyMethods.read.newClient().execute({
+            params: createdApiKey,
             session,
         })
         expect(readApiKeyResult).toMatchObject({
@@ -40,8 +38,8 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        await updateApiKey.newClient().execute({
-            params: createdApiKey.id,
+        await ApiKeyMethods.update.newClient().execute({
+            params: createdApiKey,
             data: {
                 permissions: ['APIKEY_ADMIN'],
             },
@@ -61,7 +59,7 @@ describe('api keys', () => {
     // so there should probably be a system in place to run the same test
     // with different session objects.
     test('create, read and update api key with unauthenticated user', async () => {
-        const createdApiKeyPromise = createApiKey.newClient().execute({
+        const createdApiKeyPromise = ApiKeyMethods.create.newClient().execute({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -70,14 +68,18 @@ describe('api keys', () => {
         expect(createdApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
         expect(await prisma.apiKey.count()).toEqual(0)
 
-        const readApiKeyPromise = readApiKey.newClient().execute({
-            params: 1,
+        const readApiKeyPromise = ApiKeyMethods.read.newClient().execute({
+            params: {
+                id: 1,
+            },
             session: null,
         })
         expect(readApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
-        const updateApiKeyPromise = updateApiKey.newClient().execute({
-            params: 1,
+        const updateApiKeyPromise = ApiKeyMethods.update.newClient().execute({
+            params: {
+                id: 1,
+            },
             data: {
                 permissions: ['APIKEY_ADMIN'],
             },

@@ -1,6 +1,6 @@
 import { apiHandler } from '@/app/api/apiHandler'
-import { readProductByBarCode } from '@/services/shop/product/read'
+import { ProductMethods } from '@/services/shop/product/methods'
 
 export const POST = apiHandler({
-    serviceMethod: readProductByBarCode,
+    serviceMethod: ProductMethods.readByBarCode,
 })
