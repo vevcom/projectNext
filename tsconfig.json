@@ -37,8 +37,10 @@
       "@/api/*": ["src/app/api/*"],
       "@/education/*": ["src/actions/education/*", "src/services/education/*", "src/app/education/*"],
       "@/career/*": ["src/actions/career/*", "src/services/career/*", "src/app/career/*"],
+      "@/generated/*": ["src/prisma/generated/*"],
+      "@/seeder/*": ["src/prisma/seeder/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/prisma/prismaservice"]
+  "exclude": ["node_modules"]
 }
