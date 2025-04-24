@@ -31,14 +31,14 @@ export type PrismaPossibleTransaction<
 export type ServiceMethodParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    SchemaType extends 'INFERED' | 'INPUT'
+    SchemaType extends 'INFERRED' | 'INPUT'
 > = (
     ParamsSchema extends undefined ? object : {
-        params: SchemaType extends 'INFERED' ? z.infer<NonNullable<ParamsSchema>> : z.input<NonNullable<ParamsSchema>>
+        params: SchemaType extends 'INFERRED' ? z.infer<NonNullable<ParamsSchema>> : z.input<NonNullable<ParamsSchema>>
     }
 ) & (
     DataSchema extends undefined ? object : {
-        data: SchemaType extends 'INFERED' ? z.infer<NonNullable<DataSchema>> : z.input<NonNullable<DataSchema>>
+        data: SchemaType extends 'INFERRED' ? z.infer<NonNullable<DataSchema>> : z.input<NonNullable<DataSchema>>
     }
 )
 
@@ -58,7 +58,7 @@ export type ServiceMethodArguments<
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
-} & ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERED'>
+} & ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERRED'>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -94,7 +94,7 @@ export type ServiceMethodConfig<
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
     auther: (
-        paramsData: ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERED'>
+        paramsData: ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERRED'>
     ) => // Todo: Make prettier type for returntype of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
         | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
