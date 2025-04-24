@@ -4,9 +4,9 @@ import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
 import { zfd } from 'zod-form-data'
+import type { z } from 'zod'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
-import type { z } from 'zod'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
 
 /**
@@ -31,10 +31,15 @@ export type PrismaPossibleTransaction<
 export type ServiceMethodParamsData<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
+    SchemaType extends 'INFERED' | 'INPUT'
 > = (
-    ParamsSchema extends undefined ? object : { params: z.infer<NonNullable<ParamsSchema>> }
+    ParamsSchema extends undefined ? object : {
+        params: SchemaType extends 'INFERED' ? z.infer<NonNullable<ParamsSchema>> : z.input<NonNullable<ParamsSchema>>
+    }
 ) & (
-    DataSchema extends undefined ? object : { data: z.infer<NonNullable<DataSchema>> }
+    DataSchema extends undefined ? object : {
+        data: SchemaType extends 'INFERED' ? z.infer<NonNullable<DataSchema>> : z.input<NonNullable<DataSchema>>
+    }
 )
 
 // TODO: Refactor into maybe one type? Or maybe something more concise?
@@ -53,7 +58,7 @@ export type ServiceMethodArguments<
 > = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
-} & ServiceMethodParamsData<ParamsSchema, DataSchema>
+} & ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERED'>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -64,7 +69,7 @@ export type ServiceMethodExecuteArgs<
 > = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
-} & ServiceMethodParamsData<ParamsSchema, DataSchema>
+} & ServiceMethodParamsData<ParamsSchema, DataSchema, 'INPUT'>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
@@ -89,7 +94,7 @@ export type ServiceMethodConfig<
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
     auther: (
-        paramsData: ServiceMethodParamsData<ParamsSchema, DataSchema>
+        paramsData: ServiceMethodParamsData<ParamsSchema, DataSchema, 'INFERED'>
     ) => // Todo: Make prettier type for returntype of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
         | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
