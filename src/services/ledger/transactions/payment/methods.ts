@@ -1,9 +1,9 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { ServiceMethod } from "@/services/ServiceMethod";
-import { z } from "zod";
-import { LedgerAccountMethods } from "@/services/ledger/ledgerAccount/methods";
-import { ServerError } from "@/services/error";
-import { createPaymentValidation } from "./validation";
+import { PaymentSchemas } from './schemas'
+import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/methods'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { ServerError } from '@/services/error'
+import { z } from 'zod'
 
 export namespace PaymentMethods {
     export const create = ServiceMethod({
@@ -11,7 +11,7 @@ export namespace PaymentMethods {
         paramsSchema: z.object({
             fromAccountId: z.number(),
         }),
-        dataValidation: createPaymentValidation,
+        dataSchema: PaymentSchemas.create,
         opensTransaction: true,
         method: async ({ prisma, session, params, data }) => {
             if (params.fromAccountId === data.toAccountId) {

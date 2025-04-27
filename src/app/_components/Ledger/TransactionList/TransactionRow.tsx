@@ -1,6 +1,6 @@
-import { displayAmount } from "@/lib/currency/convert"
-import { Transaction } from "@prisma/client"
 import styles from './TransactionRow.module.scss'
+import { displayAmount } from '@/lib/currency/convert'
+import type { Transaction } from '@prisma/client'
 
 type Props = {
     transaction: Transaction,

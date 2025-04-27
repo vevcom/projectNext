@@ -1,1 +1,1 @@
-const minimumAmount = 5000; // 50 kr
+export const minimumAmount = 5000 // 50 kr

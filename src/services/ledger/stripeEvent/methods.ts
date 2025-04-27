@@ -1,5 +1,5 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { ServiceMethod } from "@/services/ServiceMethod";
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { ServiceMethod } from '@/services/ServiceMethod'
 
 export namespace StripeEventMethods {
     export const handleEvent = ServiceMethod({

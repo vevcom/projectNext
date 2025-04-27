@@ -1,24 +1,24 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { ServiceMethod } from "@/services/ServiceMethod";
-import { createAccountValidation } from "./validation";
-import { ServerError } from "@/services/error";
-import { z } from "zod";
-import { Prisma } from "@prisma/client";
+import { LedgerAccountSchemas } from './schemas'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { ServerError } from '@/services/error'
+import { z } from 'zod'
+import type { Prisma } from '@prisma/client'
 
 export namespace LedgerAccountMethods {
     /**
      * Creates a new ledger account for given user or group.
-     * 
+     *
      * Will throw an error if both `userId` and `groupId` are set, or if neither are set.
-     * 
+     *
      * @param data.userId The ID of the user to create the account for.
      * @param data.groupId The ID of the group to create the account for.
-     * 
+     *
      * @returns The created account.
      */
     export const create = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
-        dataValidation: createAccountValidation,
+        dataSchema: LedgerAccountSchemas.create,
         method: async ({ prisma, data }) => {
             const type = data.userId === undefined ? 'GROUP' : 'USER'
 
@@ -42,13 +42,15 @@ export namespace LedgerAccountMethods {
     })
 
     /**
-     * Reads details of a ledger account for a given user or group. The account will be created if it does not exist.
-     * 
-     * **Note**: The balance of an account is not included in the response. Use the `calculateBalance` method to get the balance.
-     * 
+     * Reads details of a ledger account for a given user or group.
+     * The account will be created if it does not exist.
+     *
+     * **Note**: The balance of an account is not included in the response.
+     * Use the `calculateBalance` method to get the balance.
+     *
      * @param params.userId The ID of the user to read the account for.
      * @param params.groupId The ID of the group to read the account for.
-     * 
+     *
      * @returns The account details.
      */
     export const read = ServiceMethod({
@@ -81,9 +83,9 @@ export namespace LedgerAccountMethods {
 
     /**
      * Calculates the balance of an account.
-     * 
+     *
      * @param params.id The ID of the account to calculate the balance for.
-     * 
+     *
      * @returns The balance of the account.
      */
     export const calculateBalance = ServiceMethod({
@@ -119,7 +121,7 @@ export namespace LedgerAccountMethods {
                     fees: result._sum.fee ?? 0,
                 }
             }
-    
+
             const [sumIn, sumOut] = await Promise.all([
                 sumTransactions({ toAccountId: params.id }),
                 sumTransactions({ fromAccountId: params.id }),

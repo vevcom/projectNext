@@ -1,15 +1,15 @@
-"use client"
+'use client'
 
-import TransactionPagingProvider, { TransactionPagingContext } from "@/contexts/paging/TranasctionPaging";
+import TransactionRow from './TransactionRow'
+import TransactionPagingProvider, { TransactionPagingContext } from '@/contexts/paging/TranasctionPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import TransactionRow from "./TransactionRow";
 
 type Props = {
     accountId: number,
-    showFees?: boolean,
+    // TODO: showFees?: boolean,
 }
 
-export default function TransactionList({ accountId, showFees }: Props) {
+export default function TransactionList({ accountId }: Props) {
     return <TransactionPagingProvider startPage={{ page: 0, pageSize: 10 }} details={{ accountId }} serverRenderedData={[]}>
         <EndlessScroll
             pagingContext={TransactionPagingContext}

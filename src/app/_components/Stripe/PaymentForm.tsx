@@ -1,9 +1,10 @@
-"use client"
+'use client'
 
-import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import Form from '@/components/Form/Form';
-import { createStripeDeposit } from '@/actions/ledger/transactions/deposits';
-import { createActionError } from '@/actions/error';
+import Form from '@/components/Form/Form'
+import { createStripeDeposit } from '@/actions/ledger/transactions/deposits'
+import { createActionError } from '@/actions/error'
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import React from 'react'
 
 type Props = {
     accountId: number,
@@ -52,4 +53,4 @@ export default function PaymentForm({ accountId, children }: Props) {
         {children}
         <PaymentElement />
     </Form>
-}   
+}

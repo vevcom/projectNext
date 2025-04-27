@@ -1,9 +1,9 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { ServiceMethod } from "@/services/ServiceMethod";
-import { z } from "zod";
-import { createDepositValidation } from "./validation";
-import { stripe } from "@/lib/stripe";
-import { ServerError } from "@/services/error";
+import { DepositSchemas } from './schemas'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { ServiceMethod } from '@/services/ServiceMethod'
+import { stripe } from '@/lib/stripe'
+import { ServerError } from '@/services/error'
+import { z } from 'zod'
 
 export namespace DepositMethods {
     export const createStripe = ServiceMethod({
@@ -11,7 +11,7 @@ export namespace DepositMethods {
         paramsSchema: z.object({
             accountId: z.number(),
         }),
-        dataValidation: createDepositValidation,
+        dataSchema: DepositSchemas.create,
         method: async ({ prisma, params, data }) => {
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: data.amount,

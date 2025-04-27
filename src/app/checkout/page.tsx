@@ -1,4 +1,4 @@
-import Button from "../_components/UI/Button";
+import Button from '@/components/UI/Button'
 
 export default async function Checkout() {
     return <div>
