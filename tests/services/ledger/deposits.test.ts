@@ -1,7 +1,7 @@
-import { describe, test } from "@jest/globals";
+import { describe, test } from '@jest/globals'
 
 describe('deposits', () => {
     test('nothing', () => {
-        
+
     })
 })

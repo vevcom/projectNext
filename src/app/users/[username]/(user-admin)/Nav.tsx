@@ -2,7 +2,7 @@
 import styles from './Nav.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { faCircleDot, faCog, faCoins, faKey, faMoneyBill, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faCircleDot, faCog, faKey, faMoneyBill, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { usePathname } from 'next/navigation'
 
 type PropTypes = {

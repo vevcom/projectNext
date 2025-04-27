@@ -1,9 +1,10 @@
-"use client"
+'use client'
 
-import { ChangeEvent, useState } from "react"
-import PaymentProvider from "./PaymentProvider"
-import PaymentForm from "./PaymentForm"
-import NumberInput from "../UI/NumberInput"
+import PaymentProvider from './PaymentProvider'
+import PaymentForm from './PaymentForm'
+import NumberInput from '@/components/UI/NumberInput'
+import { useState } from 'react'
+import type { ChangeEvent } from 'react'
 
 type Props = {
     accountId: number,
