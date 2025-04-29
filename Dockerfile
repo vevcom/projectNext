@@ -19,6 +19,11 @@ RUN mkdir -p src/prisma
 COPY src/prisma/schema src/prisma/schema
 RUN npx prisma generate
 
+COPY src/prisma/vevenSchema src/prisma/vevenSchema
+RUN npm run dobbelOmega-generate
+
+RUN mkdir -p usr/src/app/store/images
+
 # Copy remaining files except src
 # (src is binded in dev so there is no need to copy it here)
 COPY public public
@@ -47,4 +52,4 @@ FROM base AS dev
 
 ENV NODE_ENV=development
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev-seed"]
