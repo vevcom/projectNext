@@ -84,7 +84,7 @@ npm run lint -- --fix
 To migrate the data from omegaweb-basic, run the following command inside the projectnext container.
 
 ```bash
-npm run dobbelOmega-run
+npm run dobbelOmega:run
 ```
 
 If you are connected to our test database on openStack, make sure to be on the ntnu network to be able to connect.

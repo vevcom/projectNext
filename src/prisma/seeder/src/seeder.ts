@@ -20,6 +20,7 @@ import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
 import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
+import seedCabin from './seedCabin'
 import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
@@ -39,6 +40,7 @@ export default async function seed(
     await seedStudyProgramme(prisma)
     await seedOmegaMembershipGroups(prisma)
     await seedClasses(prisma)
+    await seedCabin(prisma)
     await seedShop(prisma)
     console.log('seed standard done')
 
