@@ -1,4 +1,5 @@
 import styles from './layout.module.scss'
+import { unwrapActionReturn } from './redirectToErrorPage'
 import { SessionProvider } from '@/auth/useUser'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
@@ -8,14 +9,13 @@ import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
 import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
+import { readUserProfileAction } from '@/actions/users/read'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import { readUserProfileAction } from '@/actions/users/read'
-import { unwrapActionReturn } from './redirectToErrorPage'
 
 config.autoAddCss = false
 
@@ -24,7 +24,6 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
     title: 'projectnext',
     description: '',
-    charset: 'utf-8',
 }
 
 type PropTypes = {

@@ -6,13 +6,13 @@ import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
 import { getServerSession as getSessionNextAuth } from 'next-auth'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserAuthFiltered } from '@/services/users/Types'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 
 export type SessionType<UserGuarantee extends UserGuaranteeOption> = {
-    user: UserGuarantee extends 'HAS_USER' ? UserFiltered : (
+    user: UserGuarantee extends 'HAS_USER' ? UserAuthFiltered : (
         UserGuarantee extends 'NO_USER' ? null : never
     ),
     permissions: Permission[],

@@ -41,7 +41,7 @@ export namespace PurchaseMethods {
                 where: {
                     studentCard: data.studentCard,
                 },
-                select: UserConfig.filterSelection
+                select: UserConfig.filterNameSelection,
             })
 
             // Find the price of the different products

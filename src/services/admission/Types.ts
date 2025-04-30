@@ -1,6 +1,6 @@
 import type { AdmissionTrial } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserNameFiltered } from '@/services/users/Types'
 
 export type ExpandedAdmissionTrail = AdmissionTrial & {
-    user: UserFiltered
+    user: UserNameFiltered
 }

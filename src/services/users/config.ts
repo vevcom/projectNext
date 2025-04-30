@@ -5,8 +5,43 @@ export namespace UserConfig {
     export const maxNumberOfGroupsInFilter = 7
     export const studentCardRegistrationExpiry = 2 // minutter
 
-    // TODO: This needs to be divived into seperate filters, depending on how much information is needed
-    export const fieldsToExpose = [
+    export const exposeName = [
+        'id',
+        'username',
+        'firstname',
+        'lastname'
+    ] as const satisfies (keyof User)[]
+    export const filterNameSelection = createSelection([...exposeName])
+
+    export const exposeContactInfo = [
+        ...exposeName,
+        'email',
+        'mobile',
+    ] as const satisfies (keyof User)[]
+    export const filterContactInfoSelection = createSelection([...exposeContactInfo])
+
+    export const exposeProfile = [
+        ...exposeContactInfo,
+        'sex',
+        'bio',
+        'imageId',
+    ] as const satisfies (keyof User)[]
+    export const filterProfileSelection = {
+        ...createSelection([...exposeProfile]),
+        image: true,
+    } as const
+
+    // The auth is what is exposed to the user in the session
+    export const exposeAuth = [
+        ...exposeContactInfo,
+        'sex',
+        'emailVerified',
+        'acceptedTerms',
+        'updatedAt',
+    ] as const satisfies (keyof User)[]
+    export const filterAuthSelection = createSelection([...exposeAuth])
+
+    export const exposeAll = [
         'id',
         'username',
         'firstname',
@@ -19,9 +54,10 @@ export namespace UserConfig {
         'acceptedTerms',
         'sex',
         'allergies',
+        'imageId',
+        'studentCard',
     ] as const satisfies (keyof User)[]
-
-    export const filterSelection = createSelection([...fieldsToExpose])
+    export const filterAllSelection = createSelection([...exposeAll])
 
     export const standardMembershipSelection = [
         {

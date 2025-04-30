@@ -4,12 +4,12 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserContactInfoFiltered } from '@/services/users/Types'
 
 export default function EmailRegistrationForm({
-    user
+    user,
 }: {
-    user: UserFiltered
+    user: UserContactInfoFiltered,
 }) {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'

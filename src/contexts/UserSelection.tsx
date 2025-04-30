@@ -1,11 +1,11 @@
 'use client'
 import { createContext, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserNameFiltered } from '@/services/users/Types'
 
 type PropTypes = {
     children: ReactNode
-    initialUser?: UserFiltered | null
+    initialUser?: UserNameFiltered | null
 }
 
 /**
@@ -13,15 +13,15 @@ type PropTypes = {
  * If UserList is rendered inside IserSelectionProvider, it will display a checkbox next to each user.
  */
 export const UserSelectionContext = createContext<{
-    user: UserFiltered | null
-    setUser: (user: UserFiltered | null) => void
-    onSelection: (handler: (user: UserFiltered | null) => void) => void
+    user: UserNameFiltered | null
+    setUser: (user: UserNameFiltered | null) => void
+    onSelection: (handler: (user: UserNameFiltered | null) => void) => void
         } | null>(null)
 
-type Handler = (user: UserFiltered | null) => void
+type Handler = (user: UserNameFiltered | null) => void
 
 export default function UserSelectionProvider({ children, initialUser }: PropTypes) {
-    const [user, setUser] = useState<UserFiltered | null>(initialUser ? initialUser : null)
+    const [user, setUser] = useState<UserNameFiltered | null>(initialUser ? initialUser : null)
     const onSelection = useRef<Handler>(() => {})
     useEffect(() => {
         onSelection.current(user)

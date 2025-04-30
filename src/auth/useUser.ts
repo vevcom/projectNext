@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserAuthFiltered } from '@/services/users/Types'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 
@@ -23,7 +23,7 @@ type UseUserArgsType<ShouldRedirect extends boolean = false, UserRequired extend
 }
 
 type AuthorizedUseUserReturnType<UserRequired extends boolean = false> = ({
-    user: UserFiltered,
+    user: UserAuthFiltered,
     authorized: true,
     status: 'AUTHORIZED',
 } | (
@@ -50,7 +50,7 @@ type UseUserReturnType<UserRequired extends boolean = false> = (
     authorized: false,
     status: 'UNAUTHENTICATED',
 } | {
-    user: UserFiltered,
+    user: UserAuthFiltered,
     authorized: false,
     status: 'UNAUTHORIZED',
 }) & {

@@ -4,7 +4,7 @@ import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
 import { UserMethods } from '@/services/users/methods'
 import { UserConfig } from '@/services/users/config'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserAuthFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 
@@ -15,7 +15,7 @@ import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
  * @param user - User of the type used in veven.
  * @returns User object of the type `AdapterUser`.
  */
-function convertToAdapterUser(user: UserFiltered): AdapterUser {
+function convertToAdapterUser(user: UserAuthFiltered): AdapterUser {
     return {
         ...user,
         id: String(user.id),
@@ -96,7 +96,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                     username,
                     emailVerified: null,
                 },
-                select: UserConfig.filterSelection,
+                select: UserConfig.filterAuthSelection,
             })
 
             return convertToAdapterUser(createdUser)
@@ -133,7 +133,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 },
                 include: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: UserConfig.filterAuthSelection,
                     },
                 },
             })
@@ -165,7 +165,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                     firstname: user.firstname,
                     lastname: user.lastname,
                 },
-                select: UserConfig.filterSelection,
+                select: UserConfig.filterAuthSelection,
             })
 
             return convertToAdapterUser(updatedUser)

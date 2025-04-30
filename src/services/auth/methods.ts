@@ -49,7 +49,7 @@ export namespace AuthMethods {
                     emailVerified: new Date(),
                     email,
                 },
-                select: UserConfig.filterSelection
+                select: UserConfig.filterAuthSelection,
             })
         }
     })

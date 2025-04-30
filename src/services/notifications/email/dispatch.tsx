@@ -8,13 +8,13 @@ import prisma from '@/prisma'
 import { render } from '@react-email/render'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { Notification } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserContactInfoFiltered } from '@/services/users/Types'
 
 
 export async function dispatchEmailNotifications(
     channel: ExpandedNotificationChannel,
     notificaion: Notification,
-    users: UserFiltered[]
+    users: UserContactInfoFiltered[]
 ) {
     console.log('Email')
 
@@ -62,6 +62,6 @@ export async function dispatchEmailNotifications(
     await sendBulkMail(mails)
 }
 
-async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
+async function wrapInHTML(user: UserContactInfoFiltered, text: string): Promise<string> {
     return render(<DefaultEmailTemplate user={user} text={text} />)
 }
