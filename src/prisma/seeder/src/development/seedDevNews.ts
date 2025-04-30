@@ -4,6 +4,12 @@ export default async function seedDevNews(prisma: PrismaClient) {
     const order = await prisma.omegaOrder.findFirst()
     if (!order) throw new Error('No omega order found to seed news to')
 
+    const image = await prisma.image.findUniqueOrThrow({
+        where: {
+            special: 'REALFAGSBYGGET',
+        }
+    })
+
     // seed old news
     const date = new Date()
     date.setDate(date.getDate() - 365) // Subtract 365 days from the current date
@@ -22,7 +28,11 @@ export default async function seedDevNews(prisma: PrismaClient) {
                         name: `test_article_${i}`,
                         coverImage: {
                             create: {
-
+                                image: {
+                                    connect: {
+                                        id: image.id
+                                    }
+                                }
                             }
                         }
                     }
@@ -51,7 +61,13 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     create: {
                         name: `test_article_${i}`,
                         coverImage: {
-                            create: {}
+                            create: {
+                                image: {
+                                    connect: {
+                                        id: image.id
+                                    }
+                                }
+                            }
                         }
                     }
                 },
