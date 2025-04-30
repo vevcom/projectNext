@@ -43,7 +43,7 @@ type UnAuthorizedGetUserReturnType = ({
     memberships: MembershipFiltered[],
 }
 
-type GetUserReturnType<UserRequired extends boolean = false> = (
+export type GetUserReturnType<UserRequired extends boolean = false> = (
     AuthorizedGetUserReturnType<UserRequired>
 ) | (
     UnAuthorizedGetUserReturnType

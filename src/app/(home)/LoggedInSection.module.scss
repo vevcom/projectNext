@@ -1,0 +1,31 @@
+@use '@/styles/ohma';
+
+.LoggedInSection {
+    width: 100%;
+    margin-top: calc(10 * ohma.$gap);
+    margin-bottom: calc(10 * ohma.$gap);
+
+    > .title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        > h4 {
+            font-size: ohma.$fonts-xl;
+            font-weight: ohma.$fonts-weight-l;
+        }
+
+        > a {
+            font-size: ohma.$fonts-m;
+        }
+    }
+
+    > .content {
+        font-size: ohma.$fonts-m;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: calc(3 * ohma.$gap);
+        justify-content: space-between;
+    }
+}
