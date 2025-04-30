@@ -6,6 +6,9 @@ import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
 export namespace DepositMethods {
+    /**
+     * Creates a new stripe deposit and a new Stripe payment intent with the specified amount.
+     */
     export const createStripe = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
@@ -41,6 +44,38 @@ export namespace DepositMethods {
                             }
                         }
                     }
+                }
+            })
+        },
+    })
+
+    /**
+     * Confirms a Stripe deposit by updating the transaction status to SUCCEEDED.
+     * This method also retrieves and sets the fee from the Stripe balance transaction.
+     */
+    export const confirmStripe = ServiceMethod({
+        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        paramsSchema: z.object({
+            balanceTransactionId: z.string(),
+            paymentIntentId: z.string(),
+        }),
+        method: async ({ prisma, params }) => {
+            const { transactionId } = await prisma.stripeDeposit.findUniqueOrThrow({
+                where: {
+                    paymentIntentId: params.paymentIntentId,
+                }
+            })
+        
+            const balanceTransaction = await stripe.balanceTransactions.retrieve(params.balanceTransactionId)
+
+            await prisma.transaction.update({
+                where: {
+                    id: transactionId,
+                    status: 'PENDING',
+                },
+                data: {
+                    status: 'SUCCEEDED',
+                    fee: balanceTransaction.fee,
                 }
             })
         },
