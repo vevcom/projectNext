@@ -13,15 +13,15 @@ export function action<Return>(
 
 export function action<Return, ParamsSchema extends z.ZodTypeAny>(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined>
-): (params: z.infer<ParamsSchema>) => Promise<ActionReturn<Return>>
+): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
 
 export function action<Return, DataSchema extends z.ZodTypeAny | undefined>(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema>
-): (data: z.infer<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
+): (data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
 
 export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny | undefined>(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>
-): (params: z.infer<ParamsSchema>, data: z.infer<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
+): (params: z.input<ParamsSchema>, data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
 
 /**
  * Turn a service method into suitable function for an action.
