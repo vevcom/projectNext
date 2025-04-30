@@ -13,6 +13,7 @@
         > h4 {
             font-size: ohma.$fonts-xl;
             font-weight: ohma.$fonts-weight-l;
+            font-family: ohma.$fonts-secondary;
         }
 
         > a {
@@ -22,10 +23,12 @@
 
     > .content {
         font-size: ohma.$fonts-m;
-        display: flex;
+        /* display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         padding: calc(3 * ohma.$gap);
-        justify-content: space-between;
+        justify-content: space-between; */
+
+        @include ohma.ImageCardListLayout;
     }
 }
