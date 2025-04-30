@@ -1,7 +1,7 @@
 import 'server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
-import { readDefaultPermissions } from '@/services/permissionRoles/read'
+import { PermissionMethods } from '@/services/permissions/methods'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
@@ -92,7 +92,7 @@ export async function getUser({
 }: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
     const {
         user = null,
-        permissions = await readDefaultPermissions(),
+        permissions = await PermissionMethods.readDefaultPermissions.newClient().execute({ session: null }),
         memberships = [],
     } = await getServerSession(authOptions) ?? {}
 

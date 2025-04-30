@@ -7,15 +7,15 @@ import { authOptions } from '@/auth/authoptions'
 import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
 import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
-import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
+import { readUserProfileAction } from '@/actions/users/read'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import { readUserProfileAction } from '@/actions/users/read'
 import { unwrapActionReturn } from './redirectToErrorPage'
+import { readDefaultPermissionsAction } from '@/actions/permissions'
 
 config.autoAddCss = false
 

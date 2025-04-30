@@ -4,10 +4,10 @@ import { decryptAndComparePassword } from './password'
 import FeideProvider from '@/lib/feide/FeideProvider'
 import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
 import prisma from '@/prisma'
-import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import { UserMethods } from '@/services/users/methods'
+import { PermissionMethods } from '@/services/permissions/methods'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
@@ -170,7 +170,9 @@ export const authOptions: AuthOptions = {
                     session: null,
                     bypassAuth: true,
                 }),
-                permissions: await readPermissionsOfUser(userId),
+                permissions: await PermissionMethods.readPermissionsOfUser
+                    .newClient()
+                    .execute({ session: null, params: { id: userId } }),
                 memberships: await readMembershipsOfUser(userId),
             }
         }

@@ -34,7 +34,7 @@ model Group {
   id          Int           @id @default(autoincrement())
   groupType   GroupType
   memberships Membership[]
-  roles       RolesGroups[]
+  permissions GroupPermission[]
   omegaOrder  OmegaOrder    @relation(fields: [order], references: [order])
   order       Int //The order the group is in currently.
 

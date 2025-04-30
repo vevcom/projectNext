@@ -1,4 +1,4 @@
-import type { Permission, Prisma } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 import type { PermissionInfo } from './Types'
 
 export const permissionCategories = [
@@ -474,16 +474,16 @@ export const PermissionConfig = {
     }
 } satisfies Record<Permission, PermissionInfo>
 
-export const expandedRoleIncluder = {
-    permissions: {
-        select: {
-            permission: true,
-        },
-    },
-    groups: {
-        select: {
-            groupId: true,
-            forAdminsOnly: true,
-        },
-    },
-} as const satisfies Prisma.RoleInclude
+// export const expandedRoleIncluder = {
+//     permissions: {
+//         select: {
+//             permission: true,
+//         },
+//     },
+//     groups: {
+//         select: {
+//             groupId: true,
+//             forAdminsOnly: true,
+//         },
+//     },
+// } as const satisfies Prisma.RoleInclude

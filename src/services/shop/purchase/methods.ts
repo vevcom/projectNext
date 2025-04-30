@@ -2,10 +2,10 @@ import 'server-only'
 import { PurchaseAuthers } from './authers'
 import { PurchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
-import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { UserMethods } from '@/services/users/methods'
 import { UserConfig } from '@/services/users/config'
+import { PermissionMethods } from '@/services/permissions/methods'
 import { PurchaseMethod } from '@prisma/client'
 
 export namespace PurchaseMethods {
@@ -26,7 +26,9 @@ export namespace PurchaseMethods {
                 }
                 throw e
             }
-            const permissions = await readPermissionsOfUser(user.id)
+            const permissions = await PermissionMethods.readPermissionsOfUser
+                .newClient()
+                .execute({ session: null, params: { id: user.id } })
             return PurchaseAuthers.createByStudentCard.dynamicFields({
                 permissions,
             })
