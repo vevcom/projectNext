@@ -35,6 +35,8 @@ export default async function seedDevNews(prisma: PrismaClient) {
         })
     }
     // seed current news
+    const activeDate = new Date()
+    activeDate.setDate(activeDate.getDate() + 7)
     for (let i = 2060; i < 2070; i++) {
         await prisma.newsArticle.upsert({
             where: {
@@ -53,7 +55,7 @@ export default async function seedDevNews(prisma: PrismaClient) {
                         }
                     }
                 },
-                endDateTime: new Date(),
+                endDateTime: activeDate,
                 omegaOrder: {
                     connect: order,
                 }

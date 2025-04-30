@@ -22,6 +22,7 @@ import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
 import seedDevJobAds from './development/seedDevJobAds'
 import { PrismaClient } from '@prisma/client'
+import seedDevEvents from './development/seedDevEvents'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -59,5 +60,6 @@ export default async function seed(
     await seedDevCompanies(prisma)
     await seedDevJobAds(prisma)
     await seedDevShop(prisma)
+    await seedDevEvents(prisma)
     console.log('seed dev done')
 }
