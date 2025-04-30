@@ -16,7 +16,7 @@
     "dobbelOmega-generate": "npx prisma generate --schema ./src/prisma/vevenSchema/schema.veven.prisma",
     "dobbelOmega-run": "MIGRATE_FROM_VEVEN=true npm run seed",
     "docker:seed": "docker compose -f docker-compose.dev.yml exec projectnext /bin/sh -c 'npm run seed'",
-    "seed": "npx prisma db push --force-reset --skip-generate && npx prisma db seed",
+    "seed": "npx prisma db push --force-reset --skip-generate && IGNORE_SERVER_ONLY=true npx prisma db seed",
     "dev-seed": "(if [ ! -d './src/prisma/generated' ]; then npm run dobbelOmega-generate; fi) && npm run seed && npm run dev"
   },
   "prisma": {

@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'

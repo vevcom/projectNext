@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createCmsImageValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'

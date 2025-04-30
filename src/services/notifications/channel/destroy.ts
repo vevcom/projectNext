@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { destroyNotificaionChannelValidation } from './validation'
 import { allMethodsOn } from '@/services/notifications/Types'
 import { prismaCall } from '@/services/prismaCall'

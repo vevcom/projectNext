@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { BypassPermissions } from '@/services/visibility/ConfigVars'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { Permission, Prisma, VisibilityPurpose } from '@prisma/client'

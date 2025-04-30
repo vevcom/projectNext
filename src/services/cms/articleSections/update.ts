@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { destroyArticleSection } from './destroy'
 import { destroyCmsImage } from '@/services/cms/images/destoy'
 import { destroyCmsLink } from '@/services/cms/links/destroy'

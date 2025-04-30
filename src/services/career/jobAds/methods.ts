@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { JobAdSchemas } from './schemas'
 import { JobAdAuthers } from './authers'
 import { JobAdConfig } from './config'

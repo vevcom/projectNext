@@ -20,6 +20,7 @@ import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
 import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
+import seedDevJobAds from './development/seedDevJobAds'
 import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
@@ -56,6 +57,7 @@ export default async function seed(
     await seedDevLockers(prisma)
     await seedDevSchools(prisma)
     await seedDevCompanies(prisma)
+    await seedDevJobAds(prisma)
     await seedDevShop(prisma)
     console.log('seed dev done')
 }

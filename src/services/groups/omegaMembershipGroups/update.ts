@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from '@/services/groups/ConfigVars'
 import prisma from '@/prisma'
