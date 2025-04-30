@@ -20,7 +20,6 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
       "@/lib/*": ["src/lib/*"],
       "@pn-server-only": ["src/lib/pn-server-only"],
       "@/components/*": ["src/app/_components/*"],
@@ -40,6 +39,7 @@
       "@/career/*": ["src/actions/career/*", "src/services/career/*", "src/app/career/*"],
       "@/generated/*": ["src/prisma/generated/*"],
       "@/seeder/*": ["src/prisma/seeder/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

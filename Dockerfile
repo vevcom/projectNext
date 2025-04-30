@@ -44,6 +44,7 @@ FROM base AS test
 ENV NODE_ENV=test
 
 COPY jest.config.ts ./
+COPY babel.config.js ./
 # src and tests are expected to be binded in test
 
 CMD ["npm", "run", "test"]
