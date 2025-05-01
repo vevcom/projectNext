@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { fetchStudyProgrammesFromFeide } from './api'
 import { upsertStudyProgrammes } from '@/services/groups/studyProgrammes/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'

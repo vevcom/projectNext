@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { unlink } from 'fs/promises'
 import { join } from 'path'

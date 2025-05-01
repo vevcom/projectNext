@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'

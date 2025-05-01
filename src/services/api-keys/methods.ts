@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { ApiKeyAuthers } from './authers'
 import { ApiKeyConfig } from './config'
 import { ApiKeySchemas } from './schemas'

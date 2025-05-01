@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { LicenseSchemas } from './schemas'
 import { LicenseAuthers } from './authers'
 import { ServerError } from '@/services/error'

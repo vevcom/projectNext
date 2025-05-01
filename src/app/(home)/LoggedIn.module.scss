@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.loggedInPart {
+    padding-left: ohma.$minimalPagePadding;
+    padding-right: ohma.$minimalPagePadding;
+
+    >div {
+        width: 100%;
+        @include ohma.pagePadding();
+    }
+}

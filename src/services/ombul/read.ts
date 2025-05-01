@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'

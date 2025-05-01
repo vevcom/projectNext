@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { expandedRoleIncluder } from './ConfigVars'
 import { readUsersOfGroups } from '@/services/groups/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'

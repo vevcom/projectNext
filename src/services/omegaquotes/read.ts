@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { omegaQuoteFilterSelection } from './CofigVars'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { prismaCall } from '@/services/prismaCall'

@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import prisma from '@/prisma'
 import { ServerError } from '@/services/error'

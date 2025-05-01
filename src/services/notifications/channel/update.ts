@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { updateNotificaionChannelValidation, validateMethods, validateNewParent } from './validation'
 import { readNotificationChannels } from './read'
 import { allMethodsOn, notificationMethods } from '@/services/notifications/Types'

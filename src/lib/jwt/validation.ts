@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 
 import { ValidationBase } from '@/services/Validation'
 import { z } from 'zod'

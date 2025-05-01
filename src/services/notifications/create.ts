@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createNotificaionValidation } from './validation'
 import { allMethodsOn, notificationMethods } from './Types'
 import { dispathMethod } from './dispatch'
