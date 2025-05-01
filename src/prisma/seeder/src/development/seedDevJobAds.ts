@@ -1,5 +1,5 @@
 import { JobadMethods } from '@/services/career/jobAds/methods'
-import type { JobType, Prisma, PrismaClient } from '@prisma/client'
+import type { JobType, PrismaClient } from '@prisma/client'
 
 
 export default async function seedDevJobAds(prisma: PrismaClient) {
