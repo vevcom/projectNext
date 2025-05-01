@@ -5,14 +5,11 @@ import MazeMap from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import YouTube from '@/components/YouTube/YouTube'
-import { getUser } from '@/auth/getUser'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 
 export default async function LoggedOutLandingPage() {
-    const { user } = await getUser()
-
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
