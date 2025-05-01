@@ -3,6 +3,7 @@ import { Smorekopp } from '@/services/error'
 import prisma from '@/prisma'
 import { JobadMethods } from '@/services/career/jobAds/methods'
 import { afterEach, beforeAll, describe, expect, test } from '@jest/globals'
+import JobAd from '@/career/jobads/JobAd'
 
 // NOTE: This is file contains a lot of boiler plate which should be refactored to be more reusable.
 // This is only the first step in wrinting our tests.
@@ -36,7 +37,17 @@ beforeAll(async () => {
 })
 
 afterEach(async () => {
-    await prisma.jobAd.deleteMany()
+    const jobAds = await prisma.jobAd.findMany()
+
+    await Promise.all(jobAds.map(jobAd =>
+        JobadMethods.destroy.newClient().execute({
+            params: {
+                id: jobAd.id
+            },
+            session: null,
+            bypassAuth: true,
+        })
+    ))
 })
 
 describe('job ads', () => {

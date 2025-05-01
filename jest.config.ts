@@ -19,14 +19,12 @@ const config: Config = {
 }
 
 export default async () => {
-    const base = createJestConfig(config)
-    const ret = {
+    const base = await createJestConfig(config)()
+    return {
         ...base,
         moduleNameMapper: tsconfigPaths,
         transformIgnorePatterns: [
-            '/node_modules/(?!(unified|remark-parse|remark-rehype|.*\\.mjs$))'
+            // '/node_modules/(?!(vfile|trough|is-plain-obj|bail|devlop|unified|remark-parse|remark-rehype|.*\\.mjs$))'
         ],
     }
-    console.log(ret)
-    return ret
 }
