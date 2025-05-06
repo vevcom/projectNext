@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { CompanySchemas } from './schemas'
 import { CompanyAuthers } from './authers'
 import { CompanyConfig } from './config'

@@ -2,7 +2,7 @@ import { vevenIdToPnId } from './IdMapper'
 import logger from '@/seeder/src/logger'
 import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven, Quotes } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven, Quotes } from '@/prisma-dobbel-omega/client'
 import type { Limits } from './migrationLimits'
 
 /**

@@ -1,6 +1,6 @@
 import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 
 /**
  * This function migrates image collections from Veven to PN

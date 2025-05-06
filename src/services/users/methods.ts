@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { UserAuthers } from './authers'
 import { UserConfig } from './config'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'

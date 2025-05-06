@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import VevenAdapter from './VevenAdapter'
 import { decryptAndComparePassword } from './password'
 import FeideProvider from '@/lib/feide/FeideProvider'

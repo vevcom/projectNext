@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readSpecialImageCollection } from './collections/read'
 import { ImageConfig } from './config'
 import { ImageAuthers } from './authers'

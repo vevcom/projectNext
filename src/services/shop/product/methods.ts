@@ -1,7 +1,7 @@
 import { ProductAuthers } from './authers'
 import { ProductSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import 'server-only'
+import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExtendedProduct } from './Types'

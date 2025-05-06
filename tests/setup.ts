@@ -1,4 +1,4 @@
-import prisma from '@/prisma'
+import seed from '@/prisma/seeder/src/seeder'
 import { beforeAll } from '@jest/globals'
 
 beforeAll(async () => {
@@ -9,10 +9,5 @@ beforeAll(async () => {
     //   | |  | |____| |  | | |
     //   |_|  |______|_|  |_|_|
 
-    // TODO: Refactor to make it reusable, maybe share functionality with seeding?
-    await prisma.omegaOrder.create({
-        data: {
-            order: 104,
-        },
-    })
+    await seed(false, false, false)
 })

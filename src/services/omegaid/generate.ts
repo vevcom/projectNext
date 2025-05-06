@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { OmegaIdExpiryTime } from './ConfigVars'
 import { generateJWT } from '@/jwt/jwt'
 import type { OmegaId } from './Types'

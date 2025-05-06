@@ -6,8 +6,8 @@ import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@prisma/client'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
 
 export const imageSizes = {
     small: 180,
@@ -15,8 +15,8 @@ export const imageSizes = {
     large: 700,
 }
 
-const standardLocation = join(__dirname, '..', 'standard_store', 'images')
-export const imageStoreLocation = join(__dirname, '..', '..', '..', '..', 'store', 'images')
+const standardLocation = join(directoryName, '..', 'standard_store', 'images')
+export const imageStoreLocation = join(directoryName, '..', '..', '..', '..', 'store', 'images')
 
 /**
  * This functions seeds all images in standard_store/images,

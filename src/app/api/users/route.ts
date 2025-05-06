@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { apiHandler } from '@/api/apiHandler'
 import { UserMethods } from '@/services/users/methods'
 

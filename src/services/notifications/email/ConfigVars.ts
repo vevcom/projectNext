@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 

@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { validateMethods } from './validation'
 import { allMethodsOff, allMethodsOn } from '@/services/notifications/Types'
 import { prismaCall } from '@/services/prismaCall'

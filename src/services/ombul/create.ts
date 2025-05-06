@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createOmbulValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { readSpecialImageCollection } from '@/services/images/collections/read'

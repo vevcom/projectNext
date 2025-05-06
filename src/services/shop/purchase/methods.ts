@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { PurchaseAuthers } from './authers'
 import { PurchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'

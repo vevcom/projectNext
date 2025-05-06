@@ -36,7 +36,17 @@ beforeAll(async () => {
 })
 
 afterEach(async () => {
-    await prisma.jobAd.deleteMany()
+    const jobAds = await prisma.jobAd.findMany()
+
+    await Promise.all(jobAds.map(jobAd =>
+        JobadMethods.destroy.newClient().execute({
+            params: {
+                id: jobAd.id
+            },
+            session: null,
+            bypassAuth: true,
+        })
+    ))
 })
 
 describe('job ads', () => {

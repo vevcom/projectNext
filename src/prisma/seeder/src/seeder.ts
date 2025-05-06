@@ -20,15 +20,19 @@ import seedDevSchools from './development/seedDevSchools'
 import seedDevCompanies from './development/seedDevCompanies'
 import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
+import seedDevJobAds from './development/seedDevJobAds'
+import seedDevEvents from './development/seedDevEvents'
 import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
     shouldMigrate: boolean,
-    seedDevData: boolean
+    seedDevData: boolean,
+    logging?: boolean,
 ) {
+    const enableLogging = logging === undefined ? true : logging
     const prisma = new PrismaClient()
 
-    console.log('seeding standard data....')
+    if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
     await SeedSpecialVisibility(prisma)
     await SeedSpecialImageCollections(prisma)
@@ -40,13 +44,13 @@ export default async function seed(
     await seedOmegaMembershipGroups(prisma)
     await seedClasses(prisma)
     await seedShop(prisma)
-    console.log('seed standard done')
+    if (enableLogging) console.log('seed standard done')
 
-    console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
+    if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
     if (shouldMigrate) await dobbelOmega(prisma)
 
     if (!seedDevData) return
-    console.log('seeding dev data....')
+    if (enableLogging) console.log('seeding dev data....')
     await seedDevImages(prisma)
     await seedDevUsers(prisma)
     await seedDevGroups(prisma)
@@ -56,6 +60,8 @@ export default async function seed(
     await seedDevLockers(prisma)
     await seedDevSchools(prisma)
     await seedDevCompanies(prisma)
+    await seedDevJobAds(prisma)
     await seedDevShop(prisma)
+    await seedDevEvents(prisma)
     console.log('seed dev done')
 }

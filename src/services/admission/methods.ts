@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { AdmissionSchemas } from './schemas'
 import { AdmissionAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'

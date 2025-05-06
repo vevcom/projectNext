@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 
 /**
  * The attributes returned by the extended user info endpoint.

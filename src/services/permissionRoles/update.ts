@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readDefaultPermissions, readUsersOfRole } from './read'
 import { updateDefaultPermissionsValidation, updateRoleValidation } from './validation'
 import { expandedRoleIncluder } from './ConfigVars'

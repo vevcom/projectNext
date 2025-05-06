@@ -5,7 +5,7 @@ datasource db {
 
 generator veven {
   provider = "prisma-client-js"
-  output   = "../generated/veven"
+  output   = "../../../node_modules/.prisma-dobbel-omega"
 }
 
 model AliasAssociations {
