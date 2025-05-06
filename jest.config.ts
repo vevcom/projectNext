@@ -10,6 +10,10 @@ const config: Config = {
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     coverageReporters: ['text-summary'],
+    moduleNameMapper: {
+        // This is needed becaue jest doesn't handle the this code is inside node_modules
+        '^@/prisma-dobbel-omega/(.*)$': '<rootDir>/node_modules/.prisma-dobbel-omega/$1',
+    },
 }
 
 export default async function jestConfig() {

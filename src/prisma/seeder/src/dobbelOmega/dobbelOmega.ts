@@ -8,7 +8,7 @@ import migrateMailAliases from './migrateMailAlias'
 import migrateEvents from './migrateEvents'
 import migrateUsers from './migrateUsers'
 import manifest from '@/seeder/src/logger'
-import { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 
 /**
