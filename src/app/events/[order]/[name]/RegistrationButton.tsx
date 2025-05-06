@@ -1,10 +1,19 @@
 'use client'
 import Button from '@/components/UI/Button'
 import { createEventRegistrationAction } from '@/actions/events/registration'
+import CountDown from '@/components/countDown/CountDown'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { Event } from '@prisma/client'
 
+
+enum RegistrationButtonState {
+    NOT_REGISTERED = 'NOT_REGISTERED',
+    REGISTERED = 'REGISTERED',
+    FULL = 'FULL',
+    REGISTRATION_NOT_OPEN = 'REGISTRATION_NOT_OPEN',
+    ERROR = 'ERROR',
+}
 
 export default function RegistrationButton({
     event
@@ -19,14 +28,20 @@ export default function RegistrationButton({
         throw new Error('Can only show registration button for event that take registration')
     }
 
-    const [disabled, setDisabled] = useState(!(
-        event.registrationStart < new Date()
-        && new Date() < event.registrationEnd
-        && event._count.eventRegistrations < event.places
-    ))
-    const [text, setText] = useState(
-        event._count.eventRegistrations < event.places ? 'Meld meg på' : 'Arrangementet er fult'
-    )
+    const getInitialBtnState = () => {
+        if (event.registrationStart > new Date()) {
+            return RegistrationButtonState.REGISTRATION_NOT_OPEN
+        }
+        if (event._count.eventRegistrations >= event.places) {
+            return RegistrationButtonState.FULL
+        }
+        return RegistrationButtonState.NOT_REGISTERED
+    }
+
+    const [errorText, setErrorText] = useState('')
+
+    const [btnState, setBtnState] = useState(getInitialBtnState())
+
     const session = useSession()
 
     useEffect(() => {
@@ -34,7 +49,7 @@ export default function RegistrationButton({
         let timeoutId: ReturnType<typeof setTimeout>
         if (timeUntilRegistration > 0) {
             timeoutId = setTimeout(() => {
-                setDisabled(false)
+                setBtnState(RegistrationButtonState.NOT_REGISTERED)
             }, timeUntilRegistration)
         }
 
@@ -55,20 +70,28 @@ export default function RegistrationButton({
             eventId: event.id,
         })
 
-        setDisabled(true)
-
         if (result.success) {
-            setText('Du er påmeldt')
+            setBtnState(RegistrationButtonState.REGISTERED)
         } else if (result.error && result.error.length > 0) {
             const message = result.error[0].message
-            setText(message)
+            setErrorText(message)
+            setBtnState(RegistrationButtonState.ERROR)
         } else {
-            setText('Kunne ikke melde deg på.')
+            setErrorText('Kunne ikke melde deg på.')
+            setBtnState(RegistrationButtonState.ERROR)
         }
     }
 
     return <Button
-        disabled={disabled}
+        disabled={btnState !== RegistrationButtonState.NOT_REGISTERED}
         onClick={buttonOnClick}
-    >{text}</Button>
+    >
+        {btnState === RegistrationButtonState.NOT_REGISTERED && 'Meld meg på'}
+        {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
+        {btnState === RegistrationButtonState.FULL && 'Fullt'}
+        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && <>
+            Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} />
+        </>}
+        {btnState === RegistrationButtonState.ERROR && errorText}
+    </Button>
 }
