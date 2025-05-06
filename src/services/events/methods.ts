@@ -95,7 +95,12 @@ export namespace EventMethods {
                         include: {
                             tag: true
                         }
-                    }
+                    },
+                    _count: {
+                        select: {
+                            eventRegistrations: true,
+                        },
+                    },
                 }
             })
             return {

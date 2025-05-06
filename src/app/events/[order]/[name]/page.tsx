@@ -82,7 +82,7 @@ export default async function Event({ params }: PropTypes) {
                         <>
                             <p>
                                 <FontAwesomeIcon icon={faUsers} />
-                                {event.places}
+                                {event._count.eventRegistrations} / {event.places}
                             </p>
                             <RegistrationButton event={event} />
                         </>
