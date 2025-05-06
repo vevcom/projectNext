@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { Profile } from '@/services/users/Types'
+import UserDisplayName from '../User/UserDisplayName'
 
 type PropTypes = {
     profile: Profile | null
@@ -36,7 +37,7 @@ export default function UserNavigation({ profile }: PropTypes) {
     return (
         <div ref={ref} className={styles.UserNavigation}>
             <ProfilePicture profileImage={profile.user.image} width={180} />
-            <h2>{profile.user.firstname} {profile.user.lastname}</h2>
+            <h2><UserDisplayName user={profile.user} /></h2>
 
             <Link href="/logout" className={styles.logout}>
                 <BorderButton color="secondary">

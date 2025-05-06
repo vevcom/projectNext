@@ -14,6 +14,7 @@ import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
+import UserDisplayName from '@/components/User/UserDisplayName'
 
 export type PropTypes = {
     params: Promise<{
@@ -63,7 +64,7 @@ export default async function User({ params }: PropTypes) {
                     <ProfilePicture width={240} profileImage={profileImage} />
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
-                            <h1>{`${profile.user.firstname} ${profile.user.lastname}`}</h1>
+                            <h1><UserDisplayName user={profile.user} /></h1>
                             {showOmegaId && <PopUp
                                 showButtonClass={styles.omegaIdOpen}
                                 showButtonContent={
