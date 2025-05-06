@@ -15,6 +15,7 @@ import { bindParams } from '@/actions/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import RegistrationButton from './RegistrationButton'
 
 type PropTypes = {
     params: Promise<{
@@ -78,14 +79,17 @@ export default async function Event({ params }: PropTypes) {
                 </p>
                 {
                     event.takesRegistration ? (
-                        <p>
-                            <FontAwesomeIcon icon={faUsers} />
-                            {event.places}
-                        </p>
+                        <>
+                            <p>
+                                <FontAwesomeIcon icon={faUsers} />
+                                {event.places}
+                            </p>
+                            <RegistrationButton event={event} />
+                        </>
                     ) : (
                         <p>
                             <FontAwesomeIcon icon={faExclamation} />
-                        Dette arrangementet tar ikke påmeldinger
+                            Dette arrangementet tar ikke påmeldinger
                         </p>
                     )
                 }
