@@ -1,0 +1,11 @@
+@use '@/styles/ohma';
+
+.RegistrationsList {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+
+  > div {
+    width: 100%;
+  }
+}

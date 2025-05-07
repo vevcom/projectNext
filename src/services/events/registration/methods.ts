@@ -2,9 +2,11 @@ import { EventRegistrationAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
+import { UserConfig } from '@/services/users/config'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import { connect } from 'http2'
+import { EventRegistrationConfig } from './config'
 
 
 export namespace EventRegistrationMethods {
@@ -65,6 +67,23 @@ export namespace EventRegistrationMethods {
         }, {
             // TODO: Prevent race conditions
             isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        }),
+    })
+
+    export const readMany = ServiceMethod({
+        auther: () => EventRegistrationAuthers.readMany.dynamicFields({}),
+        paramsSchema: z.object({
+            eventId: z.number().min(0),
+            skip: z.number().optional(),
+            take: z.number().optional(),
+        }),
+        method: async ({ prisma, params }) => await prisma.eventRegistration.findMany({
+            where: {
+                eventId: params.eventId,
+            },
+            take: params.take,
+            skip: params.skip,
+            include: EventRegistrationConfig.includer,
         }),
     })
 }

@@ -1,5 +1,6 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
+import RegistrationButton from './RegistrationButton'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
@@ -12,10 +13,15 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/actions/bind'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readManyEventRegistrationAction } from '@/actions/events/registration'
+import UserList from '@/components/User/UserList/UserList'
+import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
 import Link from 'next/link'
-import RegistrationButton from './RegistrationButton'
+import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import RegistrationsList from './RegistrationsList'
 
 type PropTypes = {
     params: Promise<{
@@ -25,17 +31,16 @@ type PropTypes = {
 }
 
 export default async function Event({ params }: PropTypes) {
-    const eventRes = await readEventAction({
+    const event = unwrapActionReturn(await readEventAction({
         name: decodeURIComponent((await params).name),
-        order: parseInt((await params).order, 10)
-    })
-    const tagsRes = await readEventTagsAction()
-    if (!eventRes.success || !tagsRes.success) {
-        //TODO: Handle error in idiomatic way
-        throw new Error('Failed to read event')
-    }
-    const event = eventRes.data
-    const tags = tagsRes.data
+        order: parseInt((await params).order, 10),
+    }))
+
+    const tags = unwrapActionReturn(await readEventTagsAction())
+
+    const registrations = unwrapActionReturn(await readManyEventRegistrationAction({
+        eventId: event.id
+    }))
 
     return (
         <div className={styles.wrapper}>
@@ -98,6 +103,7 @@ export default async function Event({ params }: PropTypes) {
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />
             </main>
+            <RegistrationsList />
         </div>
     )
 }

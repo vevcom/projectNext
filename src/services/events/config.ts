@@ -26,6 +26,13 @@ export namespace EventConfig {
         'takesRegistration'
     ] as const satisfies (keyof Event)[]
 
-    export const filterSeletion = createSelection(fieldsToExpose)
+    export const filterSeletion = {
+        ...createSelection(fieldsToExpose),
+        _count: {
+            select: {
+                eventRegistrations: true,
+            },
+        },
+    } as const
 }
 

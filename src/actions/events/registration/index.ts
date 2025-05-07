@@ -5,3 +5,4 @@ import { EventRegistrationMethods } from '@/services/events/registration/methods
 
 
 export const createEventRegistrationAction = action(EventRegistrationMethods.create)
+export const readManyEventRegistrationAction = action(EventRegistrationMethods.readMany)

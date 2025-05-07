@@ -46,7 +46,7 @@ export default function EventCard({ event }: PropTypes) {
                         <>
                             <li>
                                 <FontAwesomeIcon icon={faUsers} />
-                                {0} / {event.places}
+                                {event._count.eventRegistrations} / {event.places}
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={faCalendar} />
