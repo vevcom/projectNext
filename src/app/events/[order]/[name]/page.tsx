@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import RegistrationButton from './RegistrationButton'
+import RegistrationsList from './RegistrationsList'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
@@ -17,11 +18,10 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readManyEventRegistrationAction } from '@/actions/events/registration'
 import UserList from '@/components/User/UserList/UserList'
 import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import RegistrationsList from './RegistrationsList'
 
 type PropTypes = {
     params: Promise<{
@@ -103,7 +103,11 @@ export default async function Event({ params }: PropTypes) {
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />
             </main>
-            <RegistrationsList />
+
+            <div className={styles.registrationList}>
+                <h4>Påmeldte</h4>
+                <RegistrationsList />
+            </div>
         </div>
     )
 }

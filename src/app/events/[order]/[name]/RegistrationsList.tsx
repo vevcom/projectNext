@@ -1,8 +1,8 @@
 'use client'
-import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import UserDisplayName from '@/components/User/UserDisplayName'
-import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
 import styles from './RegistrationsList.module.scss'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
+import UserCard from '@/components/User/UserCard'
 
 
 export default function RegistrationsList() {
@@ -17,9 +17,7 @@ export default function RegistrationsList() {
         <div className={styles.RegistrationsList}>
             <EndlessScroll
                 pagingContext={EventRegistrationPagingContext}
-                renderer={row => <div>
-                    <UserDisplayName user={row.user} />
-                </div>}
+                renderer={row => <UserCard user={row.user} className={styles.userCard} />}
             />
         </div>
     </EventRegistrationPagingProvider>

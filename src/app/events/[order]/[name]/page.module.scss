@@ -86,4 +86,15 @@ $padding: ohma.$minimalPagePadding;
         grid-row: 2 / 3;
         margin: 1em 3em;
     }
+
+    > .registrationList {
+        grid-column: 1 / 3;
+        grid-row: 4 / 4;
+        margin-top: calc(4 * ohma.$gap);
+
+        > h4 {
+            font-size: ohma.$fonts-xl;
+            font-weight: ohma.$fonts-weight-l;
+        }
+    }
 }

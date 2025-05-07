@@ -11,7 +11,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
     const endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + 1)
 
-    await EventMethods.create.client(prisma).execute({
+    const bedpres = await EventMethods.create.client(prisma).execute({
         session: null,
         bypassAuth: true,
         data: {
@@ -20,7 +20,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             eventEnd: endDate,
             canBeViewdBy: 'ALL',
             takesRegistration: true,
-            places: 10,
+            places: 15,
             registrationStart: today,
             registrationEnd: tomorrow,
             tagIds: [],
@@ -40,5 +40,19 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             registrationEnd: tomorrow,
             tagIds: [],
         }
+    })
+
+    const someUsers = prisma.user.findMany({
+        take: 10,
+        select: {
+            id: true
+        }
+    })
+
+    await prisma.eventRegistration.createMany({
+        data: (await someUsers).map(user => ({
+            eventId: bedpres.id,
+            userId: user.id
+        }))
     })
 }

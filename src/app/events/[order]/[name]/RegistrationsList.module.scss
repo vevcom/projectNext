@@ -1,11 +1,12 @@
 @use '@/styles/ohma';
 
 .RegistrationsList {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-
-  > div {
     width: 100%;
-  }
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: calc(1 * ohma.$gap);
+
+    > :last-child {
+        grid-column: 1 / -1;
+    }
 }
