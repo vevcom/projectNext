@@ -104,10 +104,12 @@ export default async function Event({ params }: PropTypes) {
                 <CmsParagraph cmsParagraph={event.paragraph} />
             </main>
 
-            <div className={styles.registrationList}>
-                <h4>Påmeldte</h4>
-                <RegistrationsList />
-            </div>
+            { event.takesRegistration && (
+                <div className={styles.registrationList}>
+                    <h4>Påmeldte</h4>
+                    <RegistrationsList eventId={event.id} />
+                </div>
+            )}
         </div>
     )
 }

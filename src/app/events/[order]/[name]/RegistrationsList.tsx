@@ -5,14 +5,20 @@ import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from 
 import UserCard from '@/components/User/UserCard'
 
 
-export default function RegistrationsList() {
+export default function RegistrationsList({
+    eventId,
+}: {
+    eventId: number,
+}) {
     return <EventRegistrationPagingProvider
         serverRenderedData={[]}
         startPage={{
             page: 0,
             pageSize: 50
         }}
-        details={[]}
+        details={{
+            eventId,
+        }}
     >
         <div className={styles.RegistrationsList}>
             <EndlessScroll

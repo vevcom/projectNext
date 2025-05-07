@@ -5,4 +5,6 @@ export type EventRegistrationExpanded = Prisma.EventRegistrationGetPayload<{
     include: typeof EventRegistrationConfig.includer
 }>
 
-export type EventRegistrationDetails = EventRegistrationExpanded[]
+export type EventRegistrationFetcherDetails = {
+    eventId: number,
+}
