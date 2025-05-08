@@ -17,16 +17,16 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
         'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
         'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
-        'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
-        'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
-        'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-        'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-        'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
-        'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
+        // 'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
+        // 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
+        // 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
+        // 'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
+        // 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
+        // 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
     ]
 
     const passwordHash = await hashAndEncryptPassword('password')

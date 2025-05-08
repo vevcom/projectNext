@@ -3,10 +3,12 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { UserConfig } from '@/services/users/config'
+import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import { connect } from 'http2'
 import { EventRegistrationConfig } from './config'
+import { EventRegistrationExpanded } from './Types'
 
 
 export namespace EventRegistrationMethods {
@@ -77,13 +79,27 @@ export namespace EventRegistrationMethods {
             skip: z.number().optional(),
             take: z.number().optional(),
         }),
-        method: async ({ prisma, params }) => await prisma.eventRegistration.findMany({
-            where: {
-                eventId: params.eventId,
-            },
-            take: params.take,
-            skip: params.skip,
-            include: EventRegistrationConfig.includer,
-        }),
+        method: async ({ prisma, params, session }) => {
+            const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+                params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                session,
+            })
+            const reults = await prisma.eventRegistration.findMany({
+                where: {
+                    eventId: params.eventId,
+                },
+                take: params.take,
+                skip: params.skip,
+                include: EventRegistrationConfig.includer,
+            })
+
+            return reults.map(registration => ({
+                ...registration,
+                user: {
+                    ...registration.user,
+                    image: registration.user.image || defaultImage,
+                }
+            }))
+        },
     })
 }

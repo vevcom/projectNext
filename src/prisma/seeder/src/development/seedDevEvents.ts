@@ -42,7 +42,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    const someUsers = prisma.user.findMany({
+    const someUsers = await prisma.user.findMany({
         take: 10,
         select: {
             id: true
@@ -50,7 +50,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
     })
 
     await prisma.eventRegistration.createMany({
-        data: (await someUsers).map(user => ({
+        data: someUsers.map(user => ({
             eventId: bedpres.id,
             userId: user.id
         }))
