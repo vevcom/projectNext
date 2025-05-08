@@ -1,10 +1,13 @@
 'use client'
 import Button from '@/components/UI/Button'
-import { createEventRegistrationAction } from '@/actions/events/registration'
+import { createEventRegistrationAction, eventRegistrationUpdateNotesAction } from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import type { Event } from '@prisma/client'
+import type { Event, EventRegistration } from '@prisma/client'
+import Form from '@/components/Form/Form'
+import { bindParams } from '@/actions/bind'
+import TextInput from '@/components/UI/TextInput'
 
 
 enum RegistrationButtonState {
@@ -15,14 +18,16 @@ enum RegistrationButtonState {
     ERROR = 'ERROR',
 }
 
-export default function RegistrationButton({
-    event
+export default function RegistrationUI({
+    event,
+    registration,
 }: {
     event: Event & {
         _count: {
             eventRegistrations: number
         }
-    }
+    },
+    registration?: EventRegistration,
 }) {
     if (!event.takesRegistration) {
         throw new Error('Can only show registration button for event that take registration')
@@ -35,10 +40,14 @@ export default function RegistrationButton({
         if (event._count.eventRegistrations >= event.places) {
             return RegistrationButtonState.FULL
         }
+        if (registration) {
+            return RegistrationButtonState.REGISTERED
+        }
         return RegistrationButtonState.NOT_REGISTERED
     }
 
     const [errorText, setErrorText] = useState('')
+    const [registrationState, setRegistrationState] = useState(registration)
 
     const [btnState, setBtnState] = useState(getInitialBtnState())
 
@@ -72,6 +81,7 @@ export default function RegistrationButton({
 
         if (result.success) {
             setBtnState(RegistrationButtonState.REGISTERED)
+            setRegistrationState(result.data)
         } else if (result.error && result.error.length > 0) {
             const message = result.error[0].message
             setErrorText(message)
@@ -82,16 +92,30 @@ export default function RegistrationButton({
         }
     }
 
-    return <Button
-        disabled={btnState !== RegistrationButtonState.NOT_REGISTERED}
-        onClick={buttonOnClick}
-    >
-        {btnState === RegistrationButtonState.NOT_REGISTERED && 'Meld meg på'}
-        {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
-        {btnState === RegistrationButtonState.FULL && 'Fullt'}
-        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && <>
-            Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} />
-        </>}
-        {btnState === RegistrationButtonState.ERROR && errorText}
-    </Button>
+    return <>
+        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
+            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
+        )}
+
+        <Button
+            disabled={btnState !== RegistrationButtonState.NOT_REGISTERED}
+            onClick={buttonOnClick}
+        >
+            {(
+                btnState === RegistrationButtonState.NOT_REGISTERED ||
+                btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN
+            ) && 'Meld meg på'}
+            {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
+            {btnState === RegistrationButtonState.FULL && 'Fullt'}
+            {btnState === RegistrationButtonState.ERROR && errorText}
+        </Button>
+
+        {registrationState && event.eventStart > new Date() && <Form
+            action={bindParams(eventRegistrationUpdateNotesAction, { registrationId: registrationState.id })}
+            submitText="Oppdater kommentar"
+        >
+            <TextInput name="notes" label="Kommentar" defaultValue={registrationState.note || ''} />
+        </Form>}
+
+    </>
 }

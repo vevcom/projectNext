@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
-import RegistrationButton from './RegistrationButton'
+import RegistrationUI from './RegistrationUI'
 import RegistrationsList from './RegistrationsList'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
@@ -15,10 +15,6 @@ import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/actions/bind'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readManyEventRegistrationAction } from '@/actions/events/registration'
-import UserList from '@/components/User/UserList/UserList'
-import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
-import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -37,6 +33,8 @@ export default async function Event({ params }: PropTypes) {
     }))
 
     const tags = unwrapActionReturn(await readEventTagsAction())
+
+    const ownRegitration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
 
     return (
         <div className={styles.wrapper}>
@@ -85,7 +83,7 @@ export default async function Event({ params }: PropTypes) {
                                 <FontAwesomeIcon icon={faUsers} />
                                 {event._count.eventRegistrations} / {event.places}
                             </p>
-                            <RegistrationButton event={event} />
+                            <RegistrationUI event={event} registration={ownRegitration} />
                         </>
                     ) : (
                         <p>

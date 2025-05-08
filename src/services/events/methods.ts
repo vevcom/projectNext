@@ -12,6 +12,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 
 export namespace EventMethods {
     export const create = ServiceMethod({
@@ -76,7 +77,7 @@ export namespace EventMethods {
             name: z.string(),
         }),
         auther: () => EventAuthers.read.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        method: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
                     order_name: {
@@ -101,6 +102,11 @@ export namespace EventMethods {
                             eventRegistrations: true,
                         },
                     },
+                    eventRegistrations: {
+                        where: {
+                            userId: session?.user?.id || -1
+                        }
+                    }
                 }
             })
             return {

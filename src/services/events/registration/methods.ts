@@ -119,4 +119,42 @@ export namespace EventRegistrationMethods {
             include: EventRegistrationConfig.includerDetailed,
         })
     })
+
+    export const updateNotes = ServiceMethod({
+        auther: () => EventRegistrationAuthers.updateRegistrationNotes.dynamicFields({}),
+        paramsSchema: z.object({
+            registrationId: z.number().min(0),
+        }),
+        dataSchema: z.object({
+            notes: z.string().optional(),
+        }),
+        method: async ({ prisma, params, data, session }) => {
+            const registration = await prisma.eventRegistration.findUnique({
+                where: {
+                    id: params.registrationId,
+                },
+                select: {
+                    userId: true,
+                    event: true,
+                },
+            })
+
+            if (!session.user || !registration || registration.userId !== session.user.id) {
+                throw new Smorekopp('UNAUTHORIZED', 'Kan ikke endre påmelding til andre.')
+            }
+
+            if (registration.event.eventStart < new Date()) {
+                throw new Smorekopp('BAD PARAMETERS', 'Kan ikke endre påmelding til et event som allerede har startet.')
+            }
+
+            return await prisma.eventRegistration.update({
+                where: {
+                    id: params.registrationId,
+                },
+                data: {
+                    note: data.notes,
+                },
+            })
+        }
+    })
 }

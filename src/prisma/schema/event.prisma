@@ -62,14 +62,18 @@ model EventTag {
 }
 
 model EventRegistration {
-  id        Int      @id @default(autoincrement())
-  event     Event    @relation(fields: [eventId], references: [id])
-  eventId   Int
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  note      String?
+  id           Int      @id @default(autoincrement())
+  event        Event    @relation(fields: [eventId], references: [id])
+  eventId      Int
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  note         String?
+  manuallyPaid Boolean  @default(false)
+
+  // For guests with the contact table from the cabin booking
+  // TODO: Add transaction relation
 
   @@unique([eventId, userId])
 }
