@@ -38,10 +38,6 @@ export default async function Event({ params }: PropTypes) {
 
     const tags = unwrapActionReturn(await readEventTagsAction())
 
-    const registrations = unwrapActionReturn(await readManyEventRegistrationAction({
-        eventId: event.id
-    }))
-
     return (
         <div className={styles.wrapper}>
             <span className={styles.coverImage}>
@@ -106,7 +102,6 @@ export default async function Event({ params }: PropTypes) {
 
             { event.takesRegistration && (
                 <div className={styles.registrationList}>
-                    <h4>Påmeldte</h4>
                     <RegistrationsList eventId={event.id} />
                 </div>
             )}

@@ -90,7 +90,7 @@ export namespace EventRegistrationMethods {
                 },
                 take: params.take,
                 skip: params.skip,
-                include: EventRegistrationConfig.includer,
+                select: EventRegistrationConfig.selection,
             })
 
             return reults.map(registration => ({
@@ -101,5 +101,22 @@ export namespace EventRegistrationMethods {
                 }
             }))
         },
+    })
+
+    export const readManyDetailed = ServiceMethod({
+        auther: () => EventRegistrationAuthers.readManyDetailed.dynamicFields({}),
+        paramsSchema: z.object({
+            eventId: z.number().min(0),
+            skip: z.number().optional(),
+            take: z.number().optional(),
+        }),
+        method: async ({ prisma, params }) => await prisma.eventRegistration.findMany({
+            where: {
+                eventId: params.eventId,
+            },
+            take: params.take,
+            skip: params.skip,
+            include: EventRegistrationConfig.includerDetailed,
+        })
     })
 }

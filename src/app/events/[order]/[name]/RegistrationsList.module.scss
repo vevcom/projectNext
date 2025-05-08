@@ -10,3 +10,12 @@
         grid-column: 1 / -1;
     }
 }
+
+.RegistrationTable {
+    @include ohma.table();
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}
