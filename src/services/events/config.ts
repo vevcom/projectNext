@@ -16,6 +16,7 @@ export namespace EventConfig {
     export const fieldsToExpose = [
         'id',
         'name',
+        'location',
         'order',
         'eventStart',
         'eventEnd',

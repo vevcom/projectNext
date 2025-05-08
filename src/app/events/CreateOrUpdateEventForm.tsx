@@ -15,6 +15,7 @@ import { bindParams } from '@/actions/bind'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }
@@ -49,6 +50,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 }
             >
                 <TextInput label="Navn" name="name" defaultValue={event?.name} />
+                <TextInput label="Sted" name="location" defaultValue={event?.location} />
                 <SelectString
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"
@@ -105,7 +107,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                         includeTime
                     />
                 </> : <>
-                    <input type="hidden" name="waitingList" value="false" />
+                    <input type="hidden" name="waitingList" value={FIELD_IS_PRESENT_VALUE} />
                 </>}
             </Form>
         </div>

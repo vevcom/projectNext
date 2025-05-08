@@ -12,7 +12,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
-import { EventExpanded } from './Types'
+import type { EventExpanded } from './Types'
 
 export namespace EventMethods {
     export const create = ServiceMethod({
@@ -37,6 +37,7 @@ export namespace EventMethods {
             const event = await prisma.event.create({
                 data: {
                     name: data.name,
+                    location: data.location,
                     eventStart: data.eventStart,
                     eventEnd: data.eventEnd,
                     takesRegistration: data.takesRegistration,
@@ -113,13 +114,17 @@ export namespace EventMethods {
                 event.eventRegistrations = []
             } else {
                 const indexOfUser = event.eventRegistrations.findIndex(reg => reg.userId === session.user.id)
-                console.log("INDEX OF USER", indexOfUser)
                 if (indexOfUser !== -1) {
                     event.eventRegistrations = [event.eventRegistrations[indexOfUser]]
-                    onWaitingList = (indexOfUser >= event.places) && event.waitingList
+                    onWaitingList = indexOfUser >= event.places
                 } else {
                     event.eventRegistrations = []
                 }
+            }
+
+            if (onWaitingList && !event.waitingList) {
+                onWaitingList = false
+                event.eventRegistrations = []
             }
 
             return {

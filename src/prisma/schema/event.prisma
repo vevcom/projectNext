@@ -13,6 +13,7 @@ model Event {
   coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
   coverImageId   Int
   eventTagEvents EventTagEvent[]
+  location       String
 
   eventStart         DateTime
   eventEnd           DateTime

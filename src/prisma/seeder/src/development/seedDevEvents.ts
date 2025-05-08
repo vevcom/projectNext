@@ -16,6 +16,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         bypassAuth: true,
         data: {
             name: 'Bedpres med Kongsberg',
+            location: 'EL5',
             eventStart: startDate,
             eventEnd: endDate,
             canBeViewdBy: 'ALL',
@@ -33,6 +34,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         bypassAuth: true,
         data: {
             name: 'Stresset eksamenslesing',
+            location: 'Lesesal',
             eventStart: startDate,
             eventEnd: endDate,
             canBeViewdBy: 'ALL',

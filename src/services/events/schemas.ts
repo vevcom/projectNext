@@ -5,6 +5,7 @@ import { EventCanView } from '@prisma/client'
 export namespace EventSchemas {
     const fields = z.object({
         name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),
+        location: z.string().min(2, 'Stedet må være minst 2 tegn'),
         order: z.coerce.number().int().optional(),
         eventStart: zpn.date({ label: 'Starttid' }),
         eventEnd: zpn.date({ label: 'Sluttid' }),
@@ -28,6 +29,7 @@ export namespace EventSchemas {
 
     export const create = fields.pick({
         name: true,
+        location: true,
         order: true,
         eventStart: true,
         eventEnd: true,
@@ -42,6 +44,7 @@ export namespace EventSchemas {
 
     export const update = fields.partial().pick({
         name: true,
+        location: true,
         order: true,
         eventStart: true,
         eventEnd: true,

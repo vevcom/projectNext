@@ -16,7 +16,7 @@ import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/actions/bind'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
-import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ManualRegistrationForm from './ManualRegistrationForm'
 
@@ -80,10 +80,20 @@ export default async function Event({ params }: PropTypes) {
                     <FontAwesomeIcon icon={faCalendar} />
                     {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
                 </p>
+                <p>
+                    <FontAwesomeIcon icon={faLocationDot} />
+                    {event.location}
+                </p>
                 {event.takesRegistration ? <>
                     <p>
                         <FontAwesomeIcon icon={faUsers} />
                         {event.numOfRegistrations} / {event.places}
+                    </p>
+                    <p>
+                        Påmelding start: {displayDate(event.registrationStart)}
+                    </p>
+                    <p>
+                        Påmelding slutt: {displayDate(event.registrationEnd)}
                     </p>
                     {event.waitingList && <p>
                         På venteliste: {event.numOnWaitingList}

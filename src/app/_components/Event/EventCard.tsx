@@ -3,7 +3,7 @@ import styles from './EventCard.module.scss'
 import ImageCard from '@/components/ImageCard/ImageCard'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import type { EventExpanded } from '@/services/events/Types'
 
 export default function EventCard({ event }: {
@@ -26,6 +26,10 @@ export default function EventCard({ event }: {
             <li>
                 <FontAwesomeIcon icon={faCalendar} />
                 {event.eventStart.toLocaleDateString()} - {event.eventEnd.toLocaleDateString()}
+            </li>
+            <li>
+                <FontAwesomeIcon icon={faLocationDot} />
+                {event.location}
             </li>
             {
                 event.takesRegistration ? (
