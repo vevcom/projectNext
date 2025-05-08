@@ -15,8 +15,16 @@ export namespace EventSchemas {
         registrationStart: zpn.date({ label: 'Påmelding start' }).optional(),
         registrationEnd: zpn.date({ label: 'Påmelding slutt' }).optional(),
 
+        waitingList: zpn.checkboxOrBoolean({ label: 'Venteliste' }),
+
         tagIds: zpn.numberListCheckboxFriendly({ label: 'tags' })
     })
+
+    const waitingListRefiner = (data: {
+        waitingList?: boolean,
+        takesRegistration?: boolean
+    }) => (data.takesRegistration || !data.waitingList)
+    const waitingListMessage = 'Kan ikke ha venteliste uten påmelding'
 
     export const create = fields.pick({
         name: true,
@@ -29,7 +37,9 @@ export namespace EventSchemas {
         registrationStart: true,
         registrationEnd: true,
         tagIds: true,
-    })
+        waitingList: true,
+    }).refine(waitingListRefiner, waitingListMessage)
+
     export const update = fields.partial().pick({
         name: true,
         order: true,
@@ -41,5 +51,6 @@ export namespace EventSchemas {
         registrationStart: true,
         registrationEnd: true,
         tagIds: true,
-    })
+        waitingList: true,
+    }).refine(waitingListRefiner, waitingListMessage)
 }

@@ -56,8 +56,8 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     options={EventConfig.canBeViewdByOptions}
                     defaultValue={event?.canBeViewdBy}
                 />
-                <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
-                <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
+                <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart} />
+                <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd} />
                 <ul className={styles.tags}>
                     <h2>Tags</h2>
                     {
@@ -80,29 +80,33 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     onChange={handleShowRegistration}
                     defaultChecked={event?.takesRegistration}
                 />
-                {
-                    showRegistrationOptions ? (
-                        <>
-                            <NumberInput
-                                label="plasser"
-                                name="places"
-                                defaultValue={event?.places}
-                            />
-                            <DateInput
-                                label="Registrering Start"
-                                name="registrationStart"
-                                defaultValue={event?.registrationStart}
-                                includeTime
-                            />
-                            <DateInput
-                                label="Registrering Slutt"
-                                name="registrationEnd"
-                                defaultValue={event?.registrationEnd}
-                                includeTime
-                            />
-                        </>
-                    ) : <></>
-                }
+
+                {showRegistrationOptions ? <>
+                    <Slider
+                        label="Venteliste"
+                        name="waitingList"
+                        defaultChecked={event?.waitingList}
+                    />
+                    <NumberInput
+                        label="plasser"
+                        name="places"
+                        defaultValue={event?.places}
+                    />
+                    <DateInput
+                        label="Registrering Start"
+                        name="registrationStart"
+                        defaultValue={event?.registrationStart}
+                        includeTime
+                    />
+                    <DateInput
+                        label="Registrering Slutt"
+                        name="registrationEnd"
+                        defaultValue={event?.registrationEnd}
+                        includeTime
+                    />
+                </> : <>
+                    <input type="hidden" name="waitingList" value="false" />
+                </>}
             </Form>
         </div>
     )

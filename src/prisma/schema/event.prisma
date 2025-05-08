@@ -24,6 +24,7 @@ model Event {
   places             Int                 @default(0)
   registrationStart  DateTime
   registrationEnd    DateTime
+  waitingList        Boolean
   eventRegistrations EventRegistration[]
 
   createdAt  DateTime     @default(now())

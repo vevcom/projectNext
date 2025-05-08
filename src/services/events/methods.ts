@@ -12,7 +12,6 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
 
 export namespace EventMethods {
     export const create = ServiceMethod({
@@ -44,6 +43,7 @@ export namespace EventMethods {
                     registrationStart: data.registrationStart ?? getOsloTime(),
                     registrationEnd: data.registrationEnd ?? new Date(getOsloTime().getTime() + 1000 * 60 * 60 * 24),
                     canBeViewdBy: data.canBeViewdBy,
+                    waitingList: data.waitingList,
 
                     omegaOrder: {
                         connect: {

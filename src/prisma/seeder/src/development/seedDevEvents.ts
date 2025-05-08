@@ -23,6 +23,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             places: 15,
             registrationStart: today,
             registrationEnd: tomorrow,
+            waitingList: true,
             tagIds: [],
         }
     })
@@ -36,6 +37,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             eventEnd: endDate,
             canBeViewdBy: 'ALL',
             takesRegistration: false,
+            waitingList: false,
             registrationStart: today,
             registrationEnd: tomorrow,
             tagIds: [],
