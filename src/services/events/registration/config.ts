@@ -15,4 +15,9 @@ export namespace EventRegistrationConfig {
     export const includerDetailed = {
         ...selection,
     } satisfies Prisma.EventRegistrationInclude
+
+    export enum REGISTRATION_READER_TYPE {
+        REGISTRATIONS = 'REGISTRATIONS',
+        WAITING_LIST = 'WAITING_LIST',
+    }
 }

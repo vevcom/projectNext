@@ -13,12 +13,100 @@ import Link from 'next/link'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/actions/bind'
 import { eventRegistrationDestroyAction } from '@/actions/events/registration'
+import { EventRegistrationConfig } from '@/services/events/registration/config'
+import { EventFiltered } from '@/services/events/Types'
 
+function DetailedTable({
+    event,
+    type,
+}: {
+    event: EventFiltered,
+    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+}) {
+    return <EventRegistrationDetailedPagingProvider
+        serverRenderedData={[]}
+        startPage={{
+            page: 0,
+            pageSize: 50
+        }}
+        details={{
+            eventId: event.id,
+            type,
+        }}
+    >
+        <div className={styles.RegistrationTable}>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>E-post</th>
+                        <th>Allergier</th>
+                        <th>Kommentar</th>
+                        <th>Slett</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <EndlessScroll
+                        pagingContext={EventRegistrationDetailedPagingContext}
+                        renderer={row => <tr key={row.id}>
+                            <td>
+                                <Link href={`/users/${row.user.username}`}>
+                                    <UserDisplayName user={row.user} />
+                                </Link>
+                            </td>
+                            <td>{row.user.email}</td>
+                            <td>{row.user.allergies}</td>
+                            <td>{row.note}</td>
+                            <td>
+                                <Form
+                                    action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                    submitText="Slett"
+                                    submitColor="red"
+                                    confirmation={{
+                                        confirm: true,
+                                        text: 'Er du sikker på at du vil slette denne påmeldingen?'
+                                    }}
+                                />
+                            </td>
+                        </tr>}
+                    />
+                </tbody>
+            </table>
+        </div>
+    </EventRegistrationDetailedPagingProvider>
+}
+
+function DefaultList({
+    event,
+    type,
+}: {
+    event: EventFiltered,
+    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+}) {
+    return <EventRegistrationPagingProvider
+        serverRenderedData={[]}
+        startPage={{
+            page: 0,
+            pageSize: 50
+        }}
+        details={{
+            eventId: event.id,
+            type,
+        }}
+    >
+        <div className={styles.RegistrationsList}>
+            <EndlessScroll
+                pagingContext={EventRegistrationPagingContext}
+                renderer={(row, i) => <UserCard key={i} user={row.user} className={styles.userCard} />}
+            />
+        </div>
+    </EventRegistrationPagingProvider>
+}
 
 export default function RegistrationsList({
-    eventId,
+    event,
 }: {
-    eventId: number,
+    event: EventFiltered,
 }) {
     const isAdmin = true // TODO: Fix the authing
     const [detailedView, setDetailedView] = useState(false)
@@ -31,73 +119,23 @@ export default function RegistrationsList({
             onChange={e => setDetailedView(e.target.checked)}
             checked={detailedView}
         />}
-        {detailedView ?
-            <EventRegistrationDetailedPagingProvider
-                serverRenderedData={[]}
-                startPage={{
-                    page: 0,
-                    pageSize: 50
-                }}
-                details={{
-                    eventId,
-                }}
-            >
-                <div className={styles.RegistrationTable}>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Navn</th>
-                                <th>E-post</th>
-                                <th>Allergier</th>
-                                <th>Kommentar</th>
-                                <th>Slett</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <EndlessScroll
-                                pagingContext={EventRegistrationDetailedPagingContext}
-                                renderer={row => <tr>
-                                    <td>
-                                        <Link href={`/users/${row.user.username}`}>
-                                            <UserDisplayName user={row.user} />
-                                        </Link>
-                                    </td>
-                                    <td>{row.user.email}</td>
-                                    <td>{row.user.allergies}</td>
-                                    <td>{row.note}</td>
-                                    <td>
-                                        <Form
-                                            action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
-                                            submitText="Slett"
-                                            submitColor="red"
-                                            confirmation={{
-                                                confirm: true,
-                                                text: 'Er du sikker på at du vil slette denne påmeldingen?'
-                                            }}
-                                        />
-                                    </td>
-                                </tr>}
-                            />
-                        </tbody>
-                    </table>
-                </div>
-            </EventRegistrationDetailedPagingProvider> : <EventRegistrationPagingProvider
-                serverRenderedData={[]}
-                startPage={{
-                    page: 0,
-                    pageSize: 50
-                }}
-                details={{
-                    eventId,
-                }}
-            >
-                <div className={styles.RegistrationsList}>
-                    <EndlessScroll
-                        pagingContext={EventRegistrationPagingContext}
-                        renderer={row => <UserCard user={row.user} className={styles.userCard} />}
-                    />
-                </div>
-            </EventRegistrationPagingProvider>
-        }
+        {detailedView ? <DetailedTable
+            event={event}
+            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+        /> : <DefaultList
+            event={event}
+            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+        />}
+
+        {event.waitingList && <>
+            <h4>Venteliste</h4>
+            {detailedView ? <DetailedTable
+                event={event}
+                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+            /> : <DefaultList
+                event={event}
+                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+            />}
+        </>}
     </>
 }

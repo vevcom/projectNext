@@ -6,6 +6,7 @@ import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
+import { EventRegistrationDetailedExpanded } from './Types'
 
 
 export namespace EventRegistrationMethods {
@@ -74,18 +75,58 @@ export namespace EventRegistrationMethods {
         }),
     })
 
+    async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
+        eventId: number,
+        take?: number,
+        skip?: number,
+        type?: EventRegistrationConfig.REGISTRATION_READER_TYPE,
+    }) {
+        let take = params.take
+        let skip = params.skip
+
+        if (params.type && take) {
+            const event = await prisma.event.findUniqueOrThrow({
+                where: {
+                    id: params.eventId,
+                },
+            })
+
+            if (params.type === EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS) {
+                skip = Math.min(skip ?? 0, event.places)
+                take = Math.min(take, event.places - skip)
+            } else {
+                skip = (skip ?? 0) + event.places
+            }
+
+            if (skip == 0) {
+                skip = undefined
+            }
+        }
+
+        return {
+            take,
+            skip,
+        }
+
+    }
+
     export const readMany = ServiceMethod({
         auther: () => EventRegistrationAuthers.readMany.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
             skip: z.number().optional(),
             take: z.number().optional(),
+            type: z.nativeEnum(EventRegistrationConfig.REGISTRATION_READER_TYPE).optional(),
         }),
         method: async ({ prisma, params, session }) => {
             const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 session,
             })
+
+            const skipTake = await calculateTakeSkip(prisma, params)
+            if (skipTake.take === 0) return []
+
             const reults = await prisma.eventRegistration.findMany({
                 where: {
                     eventId: params.eventId,
@@ -93,8 +134,7 @@ export namespace EventRegistrationMethods {
                 orderBy: {
                     createdAt: 'asc',
                 },
-                take: params.take,
-                skip: params.skip,
+                ...skipTake,
                 select: EventRegistrationConfig.selection,
             })
 
@@ -114,18 +154,23 @@ export namespace EventRegistrationMethods {
             eventId: z.number().min(0),
             skip: z.number().optional(),
             take: z.number().optional(),
+            type: z.nativeEnum(EventRegistrationConfig.REGISTRATION_READER_TYPE).optional(),
         }),
-        method: async ({ prisma, params }) => await prisma.eventRegistration.findMany({
-            where: {
-                eventId: params.eventId,
-            },
-            orderBy: {
-                createdAt: 'asc',
-            },
-            take: params.take,
-            skip: params.skip,
-            include: EventRegistrationConfig.includerDetailed,
-        })
+        method: async ({ prisma, params }) => {
+            const skiptake = await calculateTakeSkip(prisma, params)
+            if (skiptake.take === 0) return []
+
+            return await prisma.eventRegistration.findMany({
+                where: {
+                    eventId: params.eventId,
+                },
+                orderBy: {
+                    createdAt: 'asc',
+                },
+                ...skiptake,
+                include: EventRegistrationConfig.includerDetailed,
+            })
+        }
     })
 
     export const updateNotes = ServiceMethod({

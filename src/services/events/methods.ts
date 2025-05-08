@@ -103,11 +103,7 @@ export namespace EventMethods {
                             eventRegistrations: true,
                         },
                     },
-                    eventRegistrations: {
-                        where: {
-                            userId: session?.user?.id || -1
-                        }
-                    }
+                    eventRegistrations: true,
                 }
             })
 

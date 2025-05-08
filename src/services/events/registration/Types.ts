@@ -20,4 +20,5 @@ export type EventRegistrationDetailedExpanded = Prisma.EventRegistrationGetPaylo
 
 export type EventRegistrationFetcherDetails = {
     eventId: number,
+    type?: EventRegistrationConfig.REGISTRATION_READER_TYPE,
 }

@@ -101,7 +101,7 @@ export default async function Event({ params }: PropTypes) {
 
             {event.takesRegistration && (
                 <div className={styles.registrationList}>
-                    <RegistrationsList eventId={event.id} />
+                    <RegistrationsList event={event} />
                 </div>
             )}
         </div>
