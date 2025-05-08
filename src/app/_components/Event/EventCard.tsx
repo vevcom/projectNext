@@ -32,7 +32,7 @@ export default function EventCard({ event }: {
                     <>
                         <li>
                             <FontAwesomeIcon icon={faUsers} />
-                            {event._count.eventRegistrations} / {event.places}
+                            {event.numOfRegistrations} / {event.places}
                         </li>
                         <li>
                             <FontAwesomeIcon icon={faCalendar} />

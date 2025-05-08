@@ -54,7 +54,7 @@ export default async function Event({ params }: PropTypes) {
                     </ul>
                 </div>
                 <div className={styles.settings}>
-                    { event.takesRegistration && <UsersHeaderItemPopUp scale={30} PopUpKey="Users">
+                    {event.takesRegistration && <UsersHeaderItemPopUp scale={30} PopUpKey="Users">
                         <ManualRegistrationForm eventId={event.id} />
                     </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
@@ -80,29 +80,26 @@ export default async function Event({ params }: PropTypes) {
                     <FontAwesomeIcon icon={faCalendar} />
                     {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
                 </p>
-                {
-                    event.takesRegistration ? (
-                        <>
-                            <p>
-                                <FontAwesomeIcon icon={faUsers} />
-                                {event._count.eventRegistrations} / {event.places}
-                            </p>
-                            <RegistrationUI event={event} registration={ownRegitration} />
-                        </>
-                    ) : (
-                        <p>
-                            <FontAwesomeIcon icon={faExclamation} />
-                            Dette arrangementet tar ikke påmeldinger
-                        </p>
-                    )
-                }
+                {event.takesRegistration ? <>
+                    <p>
+                        <FontAwesomeIcon icon={faUsers} />
+                        {event.numOfRegistrations} / {event.places}
+                    </p>
+                    {event.waitingList && <p>
+                        På venteliste: {event.numOnWaitingList}
+                    </p>}
+                    <RegistrationUI event={event} registration={ownRegitration} onWaitingList={event.onWaitingList} />
+                </> : <p>
+                    <FontAwesomeIcon icon={faExclamation} />
+                    Dette arrangementet tar ikke påmeldinger
+                </p>}
 
             </aside>
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />
             </main>
 
-            { event.takesRegistration && (
+            {event.takesRegistration && (
                 <div className={styles.registrationList}>
                     <RegistrationsList eventId={event.id} />
                 </div>

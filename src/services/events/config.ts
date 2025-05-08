@@ -20,6 +20,7 @@ export namespace EventConfig {
         'eventStart',
         'eventEnd',
         'places',
+        'waitingList',
         'registrationStart',
         'registrationEnd',
         'canBeViewdBy',

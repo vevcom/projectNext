@@ -47,11 +47,11 @@ export namespace EventRegistrationMethods {
                 throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
             }
 
-            if (event.places <= event._count.eventRegistrations) {
+            if (event.places <= event._count.eventRegistrations && !event.waitingList) {
                 throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
             }
 
-            return await tx.eventRegistration.create({
+            const result = await tx.eventRegistration.create({
                 data: {
                     user: {
                         connect: {
@@ -65,6 +65,10 @@ export namespace EventRegistrationMethods {
                     },
                 },
             })
+            return {
+                result,
+                onWaitingList: event.places <= event._count.eventRegistrations,
+            }
         }, {
             isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
         }),
@@ -85,6 +89,9 @@ export namespace EventRegistrationMethods {
             const reults = await prisma.eventRegistration.findMany({
                 where: {
                     eventId: params.eventId,
+                },
+                orderBy: {
+                    createdAt: 'asc',
                 },
                 take: params.take,
                 skip: params.skip,
@@ -111,6 +118,9 @@ export namespace EventRegistrationMethods {
         method: async ({ prisma, params }) => await prisma.eventRegistration.findMany({
             where: {
                 eventId: params.eventId,
+            },
+            orderBy: {
+                createdAt: 'asc',
             },
             take: params.take,
             skip: params.skip,

@@ -8,12 +8,14 @@ import TextInput from '@/components/UI/TextInput'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { Event, EventRegistration } from '@prisma/client'
-
+import { EventExpanded } from '@/services/events/Types'
 
 enum RegistrationButtonState {
     NOT_REGISTERED = 'NOT_REGISTERED',
     REGISTERED = 'REGISTERED',
     FULL = 'FULL',
+    ON_WAITING_LIST = 'ON_WAITING_LIST',
+    WAITING_LIST_OPEN = 'WAITING_LIST_OPEN',
     REGISTRATION_NOT_OPEN = 'REGISTRATION_NOT_OPEN',
     REGISTRATION_CLOSED = 'REGISTRATION_CLOSED',
     ERROR = 'ERROR',
@@ -21,13 +23,11 @@ enum RegistrationButtonState {
 
 export default function RegistrationUI({
     event,
+    onWaitingList,
     registration,
 }: {
-    event: Event & {
-        _count: {
-            eventRegistrations: number
-        }
-    },
+    event: EventExpanded,
+    onWaitingList: boolean,
     registration?: EventRegistration,
 }) {
     if (!event.takesRegistration) {
@@ -35,6 +35,9 @@ export default function RegistrationUI({
     }
 
     const getInitialBtnState = () => {
+        if (onWaitingList) {
+            return RegistrationButtonState.ON_WAITING_LIST
+        }
         if (registration) {
             return RegistrationButtonState.REGISTERED
         }
@@ -42,6 +45,9 @@ export default function RegistrationUI({
             return RegistrationButtonState.REGISTRATION_NOT_OPEN
         }
         if (event._count.eventRegistrations >= event.places) {
+            if (event.waitingList) {
+                return RegistrationButtonState.WAITING_LIST_OPEN;
+            }
             return RegistrationButtonState.FULL
         }
         if (event.registrationEnd < new Date()) {
@@ -84,8 +90,12 @@ export default function RegistrationUI({
         })
 
         if (result.success) {
-            setBtnState(RegistrationButtonState.REGISTERED)
-            setRegistrationState(result.data)
+            if (result.data.onWaitingList) {
+                setBtnState(RegistrationButtonState.ON_WAITING_LIST)
+            } else {
+                setBtnState(RegistrationButtonState.REGISTERED)
+            }
+            setRegistrationState(result.data.result)
         } else if (result.error && result.error.length > 0) {
             const message = result.error[0].message
             setErrorText(message)
@@ -102,7 +112,10 @@ export default function RegistrationUI({
         )}
 
         <Button
-            disabled={btnState !== RegistrationButtonState.NOT_REGISTERED}
+            disabled={
+                btnState !== RegistrationButtonState.NOT_REGISTERED &&
+                btnState !== RegistrationButtonState.WAITING_LIST_OPEN
+            }
             onClick={buttonOnClick}
         >
             {(
@@ -110,7 +123,9 @@ export default function RegistrationUI({
                 btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN
             ) && 'Meld meg på'}
             {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
+            {btnState === RegistrationButtonState.ON_WAITING_LIST && 'På venteliste'}
             {btnState === RegistrationButtonState.FULL && 'Fullt'}
+            {btnState === RegistrationButtonState.WAITING_LIST_OPEN && 'Meld meg på venteliste'}
             {btnState === RegistrationButtonState.ERROR && errorText}
             {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
         </Button>

@@ -5,14 +5,16 @@ import type { EventTag, Prisma } from '@prisma/client'
 
 export type EventFiltered = Prisma.EventGetPayload<{
     select: typeof EventConfig.filterSeletion
-}>
+}> & {
+    numOfRegistrations: number,
+    numOnWaitingList: number,
+}
 
 export type EventExpanded = EventFiltered & {
     coverImage: Pick<ExpandedCmsImage, 'image'>
-    tags: EventTag[]
+    tags: EventTag[],
+    onWaitingList?: boolean,
 }
-
-export type ExpandedEvent = EventFiltered
 
 export type EventArchiveCursor = { id: number }
 

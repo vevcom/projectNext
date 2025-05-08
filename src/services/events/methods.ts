@@ -12,6 +12,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
+import { EventExpanded } from './Types'
 
 export namespace EventMethods {
     export const create = ServiceMethod({
@@ -109,8 +110,27 @@ export namespace EventMethods {
                     }
                 }
             })
+
+            let onWaitingList = false
+
+            if (!session.user) {
+                event.eventRegistrations = []
+            } else {
+                const indexOfUser = event.eventRegistrations.findIndex(reg => reg.userId === session.user.id)
+                console.log("INDEX OF USER", indexOfUser)
+                if (indexOfUser !== -1) {
+                    event.eventRegistrations = [event.eventRegistrations[indexOfUser]]
+                    onWaitingList = (indexOfUser >= event.places) && event.waitingList
+                } else {
+                    event.eventRegistrations = []
+                }
+            }
+
             return {
                 ...event,
+                numOfRegistrations: Math.min(event._count.eventRegistrations, event.places),
+                numOnWaitingList: Math.max(0, event._count.eventRegistrations - event.places),
+                onWaitingList,
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }
         }
@@ -120,7 +140,7 @@ export namespace EventMethods {
             tags: z.array(z.string()).nullable(),
         }),
         auther: () => EventAuthers.readManyCurrent.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 select: {
                     ...EventConfig.filterSeletion,
@@ -144,6 +164,8 @@ export namespace EventMethods {
             })
             return events.map(event => ({
                 ...event,
+                numOfRegistrations: Math.min(event._count.eventRegistrations, event.places),
+                numOnWaitingList: Math.max(0, event._count.eventRegistrations - event.places),
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
@@ -160,7 +182,7 @@ export namespace EventMethods {
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
         auther: () => EventAuthers.readManyArchivedPage.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
                 where: {
@@ -189,6 +211,8 @@ export namespace EventMethods {
             })
             return events.map(event => ({
                 ...event,
+                numOfRegistrations: Math.min(event._count.eventRegistrations, event.places),
+                numOnWaitingList: Math.max(0, event._count.eventRegistrations - event.places),
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
