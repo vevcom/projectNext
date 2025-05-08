@@ -34,14 +34,14 @@ export default function RegistrationUI({
     }
 
     const getInitialBtnState = () => {
+        if (registration) {
+            return RegistrationButtonState.REGISTERED
+        }
         if (event.registrationStart > new Date()) {
             return RegistrationButtonState.REGISTRATION_NOT_OPEN
         }
         if (event._count.eventRegistrations >= event.places) {
             return RegistrationButtonState.FULL
-        }
-        if (registration) {
-            return RegistrationButtonState.REGISTERED
         }
         return RegistrationButtonState.NOT_REGISTERED
     }
@@ -110,7 +110,7 @@ export default function RegistrationUI({
             {btnState === RegistrationButtonState.ERROR && errorText}
         </Button>
 
-        {registrationState && event.eventStart > new Date() && <Form
+        {registrationState && event.registrationEnd > new Date() && <Form
             action={bindParams(eventRegistrationUpdateNotesAction, { registrationId: registrationState.id })}
             submitText="Oppdater kommentar"
         >

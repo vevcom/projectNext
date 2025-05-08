@@ -143,8 +143,8 @@ export namespace EventRegistrationMethods {
                 throw new Smorekopp('UNAUTHORIZED', 'Kan ikke endre påmelding til andre.')
             }
 
-            if (registration.event.eventStart < new Date()) {
-                throw new Smorekopp('BAD PARAMETERS', 'Kan ikke endre påmelding til et event som allerede har startet.')
+            if (registration.event.registrationEnd < new Date()) {
+                throw new Smorekopp('BAD PARAMETERS', 'Kan ikke endre påmelding etter påmeldingsfristen.')
             }
 
             return await prisma.eventRegistration.update({
