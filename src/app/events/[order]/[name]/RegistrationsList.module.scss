@@ -12,10 +12,16 @@
 }
 
 .RegistrationTable {
-    @include ohma.table();
+    display: block;
+    overflow-x: auto;
+    overflow-y: visible;
 
-    a {
-        text-decoration: none;
-        color: inherit;
+    >table {
+        @include ohma.table();
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
     }
 }

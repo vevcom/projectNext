@@ -7,8 +7,8 @@ import EventRegistrationDetailedPagingProvider, {
     EventRegistrationDetailedPagingContext
 } from '@/contexts/paging/EventRegistrationDetailedPaging'
 import UserDisplayName from '@/components/User/UserDisplayName'
-import { useState } from 'react'
 import Slider from '@/components/UI/Slider'
+import { useState } from 'react'
 import Link from 'next/link'
 
 
@@ -22,7 +22,7 @@ export default function RegistrationsList({
 
     return <>
         <h4>Påmeldte</h4>
-        { isAdmin && <Slider
+        {isAdmin && <Slider
             label="Detaljert visning"
             name="detailedView"
             onChange={e => setDetailedView(e.target.checked)}
@@ -39,31 +39,33 @@ export default function RegistrationsList({
                     eventId,
                 }}
             >
-                <table className={styles.RegistrationTable}>
-                    <thead>
-                        <tr>
-                            <th>Navn</th>
-                            <th>E-post</th>
-                            <th>Allergier</th>
-                            <th>Kommentar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <EndlessScroll
-                            pagingContext={EventRegistrationDetailedPagingContext}
-                            renderer={row => <tr>
-                                <td>
-                                    <Link href={`/users/${row.user.username}`}>
-                                        <UserDisplayName user={row.user} />
-                                    </Link>
-                                </td>
-                                <td>{row.user.email}</td>
-                                <td>{row.user.allergies}</td>
-                                <td>{row.note}</td>
-                            </tr>}
-                        />
-                    </tbody>
-                </table>
+                <div className={styles.RegistrationTable}>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>E-post</th>
+                                <th>Allergier</th>
+                                <th>Kommentar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <EndlessScroll
+                                pagingContext={EventRegistrationDetailedPagingContext}
+                                renderer={row => <tr>
+                                    <td>
+                                        <Link href={`/users/${row.user.username}`}>
+                                            <UserDisplayName user={row.user} />
+                                        </Link>
+                                    </td>
+                                    <td>{row.user.email}</td>
+                                    <td>{row.user.allergies}</td>
+                                    <td>{row.note}</td>
+                                </tr>}
+                            />
+                        </tbody>
+                    </table>
+                </div>
             </EventRegistrationDetailedPagingProvider> : <EventRegistrationPagingProvider
                 serverRenderedData={[]}
                 startPage={{

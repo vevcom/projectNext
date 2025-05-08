@@ -1,14 +1,14 @@
 'use client'
-import { bindParams } from '@/actions/bind'
+import styles from './ManualRegistrationForm.module.scss'
 import { createEventRegistrationAction } from '@/actions/events/registration'
 import Form from '@/components/Form/Form'
 import UserList from '@/components/User/UserList/UserList'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
 import UserSelectionProvider, { UserSelectionContext } from '@/contexts/UserSelection'
+import TextInput from '@/components/UI/TextInput'
 import { useContext } from 'react'
 import type { EventRegistration } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
-import TextInput from '@/components/UI/TextInput'
 
 function ManualRegistrationFormInner({
     eventId,
@@ -52,7 +52,7 @@ export default function ManualRegistrationForm({
 }: {
     eventId: number,
 }) {
-    return <>
+    return <div className={styles.ManualRegistrationForm}>
         <Form
             submitText="Registrer gjest"
             title="Register gjest uten bruker"
@@ -84,5 +84,5 @@ export default function ManualRegistrationForm({
                 <UserList />
             </UserSelectionProvider>
         </UserPagingProvider>
-    </>
+    </div>
 }

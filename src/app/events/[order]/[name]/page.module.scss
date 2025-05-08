@@ -7,6 +7,7 @@ $padding: ohma.$minimalPagePadding;
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
+
     .coverImage {
         grid-column: 1 / 3;
         grid-row: 1 / 2;
@@ -16,25 +17,32 @@ $padding: ohma.$minimalPagePadding;
         position: relative;
         border-radius: ohma.$cardRounding;
         overflow: hidden;
+
         .settings {
             top: 1em;
             right: 3em;
+
             svg {
                 width: 3em;
                 height: 3em;
             }
+
             position: absolute;
-            > button {
+
+            >button {
                 margin-left: calc(2 * ohma.$gap);
             }
         }
+
         *:not(.infoInImage *, .infoInImage, .settings *, .settings) {
             width: calc(100vw - 2 * $padding) !important;
             height: 40vh;
         }
+
         img {
             object-fit: cover;
         }
+
         .infoInImage {
             position: absolute;
             width: 100%;
@@ -46,21 +54,25 @@ $padding: ohma.$minimalPagePadding;
             display: flex;
             flex-direction: row;
             gap: 0 1em;
+
             h1 {
                 font-size: ohma.$fonts-xxl;
                 color: ohma.$colors-white;
             }
+
             .tags {
                 list-style-type: none;
                 display: flex;
                 gap: 0 1em;
+
                 a {
                     text-decoration: none;
                 }
             }
         }
     }
-    > aside {
+
+    >aside {
         color: ohma.$colors-gray-800;
         grid-column: 1 / 2;
         grid-row: 2 / 3;
@@ -73,31 +85,52 @@ $padding: ohma.$minimalPagePadding;
         display: flex;
         flex-direction: column;
         gap: 2em;
-        > p {
+
+        >p {
             display: flex;
             align-items: center;
             gap: 1em;
             font-size: ohma.$fonts-l;
+
             svg {
                 width: 1.5em;
                 height: 1.5em;
             }
         }
     }
-    > main {
+
+    >main {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
         margin: 1em 3em;
     }
 
-    > .registrationList {
+    >.registrationList {
         grid-column: 1 / 3;
         grid-row: 4 / 4;
         margin-top: calc(4 * ohma.$gap);
 
-        > h4 {
+        >h4 {
             font-size: ohma.$fonts-xl;
             font-weight: ohma.$fonts-weight-l;
+        }
+    }
+}
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+
+        >aside {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+        }
+
+        >main {
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+            margin: 1em 0; // remove side margins on small screens
         }
     }
 }
