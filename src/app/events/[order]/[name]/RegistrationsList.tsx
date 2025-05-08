@@ -10,6 +10,9 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import { useState } from 'react'
 import Link from 'next/link'
+import Form from '@/components/Form/Form'
+import { bindParams } from '@/actions/bind'
+import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 
 
 export default function RegistrationsList({
@@ -47,6 +50,7 @@ export default function RegistrationsList({
                                 <th>E-post</th>
                                 <th>Allergier</th>
                                 <th>Kommentar</th>
+                                <th>Slett</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,6 +65,17 @@ export default function RegistrationsList({
                                     <td>{row.user.email}</td>
                                     <td>{row.user.allergies}</td>
                                     <td>{row.note}</td>
+                                    <td>
+                                        <Form
+                                            action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                            submitText="Slett"
+                                            submitColor="red"
+                                            confirmation={{
+                                                confirm: true,
+                                                text: 'Er du sikker på at du vil slette denne påmeldingen?'
+                                            }}
+                                        />
+                                    </td>
                                 </tr>}
                             />
                         </tbody>

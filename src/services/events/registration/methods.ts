@@ -1,14 +1,11 @@
 import { EventRegistrationAuthers } from './authers'
+import { EventRegistrationConfig } from './config'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
-import { UserConfig } from '@/services/users/config'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
-import { connect } from 'http2'
-import { EventRegistrationConfig } from './config'
-import { EventRegistrationExpanded } from './Types'
 
 
 export namespace EventRegistrationMethods {
@@ -22,7 +19,7 @@ export namespace EventRegistrationMethods {
             userId: params.userId,
         }),
         opensTransaction: true,
-        method: async ({ prisma, params }) => prisma.$transaction(async (tx) => {
+        method: async ({ prisma, params, session }) => prisma.$transaction(async (tx) => {
             const event = await tx.event.findUniqueOrThrow({
                 where: {
                     id: params.eventId
@@ -36,15 +33,17 @@ export namespace EventRegistrationMethods {
                 },
             })
 
+            const isAdmim = session.permissions.includes('EVENT_ADMIN')
+
             if (!event.takesRegistration) {
                 throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event without registration')
             }
 
-            if (event.registrationStart > new Date()) {
+            if (event.registrationStart > new Date() && !isAdmim) {
                 throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event before the registration period.')
             }
 
-            if (event.registrationEnd < new Date()) {
+            if (event.registrationEnd < new Date() && !isAdmim) {
                 throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
             }
 
@@ -67,8 +66,7 @@ export namespace EventRegistrationMethods {
                 },
             })
         }, {
-            // TODO: Prevent race conditions
-            isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
         }),
     })
 
@@ -156,5 +154,17 @@ export namespace EventRegistrationMethods {
                 },
             })
         }
+    })
+
+    export const destroy = ServiceMethod({
+        auther: () => EventRegistrationAuthers.destroy.dynamicFields({}),
+        paramsSchema: z.object({
+            registrationId: z.number().min(0),
+        }),
+        method: async ({ prisma, params }) => await prisma.eventRegistration.delete({
+            where: {
+                id: params.registrationId,
+            },
+        }),
     })
 }

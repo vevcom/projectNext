@@ -15,6 +15,7 @@ enum RegistrationButtonState {
     REGISTERED = 'REGISTERED',
     FULL = 'FULL',
     REGISTRATION_NOT_OPEN = 'REGISTRATION_NOT_OPEN',
+    REGISTRATION_CLOSED = 'REGISTRATION_CLOSED',
     ERROR = 'ERROR',
 }
 
@@ -42,6 +43,9 @@ export default function RegistrationUI({
         }
         if (event._count.eventRegistrations >= event.places) {
             return RegistrationButtonState.FULL
+        }
+        if (event.registrationEnd < new Date()) {
+            return RegistrationButtonState.REGISTRATION_CLOSED
         }
         return RegistrationButtonState.NOT_REGISTERED
     }
@@ -108,6 +112,7 @@ export default function RegistrationUI({
             {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
             {btnState === RegistrationButtonState.FULL && 'Fullt'}
             {btnState === RegistrationButtonState.ERROR && errorText}
+            {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
         </Button>
 
         {registrationState && event.registrationEnd > new Date() && <Form

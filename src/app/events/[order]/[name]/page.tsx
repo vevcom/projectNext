@@ -54,9 +54,9 @@ export default async function Event({ params }: PropTypes) {
                     </ul>
                 </div>
                 <div className={styles.settings}>
-                    <UsersHeaderItemPopUp scale={30} PopUpKey="Users">
+                    { event.takesRegistration && <UsersHeaderItemPopUp scale={30} PopUpKey="Users">
                         <ManualRegistrationForm eventId={event.id} />
-                    </UsersHeaderItemPopUp>
+                    </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}

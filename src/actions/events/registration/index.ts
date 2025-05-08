@@ -8,3 +8,4 @@ export const createEventRegistrationAction = action(EventRegistrationMethods.cre
 export const readManyEventRegistrationAction = action(EventRegistrationMethods.readMany)
 export const eventRegistrationReadManyDetailedAction = action(EventRegistrationMethods.readManyDetailed)
 export const eventRegistrationUpdateNotesAction = action(EventRegistrationMethods.updateNotes)
+export const eventRegistrationDestroyAction = action(EventRegistrationMethods.destroy)
