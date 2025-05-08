@@ -2,12 +2,12 @@
 import Button from '@/components/UI/Button'
 import { createEventRegistrationAction, eventRegistrationUpdateNotesAction } from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
-import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import type { Event, EventRegistration } from '@prisma/client'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/actions/bind'
 import TextInput from '@/components/UI/TextInput'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import type { Event, EventRegistration } from '@prisma/client'
 
 
 enum RegistrationButtonState {

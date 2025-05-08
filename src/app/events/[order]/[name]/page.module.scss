@@ -24,6 +24,9 @@ $padding: ohma.$minimalPagePadding;
                 height: 3em;
             }
             position: absolute;
+            > button {
+                margin-left: calc(2 * ohma.$gap);
+            }
         }
         *:not(.infoInImage *, .infoInImage, .settings *, .settings) {
             width: calc(100vw - 2 * $padding) !important;
