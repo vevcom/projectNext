@@ -3,11 +3,13 @@ import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { Limits } from './migrationLimits'
+import type { UserMigrator } from './migrateUsers'
 
 export default async function migrateEvents(
     pnPrisma: PrismaClientPn,
     vevenPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
+    userMigrator: UserMigrator,
     limits: Limits
 ) {
     const events = await vevenPrisma.events.findMany({
@@ -49,10 +51,11 @@ export default async function migrateEvents(
 
         const order = await upsertOrderBasedOnDate(pnPrisma, event.createdAt)
 
-        await pnPrisma.event.create({
+        const newEvent = await pnPrisma.event.create({
             data: {
                 name: event.title,
                 order,
+                location: event.location,
                 createdAt: event.createdAt,
                 updatedAt: event.updatedAt,
                 canBeViewdBy: 'ALL',
@@ -64,8 +67,47 @@ export default async function migrateEvents(
                 registrationEnd: event.registrationDeadline ?? event.createdAt,
                 coverImageId: coverIage.id,
                 cmsParagraphId: paragraph.id,
+                waitingList: event.waitingList ?? true,
+                lead: event.lead,
+                extraFields: event.extraFields ?? undefined,
+                eventTagEvents: event.company ? {
+                    create: {
+                        tag: {
+                            connect: {
+                                special: 'COMPANY_PRESENTATION'
+                            }
+                        }
+                    }
+                } : undefined,
+                createdById: event.CreatedByUserId ? await userMigrator.getPnUserId(event.CreatedByUserId) : undefined,
             }
         })
+
+        await Promise.all(event.EventRegistrations.map(async registration => {
+            const result = await pnPrisma.eventRegistration.create({
+                data: {
+                    eventId: newEvent.id,
+                    company: registration.company,
+                    manuallyPaid: registration.manPaid,
+                    note: registration.note,
+                    extraFieldChoices: registration.extraFieldChoices ?? undefined,
+                    userId: registration.UserId ? await userMigrator.getPnUserId(registration.UserId) : undefined,
+                }
+            })
+            if (registration.nameSpecified || registration.emailSpecified) {
+                await pnPrisma.contactDetails.create({
+                    data: {
+                        name: registration.nameSpecified ?? '',
+                        email: registration.emailSpecified ?? undefined,
+                        EventRegistration: {
+                            connect: {
+                                id: result.id,
+                            }
+                        }
+                    }
+                })
+            }
+        }))
     }))
 
     const simpleEvents = await vevenPrisma.simpleEvents.findMany({
@@ -115,6 +157,7 @@ export default async function migrateEvents(
                 registrationEnd: simpleEvent.createdAt,
                 coverImageId: coverIage.id,
                 cmsParagraphId: paragraph.id,
+                waitingList: false,
             }
         })
     }))

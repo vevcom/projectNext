@@ -13,13 +13,15 @@ model Event {
   coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
   coverImageId   Int
   eventTagEvents EventTagEvent[]
-  location       String
+  location       String?
 
   eventStart         DateTime
   eventEnd           DateTime
   canBeViewdBy       EventCanView
   hostedByCommitee   Committee?   @relation(fields: [hostedByCommiteeId], references: [id])
   hostedByCommiteeId Int?
+  createdBy          User?        @relation(fields: [createdById], references: [id])
+  createdById        Int?
 
   takesRegistration  Boolean
   places             Int                 @default(0)
@@ -31,6 +33,10 @@ model Event {
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   ScreenPage ScreenPage[]
+
+  // Legacy from old database
+  lead        String?
+  extraFields Json?   @db.Json
 
   @@unique([order, name])
 }
@@ -64,18 +70,21 @@ model EventTag {
 }
 
 model EventRegistration {
-  id           Int      @id @default(autoincrement())
-  event        Event    @relation(fields: [eventId], references: [id])
-  eventId      Int
-  user         User     @relation(fields: [userId], references: [id])
-  userId       Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  note         String?
-  manuallyPaid Boolean  @default(false)
+  id        Int             @id @default(autoincrement())
+  event     Event           @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User?           @relation(fields: [userId], references: [id])
+  userId    Int?
+  contact   ContactDetails? @relation(fields: [contactId], references: [id])
+  contactId Int?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  note      String?
 
-  // For guests with the contact table from the cabin booking
-  // TODO: Add transaction relation
+  // Legacy from old database
+  manuallyPaid      Boolean @default(false)
+  company           Boolean @default(false)
+  extraFieldChoices Json?   @db.Json
 
   @@unique([eventId, userId])
 }

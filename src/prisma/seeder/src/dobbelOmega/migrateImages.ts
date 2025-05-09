@@ -105,7 +105,7 @@ export default async function migrateImages(
     })
     manifest.info(`After filter: ${imagesWithCollection.length} images`)
 
-    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection)
+    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection.slice(0, 10))
 
     //correct names if there are duplicates
     const namesTaken: { name: string, times: number }[] = []

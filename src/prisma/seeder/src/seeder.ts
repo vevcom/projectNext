@@ -22,6 +22,7 @@ import seedShop from './seedShop'
 import seedDevShop from './development/seedDevShop'
 import seedDevJobAds from './development/seedDevJobAds'
 import seedDevEvents from './development/seedDevEvents'
+import seedEvents from './seedEvent'
 import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
@@ -44,6 +45,7 @@ export default async function seed(
     await seedOmegaMembershipGroups(prisma)
     await seedClasses(prisma)
     await seedShop(prisma)
+    await seedEvents(prisma)
     if (enableLogging) console.log('seed standard done')
 
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')

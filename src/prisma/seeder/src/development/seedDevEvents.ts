@@ -11,6 +11,12 @@ export default async function seedDevEvents(prisma: PrismaClient) {
     const endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + 1)
 
+    const bedPresTag = await prisma.eventTag.findUniqueOrThrow({
+        where: {
+            special: 'COMPANY_PRESENTATION'
+        }
+    })
+
     const bedpres = await EventMethods.create.client(prisma).execute({
         session: null,
         bypassAuth: true,
@@ -25,7 +31,9 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             registrationStart: today,
             registrationEnd: tomorrow,
             waitingList: true,
-            tagIds: [],
+            tagIds: [
+                bedPresTag.id,
+            ],
         }
     })
 

@@ -18,7 +18,7 @@ export namespace EventMethods {
     export const create = ServiceMethod({
         dataSchema: EventSchemas.create,
         auther: () => EventAuthers.create.dynamicFields({}),
-        method: async ({ prisma, data }) => {
+        method: async ({ prisma, data, session }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
 
@@ -46,6 +46,12 @@ export namespace EventMethods {
                     registrationEnd: data.registrationEnd ?? new Date(getOsloTime().getTime() + 1000 * 60 * 60 * 24),
                     canBeViewdBy: data.canBeViewdBy,
                     waitingList: data.waitingList,
+
+                    createdBy: session?.user ? {
+                        connect: {
+                            id: session.user.id
+                        }
+                    } : undefined,
 
                     omegaOrder: {
                         connect: {
