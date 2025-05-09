@@ -471,7 +471,22 @@ export const PermissionConfig = {
             legge til en lisens uavhengig av denne tillatelsen
         `,
         category: 'diverse admin'
-    }
+    },
+    EVENT_READ: {
+        name: 'Les arrangementer',
+        description: 'kan lese arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_CREATE: {
+        name: 'Meld deg på arrangementer',
+        description: 'kan melde seg på arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_READ: {
+        name: 'Les påemeldinger',
+        description: 'kan lese påmeldinger',
+        category: 'events'
+    },
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {

@@ -12,7 +12,7 @@ const fetcher = async (x: ReadPageInput<PageSizeUsers, number, EventRegistration
     const registrations = await eventRegistrationReadManyDetailedAction({
         eventId: x.details.eventId,
         take: x.page.pageSize,
-        skip: x.page.cursor || undefined,
+        skip: (x.page.page * x.page.pageSize) || undefined,
         type: x.details.type,
     })
     return registrations

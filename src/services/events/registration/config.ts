@@ -10,10 +10,16 @@ export namespace EventRegistrationConfig {
                 image: true,
             },
         },
+        contact: {
+            select: {
+                name: true,
+            },
+        }
     } satisfies Prisma.EventRegistrationSelect
 
     export const includerDetailed = {
         ...selection,
+        contact: true,
     } satisfies Prisma.EventRegistrationInclude
 
     export enum REGISTRATION_READER_TYPE {

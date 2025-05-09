@@ -15,6 +15,7 @@ import { bindParams } from '@/actions/bind'
 import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 import { EventRegistrationConfig } from '@/services/events/registration/config'
 import { EventFiltered } from '@/services/events/Types'
+import ContactCard from '@/components/User/ContactCard'
 
 function DetailedTable({
     event,
@@ -48,27 +49,28 @@ function DetailedTable({
                 <tbody>
                     <EndlessScroll
                         pagingContext={EventRegistrationDetailedPagingContext}
-                        renderer={row => <tr key={row.id}>
-                            <td>
-                                <Link href={`/users/${row.user.username}`}>
-                                    <UserDisplayName user={row.user} />
-                                </Link>
-                            </td>
-                            <td>{row.user.email}</td>
-                            <td>{row.user.allergies}</td>
-                            <td>{row.note}</td>
-                            <td>
-                                <Form
-                                    action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
-                                    submitText="Slett"
-                                    submitColor="red"
-                                    confirmation={{
-                                        confirm: true,
-                                        text: 'Er du sikker på at du vil slette denne påmeldingen?'
-                                    }}
-                                />
-                            </td>
-                        </tr>}
+                        renderer={row => {
+                            const name = row.user ? <Link href={`/users/${row.user.username}`}>
+                                <UserDisplayName user={row.user} />
+                            </Link> : row.contact?.name
+                            return <tr key={row.id}>
+                                <td>{name}</td>
+                                <td>{row.user ? row.user.email : row.contact?.email}</td>
+                                <td>{row.user ? row.user.allergies : 'Ukjent'}</td>
+                                <td>{row.note}</td>
+                                <td>
+                                    <Form
+                                        action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                        submitText="Slett"
+                                        submitColor="red"
+                                        confirmation={{
+                                            confirm: true,
+                                            text: 'Er du sikker på at du vil slette denne påmeldingen?'
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                        }}
                     />
                 </tbody>
             </table>
@@ -97,7 +99,15 @@ function DefaultList({
         <div className={styles.RegistrationsList}>
             <EndlessScroll
                 pagingContext={EventRegistrationPagingContext}
-                renderer={(row, i) => <UserCard key={i} user={row.user} className={styles.userCard} />}
+                renderer={(row, i) => {
+                    if (row.user) {
+                        return <UserCard key={i} user={{
+                            ...row.user,
+                            image: row.image
+                        }} className={styles.userCard} />
+                    }
+                    return <ContactCard key={i} name={row.contact?.name ?? 'Ukjent'} image={row.image} />
+                }}
             />
         </div>
     </EventRegistrationPagingProvider>

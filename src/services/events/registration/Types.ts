@@ -2,16 +2,10 @@ import type { EventRegistrationConfig } from './config'
 import type { Image, Prisma } from '@prisma/client'
 
 // This type will just make sure that the image is not null
-export type EventRegistrationExpanded = Omit<Prisma.EventRegistrationGetPayload<{
+export type EventRegistrationExpanded = Prisma.EventRegistrationGetPayload<{
     select: typeof EventRegistrationConfig.selection
-}>, 'user'> & {
-    user: Omit<Prisma.UserGetPayload<{
-        select: typeof EventRegistrationConfig.selection.user.select
-    }>, 'image'>,
-} & {
-    user: {
-        image: Image,
-    },
+}> & {
+    image: Image
 }
 
 export type EventRegistrationDetailedExpanded = Prisma.EventRegistrationGetPayload<{

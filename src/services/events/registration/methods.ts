@@ -6,7 +6,7 @@ import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
-import { EventRegistrationDetailedExpanded } from './Types'
+import type { EventRegistrationExpanded } from './Types'
 
 
 export namespace EventRegistrationMethods {
@@ -75,6 +75,7 @@ export namespace EventRegistrationMethods {
         }),
     })
 
+    // eslint-disable-next-line
     async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
         eventId: number,
         take?: number,
@@ -98,7 +99,7 @@ export namespace EventRegistrationMethods {
                 skip = (skip ?? 0) + event.places
             }
 
-            if (skip == 0) {
+            if (skip === 0) {
                 skip = undefined
             }
         }
@@ -107,7 +108,6 @@ export namespace EventRegistrationMethods {
             take,
             skip,
         }
-
     }
 
     export const readMany = ServiceMethod({
@@ -118,7 +118,7 @@ export namespace EventRegistrationMethods {
             take: z.number().optional(),
             type: z.nativeEnum(EventRegistrationConfig.REGISTRATION_READER_TYPE).optional(),
         }),
-        method: async ({ prisma, params, session }) => {
+        method: async ({ prisma, params, session }): Promise<EventRegistrationExpanded[]> => {
             const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 session,
@@ -140,10 +140,7 @@ export namespace EventRegistrationMethods {
 
             return reults.map(registration => ({
                 ...registration,
-                user: {
-                    ...registration.user,
-                    image: registration.user.image || defaultImage,
-                }
+                image: registration.user?.image || defaultImage,
             }))
         },
     })
