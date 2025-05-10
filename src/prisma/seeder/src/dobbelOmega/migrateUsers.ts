@@ -257,7 +257,7 @@ export class UserMigrator {
 
             await this.pnPrisma.membership.create({
                 data: {
-                    groupId: this.soelleGroup.id,
+                    groupId: this.soelleGroup.groupId,
                     userId: pnUser.id,
                     active: user.soelle,
                     admin: false,
@@ -268,7 +268,7 @@ export class UserMigrator {
             if (!user.soelle) {
                 await this.pnPrisma.membership.create({
                     data: {
-                        groupId: this.memberGroup.id,
+                        groupId: this.memberGroup.groupId,
                         userId: pnUser.id,
                         active: true,
                         admin: false,

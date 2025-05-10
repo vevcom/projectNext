@@ -14,12 +14,16 @@ export default async function migrateEvents(
 ) {
     const events = await vevenPrisma.events.findMany({
         take: limits.events ? limits.events : undefined,
+        orderBy: limits.events ? {
+            createdAt: 'desc'
+        } : undefined,
         include: {
             Images: true,
             Committees: true,
             EventRegistrations: true,
         }
     })
+
     //Make sure no events have same title and order
     events.forEach((event) => {
         const sameTitle = events.filter(e => e.title === event.title)
