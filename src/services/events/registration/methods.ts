@@ -7,9 +7,49 @@ import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
+import { EventRegistrationSchemas } from './schemas'
 
 
 export namespace EventRegistrationMethods {
+
+    // eslint-disable-next-line
+    async function validateNewRegistration(
+        prisma: Prisma.TransactionClient,
+        eventId: number,
+        isAdmin: boolean
+    ) {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: eventId
+            },
+            include: {
+                _count: {
+                    select: {
+                        eventRegistrations: true,
+                    },
+                },
+            },
+        })
+
+
+        if (!event.takesRegistration) {
+            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event without registration')
+        }
+
+        if (event.registrationStart > new Date() && !isAdmin) {
+            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event before the registration period.')
+        }
+
+        if (event.registrationEnd < new Date() && !isAdmin) {
+            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
+        }
+
+        if (event.places <= event._count.eventRegistrations && !event.waitingList) {
+            throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
+        }
+
+        return event
+    }
 
     export const create = ServiceMethod({
         paramsSchema: z.object({
@@ -21,36 +61,9 @@ export namespace EventRegistrationMethods {
         }),
         opensTransaction: true,
         method: async ({ prisma, params, session }) => prisma.$transaction(async (tx) => {
-            const event = await tx.event.findUniqueOrThrow({
-                where: {
-                    id: params.eventId
-                },
-                include: {
-                    _count: {
-                        select: {
-                            eventRegistrations: true,
-                        },
-                    },
-                },
-            })
+            const isAdmin = session.permissions.includes('EVENT_ADMIN')
 
-            const isAdmim = session.permissions.includes('EVENT_ADMIN')
-
-            if (!event.takesRegistration) {
-                throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event without registration')
-            }
-
-            if (event.registrationStart > new Date() && !isAdmim) {
-                throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event before the registration period.')
-            }
-
-            if (event.registrationEnd < new Date() && !isAdmim) {
-                throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
-            }
-
-            if (event.places <= event._count.eventRegistrations && !event.waitingList) {
-                throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
-            }
+            const event = await validateNewRegistration(tx, params.eventId, isAdmin)
 
             const result = await tx.eventRegistration.create({
                 data: {
@@ -66,6 +79,41 @@ export namespace EventRegistrationMethods {
                     },
                 },
             })
+            return {
+                result,
+                onWaitingList: event.places <= event._count.eventRegistrations,
+            }
+        }, {
+            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
+        }),
+    })
+
+    export const createGuest = ServiceMethod({
+        auther: () => EventRegistrationAuthers.createGuest.dynamicFields({}),
+        paramsSchema: z.object({
+            eventId: z.number(),
+        }),
+        dataSchema: EventRegistrationSchemas.createGuest,
+        opensTransaction: true,
+        method: async ({ prisma, params, data }) => prisma.$transaction(async (tx) => {
+            const event = await validateNewRegistration(tx, params.eventId, true)
+
+            const result = await tx.eventRegistration.create({
+                data: {
+                    event: {
+                        connect: {
+                            id: params.eventId,
+                        },
+                    },
+                    note: data.note,
+                    contact: {
+                        create: {
+                            name: data.name,
+                        },
+                    },
+                },
+            })
+
             return {
                 result,
                 onWaitingList: event.places <= event._count.eventRegistrations,
@@ -175,9 +223,7 @@ export namespace EventRegistrationMethods {
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
-        dataSchema: z.object({
-            notes: z.string().optional(),
-        }),
+        dataSchema: EventRegistrationSchemas.updateNotes,
         method: async ({ prisma, params, data, session }) => {
             const registration = await prisma.eventRegistration.findUnique({
                 where: {
@@ -202,7 +248,7 @@ export namespace EventRegistrationMethods {
                     id: params.registrationId,
                 },
                 data: {
-                    note: data.notes,
+                    note: data.note,
                 },
             })
         }

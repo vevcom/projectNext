@@ -1,6 +1,6 @@
 'use client'
 import styles from './ManualRegistrationForm.module.scss'
-import { createEventRegistrationAction } from '@/actions/events/registration'
+import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/actions/events/registration'
 import Form from '@/components/Form/Form'
 import UserList from '@/components/User/UserList/UserList'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
@@ -9,6 +9,7 @@ import TextInput from '@/components/UI/TextInput'
 import { useContext } from 'react'
 import type { EventRegistration } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
+import { bindParams } from '@/actions/bind'
 
 function ManualRegistrationFormInner({
     eventId,
@@ -58,17 +59,10 @@ export default function ManualRegistrationForm({
         <Form
             submitText="Registrer gjest"
             title="Register gjest uten bruker"
-            action={async () => ({
-                success: false,
-                errorCode: 'NOT IMPLEMENTED',
-                httpCode: 501,
-                error: [{
-                    message: 'Not implemented, fix after cabin merge'
-                }]
-            } satisfies ActionReturn<EventRegistration>)}
+            action={bindParams(createGuestEventRegistrationAction, { eventId })}
         >
             <TextInput name="name" label="Navn" />
-            <TextInput name="email" label="E-post" />
+            <TextInput name="note" label="Notat" />
         </Form>
         <UserPagingProvider
             serverRenderedData={[]}

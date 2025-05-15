@@ -132,9 +132,9 @@ export default function RegistrationUI({
 
         {registrationState && event.registrationEnd > new Date() && <Form
             action={bindParams(eventRegistrationUpdateNotesAction, { registrationId: registrationState.id })}
-            submitText="Oppdater kommentar"
+            submitText="Oppdater notat"
         >
-            <TextInput name="notes" label="Kommentar" defaultValue={registrationState.note || ''} />
+            <TextInput name="note" label="Notat" defaultValue={registrationState.note || ''} />
         </Form>}
 
     </>

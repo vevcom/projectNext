@@ -42,7 +42,7 @@ function DetailedTable({
                         <th>Navn</th>
                         <th>E-post</th>
                         <th>Allergier</th>
-                        <th>Kommentar</th>
+                        <th>Notat</th>
                         <th>Slett</th>
                     </tr>
                 </thead>
