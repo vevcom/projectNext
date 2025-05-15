@@ -271,6 +271,7 @@ export namespace EventMethods {
                 })),
                 skipDuplicates: true
             })
+            // TODO: Send email to users that get promoted from waiting list
             return eventUpdate
         }
     })

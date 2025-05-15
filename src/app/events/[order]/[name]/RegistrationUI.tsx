@@ -145,7 +145,7 @@ export default function RegistrationUI({
                     btnState === RegistrationButtonState.ON_WAITING_LIST
                     ? {
                         confirm: true,
-                        text: 'Er du sikker på at du vil melde deg av påmeldingen'
+                        text: 'Er du sikker på at du vil melde deg av?'
                     }
                     : undefined
             }
@@ -169,7 +169,7 @@ export default function RegistrationUI({
                 btnState === RegistrationButtonState.NOT_REGISTERED ||
                 btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN
             ) && 'Meld meg på'}
-            {btnState === RegistrationButtonState.REGISTERED && 'Meld av påmelding'}
+            {btnState === RegistrationButtonState.REGISTERED && 'Meld av arrangement'}
             {btnState === RegistrationButtonState.ON_WAITING_LIST && 'Meld av venteliste'}
             {btnState === RegistrationButtonState.FULL && 'Fullt'}
             {btnState === RegistrationButtonState.WAITING_LIST_OPEN && 'Meld meg på venteliste'}
