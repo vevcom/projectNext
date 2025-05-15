@@ -1,4 +1,5 @@
 import styles from './UserRow.module.scss'
+import UserDisplayName from '@/components/User/UserDisplayName'
 import type { UserPagingReturn } from '@/services/users/Types'
 
 type PropTypes = {
@@ -14,7 +15,7 @@ export default function UserRow({
 }: PropTypes) {
     return (
         <span className={`${styles.UserRow} ${className}`}>
-            <p>{user.lastname}, {user.firstname}</p>
+            <p><UserDisplayName user={user} /></p>
             <p>{user.username}</p>
             <p>{user.studyProgramme}</p>
             <p>{user.class}</p>

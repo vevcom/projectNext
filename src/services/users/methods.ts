@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { UserAuthers } from './authers'
 import { UserConfig } from './config'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
@@ -95,10 +95,10 @@ export namespace UserMethods {
             username: z.string(),
         }),
         auther: ({ params }) => UserAuthers.readProfile.dynamicFields({ username: params.username }),
-        method: async ({ prisma, params }) => {
+        method: async ({ prisma, params, session }) => {
             const defaultProfileImage = await ImageMethods.readSpecial.client(prisma).execute({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session: null, //TODO: pass session
+                session,
             })
             const user = await prisma.user.findUniqueOrThrow({
                 where: { username: params.username.toLowerCase() },

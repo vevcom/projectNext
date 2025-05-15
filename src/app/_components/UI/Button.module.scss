@@ -15,3 +15,8 @@
 .red {
     @include ohma.btn(ohma.$colors-red);
 }
+
+.button:disabled {
+    background-color: ohma.$colors-gray-200;
+    color: ohma.$colors-gray-600;
+}

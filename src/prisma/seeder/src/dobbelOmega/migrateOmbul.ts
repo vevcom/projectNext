@@ -3,13 +3,13 @@ import { v4 as uuid } from 'uuid'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
 
 /**
  * This function migrates ombul from Veven to PN, by creating a new ombul in PN for
@@ -40,7 +40,7 @@ export default async function migrateOmbul(
         })
         const pdfBuffer = Buffer.from(await res.arrayBuffer())
 
-        const store = join(__dirname, '..', '..', 'store', 'ombul')
+        const store = join(directoryName, '..', '..', 'store', 'ombul')
 
         const fsLocation = `${uuid()}.pdf`
 

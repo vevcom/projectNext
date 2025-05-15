@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { emailValidationExpiration } from './ConfigVars'
 import { VerifyEmailTemplate } from '@/services/notifications/email/templates/verifyEmail'
 import { sendSystemMail } from '@/services/notifications/email/send'

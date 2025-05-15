@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { updateOmbulFileValidation, updateOmbulValidation } from './validation'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'

@@ -3,7 +3,7 @@ import styles from './HeaderItemPopUp.module.scss'
 import PopUp from '@/components/PopUp/PopUp'
 import React from 'react'
 import { FontAwesomeIcon, type FontAwesomeIconProps } from '@fortawesome/react-fontawesome'
-import { faArchive, faCog, faPlus, faQuestionCircle, faTag } from '@fortawesome/free-solid-svg-icons'
+import { faArchive, faCog, faPlus, faQuestionCircle, faTag, faUsers } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as PopUpProps } from '@/components/PopUp/PopUp'
 
 type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number }
@@ -48,6 +48,8 @@ export const HelpHeaderItemPopUp = createHeaderItemPopUp(faQuestionCircle, 18)
  * Component that can be used to show a settings pop up for a page
  */
 export const SettingsHeaderItemPopUp = createHeaderItemPopUp(faCog, 18)
+
+export const UsersHeaderItemPopUp = createHeaderItemPopUp(faUsers, 18)
 
 /**
  * Component that can be used to show a tag pop up for a page

@@ -1,5 +1,5 @@
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { Limits } from './migrationLimits'
 
 

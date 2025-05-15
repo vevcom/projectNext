@@ -81,9 +81,9 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             availableMethods: allMethodsOn,
         },
         {
-            special: 'EVENT_PARTICIPANT',
-            name: 'Arrangements varsel',
-            description: 'Varslinger sendt ut til deltakere i et arrangement du er påmeldt på',
+            special: 'EVENT_WAITINGLIST_PROMOTION',
+            name: 'Venteliste opprykk',
+            description: 'Varsling ved opprykk fra venteliste',
             defaultMethods: {
                 email: true,
                 emailWeekly: false,

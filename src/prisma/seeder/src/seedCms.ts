@@ -23,8 +23,8 @@ import type {
     SeedCategories
 } from './seedCmsConfig'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
 
 export default async function seedCms(prisma: PrismaClient) {
     //Bring the special and non special images to a common format
@@ -110,7 +110,7 @@ async function seedCmsParagraph(
     cmssparagraph: SeedCmsParagraph & { special?: SpecialCmsParagraph | null },
     prisma: PrismaClient
 ) {
-    const contentMd = await readFile(join(__dirname, '..', 'cms_paragraphs', cmssparagraph.file), 'utf-8')
+    const contentMd = await readFile(join(directoryName, '..', 'cms_paragraphs', cmssparagraph.file), 'utf-8')
     const contentHtml = (await unified()
         .use(remarkParse)
         .use(remarkRehype)

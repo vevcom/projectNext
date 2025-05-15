@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { InterestGroupAuthers } from './authers'
 import { InterestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'

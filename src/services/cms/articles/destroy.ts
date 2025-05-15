@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { destroyCmsImage } from '@/cms/images/destoy'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'

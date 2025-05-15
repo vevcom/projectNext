@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createNotificaionChannelValidation, validateMethods } from './validation'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/ConfigVars'

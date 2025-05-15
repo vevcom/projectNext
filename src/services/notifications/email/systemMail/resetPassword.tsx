@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'

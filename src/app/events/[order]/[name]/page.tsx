@@ -1,5 +1,7 @@
 import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
+import RegistrationUI from './RegistrationUI'
+import RegistrationsList from './RegistrationsList'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
@@ -8,13 +10,15 @@ import { displayDate } from '@/lib/dates/displayDate'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
 import { destroyEventAction } from '@/actions/events/destroy'
-import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readEventTagsAction } from '@/actions/events/tags/read'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/actions/bind'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faExclamation, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
+import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import ManualRegistrationForm from './ManualRegistrationForm'
 
 type PropTypes = {
     params: Promise<{
@@ -24,17 +28,14 @@ type PropTypes = {
 }
 
 export default async function Event({ params }: PropTypes) {
-    const eventRes = await readEventAction({
+    const event = unwrapActionReturn(await readEventAction({
         name: decodeURIComponent((await params).name),
-        order: parseInt((await params).order, 10)
-    })
-    const tagsRes = await readEventTagsAction()
-    if (!eventRes.success || !tagsRes.success) {
-        //TODO: Handle error in idiomatic way
-        throw new Error('Failed to read event')
-    }
-    const event = eventRes.data
-    const tags = tagsRes.data
+        order: parseInt((await params).order, 10),
+    }))
+
+    const tags = unwrapActionReturn(await readEventTagsAction())
+
+    const ownRegitration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
 
     return (
         <div className={styles.wrapper}>
@@ -53,6 +54,9 @@ export default async function Event({ params }: PropTypes) {
                     </ul>
                 </div>
                 <div className={styles.settings}>
+                    {event.takesRegistration && <UsersHeaderItemPopUp scale={30} PopUpKey="Users">
+                        <ManualRegistrationForm eventId={event.id} />
+                    </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroyd*/}
@@ -76,24 +80,40 @@ export default async function Event({ params }: PropTypes) {
                     <FontAwesomeIcon icon={faCalendar} />
                     {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
                 </p>
-                {
-                    event.takesRegistration ? (
-                        <p>
-                            <FontAwesomeIcon icon={faUsers} />
-                            {event.places}
-                        </p>
-                    ) : (
-                        <p>
-                            <FontAwesomeIcon icon={faExclamation} />
-                        Dette arrangementet tar ikke påmeldinger
-                        </p>
-                    )
-                }
+                <p>
+                    <FontAwesomeIcon icon={faLocationDot} />
+                    {event.location}
+                </p>
+                {event.takesRegistration ? <>
+                    <p>
+                        <FontAwesomeIcon icon={faUsers} />
+                        {event.numOfRegistrations} / {event.places}
+                    </p>
+                    <p>
+                        Påmelding start: {displayDate(event.registrationStart)}
+                    </p>
+                    <p>
+                        Påmelding slutt: {displayDate(event.registrationEnd)}
+                    </p>
+                    {event.waitingList && <p>
+                        På venteliste: {event.numOnWaitingList}
+                    </p>}
+                    <RegistrationUI event={event} registration={ownRegitration} onWaitingList={event.onWaitingList} />
+                </> : <p>
+                    <FontAwesomeIcon icon={faExclamation} />
+                    Dette arrangementet tar ikke påmeldinger
+                </p>}
 
             </aside>
             <main>
                 <CmsParagraph cmsParagraph={event.paragraph} />
             </main>
+
+            {event.takesRegistration && (
+                <div className={styles.registrationList}>
+                    <RegistrationsList event={event} />
+                </div>
+            )}
         </div>
     )
 }

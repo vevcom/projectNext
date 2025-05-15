@@ -1,7 +1,7 @@
 import { ShopAuthers } from './authers'
 import { ShopSchemas } from './schema'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import 'server-only'
+import '@pn-server-only'
 import { z } from 'zod'
 import type { ExtendedShop } from './Types'
 

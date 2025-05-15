@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import type { CmsImage, ImageSize } from '@prisma/client'

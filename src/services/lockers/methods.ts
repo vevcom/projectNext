@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { lockerReservationIncluder } from './reservations/config'
 import { LockerAuthers } from './authers'
 import { LockersSchemas } from './schemas'

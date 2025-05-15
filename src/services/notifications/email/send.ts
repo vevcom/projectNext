@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { getMailHandler } from './mailHandler'
 import { render } from '@react-email/render'
 import type React from 'react'

@@ -6,7 +6,7 @@ import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import type { Limits } from './migrationLimits'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/generated/veven'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
@@ -105,7 +105,7 @@ export default async function migrateImages(
     })
     manifest.info(`After filter: ${imagesWithCollection.length} images`)
 
-    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection)
+    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection.slice(0, 10))
 
     //correct names if there are duplicates
     const namesTaken: { name: string, times: number }[] = []

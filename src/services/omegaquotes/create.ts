@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createOmegaquotesValidation } from './validation'
 import { dispatchSpecialNotification } from '@/services/notifications/create'
 import { prismaCall } from '@/services/prismaCall'
