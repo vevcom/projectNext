@@ -73,16 +73,8 @@ export default async function migrateEvents(
                 cmsParagraphId: paragraph.id,
                 waitingList: event.waitingList ?? true,
                 lead: event.lead,
+                company: event.company,
                 extraFields: event.extraFields ?? undefined,
-                eventTagEvents: event.company ? {
-                    create: {
-                        tag: {
-                            connect: {
-                                special: 'COMPANY_PRESENTATION'
-                            }
-                        }
-                    }
-                } : undefined,
                 createdById: event.CreatedByUserId ? await userMigrator.getPnUserId(event.CreatedByUserId) : undefined,
             }
         })

@@ -35,6 +35,7 @@ model Event {
   ScreenPage ScreenPage[]
 
   // Legacy from old database
+  company     Boolean @default(false) // If a plus one is allowed
   lead        String?
   extraFields Json?   @db.Json
 
@@ -83,7 +84,7 @@ model EventRegistration {
 
   // Legacy from old database
   manuallyPaid      Boolean @default(false)
-  company           Boolean @default(false)
+  company           Boolean @default(false) // This is if a registrations has a plus one.
   extraFieldChoices Json?   @db.Json
 
   @@unique([eventId, userId])
