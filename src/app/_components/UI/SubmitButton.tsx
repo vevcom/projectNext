@@ -23,6 +23,7 @@ export default function SubmitButton({
     className,
     pending,
     onClick,
+    disabled,
 }: {
     children: ReactNode,
     generalErrors?: ErrorMessage[],
@@ -32,6 +33,7 @@ export default function SubmitButton({
     className?: string,
     pending?: boolean,
     onClick?: React.MouseEventHandler<HTMLButtonElement>,
+    disabled?: boolean,
 }) {
     const formStatus = useFormStatus()
     if (pending === undefined) {
@@ -63,7 +65,11 @@ export default function SubmitButton({
             aria-disabled={pending || success}
             color={success ? 'green' : color}
             type="submit"
-            onClick={onClick}
+            onClick={(e) => {
+                if (confirmedOpen) setConfirmedOpen(false)
+                if (onClick) onClick(e)
+            }}
+            disabled={disabled}
         >
             {btnContent()}
         </Button>

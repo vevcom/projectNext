@@ -1,10 +1,15 @@
 'use client'
-import Button from '@/components/UI/Button'
-import { createEventRegistrationAction, eventRegistrationUpdateNotesAction } from '@/actions/events/registration'
+import styles from './RegistrationUI.module.scss'
+import {
+    createEventRegistrationAction,
+    eventRegistrationDestroyAction,
+    eventRegistrationUpdateNotesAction
+} from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/actions/bind'
 import TextInput from '@/components/UI/TextInput'
+import SubmitButton from '@/components/UI/SubmitButton'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { EventExpanded } from '@/services/events/Types'
@@ -34,11 +39,11 @@ export default function RegistrationUI({
         throw new Error('Can only show registration button for event that take registration')
     }
 
-    const getInitialBtnState = () => {
-        if (onWaitingList) {
+    const getInitialBtnState = (_onWaitingList: boolean, _registration?: EventRegistration) => {
+        if (_onWaitingList) {
             return RegistrationButtonState.ON_WAITING_LIST
         }
-        if (registration) {
+        if (_registration) {
             return RegistrationButtonState.REGISTERED
         }
         if (event.registrationStart > new Date()) {
@@ -59,7 +64,8 @@ export default function RegistrationUI({
     const [errorText, setErrorText] = useState('')
     const [registrationState, setRegistrationState] = useState(registration)
 
-    const [btnState, setBtnState] = useState(getInitialBtnState())
+    const [btnState, setBtnState] = useState(getInitialBtnState(onWaitingList, registration))
+    const [btnPending, setBtnPending] = useState(false)
 
     const session = useSession()
 
@@ -84,26 +90,47 @@ export default function RegistrationUI({
     }
 
     const buttonOnClick = async () => {
-        const result = await createEventRegistrationAction({
-            userId: session.data.user.id,
-            eventId: event.id,
-        })
+        setBtnPending(true)
 
-        if (result.success) {
-            if (result.data.onWaitingList) {
-                setBtnState(RegistrationButtonState.ON_WAITING_LIST)
+        if (registrationState) {
+            const result = await eventRegistrationDestroyAction({
+                registrationId: registrationState.id,
+            })
+            if (result.success) {
+                setBtnState(getInitialBtnState(false, undefined))
+                setRegistrationState(undefined)
+            } else if (result.error && result.error.length > 0) {
+                const message = result.error[0].message
+                setErrorText(message)
+                setBtnState(RegistrationButtonState.ERROR)
             } else {
-                setBtnState(RegistrationButtonState.REGISTERED)
+                setErrorText('Kunne ikke melde deg av påmelding.')
+                setBtnState(RegistrationButtonState.ERROR)
             }
-            setRegistrationState(result.data.result)
-        } else if (result.error && result.error.length > 0) {
-            const message = result.error[0].message
-            setErrorText(message)
-            setBtnState(RegistrationButtonState.ERROR)
         } else {
-            setErrorText('Kunne ikke melde deg på.')
-            setBtnState(RegistrationButtonState.ERROR)
+            const result = await createEventRegistrationAction({
+                userId: session.data.user.id,
+                eventId: event.id,
+            })
+
+            if (result.success) {
+                if (result.data.onWaitingList) {
+                    setBtnState(RegistrationButtonState.ON_WAITING_LIST)
+                } else {
+                    setBtnState(RegistrationButtonState.REGISTERED)
+                }
+                setRegistrationState(result.data.result)
+            } else if (result.error && result.error.length > 0) {
+                const message = result.error[0].message
+                setErrorText(message)
+                setBtnState(RegistrationButtonState.ERROR)
+            } else {
+                setErrorText('Kunne ikke melde deg på.')
+                setBtnState(RegistrationButtonState.ERROR)
+            }
         }
+
+        setBtnPending(false)
     }
 
     return <>
@@ -111,24 +138,44 @@ export default function RegistrationUI({
             <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
         )}
 
-        <Button
+        <SubmitButton
+            success={false}
+            confirmation={
+                btnState === RegistrationButtonState.REGISTERED ||
+                    btnState === RegistrationButtonState.ON_WAITING_LIST
+                    ? {
+                        confirm: true,
+                        text: 'Er du sikker på at du vil melde deg av påmeldingen'
+                    }
+                    : undefined
+            }
             disabled={
                 btnState !== RegistrationButtonState.NOT_REGISTERED &&
-                btnState !== RegistrationButtonState.WAITING_LIST_OPEN
+                btnState !== RegistrationButtonState.WAITING_LIST_OPEN &&
+                btnState !== RegistrationButtonState.REGISTERED &&
+                btnState !== RegistrationButtonState.ON_WAITING_LIST
             }
+            color={
+                btnState === RegistrationButtonState.REGISTERED ||
+                    btnState === RegistrationButtonState.ON_WAITING_LIST
+                    ? 'red'
+                    : 'primary'
+            }
+            className={styles.registrationButton}
             onClick={buttonOnClick}
+            pending={btnPending}
         >
             {(
                 btnState === RegistrationButtonState.NOT_REGISTERED ||
                 btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN
             ) && 'Meld meg på'}
-            {btnState === RegistrationButtonState.REGISTERED && 'Påmeldt'}
-            {btnState === RegistrationButtonState.ON_WAITING_LIST && 'På venteliste'}
+            {btnState === RegistrationButtonState.REGISTERED && 'Meld av påmelding'}
+            {btnState === RegistrationButtonState.ON_WAITING_LIST && 'Meld av venteliste'}
             {btnState === RegistrationButtonState.FULL && 'Fullt'}
             {btnState === RegistrationButtonState.WAITING_LIST_OPEN && 'Meld meg på venteliste'}
             {btnState === RegistrationButtonState.ERROR && errorText}
             {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
-        </Button>
+        </SubmitButton>
 
         {registrationState && event.registrationEnd > new Date() && <Form
             action={bindParams(eventRegistrationUpdateNotesAction, { registrationId: registrationState.id })}

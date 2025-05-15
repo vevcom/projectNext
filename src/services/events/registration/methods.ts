@@ -254,6 +254,8 @@ export namespace EventRegistrationMethods {
         }
     })
 
+    // TODO: Fix authing to make users be able to remove themselfes
+    // And make sure they cannot sign off after the registration period
     export const destroy = ServiceMethod({
         auther: () => EventRegistrationAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
