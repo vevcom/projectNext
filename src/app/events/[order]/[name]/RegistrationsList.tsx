@@ -8,14 +8,14 @@ import EventRegistrationDetailedPagingProvider, {
 } from '@/contexts/paging/EventRegistrationDetailedPaging'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
-import { useState } from 'react'
-import Link from 'next/link'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/actions/bind'
 import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 import { EventRegistrationConfig } from '@/services/events/registration/config'
-import { EventFiltered } from '@/services/events/Types'
 import ContactCard from '@/components/User/ContactCard'
+import Link from 'next/link'
+import { useState } from 'react'
+import type { EventFiltered } from '@/services/events/Types'
 
 function DetailedTable({
     event,

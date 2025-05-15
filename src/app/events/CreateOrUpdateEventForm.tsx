@@ -12,10 +12,10 @@ import { updateEventAction } from '@/actions/events/update'
 import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
 import { bindParams } from '@/actions/bind'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
-import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }
@@ -50,7 +50,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 }
             >
                 <TextInput label="Navn" name="name" defaultValue={event?.name} />
-                <TextInput label="Sted" name="location" defaultValue={event?.location} />
+                <TextInput label="Sted" name="location" defaultValue={event?.location ?? ''} />
                 <SelectString
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"

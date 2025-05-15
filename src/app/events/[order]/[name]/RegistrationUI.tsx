@@ -7,8 +7,8 @@ import { bindParams } from '@/actions/bind'
 import TextInput from '@/components/UI/TextInput'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import type { Event, EventRegistration } from '@prisma/client'
-import { EventExpanded } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/Types'
+import type { EventRegistration } from '@prisma/client'
 
 enum RegistrationButtonState {
     NOT_REGISTERED = 'NOT_REGISTERED',
@@ -46,7 +46,7 @@ export default function RegistrationUI({
         }
         if (event._count.eventRegistrations >= event.places) {
             if (event.waitingList) {
-                return RegistrationButtonState.WAITING_LIST_OPEN;
+                return RegistrationButtonState.WAITING_LIST_OPEN
             }
             return RegistrationButtonState.FULL
         }

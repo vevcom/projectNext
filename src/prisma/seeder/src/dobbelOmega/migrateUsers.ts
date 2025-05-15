@@ -2,7 +2,11 @@ import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, vevenIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@prisma/client'
-import type { Prisma as VevenPrisma, PrismaClient as PrismaClientVeven, enum_Users_sex as SEXVEVEN } from '@/prisma-dobbel-omega/client'
+import type {
+    Prisma as VevenPrisma,
+    PrismaClient as PrismaClientVeven,
+    enum_Users_sex as SEXVEVEN
+} from '@/prisma-dobbel-omega/client'
 import type { Limits } from './migrationLimits'
 
 /**
@@ -49,8 +53,8 @@ export class UserMigrator {
     private imageIdMap: IdMapper
 
 
-    private soelleGroup: ExtendedMemberGroup
-    private memberGroup: ExtendedMemberGroup
+    private soelleGroup?: ExtendedMemberGroup
+    private memberGroup?: ExtendedMemberGroup
     private classes: Prisma.ClassGetPayload<{
         include: {
             group: true
@@ -255,6 +259,10 @@ export class UserMigrator {
 
             const soelleOrder = await upsertOrderBasedOnDate(this.pnPrisma, user.createdAt)
 
+            if (!this.soelleGroup || !this.memberGroup) {
+                throw new Error('Cannot use th UserMigrator, before it is initialized.')
+            }
+
             await this.pnPrisma.membership.create({
                 data: {
                     groupId: this.soelleGroup.groupId,
@@ -405,8 +413,8 @@ export class UserMigrator {
                             }
                         })
                     } else if (yearOfStudy3 === 3) {
-                    // This is a nut - it is hard to say if the user still is in 3. grade.
-                    // We will assume that the user is in 3. grade if the order is gte 103
+                        // This is a nut - it is hard to say if the user still is in 3. grade.
+                        // We will assume that the user is in 3. grade if the order is gte 103
                         await this.pnPrisma.membership.create({
                             data: {
                                 groupId: this.yearIdMap(3),

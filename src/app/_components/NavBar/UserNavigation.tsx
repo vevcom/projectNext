@@ -4,12 +4,12 @@ import ProfilePicture from '@/components/User/ProfilePicture'
 import BorderButton from '@/UI/BorderButton'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
+import UserDisplayName from '@/components/User/UserDisplayName'
 import { faCog, faDotCircle, faMoneyBill, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { Profile } from '@/services/users/Types'
-import UserDisplayName from '../User/UserDisplayName'
 
 type PropTypes = {
     profile: Profile | null

@@ -18,7 +18,9 @@ function ManualRegistrationFormInner({
     const userSelectionContext = useContext(UserSelectionContext)
     if (!userSelectionContext) throw new Error('UserSelectionContext not found')
 
-    const action = async (): Promise<ActionReturn<EventRegistration>> => {
+    const action = async (): Promise<ActionReturn<{
+        result: EventRegistration
+    }>> => {
         if (!userSelectionContext.user) {
             return {
                 success: false,
