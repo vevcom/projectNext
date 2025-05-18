@@ -8,7 +8,7 @@ import type {
 } from '@/services/notifications/Types'
 
 
-export namespace NotificaionChannelSchemas {
+export namespace NotificationChannelSchemas {
 
     export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
         return Object.fromEntries(NotificationConfig.methods.filter(m => NotificationConfig.methods.includes(m)).map(m => {
@@ -80,12 +80,6 @@ export namespace NotificaionChannelSchemas {
 
         return validParents
     }
-
-    export const notificationMethodFields = z.object({
-        email: z.boolean(),
-        emailWeekly: z.boolean(),
-        push: z.boolean(),
-    })
 
     const fields = z.object({
         name: z.string().min(2),

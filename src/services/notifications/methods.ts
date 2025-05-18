@@ -4,6 +4,7 @@ import { NotificationConfig } from './config'
 import { NotificationChannelConfig } from './channel/config'
 import { dispatchEmailNotifications } from './email/dispatch'
 import { dispatchPushNotifications } from './push/dispath'
+import { NotificationAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { UserConfig } from '@/services/users/config'
@@ -12,7 +13,6 @@ import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
 import type { ExpandedNotificationChannel } from './Types'
 import type { UserFiltered } from '@/services/users/Types'
-import { NotificationAuthers } from './authers'
 
 export namespace NotificationMethods {
 

@@ -2,6 +2,13 @@ import { z } from 'zod'
 
 
 export namespace NotificationSchemas {
+
+    export const notificationMethodFields = z.object({
+        email: z.boolean(),
+        emailWeekly: z.boolean(),
+        push: z.boolean(),
+    })
+
     const fields = z.object({
         channelId: z.number().min(1),
         title: z.string().min(2),

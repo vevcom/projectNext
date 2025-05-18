@@ -1,11 +1,11 @@
 import '@pn-server-only'
 import { UserAuthers } from './authers'
 import { UserConfig } from './config'
+import { NotificationSubscriptionMethods } from '@/services/notifications/subscription/methods'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { readPermissionsOfUser } from '@/services/permissionRoles/read'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
-import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
@@ -420,7 +420,7 @@ export namespace UserMethods {
         dataSchema: UserSchemas.register,
         auther: ({ params }) => UserAuthers.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
-        method: async ({ prisma, data, params }) => {
+        method: async ({ prisma, data, params, session }) => {
             const { sex, password, mobile, allergies } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
@@ -492,7 +492,13 @@ export namespace UserMethods {
             ])
 
             try {
-                await createDefaultSubscriptions(params.id)
+                await NotificationSubscriptionMethods.createDefault.client(prisma).execute({
+                    params: {
+                        userId: params.id,
+                    },
+                    session,
+                    bypassAuth: true,
+                })
             } catch (error) {
                 if (!(error instanceof ServerError) || error.errorCode !== 'DUPLICATE') {
                     // Duplicate subscriptions doen't do anything, and it will make development easier.

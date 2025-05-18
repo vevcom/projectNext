@@ -1,12 +1,13 @@
 import '@pn-server-only'
 import { NotificationChannelAuthers } from './authers'
-import { NotificaionChannelSchemas } from './schemas'
+import { NotificationChannelSchemas } from './schemas'
 import { NotificationChannelConfig } from './config'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/ConfigVars'
 import { NotificationConfig } from '@/services/notifications/config'
 import { ServerError } from '@/services/error'
+import { NotificationSchemas } from '@/services/notifications/schemas'
 import { z } from 'zod'
 import type { NotificationMethodGeneral } from '@/services/notifications/Types'
 
@@ -14,14 +15,14 @@ export namespace NotificationChannelMethods {
 
     export const create = ServiceMethod({
         auther: () => NotificationChannelAuthers.create.dynamicFields({}),
-        dataSchema: NotificaionChannelSchemas.create,
+        dataSchema: NotificationChannelSchemas.create,
         opensTransaction: true,
         paramsSchema: z.object({
-            availableMethods: NotificaionChannelSchemas.notificationMethodFields,
-            defaultMethods: NotificaionChannelSchemas.notificationMethodFields,
+            availableMethods: NotificationSchemas.notificationMethodFields,
+            defaultMethods: NotificationSchemas.notificationMethodFields,
         }),
         method: async ({ prisma, data, params }) => {
-            if (!NotificaionChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
+            if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
 
@@ -49,7 +50,7 @@ export namespace NotificationChannelMethods {
                 include: NotificationChannelConfig.includer,
             })
 
-            if (NotificaionChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, params.defaultMethods)) {
+            if (NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, params.defaultMethods)) {
                 return channel
             }
 
@@ -71,7 +72,7 @@ export namespace NotificationChannelMethods {
                         subscriptionMethods: booleanOperationOnMethods(s.methods, channel.defaultMethods, 'AND')
                     }))
                     .filter(s =>
-                        !NotificaionChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, s.subscriptionMethods)
+                        !NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, s.subscriptionMethods)
                     )
                     .map(s => tx.notificationSubscription.create({
                         data: {
@@ -120,15 +121,15 @@ export namespace NotificationChannelMethods {
 
     export const update = ServiceMethod({
         auther: () => NotificationChannelAuthers.update.dynamicFields({}),
-        dataSchema: NotificaionChannelSchemas.update,
+        dataSchema: NotificationChannelSchemas.update,
         paramsSchema: z.object({
             id: z.number(),
-            availableMethods: NotificaionChannelSchemas.notificationMethodFields,
-            defaultMethods: NotificaionChannelSchemas.notificationMethodFields,
+            availableMethods: NotificationSchemas.notificationMethodFields,
+            defaultMethods: NotificationSchemas.notificationMethodFields,
         }),
         opensTransaction: true,
         method: async ({ prisma, data, params, session }) => {
-            if (!NotificaionChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
+            if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
 
@@ -154,7 +155,7 @@ export namespace NotificationChannelMethods {
                     bypassAuth: true,
                 })
 
-                if (!NotificaionChannelSchemas.validateNewParent(params.id, data.parentId, allChannels)) {
+                if (!NotificationChannelSchemas.validateNewParent(params.id, data.parentId, allChannels)) {
                     throw new ServerError('BAD PARAMETERS', 'Cannot set parentId in a loop')
                 }
 
