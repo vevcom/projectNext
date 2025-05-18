@@ -7,7 +7,8 @@ import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { findValidParents } from '@/services/notifications/channel/validation'
-import { updateNotificationChannelAction } from '@/actions/notifications/channel/update'
+import { updateNotificationChannelAction } from '@/actions/notifications'
+import { bindParams } from '@/actions/bind'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { MailAlias } from '@prisma/client'
@@ -31,7 +32,11 @@ export default function ChannelSettings({
         <div className={styles.channelSettings}>
             {currentChannelState.special ? <p>Spesiell: {currentChannelState.special}</p> : null}
             <Form
-                action={updateNotificationChannelAction}
+                action={bindParams(updateNotificationChannelAction, {
+                    id: currentChannelState.id,
+                    availableMethods: currentChannelState.availableMethods,
+                    defaultMethods: currentChannelState.defaultMethods,
+                })}
                 submitText="Lagre"
             >
                 <input type="hidden" name="id" value={currentChannelState.id} />

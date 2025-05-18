@@ -1,6 +1,6 @@
 'use client'
 import Checkbox from '@/components/UI/Checkbox'
-import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVars'
+import { notificationMethodsDisplayMap } from '@/services/notifications/config'
 import { v4 as uuid } from 'uuid'
 import React, { useState } from 'react'
 import type { NotificationMethodGeneral, NotificationMethodTypes } from '@/services/notifications/Types'

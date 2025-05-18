@@ -1,6 +1,6 @@
 'use server'
 import NotificationSettings from './notificationSettings'
-import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readNotificationChannelsAction } from '@/actions/notifications'
 import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import type { PropTypes } from '@/app/users/[username]/page'

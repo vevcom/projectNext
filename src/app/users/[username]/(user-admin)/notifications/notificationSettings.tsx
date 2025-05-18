@@ -3,7 +3,7 @@
 import SubscriptionItem from './subscriptionItem'
 import styles from './notificationSettings.module.scss'
 import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifications/notificationMethodOperations'
-import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVars'
+import { notificationMethodsDisplayMap } from '@/services/notifications/config'
 import { notificationMethods } from '@/services/notifications/Types'
 import SubmitButton from '@/components/UI/SubmitButton'
 import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
