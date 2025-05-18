@@ -6,12 +6,13 @@ import TextInput from '@/components/UI/TextInput'
 import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { findValidParents } from '@/services/notifications/channel/validation'
 import { updateNotificationChannelAction } from '@/actions/notifications'
 import { bindParams } from '@/actions/bind'
+import { NotificationChannelSchemas } from '@/services/notifications/channel/schemas'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { MailAlias } from '@prisma/client'
+import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 
 export default function ChannelSettings({
     currentChannel,
@@ -24,7 +25,7 @@ export default function ChannelSettings({
 }) {
     const [currentChannelState, setCurrentChannel] = useState(currentChannel)
 
-    const selectOptions = findValidParents(currentChannel.id, channels)
+    const selectOptions = NotificationChannelSchemas.findValidParents(currentChannel.id, channels)
 
     return <PageWrapper
         title={currentChannelState.name}
@@ -35,7 +36,11 @@ export default function ChannelSettings({
                 action={bindParams(updateNotificationChannelAction, {
                     id: currentChannelState.id,
                     availableMethods: currentChannelState.availableMethods,
-                    defaultMethods: currentChannelState.defaultMethods,
+                    defaultMethods: booleanOperationOnMethods(
+                        currentChannelState.defaultMethods,
+                        currentChannelState.availableMethods,
+                        'AND'
+                    )
                 })}
                 submitText="Lagre"
             >

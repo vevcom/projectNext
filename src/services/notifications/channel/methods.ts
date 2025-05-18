@@ -26,6 +26,8 @@ export namespace NotificationChannelMethods {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
 
+            console.log(data)
+
             const channel = await prisma.notificationChannel.create({
                 data: {
                     name: data.name,
@@ -49,6 +51,8 @@ export namespace NotificationChannelMethods {
                 },
                 include: NotificationChannelConfig.includer,
             })
+
+            console.log(channel)
 
             if (NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, params.defaultMethods)) {
                 return channel

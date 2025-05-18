@@ -85,8 +85,8 @@ export namespace NotificationChannelSchemas {
         name: z.string().min(2),
         description: z.string(),
         special: z.nativeEnum(SpecialNotificationChannel),
-        parentId: z.number().min(1),
-        mailAliasId: z.number().min(1),
+        parentId: z.coerce.number().min(1),
+        mailAliasId: z.coerce.number().min(1),
     })
 
     export const create = fields.pick({

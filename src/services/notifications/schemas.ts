@@ -10,7 +10,7 @@ export namespace NotificationSchemas {
     })
 
     const fields = z.object({
-        channelId: z.number().min(1),
+        channelId: z.coerce.number().min(1),
         title: z.string().min(2),
         message: z.string().min(10),
         email: z.string().email(),

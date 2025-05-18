@@ -40,7 +40,7 @@ export default function AddNotificationChannel({
         })}
         successCallback={(data) => {
             if (data) {
-                push(`notificationchannels/${data.id}`)
+                push(`notification-channels/${data.id}`)
             }
         }}
     >

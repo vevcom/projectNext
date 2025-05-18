@@ -2,7 +2,7 @@ import { sendBulkMail } from './send'
 import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
-import { repalceSpecialSymbols } from '@/services/notifications/dispatch'
+import { NotificationMethods } from '@/services/notifications/methods'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { render } from '@react-email/render'
@@ -39,8 +39,8 @@ export async function dispatchEmailNotifications(
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
             to: u.email,
-            subject: repalceSpecialSymbols(notificaion.title, u),
-            text: repalceSpecialSymbols(notificaion.message, u),
+            subject: NotificationMethods.repalceSpecialSymbols(notificaion.title, u),
+            text: NotificationMethods.repalceSpecialSymbols(notificaion.message, u),
         })
 
         return {
