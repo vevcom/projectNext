@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { createOmegaquotesValidation } from './validation'
-import { dispatchSpecialNotification } from '@/services/notifications/create'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
+import { NotificationMethods } from '@/services/notifications/methods'
 import type { CreateOmegaguotesTypes } from './validation'
 import type { OmegaQuote } from '@prisma/client'
 
@@ -28,7 +28,15 @@ export async function createQuote(
         }
     }))
 
-    dispatchSpecialNotification('NEW_OMEGAQUOTE', 'Ny Omegaquote♪', `${results.quote}\n - ${results.author}`)
+    NotificationMethods.createSpecial.newClient().execute({
+        params: {
+            special: 'NEW_OMEGAQUOTE',
+            title: 'Ny Omegaquote♪',
+            message: `${results.quote}\n - ${results.author}`,
+        },
+        session: null,
+        bypassAuth: true,
+    })
 
     return results
 }

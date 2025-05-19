@@ -38,7 +38,7 @@ export default function AddNotificationChannel({
             availableMethods,
             defaultMethods,
         })}
-        successCallback={(data) => {
+        successCallback={(data?: ExpandedNotificationChannel) => {
             if (data) {
                 push(`notification-channels/${data.id}`)
             }

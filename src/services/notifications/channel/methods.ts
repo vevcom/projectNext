@@ -9,7 +9,7 @@ import { NotificationConfig } from '@/services/notifications/config'
 import { ServerError } from '@/services/error'
 import { NotificationSchemas } from '@/services/notifications/schemas'
 import { z } from 'zod'
-import type { NotificationMethodGeneral } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 
 export namespace NotificationChannelMethods {
 
@@ -21,12 +21,10 @@ export namespace NotificationChannelMethods {
             availableMethods: NotificationSchemas.notificationMethodFields,
             defaultMethods: NotificationSchemas.notificationMethodFields,
         }),
-        method: async ({ prisma, data, params }) => {
+        method: async ({ prisma, data, params }): Promise<ExpandedNotificationChannel> => {
             if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
-
-            console.log(data)
 
             const channel = await prisma.notificationChannel.create({
                 data: {
@@ -51,8 +49,6 @@ export namespace NotificationChannelMethods {
                 },
                 include: NotificationChannelConfig.includer,
             })
-
-            console.log(channel)
 
             if (NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, params.defaultMethods)) {
                 return channel

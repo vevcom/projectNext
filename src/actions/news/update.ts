@@ -3,7 +3,7 @@ import { safeServerCall } from '@/actions/safeServerCall'
 import { createZodActionError, createActionError } from '@/actions/error'
 import { updateNews } from '@/services/news/update'
 import { updateNewsArticleValidation } from '@/services/news/validation'
-import { dispatchSpecialNotification } from '@/services/notifications/create'
+import { NotificationMethods } from '@/services/notifications/methods'
 import type { SimpleNewsArticle } from '@/services/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { UpdateNewsArticleTypes } from '@/services/news/validation'
@@ -27,11 +27,15 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    dispatchSpecialNotification(
-        'NEW_NEWS_ARTICLE',
-        'Nyhet🗞️: <En tittel her kanskje?>',
-        'Starten av artikkelen her kanskje?'
-    )
+    NotificationMethods.createSpecial.newClient().execute({
+        params: {
+            special: 'NEW_NEWS_ARTICLE',
+            title: 'Ny nyhetsartikkel',
+            message: 'En ny nyhetsartikkel er publisert',
+        },
+        session: null,
+        bypassAuth: true,
+    })
 
     return createActionError('UNKNOWN ERROR', 'Not implemented')
 }
