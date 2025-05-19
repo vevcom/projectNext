@@ -42,6 +42,14 @@ export namespace NotificationMethods {
         auther: () => NotificationAuthers.create.dynamicFields({}),
         dataSchema: NotificationSchemas.dispatch,
         method: async ({ prisma, data }) => {
+            // This prevent notifications from beeing sent during seeding
+            if (process.env.IGNORE_SERVER_ONLY) {
+                return {
+                    notification: null,
+                    recipients: 0,
+                }
+            }
+
             const notification = await prisma.notification.create({
                 data: {
                     title: data.title,
