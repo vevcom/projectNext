@@ -24,7 +24,6 @@ import seedDevJobAds from './development/seedDevJobAds'
 import seedDevEvents from './development/seedDevEvents'
 import seedCabin from './seedCabin'
 import { PrismaClient } from '@prisma/client'
-import seedDevEvents from './development/seedDevEvents'
 
 export default async function seed(
     shouldMigrate: boolean,
