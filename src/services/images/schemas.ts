@@ -25,7 +25,7 @@ export namespace ImageSchemas {
             `Du kan bare laste opp mellom 1 og ${ImageConfig.maxNumberInOneBatch} bilder av gangen`
         ),
         licenseId: z.union([
-            z.string().optional(),
+            z.string().optional().nullable(),
             z.coerce.number().optional().or(z.literal('NULL')),
         ]).transform(
             value => {

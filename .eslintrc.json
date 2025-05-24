@@ -435,7 +435,7 @@
         // Why is this a limit? This will just enforce people to use object as params, which I think is wierd. -Theodor
         "max-params": [
             "error",
-            5
+            7
         ],
         // disallow use of bitwise operators
         "no-bitwise": "warn",

@@ -15,6 +15,7 @@ export const permissionCategories = [
     'mail',
     'skjermer',
     'shop',
+    'cabin',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -486,6 +487,36 @@ export const PermissionConfig = {
         name: 'Les påemeldinger',
         description: 'kan lese påmeldinger',
         category: 'events'
+    },
+    CABIN_BOOKING_BED_CREATE: {
+        name: 'Booke senger i hytta',
+        description: 'Kan booke en senger i hytta',
+        category: 'cabin'
+    },
+    CABIN_BOOKING_CABIN_CREATE: {
+        name: 'Booke hytta',
+        description: 'Kan booke hele hytta',
+        category: 'cabin'
+    },
+    CABIN_BOOKING_ADMIN: {
+        name: 'Hyttabooking administrator',
+        description: 'Kan administrere hyttabookinger',
+        category: 'cabin'
+    },
+    CABIN_CALENDAR_READ: {
+        name: 'Les hyttakalender',
+        description: 'Kan lese hyttakalender',
+        category: 'cabin'
+    },
+    CABIN_ADMIN: {
+        name: 'Hyttadministrator',
+        description: 'Kan administrere hytter',
+        category: 'cabin'
+    },
+    CABIN_PRODUCTS_ADMIN: {
+        name: 'Hyttprodukt administrator',
+        description: 'Kan administrere hyttprodukter',
+        category: 'cabin'
     },
 } satisfies Record<Permission, PermissionInfo>
 

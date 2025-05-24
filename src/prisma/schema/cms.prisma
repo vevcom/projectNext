@@ -46,6 +46,8 @@ enum SpecialCmsParagraph {
 
   INTEREST_GROUP_GENERAL_INFO
   CAREER_INFO
+
+  CABIN_CONTRACT
 }
 
 model CmsParagraph {

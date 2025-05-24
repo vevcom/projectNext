@@ -23,6 +23,7 @@ import seedDevShop from './development/seedDevShop'
 import seedDevJobAds from './development/seedDevJobAds'
 import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
+import seedCabin from './seedCabin'
 import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
@@ -44,6 +45,7 @@ export default async function seed(
     await seedStudyProgramme(prisma)
     await seedOmegaMembershipGroups(prisma)
     await seedClasses(prisma)
+    await seedCabin(prisma)
     await seedShop(prisma)
     await seedEvents(prisma)
     if (enableLogging) console.log('seed standard done')
