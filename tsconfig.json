@@ -22,6 +22,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/lib/*": ["src/lib/*"],
+      "@pn-server-only": ["src/lib/pn-server-only"],
       "@/components/*": ["src/app/_components/*"],
       "@/UI/*": ["src/app/_components/UI/*"],
       "@/styles/*": ["src/styles/*"],

@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readJWTPart } from './jwtReadUnsecure'
 import { JWT_ISSUER } from '@/jwt/ConfigVars'
 import { ServerError } from '@/services/error'

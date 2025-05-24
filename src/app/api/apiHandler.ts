@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { Session } from '@/auth/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'

@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readSpecialCmsLinkAuther } from './authers'
 import logger from '@/lib/logger'
 import { ServiceMethod } from '@/services/ServiceMethod'

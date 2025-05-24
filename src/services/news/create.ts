@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './ConfigVars'
 import { createNewsArticleValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'

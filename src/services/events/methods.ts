@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { EventSchemas } from './schemas'
 import { EventConfig } from './config'
 import { EventAuthers } from './authers'

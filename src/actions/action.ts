@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import type { ActionReturn } from './Types'

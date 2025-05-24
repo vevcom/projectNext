@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import { createArticleValidation } from './validation'
 import prisma from '@/prisma'

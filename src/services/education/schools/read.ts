@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createStandardSchool } from './create'
 import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'

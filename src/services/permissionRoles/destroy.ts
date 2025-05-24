@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readUsersOfRole } from './read'
 import { expandedRoleIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'

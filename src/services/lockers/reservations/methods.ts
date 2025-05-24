@@ -1,5 +1,5 @@
 
-import 'server-only'
+import '@pn-server-only'
 import { LockerReservationAuthers } from './authers'
 import { LockerReservationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'

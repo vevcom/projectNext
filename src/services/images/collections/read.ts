@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
 import prisma from '@/prisma'
 import logger from '@/lib/logger'

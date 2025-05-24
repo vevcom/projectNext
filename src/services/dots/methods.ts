@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { DotConfig } from './config'
 import { DotAuthers } from './authers'
 import { DotSchemas } from './schemas'

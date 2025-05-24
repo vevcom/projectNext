@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
 import { readDefaultPermissions } from '@/services/permissionRoles/read'
@@ -43,7 +43,7 @@ type UnAuthorizedGetUserReturnType = ({
     memberships: MembershipFiltered[],
 }
 
-type GetUserReturnType<UserRequired extends boolean = false> = (
+export type GetUserReturnType<UserRequired extends boolean = false> = (
     AuthorizedGetUserReturnType<UserRequired>
 ) | (
     UnAuthorizedGetUserReturnType

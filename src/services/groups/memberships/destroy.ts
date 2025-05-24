@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup } from './canEasilyManageMembership'
 import { readCurrentGroupOrder } from '@/services/groups/read'
 import { prismaCall } from '@/services/prismaCall'

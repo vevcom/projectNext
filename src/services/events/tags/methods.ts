@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { EventTagAuthers } from './authers'
 import { EvantTagConfig } from './config'
 import { EventTagSchemas } from './schemas'

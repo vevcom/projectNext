@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'

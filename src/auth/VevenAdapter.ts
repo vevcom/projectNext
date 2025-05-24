@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'

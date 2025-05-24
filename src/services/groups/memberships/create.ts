@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } from './canEasilyManageMembership'
 import { readCurrentGroupOrder, readCurrentGroupOrders } from '@/services/groups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
