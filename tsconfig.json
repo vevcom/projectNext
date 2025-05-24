@@ -20,7 +20,6 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
       "@/lib/*": ["src/lib/*"],
       "@pn-server-only": ["src/lib/pn-server-only"],
       "@/components/*": ["src/app/_components/*"],
@@ -38,8 +37,9 @@
       "@/api/*": ["src/app/api/*"],
       "@/education/*": ["src/actions/education/*", "src/services/education/*", "src/app/education/*"],
       "@/career/*": ["src/actions/career/*", "src/services/career/*", "src/app/career/*"],
-      "@/generated/*": ["src/prisma/generated/*"],
+      "@/prisma-dobbel-omega/*": ["node_modules/.prisma-dobbel-omega/*"],
       "@/seeder/*": ["src/prisma/seeder/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

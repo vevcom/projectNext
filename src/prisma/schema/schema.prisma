@@ -3,12 +3,6 @@ generator projectnext {
   previewFeatures = ["prismaSchemaFolder"]
 }
 
-generator prismaservice {
-  provider        = "prisma-client-js"
-  output          = "../generated/pn"
-  previewFeatures = ["prismaSchemaFolder"]
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DB_URI")
