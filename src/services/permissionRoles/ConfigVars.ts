@@ -473,6 +473,21 @@ export const PermissionConfig = {
         `,
         category: 'diverse admin'
     },
+    EVENT_READ: {
+        name: 'Les arrangementer',
+        description: 'kan lese arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_CREATE: {
+        name: 'Meld deg på arrangementer',
+        description: 'kan melde seg på arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_READ: {
+        name: 'Les påemeldinger',
+        description: 'kan lese påmeldinger',
+        category: 'events'
+    },
     CABIN_BOOKING_BED_CREATE: {
         name: 'Booke senger i hytta',
         description: 'Kan booke en senger i hytta',
@@ -502,7 +517,7 @@ export const PermissionConfig = {
         name: 'Hyttprodukt administrator',
         description: 'Kan administrere hyttprodukter',
         category: 'cabin'
-    }
+    },
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {

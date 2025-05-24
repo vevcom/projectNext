@@ -16,16 +16,25 @@ export namespace EventConfig {
     export const fieldsToExpose = [
         'id',
         'name',
+        'location',
         'order',
         'eventStart',
         'eventEnd',
         'places',
+        'waitingList',
         'registrationStart',
         'registrationEnd',
         'canBeViewdBy',
         'takesRegistration'
     ] as const satisfies (keyof Event)[]
 
-    export const filterSeletion = createSelection(fieldsToExpose)
+    export const filterSeletion = {
+        ...createSelection(fieldsToExpose),
+        _count: {
+            select: {
+                eventRegistrations: true,
+            },
+        },
+    } as const
 }
 

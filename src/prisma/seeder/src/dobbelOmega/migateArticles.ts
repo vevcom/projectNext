@@ -8,6 +8,7 @@ import type { Limits } from './migrationLimits'
 /**
  * WARNING: This function is not complete, it does not migrate the InfoPages, only the articles (news)
  * WARNING: The text formatting is still bad, and needs to be fixed
+ *
  * This function migrates articles from Veven to PN,
  * Both Articles -> NewsAricle (with Article relation)
  * And InfoPages -> Articles (belonging to a Article collection)
@@ -143,4 +144,17 @@ export default async function migrateArticles(
     }
 
     //TODO: Do it for infopages as well, many should probably be seeded and revritten though
+    // Here is an overview of how the infopages should be migrated:
+    //  * forside : not migrate, rewrite and add it to the seeder
+    //  * for bedrifter: not migrate, already copied to the seeder
+    //  * hytte: not migrate, rewrite and add it to the seeder
+    //  * guider: Needs to be migrated
+    //  * interesse grupper: Ingore, this is just junk
+    //  * komiteer: The comitee page will migrate this
+    //  * omagafond: Ignore
+    //  * Om omega: Needs to be migrated
+    //  * Jobbannonser: Ignore
+    //
+    // Never mind! Infopages er bare kaos. Det er tydeligvis to prikkreglementer, en viktig meling med et ødelagt bilde.
+    // Dette tror jeg vi kopierer manuelt.
 }

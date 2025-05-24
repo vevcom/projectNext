@@ -30,7 +30,7 @@ export default function CabinPriceCalculator({
     let totalPrice = 0
 
     if (startDate && endDate) {
-        priceData = calculateCabinBookingPrice(
+        priceData = calculateCabinBookingPrice({
             pricePeriods,
             products,
             productAmounts,
@@ -38,7 +38,7 @@ export default function CabinPriceCalculator({
             endDate,
             numberOfMembers,
             numberOfNonMembers
-        )
+        })
         totalPrice = calculateTotalCabinBookingPrice(priceData)
     }
 
