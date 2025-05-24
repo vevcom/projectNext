@@ -43,7 +43,7 @@ export namespace AdmissionMethods {
                 },
                 include: {
                     user: {
-                        select: UserConfig.filterSelection
+                        select: UserConfig.filterNameSelection,
                     }
                 }
             })

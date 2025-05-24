@@ -7,7 +7,7 @@ import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserAuthFiltered } from '@/services/users/Types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: Matrix<Permission>,
@@ -18,7 +18,7 @@ type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extend
 }
 
 type AuthorizedGetUserReturnType<UserRequired extends boolean = false> = ({
-    user: UserFiltered,
+    user: UserAuthFiltered,
     status: 'AUTHORIZED',
 } | (
     UserRequired extends true ? never : {
@@ -35,7 +35,7 @@ type UnAuthorizedGetUserReturnType = ({
     user: null,
     status: 'UNAUTHENTICATED',
 } | {
-    user: UserFiltered,
+    user: UserAuthFiltered,
     status: 'UNAUTHORIZED',
 }) & {
     authorized: false,

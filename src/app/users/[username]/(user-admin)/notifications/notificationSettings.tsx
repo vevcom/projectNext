@@ -10,7 +10,7 @@ import { updateSubscriptionsAction } from '@/actions/notifications/subscription/
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserNameFiltered } from '@/services/users/Types'
 import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
 import type { NotificationBranch } from './Types'
 import type { ErrorMessage } from '@/services/error'
@@ -131,17 +131,16 @@ function prepareDataForDelivery(tree: NotificationBranch) {
     return ret
 }
 
-type PropTypes = {
-    channels: ExpandedNotificationChannel[],
-    subscriptions: Subscription[],
-    user: UserFiltered
-}
 
 export default function NotificationSettings({
     channels,
     subscriptions,
-    user
-}: PropTypes) {
+    user,
+}: {
+    channels: ExpandedNotificationChannel[],
+    subscriptions: Subscription[],
+    user: UserNameFiltered,
+}) {
     const [channelTree, setChannelTree] = useState(
         generateChannelTree(channels, subscriptions)
     )
