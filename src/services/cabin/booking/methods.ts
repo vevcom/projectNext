@@ -123,15 +123,15 @@ export namespace CabinBookingMethods {
                 session,
             })
 
-            const priceObjects = calculateCabinBookingPrice(
+            const priceObjects = calculateCabinBookingPrice({
                 pricePeriods,
-                productsInOrder,
-                params.bookingProducts.map(prod => prod.quantity),
-                data.start,
-                data.end,
-                data.numberOfMembers,
-                data.numberOfNonMembers
-            )
+                products: productsInOrder,
+                productAmounts: params.bookingProducts.map(prod => prod.quantity),
+                startDate: data.start,
+                endDate: data.end,
+                numberOfMembers: data.numberOfMembers,
+                numberOfNonMembers: data.numberOfNonMembers
+            })
 
             const totalPrice = calculateTotalCabinBookingPrice(priceObjects)
             console.log('TOTAL PRICE FOR THE BOOKING:', totalPrice)

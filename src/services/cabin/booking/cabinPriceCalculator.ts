@@ -16,12 +16,17 @@ function getDateArray(start: Date, end: Date) {
     return ret
 }
 
-function matchPriceForDay(
+function matchPriceForDay({
+    day,
+    memberShare,
+    pricePeriods,
+    prices,
+}: {
     day: Date,
     memberShare: number,
     pricePeriods: PricePeriod[],
     prices: CabinProductConfig.CabinProductPriceExtended[]
-) {
+}) {
     const currentPricePeriod = pricePeriods.findLast(period => period.validFrom <= day)
     if (!currentPricePeriod) {
         throw new Error('Could not find a price period for all the selected days')
@@ -58,14 +63,21 @@ export type CabinPriceCalculatorReturnType = {
     product: CabinProduct
 }
 
-function findPricesForProduct(
+function findPricesForProduct({
+    startDate,
+    endDate,
+    numberOfMembers,
+    numberOfNonMembers,
+    pricePeriods,
+    product,
+}: {
     startDate: Date,
     endDate: Date,
     numberOfMembers: number,
     numberOfNonMembers: number,
     pricePeriods: PricePeriod[],
     product: CabinProductConfig.CabinProductExtended
-): CabinPriceCalculatorReturnType[] {
+}): CabinPriceCalculatorReturnType[] {
     const dateArray = getDateArray(startDate, endDate)
     let memberShare = Math.ceil(numberOfMembers / (numberOfMembers + numberOfNonMembers) * 100)
     if (isNaN(memberShare)) {
@@ -75,7 +87,7 @@ function findPricesForProduct(
     const pricesHistogram: Record<string, number> = {}
 
     for (const day of dateArray) {
-        const price = matchPriceForDay(day, memberShare, pricePeriods, product.CabinProductPrice)
+        const price = matchPriceForDay({ day, memberShare, pricePeriods, prices: product.CabinProductPrice })
         if (pricesHistogram[price.id] === undefined) {
             pricesHistogram[price.id] = 0
         }
@@ -95,7 +107,15 @@ function findPricesForProduct(
     return ret
 }
 
-export function calculateCabinBookingPrice(
+export function calculateCabinBookingPrice({
+    pricePeriods,
+    products,
+    productAmounts,
+    startDate,
+    endDate,
+    numberOfMembers,
+    numberOfNonMembers,
+}: {
     pricePeriods: PricePeriod[],
     products: CabinProductConfig.CabinProductExtended[],
     productAmounts: number[],
@@ -103,7 +123,7 @@ export function calculateCabinBookingPrice(
     endDate: Date,
     numberOfMembers: number,
     numberOfNonMembers: number
-): CabinPriceCalculatorReturnType[] {
+}): CabinPriceCalculatorReturnType[] {
     if (products.length !== productAmounts.length) {
         throw new Error('The products and product amounts must be the same length')
     }
@@ -119,14 +139,14 @@ export function calculateCabinBookingPrice(
     const ret: CabinPriceCalculatorReturnType[] = []
 
     for (let i = 0; i < products.length; i++) {
-        const productPrices = findPricesForProduct(
+        const productPrices = findPricesForProduct({
             startDate,
             endDate,
             numberOfMembers,
             numberOfNonMembers,
             pricePeriods,
-            products[i]
-        )
+            product: products[i]
+        })
 
         for (const price of productPrices) {
             if (productAmounts[i] < 0) {

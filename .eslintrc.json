@@ -432,10 +432,9 @@
             4
         ],
         // limits the number of parameters that can be used in the function declaration.
-        // Why is this a limit? This will just enforce people to use object as params, which I think is wierd. -Theodor
         "max-params": [
             "error",
-            7
+            5
         ],
         // disallow use of bitwise operators
         "no-bitwise": "warn",
