@@ -204,6 +204,7 @@ export function ServiceMethod<
                 }
                 const parse = zfd.formData(config.dataSchema).safeParse(args.data)
                 if (!parse.success) {
+                    console.log(parse.error)
                     throw new ParseError(parse)
                 }
                 args.data = parse.data
