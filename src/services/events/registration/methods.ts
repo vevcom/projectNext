@@ -5,7 +5,7 @@ import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
 import { EventRegistrationSchemas } from './schemas'
 
@@ -13,7 +13,7 @@ import { EventRegistrationSchemas } from './schemas'
 export namespace EventRegistrationMethods {
 
     // eslint-disable-next-line
-    async function validateNewRegistration(
+    async function preValidateRegistration(
         prisma: Prisma.TransactionClient,
         eventId: number,
         isAdmin: boolean
@@ -51,6 +51,46 @@ export namespace EventRegistrationMethods {
         return event
     }
 
+    // eslint-disable-next-line
+    async function postValidateRegistration(
+        prisma: Prisma.TransactionClient,
+        registrationId: number,
+        eventId: number
+    ) {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: eventId
+            },
+            select: {
+                waitingList: true,
+                places: true,
+                _count: {
+                    select: {
+                        eventRegistrations: {
+                            where: {
+                                id: {
+                                    lte: registrationId,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        })
+
+        if (event.places < event._count.eventRegistrations && !event.waitingList) {
+            await prisma.eventRegistration.delete({
+                where: {
+                    id: registrationId,
+                },
+            })
+
+            throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
+        }
+
+        return event
+    }
+
     export const create = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number().min(0),
@@ -60,12 +100,11 @@ export namespace EventRegistrationMethods {
             userId: params.userId,
         }),
         opensTransaction: true,
-        method: async ({ prisma, params, session }) => prisma.$transaction(async (tx) => {
+        method: async ({ prisma, params, session }) => {
             const isAdmin = session.permissions.includes('EVENT_ADMIN')
+            await preValidateRegistration(prisma, params.eventId, isAdmin)
 
-            const event = await validateNewRegistration(tx, params.eventId, isAdmin)
-
-            const result = await tx.eventRegistration.create({
+            const result = await prisma.eventRegistration.create({
                 data: {
                     user: {
                         connect: {
@@ -79,13 +118,14 @@ export namespace EventRegistrationMethods {
                     },
                 },
             })
+
+            const updatedEvent = await postValidateRegistration(prisma, result.id, params.eventId)
+
             return {
                 result,
-                onWaitingList: event.places <= event._count.eventRegistrations,
+                onWaitingList: updatedEvent.places < updatedEvent._count.eventRegistrations,
             }
-        }, {
-            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
-        }),
+        },
     })
 
     export const createGuest = ServiceMethod({
@@ -95,10 +135,9 @@ export namespace EventRegistrationMethods {
         }),
         dataSchema: EventRegistrationSchemas.createGuest,
         opensTransaction: true,
-        method: async ({ prisma, params, data }) => prisma.$transaction(async (tx) => {
-            const event = await validateNewRegistration(tx, params.eventId, true)
-
-            const result = await tx.eventRegistration.create({
+        method: async ({ prisma, params, data }) => {
+            await preValidateRegistration(prisma, params.eventId, true)
+            const result = await prisma.eventRegistration.create({
                 data: {
                     event: {
                         connect: {
@@ -114,13 +153,13 @@ export namespace EventRegistrationMethods {
                 },
             })
 
+            const updatedEvent = await postValidateRegistration(prisma, result.id, params.eventId)
+
             return {
                 result,
-                onWaitingList: event.places <= event._count.eventRegistrations,
+                onWaitingList: updatedEvent.places < updatedEvent._count.eventRegistrations,
             }
-        }, {
-            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
-        }),
+        },
     })
 
     // eslint-disable-next-line

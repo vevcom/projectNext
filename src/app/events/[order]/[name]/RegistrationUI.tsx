@@ -66,6 +66,7 @@ export default function RegistrationUI({
 
     const [btnState, setBtnState] = useState(getInitialBtnState(onWaitingList, registration))
     const [btnPending, setBtnPending] = useState(false)
+    const [btnKey, setBtnKey] = useState(1)
 
     const session = useSession()
 
@@ -131,6 +132,7 @@ export default function RegistrationUI({
         }
 
         setBtnPending(false)
+        setBtnKey(btnKey + 1)
     }
 
     return <>
@@ -164,6 +166,7 @@ export default function RegistrationUI({
             className={styles.registrationButton}
             onClick={buttonOnClick}
             pending={btnPending}
+            key={btnKey}
         >
             {(
                 btnState === RegistrationButtonState.NOT_REGISTERED ||
