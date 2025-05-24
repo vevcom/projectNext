@@ -20,6 +20,6 @@ export default async function jestConfig() {
     const base = await createJestConfig(config)()
     return {
         ...base,
-        transformIgnorePatterns: [], // This is due to a wierd bug
+        transformIgnorePatterns: [], // This needed to transform node_module from es6 syntax, to a syntax jest can handle
     }
 }
