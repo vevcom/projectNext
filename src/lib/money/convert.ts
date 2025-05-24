@@ -1,6 +1,10 @@
 import { currencySymbol } from './ConfigVars'
 
-// TODO: Verify that @Pauliusj doesn't implement a similar function
+/**
+ * Converts a price from kroner to ører
+ * @param price The price in kroner
+ * @returns The price in øre as an integer
+ */
 export const convertPrice = (price: string | number): number => Math.floor(Number(price) * 100)
 
 export function displayPrice(price: number, short: boolean = true): string {

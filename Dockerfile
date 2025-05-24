@@ -20,7 +20,7 @@ COPY src/prisma/schema src/prisma/schema
 RUN npx prisma generate
 
 COPY src/prisma/vevenSchema src/prisma/vevenSchema
-RUN npm run dobbelOmega-generate
+RUN npm run dobbelOmega:generate
 
 RUN mkdir -p usr/src/app/store/images
 
