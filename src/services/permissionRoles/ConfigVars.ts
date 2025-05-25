@@ -16,6 +16,7 @@ export const permissionCategories = [
     'skjermer',
     'shop',
     'cabin',
+    'applications',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -518,6 +519,21 @@ export const PermissionConfig = {
         description: 'Kan administrere hyttprodukter',
         category: 'cabin'
     },
+    APPLICATION_ADMIN: {
+        name: 'Søknadsadministrator',
+        description: `
+            Create application periods and moderate and see all applications.
+            Commitee memebers can also see all applications to their own committee.
+        `,
+        category: 'applications',
+    },
+    APPLICATION_WRITE: {
+        name: 'Søknadsskriver',
+        description: `
+            Can write applications to all active application periods.
+        `,
+        category: 'applications',
+    }
 } satisfies Record<Permission, PermissionInfo>
 
 export const expandedRoleIncluder = {

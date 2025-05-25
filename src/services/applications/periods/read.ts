@@ -5,7 +5,7 @@ import type { CountdownInfo } from './Types'
 
 export async function readPeriodCountdown({ periodName }: { periodName: string }): Promise<CountdownInfo> {
     console.log(periodName)
-    const committees = await readCommittees() //TODO: Only read committees that pert. in period.
+    const committees = await readCommittees() //TODO: Only read committees that part. in period.
     const standardLogo = await ImageMethods.readSpecial.newClient().execute({
         params: {
             special: 'DAFAULT_COMMITTEE_LOGO'

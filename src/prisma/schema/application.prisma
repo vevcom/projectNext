@@ -1,6 +1,6 @@
 model ApplicationPeriod {
   id                      Int                                         @id @default(autoincrement())
-  name                    String
+  name                    String                                      @unique
   endDate                 DateTime
   committeesParticipating CommitteeParticipationInApplicationPeriod[]
 }
