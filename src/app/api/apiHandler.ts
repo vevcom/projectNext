@@ -16,7 +16,7 @@ type APIHandler<
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {
-    params: (rawparams: RawParams) => z.infer<NonNullable<ParamsSchema>>,
+    params: (rawparams: RawParams) => z.input<NonNullable<ParamsSchema>>,
 })
 
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {

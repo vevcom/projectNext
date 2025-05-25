@@ -65,10 +65,7 @@ export default function SubmitButton({
             aria-disabled={pending || success}
             color={success ? 'green' : color}
             type="submit"
-            onClick={(e) => {
-                if (confirmedOpen) setConfirmedOpen(false)
-                if (onClick) onClick(e)
-            }}
+            onClick={onClick}
             disabled={disabled}
         >
             {btnContent()}

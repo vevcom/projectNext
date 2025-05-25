@@ -5,51 +5,122 @@ import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
 import { EventRegistrationSchemas } from './schemas'
 
-
-export namespace EventRegistrationMethods {
-
-    // eslint-disable-next-line
-    async function validateNewRegistration(
-        prisma: Prisma.TransactionClient,
-        eventId: number,
-        isAdmin: boolean
-    ) {
-        const event = await prisma.event.findUniqueOrThrow({
-            where: {
-                id: eventId
+async function preValidateRegistration(
+    prisma: Prisma.TransactionClient,
+    eventId: number,
+    isAdmin: boolean
+) {
+    const event = await prisma.event.findUniqueOrThrow({
+        where: {
+            id: eventId
+        },
+        include: {
+            _count: {
+                select: {
+                    eventRegistrations: true,
+                },
             },
-            include: {
-                _count: {
-                    select: {
-                        eventRegistrations: true,
+        },
+    })
+
+
+    if (!event.takesRegistration) {
+        throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event without registration')
+    }
+
+    if (event.registrationStart > new Date() && !isAdmin) {
+        throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event before the registration period.')
+    }
+
+    if (event.registrationEnd < new Date() && !isAdmin) {
+        throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
+    }
+
+    if (event.places <= event._count.eventRegistrations && !event.waitingList) {
+        throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
+    }
+
+    return event
+}
+
+async function postValidateRegistration(
+    prisma: Prisma.TransactionClient,
+    registrationId: number,
+    eventId: number
+) {
+    const event = await prisma.event.findUniqueOrThrow({
+        where: {
+            id: eventId
+        },
+        select: {
+            waitingList: true,
+            places: true,
+            _count: {
+                select: {
+                    eventRegistrations: {
+                        where: {
+                            id: {
+                                lte: registrationId,
+                            },
+                        },
                     },
                 },
             },
+        },
+    })
+
+    if (event.places < event._count.eventRegistrations && !event.waitingList) {
+        await prisma.eventRegistration.delete({
+            where: {
+                id: registrationId,
+            },
         })
 
-
-        if (!event.takesRegistration) {
-            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event without registration')
-        }
-
-        if (event.registrationStart > new Date() && !isAdmin) {
-            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event before the registration period.')
-        }
-
-        if (event.registrationEnd < new Date() && !isAdmin) {
-            throw new Smorekopp('BAD PARAMETERS', 'Cannot register for an event after the registration period.')
-        }
-
-        if (event.places <= event._count.eventRegistrations && !event.waitingList) {
-            throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
-        }
-
-        return event
+        throw new Smorekopp('BAD PARAMETERS', 'The event is full.')
     }
+
+    return event
+}
+
+async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
+    eventId: number,
+    take?: number,
+    skip?: number,
+    type?: EventRegistrationConfig.REGISTRATION_READER_TYPE,
+}) {
+    let take = params.take
+    let skip = params.skip
+
+    if (params.type && take) {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: params.eventId,
+            },
+        })
+
+        if (params.type === EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS) {
+            skip = Math.min(skip ?? 0, event.places)
+            take = Math.min(take, event.places - skip)
+        } else {
+            skip = (skip ?? 0) + event.places
+        }
+
+        if (skip === 0) {
+            skip = undefined
+        }
+    }
+
+    return {
+        take,
+        skip,
+    }
+}
+
+export namespace EventRegistrationMethods {
 
     export const create = ServiceMethod({
         paramsSchema: z.object({
@@ -60,12 +131,11 @@ export namespace EventRegistrationMethods {
             userId: params.userId,
         }),
         opensTransaction: true,
-        method: async ({ prisma, params, session }) => prisma.$transaction(async (tx) => {
+        method: async ({ prisma, params, session }) => {
             const isAdmin = session.permissions.includes('EVENT_ADMIN')
+            await preValidateRegistration(prisma, params.eventId, isAdmin)
 
-            const event = await validateNewRegistration(tx, params.eventId, isAdmin)
-
-            const result = await tx.eventRegistration.create({
+            const result = await prisma.eventRegistration.create({
                 data: {
                     user: {
                         connect: {
@@ -79,13 +149,14 @@ export namespace EventRegistrationMethods {
                     },
                 },
             })
+
+            const updatedEvent = await postValidateRegistration(prisma, result.id, params.eventId)
+
             return {
                 result,
-                onWaitingList: event.places <= event._count.eventRegistrations,
+                onWaitingList: updatedEvent.places < updatedEvent._count.eventRegistrations,
             }
-        }, {
-            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
-        }),
+        },
     })
 
     export const createGuest = ServiceMethod({
@@ -95,10 +166,9 @@ export namespace EventRegistrationMethods {
         }),
         dataSchema: EventRegistrationSchemas.createGuest,
         opensTransaction: true,
-        method: async ({ prisma, params, data }) => prisma.$transaction(async (tx) => {
-            const event = await validateNewRegistration(tx, params.eventId, true)
-
-            const result = await tx.eventRegistration.create({
+        method: async ({ prisma, params, data }) => {
+            await preValidateRegistration(prisma, params.eventId, true)
+            const result = await prisma.eventRegistration.create({
                 data: {
                     event: {
                         connect: {
@@ -114,49 +184,14 @@ export namespace EventRegistrationMethods {
                 },
             })
 
+            const updatedEvent = await postValidateRegistration(prisma, result.id, params.eventId)
+
             return {
                 result,
-                onWaitingList: event.places <= event._count.eventRegistrations,
+                onWaitingList: updatedEvent.places < updatedEvent._count.eventRegistrations,
             }
-        }, {
-            isolationLevel: Prisma.TransactionIsolationLevel.Serializable, // Prevent race conditions
-        }),
+        },
     })
-
-    // eslint-disable-next-line
-    async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
-        eventId: number,
-        take?: number,
-        skip?: number,
-        type?: EventRegistrationConfig.REGISTRATION_READER_TYPE,
-    }) {
-        let take = params.take
-        let skip = params.skip
-
-        if (params.type && take) {
-            const event = await prisma.event.findUniqueOrThrow({
-                where: {
-                    id: params.eventId,
-                },
-            })
-
-            if (params.type === EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS) {
-                skip = Math.min(skip ?? 0, event.places)
-                take = Math.min(take, event.places - skip)
-            } else {
-                skip = (skip ?? 0) + event.places
-            }
-
-            if (skip === 0) {
-                skip = undefined
-            }
-        }
-
-        return {
-            take,
-            skip,
-        }
-    }
 
     export const readMany = ServiceMethod({
         auther: () => EventRegistrationAuthers.readMany.dynamicFields({}),

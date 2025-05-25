@@ -39,6 +39,8 @@ model User {
   registerStudentCardQueue RegisterStudentCardQueue[]
   Event                    Event[]
 
+  cabinBooking        Booking[] @relation()
+
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
   @@unique([id, username, email])

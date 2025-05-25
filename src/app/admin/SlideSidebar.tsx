@@ -15,6 +15,7 @@ import {
     faPaperPlane,
     faSchool,
     faDotCircle,
+    faHouse,
     faShop,
     faListDots,
 } from '@fortawesome/free-solid-svg-icons'
@@ -173,6 +174,26 @@ const navigations = [
             {
                 title: 'Frysperioder',
                 href: '/admin/dots-freeze-periods'
+            },
+        ]
+    },
+    {
+        header: {
+            icon: faHouse,
+            title: 'Heutte'
+        },
+        links: [
+            {
+                title: 'Perioder',
+                href: '/admin/cabin-periods',
+            },
+            {
+                title: 'Produkter',
+                href: '/admin/cabin-product',
+            },
+            {
+                title: 'Bookinger',
+                href: '/admin/cabin-booking',
             },
         ]
     },
