@@ -96,6 +96,22 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             },
         },
         {
+            special: 'CABIN_BOOKING_CONFIRMATION',
+            name: 'Bekreftlese på heuttebooking',
+            description: 'Få en mail som bekreftelse på at du har booka heutta',
+            defaultMethods: {
+                email: true,
+                emailWeekly: true,
+                push: false,
+            },
+            availableMethods: {
+                email: true,
+                emailWeekly: false,
+                push: false,
+            },
+            alias: 'heuttebooking'
+        },
+        {
             name: 'Informasjon fra HS',
             description: 'Varsling når Hovedstyret vil gi ut informasjon',
             defaultMethods: {

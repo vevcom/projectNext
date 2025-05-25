@@ -9,9 +9,16 @@ import 'server-only'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ServerError } from '@/services/error'
 import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { sendSystemMail } from '@/services/notifications/email/send'
+import { NotificationMethods } from '@/services/notifications/methods'
 import { z } from 'zod'
 import { BookingType } from '@prisma/client'
 
+const mailData = {
+    title: 'Bekreftelse på hyttebooking',
+    // eslint-disable-next-line max-len
+    message: 'Takk for din hyttebooking. Dette skal være en booking bekreftelse, så det bør nok komme noe nyttig info her snart.',
+}
 
 export namespace CabinBookingMethods {
 
@@ -183,6 +190,18 @@ export namespace CabinBookingMethods {
                     }
                 }
             })
+
+            await NotificationMethods.createSpecial.client(prisma).execute({
+                params: {
+                    special: 'CABIN_BOOKING_CONFIRMATION',
+                },
+                data: {
+                    ...mailData,
+                    userIdList: [params.userId],
+                },
+                session,
+                bypassAuth: true,
+            })
         }
     })
 
@@ -264,6 +283,12 @@ export namespace CabinBookingMethods {
                     }
                 }
             })
+
+            await sendSystemMail(
+                data.email,
+                mailData.title,
+                mailData.message
+            )
         }
     })
 

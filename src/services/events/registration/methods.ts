@@ -1,17 +1,16 @@
 import { EventRegistrationAuthers } from './authers'
 import { EventRegistrationConfig } from './config'
+import { EventRegistrationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
-import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
-import type { EventRegistrationExpanded } from './Types'
-import { EventRegistrationSchemas } from './schemas'
-import { EventConfig } from '../config'
 import { NotificationMethods } from '@/services/notifications/methods'
 import { UserConfig } from '@/services/users/config'
 import { sendSystemMail } from '@/services/notifications/email/send'
+import { z } from 'zod'
+import type { Prisma } from '@prisma/client'
+import type { EventRegistrationExpanded } from './Types'
 
 async function preValidateRegistration(
     prisma: Prisma.TransactionClient,
@@ -374,7 +373,6 @@ export namespace EventRegistrationMethods {
             const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
 
             if (nextInLine.user) {
-                console.log(nextInLine.user)
                 await NotificationMethods.createSpecial.newClient().execute({
                     params: {
                         special: 'EVENT_WAITINGLIST_PROMOTION',
