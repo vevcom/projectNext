@@ -14,15 +14,28 @@ export namespace NotificationSchemas {
         title: z.string().min(2),
         message: z.string().min(10),
         email: z.string().email(),
+        userIdList: z.number().array().optional(),
     })
 
-    export const dispatch = fields.pick({
+    export const create = fields.pick({
         channelId: true,
         title: true,
         message: true,
+        userIdList: true,
+    })
+
+    export const createSpecial = fields.pick({
+        title: true,
+        message: true,
+        userIdList: true,
     })
 
     export const sendMail = fields.pick({
         email: true,
+    })
+
+    export const sendEmail = fields.pick({
+        title: true,
+        message: true,
     })
 }

@@ -74,6 +74,8 @@ export async function createOmbul(
     NotificationMethods.createSpecial.newClient().execute({
         params: {
             special: 'NEW_OMBUL',
+        },
+        data: {
             title: 'Ny ombul',
             message: `Ny ombul er ute! ${ombul.name}`,
         },

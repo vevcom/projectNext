@@ -82,6 +82,8 @@ export namespace EventMethods {
             await NotificationMethods.createSpecial.client(prisma).execute({
                 params: {
                     special: 'NEW_EVENT',
+                },
+                data: {
                     title: `Hva der hender: ${event.name}`,
                     message: `${event.name}, 🕓 ${displayDate(event.eventStart, false)},📍 ${event.location}`,
                 },

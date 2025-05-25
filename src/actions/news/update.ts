@@ -30,6 +30,8 @@ export async function publishNewsAction(
     NotificationMethods.createSpecial.newClient().execute({
         params: {
             special: 'NEW_NEWS_ARTICLE',
+        },
+        data: {
             title: 'Ny nyhetsartikkel',
             message: 'En ny nyhetsartikkel er publisert',
         },

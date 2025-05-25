@@ -31,6 +31,8 @@ export async function createQuote(
     NotificationMethods.createSpecial.newClient().execute({
         params: {
             special: 'NEW_OMEGAQUOTE',
+        },
+        data: {
             title: 'Ny Omegaquote♪',
             message: `${results.quote}\n - ${results.author}`,
         },

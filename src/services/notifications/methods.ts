@@ -40,7 +40,7 @@ export namespace NotificationMethods {
      */
     export const create = ServiceMethod({
         auther: () => NotificationAuthers.create.dynamicFields({}),
-        dataSchema: NotificationSchemas.dispatch,
+        dataSchema: NotificationSchemas.create,
         method: async ({ prisma, data }) => {
             // This prevent notifications from beeing sent during seeding
             if (process.env.IGNORE_SERVER_ONLY) {
@@ -81,6 +81,13 @@ export namespace NotificationMethods {
                 },
             })
 
+            // If a userId map is sent, remove all other users.
+            if (data.userIdList) {
+                results.subscriptions = results.subscriptions.filter(
+                    s => (data.userIdList && data.userIdList.includes(s.user.id))
+                )
+            }
+
             // TODO: Filter the users by visibility
 
             NotificationConfig.methods.forEach(method => {
@@ -116,10 +123,9 @@ export namespace NotificationMethods {
         auther: ServerOnly,
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialNotificationChannel),
-            title: z.string(),
-            message: z.string(),
         }),
-        method: async ({ prisma, params, session }) => {
+        dataSchema: NotificationSchemas.createSpecial,
+        method: async ({ prisma, params, data, session }) => {
             const channel = await prisma.notificationChannel.findUniqueOrThrow({
                 where: {
                     special: params.special,
@@ -131,8 +137,9 @@ export namespace NotificationMethods {
                 bypassAuth: true,
                 data: {
                     channelId: channel.id,
-                    title: params.title,
-                    message: params.message,
+                    title: data.title,
+                    message: data.message,
+                    userIdList: data.userIdList,
                 }
             })
         }
