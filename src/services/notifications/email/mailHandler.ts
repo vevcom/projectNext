@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { TRANSPORT_OPTIONS } from './ConfigVars'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'

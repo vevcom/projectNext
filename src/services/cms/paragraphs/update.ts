@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
@@ -33,7 +33,7 @@ export async function updateCmsParagraphContents(id: number, contentMd: string):
                 contentHtml,
             }
         }))
-    } catch (e) {
+    } catch {
         throw new ServerError('BAD PARAMETERS', 'Invalid markdown')
     }
 }

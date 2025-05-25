@@ -31,14 +31,14 @@
                 color: ohma.$colors-white;
             }
         }
-        a {
+        .readMore {
             @include ohma.borderBtn(ohma.$colors-primary);
         }
     }
     &:not(.blue) {
         background-color: ohma.$colors-white;
         color: ohma.$colors-black;
-        a {
+        .readMore {
             @include ohma.borderBtn(ohma.$colors-secondary);
         }
     }

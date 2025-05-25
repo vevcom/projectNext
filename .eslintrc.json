@@ -8,7 +8,7 @@
     },
     "extends": [
         "next/core-web-vitals",
-        "eslint:recommended",
+        "next/typescript",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
@@ -19,12 +19,12 @@
     "root": true,
     "rules": {
         "indent": [
-        "error",
-        4,
-        {
-            "SwitchCase": 1,
-            "VariableDeclarator": 1
-        }
+            "error",
+            4,
+            {
+                "SwitchCase": 1,
+                "VariableDeclarator": 1
+            }
         ],
         // require function expressions to have a name
         "func-names": "warn",
@@ -32,9 +32,11 @@
         "eol-last": "error",  
         // disallow padding inside computed properties, ie. obj[ "fjie"] not allowed
         "computed-property-spacing": [ 
-        "error",
-        "never"
+            "error",
+            "never"
         ],
+        // Allow the use of namespaces
+        "@typescript-eslint/no-namespace": "off",
         // suggest using arrow functions as callbacks
         "prefer-arrow-callback": "error",
         // suggest using template literals instead of string concatenation
@@ -110,17 +112,17 @@
         }
         ],
         "quotes": [
-        "error",
-        "single",
-        "avoid-escape"
+            "error",
+            "single",
+            "avoid-escape"
         ],
         "jsx-quotes": ["error", "prefer-double"],
         // require camel case names
         "camelcase": [
-        "error",
-        { 
-            "properties": "never" 
-        }
+            "error",
+            { 
+                "properties": "never" 
+            }
         ],
         // enforce spacing before and after comma
         "comma-spacing": [
@@ -178,7 +180,7 @@
         // disallow use of the Array constructor
         "no-array-constructor": "error",
         // disallow use of the continue statement
-        "no-continue": "warn",
+        // "no-continue": "warn",
         // disallow if as the only statement in an else block
         "no-lonely-if": "error",
         // disallow mixed spaces and tabs for indentation
@@ -432,7 +434,7 @@
         // limits the number of parameters that can be used in the function declaration.
         "max-params": [
             "error",
-            4
+            5
         ],
         // disallow use of bitwise operators
         "no-bitwise": "warn",
@@ -493,25 +495,25 @@
             "warn",
             {
                 "groups": [
-                "index",
-                "sibling",
-                "parent",
-                "internal",
-                "external",
-                "builtin",
-                "object",
-                "type"
+                    "index",
+                    "sibling",
+                    "parent",
+                    "internal",
+                    "external",
+                    "builtin",
+                    "object",
+                    "type"
                 ]
             }
         ],
-        "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/consistent-type-imports": [
             "error",
             {
                 "prefer": "type-imports"
             }
         ],
-
+        // allow use of namespaces
+        "@typescript-eslint/no-namespace": "off",
         //SOME ODD OPTIONS:
         // suggest using the spread operator instead of .apply()
         "prefer-spread": "error",

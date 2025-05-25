@@ -1,8 +1,10 @@
 import prisma from '@/prisma'
-import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import type { ExpandedCommittee, ExpandedCommitteeWithArticle } from './Types'
+import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
+import type { ExpandedArticle } from '@/services/cms/articles/Types'
+import type { CmsParagraph } from '@prisma/client'
+import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -22,7 +24,7 @@ type ReadCommitteeArgs = {
     shortName?: string,
 }
 
-export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedCommitteeWithArticle> {
+export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedCommitteeWithCover> {
     if (!where) throw new ServerError('BAD PARAMETERS', 'Navn eller id må være spesifisert for å finne en komité.')
 
     return await prismaCall(() => prisma.committee.findUniqueOrThrow({
@@ -37,10 +39,31 @@ export async function readCommittee(where: ReadCommitteeArgs): Promise<ExpandedC
                 },
             },
             committeeArticle: {
-                include: articleRealtionsIncluder
+                include: {
+                    coverImage: {
+                        include: {
+                            image: true,
+                        },
+                    }
+                }
             }
         },
+    })).then(commitee => ({
+        ...commitee,
+        coverImage: commitee.committeeArticle.coverImage,
     }))
+}
+
+export async function readCommitteeArticle(shortName: string) : Promise<ExpandedArticle> {
+    const article = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+        where: { shortName },
+        select: {
+            committeeArticle: {
+                include: articleRealtionsIncluder
+            }
+        }
+    }))
+    return article.committeeArticle
 }
 
 export async function readCommitteesFromIds(ids: number[]) {
@@ -51,4 +74,14 @@ export async function readCommitteesFromIds(ids: number[]) {
             }
         }
     }))
+}
+
+export async function readCommitteeParagraph(shortName: string) : Promise<CmsParagraph> {
+    const article = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+        where: { shortName },
+        select: {
+            paragraph: true
+        }
+    }))
+    return article.paragraph
 }

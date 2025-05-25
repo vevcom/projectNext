@@ -1,0 +1,51 @@
+@use '@/styles/ohma';
+
+.EventsLandingLayout {
+    @include ohma.pagePadding();
+    margin-top: 1rem;
+
+    .top {
+        > .titleAndTags {
+            h1 {
+                font-size: ohma.$fonts-xxl;
+                font-family: ohma.$fonts-secondary;
+            }
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            > a {
+                text-decoration: none;
+                position: relative;
+                &:hover {
+                    &::after {
+                        content: '✖';
+                        font-size: 4em;
+                        color: ohma.$colors-black;
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+            }
+        }
+        display: flex;
+        justify-content: space-between;
+        .navButtons {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            a {
+                color: ohma.$colors-gray-800;
+                svg {
+                    width: 2.1em;
+                    height: 2.1em;
+                }
+            }
+        }
+    }
+
+    main {
+        @include ohma.ImageCardListLayout;
+    }
+}

@@ -1,17 +1,12 @@
-'use server'
 import RegistrationForm from './RegistrationForm'
 import { getUser } from '@/auth/getUser'
-import { verifyUserEmailAction } from '@/actions/users/update'
-import { readUser } from '@/services/users/read'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { QueryParams } from '@/lib/query-params/queryParams'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readUserAction } from '@/actions/users/read'
 import { notFound, redirect } from 'next/navigation'
+import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 
-type PropTypes = {
-    searchParams: {
-        token?: string,
-        callbackUrl?: string,
-    }
-}
+type PropTypes = SearchParamsServerSide
 
 export default async function Register({ searchParams }: PropTypes) {
     const { user, authorized } = await getUser({
@@ -19,41 +14,24 @@ export default async function Register({ searchParams }: PropTypes) {
         shouldRedirect: false,
     })
 
-    if (typeof searchParams.token === 'string') {
-        const verify = await verifyUserEmailAction(searchParams.token)
-        if (!verify.success) {
-            console.log(verify)
-            return <p>Token er ugyldig</p>
-        }
-
-        if (user && verify.data.id !== user.id) {
-            // TODO: Logout
-            console.log('Should logout')
-        }
-
-        console.log(verify)
-
-        //TODO: Login the correct user
-        // See https://github.com/nextauthjs/next-auth/discussions/5334
-    }
+    const callbackUrl = QueryParams.callbackUrl.decode(await searchParams)
 
     if (!authorized || !user) {
         return notFound()
     }
 
-    //TODO: change to action.
-    const updatedUser = await safeServerCall(() => readUser({ id: user.id }))
-    if (!updatedUser.success) {
-        return notFound()
+    const updatedUser = unwrapActionReturn(await readUserAction({
+        id: user.id
+    }))
+
+    if (updatedUser.acceptedTerms) {
+        redirect(callbackUrl ?? '/users/me')
     }
 
-    if (updatedUser.data.acceptedTerms) {
-        redirect(searchParams.callbackUrl ?? 'users/me')
+    if (!updatedUser.emailVerified) {
+        const linkEnding = callbackUrl ? `?callbackUrl=${callbackUrl}` : ''
+        redirect(`/register-email${linkEnding}`)
     }
 
-    if (!updatedUser.data.emailVerified) {
-        redirect('/register-email')
-    }
-
-    return <RegistrationForm />
+    return <RegistrationForm userData={updatedUser} />
 }

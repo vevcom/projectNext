@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { getMailHandler } from './mailHandler'
 import { render } from '@react-email/render'
 import type React from 'react'
@@ -30,6 +30,6 @@ export async function sendSystemMail(
         to,
         subject,
         from: `noreply@${process.env.DOMAIN}`,
-        html: render(body),
+        html: await render(body),
     })
 }

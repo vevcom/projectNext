@@ -1,0 +1,36 @@
+model Locker {
+  id                Int                 @id @default(autoincrement())
+  lockerLocation    LockerLocation      @relation(fields: [building, floor], references: [building, floor])
+  building          String
+  floor             Int
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  LockerReservation LockerReservation[]
+}
+
+model LockerLocation {
+  id        Int      @id @default(autoincrement())
+  building  String
+  floor     Int
+  lockers   Locker[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([building, floor])
+}
+
+model LockerReservation {
+  id        Int       @id @default(autoincrement())
+  locker    Locker    @relation(fields: [lockerId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  group     Group?    @relation(fields: [groupId], references: [id])
+  lockerId  Int       @unique
+  userId    Int
+  groupId   Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  endDate   DateTime?
+  active    Boolean   @default(true)
+
+  @@unique([id])
+}

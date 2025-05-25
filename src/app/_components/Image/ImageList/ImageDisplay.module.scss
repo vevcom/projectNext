@@ -1,10 +1,61 @@
 @use "@/styles/ohma";
 
-.ImageDisplay > div {
+.ImageDisplay {
+    z-index: 5;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95vw;
+    height: 95vh;
+    @include ohma.round();
+    background-color: ohma.$colors-gray-300;
+    .openImageAdmin {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        background-color: transparent;
+        border: none;
+        svg {
+            color: ohma.$colors-black;
+            width: 35px;
+            height: 35px;
+            margin: 1em;
+        }
+    }
+
+    .selectImageSize {
+        position: absolute;
+        bottom: 0;
+        top: auto;
+        right: 0;
+        margin: 1em;
+        > * {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .close {
+        background-color: ohma.$colors-red;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 1em;
+        svg {
+            color: ohma.$colors-white;
+        }
+    }
+
     > .currentImage {
         padding: 0;
-        width: 50vw;
-        height: 50vh;
+        width: 100%;
+        height: 90%;
         display: flex;
         flex-direction: column;
 
@@ -32,15 +83,15 @@
         }
         img {
             position: absolute;
-            width: auto;
-            height: auto;
+            width: 100% !important;
+            height: 100% !important;
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain;
+            border-radius: ohma.$rounding;
             top: 50%;
             left: 50%;
+            object-fit: contain;
             transform: translate(-50%, -50%);
-            @include ohma.round;
             padding: 0;
         }
     }
@@ -48,6 +99,7 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        margin-top: 1em;
         > button {
             width: 30px;
             height: 30px;
@@ -65,20 +117,10 @@
     }
 }
 
-.ImageDisplay {
-    position: relative;
-    .admin {
-        @include ohma.card;
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-height: 100%;
-        background-color: ohma.$colors-secondary;
-        translate: 100%;
-        width: 300px;
-    }
+.makeCover, .deleteImage {
+    border-top: 1px solid ohma.$colors-black;
+    padding-top: 3px;
 }
-
 
 @keyframes rotate {
     0% {

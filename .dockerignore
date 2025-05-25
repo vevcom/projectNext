@@ -13,7 +13,7 @@ build
 # configs
 # you should be explicit in docker-compose about what env-vars should be loaded into a container
 .env 
-default.env
+.env.default
 next-env.default.d.ts
 nginx.conf
 
@@ -33,5 +33,4 @@ docker-compose.dev.yml
 Dockerfile
 
 # prisma
-src/prisma/migrations
-src/prisma/prismaservice
+src/prisma/generated

@@ -21,6 +21,7 @@ import {
     faChartLine,
     faSignature,
     faSchool,
+    faHouseChimneyWindow,
 } from '@fortawesome/free-solid-svg-icons'
 import type {
     IconDefinition } from '@fortawesome/free-solid-svg-icons'
@@ -35,12 +36,6 @@ export type NavItem = {
 
 export const itemsForMenu: NavItem[] = [
     {
-        name: 'Hvad der hender',
-        href: '/events',
-        show: 'loggedIn',
-        icon: faCalendar,
-    },
-    {
         name: 'Komitéer',
         href: '/committees',
         show: 'all',
@@ -48,7 +43,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Jobbannonser',
-        href: '/jobads',
+        href: '/career/jobads',
         show: 'loggedIn',
         icon: faBriefcase,
     },
@@ -60,7 +55,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'For Bedrifter',
-        href: '/contactor',
+        href: '/career',
         show: 'loggedOut',
         icon: faSuitcase,
     },
@@ -71,10 +66,22 @@ export const itemsForMenu: NavItem[] = [
         icon: faGraduationCap,
     },
     {
+        name: 'Hvad der hender',
+        href: '/events',
+        show: 'all',
+        icon: faCalendar,
+    },
+    {
         name: 'Ombul',
         href: '/ombul',
         show: 'all',
         icon: faBook,
+    },
+    {
+        name: 'Karriere',
+        href: '/career',
+        show: 'loggedIn',
+        icon: faSuitcase,
     },
     {
         name: 'Nyheter',
@@ -138,9 +145,15 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Intressegrupper',
-        href: '/infopages/interessegrupper',
+        href: '/interest-groups',
         show: 'all',
         icon: faGamepad,
+    },
+    {
+        name: 'Hyttebooking',
+        href: '/cabin',
+        show: 'all',
+        icon: faHouseChimneyWindow,
     },
     {
         name: 'Admin',

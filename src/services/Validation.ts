@@ -2,6 +2,8 @@ import { ServerError } from './error'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
+//TODO: Delete all :(
+
 /**
  * Type for the objects that is used to make sure the  two detailed and type schemas have the same keys
  */
@@ -37,12 +39,21 @@ type Refiner<
     message: string
 }
 
+/*
+* A monadic type that is returned from the typeValidate method in Validation.
+*/
+export type SafeValidationReturn<T extends z.ZodRawShape, Partialized extends boolean> = {
+    success: true, data: PureTsTypeOfSchema<T, Partialized>
+} | {
+    success: false, error: z.ZodError
+}
+
 /**
  * A validatiorBase is meant to create Validators that wrapps zod functionality.
  * A BaseValidatior consists of a type and a detailed schema. One is meant to check basic
  * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
  * All keys in the one schema must be in the other schema.
- *
+ * @deprecated
  * @method createValidation creates a new validation with a subset of the keys and a tranformer
  * that should transform the type returned by parsing the type schema to the type detailed schema expects.
  * @method createValidationPartial Same as above but make all entries in type and detailed schema optional.
@@ -110,8 +121,9 @@ export class ValidationBase<
  * types incoming from the client (run in action), and the other is meant to check the detailed types (run on server).
  * @method typeValidate validates the type schema
  * @method detailedValidate validates the detailed schema
+ * @deprecated
  */
-class Validation<
+export class Validation<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -138,8 +150,8 @@ class Validation<
     }
 
     typeValidate(
-        data: FormData | PureTsTypeOfSchema<Type>
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed> } {
+        data: FormData | PureTsTypeOfSchema<Type> | unknown
+    ): SafeValidationReturn<Detailed, false> {
         const parse = zfd.formData(this.typeSchema).safeParse(data)
         if (!parse.success) {
             return {
@@ -153,7 +165,7 @@ class Validation<
         }
     }
 
-    detailedValidate(data: PureTsTypeOfSchema<Detailed>) {
+    detailedValidate(data: PureTsTypeOfSchema<Detailed> | unknown) {
         const parse = this.detailedSchema.refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
@@ -164,10 +176,11 @@ class Validation<
 
 /**
  * Same as Validation but all entries in type and detailed schema are optional.
+ * @deprecated
  * @method typeValidate validates the type schema (in a partial way)
  * @method detailedValidate validates the detailed schema (in a partial way
  */
-class ValidationPartial<
+export class ValidationPartial<
     Type extends z.ZodRawShape,
     Detailed extends z.ZodRawShape,
 > {
@@ -194,8 +207,8 @@ class ValidationPartial<
     }
 
     typeValidate(
-        data: FormData | Partial<PureTsTypeOfSchema<Type, true>>
-    ): { success: false, error: z.ZodError } | { success: true, data: PureTsTypeOfSchema<Detailed, true> } {
+        data: unknown | FormData | Partial<PureTsTypeOfSchema<Type, true>>
+    ): SafeValidationReturn<Detailed, true> {
         const parse = zfd.formData(this.typeSchema.partial()).safeParse(data)
         if (!parse.success) {
             return {
@@ -209,7 +222,7 @@ class ValidationPartial<
         }
     }
 
-    detailedValidate(data: PureTsTypeOfSchema<Detailed, true>) {
+    detailedValidate(data: PureTsTypeOfSchema<Detailed, true> | unknown) {
         const parse = this.detailedSchema.partial().refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
@@ -232,3 +245,25 @@ export type ValidationTypes<V> = V extends Validation<infer Type, infer Detailed
         Detailed: PureTsTypeOfSchema<Detailed, true>
     } : never;
 
+// The type of the Validation class
+export type ValidationType<GeneralData, DetailedData> = {
+    detailedValidate: (data: DetailedData | unknown) => DetailedData,
+    typeValidate: (data: unknown | FormData | GeneralData) => TypeValidateReturn<DetailedData>,
+}
+
+// The return type of the typeValidate method in Validation
+export type TypeValidateReturn<
+    DetailedType
+> = {
+    success: true,
+    data: DetailedType,
+} | {
+    success: false,
+    error: z.ZodError,
+}
+
+// Extract the type of the detailed schema from a Validation
+export type ExtractDetailedType<V extends ValidationType<unknown, unknown>> = ReturnType<V['detailedValidate']>
+
+// Utility type for a generic Valdiation which can be extended
+export type ValidationTypeUnknown = ValidationType<unknown, unknown>

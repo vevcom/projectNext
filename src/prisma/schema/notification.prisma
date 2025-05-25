@@ -5,7 +5,7 @@ enum SpecialNotificationChannel {
   NEW_NEWS_ARTICLE
   NEW_JOBAD
   NEW_OMEGAQUOTE
-  EVENT_PARTICIPANT
+  EVENT_WAITINGLIST_PROMOTION
 }
 
 model NotificationChannel {

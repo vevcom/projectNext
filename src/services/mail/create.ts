@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import {
     createAliasMailingListValidation,
     createMailingListExternalValidation,
@@ -19,7 +19,6 @@ import type {
     CreateMailingListGroupType,
     CreateMailingListUserType
 } from './validation'
-
 
 export async function createAliasMailingListRelation(
     rawdata: CreateAliasMailingListType['Detailed']

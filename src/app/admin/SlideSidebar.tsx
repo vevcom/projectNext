@@ -1,7 +1,7 @@
 'use client'
 import styles from './SlideSidebar.module.scss'
 import useOnNavigation from '@/hooks/useOnNavigation'
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -13,7 +13,11 @@ import {
     faUserGroup,
     faArrowLeft,
     faPaperPlane,
-    faSchool
+    faSchool,
+    faDotCircle,
+    faHouse,
+    faShop,
+    faListDots,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
@@ -91,6 +95,10 @@ const navigations = [
             {
                 title: 'Klasser',
                 href: '/admin/classes'
+            },
+            {
+                title: 'Studieprogrammer',
+                href: '/admin/study-programmes'
             }
         ],
     },
@@ -152,6 +160,70 @@ const navigations = [
                 href: '/admin/courses'
             }
         ],
+    },
+    {
+        header: {
+            icon: faDotCircle,
+            title: 'Prikker'
+        },
+        links: [
+            {
+                title: 'Prikker',
+                href: '/admin/dots'
+            },
+            {
+                title: 'Frysperioder',
+                href: '/admin/dots-freeze-periods'
+            },
+        ]
+    },
+    {
+        header: {
+            icon: faHouse,
+            title: 'Heutte'
+        },
+        links: [
+            {
+                title: 'Perioder',
+                href: '/admin/cabin-periods',
+            },
+            {
+                title: 'Produkter',
+                href: '/admin/cabin-product',
+            },
+            {
+                title: 'Bookinger',
+                href: '/admin/cabin-booking',
+            },
+        ]
+    },
+    {
+        header: {
+            icon: faShop,
+            title: 'Shop'
+        },
+        links: [
+            {
+                title: 'Butikker',
+                href: '/admin/shop'
+            },
+            {
+                title: 'Produkter',
+                href: '/admin/product'
+            },
+        ]
+    },
+    {
+        header: {
+            title: 'Annet',
+            icon: faListDots
+        },
+        links: [
+            {
+                title: 'Lisenser',
+                href: '/admin/licenses'
+            },
+        ]
     }
 ] satisfies {
     header: {
@@ -198,7 +270,7 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
                 <aside className={styles.sidebar}>
                     {
                         navigations.map(navigation => (
-                            <>
+                            <Fragment key={navigation.header.title}>
                                 <h3 className={styles.header}>
                                     <FontAwesomeIcon icon={navigation.header.icon} />
                                     {navigation.header.title}
@@ -214,7 +286,7 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
                                         </Link>
                                     ))
                                 }
-                            </>
+                            </Fragment>
                         ))
                     }
                 </aside>

@@ -1,5 +1,5 @@
-import 'server-only'
-import { hashAndEncrypter } from '@/auth/crypto/hashAndEncrypter'
+import '@pn-server-only'
+import { hashAndEncrypter } from '@/lib/crypto/hashAndEncrypter'
 
 export const {
     hashAndEncrypt: apiKeyHashAndEncrypt,

@@ -1,6 +1,5 @@
 'use client'
 import styles from './TimeLeft.module.scss'
-import { getTimeNow } from '@/dates/getTimeNow'
 import useInterval from '@/hooks/useInterval'
 import { useMemo, useState } from 'react'
 
@@ -9,7 +8,7 @@ type PropTypes = {
 }
 
 const getTimeLeftGen = (end: Date) => () => {
-    const seconds = Math.round((end.getTime() - getTimeNow().getTime()) / 1000)
+    const seconds = Math.round((end.getTime() - Date.now()) / 1000)
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)

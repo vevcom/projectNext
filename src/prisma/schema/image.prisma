@@ -8,25 +8,43 @@ enum SpecialImage {
   LOGO_WHITE_TEXT
   MAGISK_HATT
   HOVEDBYGGNINGEN
-  R1
+  BOOKS
+  REALFAGSBYGGET
+  MACHINE
+  FAIR
 }
 
 model Image {
   id                      Int              @id @default(autoincrement())
-  fsLocation              String           @unique
-  fsLocationSmallSize     String?          @unique
-  fsLocationMediumSize    String?          @unique
-  name                    String           @unique
-  ext                     String
+  fsLocationOriginal      String           @unique
+  fsLocationSmallSize     String           @unique
+  fsLocationMediumSize    String           @unique
+  fsLocationLargeSize     String           @unique
+  name                    String           @default("Bilde")
+  extOriginal             String
   alt                     String
   collection              ImageCollection  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   coverImageForCollection ImageCollection? @relation(name: "coverImageForCollection")
   collectionId            Int
+  credit                  String?
   createdAt               DateTime         @default(now())
   updatedAt               DateTime         @updatedAt
+  license                 License?         @relation(fields: [licenseName, licenseLink], references: [name, link])
+  licenseName             String?
+  licenseLink             String?
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
+}
+
+model License {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  link String
+
+  images Image[]
+
+  @@unique([name, link])
 }
 
 enum SpecialCollection {

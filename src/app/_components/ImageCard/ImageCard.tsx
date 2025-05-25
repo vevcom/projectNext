@@ -8,16 +8,22 @@ type PropTypes = {
     image: ImageT | null,
     title: string,
     children?: ReactNode,
-    href: string
+    href: string,
+    className?: string
 }
 
-export default function ImageCard({ image, title, children, href }: PropTypes) {
+export default function ImageCard({ image, title, children, href, className }: PropTypes) {
     return (
-        <Link href={href} className={styles.ImageCard}>
+        <Link href={href} className={`${styles.ImageCard} ${className}`}>
             <div className={styles.image}>
                 {
                     image && (
-                        <Image width={240} image={image} />
+                        <Image
+                            disableLinkingToLicense
+                            creditPlacement="top"
+                            width={240}
+                            image={image}
+                        />
                     )
                 }
             </div>

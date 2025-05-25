@@ -9,11 +9,13 @@ import PopUpProvider from '@/contexts/PopUp'
 import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
 import { readDefaultPermissionsAction } from '@/actions/permissionRoles/read'
 import { Inter } from 'next/font/google'
-import React from 'react'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
+import type { ReactNode } from 'react'
+import { readUserProfileAction } from '@/actions/users/read'
+import { unwrapActionReturn } from './redirectToErrorPage'
 
 config.autoAddCss = false
 
@@ -26,13 +28,15 @@ export const metadata = {
 }
 
 type PropTypes = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
+    const profile = session?.user ?
+        unwrapActionReturn(await readUserProfileAction(session?.user)) : null
 
     return (
         <html lang="en">
@@ -43,7 +47,7 @@ export default async function RootLayout({ children }: PropTypes) {
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
                                     <div className={styles.navBar}>
-                                        <NavBar />
+                                        <NavBar profile={profile} />
                                     </div>
                                     <div className={styles.content}>
                                         {children}
@@ -52,7 +56,7 @@ export default async function RootLayout({ children }: PropTypes) {
                                         <Footer />
                                     </div>
                                     <div className={styles.mobileNavBar}>
-                                        <MobileNavBar />
+                                        <MobileNavBar profile={profile} />
                                     </div>
                                 </div>
                             </PopUpProvider>

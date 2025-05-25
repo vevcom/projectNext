@@ -20,7 +20,7 @@ export const createImageCollectionValidation = baseImageCollectionSchema.createV
 
 export type CreateImageCollectionTypes = ValidationTypes<typeof createImageCollectionValidation>
 
-export const updateImageCollectionValidation = baseImageCollectionSchema.createValidation({
+export const updateImageCollectionValidation = baseImageCollectionSchema.createValidationPartial({
     keys: ['name', 'description'],
     transformer: data => data
 })

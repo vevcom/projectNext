@@ -1,10 +1,11 @@
-import 'server-only'
+import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } from './canEasilyManageMembership'
 import { readCurrentGroupOrder, readCurrentGroupOrders } from '@/services/groups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
+import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import type { ExpandedMembership } from './Types'
 
 export async function createMembershipForUser(
@@ -18,7 +19,7 @@ export async function createMembershipForUser(
     }
     const order = orderArg ?? await readCurrentGroupOrder(groupId)
 
-    return await prismaCall(() => prisma.membership.create({
+    const membership = await prismaCall(() => prisma.membership.create({
         data: {
             group: {
                 connect: {
@@ -39,6 +40,8 @@ export async function createMembershipForUser(
             active: true,
         },
     }))
+    await invalidateOneUserSessionData(userId)
+    return membership
 }
 
 /**
@@ -80,6 +83,7 @@ export async function createMembershipsForGroup(
         })),
         skipDuplicates: true,
     }))
+    await invalidateManyUserSessionData(data.map(({ userId }) => userId))
 }
 
 /**
@@ -121,4 +125,6 @@ export async function createMembershipsForUser(
         })),
         skipDuplicates: true,
     }))
+
+    await invalidateOneUserSessionData(userId)
 }

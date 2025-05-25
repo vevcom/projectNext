@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 
 import { Html } from '@react-email/components'
 import type { UserFiltered } from '@/services/users/Types'

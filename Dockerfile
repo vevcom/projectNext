@@ -1,5 +1,14 @@
-FROM node:20-alpine AS base
+ARG NODE_VERSION="22.14"
+ARG ALPINE_VERSION="3.20"
+
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 WORKDIR /usr/src/app
+
+# Expose Next.js port
+EXPOSE 3000
+
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Install node packages
 COPY package*.json ./
@@ -10,24 +19,37 @@ RUN mkdir -p src/prisma
 COPY src/prisma/schema src/prisma/schema
 RUN npx prisma generate
 
+COPY src/prisma/vevenSchema src/prisma/vevenSchema
+RUN npm run dobbelOmega:generate
+
+RUN mkdir -p usr/src/app/store/images
+
 # Copy remaining files except src
 # (src is binded in dev so there is no need to copy it here)
 COPY public public
-COPY next-env.d.t[s] next.config.js tsconfig.json ./
+COPY next-env.d.t[s] next.config.mjs tsconfig.json ./
 
 ############################################################
-FROM node:20-alpine AS prod
-WORKDIR /usr/src/app
+FROM base AS prod
+
+ENV NODE_ENV=production
 
 COPY src src
-COPY --from=base /usr/src/app/ .
 
 RUN npm run build
 CMD ["npm", "run", "start"]
 ############################################################
-FROM node:20-alpine AS dev
-WORKDIR /usr/src/app
+FROM base AS test
 
-COPY --from=base /usr/src/app/ .
+ENV NODE_ENV=test
 
-CMD ["npm", "run", "dev"]
+COPY jest.config.ts ./
+# src and tests are expected to be binded in test
+
+CMD ["npm", "run", "test"]
+############################################################
+FROM base AS dev
+
+ENV NODE_ENV=development
+
+CMD ["npm", "run", "dev-seed"]

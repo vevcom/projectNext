@@ -3,21 +3,39 @@
 $collectionSize: calc(14vmin + 70px);
 
 .CmsImageEditor {
-    width: calc(97vw - 140px);
-    height: calc(97vh - 140px);
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 1fr auto;
-    gap: 1em;
-    padding: -1em;
+    @include ohma.screenLg {
+        width: calc(97vw - 140px);
+        height: calc(97vh - 140px);
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr auto;
+        gap: 1em;
+        padding: -1em;
+    }
+    @include ohma.screenMobile {
+        width: 100%;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto auto;
+        height: 75svh;
+        overflow-y: hidden;
+    }
     .linkToImages {
         position: absolute;
-        top: -2%;
-        right: -2%;
         @include ohma.btn(ohma.$colors-primary);
         width: 10em;
+        @include ohma.screenLg {
+            top: -2%;
+            right: -2%;
+        }
+        @include ohma.screenMobile {
+            top: 2%;
+            left: 2%;
+        }
     }
     > .currentCmsImage {
+        @include ohma.screenMobile {
+            display: none;
+        }
         grid-column: 1 / 2;
         grid-row: 1 / 2;
         > .info {
@@ -25,12 +43,24 @@ $collectionSize: calc(14vmin + 70px);
             overflow: hidden;
         }
     }
+    > .changeImageMobile {
+        grid-row: 3 / 4;
+        @include ohma.screenLg {
+            display: none;
+        }
+    }
     > .selectImage {
         grid-column: 2 / 3;
+        @include ohma.screenMobile {
+            grid-column: 1 / 2;
+            margin: 1em 0;
+        }
         grid-row: 1 / 2;
         background-color: lighten(ohma.$colors-secondary, 40%);
         @include ohma.round;
         overflow: scroll;
+        max-width: 100%;
+        width: 100%;
         > * {
             isolation: isolate;
         }

@@ -44,9 +44,10 @@ model Group {
   manualGroup          ManualGroup?
   omegaMembershipGroup OmegaMembershipGroup?
   studyProgramme       StudyProgramme?
+  LockerReservation    LockerReservation[]
+  mailingLists         MailingListGroup[]
 
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
-  mailingLists               MailingListGroup[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -72,6 +73,10 @@ model Committee {
   logoImage                  CmsImage                                   @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId                Int                                        @unique
   ApplicationPeriodCommittee CommitteeParticipationInApplicationPeriod?
+
+  paragraph   CmsParagraph @relation(fields: [paragraphId], references: [id])
+  paragraphId Int          @unique
+  events      Event[]
 }
 
 model InterestGroup {
@@ -81,7 +86,10 @@ model InterestGroup {
 
   name      String
   shortName String @unique
-  // TODOD - add intereset group data
+
+  articleSection   ArticleSection @relation(fields: [articleSectionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  articleSectionId Int            @unique
+  // TODO - add intereset group data
 }
 
 model ManualGroup {

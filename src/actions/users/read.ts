@@ -1,14 +1,12 @@
 'use server'
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
+import { action } from '@/actions/action'
 import { getUser } from '@/auth/getUser'
+import { UserMethods } from '@/services/users/methods'
 import { readGroupsExpanded } from '@/services/groups/read'
-import { readUserPage, readUserProfile } from '@/services/users/read'
 import type { ExpandedGroup } from '@/services/groups/Types'
-import type { UserDetails, UserCursor, UserPagingReturn, Profile } from '@/services/users/Types'
 import type { ActionReturn } from '@/actions/Types'
-import type { ReadPageInput } from '@/services/paging/Types'
-import type { Permission } from '@prisma/client'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -16,16 +14,7 @@ import type { Permission } from '@prisma/client'
  * name and groups
  * @returns
  */
-export async function readUserPageAction<const PageSize extends number>(
-    readPageInput: ReadPageInput<PageSize, UserCursor, UserDetails>
-): Promise<ActionReturn<UserPagingReturn[]>> {
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['USERS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return safeServerCall(() => readUserPage(readPageInput))
-}
+export const readUserPageAction = action(UserMethods.readPage)
 
 /**
  * Action meant to read the profile of a user.
@@ -33,23 +22,11 @@ export async function readUserPageAction<const PageSize extends number>(
  * @param username - The username of the user to read
  * @returns - The profile of the user
  */
-export async function readUserProfileAction(username: string): Promise<ActionReturn<Profile>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['USERS_READ']]
-    })
-    if (!authorized) return createActionError(status)
+export const readUserProfileAction = action(UserMethods.readProfile)
 
-    return safeServerCall(() => readUserProfile(username))
-}
+export const readUserAction = action(UserMethods.read)
 
-export async function readUsersPermissionsAction(): Promise<ActionReturn<Permission[]>> {
-    return {
-        success: true,
-        data: []
-    }
-}
-
-
+//TODO: MOVE!!!
 export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {
     const { status, authorized } = await getUser({
         requiredPermissions: [['USERS_READ']]

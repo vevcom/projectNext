@@ -5,15 +5,26 @@ import ChangeName from './ChangeName'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import ArticleSection from '@/cms/ArticleSection/ArticleSection'
+import type { ReactNode } from 'react'
 import type { ExpandedArticle } from '@/cms/articles/Types'
 
 export type PropTypes = {
     article: ExpandedArticle,
     coverImageClass?: string,
     hideCoverImage?: boolean
+    noMargin?: boolean
+    sideBarContent?: ReactNode
+    sideBarClassName?: string
 }
 
-export default function Article({ article, coverImageClass, hideCoverImage = false }: PropTypes) {
+export default function Article({
+    article,
+    coverImageClass,
+    hideCoverImage = false,
+    noMargin = false,
+    sideBarContent,
+    sideBarClassName,
+}: PropTypes) {
     return (
         <span className={styles.Article}>
             {hideCoverImage ? <></> : (
@@ -24,7 +35,7 @@ export default function Article({ article, coverImageClass, hideCoverImage = fal
                     </SlideInOnView>
                 </span>
             )}
-            <article>
+            <article className={noMargin ? styles.noMargin : undefined}>
                 {
                     article.articleSections.length ? (
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
@@ -46,6 +57,11 @@ export default function Article({ article, coverImageClass, hideCoverImage = fal
                     )
                 }
             </article>
+            {sideBarContent && (
+                <aside className={`${styles.sideBar} ${sideBarClassName}`}>
+                    {sideBarContent}
+                </aside>
+            )}
             <div className={styles.addSection}>
                 <AddSection articleId={article.id} currentNumberSections={article.articleSections.length} />
             </div>

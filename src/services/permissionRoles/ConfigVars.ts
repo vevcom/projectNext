@@ -14,6 +14,8 @@ export const permissionCategories = [
     'notifikasjoner',
     'mail',
     'skjermer',
+    'shop',
+    'cabin',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -92,24 +94,14 @@ export const PermissionConfig = {
         description: 'kan oppdatere komite',
         category: 'groups',
     },
-    INTEREST_GROUP_CREATE: {
-        name: 'Lage interessegruppe',
-        description: 'kan lage interessegruppe',
-        category: 'groups',
-    },
-    INTEREST_GROUP_DESTROY: {
-        name: 'Slette interessegruppe',
-        description: 'kan slette interessegruppe',
-        category: 'groups',
-    },
     INTEREST_GROUP_READ: {
         name: 'Les interessegruppe',
         description: 'kan lese interessegruppe',
         category: 'groups',
     },
-    INTEREST_GROUP_UPDATE: {
-        name: 'Oppdatere interessegruppe',
-        description: 'kan oppdatere interessegruppe',
+    INTEREST_GROUP_ADMIN: {
+        name: 'Administrere interessegruppe',
+        description: 'Administrere interessegruppe uten å være admin i gruppen. Og lage nye grupper',
         category: 'groups',
     },
     OMEGA_MEMBERSHIP_GROUP_UPDATE: {
@@ -206,6 +198,12 @@ export const PermissionConfig = {
         name: 'Oppdatere bruker',
         description: 'kan oppdatere bruker',
         category: 'brukere',
+    },
+    USERS_CONNECT_STUDENT_CARD: {
+        name: 'Koble studentkort til andre brukere',
+        // eslint-disable-next-line max-len
+        description: 'Kan legge til andre personer i registreringskøen for å registrere et kort og kan registrere et kort på en person',
+        category: 'brukere'
     },
     IMAGE_ADMIN: {
         name: 'Bildeadministrator',
@@ -411,6 +409,114 @@ export const PermissionConfig = {
         name: 'Emneadministrator',
         description: 'kan administrere emner',
         category: 'brukere',
+    },
+    LOCKER_USE: {
+        name: 'Bruke skap',
+        description: 'kan opprette skapreservasjoner',
+        category: 'brukere'
+    },
+    LOCKER_ADMIN: {
+        name: 'Administrere skap',
+        description: 'kan opprette og slette reservasjoner på veiene av andre samt opprette og slette selve skapene',
+        category: 'diverse admin'
+    },
+    COMPANY_ADMIN: {
+        name: 'Bedriftsadministrator',
+        description: 'kan administrere bedrifter',
+        category: 'brukere'
+    },
+    COMPANY_READ: {
+        name: 'Les bedrifter',
+        description: 'kan lese bedrifter',
+        category: 'brukere'
+    },
+    DOTS_ADMIN: {
+        name: 'Prikkadministrator',
+        description: 'kan administrere prikker',
+        category: 'brukere'
+    },
+    SHOP_READ: {
+        name: 'Les butikker',
+        description: 'kan lese butikker',
+        category: 'shop'
+    },
+    SHOP_ADMIN: {
+        name: 'Butikk administrator',
+        description: 'Kan administrere alle butikker',
+        category: 'shop'
+    },
+    PRODUCT_READ: {
+        name: 'Les produkter',
+        description: 'Kan lese produkter',
+        category: 'shop'
+    },
+    PRODUCT_ADMIN: {
+        name: 'Produkt administrator',
+        description: 'Kan administrare alle produkter',
+        category: 'shop'
+    },
+    PURCHASE_CREATE: {
+        name: 'Gjennomfør kjøp',
+        description: 'Kan gjennomføre et kjøp i en butikk',
+        category: 'shop'
+    },
+    PURCHASE_CREATE_ONBEHALF: {
+        name: 'Kan ta betalt i en butikk',
+        description: 'Kan belaste andre brukerkontoer, når de handler i en butikk.',
+        category: 'shop'
+    },
+    LICENSE_ADMIN: {
+        name: 'Lisensadministrator',
+        description: `
+            kan administrere lisenser. Alle som eier et bilde kan 
+            legge til en lisens uavhengig av denne tillatelsen
+        `,
+        category: 'diverse admin'
+    },
+    EVENT_READ: {
+        name: 'Les arrangementer',
+        description: 'kan lese arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_CREATE: {
+        name: 'Meld deg på arrangementer',
+        description: 'kan melde seg på arrangementer',
+        category: 'events'
+    },
+    EVENT_REGISTRATION_READ: {
+        name: 'Les påemeldinger',
+        description: 'kan lese påmeldinger',
+        category: 'events'
+    },
+    CABIN_BOOKING_BED_CREATE: {
+        name: 'Booke senger i hytta',
+        description: 'Kan booke en senger i hytta',
+        category: 'cabin'
+    },
+    CABIN_BOOKING_CABIN_CREATE: {
+        name: 'Booke hytta',
+        description: 'Kan booke hele hytta',
+        category: 'cabin'
+    },
+    CABIN_BOOKING_ADMIN: {
+        name: 'Hyttabooking administrator',
+        description: 'Kan administrere hyttabookinger',
+        category: 'cabin'
+    },
+    CABIN_CALENDAR_READ: {
+        name: 'Les hyttakalender',
+        description: 'Kan lese hyttakalender',
+        category: 'cabin'
+    },
+    CABIN_ADMIN: {
+        name: 'Hyttadministrator',
+        description: 'Kan administrere hytter',
+        category: 'cabin'
+    },
+    CABIN_PRODUCTS_ADMIN: {
+        name: 'Hyttprodukt administrator',
+        description: 'Kan administrere hyttprodukter',
+        category: 'cabin'
     },
 } satisfies Record<Permission, PermissionInfo>
 

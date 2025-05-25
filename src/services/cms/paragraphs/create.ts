@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { createCmsParagraphValidation } from './validation'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'

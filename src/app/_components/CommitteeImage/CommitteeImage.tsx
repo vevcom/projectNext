@@ -6,9 +6,9 @@ import type { Image as ImageT } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 
 type PropTypes = {
-    children: ReactNode
+    children?: ReactNode
     logoImage: ImageT
-    committeeImage: ExpandedCmsImage
+    coverImage: ExpandedCmsImage
     grayScale?: boolean
 }
 /**
@@ -17,7 +17,7 @@ type PropTypes = {
  * @param image - The image to render as a backdrop
  * @param grayScale - Whether the image should be rendered in grayscale (true by default)
  * */
-export default function CommitteeImage({ children, logoImage, committeeImage, grayScale = false }: PropTypes) {
+export default function CommitteeImage({ children, logoImage, coverImage, grayScale = false }: PropTypes) {
     return (
         <div className={styles.CommitteeImage}>
             <div className={styles.content}>
@@ -33,7 +33,7 @@ export default function CommitteeImage({ children, logoImage, committeeImage, gr
                 </div>
                 <CmsImage
                     className={styles.committeeImage}
-                    cmsImage={committeeImage}
+                    cmsImage={coverImage}
                     width={600}
                 />
             </div>

@@ -29,7 +29,7 @@
     }
     th {
         background-color: colors.$gray-200;
-        color: black;
+        color: colors.$black;
     }
     tr:nth-child(even) {
         background-color: colors.$gray-100;
@@ -44,7 +44,6 @@
     text-decoration: none;
     font-size: fonts.$m;
     background: $color;
-    padding: variables.$gap;
     padding: 2*variables.$gap;
     margin: variables.$gap;
     color: colors.$black;
@@ -66,6 +65,27 @@
     &:hover {
         background: $color;
         color: $hoverColor;
+    }
+}
+
+@mixin roundAdminSvgBtn() {
+    width: 45px;
+    height: 45px;
+    background-color: colors.$primary;
+    border: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    svg {
+        color: colors.$black;
+        transition: color 0.6s;
+        width: 31px;
+        height: 31px;
+    }
+    &:hover svg {
+        color: colors.$gray-500;
+        cursor: pointer;
     }
 }
 

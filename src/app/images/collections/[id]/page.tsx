@@ -4,57 +4,54 @@ import { readImagesPageAction } from '@/actions/images/read'
 import { readImageCollectionAction } from '@/actions/images/collections/read'
 import ImageList from '@/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/contexts/paging/ImagePaging'
-import ImageSelectionProvider from '@/contexts/ImageSelection'
-import PopUpProvider from '@/contexts/PopUp'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
+import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
 
 type PropTypes = {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
 export default async function Collection({ params }: PropTypes) {
     const pageSize: PageSizeImage = 30
 
-    const readCollection = await readImageCollectionAction(Number(params.id))
+    const readCollection = await readImageCollectionAction(Number((await params).id))
     if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 
-    const readImages = await readImagesPageAction({
-        page: { pageSize, page: 0, cursor: null },
-        details: { collectionId: collection.id }
-    })
+    const readImages = await readImagesPageAction.bind(null, {
+        paging: {
+            page: { pageSize, page: 0, cursor: null },
+            details: { collectionId: collection.id }
+        }
+    })()
     if (!readImages.success) notFound()
     const images = readImages.data
 
     return (
-        <ImageSelectionProvider>
-            <ImagePagingProvider
-                startPage={{
-                    pageSize,
-                    page: 1,
-                }}
-                details={{ collectionId: collection.id }}
-                serverRenderedData={images}
-            >
-                <PopUpProvider>
-                    <div className={styles.wrapper}>
-                        <CollectionAdmin visibility={collection.visibility} collection={collection} />
-                        <div className={styles.images}>
-                            <h1>{collection.name}</h1>
-                            <i>{collection.description}</i>
-                            <main>
-                                <ImageList serverRendered={
-                                    images.map(image => <ImageListImage key={image.id} image={image} />)
-                                } />
-                            </main>
-                        </div>
-                    </div>
-                </PopUpProvider>
-            </ImagePagingProvider>
-        </ImageSelectionProvider>
+        <ImagePagingProvider
+            startPage={{
+                pageSize,
+                page: 1,
+            }}
+            details={{ collectionId: collection.id }}
+            serverRenderedData={images}
+        >
+            <ImageDisplayProvider>
+                <div className={styles.wrapper}>
+                    <h1>{collection.name}</h1>
+                    <i>{collection.description}</i>
+                    <main>
+                        <ImageList serverRendered={
+                            images.map(image => <ImageListImage key={image.id} image={image} />)
+                        } />
+                    </main>
+                    <CollectionAdmin visibility={collection.visibility} collection={collection} />
+                </div>
+            </ImageDisplayProvider>
+        </ImagePagingProvider>
     )
 }

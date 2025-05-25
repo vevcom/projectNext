@@ -3,7 +3,7 @@ import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import logger from '@/logger'
+import logger from '@/lib/logger'
 import type {
     Group,
     User,
@@ -266,6 +266,27 @@ export function checkGroupValidity<
             logger.error('Group with unknown group type detected', group)
             throw new ServerError('SERVER ERROR', WRONG_GROUP_TYPE_ERROR_STRING)
     }
+}
+
+export async function readGroupsOfUser(id: number) {
+    const memberships = await prisma.membership.findMany({
+        where: { userId: id },
+        include: {
+            group: {
+                include: {
+                    class: true,
+                    committee: true,
+                    interestGroup: true,
+                    manualGroup: true,
+                    omegaMembershipGroup: true,
+                    studyProgramme: true,
+                }
+            }
+        }
+    })
+
+    const groups = memberships.map(item => checkGroupValidity(item.group))
+    return groups
 }
 
 /**

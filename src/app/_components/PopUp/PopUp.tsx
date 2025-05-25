@@ -1,6 +1,5 @@
 'use client'
 import styles from './PopUp.module.scss'
-import Button from '@/components/UI/Button'
 import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
@@ -53,11 +52,13 @@ export default function PopUp({
         contentRef.current = (
             <div className={styles.PopUp}>
                 <div className={styles.main} ref={ref}>
-                    <Button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-                        <FontAwesomeIcon icon={faX} />
-                    </Button>
-                    <div className={styles.content}>
-                        { children }
+                    <div className={styles.overflow}>
+                        <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
+                            <FontAwesomeIcon icon={faX} />
+                        </button>
+                        <div className={styles.content}>
+                            { children }
+                        </div>
                     </div>
                 </div>
             </div>

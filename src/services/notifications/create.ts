@@ -1,8 +1,8 @@
-import 'server-only'
+import '@pn-server-only'
 import { createNotificaionValidation } from './validation'
 import { allMethodsOn, notificationMethods } from './Types'
 import { dispathMethod } from './dispatch'
-import { userFilterSelection } from '@/services/users/ConfigVars'
+import { UserConfig } from '@/services/users/config'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { ExpandedNotificationChannel } from './Types'
@@ -77,7 +77,7 @@ export async function dispatchNotification(data: CreateNotificationType['Detaile
                         select: allMethodsOn,
                     },
                     user: {
-                        select: userFilterSelection,
+                        select: UserConfig.filterSelection,
                     },
                 },
             },

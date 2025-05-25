@@ -1,5 +1,4 @@
-import 'server-only'
-import { hashAndEncrypter } from './crypto/hashAndEncrypter'
+import { hashAndEncrypter } from '@/lib/crypto/hashAndEncrypter'
 
 export const {
     hashAndEncrypt: hashAndEncryptPassword,

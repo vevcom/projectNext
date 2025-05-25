@@ -1,0 +1,77 @@
+services:
+    projectnext:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            target: prod
+        volumes:
+            - store:/usr/src/app/store
+            - logs:/usr/src/app/logs
+        deploy:
+            replicas: 8
+
+    db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
+        restart: always
+        volumes:
+            - proddb:/var/lib/postgresql/data
+
+    nginx:
+        extends:
+            file: docker-compose.base.yml
+            service: nginx
+        restart: always
+        ports:
+            - 80:80
+            - 443:443
+        environment:
+            DOMAIN: ${DOMAIN}
+            PROXY_PASS: 'projectnext:3000'
+        volumes:
+            - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./containers/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
+            - store:/usr/store:ro
+            - ./certs/conf:/etc/letsencrypt:ro
+            - ./certs/www/:/var/www/certbot:ro
+
+    certbot:
+        image: certbot/certbot:latest
+        volumes:
+            - ./certs/www:/var/www:rw
+            - ./certs/conf:/etc/letsencrypt:rw
+        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 14d & wait $${!}; done;'"
+        restart: always
+
+    postfix:
+        build: ${PROJECT_ROOT:-.}/containers/postfix/
+        ports:
+            - '587:587'
+            - '25:25'
+        environment:
+            POSTGRES_HOST: 'db'
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            MY_HOSTNAME: ${MAIL_DOMAIN}
+            MY_DOMAIN: ${DOMAIN}
+            RELAY_HOST: ${MAIL_RELAY_HOST}
+        volumes:
+            - ./certs/conf:/etc/letsencrypt:ro
+        depends_on:
+            - db
+        links:
+            - db
+        restart: always
+
+volumes:
+    proddb:
+        driver: local
+    store:
+        driver: local
+    logs:
+        driver: local
+    dobbelOmegaManifest:
+        driver: local

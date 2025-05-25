@@ -1,61 +1,89 @@
-import 'server-only'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import '@pn-server-only'
+import { Session } from '@/auth/Session'
+import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import type { ErrorCode, ErrorMessage } from '@/services/error'
+import type { ServiceMethodType } from '@/services/ServiceMethod'
+import type { SessionNoUser } from '@/auth/Session'
+import type { z } from 'zod'
 
-type APIHandlerFunction<Return> = (req: NextRequest) => Promise<Return>
-type Auther = { auth: (x: string) => boolean }
-type APIHandler<Return> = {
-    permission: Auther,
-    handler: APIHandlerFunction<Return>
-}
+type APIHandler<
+    RawParams,
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+> = {
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>,
+} & (ParamsSchema extends undefined ? {
+    params?: undefined,
+} : {
+    params: (rawparams: RawParams) => z.input<NonNullable<ParamsSchema>>,
+})
 
-export function apiHandler<GETReturn, POSTReturn, PUTReturn, DELETEReturn>({
-    GET,
-    POST,
-    PUT,
-    DELETE
-}: {
-    GET?: APIHandler<GETReturn>,
-    POST?: APIHandler<POSTReturn>,
-    PUT?: APIHandler<PUTReturn>,
-    DELETE?: APIHandler<DELETEReturn>
-}) {
-    return async function handler(req: NextRequest) {
-        switch (req.method) {
-            case 'GET':
-                if (GET) {
-                    const data = await GET.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'POST':
-                if (POST) {
-                    const data = await POST.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'PUT':
-                if (PUT) {
-                    const data = await PUT.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            case 'DELETE':
-                if (DELETE) {
-                    const data = await DELETE.handler(req)
-                    NextResponse.json(data, { status: 200 })
-                } else {
-                    NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
-                }
-                break
-            default:
-                NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
+async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
+    try {
+        const authorization = req.headers.get('authorization')
+        const session = await Session.fromApiKey(authorization)
+        const result = await handle(session)
+        return createApiResponse(result)
+    } catch (error: unknown) {
+        if (error instanceof Smorekopp) {
+            return createApiErrorRespone(error.errorCode, error.errors)
+        }
+        if (error instanceof Error) {
+            return createApiErrorRespone('UNKNOWN ERROR', error.message)
         }
     }
+    return createApiErrorRespone('SERVER ERROR', 'Noe veldig uventet skjedde')
+}
+
+export function apiHandler<
+    RawParams,
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+>({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
+    // TODO: I think I will rewrite this to be easier to read
+    return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
+        await apiHandlerGeneric<Return>(req, async session => {
+            if (serviceMethod.dataSchema) {
+                try {
+                    const rawdata = await req.json()
+
+                    return serviceMethod.newClient().executeUnsafe({
+                        params: params ? params(await rawParams) : undefined,
+                        data: rawdata,
+                        session,
+                    })
+                } catch (error) {
+                    if (error instanceof SyntaxError) {
+                        throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
+                    }
+                    throw error
+                }
+            }
+
+            return serviceMethod.newClient().executeUnsafe({
+                params: params ? params(await rawParams) : undefined,
+                data: undefined,
+                session,
+            })
+        })
+}
+
+function createApiErrorRespone(errorCode: ErrorCode, message: string | ErrorMessage[]) {
+    const errors: ErrorMessage[] = Array.isArray(message) ? message : [{
+        message,
+    }]
+
+    return new Response(JSON.stringify({
+        errorCode,
+        errors,
+    }), {
+        status: getHttpErrorCode(errorCode)
+    })
+}
+
+function createApiResponse<Return>(res: Return) {
+    const data = res ? JSON.stringify(res) : ''
+    return Response.json(data, { status: 200 })
 }

@@ -1,5 +1,7 @@
-import 'server-only'
+import '@pn-server-only'
 import { apiHandler } from '@/api/apiHandler'
+import { UserMethods } from '@/services/users/methods'
 
-const handler = apiHandler({})
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE }
+export const POST = apiHandler({
+    serviceMethod: UserMethods.create
+})

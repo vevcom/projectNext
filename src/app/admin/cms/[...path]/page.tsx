@@ -1,11 +1,11 @@
 type PropTypes = {
-    params: {
+    params: Promise<{
         path: string[],
-    },
+    }>,
 }
 
-export default function EditPath({ params }: PropTypes) {
-    const path = params.path.join('/')
+export default async function EditPath({ params }: PropTypes) {
+    const path = (await params).path.join('/')
     //check that path exists.
     return <>Edit: {path}</>
 }

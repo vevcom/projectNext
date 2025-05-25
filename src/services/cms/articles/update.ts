@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import { updateArticleValidation } from './validation'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
 import prisma from '@/prisma'

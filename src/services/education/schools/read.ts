@@ -1,13 +1,13 @@
-import 'server-only'
+import '@pn-server-only'
 import { createStandardSchool } from './create'
 import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
-import logger from '@/logger'
+import logger from '@/lib/logger'
 import prisma from '@/prisma'
-import { cursorPageingSelection } from '@/services/paging/cursorPageingSelection'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { StandardSchool } from '@prisma/client'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './Types'
-import type { ReadPageInput } from '@/services/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/Types'
 
 export async function readSchoolsPage<const PageSize extends number>({
     page,
