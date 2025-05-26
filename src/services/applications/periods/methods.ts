@@ -15,7 +15,25 @@ export namespace ApplicationPeriodMethods {
         paramsSchema: z.object({
             name: z.string()
         }),
-        method: async ({ prisma, params }) => prisma.applicationPeriod.findUniqueOrThrow({ where: { name: params.name } })
+        method: async ({ prisma, params }) => prisma.applicationPeriod.findUniqueOrThrow({
+            where: { name: params.name },
+            include: {
+                committeesParticipating: {
+                    include: {
+                        committee: {
+                            include: {
+                                logoImage: {
+                                    include: {
+                                        image: true
+                                    }
+                                },
+                                paragraph: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
     })
 
     export const create = ServiceMethod({

@@ -13,3 +13,4 @@ export async function readPeriodCountdownAction(
 }
 
 export const readApplicationPeriodsAction = action(ApplicationPeriodMethods.readAll)
+export const readApplicationPeriodAction = action(ApplicationPeriodMethods.read)

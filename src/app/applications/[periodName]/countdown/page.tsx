@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import Countdown from './Countdown'
-import { readPeriodCountdownAction } from '@/actions/applications/period/read'
 import type { PropTypes } from '@/app/applications/[periodName]/page'
+import { readPeriodCountdownAction } from '@/actions/applications/periods/read'
 
 export default async function ApplicationPeriodCountdown({ params }: PropTypes) {
     const infoRes = await readPeriodCountdownAction({

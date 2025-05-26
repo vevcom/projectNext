@@ -6,7 +6,7 @@ import Speedlines from './Speedlines'
 import FinalCountdown from './FinalCountdown'
 import useInterval from '@/hooks/useInterval'
 import { useState } from 'react'
-import type { CountdownInfo } from '@/services/applications/period/Types'
+import type { CountdownInfo } from '@/services/applications/periods/Types'
 
 type PropTypes = {
     info: CountdownInfo
