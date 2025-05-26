@@ -522,15 +522,15 @@ export const PermissionConfig = {
     APPLICATION_ADMIN: {
         name: 'Søknadsadministrator',
         description: `
-            Create application periods and moderate and see all applications.
-            Commitee memebers can also see all applications to their own committee.
+            Lag søknadsperioder, les søknader og administrer/moderere søknader.
+            Komitemedlemmer kan også lese søknader til sin komite.
         `,
         category: 'applications',
     },
     APPLICATION_WRITE: {
         name: 'Søknadsskriver',
         description: `
-            Can write applications to all active application periods.
+            Kan skrive søknader til alle aktive søknadsperioder. 
         `,
         category: 'applications',
     }

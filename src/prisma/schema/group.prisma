@@ -72,7 +72,8 @@ model Committee {
   shortName                  String                                     @unique
   logoImage                  CmsImage                                   @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   logoImageId                Int                                        @unique
-  ApplicationPeriodCommittee CommitteeParticipationInApplicationPeriod?
+  
+  participationsInApplicationPeriods CommitteeParticipationInApplicationPeriod[]
 
   paragraph   CmsParagraph @relation(fields: [paragraphId], references: [id])
   paragraphId Int          @unique
