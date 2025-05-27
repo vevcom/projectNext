@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export namespace ApplicationSchemas {
     const fields = z.object({

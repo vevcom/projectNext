@@ -3,7 +3,7 @@ import styles from './Reprioritize.module.scss'
 import { updateApplicationAction } from '@/actions/applications/update'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 type PropTypes = {
@@ -15,12 +15,30 @@ type PropTypes = {
 
 export default function Reprioritize({ showUp, showDown, userId, commiteeParticipationId }: PropTypes) {
     const { refresh } = useRouter()
+    const [error, setError] = useState<string | null>(null)
+
+    const handleShowError = useCallback((e: string) => {
+        setError(e)
+        setTimeout(() => {
+            setError(null)
+        }, 3000)
+    }, [])
+
     const handleReprioritize = useCallback(async (direction: 'UP' | 'DOWN') => {
-        await updateApplicationAction({
+        const res = await updateApplicationAction({
             userId, commiteeParticipationId
         }, { priority: direction })
+        if (!res.success) {
+            handleShowError(
+                res.error?.length ?
+                    res.error.map(e => e.message).join(' ') :
+                    'An unknown error occurred while reprioritizing.'
+            )
+            return
+        }
         refresh()
-    }, [userId, commiteeParticipationId, refresh])
+    }, [userId, commiteeParticipationId, refresh, handleShowError])
+
     return (
         <>
             {
@@ -33,6 +51,7 @@ export default function Reprioritize({ showUp, showDown, userId, commiteePartici
                     <FontAwesomeIcon icon={faArrowDown} />
                 </button>
             }
+            { error && <i className={styles.error}>{error}</i> }
         </>
     )
 }

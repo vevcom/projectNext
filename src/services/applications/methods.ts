@@ -32,12 +32,31 @@ export namespace ApplicationMethods {
                 where: {
                     id: params.commiteeParticipationId
                 },
+                select: {
+                    applicationPeriod: {
+                        select: {
+                            id: true,
+                            startDate: true,
+                            endDate: true,
+                        }
+                    }
+                }
             })
+
+            if (Date.now() < commiteeParticipation.applicationPeriod.startDate.getTime()) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The application period has not started yet.'
+                )
+            } else if (Date.now() > commiteeParticipation.applicationPeriod.endDate.getTime()) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The application period has ended.'
+                )
+            }
 
             const usersLowestPriorityApplicationInPeriod = await prisma.application.findFirst({
                 where: {
                     userId: params.userId,
-                    applicationPeriodId: commiteeParticipation.applicationPeriodId
+                    applicationPeriodId: commiteeParticipation.applicationPeriod.id
                 },
                 orderBy: {
                     priority: 'desc'
@@ -47,18 +66,12 @@ export namespace ApplicationMethods {
                 }
             }).then(application => application?.priority ?? 0)
 
-            console.log({ text: data.text,
-                userId: params.userId,
-                applicationPeriodCommiteeId: params.commiteeParticipationId,
-                applicationPeriodId: commiteeParticipation.applicationPeriodId,
-                priority: usersLowestPriorityApplicationInPeriod + 1, })
-
             await prisma.application.create({
                 data: {
                     text: data.text,
                     userId: params.userId,
                     applicationPeriodCommiteeId: params.commiteeParticipationId,
-                    applicationPeriodId: commiteeParticipation.applicationPeriodId,
+                    applicationPeriodId: commiteeParticipation.applicationPeriod.id,
                     priority: usersLowestPriorityApplicationInPeriod + 1,
                 }
             })
@@ -79,12 +92,37 @@ export namespace ApplicationMethods {
                     userId_applicationPeriodCommiteeId: {
                         userId: params.userId,
                         applicationPeriodCommiteeId: params.commiteeParticipationId
+                    },
+                },
+                select: {
+                    priority: true,
+                    applicationPeriodId: true,
+                    applicationPeriodCommitee: {
+                        select: {
+                            applicationPeriod: {
+                                select: {
+                                    endDate: true,
+                                    startDate: true,
+                                    endPriorityDate: true
+                                }
+                            }
+                        }
                     }
                 }
             })
-
+            const { startDate, endDate, endPriorityDate } = application.applicationPeriodCommitee.applicationPeriod
+            if (Date.now() < startDate.getTime()) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The application period has not started yet.'
+                )
+            }
 
             if (data.text !== undefined) {
+                if (Date.now() > endDate.getTime()) {
+                    throw new ServerError(
+                        'BAD PARAMETERS', 'The application period has ended.'
+                    )
+                }
                 await prisma.application.update({
                     where: {
                         userId_applicationPeriodCommiteeId: {
@@ -98,6 +136,12 @@ export namespace ApplicationMethods {
                 })
             }
             if (data.priority === undefined) return
+            if (Date.now() > endPriorityDate.getTime()) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The priority period has ended.'
+                )
+            }
+
             const otherApplication = await prisma.application.findFirst({
                 where: {
                     userId: params.userId,

@@ -15,6 +15,7 @@ import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
 import { createApplicationAction } from '@/actions/applications/create'
 import { updateApplicationAction } from '@/actions/applications/update'
+import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import Link from 'next/link'
 
 export type PropTypes = {
@@ -68,7 +69,18 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
         }, null as number | null) ?? 0
 
     return (
-        <PageWrapper title={`Søknadsperiode: ${params.periodName}`}>
+        <PageWrapper title={`Søknadsperiode: ${params.periodName}`} headerItem={
+            <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`}>
+                <h1>Innstillinger for søknadsperiode</h1>
+                <Form
+                    closePopUpOnSuccess={`period-${period.name}-settings`}
+                    action={async () => ({ success: true })}
+                    submitText="Lagre endringer"
+                >
+
+                </Form>
+            </SettingsHeaderItemPopUp>
+        }>
             <p>
                 Søknadsstart: <DateComponent date={period.startDate} includeTime />
                 <br />
