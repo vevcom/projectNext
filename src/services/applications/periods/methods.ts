@@ -46,6 +46,7 @@ export namespace ApplicationPeriodMethods {
                     name: data.name,
                     startDate: data.startDate,
                     endDate: data.endDate,
+                    endPriorityDate: data.endPriorityDate,
                     committeesParticipating: {
                         create: data.participatingCommitteeIds.map(id => ({ committeeId: id }))
                     }

@@ -1,5 +1,7 @@
 import '@pn-server-only'
 import { ApplicationAuthers } from './authers'
+import { ApplicationSchemas } from './schemas'
+import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { z } from 'zod'
 
@@ -16,5 +18,129 @@ export namespace ApplicationMethods {
                 applicationPeriodId: params.periodId
             }
         })
+    })
+
+    export const create = ServiceMethod({
+        dataSchema: ApplicationSchemas.create,
+        paramsSchema: z.object({
+            userId: z.number(),
+            commiteeParticipationId: z.number()
+        }),
+        auther: ({ params }) => ApplicationAuthers.create.dynamicFields({ userId: params.userId }),
+        method: async ({ prisma, data, params }) => {
+            const commiteeParticipation = await prisma.committeeParticipationInApplicationPeriod.findUniqueOrThrow({
+                where: {
+                    id: params.commiteeParticipationId
+                },
+            })
+
+            const usersLowestPriorityApplicationInPeriod = await prisma.application.findFirst({
+                where: {
+                    userId: params.userId,
+                    applicationPeriodId: commiteeParticipation.applicationPeriodId
+                },
+                orderBy: {
+                    priority: 'asc'
+                },
+                select: {
+                    priority: true
+                }
+            }).then(application => application?.priority ?? 0)
+
+            await prisma.application.create({
+                data: {
+                    text: data.text,
+                    userId: params.userId,
+                    applicationPeriodCommiteeId: params.commiteeParticipationId,
+                    applicationPeriodId: commiteeParticipation.applicationPeriodId,
+                    priority: usersLowestPriorityApplicationInPeriod + 1,
+                }
+            })
+        },
+    })
+
+    export const update = ServiceMethod({
+        dataSchema: ApplicationSchemas.update,
+        paramsSchema: z.object({
+            userId: z.number(),
+            commiteeParticipationId: z.number()
+        }),
+        opensTransaction: true,
+        auther: ({ params }) => ApplicationAuthers.update.dynamicFields({ userId: params.userId }),
+        method: async ({ prisma, data, params }) => {
+            const application = await prisma.application.findUniqueOrThrow({
+                where: {
+                    userId_applicationPeriodCommiteeId: {
+                        userId: params.userId,
+                        applicationPeriodCommiteeId: params.commiteeParticipationId
+                    }
+                }
+            })
+
+            const otherApplication = await prisma.application.findFirst({
+                where: {
+                    userId: params.userId,
+                    applicationPeriodId: application.applicationPeriodId,
+                    priority: data.priority === 'UP' ? application.priority - 1 : application.priority + 1
+                }
+            })
+
+            if (!otherApplication) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The application is already at the top or bottom of the priority list.'
+                )
+            }
+
+            if (data.text !== undefined) {
+                await prisma.application.update({
+                    where: {
+                        userId_applicationPeriodCommiteeId: {
+                            userId: params.userId,
+                            applicationPeriodCommiteeId: params.commiteeParticipationId
+                        }
+                    },
+                    data: {
+                        text: data.text
+                    }
+                })
+            }
+
+            // Swap the priorities if the other application exists.
+            // Must temporarly change the priority to -1 to avoid unique constraint violation
+            prisma.$transaction(async (tx) => {
+                await tx.application.update({
+                    where: {
+                        userId_applicationPeriodCommiteeId: {
+                            userId: params.userId,
+                            applicationPeriodCommiteeId: params.commiteeParticipationId
+                        }
+                    },
+                    data: {
+                        priority: -1 // Temporarily set to -1 to avoid unique constraint violation
+                    }
+                })
+
+                await tx.application.update({
+                    where: {
+                        id: otherApplication.id
+                    },
+                    data: {
+                        priority: application.priority
+                    }
+                })
+
+                await tx.application.update({
+                    where: {
+                        userId_applicationPeriodCommiteeId: {
+                            userId: params.userId,
+                            applicationPeriodCommiteeId: params.commiteeParticipationId
+                        }
+                    },
+                    data: {
+                        priority: data.priority === 'UP' ? application.priority - 1 : application.priority + 1
+                    }
+                })
+            })
+        },
     })
 }

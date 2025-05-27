@@ -24,10 +24,12 @@ export default async function Apllications() {
                     submitText="Legg til"
                     refreshOnSuccess
                     className={styles.createForm}
+                    closePopUpOnSuccess="addApplicationPeriod"
                 >
                     <TextInput name="name" label="Navn" />
-                    <DateInput name="startDate" label="Starttid" />
-                    <DateInput name="endDate" label="Sluttid" />
+                    <DateInput name="startDate" label="Starttid" includeTime />
+                    <DateInput name="endDate" label="Sluttid" includeTime />
+                    <DateInput name="endPriorityDate" label="Frist for prioritering" includeTime />
                     <h3>Kommitéer som deltar i søknadsperioden</h3>
                     {
                         committees.map(committee => (

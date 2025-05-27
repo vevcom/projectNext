@@ -3,13 +3,14 @@ model ApplicationPeriod {
   name                    String                                      @unique
   startDate               DateTime
   endDate                 DateTime
+  endPriorityDate         DateTime
   committeesParticipating CommitteeParticipationInApplicationPeriod[]
 }
 
 model CommitteeParticipationInApplicationPeriod {
   id                  Int               @id @default(autoincrement())
   committee           Committee         @relation(fields: [committeeId], references: [id])
-  committeeId         Int               
+  committeeId         Int
   applicationPeriod   ApplicationPeriod @relation(fields: [applicationPeriodId], references: [id])
   applicationPeriodId Int
   applications        Application[]
@@ -26,6 +27,7 @@ model Application {
   applicationPeriodCommiteeId Int
   applicationPeriodId         Int
   priority                    Int
+  text                        String
 
   @@unique([userId, applicationPeriodId, priority])
   @@unique([userId, applicationPeriodCommiteeId])
