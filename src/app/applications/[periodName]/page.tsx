@@ -21,6 +21,7 @@ import { readCommitteesAction } from '@/actions/groups/committees/read'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
+import { destroyApplicationAction } from '@/actions/applications/destroy'
 
 export type PropTypes = {
     params: {
@@ -114,7 +115,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                     />
                                     <div className={styles.navigation}>
                                         {
-                                            userId && (
+                                            userId ? (
                                                 <PopUp
                                                     PopUpKey={`committee-${part.committee.shortName}-apply`}
                                                     showButtonContent={
@@ -142,8 +143,30 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                                             className={styles.textarea}
                                                         />
                                                     </Form>
+                                                    {
+                                                        part.priority !== null && (
+                                                            <Form
+                                                                refreshOnSuccess
+                                                                closePopUpOnSuccess={
+                                                                    `committee-${part.committee.shortName}-apply`
+                                                                }
+                                                                action={destroyApplicationAction.bind(null, {
+                                                                    userId,
+                                                                    commiteeParticipationId: part.id
+                                                                })}
+                                                                confirmation={{
+                                                                    confirm: true,
+                                                                    text: 'Er du sikker på at du vil slette søknaden?',
+                                                                }}
+                                                                submitColor="red"
+                                                                submitText="Slett søknad"
+                                                            />
+                                                        )
+                                                    }
                                                 </PopUp>
-                                            )
+                                            ) : <Link href="/login" className={styles.applyButton}>
+                                                Logg inn for å søke
+                                            </Link>
                                         }
                                         <Link
                                             href={`/committees/${part.committee.shortName}`}

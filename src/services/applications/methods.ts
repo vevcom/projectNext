@@ -193,4 +193,44 @@ export namespace ApplicationMethods {
             })
         },
     })
+
+    export const destroy = ServiceMethod({
+        paramsSchema: z.object({
+            userId: z.number(),
+            commiteeParticipationId: z.number()
+        }),
+        auther: ({ params }) => ApplicationAuthers.destroy.dynamicFields({ userId: params.userId }),
+        opensTransaction: true,
+        method: async ({ prisma, params }) => {
+            prisma.$transaction(async (tx) => {
+                // Delete application
+                const application = await tx.application.delete({
+                    where: {
+                        userId_applicationPeriodCommiteeId: {
+                            userId: params.userId,
+                            applicationPeriodCommiteeId: params.commiteeParticipationId
+                        }
+                    },
+                    select: {
+                        priority: true,
+                        applicationPeriodId: true,
+                    }
+                })
+                await tx.application.updateMany({
+                    where: {
+                        userId: params.userId,
+                        applicationPeriodId: application.applicationPeriodId,
+                        priority: {
+                            gt: application.priority
+                        }
+                    },
+                    data: {
+                        priority: {
+                            decrement: 1
+                        }
+                    }
+                })
+            })
+        }
+    })
 }

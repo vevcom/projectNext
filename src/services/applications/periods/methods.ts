@@ -68,7 +68,14 @@ export namespace ApplicationPeriodMethods {
                     startDate: data.startDate,
                     endDate: data.endDate,
                     endPriorityDate: data.endPriorityDate,
-                }
+                },
+                include: {
+                    committeesParticipating: {
+                        select: {
+                            committeeId: true
+                        },
+                    },
+                },
             })
 
             if (data.participatingCommitteeIds) {
