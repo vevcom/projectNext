@@ -203,7 +203,6 @@ export namespace ApplicationMethods {
         opensTransaction: true,
         method: async ({ prisma, params }) => {
             prisma.$transaction(async (tx) => {
-                // Delete application
                 const application = await tx.application.delete({
                     where: {
                         userId_applicationPeriodCommiteeId: {

@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { ApplicationPeriodAuthers } from './authers'
 import { ApplicationPeriodSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
+import { ApplicationMethods } from '@/services/applications/methods'
 import { z } from 'zod'
 
 export namespace ApplicationPeriodMethods {
@@ -60,7 +61,7 @@ export namespace ApplicationPeriodMethods {
         paramsSchema: z.object({
             name: z.string()
         }),
-        method: async ({ prisma, data, params }) => {
+        method: async ({ prisma, data, params, session }) => {
             const period = await prisma.applicationPeriod.update({
                 where: { name: params.name },
                 data: {
@@ -79,14 +80,39 @@ export namespace ApplicationPeriodMethods {
             })
 
             if (data.participatingCommitteeIds) {
-                await prisma.committeeParticipationInApplicationPeriod.deleteMany({
-                    where: {
-                        applicationPeriodId: period.id,
-                        committeeId: {
-                            notIn: data.participatingCommitteeIds
-                        }
-                    }
-                })
+                // Remove applications to committees that are no longer participating
+                // This must be done through the ApplicationMethods.destroy method to ensure
+                // that reordering priorities is handled correctly.
+                await Promise.all(
+                    period.committeesParticipating
+                        .map(c => c.committeeId)
+                        .filter(id => !(data.participatingCommitteeIds ?? []).includes(id))
+                        .map(async id => {
+                            const removeApplications = await prisma.application.findMany({
+                                where: {
+                                    applicationPeriodId: period.id,
+                                    applicationPeriodCommitee: {
+                                        committeeId: id
+                                    }
+                                },
+                                select: {
+                                    userId: true,
+                                    applicationPeriodCommiteeId: true
+                                }
+                            })
+                            await Promise.all(
+                                removeApplications.map(async application =>
+                                    await ApplicationMethods.destroy.newClient().execute({
+                                        params: {
+                                            userId: application.userId,
+                                            commiteeParticipationId: application.applicationPeriodCommiteeId
+                                        },
+                                        session,
+                                    })
+                                )
+                            )
+                        })
+                )
 
                 await prisma.committeeParticipationInApplicationPeriod.createMany({
                     data: data.participatingCommitteeIds.map(id => ({
@@ -94,6 +120,14 @@ export namespace ApplicationPeriodMethods {
                         committeeId: id
                     })),
                     skipDuplicates: true
+                })
+                await prisma.committeeParticipationInApplicationPeriod.deleteMany({
+                    where: {
+                        applicationPeriodId: period.id,
+                        committeeId: {
+                            notIn: data.participatingCommitteeIds
+                        }
+                    }
                 })
             }
         }
