@@ -1,15 +1,11 @@
 import styles from './page.module.scss'
+import CreateUpdateApplicationPeriodForm from './CreateUpdateApplicationPeriodForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readApplicationPeriodsAction } from '@/actions/applications/periods/read'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Date from '@/components/Date/Date'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import TextInput from '@/components/UI/TextInput'
-import Form from '@/components/Form/Form'
-import { createApplicationPeriodAction } from '@/actions/applications/periods/create'
-import DateInput from '@/components/UI/DateInput'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
-import Checkbox from '@/components/UI/Checkbox'
 
 export default async function Apllications() {
     const periods = unwrapActionReturn(await readApplicationPeriodsAction())
@@ -18,30 +14,7 @@ export default async function Apllications() {
     return (
         <PageWrapper title="Søknadsperioder" headerItem={
             <AddHeaderItemPopUp PopUpKey="addApplicationPeriod">
-                <Form
-                    title="Legg til søknadsperiode"
-                    action={createApplicationPeriodAction}
-                    submitText="Legg til"
-                    refreshOnSuccess
-                    className={styles.createForm}
-                    closePopUpOnSuccess="addApplicationPeriod"
-                >
-                    <TextInput name="name" label="Navn" />
-                    <DateInput name="startDate" label="Starttid" includeTime />
-                    <DateInput name="endDate" label="Sluttid" includeTime />
-                    <DateInput name="endPriorityDate" label="Frist for prioritering" includeTime />
-                    <h3>Kommitéer som deltar i søknadsperioden</h3>
-                    {
-                        committees.map(committee => (
-                            <Checkbox
-                                key={committee.id}
-                                name="participatingCommitteeIds"
-                                value={committee.id}
-                                label={committee.name}
-                            />
-                        ))
-                    }
-                </Form>
+                <CreateUpdateApplicationPeriodForm committees={committees} closePopUpOnSuccess="addApplicationPeriod" />
             </AddHeaderItemPopUp>
         }>
             <div className={styles.wrapper}>

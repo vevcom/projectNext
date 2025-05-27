@@ -1,4 +1,5 @@
-import type { Image } from '@prisma/client'
+import type { ApplicationPeriodConfig } from './config'
+import type { Image, Prisma } from '@prisma/client'
 
 export type CountdownInfo = {
     endTime: Date,
@@ -7,3 +8,7 @@ export type CountdownInfo = {
         logo: Image
     }[]
 }
+
+export type ExpandedApplicationPeriod = Prisma.ApplicationPeriodGetPayload<{
+    include: typeof ApplicationPeriodConfig.includer
+}>

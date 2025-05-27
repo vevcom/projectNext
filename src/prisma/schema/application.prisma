@@ -23,7 +23,7 @@ model Application {
   id                          Int                                       @id @default(autoincrement())
   user                        User                                      @relation(fields: [userId], references: [id])
   userId                      Int
-  applicationPeriodCommitee   CommitteeParticipationInApplicationPeriod @relation(fields: [applicationPeriodCommiteeId, applicationPeriodId], references: [id, applicationPeriodId])
+  applicationPeriodCommitee   CommitteeParticipationInApplicationPeriod @relation(fields: [applicationPeriodCommiteeId, applicationPeriodId], references: [id, applicationPeriodId], onDelete: Cascade)
   applicationPeriodCommiteeId Int
   applicationPeriodId         Int
   priority                    Int

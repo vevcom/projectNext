@@ -35,6 +35,14 @@
                 @include ohma.borderBtn(ohma.$colors-secondary);
                 margin: 0;
             }
+            .videoButton {
+                @include ohma.borderBtn(ohma.$colors-secondary);
+                margin: 0;
+                svg {
+                    width: 1em;
+                    height: 1em;
+                }
+            }
         }
     }
     .priorityContainer {

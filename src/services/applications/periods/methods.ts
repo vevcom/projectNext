@@ -40,7 +40,6 @@ export namespace ApplicationPeriodMethods {
         auther: () => ApplicationPeriodAuthers.create.dynamicFields({}),
         dataSchema: ApplicationPeriodSchemas.create,
         method: async ({ prisma, data }) => {
-            console.log('creating application period', data)
             await prisma.applicationPeriod.create({
                 data: {
                     name: data.name,
@@ -52,6 +51,44 @@ export namespace ApplicationPeriodMethods {
                     }
                 }
             })
+        }
+    })
+
+    export const update = ServiceMethod({
+        auther: () => ApplicationPeriodAuthers.update.dynamicFields({}),
+        dataSchema: ApplicationPeriodSchemas.update,
+        paramsSchema: z.object({
+            name: z.string()
+        }),
+        method: async ({ prisma, data, params }) => {
+            const period = await prisma.applicationPeriod.update({
+                where: { name: params.name },
+                data: {
+                    name: data.name,
+                    startDate: data.startDate,
+                    endDate: data.endDate,
+                    endPriorityDate: data.endPriorityDate,
+                }
+            })
+
+            if (data.participatingCommitteeIds) {
+                await prisma.committeeParticipationInApplicationPeriod.deleteMany({
+                    where: {
+                        applicationPeriodId: period.id,
+                        committeeId: {
+                            notIn: data.participatingCommitteeIds
+                        }
+                    }
+                })
+
+                await prisma.committeeParticipationInApplicationPeriod.createMany({
+                    data: data.participatingCommitteeIds.map(id => ({
+                        applicationPeriodId: period.id,
+                        committeeId: id
+                    })),
+                    skipDuplicates: true
+                })
+            }
         }
     })
 }

@@ -16,7 +16,11 @@ import Form from '@/components/Form/Form'
 import { createApplicationAction } from '@/actions/applications/create'
 import { updateApplicationAction } from '@/actions/applications/update'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import CreateUpdateApplicationPeriodForm from '@/app/applications/CreateUpdateApplicationPeriodForm'
+import { readCommitteesAction } from '@/actions/groups/committees/read'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faVideo } from '@fortawesome/free-solid-svg-icons'
 
 export type PropTypes = {
     params: {
@@ -31,6 +35,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
     const applications = userId ? unwrapActionReturn(
         await readApplicationsForUserAction({ userId, periodId: period.id })
     ) : []
+    const committees = unwrapActionReturn(await readCommitteesAction())
 
     const periodWithApplications = {
         ...period,
@@ -70,23 +75,20 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
 
     return (
         <PageWrapper title={`Søknadsperiode: ${params.periodName}`} headerItem={
-            <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`}>
-                <h1>Innstillinger for søknadsperiode</h1>
-                <Form
+            <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`} scale={35}>
+                <CreateUpdateApplicationPeriodForm
+                    committees={committees}
                     closePopUpOnSuccess={`period-${period.name}-settings`}
-                    action={async () => ({ success: true })}
-                    submitText="Lagre endringer"
-                >
-
-                </Form>
+                    period={period}
+                />
             </SettingsHeaderItemPopUp>
         }>
             <p>
-                Søknadsstart: <DateComponent date={period.startDate} includeTime />
+                <b>Søknadsstart:</b> <DateComponent date={period.startDate} includeTime />
                 <br />
-                Søknadsfrist: <DateComponent date={period.endDate} includeTime />
+                <b>Søknadsfrist:</b> <DateComponent date={period.endDate} includeTime />
                 <br />
-                Frist for prioritering: <DateComponent date={period.endPriorityDate} includeTime />
+                <b>Frist for prioritering:</b> <DateComponent date={period.endPriorityDate} includeTime />
             </p>
             {
                 period.endDate.getTime() > (new Date()).getTime() && (
@@ -110,7 +112,6 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                     <CmsParagraph
                                         cmsParagraph={part.committee.paragraph}
                                     />
-                                    {/* TODO: Video saved on committee */}
                                     <div className={styles.navigation}>
                                         {
                                             userId && (
@@ -150,6 +151,16 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                         >
                                             Les mer
                                         </Link>
+                                        <PopUp
+                                            PopUpKey={`committee-${part.committee.shortName}-video`}
+                                            showButtonContent={
+                                                <FontAwesomeIcon icon={faVideo} />
+                                            }
+                                            showButtonClass={styles.videoButton}
+                                        >
+                                            {/* TODO: Video saved on committee */}
+                                            <h1>Komitévideo for {part.committee.name}</h1>
+                                        </PopUp>
                                     </div>
                                     {
                                         part.priority !== null && userId && (
