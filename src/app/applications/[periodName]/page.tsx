@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
+import Reprioritize from './Reprioritize'
 import { readApplicationPeriodAction } from '@/actions/applications/periods/read'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { default as DateComponent } from '@/components/Date/Date'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CountDown from '@/components/countDown/CountDown'
-import Link from 'next/link'
 import { readSpecialImageAction } from '@/images/read'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
@@ -13,10 +13,9 @@ import { readApplicationsForUserAction } from '@/actions/applications/read'
 import { Session } from '@/auth/Session'
 import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { createApplicationAction } from '@/actions/applications/create'
 import { updateApplicationAction } from '@/actions/applications/update'
+import Link from 'next/link'
 
 export type PropTypes = {
     params: {
@@ -49,6 +48,24 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
             return a.priority - b.priority
         })
     }
+
+    const minPriority = periodWithApplications.committeesParticipating
+        .reduce((highest, part) => {
+            if (part.priority === null) return highest
+            if (highest === null || part.priority < highest) {
+                return part.priority
+            }
+            return highest
+        }, null as number | null) ?? 0
+
+    const maxPriority = periodWithApplications.committeesParticipating
+        .reduce((lowest, part) => {
+            if (part.priority === null) return lowest
+            if (lowest === null || part.priority > lowest) {
+                return part.priority
+            }
+            return lowest
+        }, null as number | null) ?? 0
 
     return (
         <PageWrapper title={`Søknadsperiode: ${params.periodName}`}>
@@ -94,6 +111,8 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                                 >
                                                     <h1>Søknad til {part.committee.name}</h1>
                                                     <Form
+                                                        closePopUpOnSuccess={`committee-${part.committee.shortName}-apply`}
+                                                        refreshOnSuccess
                                                         action={part.priority === null ?
                                                             createApplicationAction.bind(
                                                                 null, { userId, commiteeParticipationId: part.id }
@@ -107,6 +126,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                                             name="text"
                                                             label="Søknadstekst"
                                                             defaultValue={part.text}
+                                                            className={styles.textarea}
                                                         />
                                                     </Form>
                                                 </PopUp>
@@ -120,12 +140,20 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                         </Link>
                                     </div>
                                     {
-                                        part.priority !== null && (
-                                            <div className={styles.priority}>
-                                                <p>{part.priority}</p>
-                                                <FontAwesomeIcon icon={faArrowUp} />
-                                                <FontAwesomeIcon icon={faArrowDown} />
-                                            </div>
+                                        part.priority !== null && userId && (
+                                            <>
+                                                <div className={styles.priorityContainer}>
+                                                    <p className={styles.priority}>
+                                                        {part.priority}
+                                                    </p>
+                                                    <Reprioritize
+                                                        userId={userId}
+                                                        commiteeParticipationId={part.id}
+                                                        showUp={part.priority > minPriority}
+                                                        showDown={part.priority < maxPriority}
+                                                    />
+                                                </div>
+                                            </>
                                         )
                                     }
                                 </BackdropImage>

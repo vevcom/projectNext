@@ -4,10 +4,16 @@
     font-size: ohma.$fonts-m;
 }
 
+.textarea {
+    min-width: 50vw;
+    height: 20vh;
+}
+
 .committees {
     list-style: none;
     > li {
         background-color: ohma.$colors-gray-200;
+        padding: 0.5em;
         margin: 1em 0;
         min-height: 250px;
         display: flex;
@@ -22,7 +28,7 @@
             display: flex;
             gap: 0.5em;
             .applyButton {
-                @include ohma.btn(ohma.$colors-primary);
+                @include ohma.btn(ohma.$colors-secondary);
                 margin: 0;
             }
             .committeeLink {
@@ -30,5 +36,26 @@
                 margin: 0;
             }
         }
+    }
+    .priorityContainer {
+        > p, button {
+            border-radius: 50%;
+            background-color: ohma.$colors-primary;
+            color: ohma.$colors-black;
+            width: 3em;
+            height: 3em;
+            display: grid;
+            place-items: center;
+            padding: 0;
+            font-weight: ohma.$fonts-weight-l;
+        }
+        > button:hover {
+            cursor: pointer;
+            background-color: darken(ohma.$colors-primary, 10%);
+        }
+        display: flex;
+        flex-flow: row wrap;
+        gap: 0.5em;
+        margin-top: .5em;
     }
 }

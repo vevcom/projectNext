@@ -40,12 +40,18 @@ export namespace ApplicationMethods {
                     applicationPeriodId: commiteeParticipation.applicationPeriodId
                 },
                 orderBy: {
-                    priority: 'asc'
+                    priority: 'desc'
                 },
                 select: {
                     priority: true
                 }
             }).then(application => application?.priority ?? 0)
+
+            console.log({ text: data.text,
+                userId: params.userId,
+                applicationPeriodCommiteeId: params.commiteeParticipationId,
+                applicationPeriodId: commiteeParticipation.applicationPeriodId,
+                priority: usersLowestPriorityApplicationInPeriod + 1, })
 
             await prisma.application.create({
                 data: {
@@ -77,19 +83,6 @@ export namespace ApplicationMethods {
                 }
             })
 
-            const otherApplication = await prisma.application.findFirst({
-                where: {
-                    userId: params.userId,
-                    applicationPeriodId: application.applicationPeriodId,
-                    priority: data.priority === 'UP' ? application.priority - 1 : application.priority + 1
-                }
-            })
-
-            if (!otherApplication) {
-                throw new ServerError(
-                    'BAD PARAMETERS', 'The application is already at the top or bottom of the priority list.'
-                )
-            }
 
             if (data.text !== undefined) {
                 await prisma.application.update({
@@ -104,7 +97,20 @@ export namespace ApplicationMethods {
                     }
                 })
             }
+            if (data.priority === undefined) return
+            const otherApplication = await prisma.application.findFirst({
+                where: {
+                    userId: params.userId,
+                    applicationPeriodId: application.applicationPeriodId,
+                    priority: data.priority === 'UP' ? application.priority - 1 : application.priority + 1
+                }
+            })
 
+            if (!otherApplication) {
+                throw new ServerError(
+                    'BAD PARAMETERS', 'The application is already at the top or bottom of the priority list.'
+                )
+            }
             // Swap the priorities if the other application exists.
             // Must temporarly change the priority to -1 to avoid unique constraint violation
             prisma.$transaction(async (tx) => {
