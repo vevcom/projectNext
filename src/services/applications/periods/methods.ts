@@ -52,6 +52,7 @@ export namespace ApplicationPeriodMethods {
                     }
                 }
             })
+            return { name: data.name }
         }
     })
 
@@ -130,6 +131,8 @@ export namespace ApplicationPeriodMethods {
                     }
                 })
             }
+
+            return { name: period.name }
         }
     })
 }

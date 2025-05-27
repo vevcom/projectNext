@@ -1,3 +1,4 @@
+'use client'
 import styles from './CreateUpdateApplicationPeriodForm.module.scss'
 import { createApplicationPeriodAction } from '@/actions/applications/periods/create'
 import { updateApplicationPeriodAction } from '@/actions/applications/periods/update'
@@ -23,6 +24,7 @@ export default function CreateUpdateApplicationPeriodForm({ committees, period, 
             refreshOnSuccess
             className={styles.CreateUpdateApplicationPeriodForm}
             closePopUpOnSuccess={closePopUpOnSuccess}
+            navigateOnSuccess={data => (data?.name ? `/applications/${encodeURIComponent(data.name)}` : null)}
         >
             <TextInput name="name" label="Navn" defaultValue={period ? period.name : undefined} />
             <DateInput
