@@ -1,9 +1,9 @@
 import styles from './page.module.scss'
 import Countdown from './Countdown'
-import type { PropTypes } from '@/app/applications/[periodName]/page'
 import { readApplicationPeriodAction } from '@/actions/applications/periods/read'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readSpecialImageAction } from '@/images/read'
+import type { PropTypes } from '@/app/applications/[periodName]/page'
 
 export default async function ApplicationPeriodCountdown({ params }: PropTypes) {
     const period = unwrapActionReturn(await readApplicationPeriodAction({ name: decodeURIComponent(params.periodName) }))

@@ -2,10 +2,9 @@
 import styles from './CommitteeLogoRoll.module.scss'
 import Image from '@/app/_components/Image/Image'
 import useInterval from '@/hooks/useInterval'
+import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 import { useRef, useState } from 'react'
 import type { Image as ImageT } from '@prisma/client'
-import { read } from 'fs'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 
 type PropTypes = {
     committees: {

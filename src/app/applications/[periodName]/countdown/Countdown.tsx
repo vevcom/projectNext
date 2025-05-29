@@ -6,8 +6,8 @@ import Speedlines from './Speedlines'
 import FinalCountdown from './FinalCountdown'
 import useInterval from '@/hooks/useInterval'
 import { useState } from 'react'
+import type { Image } from '@prisma/client'
 import type { ExpandedApplicationPeriod } from '@/services/applications/periods/Types'
-import { Image } from '@prisma/client'
 
 type PropTypes = {
     period: ExpandedApplicationPeriod

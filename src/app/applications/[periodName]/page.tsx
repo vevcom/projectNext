@@ -18,11 +18,11 @@ import { updateApplicationAction } from '@/actions/applications/update'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import CreateUpdateApplicationPeriodForm from '@/app/applications/CreateUpdateApplicationPeriodForm'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
+import { destroyApplicationAction } from '@/actions/applications/destroy'
+import { destroyApplicationPeriodAction, removeAllApplicationTextsAction } from '@/actions/applications/periods/destroy'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
-import { destroyApplicationAction } from '@/actions/applications/destroy'
-import { destroyApplicationPeriodAction, removeAllApplicationTextsAction } from '@/actions/applications/periods/destroy'
 
 export type PropTypes = {
     params: {
@@ -104,7 +104,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                     refreshOnSuccess
                 />
                 <p>
-                    Du kan slette en søknadsperiode dette vil slette alle asosierte søknader, 
+                    Du kan slette en søknadsperiode dette vil slette alle asosierte søknader,
                     men det er anbefalt å heller fjerne alle søknadstekster istedenfor å slette søknadsperioden.
                 </p>
                 <Form
@@ -120,9 +120,9 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                     submitText="Slett søknadsperiode"
                     closePopUpOnSuccess={`period-${period.name}-settings`}
                     refreshOnSuccess
-                    navigateOnSuccess={"/applications"}
+                    navigateOnSuccess={'/applications'}
                 />
-                    
+
             </SettingsHeaderItemPopUp>
         }>
             <p>

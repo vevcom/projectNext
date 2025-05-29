@@ -3,8 +3,8 @@ import { ApplicationPeriodAuthers } from './authers'
 import { ApplicationPeriodSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ApplicationMethods } from '@/services/applications/methods'
-import { z } from 'zod'
 import { ServerError } from '@/services/error'
+import { z } from 'zod'
 
 export namespace ApplicationPeriodMethods {
     export const readAll = ServiceMethod({
