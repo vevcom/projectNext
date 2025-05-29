@@ -1,17 +1,23 @@
+import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 import styles from './FinalCountdown.module.scss'
 import useInterval from '@/hooks/useInterval'
 import { useEffect, useRef, useState } from 'react'
 
-export default function FinalCountdown() {
+type PropTypes = {
+    periodName: string
+}
+
+export default function FinalCountdown({ periodName }: PropTypes) {
     const [timeLeft, setTimeLeft] = useState<number | null>(11)
     const ref = useRef<HTMLDivElement>(null)
 
     const [applicants, setApplicants] = useState(0)
 
     useEffect(() => {
-        fetch('https://omega.ntnu.no/api/applications/applicants').then(res => res.json()).then(data => {
-            setApplicants(data)
-        }).catch(console.log)
+        readNumberOfApplicationsAction({ name: periodName }).then(res =>{
+            if (!res.success) return
+            setApplicants(res.data)
+        })
     }, [])
 
     useInterval(() => {
@@ -24,7 +30,7 @@ export default function FinalCountdown() {
     return (
         <div ref={ref} className={styles.FinalCountdown}>
             { timeLeft === null ? <h1 className={styles.applicants}>
-                {applicants} <br /> søkere
+                {applicants} <br /> søknader
             </h1> : <h1>{timeLeft}</h1> }
 
         </div>

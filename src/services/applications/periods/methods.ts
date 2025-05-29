@@ -174,4 +174,24 @@ export namespace ApplicationPeriodMethods {
             })
         }
     })
+
+    export const readNumberOfApplications = ServiceMethod({
+        auther: () => ApplicationPeriodAuthers.readNumberOfApplications.dynamicFields({}),
+        paramsSchema: z.object({
+            name: z.string()
+        }),
+        method: async ({ prisma, params }) => {
+            const period = await prisma.applicationPeriod.findUniqueOrThrow({
+                where: { name: params.name },
+                select: {
+                    id: true
+                },
+            })
+            return await prisma.application.count({
+                where: {
+                    applicationPeriodId: period.id
+                },
+            })
+        }
+    })
 }

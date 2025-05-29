@@ -4,15 +4,18 @@ import Image from '@/app/_components/Image/Image'
 import useInterval from '@/hooks/useInterval'
 import { useRef, useState } from 'react'
 import type { Image as ImageT } from '@prisma/client'
+import { read } from 'fs'
+import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 
 type PropTypes = {
     committees: {
         shortname: string,
         logo: ImageT
-    }[]
+    }[],
+    periodName: string
 }
 
-export default function CommitteeLogoRoll({ committees }: PropTypes) {
+export default function CommitteeLogoRoll({ committees, periodName }: PropTypes) {
     const [currentCommitteeIndexes, setCurrentCommitteeIndexes] = useState<
         {
             display1: number | 'Søkere',
@@ -27,11 +30,10 @@ export default function CommitteeLogoRoll({ committees }: PropTypes) {
 
     const sokere = useRef(0)
 
-    useInterval(() => {
-        fetch('https://omega.ntnu.no/api/applications/applicants').then(res => res.json()).then(data => {
-            console.log(data)
-            sokere.current = data as number
-        }).catch(console.log)
+    useInterval(async () => {
+        const res = await readNumberOfApplicationsAction({ name: periodName })
+        if (!res.success) return
+        sokere.current = res.data
     }, 2000)
 
     const display1Ref = useRef<HTMLDivElement>(null)

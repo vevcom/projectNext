@@ -6,22 +6,24 @@ import Speedlines from './Speedlines'
 import FinalCountdown from './FinalCountdown'
 import useInterval from '@/hooks/useInterval'
 import { useState } from 'react'
-import type { CountdownInfo } from '@/services/applications/periods/Types'
+import type { ExpandedApplicationPeriod } from '@/services/applications/periods/Types'
+import { Image } from '@prisma/client'
 
 type PropTypes = {
-    info: CountdownInfo
+    period: ExpandedApplicationPeriod
+    defaultCommitteeLogo: Image
 }
 
-export default function Countdown({ info }: PropTypes) {
+export default function Countdown({ period, defaultCommitteeLogo }: PropTypes) {
     const [showCommitteeRoll, setShowComitteeRoll] = useState(true)
     const [finalCountdown, setFinalCountdown] = useState(false)
 
     useInterval(() => {
-        if (new Date().getTime() + 20_000 > info.endTime.getTime()) {
+        if (new Date().getTime() + 20_000 > period.endDate.getTime()) {
             setShowComitteeRoll(false)
             setTimeout(() => {
                 setFinalCountdown(true)
-            }, Math.max(0, info.endTime.getTime() - new Date().getTime() - 12_000))
+            }, Math.max(0, period.endDate.getTime() - new Date().getTime() - 12_000))
         }
     }, 10_000)
 
@@ -29,16 +31,19 @@ export default function Countdown({ info }: PropTypes) {
         <div className={styles.Countdown}>
             <div className={styles.top}>
                 {!finalCountdown && (
-                    <TimeLeft end={info.endTime} />
+                    <TimeLeft end={period.endDate} />
                 )}
             </div>
             <div className={styles.under}>
                 <Speedlines />
                 {showCommitteeRoll && (
-                    <CommitteeLogoRoll committees={info.commiteesParticipating} />
+                    <CommitteeLogoRoll periodName={period.name} committees={period.committeesParticipating.map(part => ({
+                        shortname: part.committee.shortName,
+                        logo: part.committee.logoImage.image || defaultCommitteeLogo
+                    }))} />
                 )}
                 {finalCountdown && (
-                    <FinalCountdown />
+                    <FinalCountdown periodName={period.name} />
                 )}
             </div>
         </div>
