@@ -24,12 +24,12 @@ export async function sendBulkMail(rawdata: Mail.Options[]) {
 export async function sendSystemMail(
     to: string,
     subject: string,
-    body: React.JSX.Element,
+    body: React.JSX.Element | string,
 ) {
     await sendMail({
         to,
         subject,
         from: `noreply@${process.env.DOMAIN}`,
-        html: await render(body),
+        html: (typeof body === 'string') ? body : await render(body),
     })
 }

@@ -4,7 +4,7 @@ import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import { dispatchNotificationAction } from '@/actions/notifications/create'
+import { createNotificationAction } from '@/actions/notifications'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 
@@ -20,7 +20,7 @@ export default function NotificaionForm({
         <Form
             submitText="Send varsel"
             className={styles.notificaionForm}
-            action={dispatchNotificationAction}
+            action={createNotificationAction}
             successCallback={data => {
                 if (data) {
                     setSuccessMessage(`
@@ -63,6 +63,6 @@ export default function NotificaionForm({
             </table>
 
         </Form>
-        { successMessage && <p>{successMessage}</p>}
+        {successMessage && <p>{successMessage}</p>}
     </>
 }
