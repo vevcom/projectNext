@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { destroyApplicationAction } from '@/actions/applications/destroy'
+import { destroyApplicationPeriodAction, removeAllApplicationTextsAction } from '@/actions/applications/periods/destroy'
 
 export type PropTypes = {
     params: {
@@ -82,6 +83,46 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                     closePopUpOnSuccess={`period-${period.name}-settings`}
                     period={period}
                 />
+                <p>
+                    Etter søknadsperioden er over og plasser fordelt anbefales det av personvernshensyn å
+                    fjerne alle søknadstekster. Dette kan gjøres her. Dette sletter ikke historikk om hvem
+                    som har søkt og på hva men sletter alle søknadstekstene og bytter de ut med en tom tekst:
+                    &quot; SLETTET TEKST &quot;.
+                </p>
+                <Form
+                    action={removeAllApplicationTextsAction.bind(null, { name: period.name })}
+                    confirmation={{
+                        confirm: true,
+                        text: `
+                            Er du sikker på at du vil fjerne alle søknadstekster i denne perioden?
+                            Dette kan ikke angres!
+                        `,
+                    }}
+                    submitColor="red"
+                    submitText="Fjern alle søknadstekster"
+                    closePopUpOnSuccess={`period-${period.name}-settings`}
+                    refreshOnSuccess
+                />
+                <p>
+                    Du kan slette en søknadsperiode dette vil slette alle asosierte søknader, 
+                    men det er anbefalt å heller fjerne alle søknadstekster istedenfor å slette søknadsperioden.
+                </p>
+                <Form
+                    action={destroyApplicationPeriodAction.bind(null, { name: period.name })}
+                    confirmation={{
+                        confirm: true,
+                        text: `
+                            Er du sikker på at du vil slette denne søknadsperioden?
+                            Dette kan ikke angres!
+                        `,
+                    }}
+                    submitColor="red"
+                    submitText="Slett søknadsperiode"
+                    closePopUpOnSuccess={`period-${period.name}-settings`}
+                    refreshOnSuccess
+                    navigateOnSuccess={"/applications"}
+                />
+                    
             </SettingsHeaderItemPopUp>
         }>
             <p>

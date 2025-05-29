@@ -4,6 +4,7 @@ import { ApplicationPeriodSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ApplicationMethods } from '@/services/applications/methods'
 import { z } from 'zod'
+import { ServerError } from '@/services/error'
 
 export namespace ApplicationPeriodMethods {
     export const readAll = ServiceMethod({
@@ -133,6 +134,44 @@ export namespace ApplicationPeriodMethods {
             }
 
             return { name: period.name }
+        }
+    })
+
+    export const removeAllApplicationTexts = ServiceMethod({
+        paramsSchema: z.object({
+            name: z.string()
+        }),
+        auther: () => ApplicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
+        method: async ({ prisma, params, session }) => {
+            const period = await read.client(prisma).execute({
+                params: { name: params.name },
+                session
+            })
+            if (period.endPriorityDate.getTime() > Date.now()) {
+                throw new ServerError(
+                    'DISSALLOWED', 'You cannot remove application texts before the end of the priority date.'
+                )
+            }
+            await prisma.application.updateMany({
+                where: {
+                    applicationPeriodId: period.id
+                },
+                data: {
+                    text: 'SLETTET TEKST',
+                }
+            })
+        }
+    })
+
+    export const destroy = ServiceMethod({
+        auther: () => ApplicationPeriodAuthers.destroy.dynamicFields({}),
+        paramsSchema: z.object({
+            name: z.string()
+        }),
+        method: async ({ prisma, params }) => {
+            await prisma.applicationPeriod.delete({
+                where: { name: params.name }
+            })
         }
     })
 }

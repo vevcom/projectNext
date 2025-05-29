@@ -71,6 +71,11 @@ export const errorCodes = [
         name: 'UNPERMITTED CASCADE',
         httpCode: 400,
         defaultMessage: 'Du kan ikke slette denne ressursen fordi den er tilknyttet andre ressurser',
+    },
+    {
+        name: 'DISSALLOWED',
+        httpCode: 403,
+        defaultMessage: 'Du har ikke lov til å gjøre dette',
     }
 ] as const
 
