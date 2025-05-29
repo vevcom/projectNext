@@ -25,13 +25,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 
 export type PropTypes = {
-    params: {
+    params: Promise<{
         periodName: string
-    }
+    }>
 }
 
 export default async function ApplicationPeriod({ params }: PropTypes) {
-    const period = unwrapActionReturn(await readApplicationPeriodAction({ name: params.periodName }))
+    const period = unwrapActionReturn(await readApplicationPeriodAction({ name: (await params).periodName }))
     const defaultCommitteeLogo = unwrapActionReturn(await readSpecialImageAction({ special: 'DAFAULT_COMMITTEE_LOGO' }))
     const userId = (await Session.fromNextAuth()).user?.id
     const applications = userId ? unwrapActionReturn(
@@ -76,7 +76,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
         }, null as number | null) ?? 0
 
     return (
-        <PageWrapper title={`Søknadsperiode: ${params.periodName}`} headerItem={
+        <PageWrapper title={`Søknadsperiode: ${period.name}`} headerItem={
             <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`} scale={35}>
                 <CreateUpdateApplicationPeriodForm
                     committees={committees}
