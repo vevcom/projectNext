@@ -3,7 +3,6 @@ import { NotificationSchemas } from './schemas'
 import { NotificationConfig } from './config'
 import { NotificationChannelConfig } from './channel/config'
 import { dispatchEmailNotifications } from './email/dispatch'
-import { dispatchPushNotifications } from './push/dispath'
 import { NotificationAuthers } from './authers'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
@@ -19,7 +18,6 @@ export namespace NotificationMethods {
     const dispathMethod = {
         email: dispatchEmailNotifications,
         emailWeekly: async () => { },
-        push: dispatchPushNotifications,
     } satisfies Record<
         typeof NotificationConfig.methods[number],
         ((channel: ExpandedNotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<void>)

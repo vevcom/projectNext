@@ -7,11 +7,11 @@ import { NotificationChannelSchemas } from '@/services/notifications/channel/sch
 import { NotificationChannelMethods } from '@/services/notifications/channel/methods'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { PrismaPossibleTransaction } from '@/services/ServiceMethod'
 import type { Subscription } from './Types'
 import type { NotificationMethodGeneral } from '@/services/notifications/Types'
-import { ServerError } from '@/services/error'
 
 
 export namespace NotificationSubscriptionMethods {

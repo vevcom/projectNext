@@ -6,7 +6,6 @@ export namespace NotificationSchemas {
     export const notificationMethodFields = z.object({
         email: z.boolean(),
         emailWeekly: z.boolean(),
-        push: z.boolean(),
     })
 
     const fields = z.object({
