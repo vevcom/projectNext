@@ -6,7 +6,9 @@ import { readSpecialImageAction } from '@/images/read'
 import type { PropTypes } from '@/app/applications/[periodName]/page'
 
 export default async function ApplicationPeriodCountdown({ params }: PropTypes) {
-    const period = unwrapActionReturn(await readApplicationPeriodAction({ name: decodeURIComponent((await params).periodName) }))
+    const period = unwrapActionReturn(await readApplicationPeriodAction({
+        name: decodeURIComponent((await params).periodName)
+    }))
     const defaultCommitteeLogo = unwrapActionReturn(await readSpecialImageAction({ special: 'DAFAULT_COMMITTEE_LOGO' }))
 
     return (
