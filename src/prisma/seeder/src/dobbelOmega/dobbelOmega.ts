@@ -7,6 +7,7 @@ import migrateArticles from './migateArticles'
 import migrateMailAliases from './migrateMailAlias'
 import migrateEvents from './migrateEvents'
 import { UserMigrator } from './migrateUsers'
+import migrateCommittees from './migrateCommittees'
 import manifest from '@/seeder/src/logger'
 import { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
@@ -34,6 +35,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateOmegaquotes(pnPrisma, vevenPrisma, userMigrator, limits)
     await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, vevenPrisma, limits)
+    await migrateCommittees(pnPrisma, vevenPrisma, userMigrator)
     await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, userMigrator, limits)
 
     vevenPrisma.$disconnect()

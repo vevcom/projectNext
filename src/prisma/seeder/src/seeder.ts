@@ -53,7 +53,7 @@ export default async function seed(
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
     if (shouldMigrate) await dobbelOmega(prisma)
 
-    if (!seedDevData) return
+    if (!seedDevData || shouldMigrate) return
     if (enableLogging) console.log('seeding dev data....')
     await seedDevImages(prisma)
     await seedDevUsers(prisma)
