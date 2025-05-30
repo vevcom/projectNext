@@ -1,6 +1,7 @@
 import '@pn-server-only'
 import { ApplicationPeriodAuthers } from './authers'
 import { ApplicationPeriodSchemas } from './schemas'
+import { ApplicationPeriodConfig } from './config'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ApplicationMethods } from '@/services/applications/methods'
 import { ServerError } from '@/services/error'
@@ -19,22 +20,7 @@ export namespace ApplicationPeriodMethods {
         }),
         method: async ({ prisma, params }) => prisma.applicationPeriod.findUniqueOrThrow({
             where: { name: params.name },
-            include: {
-                committeesParticipating: {
-                    include: {
-                        committee: {
-                            include: {
-                                logoImage: {
-                                    include: {
-                                        image: true
-                                    }
-                                },
-                                paragraph: true
-                            }
-                        }
-                    }
-                }
-            }
+            include: ApplicationPeriodConfig.includer
         })
     })
 
