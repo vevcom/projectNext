@@ -213,8 +213,22 @@ export namespace ApplicationMethods {
                     select: {
                         priority: true,
                         applicationPeriodId: true,
+                        applicationPeriodCommitee: {
+                            select: {
+                                applicationPeriod: {
+                                    select: {
+                                        endDate: true,
+                                    }
+                                }
+                            }
+                        }
                     }
                 })
+                if (Date.now() > application.applicationPeriodCommitee.applicationPeriod.endDate.getTime()) {
+                    throw new ServerError(
+                        'BAD PARAMETERS', 'The application period has ended.'
+                    )
+                }
                 await tx.application.updateMany({
                     where: {
                         userId: params.userId,
