@@ -7,6 +7,7 @@ type PropTypes = {
     children: ReactNode
     image: ImageT
     grayScale?: boolean
+    imageSize?: number
 }
 /**
  * A component that renders a backdrop image with a content div on top of it
@@ -14,17 +15,17 @@ type PropTypes = {
  * @param image - The image to render as a backdrop
  * @param grayScale - Whether the image should be rendered in grayscale (true by default)
  * */
-export default function BackdropImage({ children, image, grayScale = true }: PropTypes) {
+export default function BackdropImage({ children, image, grayScale = true, imageSize }: PropTypes) {
     return (
         <div className={styles.BackdropImage}>
             <div className={styles.content}>
                 {children}
             </div>
-            <div className={styles.image}>
+            <div className={styles.image} style={{ width: imageSize ?? 400 }}>
                 <Image
                     className={grayScale ? styles.gray : ''}
                     image={image}
-                    width={350}
+                    width={imageSize ?? 400}
                 />
             </div>
         </div>

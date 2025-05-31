@@ -167,6 +167,10 @@ enum Permission {
 
   // Image licenses
   LICENSE_ADMIN
+
+  // Applications
+  APPLICATION_ADMIN
+  APPLICATION_WRITE
 }
 
 model Role {

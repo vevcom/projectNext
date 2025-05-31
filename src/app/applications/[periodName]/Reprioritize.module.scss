@@ -1,0 +1,12 @@
+@use '@/styles/ohma';
+
+.btn {
+    border: none;
+}
+
+.error {
+    color: ohma.$colors-red;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

@@ -9,12 +9,12 @@ import { Session } from '@/auth/Session'
 import { UserAuthers } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import { UserConfig } from '@/services/users/config'
+import UserDisplayName from '@/components/User/UserDisplayName'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
-import UserDisplayName from '@/components/User/UserDisplayName'
 
 export type PropTypes = {
     params: Promise<{
