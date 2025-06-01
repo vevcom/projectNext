@@ -6,6 +6,7 @@ import { createCmsImage } from '@/services/cms/images/create'
 import prisma from '@/prisma'
 import { createFile } from '@/services/store/createFile'
 import { ImageMethods } from '@/services/images/methods'
+import { NotificationMethods } from '@/services/notifications/methods'
 import type { CreateOmbulTypes } from './validation'
 import type { Ombul } from '@prisma/client'
 
@@ -69,5 +70,18 @@ export async function createOmbul(
             fsLocation,
         }
     }))
+
+    NotificationMethods.createSpecial.newClient().execute({
+        params: {
+            special: 'NEW_OMBUL',
+        },
+        data: {
+            title: 'Ny ombul',
+            message: `Ny ombul er ute! ${ombul.name}`,
+        },
+        session: null,
+        bypassAuth: true,
+    })
+
     return ombul
 }

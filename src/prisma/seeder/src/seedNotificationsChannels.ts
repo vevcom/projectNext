@@ -1,3 +1,4 @@
+import { NotificationConfig } from '@/services/notifications/config'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { NotificationMethod, PrismaClient } from '@prisma/client'
 
@@ -10,18 +11,6 @@ type ChannelInfo = {
     alias?: string
 }
 
-const allMethodsOn = {
-    email: true,
-    emailWeekly: true,
-    push: true,
-} as const
-
-const allMethodsOff = {
-    email: false,
-    emailWeekly: false,
-    push: false,
-} as const
-
 export default async function seedNotificationChannels(prisma: PrismaClient) {
     const specialKeys = new Set(Object.keys(SpecialNotificationChannel) as SpecialNotificationChannel[])
 
@@ -30,55 +19,46 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'ROOT',
             name: 'Alle varslinger',
             description: 'Denne kanalen styrer alle varslinger',
-            defaultMethods: allMethodsOn,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_EVENT',
             name: 'Nytt arrangement',
             description: 'Varslinger om nye arrangementer',
             defaultMethods: {
-                email: true,
-                emailWeekly: false,
-                push: true,
+                email: false,
+                emailWeekly: true,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
-            },
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_NEWS_ARTICLE',
             name: 'Ny nyhetsartikkel',
             description: 'Varslinger om nye artikler',
-            defaultMethods: allMethodsOff,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
-            },
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_OMEGAQUOTE',
             name: 'Ny omegaquote',
             description: 'Varslinger om en ny omega quote',
-            defaultMethods: allMethodsOff,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'EVENT_WAITINGLIST_PROMOTION',
@@ -87,13 +67,25 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
             availableMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
+        },
+        {
+            special: 'CABIN_BOOKING_CONFIRMATION',
+            name: 'Bekreftelse på heuttebooking',
+            description: 'Få en mail som bekreftelse på at du har booka heutta',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            availableMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            alias: 'heuttebooking'
         },
         {
             name: 'Informasjon fra HS',
@@ -101,20 +93,18 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'hs',
         },
         {
             name: 'Merch',
             description: 'Her kommer det varslinger om Omega Merch fra Blaest-Com',
             defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
+                email: true,
+                emailWeekly: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'bleast',
         },
         {
@@ -123,9 +113,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'vevcom',
         },
         {
@@ -134,9 +123,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'contactor',
         },
         {
@@ -146,19 +134,20 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
             availableMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
         },
         {
             name: 'Diverse',
             description: 'Her kommer informasjon som ellers ikke passer inn i kategoriene',
-            defaultMethods: allMethodsOn,
-            availableMethods: allMethodsOn,
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            availableMethods: NotificationConfig.allMethodsOn,
         },
     ]
 
