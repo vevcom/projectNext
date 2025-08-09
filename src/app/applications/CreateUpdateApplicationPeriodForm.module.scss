@@ -1,0 +1,8 @@
+@use '@/styles/ohma';
+
+.CreateUpdateApplicationPeriodForm {
+    min-width: 50vw;
+    .warning {
+        color: ohma.$colors-red;
+    }
+}

@@ -32,6 +32,7 @@ model User {
   mailingLists              MailingListUser[]
   admissionTrials           AdmissionTrial[]           @relation(name: "user")
   registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
+  Application               Application[]
   EventRegistration         EventRegistration[]
 
   dots                     DotWrapper[]               @relation(name: "dot_user")
@@ -39,7 +40,7 @@ model User {
   registerStudentCardQueue RegisterStudentCardQueue[]
   Event                    Event[]
 
-  cabinBooking        Booking[] @relation()
+  cabinBooking Booking[] @relation()
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
@@ -76,10 +77,10 @@ model RegisterStudentCardQueue {
 }
 
 model ContactDetails {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String?
-  mobile    String?
+  id     Int     @id @default(autoincrement())
+  name   String
+  email  String?
+  mobile String?
 
   EventRegistration EventRegistration[]
 }

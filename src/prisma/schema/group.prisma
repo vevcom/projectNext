@@ -66,15 +66,18 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  committeeArticle   Article      @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  committeeArticleId Int          @unique
+  committeeArticle   Article  @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  committeeArticleId Int      @unique
   name               String
-  shortName          String       @unique
-  logoImage          CmsImage     @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId        Int          @unique
-  paragraph          CmsParagraph @relation(fields: [paragraphId], references: [id])
-  paragraphId        Int          @unique
-  events             Event[]
+  shortName          String   @unique
+  logoImage          CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId        Int      @unique
+
+  participationsInApplicationPeriods CommitteeParticipationInApplicationPeriod[]
+
+  paragraph   CmsParagraph @relation(fields: [paragraphId], references: [id])
+  paragraphId Int          @unique
+  events      Event[]
 }
 
 model InterestGroup {
