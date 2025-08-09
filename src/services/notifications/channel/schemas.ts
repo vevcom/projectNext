@@ -1,3 +1,4 @@
+import { INFINITE_LOOP_PREVENTION_MAX_ITERATIONS } from './config'
 import { NotificationConfig } from '@/services/notifications/config'
 import { SpecialNotificationChannel } from '@prisma/client'
 import { z } from 'zod'
@@ -11,15 +12,17 @@ import type {
 export namespace NotificationChannelSchemas {
 
     export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
-        return Object.fromEntries(NotificationConfig.methods.filter(m => NotificationConfig.methods.includes(m)).map(m => {
-            const compare = prefix ? `${prefix}_${m}` : m
-            const value = data.get(compare)
-            if (!value) {
-                return [m, false]
-            }
+        return Object.fromEntries(
+            NotificationConfig.methods.filter(method => NotificationConfig.methods.includes(method)).map(method => {
+                const compare = prefix ? `${prefix}_${method}` : method
+                const value = data.get(compare)
+                if (!value) {
+                    return [method, false]
+                }
 
-            return [m, value === 'on']
-        })) as NotificationMethodGeneral
+                return [method, value === 'on']
+            })
+        ) as NotificationMethodGeneral
     }
 
     /**
@@ -33,10 +36,10 @@ export namespace NotificationChannelSchemas {
         defaultMethods: NotificationMethodGeneral
     ): boolean {
         for (let i = 0; i < NotificationConfig.methods.length; i++) {
-            const a = availableMethods[NotificationConfig.methods[i]]
-            const d = defaultMethods[NotificationConfig.methods[i]]
+            const availableMethod = availableMethods[NotificationConfig.methods[i]]
+            const defaultMethod = defaultMethods[NotificationConfig.methods[i]]
 
-            if (d && !a) return false
+            if (defaultMethod && !availableMethod) return false
         }
 
         return true
@@ -47,17 +50,17 @@ export namespace NotificationChannelSchemas {
         newParentId: number,
         channels: ExpandedNotificationChannel[]
     ): boolean {
-        return findValidParents(channelId, channels).map(c => c.id).includes(newParentId)
+        return findValidParents(channelId, channels).map(channel => channel.id).includes(newParentId)
     }
 
     export function findValidParents(
         channelId: number,
         channels: ExpandedNotificationChannel[]
     ): ExpandedNotificationChannel[] {
-        const validParents = channels.filter(c => c.id !== channelId)
+        const validParents = channels.filter(channel => channel.id !== channelId)
         // Remove chrildren of the current channel
-        const channelIDS = new Set(validParents.map(c => c.id))
-        for (let i = 0; i < 1000; i++) {
+        const channelIDS = new Set(validParents.map(channel => channel.id))
+        for (let i = 0; i < INFINITE_LOOP_PREVENTION_MAX_ITERATIONS; i++) {
             const lengthBeforeReduction = channelIDS.size
 
             for (let j = validParents.length - 1; j >= 0; j--) {
@@ -72,7 +75,7 @@ export namespace NotificationChannelSchemas {
                 break
             }
 
-            if (i >= 999) {
+            if (i >= INFINITE_LOOP_PREVENTION_MAX_ITERATIONS - 1) {
                 // It's highly unlikely that this wil ever throw
                 throw new Error('Stopping infinite loop, while finding valid parents.')
             }

@@ -4,7 +4,7 @@ import { NotificationChannelSchemas } from './schemas'
 import { NotificationChannelConfig } from './config'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/ConfigVars'
+import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/config'
 import { NotificationConfig } from '@/services/notifications/config'
 import { ServerError } from '@/services/error'
 import { NotificationSchemas } from '@/services/notifications/schemas'
@@ -110,8 +110,8 @@ export namespace NotificationChannelMethods {
         method: async ({ prisma }) => await prisma.notificationChannel.findMany({
             where: {
                 defaultMethods: {
-                    OR: NotificationConfig.methods.map(m => ({
-                        [m]: true
+                    OR: NotificationConfig.methods.map(method => ({
+                        [method]: true
                     }))
                 }
             },

@@ -16,8 +16,8 @@ import { BookingType } from '@prisma/client'
 
 const mailData = {
     title: 'Bekreftelse på hyttebooking',
-    // eslint-disable-next-line max-len
-    message: 'Takk for din hyttebooking. Dette skal være en booking bekreftelse, så det bør nok komme noe nyttig info her snart.',
+    message: `Takk for din hyttebooking.
+Dette skal være en bookingbekreftelse, så det bør nok komme noe nyttig info her snart.`,
 }
 
 export namespace CabinBookingMethods {

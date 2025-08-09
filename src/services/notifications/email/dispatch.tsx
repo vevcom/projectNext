@@ -1,5 +1,5 @@
 import { sendBulkMail } from './send'
-import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
+import { DEFAULT_NOTIFICATION_ALIAS } from './config'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
 import { NotificationMethods } from '@/services/notifications/methods'
@@ -35,22 +35,22 @@ export async function dispatchEmailNotifications(
 
     const senderAlias = results.mailAlias ? results.mailAlias.address : DEFAULT_NOTIFICATION_ALIAS
 
-    const mails = await Promise.all(users.map(async u => {
+    const mails = await Promise.all(users.map(async user => {
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
-            to: u.email,
-            subject: NotificationMethods.repalceSpecialSymbols(notificaion.title, u),
-            text: NotificationMethods.repalceSpecialSymbols(notificaion.message, u),
+            to: user.email,
+            subject: NotificationMethods.repalceSpecialSymbols(notificaion.title, user),
+            text: NotificationMethods.repalceSpecialSymbols(notificaion.message, user),
         })
 
         return {
             from: parsed.from,
             to: parsed.to,
             subject: parsed.subject,
-            html: await wrapInHTML(u, parsed.text),
+            html: await wrapInHTML(user, parsed.text),
             list: {
                 unsubscribe: {
-                    url: `https://${process.env.DOMAIN}/users/${u.username}/unsubscribe`,
+                    url: `https://${process.env.DOMAIN}/users/${user.username}/unsubscribe`,
                     comment: 'Comment'
                 },
             }

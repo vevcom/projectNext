@@ -1,4 +1,5 @@
 import { NotificationConfig } from '@/services/notifications/config'
+import type { Prisma } from '@prisma/client'
 
 
 export namespace NotificationSubscriptionConfig {
@@ -6,5 +7,5 @@ export namespace NotificationSubscriptionConfig {
         methods: {
             select: NotificationConfig.allMethodsOn,
         },
-    } as const
+    } satisfies Prisma.NotificationSubscriptionInclude
 }

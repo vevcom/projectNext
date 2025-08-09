@@ -32,7 +32,7 @@ export async function publishNewsAction(
             special: 'NEW_NEWS_ARTICLE',
         },
         data: {
-            title: 'Ny nyhetsartikkel',
+            title: 'Ny nyhetsartikkel', // TODO: Add info about the article
             message: 'En ny nyhetsartikkel er publisert',
         },
         session: null,
