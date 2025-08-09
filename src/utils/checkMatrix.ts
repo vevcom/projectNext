@@ -10,5 +10,5 @@ export type Matrix<T> = T[][]
  * @returns - true if the given array fulfills the required matrix, false otherwise.
  */
 export default function checkMatrix<T>(given: T[], required: Matrix<T>): boolean {
-    return required.every((row) => row.some((p) => given.includes(p)))
+    return required.every((row) => row.some((item) => given.includes(item)))
 }

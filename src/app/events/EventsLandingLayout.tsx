@@ -37,7 +37,7 @@ export default function EventsLandingLayout({
                         selectedTags?.map(tag =>
                             <Link key={tag.name} href={selectedTags.length === 1 ? baseUrl :
                                 `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-                                    selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
+                                    selectedTags.filter(tagItem => tagItem.name !== tag.name).map(tagItem => tagItem.name)
                                 )}`
                             }>
                                 <EventTag eventTag={tag} />

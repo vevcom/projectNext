@@ -41,7 +41,7 @@ export namespace NotificationSubscriptionMethods {
                 bypassAuth: true,
             })
 
-            await prisma.$transaction(channels.map(c =>
+            await prisma.$transaction(channels.map(channel =>
                 prisma.notificationSubscription.create({
                     data: {
                         user: {
@@ -51,11 +51,11 @@ export namespace NotificationSubscriptionMethods {
                         },
                         channel: {
                             connect: {
-                                id: c.id,
+                                id: channel.id,
                             }
                         },
                         methods: {
-                            create: c.defaultMethods,
+                            create: channel.defaultMethods,
                         }
                     }
                 })
@@ -168,7 +168,9 @@ export namespace NotificationSubscriptionMethods {
         method: async ({ prisma, params, data }): Promise<Subscription[]> => {
             // Prepare updates and validate the data with the data in the database
             const transactionParts = (await Promise.all(
-                data.subscriptions.map(s => createTransactionPart(prisma, params.userId, s.channelId, s.methods))
+                data.subscriptions.map(subscription =>
+                    createTransactionPart(prisma, params.userId, subscription.channelId, subscription.methods)
+                )
             )).filter(i => i) as (() => Promise<Subscription>)[]
 
             // Update the subscriptions

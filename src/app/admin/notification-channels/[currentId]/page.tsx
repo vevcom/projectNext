@@ -22,7 +22,7 @@ export default async function Channels({ params }: PropTypes) {
     }
 
     const currentId = Number((await params).currentId)
-    const selected = channels.data.find(c => c.id === currentId)
+    const selected = channels.data.find(channel => channel.id === currentId)
 
     if (!selected) {
         notFound()

@@ -49,29 +49,29 @@ export default async function seedMail(prisma: PrismaClient) {
         }
     ]
 
-    const allAliases = mailingLists.map(m => m.aliases).flat().concat(otherAliases)
+    const allAliases = mailingLists.map(mailingList => mailingList.aliases).flat().concat(otherAliases)
     const aliasSet = new Set(allAliases)
 
     const aliasIdMap = new Map<string, number>()
 
-    await Promise.all(Array.from(aliasSet).map(async (a) => {
+    await Promise.all(Array.from(aliasSet).map(async (alias) => {
         const results = await prisma.mailAlias.create({
             data: {
-                address: a + DOMAIN
+                address: alias + DOMAIN
             }
         })
 
-        aliasIdMap.set(a, results.id)
+        aliasIdMap.set(alias, results.id)
     }))
 
-    await Promise.all(mailingLists.map(m => prisma.mailingList.create({
+    await Promise.all(mailingLists.map(mailingList => prisma.mailingList.create({
         data: {
-            name: m.name,
+            name: mailingList.name,
             mailAliases: {
                 createMany: {
-                    data: m.aliases.map(a => ({
-                        mailAliasId: aliasIdMap.get(a),
-                    })).filter(a => a.mailAliasId !== undefined) as {
+                    data: mailingList.aliases.map(alias => ({
+                        mailAliasId: aliasIdMap.get(alias),
+                    })).filter(aliasEntry => aliasEntry.mailAliasId !== undefined) as {
                         mailAliasId: number
                     }[],
                 }

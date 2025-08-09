@@ -17,7 +17,7 @@ import type { ExpandedRole } from '@/services/permissionRoles/Types'
  */
 function generateDisplayedPermissionsState(role: ExpandedRole) {
     return Object.values(Permission).reduce((result, permission) => ({
-        [permission]: role.permissions.some(p => p.permission === permission),
+        [permission]: role.permissions.some(perm => perm.permission === permission),
         ...result,
     }), {})
 }

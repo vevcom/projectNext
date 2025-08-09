@@ -113,7 +113,7 @@ export default async function migrateImages(
         if (!image) return null //Only happens if fetchImageAndUploadToStore fails for the image
         const ext = image.originalName.split('.').pop() || ''
         const name = image.originalName.split('.').slice(0, -1).join('.')
-        const nameTaken = namesTaken.find(n => n.name === name)
+        const nameTaken = namesTaken.find(nameTakenItem => nameTakenItem.name === name)
         if (nameTaken) {
             nameTaken.times++
             return {
@@ -167,12 +167,12 @@ type Locations = {
     fsLocationLargeSize: string
 }
 
-async function fetchAllImagesAndUploadToStore<X extends {
+async function fetchAllImagesAndUploadToStore<ImageType extends {
     originalName: string,
     name: string,
     id: number
-}>(images: X[]): Promise<((X & Locations) | null)[]> {
-    const ret: ((X & Locations) | null)[] = []
+}>(images: ImageType[]): Promise<((ImageType & Locations) | null)[]> {
+    const ret: ((ImageType & Locations) | null)[] = []
     let imageCounter = 1
     const batchSize = 1200
     const imageBatches = images.reduce((acc, image) => {
@@ -182,9 +182,9 @@ async function fetchAllImagesAndUploadToStore<X extends {
             acc[acc.length - 1].push(image)
         }
         return acc
-    }, [[]] as X[][])
+    }, [[]] as ImageType[][])
 
-    const uploadOne = async (image: X) => {
+    const uploadOne = async (image: ImageType) => {
         manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
         const ext = image.originalName.split('.').pop() || ''
         const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`

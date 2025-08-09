@@ -121,5 +121,7 @@ export async function includeVisibility<T>(serverCall: () => Promise<T>, getVisi
 }
 
 function collapseVisibilityLevel(level: {requirements: {visibilityRequirmenetGroups: VisibilityRequirmenetGroup[]}[]}) {
-    return level.requirements.map(r => r.visibilityRequirmenetGroups.map(g => g.groupId))
+    return level.requirements.map(requirement =>
+        requirement.visibilityRequirmenetGroups.map(groupItem => groupItem.groupId)
+    )
 }

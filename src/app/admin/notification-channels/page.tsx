@@ -4,9 +4,9 @@ import AddNotificationChannel from './addNotificationChannel'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readNotificationChannelsAction } from '@/actions/notifications'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 
 export default async function NotificationChannels() {
     const channels = unwrapActionReturn(await readNotificationChannelsAction())
@@ -20,9 +20,9 @@ export default async function NotificationChannels() {
         }
     >
         <ul>
-            {channels.map(c =>
+            {channels.map(channel =>
                 <li key={uuid()}>
-                    <Link href={`/admin/notification-channels/${c.id}`}>{c.name}</Link>
+                    <Link href={`/admin/notification-channels/${channel.id}`}>{channel.name}</Link>
                 </li>
             )}
         </ul>

@@ -107,9 +107,9 @@ export namespace UserMethods {
                     bio: true,
                     image: true,
                 },
-            }).then(async u => ({
-                ...u,
-                image: u.image || defaultProfileImage,
+            }).then(async userData => ({
+                ...userData,
+                image: userData.image || defaultProfileImage,
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
@@ -221,15 +221,17 @@ export namespace UserMethods {
             })
             return users.map(user => {
                 const clas = user.memberships.find(
-                    m => m.group.class !== null)?.group.class?.year
+                    membership => membership.group.class !== null)?.group.class?.year
                 const studyProgramme = user.memberships.find(
-                    m => m.group.studyProgramme !== null)?.group.studyProgramme?.code
+                    membership => membership.group.studyProgramme !== null)?.group.studyProgramme?.code
                 const membershipType = user.memberships.find(
-                    m => m.group.omegaMembershipGroup !== null)?.group.omegaMembershipGroup?.omegaMembershipLevel
+                    membership =>
+                        membership.group.omegaMembershipGroup !== null
+                )?.group.omegaMembershipGroup?.omegaMembershipLevel
                 const title = user.memberships.find(
-                    m => m.groupId === details.selectedGroup?.groupId)?.title
+                    membership => membership.groupId === details.selectedGroup?.groupId)?.title
                 const admin = user.memberships.find(
-                    m => m.groupId === details.selectedGroup?.groupId)?.admin
+                    membership => membership.groupId === details.selectedGroup?.groupId)?.admin
                 return {
                     ...user,
                     class: clas,

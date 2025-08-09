@@ -51,8 +51,8 @@ export default function PdfDocument({ src, className }: PropTypes) {
         setPagePair(pageNumber)
     }
 
-    const onDocumentLoadSuccess = ({ numPages: n }: { numPages: number }) => {
-        setNumPages(n)
+    const onDocumentLoadSuccess = ({ numPages: numPagesCount }: { numPages: number }) => {
+        setNumPages(numPagesCount)
     }
 
     useEffect(() => {

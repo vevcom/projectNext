@@ -42,11 +42,11 @@ export default function SubscriptionItem({
                 {branch.description}
             </td>
 
-            {checkboxes.map(c => <td
+            {checkboxes.map(checkbox => <td
                 key={uuid()}
                 className={styles.checkbox}
             >
-                <div>{c}</div>
+                <div>{checkbox}</div>
             </td>
             )}
         </tr>

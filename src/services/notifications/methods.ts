@@ -82,7 +82,7 @@ export namespace NotificationMethods {
             // If a userId map is sent, remove all other users.
             if (data.userIdList) {
                 results.subscriptions = results.subscriptions.filter(
-                    s => (data.userIdList && data.userIdList.includes(s.user.id))
+                    subscription => (data.userIdList && data.userIdList.includes(subscription.user.id))
                 )
             }
 
@@ -93,7 +93,9 @@ export namespace NotificationMethods {
                     return
                 }
 
-                const userFiltered = results.subscriptions.filter(s => s.methods[method]).map(s => s.user)
+                const userFiltered = results.subscriptions
+                    .filter(subscription => subscription.methods[method])
+                    .map(subscription => subscription.user)
 
                 dispathMethod[method]({
                     ...results,

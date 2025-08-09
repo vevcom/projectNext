@@ -483,6 +483,11 @@ export const PermissionConfig = {
         description: 'kan melde seg på arrangementer',
         category: 'events'
     },
+    EVENT_REGISTRATION_DESROY: {
+        name: 'Meld deg av arrangementer',
+        description: 'kan melde seg av arrangementer',
+        category: 'events'
+    },
     EVENT_REGISTRATION_READ: {
         name: 'Les påemeldinger',
         description: 'kan lese påmeldinger',

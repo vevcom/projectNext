@@ -6,6 +6,7 @@ import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifica
 import SubmitButton from '@/components/UI/SubmitButton'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { updateNotificationSubscriptionsAction } from '@/actions/notifications'
+import { NotificationConfig } from '@/services/notifications/config'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'
@@ -17,10 +18,9 @@ import type {
     NotificationMethodGeneral,
     NotificationMethods
 } from '@/services/notifications/Types'
-import { NotificationConfig } from '@/services/notifications/config'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
-    const rootChannel = channels.find(c => c.special === 'ROOT')
+    const rootChannel = channels.find(channel => channel.special === 'ROOT')
     if (!rootChannel) {
         throw Error('Ingen ROOT varslings kanal')
     }
@@ -29,7 +29,7 @@ function generateChannelTree(channels: ExpandedNotificationChannel[], subscripti
         return {
             ...channel,
             children: [],
-            subscription: subscriptions.find(s => s.channelId === channel.id)
+            subscription: subscriptions.find(subscription => subscription.channelId === channel.id)
         }
     }
 

@@ -95,7 +95,7 @@ export namespace CabinBookingMethods {
             const productsInOrder: CabinProductConfig.CabinProductExtended[] = []
 
             for (const paramProduct of params.bookingProducts) {
-                const product = products.find(p => p.id === paramProduct.cabinProductId)
+                const product = products.find(prodItem => prodItem.id === paramProduct.cabinProductId)
                 if (!product) {
                     throw new ServerError('UNKNOWN ERROR', 'Kunne ikke finne mengden av produktet.')
                 }

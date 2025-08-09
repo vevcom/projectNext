@@ -24,9 +24,9 @@ export async function readOldNewsPage<const PageSize extends number>(
         },
         include: simpleNewsArticleRealtionsIncluder
     }))
-    return news.map(n => ({
-        ...n,
-        coverImage: n.article.coverImage.image
+    return news.map(newsItem => ({
+        ...newsItem,
+        coverImage: newsItem.article.coverImage.image
     }))
 }
 
@@ -44,9 +44,9 @@ export async function readNewsCurrent(): Promise<SimpleNewsArticle[]> {
         },
         include: simpleNewsArticleRealtionsIncluder,
     }))
-    return news.map(n => ({
-        ...n,
-        coverImage: n.article.coverImage.image
+    return news.map(newsItem => ({
+        ...newsItem,
+        coverImage: newsItem.article.coverImage.image
     }))
 }
 

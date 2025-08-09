@@ -2,6 +2,7 @@ import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import RegistrationUI from './RegistrationUI'
 import RegistrationsList from './RegistrationsList'
+import ManualRegistrationForm from './ManualRegistrationForm'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
@@ -18,7 +19,6 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ManualRegistrationForm from './ManualRegistrationForm'
 
 type PropTypes = {
     params: Promise<{

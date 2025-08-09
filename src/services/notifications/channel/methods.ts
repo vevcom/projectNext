@@ -67,18 +67,21 @@ export namespace NotificationChannelMethods {
                 })
 
                 await Promise.all(parentSubscriptions
-                    .map(s => ({
-                        ...s,
-                        subscriptionMethods: booleanOperationOnMethods(s.methods, channel.defaultMethods, 'AND')
+                    .map(subscription => ({
+                        ...subscription,
+                        subscriptionMethods: booleanOperationOnMethods(subscription.methods, channel.defaultMethods, 'AND')
                     }))
-                    .filter(s =>
-                        !NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, s.subscriptionMethods)
+                    .filter(sub =>
+                        !NotificationChannelSchemas.validateMethods(
+                            NotificationConfig.allMethodsOff,
+                            sub.subscriptionMethods
+                        )
                     )
-                    .map(s => tx.notificationSubscription.create({
+                    .map(sub => tx.notificationSubscription.create({
                         data: {
                             user: {
                                 connect: {
-                                    id: s.userId,
+                                    id: sub.userId,
                                 },
                             },
                             channel: {
@@ -87,7 +90,7 @@ export namespace NotificationChannelMethods {
                                 },
                             },
                             methods: {
-                                create: s.subscriptionMethods
+                                create: sub.subscriptionMethods
                             }
                         }
                     }))

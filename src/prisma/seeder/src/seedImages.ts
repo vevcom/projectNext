@@ -128,8 +128,8 @@ export default async function seedImages(prisma: PrismaClient) {
  * @param fn - the function to transform the object with
  * @returns
  */
-export function transformObject<K extends string | number | symbol, T, U>(
-    obj: Record<K, T>, fn: (value: T, key: K) => U
-): U[] {
-    return Object.entries(obj).map(([key, value]) => fn(value as T, key as K))
+export function transformObject<KeyType extends string | number | symbol, ValueType, ReturnType>(
+    obj: Record<KeyType, ValueType>, fn: (value: ValueType, key: KeyType) => ReturnType
+): ReturnType[] {
+    return Object.entries(obj).map(([key, value]) => fn(value as ValueType, key as KeyType))
 }

@@ -151,12 +151,14 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         },
     ]
 
-    channels.forEach(c => {
-        if (c.special) {
-            if (!specialKeys.has(c.special)) {
-                throw new Error(`The seeding data is not valid. The special key: ${c.special} is duplicate or not valid.`)
+    channels.forEach(channel => {
+        if (channel.special) {
+            if (!specialKeys.has(channel.special)) {
+                throw new Error(
+                    `The seeding data is not valid. The special key: ${channel.special} is duplicate or not valid.`
+                )
             }
-            specialKeys.delete(c.special)
+            specialKeys.delete(channel.special)
         }
     })
 
@@ -166,7 +168,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
 
     const DEFAULT_NOTIFCIATION_ALIAS = 'noreply@omega.ntnu.no'
 
-    const rChan = channels.find(c => c.special === 'ROOT')
+    const rChan = channels.find(channel => channel.special === 'ROOT')
 
     if (!rChan) {
         throw new Error('No ROOT channel found')
@@ -174,12 +176,12 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
 
     const seedSpecialChannels = new Set<SpecialNotificationChannel>()
     const specialEnums = Object.keys(SpecialNotificationChannel)
-    for (const c of channels) {
-        if (c.special) {
-            if (!specialEnums.includes(c.special)) {
-                throw new Error(`Invalid special channel type ${c.special}`)
+    for (const channel of channels) {
+        if (channel.special) {
+            if (!specialEnums.includes(channel.special)) {
+                throw new Error(`Invalid special channel type ${channel.special}`)
             }
-            seedSpecialChannels.add(c.special)
+            seedSpecialChannels.add(channel.special)
         }
     }
 
@@ -222,27 +224,30 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             ${rootMailAlias}
         );`
 
-    await Promise.all(channels.filter(c => c.special !== 'ROOT').map(c => prisma.notificationChannel.create({
-        data: {
-            name: c.name,
-            description: c.description,
-            availableMethods: {
-                create: c.availableMethods,
-            },
-            defaultMethods: {
-                create: c.defaultMethods,
-            },
-            special: c.special,
-            parent: {
-                connect: {
-                    special: 'ROOT',
-                }
-            },
-            mailAlias: {
-                connect: {
-                    address: c.alias ? `${c.alias}@omega.ntnu.no` : DEFAULT_NOTIFCIATION_ALIAS,
+    await Promise.all(channels
+        .filter(channel => channel.special !== 'ROOT')
+        .map(channel => prisma.notificationChannel.create({
+            data: {
+                name: channel.name,
+                description: channel.description,
+                availableMethods: {
+                    create: channel.availableMethods,
+                },
+                defaultMethods: {
+                    create: channel.defaultMethods,
+                },
+                special: channel.special,
+                parent: {
+                    connect: {
+                        special: 'ROOT',
+                    }
+                },
+                mailAlias: {
+                    connect: {
+                        address: channel.alias ? `${channel.alias}@omega.ntnu.no` : DEFAULT_NOTIFCIATION_ALIAS,
+                    }
                 }
             }
-        }
-    })))
+        }))
+    )
 }

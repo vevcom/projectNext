@@ -22,7 +22,9 @@ import type { Limits } from './migrationLimits'
  */
 
 const sexMap = {
+    // eslint-disable-next-line id-length
     m: 'MALE',
+    // eslint-disable-next-line id-length
     f: 'FEMALE',
     other: 'OTHER',
 } as const satisfies Record<SEXVEVEN, SEX>
@@ -97,7 +99,7 @@ export class UserMigrator {
     }
 
     yearIdMap(x: number) {
-        const year = this.classes.find(c => c.year === x)
+        const year = this.classes.find(cls => cls.year === x)
         if (!year) {
             manifest.error(`Year ${x} not found - dobbelOmega failed :(`)
             throw new Error(`Year ${x} not found`)
