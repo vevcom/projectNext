@@ -1,4 +1,4 @@
-import { GroupTypesConfig, OmegaMembershipLevelConfig, groupsExpandedIncluder } from './ConfigVars'
+import { GroupTypesConfig, OmegaMembershipLevelConfig, groupsExpandedIncluder } from './config'
 import { ServerError } from '@/services/error'
 import prisma from '@/prisma'
 import { prismaCall } from '@/services/prismaCall'
