@@ -1,12 +1,12 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
 import { createActionError } from '@/actions/error'
-import { readGroupsStructured } from '@/services/groups/read'
 import { readVisibilityCollapsed } from '@/services/visibility/read'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
 import { PurposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { GroupTypesConfig } from '@/services/groups/config'
+import { GroupMethods } from '@/services/groups/methods'
 import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import type { GroupMatrix } from '@/services/visibility/Types'
 import type { ActionReturn } from '@/actions/Types'
@@ -16,7 +16,8 @@ import type { VisibilityRequiermentForAdmin, VisibilityStructuredForAdmin } from
 export async function readVisibilityForAdminAction(id: number): Promise<ActionReturn<VisibilityStructuredForAdmin>> {
     const [visibilityRes, groupsRes] = await Promise.all([
         safeServerCall(() => readVisibilityCollapsed(id)),
-        safeServerCall(() => readGroupsStructured())
+        // TODO: Fix Authing here. The bypass should be false
+        safeServerCall(() => GroupMethods.readGroupsStructured.newClient().execute({ session: null, bypassAuth: true }))
     ])
     if (!visibilityRes.success || !groupsRes.success) return createActionError('UNKNOWN ERROR', 'noe gikk galt')
 

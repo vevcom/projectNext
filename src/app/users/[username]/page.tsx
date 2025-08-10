@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
-import { readCommitteesFromIds } from '@/services/groups/committees/read'
+import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
@@ -9,12 +9,12 @@ import { Session } from '@/auth/Session'
 import { UserAuthers } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import { UserConfig } from '@/services/users/config'
+import UserDisplayName from '@/components/User/UserDisplayName'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
-import UserDisplayName from '@/components/User/UserDisplayName'
 
 export type PropTypes = {
     params: Promise<{
@@ -34,7 +34,7 @@ export default async function User({ params }: PropTypes) {
 
     // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
-    const committees = await readCommitteesFromIds(groupIds)
+    const committees = await readCommitteesFromGroupIds(groupIds)
 
     //TODO: Basic user info will exist on the profile object
     const studyProgramme = { name: 'Kybernetikk', code: 'MTTK' }
@@ -75,7 +75,7 @@ export default async function User({ params }: PropTypes) {
                                 <div className={styles.omegaId}>
                                     <OmegaId />
                                 </div>
-                            </PopUp> }
+                            </PopUp>}
                         </div>
                         {
                             studyProgramme && (
@@ -85,12 +85,16 @@ export default async function User({ params }: PropTypes) {
                         <div className={styles.committeesWrapper}>
                             {
                                 committees.map(committee =>
-                                    <div className={styles.committee} key={uuid()}><p>{committee.name}</p></div>
+                                    <div className={styles.committee} key={uuid()}>
+                                        <Link href={`/committees/${committee.shortName}`}>
+                                            <p>{committee.name}</p>
+                                        </Link>
+                                    </div>
                                 )
                             }
                             {/* TODO change to your own committee title instead of committee name*/}
                         </div>
-                        <hr/>
+                        <hr />
                         <p className={styles.orderText}>
                             {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
                             uudaf {order}´dis orden i Sanctus Omega Broderskab

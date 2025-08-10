@@ -25,7 +25,7 @@ export default async function Committee({ params }: PropTypes) {
             <CmsParagraph cmsParagraph={paragraph} />
 
             <div className={styles.memberList}>
-                {members.map((member, i) => <UserCard key={i} user={member.user} />)}
+                {members.map((member, i) => <UserCard key={i} user={member.user} subText={`${member.order} ${member.active} ${member.title}`} />)}
             </div>
         </div>
     )

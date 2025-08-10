@@ -1,12 +1,13 @@
 import '@pn-server-only'
 import { expandedRoleIncluder } from './ConfigVars'
-import { readUsersOfGroups } from '@/services/groups/read'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
-import type { User, Permission, RolesGroups } from '@prisma/client'
+import { GroupMethods } from '@/services/groups/methods'
+import type { Permission, RolesGroups } from '@prisma/client'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { ExpandedRole } from '@/services/permissionRoles/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 export async function readRoles(): Promise<ExpandedRole[]> {
     return await prismaCall(() => prisma.role.findMany({
@@ -85,11 +86,19 @@ export async function readDefaultPermissions(): Promise<Permission[]> {
     return defaultPermissions.map(({ permission }) => permission)
 }
 
-export async function readUsersOfRole(id: number): Promise<User[]> {
+export async function readUsersOfRole(id: number): Promise<UserFiltered[]> {
     const groups = await readGroupsOfRole(id)
 
-    return await readUsersOfGroups(groups.map(({ forAdminsOnly, groupId }) => ({
-        admin: forAdminsOnly,
-        groupId,
-    })))
+    const result = await GroupMethods.readUsersOfGroups.newClient().execute({
+        session: null,
+        bypassAuth: true,
+        params: {
+            groups: groups.map(({ forAdminsOnly, groupId }) => ({
+                admin: forAdminsOnly,
+                groupId,
+            })),
+        }
+    })
+
+    return result
 }

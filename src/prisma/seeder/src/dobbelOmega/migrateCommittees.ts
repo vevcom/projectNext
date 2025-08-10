@@ -14,6 +14,15 @@ export default async function migrateCommittees(
         }
     })
 
+    const latestOrder = (await pnPrisma.omegaOrder.findFirstOrThrow({
+        orderBy: {
+            order: 'desc',
+        },
+        select: {
+            order: true,
+        }
+    })).order
+
     await Promise.all(committees.map(async committee => {
         const newCommittee = await pnPrisma.committee.create({
             data: {
@@ -46,7 +55,7 @@ export default async function migrateCommittees(
                 group: {
                     create: {
                         groupType: 'COMMITTEE',
-                        order: 104,
+                        order: 106,
                     },
                 }
             }
@@ -65,7 +74,22 @@ export default async function migrateCommittees(
                     userId: pnUserId,
                     active: true,
                     admin: member.admin,
-                    order: 104,
+                    order: 106,
+                    title: member.position || undefined,
+                }
+            })
+        }))
+
+        await Promise.all(committee.CommitteeMembersHist.map(async member => {
+            const pnUserId = await userMigrator.getPnUserId(member.UserId)
+            await pnPrisma.membership.create({
+                data: {
+                    groupId: newCommittee.groupId,
+                    userId: pnUserId,
+                    active: false,
+                    admin: member.admin,
+                    order: member.order,
+                    title: member.position || undefined,
                 }
             })
         }))

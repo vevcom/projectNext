@@ -13,7 +13,13 @@
     align-items: center;
     gap: calc(2 * ohma.$gap);
 
-    > h6 {
-        font-size: ohma.$fonts-m;
+    > div {
+        > h6 {
+            font-size: ohma.$fonts-m;
+        }
+
+        > p {
+            font-size: ohma.$fonts-s;
+        }
     }
 }

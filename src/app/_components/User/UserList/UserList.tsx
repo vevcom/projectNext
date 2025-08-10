@@ -5,7 +5,7 @@ import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
 import useActionCall from '@/hooks/useActionCall'
-import { readGroupsForPageFiteringAction } from '@/actions/users/read'
+import { readGroupsForPageFilteringAction } from '@/actions/users/read'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext, useEffect, useState } from 'react'
@@ -88,7 +88,7 @@ export default function UserList({
 
     const groupSelected = !!userPaging?.deatils.selectedGroup
 
-    const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
+    const { data: groups } = useActionCall(readGroupsForPageFilteringAction)
     const [groupSelection, setGroupSelection] = useState<{
         [T in GroupSelectionType]: {
             group: ExpandedGroup | null,
