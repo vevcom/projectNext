@@ -184,6 +184,14 @@ model RolePermission {
   @@unique([roleId, permission])
 }
 
+model GroupPermission {
+  group      Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId    Int
+  permission Permission
+
+  @@unique([groupId, permission])
+}
+
 model DefaultPermission {
   permission Permission @unique
 }

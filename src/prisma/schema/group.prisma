@@ -48,6 +48,7 @@ model Group {
   mailingLists         MailingListGroup[]
 
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+  Permissions                GroupPermission[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
