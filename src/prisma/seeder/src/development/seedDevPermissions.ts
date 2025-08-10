@@ -36,29 +36,10 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
         throw new Error('Failed to seed permissions becasue Harambe\'s committee is dead')
     }
 
-    // Only seed new role if one doesn't already exist
-    const haramabeCommiteeRolesCount = await prisma.rolesGroups.count({
-        where: {
-            groupId: committee.groupId,
-        },
-    })
-
-    if (haramabeCommiteeRolesCount > 0) {return}
-
-    await prisma.role.create({
-        data: {
-            name: `${user.firstname}s rolle`,
-            permissions: {
-                // createMany: {
-                //     data: allPermissions
-                // },
-            },
-            groups: {
-                create: {
-                    forAdminsOnly: false,
-                    groupId: committee.groupId,
-                },
-            },
-        },
+    await prisma.groupPermission.createMany({
+        data: allPermissions.map(permission => ({
+            permission: permission.permission,
+            groupId: committee.groupId
+        }))
     })
 }

@@ -9,7 +9,7 @@ export default async function PermissionGroups() {
     return <div>
         <ul>
             {groups.map((group, i) => <li key={i}>
-                <Link href={`/admin/permission-groups/${group.id}`}>{group.name}</Link>
+                <Link href={`/admin/group-permissions/${group.id}`}>{group.name}</Link>
             </li>)}
         </ul>
     </div>

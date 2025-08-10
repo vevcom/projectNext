@@ -109,20 +109,16 @@ const navigations = [
         },
         links: [
             {
-                title: 'Tillgangsroller',
-                href: '/admin/permission-roles'
+                title: 'Gruppe Tilganger',
+                href: '/admin/group-permissions'
             },
             {
-                title: 'Standard tillganger',
+                title: 'Standard Tilganger',
                 href: '/admin/default-permissions'
             },
             {
                 title: 'Api Nøkler',
                 href: '/admin/api-keys'
-            },
-            {
-                title: 'Gruppe Tilganger',
-                href: '/admin/permission-groups'
             },
         ],
     },

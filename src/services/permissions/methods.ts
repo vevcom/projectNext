@@ -3,6 +3,8 @@ import { PermissionAuthers } from './auther'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { z } from 'zod'
+import { Permission } from '@prisma/client'
+import { invalidateAllUserSessionData } from '../auth/invalidateSession'
 
 
 export namespace PermissionMethods {
@@ -59,5 +61,33 @@ export namespace PermissionMethods {
                 groupId: params.groupId
             }
         })).map(permission => permission.permission)
+    })
+
+    export const updateDefaultPermissions = ServiceMethod({
+        auther: () => PermissionAuthers.updateDefaultPermissions.dynamicFields({}),
+        dataSchema: z.object({
+            permissions: z.nativeEnum(Permission).array(),
+        }),
+        method: async ({ prisma, data }) => {
+            await prisma.defaultPermission.deleteMany({
+                where: {
+                    permission: {
+                        notIn: data.permissions,
+                    },
+                },
+            })
+
+            await prisma.defaultPermission.createMany({
+                data: data.permissions.map(permission => ({
+                    permission,
+                })),
+                skipDuplicates: true,
+            })
+
+            // Invalidate all user sessions
+            await invalidateAllUserSessionData()
+
+            return data.permissions
+        }
     })
 }
