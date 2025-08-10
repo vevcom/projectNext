@@ -167,6 +167,11 @@ enum Permission {
 
   // Image licenses
   LICENSE_ADMIN
+
+  // Permission admin
+  PERMISSION_GROUP_READ
+  PERMISSION_GROUP_ADMIN
+  PERMISSION_DEFAULT_ADMIN
 }
 
 model Role {

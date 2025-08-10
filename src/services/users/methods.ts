@@ -2,7 +2,6 @@ import '@pn-server-only'
 import { UserAuthers } from './authers'
 import { UserConfig } from './config'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
-import { readPermissionsOfUser } from '@/services/permissions/read'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
 import { createDefaultSubscriptions } from '@/services/notifications/subscription/create'
@@ -20,6 +19,7 @@ import { hashAndEncryptPassword } from '@/auth/password'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
+import { PermissionMethods } from '../permissions/methods'
 
 export namespace UserMethods {
     /**
@@ -113,7 +113,13 @@ export namespace UserMethods {
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
-            const permissions = await readPermissionsOfUser(user.id)
+            const permissions = await PermissionMethods.readPermissionsOfUser.client(prisma).execute({
+                session,
+                bypassAuth: true,
+                params: {
+                    userId: user.id
+                }
+            })
 
             return { user, memberships, permissions }
         }

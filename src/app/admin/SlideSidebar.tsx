@@ -119,7 +119,11 @@ const navigations = [
             {
                 title: 'Api Nøkler',
                 href: '/admin/api-keys'
-            }
+            },
+            {
+                title: 'Gruppe Tilganger',
+                href: '/admin/permission-groups'
+            },
         ],
     },
     {

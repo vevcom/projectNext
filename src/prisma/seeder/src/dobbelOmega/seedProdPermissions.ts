@@ -64,16 +64,16 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
     checkForPuplicates(membershipPermissions.EXTERNAL, 'EXTERNAL permissions')
 
     for (const [level, permissions] of Object.entries(membershipPermissions)) {
-        const group = await prisma.omegaMembershipGroup.findUniqueOrThrow({
+        const membershipType = await prisma.omegaMembershipGroup.findUniqueOrThrow({
             where: {
                 omegaMembershipLevel: level as OmegaMembershipLevel,
-            }
+            },
         })
 
         await prisma.groupPermission.createMany({
             data: permissions.map(perm => ({
                 permission: perm,
-                groupId: group.id
+                groupId: membershipType.groupId
             }))
         })
     }

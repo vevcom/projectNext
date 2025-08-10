@@ -16,6 +16,7 @@ export const permissionCategories = [
     'skjermer',
     'shop',
     'cabin',
+    'permission'
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -517,6 +518,21 @@ export const PermissionConfig = {
         name: 'Hyttprodukt administrator',
         description: 'Kan administrere hyttprodukter',
         category: 'cabin'
+    },
+    PERMISSION_DEFAULT_ADMIN: {
+        name: 'Endre standardtilganger',
+        description: 'Kan endre standardtilganger',
+        category: 'permission'
+    },
+    PERMISSION_GROUP_READ: {
+        name: 'Les tilganger til grupper',
+        description: 'Kan lese tilganger til grupper',
+        category: 'permission'
+    },
+    PERMISSION_GROUP_ADMIN: {
+        name: 'Administrere tilganger til grupper',
+        description: 'Kan administrere tilganger til grupper',
+        category: 'permission'
     },
 } satisfies Record<Permission, PermissionInfo>
 
