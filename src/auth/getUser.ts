@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
-import { readDefaultPermissions } from '@/services/permissionRoles/read'
+import { readDefaultPermissions } from '@/services/permissions/read'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'

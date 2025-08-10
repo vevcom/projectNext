@@ -7,22 +7,22 @@ import {
     updateDefaultPermissions,
     updateGroupRoleRelation,
     updateRole
-} from '@/services/permissionRoles/update'
+} from '@/services/permissions/update'
 import {
     updateDefaultPermissionsValidation,
     updateRoleValidation,
     addGroupToRoleActionValidation,
     removeGroupFromRoleActionValidation,
     updateGroupRoleRelationActionValidation
-} from '@/services/permissionRoles/validation'
+} from '@/services/permissions/validation'
 import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedRole } from '@/services/permissionRoles/Types'
+import type { ExpandedRole } from '@/services/permissions/Types'
 import type {
     UpdateRoleTypes,
     AddGroupToRoleActionTypes,
     RemoveGroupFromRoleActionTypes,
     UpdateGroupRoleRelationActionTypes,
-} from '@/services/permissionRoles/validation'
+} from '@/services/permissions/validation'
 import type { Permission } from '@prisma/client'
 
 /**

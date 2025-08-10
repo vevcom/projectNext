@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { readDefaultPermissions, readUsersOfRole } from './read'
 import { updateDefaultPermissionsValidation, updateRoleValidation } from './validation'
-import { expandedRoleIncluder } from './ConfigVars'
+import { expandedRoleIncluder } from './config'
 import { readMembershipsOfGroup } from '@/services/groups/memberships/read'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'

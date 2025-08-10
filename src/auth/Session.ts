@@ -1,5 +1,5 @@
 import { authOptions } from './authoptions'
-import { readDefaultPermissions } from '@/services/permissionRoles/read'
+import { readDefaultPermissions } from '@/services/permissions/read'
 import { ApiKeyMethods } from '@/services/api-keys/methods'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'

@@ -7,7 +7,7 @@ import TextInput from '@/components/UI/TextInput'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Permission } from '@prisma/client'
-import type { ExpandedRole } from '@/services/permissionRoles/Types'
+import type { ExpandedRole } from '@/services/permissions/Types'
 
 /**
  * This function returns all the permissions set to be displayed by

@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { readUsersOfRole } from './read'
-import { expandedRoleIncluder } from './ConfigVars'
+import { expandedRoleIncluder } from './config'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { invalidateManyUserSessionData } from '@/services/auth/invalidateSession'

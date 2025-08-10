@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { createRoleValidation } from './validation'
-import { expandedRoleIncluder } from './ConfigVars'
+import { expandedRoleIncluder } from './config'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import type { CreateRoleTypes } from './validation'

@@ -1,12 +1,12 @@
 import '@pn-server-only'
-import { expandedRoleIncluder } from './ConfigVars'
+import { expandedRoleIncluder } from './config'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { prismaCall } from '@/services/prismaCall'
 import prisma from '@/prisma'
 import { GroupMethods } from '@/services/groups/methods'
 import type { Permission, RolesGroups } from '@prisma/client'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
-import type { ExpandedRole } from '@/services/permissionRoles/Types'
+import type { ExpandedRole } from '@/services/permissions/Types'
 import type { UserFiltered } from '@/services/users/Types'
 
 export async function readRoles(): Promise<ExpandedRole[]> {

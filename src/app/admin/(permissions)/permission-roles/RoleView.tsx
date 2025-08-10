@@ -8,7 +8,7 @@ import { readGroupsOfRoleAction } from '@/actions/permissionRoles/read'
 import React, { useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { RolesGroups } from '@prisma/client'
-import type { ExpandedRole } from '@/services/permissionRoles/Types'
+import type { ExpandedRole } from '@/services/permissions/Types'
 
 type PropTypes = {
     roles: ExpandedRole[]
