@@ -1,1 +1,0 @@
-export const minimumAmount = 5000 // 50 kr
