@@ -68,16 +68,6 @@ export async function readCommitteeArticle(shortName: string) : Promise<Expanded
     return article.committeeArticle
 }
 
-export async function readCommitteesFromIds(ids: number[]) {
-    return await prismaCall(() => prisma.committee.findMany({
-        where: {
-            id: {
-                in: ids
-            }
-        }
-    }))
-}
-
 export async function readCommitteesFromGroupIds(ids: number[]) {
     return await prismaCall(() => prisma.committee.findMany({
         where: {
