@@ -11,6 +11,7 @@ import migrateCommittees from './migrateCommittees'
 import manifest from '@/seeder/src/logger'
 import { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
+import seedProdPermissions from './seedProdPermissions'
 
 /**
  * !DobbelOmega!
@@ -37,6 +38,8 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateMailAliases(pnPrisma, vevenPrisma, limits)
     await migrateCommittees(pnPrisma, vevenPrisma, userMigrator)
     await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, userMigrator, limits)
+
+    await seedProdPermissions(pnPrisma)
 
     vevenPrisma.$disconnect()
     manifest.info('=======Dobbel Omega ferdig, dagen derpå=======')

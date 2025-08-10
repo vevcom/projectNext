@@ -55,6 +55,7 @@ export default async function migrateCommittees(
         await Promise.all(committee.CommitteeMembers.map(async member => {
             if (member.UserId === null) {
                 console.warn(`${committee.shortname} has a member that is not connected to a user!`)
+                console.warn(member)
                 return
             }
             const pnUserId = await userMigrator.getPnUserId(member.UserId)

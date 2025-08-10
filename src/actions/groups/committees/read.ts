@@ -4,6 +4,7 @@ import { getUser } from '@/auth/getUser'
 import {
     readCommittee,
     readCommitteeArticle,
+    readCommitteeMembers,
     readCommitteeParagraph,
     readCommittees
 } from '@/services/groups/committees/read'
@@ -58,4 +59,9 @@ export async function readCommitteeParagraphAction(shortName: string): Promise<A
     if (!authorized) return createActionError(status)
 
     return await safeServerCall(() => readCommitteeParagraph(shortName))
+}
+
+// TODO: Convert to ServiceMethod
+export async function readCommitteeMembersAction(shortName: string) {
+    return await safeServerCall(() => readCommitteeMembers(shortName))
 }

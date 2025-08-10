@@ -5,6 +5,8 @@ import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
 import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { CmsParagraph } from '@prisma/client'
 import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
+import { UserConfig } from '@/services/users/config'
+import { ImageMethods } from '@/services/images/methods'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -84,4 +86,40 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
         }
     }))
     return article.paragraph
+}
+
+// TODO: Create ServiceMethod
+export async function readCommitteeMembers(shortName: string) {
+    const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+        params: { special: 'DEFAULT_PROFILE_IMAGE' },
+        session: null,
+        bypassAuth: true
+    })
+
+    const com = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+        where: { shortName },
+        select: {
+            group: {
+                select: {
+                    memberships: {
+                        include: {
+                            user: {
+                                select: {
+                                    ...UserConfig.filterSelection,
+                                    image: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }))
+    return com.group.memberships.map(member => ({
+        ...member,
+        user: {
+            ...member.user,
+            image: member.user.image ?? defaultImage
+        }
+    }))
 }
