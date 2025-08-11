@@ -24,7 +24,7 @@ export default async function Users() {
                         partOfName: ''
                     }}
                 >
-                    <UserList />
+                    <UserList linksToUser={true} />
                 </UserPagingProvider>
             </div>
         </PageWrapper>

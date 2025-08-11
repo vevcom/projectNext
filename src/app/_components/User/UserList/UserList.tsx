@@ -25,7 +25,8 @@ type PropTypes = {
     displayForUser?: (user: UserPagingReturn) => ReactNode
     disableFilters?: DisableGroupFilters & {
         name?: boolean,
-    }
+    },
+    linksToUser?: boolean
 }
 
 function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
@@ -80,7 +81,8 @@ export default function UserList({
         CLASS: false,
         STUDY_PROGRAMME: false,
         OMEGA_MEMBERSHIP_GROUP: false
-    }
+    },
+    linksToUser,
 }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const usersSelection = useContext(UsersSelectionContext)
@@ -281,6 +283,7 @@ export default function UserList({
                             displayForUser && displayForUser(user)
                         }
                         <UserRow
+                            linksToUser={linksToUser}
                             groupSelected={groupSelected}
                             className={
                                 `${styles.userRow} ${groupSelected ? styles.extraInfo : ''}`
