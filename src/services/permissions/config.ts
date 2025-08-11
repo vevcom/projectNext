@@ -500,22 +500,22 @@ export const PermissionConfig = {
         category: 'cabin'
     },
     CABIN_BOOKING_ADMIN: {
-        name: 'Hyttabooking administrator',
-        description: 'Kan administrere hyttabookinger',
+        name: 'Hyttebooking administrator',
+        description: 'Kan administrere hyttebookinger',
         category: 'cabin'
     },
     CABIN_CALENDAR_READ: {
-        name: 'Les hyttakalender',
-        description: 'Kan lese hyttakalender',
+        name: 'Les hyttekalender',
+        description: 'Kan lese hyttekalender',
         category: 'cabin'
     },
     CABIN_ADMIN: {
-        name: 'Hyttadministrator',
+        name: 'Hyttedministrator',
         description: 'Kan administrere hytter',
         category: 'cabin'
     },
     CABIN_PRODUCTS_ADMIN: {
-        name: 'Hyttprodukt administrator',
+        name: 'Hytteprodukt administrator',
         description: 'Kan administrere hyttprodukter',
         category: 'cabin'
     },

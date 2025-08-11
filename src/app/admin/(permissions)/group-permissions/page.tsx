@@ -16,7 +16,11 @@ export default async function PermissionGroups() {
                 <tr>
                     <th>Gruppe</th>
                     {permissionList.map((permission, i) =>
-                        <th key={i} className={styles.permissionTH}>
+                        <th
+                            key={i}
+                            className={styles.permissionTH}
+                            title={PermissionConfig[permission as Permission].description}
+                        >
                             <span>{PermissionConfig[permission as Permission].name}</span>
                         </th>
                     )}

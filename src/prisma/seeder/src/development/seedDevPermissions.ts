@@ -1,15 +1,10 @@
+import { COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
 import { Permission } from '@prisma/client'
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevPermissions(prisma: PrismaClient) {
     const allPermissions = Object.values(Permission).map(permission => ({ permission }))
 
-    // Seed default permissions
-    await prisma.defaultPermission.createMany({
-        data: allPermissions
-    })
-
-    // Create Harambe's role
     const user = await prisma.user.findUnique({
         where: {
             username: 'harambe'
@@ -42,4 +37,16 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
             groupId: committee.groupId
         }))
     })
+
+    const allCommittees = await prisma.committee.findMany()
+
+    await Promise.all(allCommittees.map(com =>
+        prisma.groupPermission.createMany({
+            data: COMMITTEE_PERMISSIONS.map(perm => ({
+                permission: perm,
+                groupId: com.groupId,
+            })),
+            skipDuplicates: true,
+        })
+    ))
 }

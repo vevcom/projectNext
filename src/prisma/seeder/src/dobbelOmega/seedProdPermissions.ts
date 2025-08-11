@@ -1,83 +1,8 @@
+import { checkForPermissionDuplicates, COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
 import { Permission } from '@prisma/client'
-import type { OmegaMembershipLevel, PrismaClient as PrismaClientPn } from '@prisma/client'
-
-function checkForPuplicates(arr: Permission[], failMessage: string) {
-    const permissionSet = new Set(arr)
-    if (permissionSet.size !== arr.length) {
-        const duplicates = arr.filter((perm, index) => arr.indexOf(perm) !== index)
-        throw new Error(
-            `A duplicate permission is trying to be added to ${failMessage}, duplicates: ${duplicates.join(', ')}`
-        )
-    }
-}
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 
 export default async function seedProdPermissions(prisma: PrismaClientPn) {
-    const defaultPermissions: Permission[] = [
-        'GROUP_READ',
-        'CLASS_READ',
-        'JOBAD_READ',
-        'SCHOOLS_READ',
-        'COURSES_READ',
-        'CABIN_CALENDAR_READ',
-        'CABIN_BOOKING_CABIN_CREATE',
-        'CABIN_BOOKING_BED_CREATE'
-    ]
-
-    checkForPuplicates(defaultPermissions, 'default permissions')
-
-    await prisma.defaultPermission.createMany({
-        data: defaultPermissions.map(perm => ({
-            permission: perm
-        }))
-    })
-
-    const membershipPermissions: Record<OmegaMembershipLevel, Permission[]> = {
-        MEMBER: [
-            'OMBUL_READ',
-            'OMEGAQUOTES_READ',
-            'OMEGAQUOTES_WRITE',
-            'COMMITTEE_READ',
-            'INTEREST_GROUP_READ',
-            'STUDY_PROGRAMME_READ',
-            'LOCKER_USE',
-            'EVENT_READ',
-            'EVENT_REGISTRATION_READ',
-            'EVENT_REGISTRATION_CREATE',
-            'PURCHASE_CREATE',
-            'USERS_READ',
-        ],
-        SOELLE: [
-            'OMBUL_READ',
-            'OMEGAQUOTES_READ',
-            'COMMITTEE_READ',
-            'INTEREST_GROUP_READ',
-            'STUDY_PROGRAMME_READ',
-            'EVENT_READ',
-            'EVENT_REGISTRATION_READ',
-            'USERS_READ',
-        ],
-        EXTERNAL: []
-    }
-
-    checkForPuplicates(membershipPermissions.MEMBER, 'MEMBER permissions')
-    checkForPuplicates(membershipPermissions.SOELLE, 'SOELLE permissions')
-    checkForPuplicates(membershipPermissions.EXTERNAL, 'EXTERNAL permissions')
-
-    for (const [level, permissions] of Object.entries(membershipPermissions)) {
-        const membershipType = await prisma.omegaMembershipGroup.findUniqueOrThrow({
-            where: {
-                omegaMembershipLevel: level as OmegaMembershipLevel,
-            },
-        })
-
-        await prisma.groupPermission.createMany({
-            data: permissions.map(perm => ({
-                permission: perm,
-                groupId: membershipType.groupId
-            }))
-        })
-    }
-
     const allPermissions = Object.values(Permission)
 
     const committeePermissions: Record<string, Permission[]> = {
@@ -96,11 +21,13 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
         ],
         contactor: [
             'DOTS_ADMIN',
+            'SCREEN_READ',
+            'SCREEN_ADMIN',
         ],
     }
 
     for (const [shortName, permissions] of Object.entries(committeePermissions)) {
-        checkForPuplicates(permissions, `${shortName} permissions`)
+        checkForPermissionDuplicates(permissions, `${shortName} permissions`)
 
         const committee = await prisma.committee.findUnique({
             where: {
@@ -118,6 +45,14 @@ This should never happen with no limits`)
                 permission: perm,
                 groupId: committee.groupId
             }))
+        })
+
+        await prisma.groupPermission.createMany({
+            data: COMMITTEE_PERMISSIONS.map(perm => ({
+                permission: perm,
+                groupId: committee.groupId,
+            })),
+            skipDuplicates: true,
         })
     }
 }

@@ -8,12 +8,6 @@
     position: relative;
     padding: 0;
 
-    .backButton {
-        position: absolute;
-        top: .5em;
-        left: .5em;
-    }
-
     .content {
         flex-grow: 1;
         min-width: 0;
