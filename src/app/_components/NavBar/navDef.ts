@@ -22,6 +22,7 @@ import {
     faSignature,
     faSchool,
     faHouseChimneyWindow,
+    faPeopleLine,
 } from '@fortawesome/free-solid-svg-icons'
 import type {
     IconDefinition } from '@fortawesome/free-solid-svg-icons'
@@ -154,6 +155,12 @@ export const itemsForMenu: NavItem[] = [
         href: '/cabin',
         show: 'all',
         icon: faHouseChimneyWindow,
+    },
+    {
+        name: 'Broedre item Systre',
+        href: '/users',
+        show: 'loggedIn',
+        icon: faPeopleLine,
     },
     {
         name: 'Admin',
