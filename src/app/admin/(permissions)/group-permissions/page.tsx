@@ -1,9 +1,9 @@
 import styles from './page.module.scss'
 import { readPermissionMatrixAction } from '@/actions/permissions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import Checkbox from '@/components/UI/Checkbox'
 import { PermissionConfig } from '@/services/permissions/config'
 import type { Permission } from '@prisma/client'
+import PermissionCheckbox from './PermissionCheckbox'
 
 export default async function PermissionGroups() {
     const permissionMatrix = unwrapActionReturn(await readPermissionMatrixAction())
@@ -34,7 +34,11 @@ export default async function PermissionGroups() {
                         {permissionList.map((permission, j) => {
                             const hasPermission = group.permissions.includes(permission as Permission)
                             return <td key={j} className={styles.permissionTD}>
-                                <Checkbox name="abcd" defaultChecked={hasPermission} />
+                                <PermissionCheckbox
+                                    groupId={group.id}
+                                    permission={permission as Permission}
+                                    value={hasPermission}
+                                />
                             </td>
                         })}
                     </tr>

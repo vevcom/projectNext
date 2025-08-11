@@ -7,3 +7,4 @@ export const readPermissionOfGroupAction = action(PermissionMethods.readPermissi
 export const readPermissionMatrixAction = action(PermissionMethods.readPermissionMatrix)
 export const readDefaultPermissionsAction = action(PermissionMethods.readDefaultPermissions)
 export const updateDefaultPermissionsAction = action(PermissionMethods.updateDefaultPermissions)
+export const updateGroupPermissionAction = action(PermissionMethods.updateGroupPermission)

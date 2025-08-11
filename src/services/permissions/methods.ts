@@ -4,7 +4,7 @@ import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { z } from 'zod'
 import { Permission } from '@prisma/client'
-import { invalidateAllUserSessionData } from '../auth/invalidateSession'
+import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '../auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '../groups/config'
 import { checkGroupValidity, inferGroupName } from '../groups/methods'
 
@@ -108,6 +108,57 @@ export namespace PermissionMethods {
             await invalidateAllUserSessionData()
 
             return data.permissions
+        }
+    })
+
+    export const updateGroupPermission = ServiceMethod({
+        auther: () => PermissionAuthers.updateGroupPermission.dynamicFields({}),
+        paramsSchema: z.object({
+            groupId: z.number(),
+            permission: z.nativeEnum(Permission),
+        }),
+        dataSchema: z.object({
+            value: z.boolean()
+        }),
+        method: async ({ prisma, params, data }) => {
+            if (data.value) {
+                await prisma.groupPermission.create({
+                    data: {
+                        groupId: params.groupId,
+                        permission: params.permission,
+                    },
+                })
+            } else {
+                await prisma.groupPermission.delete({
+                    where: {
+                        groupId_permission: {
+                            groupId: params.groupId,
+                            permission: params.permission,
+                        }
+                    },
+                })
+            }
+
+            const group = await prisma.group.findUniqueOrThrow({
+                where: {
+                    id: params.groupId
+                },
+                select: {
+                    memberships: {
+                        select: {
+                            userId: true,
+                        },
+                        where: {
+                            active: true,
+                        }
+                    }
+                }
+            })
+
+            const userIds = group.memberships.map(membership => membership.userId)
+            await invalidateManyUserSessionData(userIds)
+
+            return data.value
         }
     })
 }
