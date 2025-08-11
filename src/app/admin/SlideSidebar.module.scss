@@ -5,7 +5,12 @@
     margin: .5em;
     padding: 2em;
     border-radius: ohma.$rounding;
-    position: relative;
+    position: sticky;
+    top: .5rem;
+    @include ohma.screenLg {
+        top: 4.1rem;
+    }
+    height: calc(100vh - 5rem);
 
     .toggle {   
         position: absolute;
@@ -50,6 +55,9 @@
         display: flex;
         flex-direction: column;
         width: 200px;
+        overflow-y: auto;
+        height: 100%;
+
         a {
             color: ohma.$colors-gray-700;
             text-decoration: none;
@@ -68,8 +76,10 @@
             }
         }
     }
-}
 
-.content {
-    width: 100%;
+    .backButton {
+        position: absolute;
+        top: .5em;
+        left: .5em;
+    }
 }

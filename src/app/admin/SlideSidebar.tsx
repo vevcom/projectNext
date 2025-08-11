@@ -21,6 +21,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
+import BackButton from './BackButton'
 
 /**
  * Declaration for the admin navigation links.
@@ -238,7 +239,6 @@ const navigations = [
 
 type PropTypes = {
     currentPath: string
-    children: ReactNode
 }
 
 /**
@@ -246,7 +246,7 @@ type PropTypes = {
  * @param children - The children to render in the sidebar.
  * @returns
  */
-export default function SlideSidebar({ currentPath, children }: PropTypes) {
+export default function SlideSidebar({ currentPath }: PropTypes) {
     const [open, setOpen] = useState(true)
     const previousPath = useRef<string>(currentPath)
 
@@ -264,44 +264,39 @@ export default function SlideSidebar({ currentPath, children }: PropTypes) {
         setOpen(!open)
     }
 
-    return (
-        <>
-            <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
-                <aside className={styles.sidebar}>
-                    {
-                        navigations.map(navigation => (
-                            <Fragment key={navigation.header.title}>
-                                <h3 className={styles.header}>
-                                    <FontAwesomeIcon icon={navigation.header.icon} />
-                                    {navigation.header.title}
-                                </h3>
-                                {
-                                    navigation.links.map(link => (
-                                        <Link
-                                            key={link.title}
-                                            href={link.href}
-                                            className={link.href === `/admin/${currentPath}` ? styles.active : ''}
-                                        >
-                                            {link.title}
-                                        </Link>
-                                    ))
-                                }
-                            </Fragment>
-                        ))
-                    }
-                </aside>
-                {
-                    !(currentPath === 'admin' && open) && (
-                        <button onClick={handleToggle} className={styles.toggle}>
-                            <FontAwesomeIcon icon={faArrowLeft} />
-                        </button>
-                    )
-                }
+    return <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
+        <aside className={styles.sidebar}>
+            {
+                navigations.map(navigation => (
+                    <Fragment key={navigation.header.title}>
+                        <h3 className={styles.header}>
+                            <FontAwesomeIcon icon={navigation.header.icon} />
+                            {navigation.header.title}
+                        </h3>
+                        {
+                            navigation.links.map(link => (
+                                <Link
+                                    key={link.title}
+                                    href={link.href}
+                                    className={link.href === `/admin/${currentPath}` ? styles.active : ''}
+                                >
+                                    {link.title}
+                                </Link>
+                            ))
+                        }
+                    </Fragment>
+                ))
+            }
+        </aside>
+        {
+            !(currentPath === 'admin' && open) && (
+                <button onClick={handleToggle} className={styles.toggle}>
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+            )
+        }
 
-            </div>
-            <div className={open ? `${styles.content} ${styles.open}` : `${styles.content} ${styles.closed}`}>
-                {children}
-            </div>
-        </>
-    )
+        <BackButton className={styles.backButton} />
+
+    </div>
 }

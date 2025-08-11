@@ -5,6 +5,8 @@ import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { z } from 'zod'
 import { Permission } from '@prisma/client'
 import { invalidateAllUserSessionData } from '../auth/invalidateSession'
+import { groupsWithRelationsIncluder } from '../groups/config'
+import { checkGroupValidity, inferGroupName } from '../groups/methods'
 
 
 export namespace PermissionMethods {
@@ -61,6 +63,24 @@ export namespace PermissionMethods {
                 groupId: params.groupId
             }
         })).map(permission => permission.permission)
+    })
+
+    export const readPermissionMatrix = ServiceMethod({
+        auther: () => PermissionAuthers.readPermissionMatrix.dynamicFields({}),
+        method: async ({ prisma }) => {
+            const groupsPermission = await prisma.group.findMany({
+                include: {
+                    ...groupsWithRelationsIncluder,
+                    permissions: true
+                }
+            })
+
+            return groupsPermission.map(group => ({
+                ...group,
+                name: inferGroupName(checkGroupValidity(group)),
+                permissions: group.permissions.map(permission => permission.permission)
+            }))
+        }
     })
 
     export const updateDefaultPermissions = ServiceMethod({
