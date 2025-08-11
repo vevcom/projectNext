@@ -26,33 +26,28 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
         ],
     }
 
+
+    const allCommittess = await prisma.committee.findMany()
+
     for (const [shortName, permissions] of Object.entries(committeePermissions)) {
         checkForPermissionDuplicates(permissions, `${shortName} permissions`)
 
-        const committee = await prisma.committee.findUnique({
-            where: {
-                shortName,
-            }
-        })
+        const committee = allCommittess.find(c => c.shortName === shortName)
         if (!committee) {
-            console.warn(`Committee with shortName ${shortName} not found, skipping permissions creation.
-This should never happen with no limits`)
-            continue
+            console.warn(`Committee with shortName ${shortName} not found, skipping permissions creation.`)
         }
+    }
+
+    for (const committee of allCommittess) {
+        let permissions: Permission[] = committeePermissions[committee.shortName] ?? []
+        permissions = permissions.concat(COMMITTEE_PERMISSIONS)
+        permissions = permissions.filter((perm, index) => permissions.indexOf(perm) === index)
 
         await prisma.groupPermission.createMany({
             data: permissions.map(perm => ({
                 permission: perm,
                 groupId: committee.groupId
             }))
-        })
-
-        await prisma.groupPermission.createMany({
-            data: COMMITTEE_PERMISSIONS.map(perm => ({
-                permission: perm,
-                groupId: committee.groupId,
-            })),
-            skipDuplicates: true,
         })
     }
 }

@@ -19,6 +19,7 @@ export default function RegistrationForm({
     const callbackUrl = searchParams.get('callbackUrl') || '/users/me'
 
     const [lastPassword, setLastPassword] = useState('')
+    const [sexValue, setSexValue] = useState<SEX | undefined>(userData.sex ?? undefined)
 
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
@@ -40,7 +41,12 @@ export default function RegistrationForm({
         <TextInput label="Allergier / diett" name="allergies" defaultValue={userData.allergies ?? ''} />
         <TextInput type="password" label="Passord" name="password" onChange={(e) => { setLastPassword(e.target.value) }} />
         <TextInput type="password" label="Gjenta passord" name="confirmPassword" />
-        <SelectString label="Kjønn" name="sex" options={sexOptions} defaultValue={userData.sex ?? undefined} />
+        <SelectString
+            label="Kjønn"
+            name="sex"
+            options={sexOptions}
+            value={sexValue}
+            onChange={(e) => setSexValue(e as SEX)} />
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
 }
