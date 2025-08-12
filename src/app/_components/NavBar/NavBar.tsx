@@ -5,6 +5,7 @@ import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import ReportButton from './ReportButton'
 import Link from 'next/link'
 import type { Profile } from '@/services/users/types'
 
@@ -49,6 +50,7 @@ export default async function NavBar({ profile }: PropTypes) {
                     />
                 </li>
                 <li className={styles.rightSide}>
+                    <ReportButton/>
                     <EditModeSwitch />
                     <div className={styles.magicHat}>
                         <SpecialCmsImage
