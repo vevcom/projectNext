@@ -102,7 +102,6 @@ export namespace LedgerAccountMethods {
                 where: {
                     // Select which accounts we want to calculate the balance for
                     ledgerAccountId: {
-                        not: null,
                         in: params.ids,
                     },
                     // Since transaction ids are sequential we can use the less than operator
@@ -136,35 +135,49 @@ export namespace LedgerAccountMethods {
                 },
             })
 
-            // The output from the Prisma `groupBy` method is an array.
-            // We convert it to an object (record) as it is more sensible for lookups. 
+            // Convert the array to an object as it's more convenient for lookups and
+            // replace all nulls with zeros to handle accounts with no entries yet.
             const balanceRecord = Object.fromEntries(
-                // The "as const"s are required so that TS understands that the arrays
-                // have a length of exactly two.
-                [
-                    // Set all ids to zero by default in case some ledger accounts do not have
-                    // any ledger entries yet.
-                    ...params.ids.map(id => [id, { amount: 0, fees: 0 }] as const),
-                    // Map the array returned by `groupBy` to key value pairs. 
-                    ...balanceArray.map(balance => [
-                        // The "!" is required because the typing for `fromEntries` doesn't accept
-                        // null as a key. (Even though all keys just get converted to strings during
-                        // runtime.) The query above guarantees that the id can never be null so
-                        // its safe anyhow. 
-                        balance.ledgerAccountId!, 
-                        {
-                            // Prisma sets sum to "null" in case the only rows which exist are null.
-                            // For our case we can treat it as zero.
-                            amount: balance._sum.amount ?? 0,
-                            fees: balance._sum.fees ?? 0,  
-                        },
-                    ] as const),
-                ]
+                balanceArray.map(balance => [
+                    balance.ledgerAccountId, 
+                    {
+                        amount: balance._sum.amount ?? 0,
+                        fees: balance._sum.fees ?? 0 
+                    }
+                ])
             )
+
+            return balanceRecord
+
+            // // The output from the Prisma `groupBy` method is an array.
+            // // We convert it to an object (record) as it is more sensible for lookups. 
+            // const balanceRecord = Object.fromEntries(
+            //     // The "as const"s are required so that TS understands that the arrays
+            //     // have a length of exactly two.
+            //     [
+            //         // Set all ids to zero by default in case some ledger accounts do not have
+            //         // any ledger entries yet.
+            //         ...params.ids.map(id => [id, { amount: 0, fees: 0 }] as const),
+            //         // Map the array returned by `groupBy` to key value pairs. 
+            //         ...balanceArray.map(balance => [
+            //             // The "!" is required because the typing for `fromEntries` doesn't accept
+            //             // null as a key. (Even though all keys just get converted to strings during
+            //             // runtime.) The query above guarantees that the id can never be null so
+            //             // its safe anyhow. 
+            //             balance.ledgerAccountId!, 
+            //             {
+            //                 // Prisma sets sum to "null" in case the only rows which exist are null.
+            //                 // For our case we can treat it as zero.
+            //                 amount: balance._sum.amount ?? 0,
+            //                 fees: balance._sum.fees ?? 0,  
+            //             },
+            //         ] as const),
+            //     ]
+            // )
 
             // The object returned by `fromEntries` assumes that all keys map to the provided type.
             // This is obviously not true so we need to assert the record as partial.
-            return balanceRecord as Partial<typeof balanceRecord>
+            // return balanceRecord as Partial<typeof balanceRecord>
         }
     })
 
@@ -193,10 +206,12 @@ export namespace LedgerAccountMethods {
                 session,
             })
 
+            return balances[0]
+
             // We know that the returned balances must contain the id we provided.
             // So, we can simply assert that this is not undefined.
             // TODO: There might be a better way to do this?
-            return balances[params.id]!
+            // return balances[params.id]!
         }
     })
 

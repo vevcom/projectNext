@@ -51,14 +51,20 @@ enum LedgerTransactionStatus {
   CANCELED
 }
 
-// The system uses double-entry accounting (google it or read the wiki to know what this means)
-// Each transaction consists of one or more LedgerEntries that must sum to zero
-// Either all ledger entires in a transaction are valid or none are
+// The system uses a double-entry accounting. In engineering terms this means that
+// ledger transactions obey Kirchhoff's first law. That is: 
+// sum of ledger entries + sum of payouts = sum of all payments
+// Either all or none ledger entries and payouts in a transaction are valid.
+// Payments track their own state as they depend on the external payment provider.
 model LedgerTransaction {
   id            Int                      @id @default(autoincrement())
   purpose       LedgerTransactionPurpose
   status        LedgerTransactionStatus
   ledgerEntries LedgerEntry[]
+  payment       Payment? @relation(fields: [paymentId], references: [id])
+  paymentId     Int? @unique
+  payout        Payout? @relation(fields: [payoutId], references: [id])
+  payoutId      Int? @unique
 
   // Relevant relations to other tables based un purpose
   // purchase Purchase
@@ -70,7 +76,6 @@ model LedgerTransaction {
   updatedAt DateTime @updatedAt
 }
 
-// All ledger entries part of a transaction must sum to zero
 model LedgerEntry {
   id                  Int               @id @default(autoincrement())
   // The amount this ledger entry moves
@@ -78,17 +83,14 @@ model LedgerEntry {
   amount              Int
   // Fees are the fees incurred during payment. This does not effect users balance and are only used for book keeping.
   // Optional since fees might not be known until payment is confirmed
-  // Must be non-null when completing a transaction. Set to 0 explicitly for no fees.
+  // Must be non-null when completing a transaction. It must be explicitly set to 0 to indicate no fees.
   fees                Int?
   // What type of movement this ledger entry does.
   // Determines how it is validated.
   // type                LedgerEntryType
   // The account which should be credited/debited on completions
   ledgerAccount       LedgerAccount?    @relation(fields: [ledgerAccountId], references: [id])
-  ledgerAccountId     Int?
-  // The payment the amount comes from in case this is an external debit
-  payment             Payment?          @relation(fields: [paymentId], references: [id])
-  paymentId           Int?
+  ledgerAccountId     Int
   // The transaction this ledger entry is part of
   // Accounts are credited only when the transaction succeeds.
   // Accounts are debited immediately when the transaction is created,
@@ -105,8 +107,6 @@ model LedgerEntry {
   // Only one ledger entry for a given account may be present in a transaction
   // This is for simplicity as they could always be merged
   @@unique([ledgerTransactionId, ledgerAccountId])
-  // Same applies to payment id and transaction id
-  @@unique([ledgerTransactionId, paymentId])
 }
 
 enum PaymentProvider {
@@ -130,37 +130,50 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id              Int             @id @default(autoincrement())
+  id                  Int               @id @default(autoincrement())
   // The amount that was requested for this payment
   // Use to confirm that the correct amount was captured
-  amount          Int
+  amount              Int
   // The amount of fees this payment incurred
-  fees            Int?
+  fees                Int?
   // Lifecycle of the payment
-  status          PaymentStatus
+  status              PaymentStatus
   // Which service we should call and listen to
-  provider        PaymentProvider
+  provider            PaymentProvider
   // If the payment provider is Stripe, then the stripe
   // payment model holds the details for the payment intent
-  paymentIntentId String?         @unique
+  paymentIntentId     String?           @unique
   // The key the fronted uses to confirm the payment intent
-  clientSecret    String?         @unique
+  clientSecret        String?           @unique
   // The reason for the payment, displayed on the stripe dashboard
-  description     String
+  description         String
   // The text displayed on the bank statement
-  descriptor      String
+  descriptor          String
   // The ledger account responsible for creating the payment
   // May be null if user without account is paying
-  ledgerAccount   LedgerAccount?  @relation(fields: [ledgerAccountId], references: [id])
-  ledgerAccountId Int?
+  ledgerAccount       LedgerAccount?    @relation(fields: [ledgerAccountId], references: [id])
+  ledgerAccountId     Int?
   // Which ledger entries have used this payment
   // Useful in case payment goes through,
   // then user can be credited unused amount
   // into their account.
-  ledgerEntries   LedgerEntry[]
+  ledgerTransaction   LedgerTransaction?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Bookkeeping for where money has been sent out from the website
+model Payout {
+  id                Int     @id @default(autoincrement())
+  amount            Int
+  fees              Int?
+  // The bank account number is only for our own bookkeeping.
+  // The money has to be transferred manually by HS!
+  bankAccountNumber String?
+  comment           String?
+
+  ledgerTransaction   LedgerTransaction?
 }
 
 // // The type of a ledger entry determines how it is validated.
