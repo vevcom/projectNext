@@ -23,6 +23,7 @@ import {
     faSchool,
     faHouseChimneyWindow,
     faPeopleLine,
+    faIdCard,
 } from '@fortawesome/free-solid-svg-icons'
 import type {
     IconDefinition } from '@fortawesome/free-solid-svg-icons'
@@ -163,11 +164,17 @@ export const itemsForMenu: NavItem[] = [
         icon: faPeopleLine,
     },
     {
+        name: 'Søknadsperioder',
+        href: '/applications',
+        show: 'all',
+        icon: faIdCard,
+    },
+    {
         name: 'Admin',
         href: '/admin',
         show: 'admin',
         icon: faTools,
-    }
+    },
 ]
 
 export default function getNavItems(loggedIn: boolean, admin: boolean, applicationPeiod: boolean): NavItem[] {

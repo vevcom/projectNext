@@ -1,5 +1,6 @@
 'use client'
 import styles from './SlideSidebar.module.scss'
+import BackButton from './BackButton'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import { Fragment, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -20,8 +21,6 @@ import {
     faListDots,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons'
-import type { ReactNode } from 'react'
-import BackButton from './BackButton'
 
 /**
  * Declaration for the admin navigation links.

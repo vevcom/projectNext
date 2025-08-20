@@ -17,9 +17,9 @@ import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { PermissionMethods } from '@/services/permissions/methods'
 import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
-import { PermissionMethods } from '../permissions/methods'
 
 export namespace UserMethods {
     /**

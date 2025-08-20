@@ -2,11 +2,12 @@ import styles from './page.module.scss'
 import ShowAndEditName from './ShowAndEditName'
 import RegistrationUI from './RegistrationUI'
 import RegistrationsList from './RegistrationsList'
+import ManualRegistrationForm from './ManualRegistrationForm'
+import Date from '@/components/Date/Date'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
 import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
-import { displayDate } from '@/lib/dates/displayDate'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
 import { destroyEventAction } from '@/actions/events/destroy'
@@ -18,7 +19,6 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ManualRegistrationForm from './ManualRegistrationForm'
 
 type PropTypes = {
     params: Promise<{
@@ -59,7 +59,7 @@ export default async function Event({ params }: PropTypes) {
                     </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
-                        {/*TODO: Use auther to only display if it can be destroyd*/}
+                        {/*TODO: Use auther to only display if it can be destroy*/}
                         <Form
                             action={bindParams(destroyEventAction, { id: event.id })}
                             navigateOnSuccess="/events"
@@ -78,7 +78,7 @@ export default async function Event({ params }: PropTypes) {
             <aside>
                 <p>
                     <FontAwesomeIcon icon={faCalendar} />
-                    {displayDate(event.eventStart)} - {displayDate(event.eventEnd)}
+                    <Date date={event.eventStart} includeTime /> - <Date date={event.eventEnd} includeTime />
                 </p>
                 <p>
                     <FontAwesomeIcon icon={faLocationDot} />
@@ -90,10 +90,10 @@ export default async function Event({ params }: PropTypes) {
                         {event.numOfRegistrations} / {event.places}
                     </p>
                     <p>
-                        Påmelding start: {displayDate(event.registrationStart)}
+                        Påmelding start: <Date date={event.registrationStart} includeTime />
                     </p>
                     <p>
-                        Påmelding slutt: {displayDate(event.registrationEnd)}
+                        Påmelding slutt: <Date date={event.registrationEnd} includeTime />
                     </p>
                     {event.waitingList && <p>
                         På venteliste: {event.numOnWaitingList}

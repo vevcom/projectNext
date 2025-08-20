@@ -1,5 +1,6 @@
 import '@pn-server-only'
 import { groupsExpandedIncluder, GroupTypesConfig, OmegaMembershipLevelConfig, readGroupsOfUserIncluder } from './config'
+import { GroupAuthers } from './authers'
 import { UserConfig } from '@/services/users/config'
 import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
@@ -23,8 +24,7 @@ import type {
     GroupWithRelations,
     GroupWithRelationsNameInferencer
 } from './Types'
-import { GroupAuthers } from './authers'
-import { UserFiltered } from '../users/Types'
+import type { UserFiltered } from '@/services/users/Types'
 
 async function expandGroup(group: GroupWithRelationsNameInferencer & {
     membershipsToInferFirstOrder: { order: number }[]

@@ -2,11 +2,11 @@ import '@pn-server-only'
 import { PermissionAuthers } from './auther'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
-import { z } from 'zod'
+import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
+import { groupsWithRelationsIncluder } from '@/services/groups/config'
+import { checkGroupValidity, inferGroupName } from '@/services/groups/methods'
 import { Permission } from '@prisma/client'
-import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '../auth/invalidateSession'
-import { groupsWithRelationsIncluder } from '../groups/config'
-import { checkGroupValidity, inferGroupName } from '../groups/methods'
+import { z } from 'zod'
 
 
 export namespace PermissionMethods {

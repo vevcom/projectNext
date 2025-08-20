@@ -10,6 +10,7 @@ type PropTypes = {
 /**
  * Just a wrapper for the displayDate function. Importantly it is client side rendered to use the client's timezone.
  * @param date - The date to display
+ * @param includeTime - Whether to include time in the display
  * @returns the date in jsx
  */
 export default function Date({ date, includeTime = true }: PropTypes) {

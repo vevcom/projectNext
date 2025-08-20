@@ -30,8 +30,8 @@ model Event {
   waitingList        Boolean
   eventRegistrations EventRegistration[]
 
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
   ScreenPage ScreenPage[]
   cabinEvent Booking[]
 

@@ -16,7 +16,8 @@ export const permissionCategories = [
     'skjermer',
     'shop',
     'cabin',
-    'permission'
+    'permission',
+    'applications',
 ] as const satisfies string[]
 
 export const PermissionConfig = {
@@ -533,5 +534,20 @@ export const PermissionConfig = {
         name: 'Administrere tilganger til grupper',
         description: 'Kan administrere tilganger til grupper',
         category: 'permission'
+    },
+    APPLICATION_ADMIN: {
+        name: 'Søknadsadministrator',
+        description: `
+            Lag søknadsperioder, les søknader og administrer/moderere søknader.
+            Komitemedlemmer kan også lese søknader til sin komite.
+        `,
+        category: 'applications',
+    },
+    APPLICATION_WRITE: {
+        name: 'Søknadsskriver',
+        description: `
+            Kan skrive søknader til alle aktive søknadsperioder. 
+        `,
+        category: 'applications',
     },
 } satisfies Record<Permission, PermissionInfo>

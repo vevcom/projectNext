@@ -14,14 +14,14 @@ export default async function migrateCommittees(
         }
     })
 
-    const latestOrder = (await pnPrisma.omegaOrder.findFirstOrThrow({
-        orderBy: {
-            order: 'desc',
-        },
-        select: {
-            order: true,
-        }
-    })).order
+    // const latestOrder = (await pnPrisma.omegaOrder.findFirstOrThrow({
+    //     orderBy: {
+    //         order: 'desc',
+    //     },
+    //     select: {
+    //         order: true,
+    //     }
+    // })).order
 
     await Promise.all(committees.map(async committee => {
         const newCommittee = await pnPrisma.committee.create({

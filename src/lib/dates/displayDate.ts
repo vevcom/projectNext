@@ -1,6 +1,8 @@
 import { toLocalDate } from './toLocal'
 
 /**
+ * WARNING: Do not use this function directly on server side rendering as it will use the server's timezone.
+ * Use the `date` component instead, which is client side rendered.
  * Displays date and time in norwegian format
  * @param date - The date to display
  * @returns
