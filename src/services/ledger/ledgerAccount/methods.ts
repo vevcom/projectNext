@@ -149,36 +149,6 @@ export namespace LedgerAccountMethods {
             )
 
             return balanceRecord
-
-            // // The output from the Prisma `groupBy` method is an array.
-            // // We convert it to an object (record) as it is more sensible for lookups. 
-            // const balanceRecord = Object.fromEntries(
-            //     // The "as const"s are required so that TS understands that the arrays
-            //     // have a length of exactly two.
-            //     [
-            //         // Set all ids to zero by default in case some ledger accounts do not have
-            //         // any ledger entries yet.
-            //         ...params.ids.map(id => [id, { amount: 0, fees: 0 }] as const),
-            //         // Map the array returned by `groupBy` to key value pairs. 
-            //         ...balanceArray.map(balance => [
-            //             // The "!" is required because the typing for `fromEntries` doesn't accept
-            //             // null as a key. (Even though all keys just get converted to strings during
-            //             // runtime.) The query above guarantees that the id can never be null so
-            //             // its safe anyhow. 
-            //             balance.ledgerAccountId!, 
-            //             {
-            //                 // Prisma sets sum to "null" in case the only rows which exist are null.
-            //                 // For our case we can treat it as zero.
-            //                 amount: balance._sum.amount ?? 0,
-            //                 fees: balance._sum.fees ?? 0,  
-            //             },
-            //         ] as const),
-            //     ]
-            // )
-
-            // The object returned by `fromEntries` assumes that all keys map to the provided type.
-            // This is obviously not true so we need to assert the record as partial.
-            // return balanceRecord as Partial<typeof balanceRecord>
         }
     })
 
@@ -208,71 +178,6 @@ export namespace LedgerAccountMethods {
             })
 
             return balances[params.id]
-
-            // We know that the returned balances must contain the id we provided.
-            // So, we can simply assert that this is not undefined.
-            // TODO: There might be a better way to do this?
-            // return balances[params.id]!
         }
     })
-
-            // const sumPayments = async () => {
-            //     const payments = await prisma.payment.aggregate({
-            //         where: {
-            //             transaction: {
-            //                 id: params.atTransactionId && { lte: params.atTransactionId },
-            //                 toAccountId: params.id,
-            //                 status: 'SUCCEEDED',
-            //             }
-            //         },
-            //         _sum: {
-            //             amount: true,
-            //             fees: true,
-            //         },
-            //     })
-
-            //     return {
-            //         amount: payments._sum.amount ?? 0,
-            //         fees: payments._sum.fees ?? 0,
-            //     }
-            // }
-
-            // const sumTransfers = async (direction: 'TO' | 'FROM', accountId: number) => {
-            //     const transactionFilter = {
-            //         id: params.atTransactionId && { lte: params.atTransactionId },
-            //         fromAccountId: direction === 'FROM' ? accountId : undefined,
-            //         toAccountId: direction === 'TO' ? accountId : undefined,
-            //         // Reserve transfers that are pending (i.e. don't count them towards the balance), 
-            //         // but don't make them available at the destination account
-            //         status: direction === 'TO' ? 'SUCCEEDED' : { in: ['SUCCEEDED', 'PENDING'] },
-            //     } satisfies Prisma.TransactionWhereInput
-
-            //     const transfers = await prisma.transfer.aggregate({
-            //         where: {
-            //             transaction: transactionFilter,
-            //         },
-            //         _sum: {
-            //             amount: true,
-            //             fees: true,
-            //         },
-            //     })
-
-            //     return {
-            //         amount: transfers._sum.amount ?? 0,
-            //         fees: transfers._sum.fees ?? 0,
-            //     }
-            // }
-
-            // const [payments, transfersIn, transfersOut] = await Promise.all([
-            //     sumPayments(),
-            //     sumTransfers('TO', params.id),
-            //     sumTransfers('FROM', params.id),
-            // ])
-
-        //     return {
-        //         amount: payments.amount + transfersIn.amount - transfersOut.amount,
-        //         fees: payments.fees + transfersIn.fees - transfersOut.fees,
-        //     }
-        // }
-    // })
 }

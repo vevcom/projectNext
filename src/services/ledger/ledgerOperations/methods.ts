@@ -5,7 +5,20 @@ import { PaymentMethods } from "../payments/methods"
 import { z } from "zod"
 import { ManualTransferMethods } from "../manualTransfers/methods"
 
+// `LedgerOperations` provides functions to orchestrate account related actions,
+// such as depositing funds or creating payouts. If the ledger is needed for
+// other purposes, such as creating a transaction, it should be done through
+// `LedgerTransaction`.
+
 export namespace LedgerOperationMethods {
+    /**
+     * Creates a deposit transaction, which is a deposit of funds into the ledger.
+     * 
+     * @params params.amount The amount to be deposited.
+     * @params params.ledgerAccountId The ID of the ledger account where the funds will be deposited.
+     * 
+     * @return The created transaction representing the deposit operation.
+     */
     export const createDeposit = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         opensTransaction: true,
@@ -46,6 +59,15 @@ export namespace LedgerOperationMethods {
         }
     })
 
+    /**
+     * Creates a payout transaction, which is a withdrawal of funds from the ledger.
+     * 
+     * @params params.amount The amount to be withdrawn.
+     * @params params.fees The fees associated with the payout.
+     * @params params.ledgerAccountId The ID of the ledger account from which the funds will be withdrawn.
+     * 
+     * @returns The created transaction representing the payout operation.
+     */
     export const createPayout = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
