@@ -6,4 +6,5 @@ export type Balance = {
     fees: number,
 }
 
+// TODO: Should this also be partial? It cannot possibly contain all number IDs.
 export type BalanceRecord = Record<number, Balance>
