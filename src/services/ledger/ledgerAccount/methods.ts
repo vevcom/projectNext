@@ -3,6 +3,7 @@ import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
+import { BalanceRecord } from './Types'
 
 export namespace LedgerAccountMethods {
     /**
@@ -96,7 +97,7 @@ export namespace LedgerAccountMethods {
             ids: z.number().array(),
             atTransactionId: z.number().optional(),
         }),
-        method: async ({ prisma, params }) => {
+        method: async ({ prisma, params }): Promise<BalanceRecord> => {
             const balanceArray = await prisma.ledgerEntry.groupBy({
                 by: ['ledgerAccountId'],
                 where: {
@@ -206,7 +207,7 @@ export namespace LedgerAccountMethods {
                 session,
             })
 
-            return balances[0]
+            return balances[params.id]
 
             // We know that the returned balances must contain the id we provided.
             // So, we can simply assert that this is not undefined.

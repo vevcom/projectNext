@@ -3,159 +3,17 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { LedgerTransactionPurpose } from '@prisma/client'
-import type { Prisma, LedgerTransactionStatus, PaymentStatus } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { z } from 'zod'
 import { LedgerAccountMethods } from '../ledgerAccount/methods'
+import { ServerError } from '@/services/error'
+import { calculateCreditFees, calculateDebitFees } from './calculateFees'
+import { determineTransactionState } from './determineTransactionState'
 
 export namespace LedgerTransactionMethods {
-    // TODO FOR IMORGEN:
-    // - Splitte validate transaction i to
-    // - Finne ut hvordan man setter sammen balanse kalkulasjon
-    // - Integrere med shop hvis tid
-    // - Se litt på frontend hvis gidder
-
     /**
-     * Checks that the participating attachments have enough balance to do a given transaction.
+     * Reads a single transaction including its ledger entries, payment and manual transfer (if any).
      */
-    async function determineTransactionStatus(prisma: Prisma.TransactionClient, id: number): Promise<LedgerTransactionStatus> {
-        const { ledgerEntries, payment, payout, status } = await prisma.ledgerTransaction.findUniqueOrThrow({
-            where: { id },
-            select: {
-                status: true,
-                ledgerEntries: true,
-                payment: true,
-                payout: true,
-            },
-        })
-
-        // All the rules for a transaction to be valid are written in styled boxes.
-
-        // NOTE: The order of the rules are important!
-
-        ///////////////////////////////////////////////////////////////////////
-        // A transaction in a terminal state (SUCCEEDED, FAILED or CANCELED) //
-        // can never change state,                                           //
-        ///////////////////////////////////////////////////////////////////////
-
-        if (status !== 'PENDING') return status
-
-        ///////////////////////////////////////////////////////////////////
-        // If any payment has failed, the entire transaction has failed. //
-        ///////////////////////////////////////////////////////////////////
-
-        const okStates: PaymentStatus[] = ['PENDING', 'PROCESSING', 'SUCCEEDED']
-        const hasFailedPayment = payment && !okStates.includes(payment.status) 
-
-        if (hasFailedPayment) {
-            return 'FAILED'
-        }
-
-        ///////////////////////////////////////////////////////////////////
-        // Payments and payouts may only have positive amounts and fees. //
-        ///////////////////////////////////////////////////////////////////
-
-        const validPayment = !payment || (payment.amount > 0 && (!payment.fees || payment.fees > 0))
-        const validPayout  = !payout  || (payout.amount  > 0 && (!payout.fees  || payout.fees  > 0))
-        
-        if (!validPayout || !validPayment) {
-            return 'FAILED'
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////
-        // If amount and fees are both non-zero in an entry, they must have the same sign. //
-        /////////////////////////////////////////////////////////////////////////////////////
-
-        const validLedgerEntries = ledgerEntries.every(entry => 
-            !entry.amount || !entry.fees || Math.sign(entry.amount) === Math.sign(entry.fees)
-        )
-
-        if (!validLedgerEntries) {
-            return 'FAILED'
-        }
-
-        /////////////////////////////////////////////////////////////////
-        // Kirchhoff's first law! The sum of all amounts must be zero. //
-        // I.e. money must come from somewhere and go to somewhere.    //
-        /////////////////////////////////////////////////////////////////
-        
-        // NOTE: Since the number of entries in a transaction is generally low (max two) we can
-        // sum the amounts and fees in memory rather than doing a database aggregation.
-        const ledgerEntriesAmountSum = ledgerEntries.reduce((sum, entry) => sum + entry.amount, 0)
-        const paymentAmount = payment?.amount ?? 0
-        const payoutAmount = payout?.amount ?? 0
-
-        if (ledgerEntriesAmountSum + payoutAmount !== paymentAmount) {
-            return 'FAILED'
-        }
-
-        ////////////////////////////////////////////////////////////////////
-        // If an entry is debit (amount < 0), its referenced account must //
-        // have a positive balance after the transaction succeeds.        //
-        ////////////////////////////////////////////////////////////////////
-
-        const debitLedgerAccountIds = ledgerEntries.filter(entry => entry.amount < 0).map(entry => entry.ledgerAccountId)
-
-        if (debitLedgerAccountIds) {
-            const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
-                params: {
-                    ids: debitLedgerAccountIds,
-                    atTransactionId: id,
-                },
-                session: null,
-            })
-    
-            const hasNegativeBalance = Object.values(balances).some(balance => balance.amount < 0 || balance.fees < 0)
-    
-            if (hasNegativeBalance) {
-                return 'FAILED'
-            }
-        } 
-
-        ////////////////////////////////////////////////////////////
-        // If any payment is pending, the transaction is pending. // 
-        ////////////////////////////////////////////////////////////
-
-        // Since we have checked for failure states above,
-        // we can simply check that the transaction has not succeeded.
-        const hasPendingPayment = payment && payment.status !== 'SUCCEEDED'
-
-        if (hasPendingPayment) {
-            return 'PENDING'
-        }
-
-        // NOTE: Since fees are not known until the payment (if any) completes, 
-        // the checks must be run afterwards.
-
-        ////////////////////////////////
-        // All fees must be non-null. //
-        ////////////////////////////////
-
-        const hasNullFees = 
-            ledgerEntries.some(entry => entry.fees === null) ||
-            payment && payment.fees === null ||
-            payout && payout.fees === null
-
-        if (hasNullFees) {
-            return 'FAILED'
-        }
-
-        //////////////////////////////////////////////////
-        // Fees must also follow Kirchhoff's first law. //
-        //////////////////////////////////////////////////
-
-        // NOTE: Since the number of entries in a transaction is generally low (max two) we can
-        // sum the amounts and fees in memory rather than doing a database aggregation.
-        const ledgerEntriesFeesSum = ledgerEntries.reduce((sum, entry) => sum + entry.fees!, 0)
-        const paymentFees = payment?.fees ?? 0
-        const payoutFees = payout?.fees ?? 0
-
-        if (ledgerEntriesFeesSum + payoutFees !== paymentFees) {
-            return 'FAILED'
-        }
-
-        return 'SUCCEEDED'
-    }
-
     export const read = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
@@ -169,7 +27,7 @@ export namespace LedgerTransactionMethods {
                 include: {
                     ledgerEntries: true,
                     payment: true,
-                    payout: true,
+                    manualTransfer: true,
                 },
             })
 
@@ -177,6 +35,9 @@ export namespace LedgerTransactionMethods {
         }
     })
 
+    /**
+     * Read several ledger transactions including its ledger entries, payment and manual transfer (if any).
+     */
     export const readPage = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
@@ -199,7 +60,7 @@ export namespace LedgerTransactionMethods {
             include: {
                 ledgerEntries: true,
                 payment: true,
-                payout: true,
+                manualTransfer: true,
             },
             orderBy: {
                 createdAt: 'desc',
@@ -209,6 +70,14 @@ export namespace LedgerTransactionMethods {
         })
     })
 
+    /**
+     * Create a new transaction on the ledger with the given entries and optionally 
+     * link to the provided payment and/or manual transfer.
+     * 
+     * The fees transferred are automatically calculated.
+     * 
+     * The lifecycle of the transaction is automatically handled by the system.
+     */
     export const create = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO,
         paramsSchema: z.object({
@@ -218,64 +87,133 @@ export namespace LedgerTransactionMethods {
                 ledgerAccountId: z.number(),
             }).array(),
             paymentId: z.number().optional(),
-            payoutId: z.number().optional(),
+            manualTransferId: z.number().optional(),
         }),
         method: async ({ prisma, session, params }, ) => {
+            // Calculate the balance for all accounts which are going to be deducted
+            const debitEntries = params.ledgerEntries.filter(entry => entry.amount < 0)
+            const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
+                params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
+                session: null,
+            })
+
+            // Check that the relevant accounts have enough balance to do the transaction.
+            // NOTE: This is check is only to avoid calling the db unnecessarily.
+            // The actual validation is handled in the `advance` function.
+            const hasInsufficientBalance = debitEntries.some(entry => entry.amount > balances[entry.ledgerAccountId].amount)
+            if (hasInsufficientBalance) {
+                throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
+            }
+
+            // Calculate and set fees for the debit entries 
+            const fees = calculateDebitFees(params.ledgerEntries, balances)
+            const entries = params.ledgerEntries.map(entry => ({ 
+                ...entry, 
+                fees: fees[entry.ledgerAccountId] ?? null
+            }))
+
             const { id } = await prisma.ledgerTransaction.create({
                 data: {
                     purpose: params.purpose,
                     status: 'PENDING',
                     ledgerEntries: {
-                        create: params.ledgerEntries,
+                        create: entries,
                     },
-                    paymentId: params.paymentId,
-                    payoutId: params.payoutId,
+                    paymentId :params.paymentId,
+                    manualTransferId: params.manualTransferId,
                 },
                 select: {
                     id: true,
                 },
             })
         
-            const transaction = await updateStatus.client(prisma).execute({
+            const transaction = await advance.client(prisma).execute({
                 params: {
                     id,
                 },
                 session,
             })
 
+            if (transaction.status === 'FAILED') {
+                // TODO: Better error message.
+                throw new ServerError('BAD PARAMETERS', 'Ugyldig transaksjon.')
+            }
+
             return transaction
         } 
     })
 
     /**
-     * Tries to update a given transaction to a state.
-     * If the transaction is valid and possible (all payments completed, enough balance, etc...) the state is set to succeeded.
-     * If anything has failed 
+     * Tries to advance the transactions state to a terminal state.
+     * Also, updates the fees if possible.
      */
-    export const updateStatus = ServiceMethod({
+    export const advance = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         method: async ({ session, prisma, params}) => {
-            const transactionStatus = await determineTransactionStatus(prisma, params.id)
+            const transaction = await read.client(prisma).execute({
+                params: { id: params.id },
+                session,
+            })
+
+            const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment, transaction.manualTransfer)
+
+            if (creditFees) {
+                const creditEntries = transaction.ledgerEntries.filter(entry => entry.amount > 0)
+
+                const ledgerEntryUpdateInput = creditEntries.map(entry => ({
+                    where: {
+                        id: entry.id,
+                    },
+                    data: {
+                        fees: creditFees[entry.ledgerAccountId],
+                    },
+                })) satisfies Prisma.LedgerEntryUpdateWithWhereUniqueWithoutLedgerTransactionInput[] // X_x
+
+                await prisma.ledgerTransaction.update({
+                    where: {
+                        id: params.id,
+                    },
+                    data: {
+                        ledgerEntries: {
+                            update: ledgerEntryUpdateInput,
+                        },
+                    },
+                    select: {},
+                })
+
+                transaction.ledgerEntries.forEach(
+                    entry => entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
+                )
+            }
+
+            const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
+                params: {
+                    ids: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
+                    atTransactionId: transaction.id,
+                },
+                session: null,
+            })
+
+            const transactionStatus = await determineTransactionState(transaction, balances)
 
             // We use `updateMany` in stead of just `update` here because
             // we don't want to throw in case the record is not found.
             await prisma.ledgerTransaction.updateMany({
                 where: {
                     id: params.id,
-                    status: 'PENDING',
+                    status: 'PENDING', // Protect against changing final state.
                 },
                 data: {
                     status: transactionStatus,
+                    // TODO: Add message detailing why a transaction failed if it did.
                 },
             })
             
-            return await read.client(prisma).execute({
-                params: {
-                    id: params.id,
-                },
+            return read.client(prisma).execute({
+                params: { id: params.id },
                 session,
             })
         }
@@ -297,7 +235,7 @@ export namespace LedgerTransactionMethods {
 
 
         ///////////////////////////////////////////////////////////////////////////////////////
-        // All ledger entries must have either a ledger account, payment or payout attached. //
+        // All ledger entries must have either a ledger account, payment or manualTransfer attached. //
         // Multiple or none are not allowed. (The money must come from/go to somewhere.)     //
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -307,7 +245,7 @@ export namespace LedgerTransactionMethods {
         }
 
         const onlySingleAttachments = transaction.ledgerEntries.every(
-            entry => exactlyOneOf(entry, ['ledgerAccountId', 'paymentId', 'payoutId'])
+            entry => exactlyOneOf(entry, ['ledgerAccountId', 'paymentId', 'manualTransferId'])
         )
 
         if (!onlySingleAttachments) {
@@ -457,13 +395,13 @@ async function createDeposit(...) {
 //     })
 // }
 
-// async function createPayout() {
+// async function createmanualTransfer() {
 //     await prisma.$transaction(async (tx) => {
 //         return await transactios.create({
 //             toAccountId: null,
 //             fromAccountId: ...,
 //             totalAmount: ...,
-//             purpose: 'PAYOUT',
+//             purpose: 'manualTransfer',
 //         })
 //     })
 // }
