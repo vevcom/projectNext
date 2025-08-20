@@ -57,14 +57,14 @@ enum LedgerTransactionStatus {
 // Either all or none ledger entries and payouts in a transaction are valid.
 // Payments track their own state as they depend on the external payment provider.
 model LedgerTransaction {
-  id            Int                      @id @default(autoincrement())
-  purpose       LedgerTransactionPurpose
-  status        LedgerTransactionStatus
-  ledgerEntries LedgerEntry[]
-  payment       Payment? @relation(fields: [paymentId], references: [id])
-  paymentId     Int? @unique
-  payout        Payout? @relation(fields: [payoutId], references: [id])
-  payoutId      Int? @unique
+  id                     Int                      @id @default(autoincrement())
+  purpose                LedgerTransactionPurpose
+  status                 LedgerTransactionStatus
+  ledgerEntries          LedgerEntry[]
+  payment                Payment?                 @relation(fields: [paymentId], references: [id])
+  paymentId              Int?                     @unique
+  manualTransfer   ManualTransfer?    @relation(fields: [manualTransferId], references: [id])
+  manualTransferId Int?                     @unique
 
   // Relevant relations to other tables based un purpose
   // purchase Purchase
@@ -130,50 +130,92 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id                  Int               @id @default(autoincrement())
+  id                Int                @id @default(autoincrement())
   // The amount that was requested for this payment
   // Use to confirm that the correct amount was captured
-  amount              Int
+  amount            Int
   // The amount of fees this payment incurred
-  fees                Int?
+  fees              Int?
   // Lifecycle of the payment
-  status              PaymentStatus
+  status            PaymentStatus
   // Which service we should call and listen to
-  provider            PaymentProvider
+  provider          PaymentProvider
   // If the payment provider is Stripe, then the stripe
   // payment model holds the details for the payment intent
-  paymentIntentId     String?           @unique
+  paymentIntentId   String?            @unique
   // The key the fronted uses to confirm the payment intent
-  clientSecret        String?           @unique
+  clientSecret      String?            @unique
   // The reason for the payment, displayed on the stripe dashboard
-  description         String
+  description       String
   // The text displayed on the bank statement
-  descriptor          String
+  descriptor        String
   // The ledger account responsible for creating the payment
   // May be null if user without account is paying
-  ledgerAccount       LedgerAccount?    @relation(fields: [ledgerAccountId], references: [id])
-  ledgerAccountId     Int?
+  ledgerAccount     LedgerAccount?     @relation(fields: [ledgerAccountId], references: [id])
+  ledgerAccountId   Int?
   // Which ledger entries have used this payment
   // Useful in case payment goes through,
   // then user can be credited unused amount
   // into their account.
-  ledgerTransaction   LedgerTransaction?
+  ledgerTransaction LedgerTransaction?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-// Bookkeeping for where money has been sent out from the website
-model Payout {
-  id                Int     @id @default(autoincrement())
+/**
+ * // Function which users call to add money to their ledger account.
+ * // Payment is completed on the client side.
+ * // Required references/keys are returned with the transaction object
+ * async function createDeposit(ledgerAccountId: number, amount: number, paymentProvider: string) {
+ * const payment = await createPayment({ amount, paymentProvider, ... })
+ * const transaction = await createTransaction({
+ * entries: [{
+ * ledgerAccountId,
+ * amount,
+ * }],
+ * paymentId: payment.id,
+ * })
+ * return transaction
+ * }
+ * // Functions users call to remove money from their account and
+ * // send it to their real life bank account.
+ * async function createPayout(ledgerAccountId: number, amount: number, bankAccountNumber: string) {
+ * const manualTransfer = createmanualTransfer({
+ * data: {
+ * amount,
+ * fees,
+ * bankAccountNumber,
+ * }
+ * })
+ * const transaction = await createLedgerTransaction({
+ * ledgerEntries: [{
+ * ledgerAccountId,
+ * amount: -amount,
+ * }],
+ * manualTransferId: manualTransfer.id,
+ * })
+ * return transaction
+ * }
+ */
+
+// Bookkeeping for when funds are transferred to or from the ledger manually by administrators.
+model ManualTransfer {
+  id                Int    @id @default(autoincrement())
+  // Important: The actual amount transferred is amount minus fees!
+  // Example: Say PhaestCom has earned 50'000.00 Kluengende Muent in
+  // revenue and 1000.00 Kluengende Muent in fees.  Then, the actual
+  // bank transfer should equate to 49'000.00.
+  // Note: positive = going into the ledger, negative = going out of the ledger
   amount            Int
-  fees              Int?
-  // The bank account number is only for our own bookkeeping.
-  // The money has to be transferred manually by HS!
+  fees              Int
+  // The bank account number where the money was sent to/from. 
+  // This is only for our own bookkeeping. When sending funds
+  // out of the system it has to be transferred manually by HS!
   bankAccountNumber String?
   comment           String?
 
-  ledgerTransaction   LedgerTransaction?
+  ledgerTransaction LedgerTransaction?
 }
 
 // // The type of a ledger entry determines how it is validated.
