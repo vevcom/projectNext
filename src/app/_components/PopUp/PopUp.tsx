@@ -11,15 +11,17 @@ import type { PopUpKeyType } from '@/contexts/PopUp'
 
 export type PropTypes = {
     children: ReactNode,
-    showButtonContent: ReactNode,
-    showButtonClass?: string,
     PopUpKey: PopUpKeyType,
+    customShowButton?: (open: () => void) => ReactNode,
+    showButtonContent?: ReactNode,
+    showButtonClass?: string,
     showButtonStyle?: CSSProperties,
 }
 
 export default function PopUp({
     PopUpKey,
     children,
+    customShowButton,
     showButtonContent,
     showButtonClass,
     showButtonStyle,
@@ -72,13 +74,17 @@ export default function PopUp({
         setIsOpen(true)
     }, [])
 
-    return (
-        <button
-            className={`${styles.openBtn} ${showButtonClass}`}
-            style={showButtonStyle}
-            onClick={handleOpening}
-        >
-            {showButtonContent}
-        </button>
-    )
+    return <>{
+        customShowButton ? (
+            customShowButton(handleOpening)
+        ) : (
+            <button
+                className={`${styles.openBtn} ${showButtonClass}`}
+                style={showButtonStyle}
+                onClick={handleOpening}
+            >
+                {showButtonContent}
+            </button>
+        )
+    }</>
 }

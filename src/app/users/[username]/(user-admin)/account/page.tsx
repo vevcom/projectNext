@@ -1,16 +1,13 @@
-import { bindParams } from '@/actions/bind'
 import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
-import { createPayment } from '@/actions/ledger/transactions/payments'
-import { createPayout } from '@/actions/ledger/transactions/payouts'
-import Form from '@/app/_components/Form/Form'
 import LedgerAccountBalance from '@/app/_components/Ledger/LedgerAccountBalance'
-import DepositForm from '@/app/_components/Stripe/DepositForm'
-import NumberInput from '@/app/_components/UI/NumberInput'
 import TextInput from '@/app/_components/UI/TextInput'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
 import Button from '@/components/UI/Button'
 import Link from 'next/link'
+import PayoutModal from './PayoutModal'
+import DepositModal from './DepositModal'
+import EventPaymentModal from './EventPaymentModal'
 
 export default async function Account() {
     const session = await getUser({
@@ -23,11 +20,21 @@ export default async function Account() {
     return <div>
         <h2>Konto</h2>
         <LedgerAccountBalance accountId={account.id} showFees />
-        <br />
-        <h3>Innskudd</h3>
-        <DepositForm accountId={account.id}/>
-        <br />
-        <h3>Betaling</h3>
+        <DepositModal/>
+        <PayoutModal accountId={account.id} />
+        <EventPaymentModal />
+            {/* <PopUp
+                PopUpKey="DepositForm"
+                customShowButton={(open) => <Button onClick={open}>Sett inn muenter</Button>}
+            >
+                <h3>Sett inn muenter</h3>
+                <DepositForm accountId={account.id}/>
+            </PopUp> */}
+
+        {/* <Button>Sett inn muenter</Button> */}
+        {/* <h3>Innskudd</h3>
+        <br /> */}
+        {/* <h3>Betaling</h3>
         <Form
             refreshOnSuccess={true}
             submitText="Sett inn"
@@ -45,13 +52,26 @@ export default async function Account() {
         >
             <NumberInput label="Sum" name="amount" min="0"/>
         </Form>
-        <br />
+        <br /> */}
+        <h3>Betalingskort</h3>
+        <p>For lagre informasjonen din for senere betalinger med Stripe, fyll inn skjemaet under.</p>
+        <form>
+            <TextInput label="Kortnummer" name="cardnumber"/>
+            <Button>Legg til kort</Button>
+        </form>
         <h3>Transaksjoner</h3>
+        <table>
+            <tbody>
+                <tr>
+                    <td>En transaksjon</td>
+                </tr>
+                <tr>
+                    <td>En annen transaksjon</td>
+                </tr>
+            </tbody>
+        </table>
         <p><Link href="account/transactions">Se alle transaksjoner -&gt;</Link></p>
+        <p></p>
         <br />
-        <h3>Betalingsalternativer</h3>
-        <TextInput label="Kortnummer" name="cardnumber"/>
-        <Button>Legg til kort (TODO)</Button>
-        <p>VIPPS (TODO)</p>
     </div>
 }

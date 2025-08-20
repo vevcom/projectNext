@@ -1,6 +1,6 @@
 'use client'
 
-import PaymentProvider from './PaymentProvider'
+import PaymentProvider from './StripePaymentProvider'
 import PaymentForm from './PaymentForm'
 import NumberInput from '@/components/UI/NumberInput'
 import { useState } from 'react'

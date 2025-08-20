@@ -1,18 +1,20 @@
-import styles from './TransactionRow.module.scss'
+// import styles from './TransactionRow.module.scss'
 import { displayAmount } from '@/lib/currency/convert'
-import type { Transaction } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 type Props = {
-    transaction: Transaction,
+    transaction: Prisma.TransactionGetPayload<{ include: { payment: true, transfer: true } }>,
     showFees?: boolean,
 }
 
 export default function TransactionRow({ transaction, showFees }: Props) {
-    return <span key={transaction.id} className={styles.TransactionRow}>
-        <p>{transaction.createdAt.toLocaleString()}</p>
-        <p><b>{displayAmount((transaction.amount))}</b></p>
-        {showFees && <p><i>{transaction.fee ? displayAmount(transaction.fee) : '-'}</i></p>}
-        <p>{transaction.type}</p>
-        <p>{transaction.status}</p>
-    </span>
+    const totalAmount = Number(transaction.transfer?.amount) + Number(transaction.payment?.amount)
+    const totalFees = Number(transaction.transfer?.fees) + Number(transaction.payment?.fees)
+    return <tr key={transaction.id}>
+        <td>{transaction.createdAt.toLocaleString()}</td>
+        <td>{transaction.purpose}</td>
+        <td><b>{displayAmount(totalAmount)}</b></td>
+        {/* {showFees && <p><i>{displayAmount(totalFees)}</i></p>} */}
+        <td>{transaction.status}</td>
+    </tr>
 }

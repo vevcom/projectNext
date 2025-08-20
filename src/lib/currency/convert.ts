@@ -8,7 +8,7 @@ export function convertAmount(amount: string | number): number {
 
 export function displayAmount(amount: number, short: boolean = true): string {
     const convertedamount = amount / 100
-    const amountString = convertedamount.toFixed(2)
+    const amountString = convertedamount.toFixed(2).replace('.', ',')
     if (short) return amountString
 
     return `${amountString} ${currencySymbol}`
