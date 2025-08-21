@@ -9,18 +9,17 @@ import { BalanceRecord } from "@/services/ledger/ledgerAccount/Types"
  * should also be 25% of the total fees, i.e., 5 Kl.M.
  */
 export function feesFormula(entryAmount: number, totalAmount: number, totalFees: number) {
-    let fees = Math.floor(totalFees * entryAmount / totalAmount)
-    
-    // Guard against NaN
-    fees ||= 0
-    // Ensure fees are never positive
-    // (Taking money from an account should never increase that account's fees)
-    fees = Math.min(fees, 0)
-    // Ensure fees never exceed the account's fee balance
-    // (We cannot take more fees than an account has)
-    fees = Math.max(fees, -totalFees)
+    if (entryAmount === 0 || totalAmount === 0) return 0;
 
-    return fees
+    let fees = Math.trunc(totalFees * entryAmount / totalAmount);
+
+    // Clamp fees to have same sign as amount 
+    // and never exceed total fees.
+    if (entryAmount > 0) {
+        return Math.min(Math.max(fees, 0), totalFees);
+    } else {
+        return Math.min(Math.max(fees, -totalFees), 0);
+    }
 }
 
 /**
