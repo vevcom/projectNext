@@ -5,7 +5,8 @@ import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 import type Mail from 'nodemailer/lib/mailer'
 
-const PROD = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production'
+const isTest = process.env.NODE_ENV === 'test'
 
 type Transporter = nodemailer.Transporter<SMTPPool.SentMessageInfo | SMTPTransport.SentMessageInfo>
 
@@ -43,7 +44,7 @@ class MailHandler {
     }
 
     async setupTransporter() {
-        if (PROD) {
+        if (isProd) {
             this.transporter = nodemailer.createTransport(TRANSPORT_OPTIONS)
             this.resolveSetup()
             console.log('Email setup in production')
@@ -69,7 +70,7 @@ class MailHandler {
     }
 
     async getTestAccount(): Promise<nodemailer.TestAccount> {
-        if (PROD) {
+        if (isProd) {
             throw new Error('TestAccount should only be used in development')
         }
 
@@ -87,6 +88,10 @@ class MailHandler {
     }
 
     async handleNewMail() {
+        if (isTest) {
+
+        }
+
         const transporter = await this.getTransporter()
 
         const responsePromises = []
@@ -104,7 +109,7 @@ class MailHandler {
             console.log(`MAIL SENT: ${response.envelope.from} -> (${response.envelope.to.join(' ')})`)
             console.log(response.response)
 
-            if (!PROD) {
+            if (!isProd) {
                 console.log(`Preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
             }
         })
@@ -115,7 +120,7 @@ class MailHandler {
     }
 
     async sendBulkMail(data: Mail.Options[]) {
-        const testSender = PROD ? null : (await this.getTestAccount()).user
+        const testSender = isProd ? null : (await this.getTestAccount()).user
 
         const queue = data
             .map(mailData => ({
