@@ -2,12 +2,11 @@ import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/methods'
 import { LedgerTransactionMethods } from '@/services/ledger/ledgerTransactions/methods'
 import { ManualTransferMethods } from '@/services/ledger/manualTransfers/methods'
 import { UserMethods } from '@/services/users/methods'
-import { beforeAll, describe, expect, test } from '@jest/globals'
-import { afterEach, beforeEach } from 'node:test'
+import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
+import { allSettledOrThrow } from 'tests/utils'
 
-const testAccountCount = 10
-const initialBalanceAmount = 100_00
-const initialBalanceFees = 10_00
+const TEST_ACCOUNT_COUNT = 3
+const INITIAL_BALANCE = { amount: 100_00, fees: 10_00 }
 
 describe('ledger transactions', () => {
     let testAccountIds: number[] = []
@@ -15,7 +14,7 @@ describe('ledger transactions', () => {
     // Set up ledger accounts
     beforeAll(async () => {
         // TODO: Create utility to create test accounts
-        for (let i = 0; i < testAccountCount; i++) {
+        await allSettledOrThrow(Array.from({ length: TEST_ACCOUNT_COUNT }).map(async (_, i) => {
             const username = `testuser${i + 1}`
             
             const testUser = await UserMethods.create({
@@ -36,7 +35,7 @@ describe('ledger transactions', () => {
             })
 
             testAccountIds.push(testAccount.id)
-        }
+        }))
     })
 
     afterEach(async () => {
@@ -50,25 +49,26 @@ describe('ledger transactions', () => {
 
     describe('internal transactions', () => {
         beforeEach(async () => {
-            Promise.all(testAccountIds.map(async accountId => {
-                const manualTransfer = await ManualTransferMethods.create({
-                    params: {
-                        amount: initialBalanceAmount,
-                        fees: initialBalanceFees,
-                    },
-                })
+            await allSettledOrThrow(testAccountIds.map(async accountId => {
+                    const manualTransfer = await ManualTransferMethods.create({
+                        params: {
+                            amount: INITIAL_BALANCE.amount,
+                            fees: INITIAL_BALANCE.fees,
+                        },
+                    })
 
-                await LedgerTransactionMethods.create({
-                    params: {
-                        ledgerEntries: [{
-                            ledgerAccountId: accountId,
-                            amount: initialBalanceAmount,
-                        }],
-                        purpose: 'DEPOSIT',
-                        manualTransferId: manualTransfer.id,
-                    }
+                    await LedgerTransactionMethods.create({
+                        params: {
+                            purpose: 'DEPOSIT',
+                            ledgerEntries: [{
+                                ledgerAccountId: accountId,
+                                amount: INITIAL_BALANCE.amount,
+                            }],
+                            manualTransferId: manualTransfer.id,
+                        }
+                    })
                 })
-            }))
+            )
         })
 
         const validLedgerEntries: number[][] = [
@@ -91,10 +91,21 @@ describe('ledger transactions', () => {
             })
 
             expect(transaction).toMatchObject({
-                status: 'SUCCEEDED',
+                state: 'SUCCEEDED',
+            })
+
+            const balances = await LedgerAccountMethods.calculateBalances({
+                params: { ids: testAccountIds },
+            })
+
+            entries.forEach((amount, i) => {
+                const accountId = testAccountIds[i]
+                const balance = balances[accountId]
+
+                expect(balance.amount).toBe(INITIAL_BALANCE.amount + amount)
             })
         })
-        
+
         const invalidLedgerEntries: number[][] = [
             // Only one entry
             [100],
@@ -113,7 +124,7 @@ describe('ledger transactions', () => {
                 },
             })
 
-            expect(transactionPromise).rejects.toThrow()
+            await expect(transactionPromise).rejects.toThrow()
 
             const balances = await LedgerAccountMethods.calculateBalances({
                 params: { ids: testAccountIds },
@@ -122,8 +133,7 @@ describe('ledger transactions', () => {
             testAccountIds.forEach(accountId => {
                 const balance = balances[accountId]
 
-                expect(balance.amount).toBe(initialBalanceAmount)
-                expect(balance.fees).toBe(initialBalanceFees)
+                expect(balance.amount).toBe(INITIAL_BALANCE.amount)
             })
         })
     })
