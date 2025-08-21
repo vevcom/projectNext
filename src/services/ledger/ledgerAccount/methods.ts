@@ -73,9 +73,7 @@ export namespace LedgerAccountMethods {
                 },
             })
 
-            if (account) {
-                return account
-            }
+            if (account) return account
 
             return create.client(prisma).execute({ session, data: params })
         },
@@ -117,7 +115,7 @@ export namespace LedgerAccountMethods {
                             // If the amount is greater than zero the entry is a credit (i.e. giving money).
                             amount: { gt: 0 },
                             // The receiver should (logically) only receive the money if the transaction succeeded.
-                            ledgerTransaction: { status: 'SUCCEEDED' },
+                            ledgerTransaction: { state: 'SUCCEEDED' },
                         },
                         {
                             // If the amount is less than zero the entry is a debit (i.e. taking money).
@@ -125,7 +123,7 @@ export namespace LedgerAccountMethods {
                             // The amount should be deducted from the source if the transaction succeeded (obviously)
                             // OR when the transaction is pending. This is our way of reserving the funds
                             // until the transaction is complete.
-                            ledgerTransaction: { status: { in: ['PENDING', 'SUCCEEDED'] } },
+                            ledgerTransaction: { state: { in: ['PENDING', 'SUCCEEDED'] } },
                         },
                     ],
                 },
@@ -138,15 +136,17 @@ export namespace LedgerAccountMethods {
 
             // Convert the array to an object as it's more convenient for lookups and
             // replace all nulls with zeros to handle accounts with no entries yet.
-            const balanceRecord = Object.fromEntries(
-                balanceArray.map(balance => [
+            // Set the balance of accounts that have no entries to zero.
+            const balanceRecord = Object.fromEntries([
+                ...params.ids.map(id => [id, { amount: 0, fees: 0 }]),
+                ...balanceArray.map(balance => [
                     balance.ledgerAccountId, 
                     {
                         amount: balance._sum.amount ?? 0,
                         fees: balance._sum.fees ?? 0 
                     }
                 ])
-            )
+            ])
 
             return balanceRecord
         }
