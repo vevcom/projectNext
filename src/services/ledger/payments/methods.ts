@@ -26,7 +26,7 @@ export namespace PaymentMethods {
                 data: {
                     ...params,
                     // Manual payments are automatically succeeded
-                    status: params.provider === 'MANUAL' ? 'SUCCEEDED' : 'PENDING',
+                    state: params.provider === 'MANUAL' ? 'SUCCEEDED' : 'PENDING',
                 }
             })
         },
@@ -53,13 +53,13 @@ export namespace PaymentMethods {
                 select: {
                     amount: true,
                     provider: true,
-                    status: true,
+                    state: true,
                     description: true,
                     descriptor: true,
                 },
             })
 
-            if (payment.status !== 'PENDING') {
+            if (payment.state !== 'PENDING') {
                 throw new ServerError('BAD PARAMETERS', 'Betalingen har allerede blitt forespurt.')
             }
 
@@ -96,7 +96,7 @@ export namespace PaymentMethods {
                         },
                         data: {
                             paymentIntentId: paymentIntent.id,
-                            status: 'PROCESSING',
+                            state: 'PROCESSING',
                         },
                     })
 

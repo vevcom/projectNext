@@ -1,9 +1,9 @@
-import { LedgerTransactionStatus, PaymentStatus } from "@prisma/client"
+import { LedgerTransactionState, PaymentState } from "@prisma/client"
 import { ExpandedLedgerTransaction } from "./Type"
 import { BalanceRecord } from "@/services/ledger/ledgerAccount/Types"
 
 type LedgerTransactionTransition = {
-    state: LedgerTransactionStatus,
+    state: LedgerTransactionState,
     reason?: string,
 }
 
@@ -39,16 +39,16 @@ export async function determineTransactionState(transaction: ExpandedLedgerTrans
  * A transaction in a terminal state (SUCCEEDED, FAILED or CANCELED)
  * can never change state.
  */
-function noTerminalState({ status }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
-    if (status !== 'PENDING') return { state: status }
+function noTerminalState({ state }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+    if (state !== 'PENDING') return { state }
 }
 
 /**
  * If any payment has failed, the entire transaction has failed.
  */
 function noFailedPayment({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
-    const okStates: PaymentStatus[] = ['PENDING', 'PROCESSING', 'SUCCEEDED']
-    const hasFailedPayment = payment && !okStates.includes(payment.status) 
+    const okStates: PaymentState[] = ['PENDING', 'PROCESSING', 'SUCCEEDED']
+    const hasFailedPayment = payment && !okStates.includes(payment.state) 
 
     if (hasFailedPayment) return { state: 'FAILED', reason: 'Betaling mislyktes.' }
 }
@@ -108,7 +108,7 @@ function sufficientBalances({ ledgerEntries }: ExpandedLedgerTransaction, balanc
 function paymentComplete({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     // Since we have checked for failure states above,
     // we can simply check that the transaction has not succeeded.
-    const hasPendingPayment = payment && payment.status !== 'SUCCEEDED'
+    const hasPendingPayment = payment && payment.state !== 'SUCCEEDED'
 
     if (hasPendingPayment) return { state: 'PENDING' }
 }

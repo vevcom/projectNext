@@ -1,7 +1,7 @@
 import type Stripe from "stripe"
 import prisma from "@/prisma"
 import logger from "@/lib/logger"
-import { PaymentStatus } from "@prisma/client"
+import { PaymentState } from "@prisma/client"
 import { stripe } from "@/lib/stripe"
 
 /**
@@ -29,8 +29,8 @@ function extractBalanceTransaction(paymentIntent: Stripe.PaymentIntent): Stripe.
     return balanceTransaction
 }
 
-// Map between Stripe event types and our internal payment statuses.
-const EVENT_TYPE_TO_STATUS: Partial<Record<Stripe.Event['type'], PaymentStatus>> = {
+// Map between Stripe event types and our internal payment states.
+const EVENT_TYPE_TO_STATE: Partial<Record<Stripe.Event['type'], PaymentState>> = {
     'payment_intent.canceled': 'CANCELED',
     'payment_intent.succeeded': 'SUCCEEDED',
     'payment_intent.payment_failed': 'FAILED',
@@ -54,9 +54,9 @@ const EVENT_TYPE_TO_STATUS: Partial<Record<Stripe.Event['type'], PaymentStatus>>
  * @returns An appropriate `Response`.
  */
 export async function stripeWebhookCallback(event: Stripe.Event): Promise<Response> {
-    const paymentStatus = EVENT_TYPE_TO_STATUS[event.type];
+    const paymentState = EVENT_TYPE_TO_STATE[event.type];
 
-    if (!paymentStatus) {
+    if (!paymentState) {
         logger.error('Received unsupported Stripe event type.')
         return new Response('Unsupported Stripe event type', { status: 400 })
     }
@@ -85,15 +85,15 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     const payment = await prisma.payment.update({
         where: {
             paymentIntentId: paymentIntent.id,
-            status: {
-                // Guard against changing final status
+            state: {
+                // Guard against changing final state
                 // This should never happen, but you can never be too careful
-                in: ['PENDING', 'PROCESSING', paymentStatus]
+                in: ['PENDING', 'PROCESSING', paymentState]
             },
         },
         data: {
             fees: fee,
-            status: paymentStatus,
+            state: paymentState,
         },
         select: {
             id: true,

@@ -115,7 +115,7 @@ export namespace LedgerTransactionMethods {
             const { id } = await prisma.ledgerTransaction.create({
                 data: {
                     purpose: params.purpose,
-                    status: 'PENDING',
+                    state: 'PENDING',
                     ledgerEntries: {
                         create: entries,
                     },
@@ -134,7 +134,7 @@ export namespace LedgerTransactionMethods {
                 session,
             })
 
-            if (transaction.status === 'FAILED') {
+            if (transaction.state === 'FAILED') {
                 // TODO: Better error message.
                 throw new ServerError('BAD PARAMETERS', transaction.reason ?? 'Transaksjonen feilet av ukjent årsak.')
             }
@@ -203,7 +203,7 @@ export namespace LedgerTransactionMethods {
             await prisma.ledgerTransaction.updateMany({
                 where: {
                     id: params.id,
-                    status: 'PENDING', // Protect against changing final state.
+                    state: 'PENDING', // Protect against changing final state.
                 },
                 data: transition,
             })

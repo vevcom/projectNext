@@ -14,6 +14,11 @@ const config: Config = {
         // This is needed becaue jest doesn't handle the this code is inside node_modules
         '^@/prisma-dobbel-omega/(.*)$': '<rootDir>/node_modules/.prisma-dobbel-omega/$1',
     },
+    globals: {
+        'ts-jest': {
+            useESM: true,
+        },
+    }
 }
 
 export default async function jestConfig() {

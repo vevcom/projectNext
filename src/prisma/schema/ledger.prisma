@@ -44,7 +44,7 @@ enum LedgerTransactionPurpose {
 // All ledger transactions start as pending and become
 // either failed, succeeded or canceled. No other
 // transitions are possible. 
-enum LedgerTransactionStatus {
+enum LedgerTransactionState {
   PENDING
   FAILED
   SUCCEEDED
@@ -59,7 +59,7 @@ enum LedgerTransactionStatus {
 model LedgerTransaction {
   id      Int                      @id @default(autoincrement())
   purpose LedgerTransactionPurpose
-  status  LedgerTransactionStatus
+  state   LedgerTransactionState
   reason  String? // If the transaction failed, this is the reason why.
 
   ledgerEntries    LedgerEntry[]
@@ -117,7 +117,7 @@ enum PaymentProvider {
   // TODO: VIPPS
 }
 
-enum PaymentStatus {
+enum PaymentState {
   // Payment created, but not external API call made
   PENDING
   // Awaiting response from payment provider (webhook)
@@ -127,7 +127,7 @@ enum PaymentStatus {
   // Succeed webhook received with correct amount
   SUCCEEDED
   // Cancel webhook confirmation received - NOT that we initiated a cancel 
-  // set the transaction status to canceled for that
+  // set the transaction state to canceled for that
   CANCELED
 }
 
@@ -139,7 +139,7 @@ model Payment {
   // The amount of fees this payment incurred
   fees              Int?
   // Lifecycle of the payment
-  status            PaymentStatus
+  state             PaymentState
   // Which service we should call and listen to
   provider          PaymentProvider
   // If the payment provider is Stripe, then the stripe
@@ -165,42 +165,6 @@ model Payment {
   updatedAt DateTime @updatedAt
 }
 
-/**
- * // Function which users call to add money to their ledger account.
- * // Payment is completed on the client side.
- * // Required references/keys are returned with the transaction object
- * async function createDeposit(ledgerAccountId: number, amount: number, paymentProvider: string) {
- * const payment = await createPayment({ amount, paymentProvider, ... })
- * const transaction = await createTransaction({
- * entries: [{
- * ledgerAccountId,
- * amount,
- * }],
- * paymentId: payment.id,
- * })
- * return transaction
- * }
- * // Functions users call to remove money from their account and
- * // send it to their real life bank account.
- * async function createPayout(ledgerAccountId: number, amount: number, bankAccountNumber: string) {
- * const manualTransfer = createmanualTransfer({
- * data: {
- * amount,
- * fees,
- * bankAccountNumber,
- * }
- * })
- * const transaction = await createLedgerTransaction({
- * ledgerEntries: [{
- * ledgerAccountId,
- * amount: -amount,
- * }],
- * manualTransferId: manualTransfer.id,
- * })
- * return transaction
- * }
- */
-
 // Bookkeeping for when funds are transferred to or from the ledger manually by administrators.
 model ManualTransfer {
   id                Int     @id @default(autoincrement())
@@ -219,21 +183,3 @@ model ManualTransfer {
 
   ledgerTransaction LedgerTransaction?
 }
-
-// // The type of a ledger entry determines how it is validated.
-// // NOTE: In the context of ledger "credit" means to receive money and "debit" means to loose money
-// enum LedgerEntryType {
-//   // The entry must reference a account
-//   // No other special requirements
-//   INTERNAL_CREDIT
-//   // The entry must reference a account and that account
-//   // must have a non-negative balance after the transaction.
-//   INTERNAL_DEBIT
-//   // Represents money coming into the system.
-//   // The entry must reference a succeed payment with
-//   // enough value to cover the amount.
-//   EXTERNAL_DEBIT
-//   // Represents money going out of the system.
-//   // No special requirements.
-//   EXTERNAL_CREDIT
-// }
