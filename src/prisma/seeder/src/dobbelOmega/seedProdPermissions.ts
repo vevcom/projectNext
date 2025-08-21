@@ -32,7 +32,7 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
     for (const [shortName, permissions] of Object.entries(committeePermissions)) {
         checkForPermissionDuplicates(permissions, `${shortName} permissions`)
 
-        const committee = allCommittess.find(c => c.shortName === shortName)
+        const committee = allCommittess.find(com => com.shortName === shortName)
         if (!committee) {
             console.warn(`Committee with shortName ${shortName} not found, skipping permissions creation.`)
         }
