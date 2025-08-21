@@ -8,6 +8,7 @@ import type { z } from 'zod'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
+import { AsyncLocalStorage } from 'async_hooks'
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -66,16 +67,19 @@ export type ServiceMethodArguments<
 export type ServiceMethodExecuteArgs<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
+    OpensTransaction extends boolean,
 > = {
-    session: SessionMaybeUser | null,
+    session?: SessionMaybeUser | null,
+    prisma?: PrismaPossibleTransaction<OpensTransaction>,
     bypassAuth?: boolean,
 } & ServiceMethodParamsData<ParamsSchema, DataSchema, 'INPUT'>
 
 /**
  * This is the type for the argument that are passed to the execute method of a service method.
  */
-export type ServiceMethodExecuteArgsUnsafe = {
-    session: SessionMaybeUser | null,
+export type ServiceMethodExecuteArgsUnsafe<OpensTransaction extends boolean> = {
+    session?: SessionMaybeUser | null,
+    prisma?: PrismaPossibleTransaction<OpensTransaction>,
     bypassAuth?: boolean,
 } & ServiceMethodParamsDataUnsafe
 
@@ -117,14 +121,15 @@ export type ServiceMethodType<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = {
+    (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema, OpensTransaction>): Promise<Return>,
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
      * @note
      * @param client
      */
     client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
-        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema>) => Promise<Return>,
-        executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe) => Promise<Return>,
+        execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema, OpensTransaction>) => Promise<Return>,
+        executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe<OpensTransaction>) => Promise<Return>,
     },
     /**
      * Use the global prisma client for the service method.
@@ -136,6 +141,15 @@ export type ServiceMethodType<
     ),
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
+}
+
+export type Context = { prisma: PrismaClient | Prisma.TransactionClient, session: SessionMaybeUser | null }
+
+const asyncLocalStorage = new AsyncLocalStorage<Context>()
+
+function withContext<T>(defaultContext: Partial<Context>, callback: (context: Context) => T): T {
+    const context = asyncLocalStorage.getStore() ?? { prisma: defaultContext.prisma ?? globalPrisma, session: defaultContext.session ?? null }
+    return asyncLocalStorage.run(context, () => callback(context))
 }
 
 /**
@@ -166,84 +180,93 @@ export function ServiceMethod<
     // I.e. if the params/data are present when they should be and vice versa.
     // This is needed to help typescript infer the correct types for the arguments.
     const expectedArgsArePresent = (
-        args: ServiceMethodExecuteArgsUnsafe
-    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataSchema> => {
+        args: ServiceMethodExecuteArgsUnsafe<OpensTransaction>
+    ): args is ServiceMethodExecuteArgs<ParamsSchema, DataSchema, OpensTransaction> => {
         const paramsMatch = Boolean(args.params) === Boolean(config.paramsSchema)
         const dataMatches = Boolean(args.data) === Boolean(config.dataSchema)
         return paramsMatch && dataMatches
     }
 
-    const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => {
-        const executeUnsafe = async (args: ServiceMethodExecuteArgsUnsafe) => {
-            // First, validate parameters (if any).
-            if (args.params) {
-                if (!config.paramsSchema) {
-                    throw new Smorekopp('BAD PARAMETERS', 'Service method recieved params, but has no params schema.')
-                }
-
-                // TODO: Decide if this should be a validation or a schema.
-                // For now it's just a schema because it's simpler.
-                const paramsParse = config.paramsSchema.safeParse(args.params)
-
-                if (!paramsParse.success) {
-                    console.log(config.paramsSchema)
-                    console.log(args.params)
-                    console.log(paramsParse) // TODO: This needs to be returned to give good error message.
-                    throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service method.')
-                }
-
-                args.params = paramsParse.data
+    async function executeUnsafe(args: ServiceMethodExecuteArgsUnsafe<OpensTransaction>) {
+        // First, validate parameters (if any).
+        if (args.params) {
+            if (!config.paramsSchema) {
+                throw new Smorekopp('BAD PARAMETERS', 'Service method recieved params, but has no params schema.')
             }
 
-            // Then, validate data (if any).
-            if (args.data) {
-                if (!config.dataSchema) {
-                    throw new Smorekopp(
-                        'BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.'
-                    )
-                }
-                const parse = zfd.formData(config.dataSchema).safeParse(args.data)
-                if (!parse.success) {
-                    console.log(parse.error)
-                    throw new ParseError(parse)
-                }
-                args.data = parse.data
+            // TODO: Decide if this should be a validation or a schema.
+            // For now it's just a schema because it's simpler.
+            const paramsParse = config.paramsSchema.safeParse(args.params)
+
+            if (!paramsParse.success) {
+                // TODO: This needs to be returned to give good error message.
+                throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service method.')
             }
 
-            // Then, determine if the correct properties are present.
-            // This gives the correct type for "args" if the check succeeds.
-            if (!expectedArgsArePresent(args)) {
-                throw new Smorekopp('SERVER ERROR', 'Service method recieved invalid arguments.')
+            args.params = paramsParse.data
+        }
+
+        // Then, validate data (if any).
+        if (args.data) {
+            if (!config.dataSchema) {
+                throw new Smorekopp(
+                    'BAD DATA', 'Service method recieved data, but has no dataValidation or dataSchema.'
+                )
             }
+            const parse = zfd.formData(config.dataSchema).safeParse(args.data)
+            if (!parse.success) {
+                throw new ParseError(parse)
+            }
+            args.data = parse.data
+        }
+
+        // Then, determine if the correct properties are present.
+        // This gives the correct type for "args" if the check succeeds.
+        if (!expectedArgsArePresent(args)) {
+            throw new Smorekopp('SERVER ERROR', 'Service method recieved invalid arguments.')
+        }
+
+        return withContext({ prisma: args.prisma, session: args.session }, async ({ prisma, session }) => {
+            session ??= Session.empty()
 
             // Then, authorize user.
             // This has to be done after the validation because the auther might use the data to authorize the user.
             if (!args.bypassAuth) {
-                const authRes = (await config.auther(args)).auth(args.session ?? Session.empty())
+                const authRes = (await config.auther(args)).auth(session)
 
                 if (!authRes.authorized) {
                     throw new Smorekopp(authRes.status, authRes.getErrorMessage)
                 }
             }
 
+            const isAppropriateClient = (prisma: PrismaClient | Prisma.TransactionClient): prisma is PrismaPossibleTransaction<OpensTransaction> =>
+                !config.opensTransaction || "$transaction" in prisma
+
+            if (!isAppropriateClient(prisma)) {
+                throw new Smorekopp(
+                    'SERVER ERROR',
+                    'Service method that opens a transaction cannot be called from within a transaction..'
+                )
+            }
+
             // Finally, call the method.
             return prismaErrorWrapper(() => config.method({
                 ...args,
                 prisma,
-                session: args.session ?? Session.empty(),
+                session,
             }))
-        }
+        })
+    }
 
+    executeUnsafe.client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => {
         return {
-            executeUnsafe,
-            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema>) => executeUnsafe(args),
+            executeUnsafe: (args: ServiceMethodExecuteArgsUnsafe<OpensTransaction>) => executeUnsafe({ prisma, ...args }),
+            execute: (args: ServiceMethodExecuteArgs<ParamsSchema, DataSchema, OpensTransaction>) => executeUnsafe({ prisma, ...args }),
         }
     }
+    executeUnsafe.newClient = () => executeUnsafe.client(globalPrisma)
+    executeUnsafe.dataSchema = config.dataSchema
+    executeUnsafe.paramsSchema = config.paramsSchema
 
-    return {
-        client,
-        newClient: () => client(globalPrisma),
-        dataSchema: config.dataSchema,
-        paramsSchema: config.paramsSchema,
-    }
+    return executeUnsafe
 }
