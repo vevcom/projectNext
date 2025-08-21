@@ -1,4 +1,4 @@
-import type { Permission, Prisma } from '@prisma/client'
+import type { Permission } from '@prisma/client'
 import type { PermissionInfo } from './Types'
 
 export const permissionCategories = [
@@ -16,6 +16,7 @@ export const permissionCategories = [
     'skjermer',
     'shop',
     'cabin',
+    'permission',
     'applications',
 ] as const satisfies string[]
 
@@ -505,24 +506,39 @@ export const PermissionConfig = {
         category: 'cabin'
     },
     CABIN_BOOKING_ADMIN: {
-        name: 'Hyttabooking administrator',
-        description: 'Kan administrere hyttabookinger',
+        name: 'Hyttebooking administrator',
+        description: 'Kan administrere hyttebookinger',
         category: 'cabin'
     },
     CABIN_CALENDAR_READ: {
-        name: 'Les hyttakalender',
-        description: 'Kan lese hyttakalender',
+        name: 'Les hyttekalender',
+        description: 'Kan lese hyttekalender',
         category: 'cabin'
     },
     CABIN_ADMIN: {
-        name: 'Hyttadministrator',
+        name: 'Hyttedministrator',
         description: 'Kan administrere hytter',
         category: 'cabin'
     },
     CABIN_PRODUCTS_ADMIN: {
-        name: 'Hyttprodukt administrator',
+        name: 'Hytteprodukt administrator',
         description: 'Kan administrere hyttprodukter',
         category: 'cabin'
+    },
+    PERMISSION_DEFAULT_ADMIN: {
+        name: 'Endre standardtilganger',
+        description: 'Kan endre standardtilganger',
+        category: 'permission'
+    },
+    PERMISSION_GROUP_READ: {
+        name: 'Les tilganger til grupper',
+        description: 'Kan lese tilganger til grupper',
+        category: 'permission'
+    },
+    PERMISSION_GROUP_ADMIN: {
+        name: 'Administrere tilganger til grupper',
+        description: 'Kan administrere tilganger til grupper',
+        category: 'permission'
     },
     APPLICATION_ADMIN: {
         name: 'Søknadsadministrator',
@@ -538,19 +554,5 @@ export const PermissionConfig = {
             Kan skrive søknader til alle aktive søknadsperioder. 
         `,
         category: 'applications',
-    }
+    },
 } satisfies Record<Permission, PermissionInfo>
-
-export const expandedRoleIncluder = {
-    permissions: {
-        select: {
-            permission: true,
-        },
-    },
-    groups: {
-        select: {
-            groupId: true,
-            forAdminsOnly: true,
-        },
-    },
-} as const satisfies Prisma.RoleInclude

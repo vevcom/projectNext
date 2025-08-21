@@ -6,6 +6,7 @@ import { CanEasilyManageMembership } from '@/services/groups/memberships/ConfigV
 import PopUp from '@/components/PopUp/PopUp'
 import UsersSelectionProvider from '@/contexts/UsersSelection'
 import { readGroupExpandedAction } from '@/actions/groups/read'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 
 type PropTypes = {
@@ -15,9 +16,9 @@ type PropTypes = {
 }
 
 export default async function GroupAdmin({ params }: PropTypes) {
-    const groupRes = await readGroupExpandedAction(parseInt((await params).id, 10))
-    if (!groupRes.success) throw new Error('Failed to load group')
-    const group = groupRes.data
+    const group = unwrapActionReturn(await readGroupExpandedAction({
+        id: parseInt((await params).id, 10)
+    }))
 
     const canEasilyManageMembership = CanEasilyManageMembership[group.groupType]
 
@@ -68,11 +69,11 @@ export default async function GroupAdmin({ params }: PropTypes) {
                     ) : (
                         (
                             group.groupType === 'CLASS' &&
-                                <Link href="/admin/classes" className={styles.link}>Gå til Kalsseadministrasjon</Link>
+                            <Link href="/admin/classes" className={styles.link}>Gå til Kalsseadministrasjon</Link>
                         )
                         || (
                             group.groupType === 'OMEGA_MEMBERSHIP_GROUP' &&
-                                <Link href="/admin/admission" className={styles.link}>Gå til opptakssiden</Link>
+                            <Link href="/admin/admission" className={styles.link}>Gå til opptakssiden</Link>
                         )
                     )
                 }

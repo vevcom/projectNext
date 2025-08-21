@@ -5,7 +5,7 @@ import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
 import useActionCall from '@/hooks/useActionCall'
-import { readGroupsForPageFiteringAction } from '@/actions/users/read'
+import { readGroupsForPageFilteringAction } from '@/actions/users/read'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext, useEffect, useState } from 'react'
@@ -25,7 +25,8 @@ type PropTypes = {
     displayForUser?: (user: UserPagingReturn) => ReactNode
     disableFilters?: DisableGroupFilters & {
         name?: boolean,
-    }
+    },
+    linksToUser?: boolean
 }
 
 function getGroupType(groups: ExpandedGroup[] | null, type: GroupType) {
@@ -80,7 +81,8 @@ export default function UserList({
         CLASS: false,
         STUDY_PROGRAMME: false,
         OMEGA_MEMBERSHIP_GROUP: false
-    }
+    },
+    linksToUser,
 }: PropTypes) {
     const userPaging = useContext(UserPagingContext)
     const usersSelection = useContext(UsersSelectionContext)
@@ -88,7 +90,7 @@ export default function UserList({
 
     const groupSelected = !!userPaging?.deatils.selectedGroup
 
-    const { data: groups } = useActionCall(readGroupsForPageFiteringAction)
+    const { data: groups } = useActionCall(readGroupsForPageFilteringAction)
     const [groupSelection, setGroupSelection] = useState<{
         [T in GroupSelectionType]: {
             group: ExpandedGroup | null,
@@ -281,6 +283,7 @@ export default function UserList({
                             displayForUser && displayForUser(user)
                         }
                         <UserRow
+                            linksToUser={linksToUser}
                             groupSelected={groupSelected}
                             className={
                                 `${styles.userRow} ${groupSelected ? styles.extraInfo : ''}`

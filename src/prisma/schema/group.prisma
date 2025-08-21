@@ -31,11 +31,10 @@ enum GroupType {
 // 'Group' should never be created by itself. It should always be created
 // with a reference to one specific type of group.
 model Group {
-  id          Int           @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   groupType   GroupType
   memberships Membership[]
-  roles       RolesGroups[]
-  omegaOrder  OmegaOrder    @relation(fields: [order], references: [order])
+  omegaOrder  OmegaOrder   @relation(fields: [order], references: [order])
   order       Int //The order the group is in currently.
 
   class                Class?
@@ -48,6 +47,7 @@ model Group {
   mailingLists         MailingListGroup[]
 
   VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+  permissions                GroupPermission[]
 }
 
 // Bellow are all the specific types of groups. These models should contain
@@ -66,18 +66,21 @@ model Committee {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  committeeArticle   Article  @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  committeeArticleId Int      @unique
-  name               String
-  shortName          String   @unique
-  logoImage          CmsImage @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId        Int      @unique
+  name      String
+  shortName String @unique
 
+  committeeArticle       Article      @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  committeeArticleId     Int          @unique
+  videoLink              String?
+  logoImage              CmsImage     @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId            Int          @unique
+  paragraph              CmsParagraph @relation(fields: [paragraphId], references: [id], name: "committeeParagraph")
+  paragraphId            Int          @unique
+  applicationParagraph   CmsParagraph @relation(fields: [applicationParagraphId], references: [id], name: "applicationParagraph")
+  applicationParagraphId Int          @unique
+
+  events                             Event[]
   participationsInApplicationPeriods CommitteeParticipationInApplicationPeriod[]
-
-  paragraph   CmsParagraph @relation(fields: [paragraphId], references: [id])
-  paragraphId Int          @unique
-  events      Event[]
 }
 
 model InterestGroup {

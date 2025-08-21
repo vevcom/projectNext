@@ -25,6 +25,7 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import { PrismaClient } from '@prisma/client'
+import seedPermissions from './seedPermissions'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -48,12 +49,13 @@ export default async function seed(
     await seedCabin(prisma)
     await seedShop(prisma)
     await seedEvents(prisma)
+    await seedPermissions(prisma)
     if (enableLogging) console.log('seed standard done')
 
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
     if (shouldMigrate) await dobbelOmega(prisma)
 
-    if (!seedDevData) return
+    if (!seedDevData || shouldMigrate) return
     if (enableLogging) console.log('seeding dev data....')
     await seedDevImages(prisma)
     await seedDevUsers(prisma)

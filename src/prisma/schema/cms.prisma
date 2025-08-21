@@ -51,20 +51,21 @@ enum SpecialCmsParagraph {
 }
 
 model CmsParagraph {
-  id               Int                  @id @default(autoincrement())
-  name             String               @unique @default(cuid())
-  contentMd        String               @default("")
-  contentHtml      String               @default("")
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  articleSection   ArticleSection?      @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
-  articleSectionId Int?                 @unique
-  special          SpecialCmsParagraph? @unique
-  ScreenPage       ScreenPage[]
-  Course           Course[]
-  School           School[]
-  Event            Event[]
-  Committee        Committee?
+  id                  Int                  @id @default(autoincrement())
+  name                String               @unique @default(cuid())
+  contentMd           String               @default("")
+  contentHtml         String               @default("")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  articleSection      ArticleSection?      @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
+  articleSectionId    Int?                 @unique
+  special             SpecialCmsParagraph? @unique
+  ScreenPage          ScreenPage[]
+  Course              Course[]
+  School              School[]
+  Event               Event[]
+  Committee           Committee? @relation(name: "committeeParagraph")
+  CommitteApplication Committee? @relation(name: "applicationParagraph")
 }
 
 enum SpecialCmsLink {

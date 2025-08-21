@@ -1,15 +1,10 @@
+import { COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
 import { Permission } from '@prisma/client'
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevPermissions(prisma: PrismaClient) {
     const allPermissions = Object.values(Permission).map(permission => ({ permission }))
 
-    // Seed default permissions
-    await prisma.defaultPermission.createMany({
-        data: allPermissions
-    })
-
-    // Create Harambe's role
     const user = await prisma.user.findUnique({
         where: {
             username: 'harambe'
@@ -36,29 +31,22 @@ export default async function seedDevPermissions(prisma: PrismaClient) {
         throw new Error('Failed to seed permissions becasue Harambe\'s committee is dead')
     }
 
-    // Only seed new role if one doesn't already exist
-    const haramabeCommiteeRolesCount = await prisma.rolesGroups.count({
-        where: {
-            groupId: committee.groupId,
-        },
+    await prisma.groupPermission.createMany({
+        data: allPermissions.map(permission => ({
+            permission: permission.permission,
+            groupId: committee.groupId
+        }))
     })
 
-    if (haramabeCommiteeRolesCount > 0) {return}
+    const allCommittees = await prisma.committee.findMany()
 
-    await prisma.role.create({
-        data: {
-            name: `${user.firstname}s rolle`,
-            permissions: {
-                // createMany: {
-                //     data: allPermissions
-                // },
-            },
-            groups: {
-                create: {
-                    forAdminsOnly: false,
-                    groupId: committee.groupId,
-                },
-            },
-        },
-    })
+    await Promise.all(allCommittees.map(com =>
+        prisma.groupPermission.createMany({
+            data: COMMITTEE_PERMISSIONS.map(perm => ({
+                permission: perm,
+                groupId: com.groupId,
+            })),
+            skipDuplicates: true,
+        })
+    ))
 }

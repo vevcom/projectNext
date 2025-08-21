@@ -89,3 +89,13 @@ export const groupsExpandedIncluder = {
         }
     },
 } as const satisfies Prisma.GroupInclude
+
+export const readGroupsOfUserIncluder = {
+    class: true,
+    committee: true,
+    interestGroup: true,
+    manualGroup: true,
+    omegaMembershipGroup: true,
+    studyProgramme: true,
+
+} as const satisfies Prisma.GroupInclude

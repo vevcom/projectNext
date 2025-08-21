@@ -9,7 +9,7 @@ export type PropTypes = {
 }
 
 export default async function committeeArticle({ params }: PropTypes) {
-    const committeeArticleRes = await readCommitteeArticleAction((await params).shortName)
+    const committeeArticleRes = await readCommitteeArticleAction(await params)
     if (!committeeArticleRes.success) throw new Error('Kunne ikke hente komitéartikkel')
     const article = committeeArticleRes.data
 
