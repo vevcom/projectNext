@@ -88,9 +88,7 @@ class MailHandler {
     }
 
     async handleNewMail() {
-        if (isTest) {
-
-        }
+        if (isTest) return
 
         const transporter = await this.getTransporter()
 
