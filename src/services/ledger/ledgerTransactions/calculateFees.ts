@@ -58,13 +58,12 @@ export function calculateCreditFees(
         values.reduce<number>((total, value) => total + (value ?? 0), 0)
 
     let totalAmount = sum(
-        ...ledgerEntries.map(entry => entry.amount),
+        ...debitLedgerEntries.map(entry => -entry.amount),
         payment?.amount,
         manualTransfer?.amount,
     )
     let totalFees = sum(
-        // Only debit ledger entries may have fees
-        ...debitLedgerEntries.map(entry => entry.fees),
+        ...debitLedgerEntries.map(entry => -(entry.fees ?? 0)),
         payment?.fees,
         manualTransfer?.fees,
     )
