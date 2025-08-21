@@ -57,14 +57,16 @@ enum LedgerTransactionStatus {
 // Either all or none ledger entries and payouts in a transaction are valid.
 // Payments track their own state as they depend on the external payment provider.
 model LedgerTransaction {
-  id                     Int                      @id @default(autoincrement())
-  purpose                LedgerTransactionPurpose
-  status                 LedgerTransactionStatus
-  ledgerEntries          LedgerEntry[]
-  payment                Payment?                 @relation(fields: [paymentId], references: [id])
-  paymentId              Int?                     @unique
-  manualTransfer   ManualTransfer?    @relation(fields: [manualTransferId], references: [id])
-  manualTransferId Int?                     @unique
+  id      Int                      @id @default(autoincrement())
+  purpose LedgerTransactionPurpose
+  status  LedgerTransactionStatus
+  reason  String? // If the transaction failed, this is the reason why.
+
+  ledgerEntries    LedgerEntry[]
+  payment          Payment?        @relation(fields: [paymentId], references: [id])
+  paymentId        Int?            @unique
+  manualTransfer   ManualTransfer? @relation(fields: [manualTransferId], references: [id])
+  manualTransferId Int?            @unique
 
   // Relevant relations to other tables based un purpose
   // purchase Purchase
@@ -201,7 +203,7 @@ model Payment {
 
 // Bookkeeping for when funds are transferred to or from the ledger manually by administrators.
 model ManualTransfer {
-  id                Int    @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
   // Important: The actual amount transferred is amount minus fees!
   // Example: Say PhaestCom has earned 50'000.00 Kluengende Muent in
   // revenue and 1000.00 Kluengende Muent in fees.  Then, the actual

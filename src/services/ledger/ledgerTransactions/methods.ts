@@ -100,7 +100,7 @@ export namespace LedgerTransactionMethods {
             // Check that the relevant accounts have enough balance to do the transaction.
             // NOTE: This is check is only to avoid calling the db unnecessarily.
             // The actual validation is handled in the `advance` function.
-            const hasInsufficientBalance = debitEntries.some(entry => entry.amount > balances[entry.ledgerAccountId].amount)
+            const hasInsufficientBalance = debitEntries.some(entry => (balances[entry.ledgerAccountId]?.amount ?? 0) + entry.amount < 0)
             if (hasInsufficientBalance) {
                 throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
             }
@@ -126,7 +126,7 @@ export namespace LedgerTransactionMethods {
                     id: true,
                 },
             })
-        
+
             const transaction = await advance.client(prisma).execute({
                 params: {
                     id,
@@ -136,7 +136,7 @@ export namespace LedgerTransactionMethods {
 
             if (transaction.status === 'FAILED') {
                 // TODO: Better error message.
-                throw new ServerError('BAD PARAMETERS', 'Ugyldig transaksjon.')
+                throw new ServerError('BAD PARAMETERS', transaction.reason ?? 'Transaksjonen feilet av ukjent årsak.')
             }
 
             return transaction
@@ -153,7 +153,7 @@ export namespace LedgerTransactionMethods {
             id: z.number(),
         }),
         method: async ({ session, prisma, params}) => {
-            const transaction = await read.client(prisma).execute({
+            let transaction = await read.client(prisma).execute({
                 params: { id: params.id },
                 session,
             })
@@ -181,7 +181,6 @@ export namespace LedgerTransactionMethods {
                             update: ledgerEntryUpdateInput,
                         },
                     },
-                    select: {},
                 })
 
                 transaction.ledgerEntries.forEach(
@@ -197,7 +196,7 @@ export namespace LedgerTransactionMethods {
                 session: null,
             })
 
-            const transactionStatus = await determineTransactionState(transaction, balances)
+            const transition = await determineTransactionState(transaction, balances)
 
             // We use `updateMany` in stead of just `update` here because
             // we don't want to throw in case the record is not found.
@@ -206,16 +205,15 @@ export namespace LedgerTransactionMethods {
                     id: params.id,
                     status: 'PENDING', // Protect against changing final state.
                 },
-                data: {
-                    status: transactionStatus,
-                    // TODO: Add message detailing why a transaction failed if it did.
-                },
+                data: transition,
             })
             
-            return read.client(prisma).execute({
+            transaction = await read.client(prisma).execute({
                 params: { id: params.id },
                 session,
             })
+
+            return transaction
         }
     })
 }
