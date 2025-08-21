@@ -1,13 +1,13 @@
 import '@pn-server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
+import { PermissionMethods } from '@/services/permissions/methods'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission } from '@prisma/client'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { UserFiltered } from '@/services/users/Types'
-import { PermissionMethods } from '@/services/permissions/methods'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: Matrix<Permission>,
