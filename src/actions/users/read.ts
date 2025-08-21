@@ -1,12 +1,7 @@
 'use server'
-import { createActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
 import { action } from '@/actions/action'
-import { getUser } from '@/auth/getUser'
 import { UserMethods } from '@/services/users/methods'
-import { readGroupsExpanded } from '@/services/groups/read'
-import type { ExpandedGroup } from '@/services/groups/Types'
-import type { ActionReturn } from '@/actions/Types'
+import { GroupMethods } from '@/services/groups/methods'
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -26,13 +21,5 @@ export const readUserProfileAction = action(UserMethods.readProfile)
 
 export const readUserAction = action(UserMethods.read)
 
-//TODO: MOVE!!!
-export async function readGroupsForPageFiteringAction(): Promise<ActionReturn<ExpandedGroup[]>> {
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['USERS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => readGroupsExpanded())
-}
+export const readGroupsForPageFilteringAction = action(GroupMethods.readGroupsExpanded)
 

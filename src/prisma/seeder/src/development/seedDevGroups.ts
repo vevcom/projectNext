@@ -62,6 +62,9 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             paragraph: {
                 create: {}
             },
+            applicationParagraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -107,6 +110,9 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             paragraph: {
                 create: {}
             },
+            applicationParagraph: {
+                create: {}
+            },
             group: {
                 create: {
                     groupType: 'COMMITTEE',
@@ -140,35 +146,4 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             },
         }
     })))
-
-    await Promise.all([1, 2, 3, 4, 5, 6].map(i => prisma.studyProgramme.create({
-        data: {
-            code: `COCO${i}`,
-            name: `Studieprogram ${i}`,
-            group: {
-                create: {
-                    groupType: 'STUDY_PROGRAMME',
-                    order: order.order,
-                },
-            },
-        }
-    })))
-
-    await prisma.studyProgramme.create({
-        data: {
-            name: 'Elektronisk Systemdesign og Innovasjon',
-            code: 'MTEL',
-            insititueCode: 'MTEL',
-            yearsLength: 5,
-            startYear: 2023,
-
-            group: {
-                create: {
-                    groupType: 'STUDY_PROGRAMME',
-                    memberships,
-                    order: order.order,
-                }
-            }
-        }
-    })
 }
