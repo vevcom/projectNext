@@ -22,7 +22,7 @@ export namespace CommitteeMethods {
             z.object({ shortName: z.string() })
         ]),
         method: async ({ prisma, params }) => {
-            const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+            const defaultImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 session: null,
                 bypassAuth: true
@@ -99,10 +99,9 @@ export namespace CommitteeMethods {
             shortName: z.string(),
             active: z.boolean().optional(),
         }),
-        method: async ({ prisma, session, params }) => {
-            const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+        method: async ({ prisma, params }) => {
+            const defaultImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session,
             })
 
 

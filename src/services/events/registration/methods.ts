@@ -204,10 +204,9 @@ export namespace EventRegistrationMethods {
             take: z.number().optional(),
             type: z.nativeEnum(EventRegistrationConfig.REGISTRATION_READER_TYPE).optional(),
         }),
-        method: async ({ prisma, params, session }): Promise<EventRegistrationExpanded[]> => {
-            const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+        method: async ({ prisma, params }): Promise<EventRegistrationExpanded[]> => {
+            const defaultImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session,
             })
 
             const skipTake = await calculateTakeSkip(prisma, params)

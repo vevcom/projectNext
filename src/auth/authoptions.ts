@@ -127,7 +127,7 @@ export const authOptions: AuthOptions = {
                 }
                 // Trigger is undefined for subsequent calls
                 case undefined: {
-                    const dbUser = await UserMethods.read.newClient().execute({
+                    const dbUser = await UserMethods.read({
                         params: { id: token.user.id },
                         session: null,
                         bypassAuth: true,
@@ -165,12 +165,12 @@ export const authOptions: AuthOptions = {
 
             return {
                 provider,
-                user: await UserMethods.read.newClient().execute({
+                user: await UserMethods.read({
                     params: { id: userId },
                     session: null,
                     bypassAuth: true,
                 }),
-                permissions: await PermissionMethods.readPermissionsOfUser.newClient().execute({
+                permissions: await PermissionMethods.readPermissionsOfUser({
                     bypassAuth: true,
                     session: null,
                     params: {

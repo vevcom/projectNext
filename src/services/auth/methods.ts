@@ -29,7 +29,7 @@ export namespace AuthMethods {
 
             const iat = new Date(payload.iat * 1000)
 
-            const user = await UserMethods.read.client(prisma).execute({
+            const user = await UserMethods.read({
                 params: {
                     id: userId,
                 },
@@ -92,18 +92,14 @@ export namespace AuthMethods {
         }),
         dataSchema: UserSchemas.updatePassword,
         auther: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
-        method: async ({ prisma, params, data, session }) => {
-            const userId = await verifyResetPasswordToken.client(prisma).executeUnsafe({
-                params,
-                session,
-            })
+        method: async ({ params, data }) => {
+            const userId = await verifyResetPasswordToken({ params })
 
-            UserMethods.updatePassword.client(prisma).execute({
+            UserMethods.updatePassword({
                 params: {
                     id: userId,
                 },
                 data,
-                session,
                 bypassAuth: true,
             })
         }
@@ -112,14 +108,13 @@ export namespace AuthMethods {
     export const sendResetPasswordEmail = ServiceMethod({
         dataSchema: AuthSchemas.sendResetPasswordEmail,
         auther: () => AuthAuthers.sendResetPasswordEmail.dynamicFields({}),
-        method: async ({ prisma, data, session }) => {
+        method: async ({ data }) => {
             console.log(data)
             try {
-                const user = await UserMethods.read.client(prisma).executeUnsafe({
+                const user = await UserMethods.read({
                     params: {
-                        email: data.email
+                        email: data.email,
                     },
-                    session,
                     bypassAuth: true,
                 })
 

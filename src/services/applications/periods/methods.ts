@@ -49,7 +49,7 @@ export namespace ApplicationPeriodMethods {
         paramsSchema: z.object({
             name: z.string()
         }),
-        method: async ({ prisma, data, params, session }) => {
+        method: async ({ prisma, data, params }) => {
             const period = await prisma.applicationPeriod.update({
                 where: { name: params.name },
                 data: {
@@ -90,12 +90,11 @@ export namespace ApplicationPeriodMethods {
                             })
                             await Promise.all(
                                 removeApplications.map(async application =>
-                                    await ApplicationMethods.destroy.newClient().execute({
+                                    await ApplicationMethods.destroy({
                                         params: {
                                             userId: application.userId,
                                             commiteeParticipationId: application.applicationPeriodCommiteeId
                                         },
-                                        session,
                                     })
                                 )
                             )
@@ -129,7 +128,7 @@ export namespace ApplicationPeriodMethods {
         }),
         auther: () => ApplicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
         method: async ({ prisma, params, session }) => {
-            const period = await read.client(prisma).execute({
+            const period = await read({
                 params: { name: params.name },
                 session
             })

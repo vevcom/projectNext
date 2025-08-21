@@ -71,7 +71,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
     public static async fromNextAuth(): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
         const {
             user = null,
-            permissions = await PermissionMethods.readDefaultPermissions.newClient().execute({
+            permissions = await PermissionMethods.readDefaultPermissions({
                 session: null,
                 bypassAuth: true,
             }),
@@ -87,7 +87,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
      * If the key is null, the session will be cratedwith only default permissios
      */
     public static async fromApiKey(keyAndIdEncoded: string | null): Promise<Session<'NO_USER'>> {
-        const defaultPermissions = await PermissionMethods.readDefaultPermissions.newClient().execute({
+        const defaultPermissions = await PermissionMethods.readDefaultPermissions({
             session: null,
             bypassAuth: true,
         })
@@ -99,7 +99,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         let apiKeyFetch
 
         try {
-            apiKeyFetch = await ApiKeyMethods.readWithHash.newClient().execute({
+            apiKeyFetch = await ApiKeyMethods.readWithHash({
                 session: null,
                 bypassAuth: true,
                 params: { id }

@@ -18,7 +18,7 @@ export async function createMembershipForUser(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
 
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
+    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder({
         session: null,
         bypassAuth: true,
         params: {
@@ -65,7 +65,7 @@ export async function createMembershipsForGroup(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
+    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder({
         session: null,
         bypassAuth: true,
         params: {
@@ -113,7 +113,7 @@ export async function createMembershipsForUser(
     if (!await canEasilyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const ordersMap = await GroupMethods.readCurrentGroupOrders.newClient().execute({
+    const ordersMap = await GroupMethods.readCurrentGroupOrders({
         session: null,
         bypassAuth: true,
         params: {

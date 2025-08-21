@@ -13,7 +13,7 @@ export async function updateCommittee(
 
     let defaultLogoImageId: number
     if (!logoImageId) {
-        defaultLogoImageId = await ImageMethods.readSpecial.client(prisma).execute({
+        defaultLogoImageId = await ImageMethods.readSpecial({
             params: { special: 'DAFAULT_COMMITTEE_LOGO' }, session: null //TODO: pass session
         }).then(res => res.id)
     }

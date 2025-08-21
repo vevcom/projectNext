@@ -51,7 +51,8 @@ export default async function seedDevJobAds(prisma: PrismaClient) {
     ]
 
     for (const jobAd of jobAdData) {
-        const restult = await JobadMethods.create.client(prisma).execute({
+        const restult = await JobadMethods.create({
+            prisma,
             data: {
                 ...jobAd,
                 companyId: 1,

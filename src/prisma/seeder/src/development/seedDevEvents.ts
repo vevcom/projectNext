@@ -17,7 +17,8 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    const bedpres = await EventMethods.create.client(prisma).execute({
+    const bedpres = await EventMethods.create({
+        prisma,
         session: null,
         bypassAuth: true,
         data: {
@@ -37,7 +38,8 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    await EventMethods.create.client(prisma).execute({
+    await EventMethods.create({
+        prisma,
         session: null,
         bypassAuth: true,
         data: {

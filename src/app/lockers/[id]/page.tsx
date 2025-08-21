@@ -33,7 +33,7 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
-    const groups = await GroupMethods.readGroupsOfUser.newClient().execute({
+    const groups = await GroupMethods.readGroupsOfUser({
         session: null,
         bypassAuth: true,
         params: {

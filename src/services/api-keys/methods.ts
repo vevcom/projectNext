@@ -77,7 +77,7 @@ export namespace ApiKeyMethods {
             if (!apiKey) throw new ServerError('BAD PARAMETERS', 'Api key does not exist')
             return {
                 ...apiKey,
-                ...await updateIfExpired.client(prisma).execute({
+                ...await updateIfExpired({
                     params: apiKey,
                     session: null,
                     bypassAuth: true,
@@ -98,7 +98,7 @@ export namespace ApiKeyMethods {
 
             return await Promise.all(apiKeys.map(async apiKey => ({
                 ...apiKey,
-                ...await updateIfExpired.client(prisma).execute({
+                ...await updateIfExpired({
                     params: apiKey,
                     session: null,
                     bypassAuth: true,
@@ -125,7 +125,7 @@ export namespace ApiKeyMethods {
 
             return {
                 ...apiKey,
-                ...await updateIfExpired.client(prisma).execute({
+                ...await updateIfExpired({
                     params: apiKey,
                     session: null,
                     bypassAuth: true,

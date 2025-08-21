@@ -13,7 +13,7 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
     let defaultLogoImageId: number
     if (!logoImageId) {
-        defaultLogoImageId = await ImageMethods.readSpecial.client(prisma).execute({
+        defaultLogoImageId = await ImageMethods.readSpecial({
             params: { special: 'DAFAULT_COMMITTEE_LOGO' }, session: null //TODO: pass session
         }).then(res => res.id)
     }

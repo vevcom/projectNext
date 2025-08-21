@@ -90,7 +90,7 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
 
 // TODO: Create ServiceMethod
 export async function readCommitteeMembers(shortName: string) {
-    const defaultImage = await ImageMethods.readSpecial.client(prisma).execute({
+    const defaultImage = await ImageMethods.readSpecial({
         params: { special: 'DEFAULT_PROFILE_IMAGE' },
         session: null,
         bypassAuth: true

@@ -78,19 +78,16 @@ export namespace ImageMethods {
         }),
         dataSchema: ImageSchemas.createMany,
         method: async ({
-            prisma,
             params: { useFileName, collectionId },
             data,
-            session,
         }) => {
             console.log('data', data)
             for (const file of data.files) {
                 console.log('file', file)
                 const name = useFileName ? file.name.split('.')[0] : undefined
-                await create.client(prisma).execute({
+                await create({
                     params: { collectionId },
                     data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
-                    session
                 })
             }
         }
@@ -198,7 +195,7 @@ export namespace ImageMethods {
             })
 
             if (!image) {
-                return await createSourceless.client(prisma).execute(
+                return await createSourceless(
                     { params: { name: special, special }, session }
                 )
             }

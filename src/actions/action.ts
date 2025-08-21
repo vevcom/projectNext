@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { safeServerCall } from './safeServerCall'
 import { Session } from '@/auth/Session'
 import type { ActionReturn } from './Types'
-import type { ServiceMethodType } from '@/services/ServiceMethod'
+import type { ServiceMethodExecuteArgs, ServiceMethodType } from '@/services/ServiceMethod'
 import type { z } from 'zod'
 
 // This function is overloaded to allow for different combinations of parameters and data.
@@ -39,8 +39,8 @@ export function action<
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service method will validate the parameter and data before it is used.
     //
-    // For convinience this function is given a return type that is more specific. The return type is a function that
-    // has arguments witch match the underlying service method. This makes programming easier as intellisesne can
+    // For convenience this function is given a return type that is more specific. The return type is a function that
+    // has arguments witch match the underlying service method. This makes programming easier as Intellisense can
     // help and errors are caught at compile time.
     const actionUnsafe = async (params?: unknown, data?: unknown) => {
         const session = await Session.fromNextAuth()
@@ -51,7 +51,11 @@ export function action<
             data = undefined
         }
 
-        return safeServerCall(() => serviceMethod.newClient().executeUnsafe({ session, params, data }))
+        return safeServerCall(() => serviceMethod({
+            session,
+            params,
+            data,
+        } as unknown as ServiceMethodExecuteArgs<ParamsSchema, DataSchema, boolean>))
     }
 
     // If the service method has a params schema, we require the params to be passed to the action.

@@ -40,10 +40,9 @@ const create = ServiceMethod({
         accuserId: z.number(),
     }),
     opensTransaction: true,
-    method: async ({ prisma, params, data: { value, ...data }, session }) => {
-        const activeDots = await readForUser.client(prisma).execute({
-            params: { userId: data.userId, onlyActive: true },
-            session,
+    method: async ({ prisma, params, data: { value, ...data } }) => {
+        const activeDots = await readForUser({
+            params: { userId: data.userId, onlyActive: true }
         })
 
         const dotData : { expiresAt: Date }[] = []

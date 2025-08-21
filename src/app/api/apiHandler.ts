@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { Session } from '@/auth/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { ServiceMethodType } from '@/services/ServiceMethod'
+import type { ServiceMethodExecuteArgs, ServiceMethodType } from '@/services/ServiceMethod'
 import type { SessionNoUser } from '@/auth/Session'
 import type { z } from 'zod'
 
@@ -45,15 +45,11 @@ export function apiHandler<
     // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
+            let data
+
             if (serviceMethod.dataSchema) {
                 try {
-                    const rawdata = await req.json()
-
-                    return serviceMethod.newClient().executeUnsafe({
-                        params: params ? params(await rawParams) : undefined,
-                        data: rawdata,
-                        session,
-                    })
+                    data = await req.json()
                 } catch (error) {
                     if (error instanceof SyntaxError) {
                         throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
@@ -62,11 +58,11 @@ export function apiHandler<
                 }
             }
 
-            return serviceMethod.newClient().executeUnsafe({
+            return serviceMethod({
                 params: params ? params(await rawParams) : undefined,
-                data: undefined,
+                data,
                 session,
-            })
+            } as unknown as ServiceMethodExecuteArgs<ParamsSchema, DataSchema, boolean>)
         })
 }
 

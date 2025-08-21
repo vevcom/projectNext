@@ -92,7 +92,7 @@ export async function getUser({
 }: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
     const {
         user = null,
-        permissions = await PermissionMethods.readDefaultPermissions.newClient().execute({
+        permissions = await PermissionMethods.readDefaultPermissions({
             session: null,
             bypassAuth: true,
         }),

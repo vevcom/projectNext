@@ -18,7 +18,7 @@ export async function updateMembership({
     active?: boolean
 }): Promise<ExpandedMembership> {
     const order = (orderArg && typeof orderArg === 'number') ? orderArg : (
-        await GroupMethods.readCurrentGroupOrder.newClient().execute({
+        await GroupMethods.readCurrentGroupOrder({
             bypassAuth: true,
             session: null,
             params: {

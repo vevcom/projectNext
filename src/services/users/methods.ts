@@ -95,10 +95,9 @@ export namespace UserMethods {
             username: z.string(),
         }),
         auther: ({ params }) => UserAuthers.readProfile.dynamicFields({ username: params.username }),
-        method: async ({ prisma, params, session }) => {
-            const defaultProfileImage = await ImageMethods.readSpecial.client(prisma).execute({
+        method: async ({ prisma, params }) => {
+            const defaultProfileImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session,
             })
             const user = await prisma.user.findUniqueOrThrow({
                 where: { username: params.username.toLowerCase() },
@@ -113,8 +112,7 @@ export namespace UserMethods {
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
-            const permissions = await PermissionMethods.readPermissionsOfUser.client(prisma).execute({
-                session,
+            const permissions = await PermissionMethods.readPermissionsOfUser({
                 bypassAuth: true,
                 params: {
                     userId: user.id

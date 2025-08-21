@@ -16,7 +16,7 @@ describe('api keys', () => {
             user: null,
         })
 
-        const createdApiKey = await ApiKeyMethods.create.newClient().execute({
+        const createdApiKey = await ApiKeyMethods.create({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -28,7 +28,7 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        const readApiKeyResult = await ApiKeyMethods.read.newClient().execute({
+        const readApiKeyResult = await ApiKeyMethods.read({
             params: createdApiKey,
             session,
         })
@@ -38,7 +38,7 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        await ApiKeyMethods.update.newClient().execute({
+        await ApiKeyMethods.update({
             params: createdApiKey,
             data: {
                 permissions: ['APIKEY_ADMIN'],
@@ -59,7 +59,7 @@ describe('api keys', () => {
     // so there should probably be a system in place to run the same test
     // with different session objects.
     test('create, read and update api key with unauthenticated user', async () => {
-        const createdApiKeyPromise = ApiKeyMethods.create.newClient().execute({
+        const createdApiKeyPromise = ApiKeyMethods.create({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -68,7 +68,7 @@ describe('api keys', () => {
         expect(createdApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
         expect(await prisma.apiKey.count()).toEqual(0)
 
-        const readApiKeyPromise = ApiKeyMethods.read.newClient().execute({
+        const readApiKeyPromise = ApiKeyMethods.read({
             params: {
                 id: 1,
             },
@@ -76,7 +76,7 @@ describe('api keys', () => {
         })
         expect(readApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
-        const updateApiKeyPromise = ApiKeyMethods.update.newClient().execute({
+        const updateApiKeyPromise = ApiKeyMethods.update({
             params: {
                 id: 1,
             },

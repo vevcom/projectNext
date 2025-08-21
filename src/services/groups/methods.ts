@@ -268,7 +268,7 @@ export namespace GroupMethods {
 
     export const readGroupsStructured = ServiceMethod({
         auther: () => GroupAuthers.read.dynamicFields({}),
-        method: async ({ prisma, session }) => {
+        method: async () => {
             const groupsStructured: GroupsStructured = {
                 CLASS: {
                     ...GroupTypesConfig.CLASS,
@@ -296,10 +296,8 @@ export namespace GroupMethods {
                 },
             } satisfies GroupsStructured
 
-            const groupExpanded = await readGroupsExpanded.client(prisma).execute({
-                bypassAuth: true,
-                session,
-            })
+            const groupExpanded = await readGroupsExpanded({ bypassAuth: true })
+
             groupExpanded.forEach(group => {
                 groupsStructured[group.groupType].groups.push(group)
             })

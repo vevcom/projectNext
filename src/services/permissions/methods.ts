@@ -22,12 +22,9 @@ export namespace PermissionMethods {
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ prisma, session, params }) => {
+        method: async ({ prisma, params }) => {
             const [defaultPermissions, groupPermissions] = await Promise.all([
-                readDefaultPermissions.client(prisma).execute({
-                    bypassAuth: true,
-                    session,
-                }),
+                readDefaultPermissions({}),
                 prisma.membership.findMany({
                     where: {
                         userId: params.userId,

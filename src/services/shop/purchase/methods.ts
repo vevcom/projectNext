@@ -13,11 +13,10 @@ export namespace PurchaseMethods {
         auther: async ({ data }) => {
             let user
             try {
-                user = await UserMethods.read.newClient().execute({
+                user = await UserMethods.read({
                     params: {
                         studentCard: data.studentCard,
                     },
-                    session: null,
                     bypassAuth: true,
                 })
             } catch (e) {
@@ -27,8 +26,7 @@ export namespace PurchaseMethods {
                 throw e
             }
 
-            const permissions = await PermissionMethods.readPermissionsOfUser.newClient().execute({
-                session: null,
+            const permissions = await PermissionMethods.readPermissionsOfUser({
                 bypassAuth: true,
                 params: {
                     userId: user.id,

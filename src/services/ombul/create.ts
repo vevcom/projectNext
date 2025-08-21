@@ -43,7 +43,7 @@ export async function createOmbul(
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
 
-    const coverImage = await ImageMethods.create.client(prisma).execute({
+    const coverImage = await ImageMethods.create({
         params: {
             collectionId: ombulCoverCollection.id,
         },

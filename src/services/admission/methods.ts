@@ -49,8 +49,7 @@ export namespace AdmissionMethods {
             })
 
             // check if user has taken all admissions
-            const userTrials = await readTrial.newClient().execute({
-                session,
+            const userTrials = await readTrial({
                 params: {
                     userId: data.userId
                 },

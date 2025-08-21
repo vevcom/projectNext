@@ -56,11 +56,10 @@ export namespace CabinBookingMethods {
         }),
         auther: ServerOnlyAuther,
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
-        method: async ({ prisma, params, data, session }) => {
+        method: async ({ prisma, params, data }) => {
             // TODO: Prevent Race conditions
 
-            const latestReleaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
-                session,
+            const latestReleaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod({
                 bypassAuth: true,
             })
 
@@ -72,9 +71,8 @@ export namespace CabinBookingMethods {
                 throw new ServerError('BAD PARAMETERS', 'Hytta kan ikke bookes etter siste slippdato.')
             }
 
-            if (!await cabinAvailable.client(prisma).execute({
+            if (!await cabinAvailable({
                 params: data,
-                session,
                 bypassAuth: true,
             })) {
                 throw new ServerError('BAD PARAMETERS', 'Hytta er ikke tilgjengelig i den perioden.')
@@ -125,10 +123,7 @@ export namespace CabinBookingMethods {
                 throw new ServerError('BAD PARAMETERS', 'Sengebookinger må inneholde minst ett produkt.')
             }
 
-            const pricePeriods = await CabinPricePeriodMethods.readMany.client(prisma).execute({
-                bypassAuth: true,
-                session,
-            })
+            const pricePeriods = await CabinPricePeriodMethods.readMany({ bypassAuth: true })
 
             const priceObjects = calculateCabinBookingPrice({
                 pricePeriods,
@@ -170,11 +165,10 @@ export namespace CabinBookingMethods {
         }),
         auther: ServerOnlyAuther,
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
-        method: async ({ prisma, params, data, session }) => {
-            const result = await create.client(prisma).execute({
+        method: async ({ prisma, params, data }) => {
+            const result = await create({
                 params,
                 data,
-                session,
                 bypassAuth: true,
             })
 
@@ -214,15 +208,14 @@ export namespace CabinBookingMethods {
             userId: params.userId,
         }),
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
-        method: async ({ prisma, params, data, session }) =>
-            createBookingWithUser.client(prisma).execute({
+        method: async ({ params, data }) =>
+            createBookingWithUser({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.CABIN,
                     bookingProducts: params.bookingProducts,
                 },
                 data,
-                session,
                 bypassAuth: true,
             })
     })
@@ -236,15 +229,14 @@ export namespace CabinBookingMethods {
             userId: params.userId,
         }),
         dataSchema: CabinBookingSchemas.createBookingUserAttached,
-        method: async ({ prisma, params, data, session }) =>
-            createBookingWithUser.client(prisma).execute({
+        method: async ({ params, data }) =>
+            createBookingWithUser({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.BED,
                     bookingProducts: params.bookingProducts,
                 },
                 data,
-                session,
                 bypassAuth: true,
             })
     })
@@ -256,15 +248,14 @@ export namespace CabinBookingMethods {
         }),
         auther: ServerOnlyAuther,
         dataSchema: CabinBookingSchemas.createBookingNoUser,
-        method: async ({ prisma, params, data, session }) => {
-            const result = await create.client(prisma).execute({
+        method: async ({ prisma, params, data }) => {
+            const result = await create({
                 params,
                 data: {
                     ...data,
                     numberOfMembers: 0,
                     numberOfNonMembers: 0,
                 },
-                session,
                 bypassAuth: true,
             })
 
@@ -298,13 +289,12 @@ export namespace CabinBookingMethods {
         }),
         auther: () => CabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}),
         dataSchema: CabinBookingSchemas.createBookingNoUser,
-        method: async ({ prisma, params, data, session }) => createBookingNoUser.client(prisma).execute({
+        method: async ({ params, data }) => createBookingNoUser({
             params: {
                 bookingType: BookingType.CABIN,
                 bookingProducts: params.bookingProducts,
             },
             data,
-            session,
             bypassAuth: true,
         })
     })
@@ -315,13 +305,12 @@ export namespace CabinBookingMethods {
         }),
         auther: () => CabinBookingAuthers.createBedBookingNoUser.dynamicFields({}),
         dataSchema: CabinBookingSchemas.createBookingNoUser,
-        method: async ({ prisma, params, data, session }) => createBookingNoUser.client(prisma).execute({
+        method: async ({ params, data }) => createBookingNoUser({
             params: {
                 bookingType: BookingType.BED,
                 bookingProducts: params.bookingProducts,
             },
             data,
-            session,
             bypassAuth: true,
         })
     })

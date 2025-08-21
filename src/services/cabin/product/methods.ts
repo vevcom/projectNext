@@ -31,7 +31,7 @@ export namespace CabinProductMethods {
                         id: data.pricePeriodId,
                     }
                 }),
-                CabinReleasePeriodMethods.getCurrentReleasePeriod.client(prisma).execute({
+                CabinReleasePeriodMethods.getCurrentReleasePeriod({
                     bypassAuth: true,
                     session
                 })
@@ -61,11 +61,8 @@ export namespace CabinProductMethods {
 
     export const readActive = ServiceMethod({
         auther: () => CabinProductAuthers.read.dynamicFields({}),
-        method: async ({ prisma, session }) => {
-            const pricePeriods = await CabinPricePeriodMethods.readPublicPeriods.client(prisma).execute({
-                bypassAuth: true,
-                session,
-            })
+        method: async ({ prisma }) => {
+            const pricePeriods = await CabinPricePeriodMethods.readPublicPeriods({ bypassAuth: true })
 
             return await prisma.cabinProduct.findMany({
                 where: {

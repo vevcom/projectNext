@@ -76,7 +76,7 @@ export namespace InterestGroupMethods {
         dataSchema: InterestGroupSchemas.update,
         auther: async ({ params }) => InterestGroupAuthers.update.dynamicFields({
             groupId: (
-                await read.newClient().execute({
+                await read({
                     params: { id: params.id },
                     session: null,
                     bypassAuth: true,

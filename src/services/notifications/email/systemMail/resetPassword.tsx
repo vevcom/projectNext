@@ -10,9 +10,8 @@ export async function sendResetPasswordMail(email: string) {
     const emailParsed = z.string().email().parse(email)
 
     try {
-        const user = await UserMethods.read.newClient().execute({
+        const user = await UserMethods.read({
             params: { email: emailParsed },
-            session: null,
             bypassAuth: true,
         })
 

@@ -26,7 +26,7 @@ export namespace LockerReservationMethods {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await GroupMethods.readUsersOfGroups.newClient().execute({
+                const groupUsers = await GroupMethods.readUsersOfGroups({
                     session: null,
                     bypassAuth: true,
                     params: {
@@ -108,8 +108,7 @@ export namespace LockerReservationMethods {
 
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await GroupMethods.readUsersOfGroups.client(prisma).execute({
-                    session,
+                const groupUsers = await GroupMethods.readUsersOfGroups({
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]

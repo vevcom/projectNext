@@ -68,7 +68,7 @@ export async function readImageCollectionsPage<const PageSize extends number>(
         ...cursorPageingSelection(page)
     }))
 
-    const lensCamera = await ImageMethods.readSpecial.client(prisma).execute({
+    const lensCamera = await ImageMethods.readSpecial({
         params: {
             special: 'DEFAULT_IMAGE_COLLECTION_COVER'
         },
