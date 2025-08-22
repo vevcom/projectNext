@@ -1,16 +1,14 @@
-import { bindParams } from '@/actions/bind'
-import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
-import { createPayment } from '@/actions/ledger/transactions/payments'
-import { createPayout } from '@/actions/ledger/transactions/payouts'
-import Form from '@/app/_components/Form/Form'
+// import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
 import LedgerAccountBalance from '@/app/_components/Ledger/LedgerAccountBalance'
-import DepositForm from '@/app/_components/Stripe/DepositForm'
-import NumberInput from '@/app/_components/UI/NumberInput'
 import TextInput from '@/app/_components/UI/TextInput'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
 import Button from '@/components/UI/Button'
 import Link from 'next/link'
+import PayoutModal from './PayoutModal'
+import DepositModal from './DepositModal'
+import Card from './Card'
+import BankCardModal from './BankCardModal'
 
 export default async function Account() {
     const session = await getUser({
@@ -18,16 +16,27 @@ export default async function Account() {
         shouldRedirect: true,
     }) // TODO: Replace
 
-    const account = unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
+    const account = { id: 1 }; //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
 
     return <div>
-        <h2>Konto</h2>
-        <LedgerAccountBalance accountId={account.id} showFees />
-        <br />
-        <h3>Innskudd</h3>
-        <DepositForm accountId={account.id}/>
-        <br />
-        <h3>Betaling</h3>
+        <Card>
+            <h2>Konto</h2>
+            <LedgerAccountBalance accountId={account.id} showFees />
+            <DepositModal accountId={account.id} />
+            <PayoutModal accountId={account.id} />
+        </Card>
+            {/* <PopUp
+                PopUpKey="DepositForm"
+                customShowButton={(open) => <Button onClick={open}>Sett inn muenter</Button>}
+            >
+                <h3>Sett inn muenter</h3>
+                <DepositForm accountId={account.id}/>
+            </PopUp> */}
+
+        {/* <Button>Sett inn muenter</Button> */}
+        {/* <h3>Innskudd</h3>
+        <br /> */}
+        {/* <h3>Betaling</h3>
         <Form
             refreshOnSuccess={true}
             submitText="Sett inn"
@@ -45,13 +54,34 @@ export default async function Account() {
         >
             <NumberInput label="Sum" name="amount" min="0"/>
         </Form>
-        <br />
-        <h3>Transaksjoner</h3>
-        <p><Link href="account/transactions">Se alle transaksjoner -&gt;</Link></p>
-        <br />
-        <h3>Betalingsalternativer</h3>
-        <TextInput label="Kortnummer" name="cardnumber"/>
-        <Button>Legg til kort (TODO)</Button>
-        <p>VIPPS (TODO)</p>
+        <br /> */}
+        <Card>
+            <h2>Betalingsalternativer</h2>
+            <h3>Bankkort</h3>
+            <p>
+                Du kan lagre kortinformasjonen din for senere betalinger. 
+                Kortinformasjonen lagres kun hos betalingsleverandøren vår Stripe, ikke på våre tjenere.
+            </p>
+            <BankCardModal userId={session.user.id} />
+            <h3>NTNU-kort</h3>
+            <p>
+                For å benytte Kioleskabet på Lophtet må et NTNU-kort være tilknyttet brukeren din.
+            </p>
+            <Link href="settings">Gå til siden for kortregistrering.</Link>
+        </Card>
+        <Card>
+            <h3>Transaksjoner</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>En transaksjon</td>
+                    </tr>
+                    <tr>
+                        <td>En annen transaksjon</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><Link href="account/transactions">Se alle transaksjoner -&gt;</Link></p>
+        </Card>
     </div>
 }

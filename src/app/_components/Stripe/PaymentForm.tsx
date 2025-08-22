@@ -1,7 +1,7 @@
 'use client'
 
 import Form from '@/components/Form/Form'
-import { createStripeDeposit } from '@/actions/ledger/transactions/deposits'
+// import { createStripeDeposit } from '@/actions/ledger/transactions/deposits'
 import { createActionError } from '@/actions/error'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import React from 'react'
@@ -25,7 +25,7 @@ export default function PaymentForm({ accountId, children }: Props) {
             return createActionError('BAD DATA', '')
         }
 
-        const deposit = await createStripeDeposit({ accountId }, formData)
+        const deposit = { success: true, data: {} as any } as const //await createStripeDeposit({ accountId }, formData)
 
         if (!deposit.success) {
             return deposit

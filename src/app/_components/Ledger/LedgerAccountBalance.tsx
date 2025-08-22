@@ -1,4 +1,5 @@
-import { calculateLedgerAccountBalance } from '@/actions/ledger/ledgerAccount'
+import styles from './LedgerAccountBalance.module.scss'
+// import { calculateLedgerAccountBalance } from '@/actions/ledger/ledgerAccount'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayAmount } from '@/lib/currency/convert'
 
@@ -8,10 +9,10 @@ type Props = {
 }
 
 export default async function LedgerAccountBalance({ accountId, showFees }: Props) {
-    const balance = unwrapActionReturn(await calculateLedgerAccountBalance({ id: accountId }))
+    const balance = { amount: 100, fees: 2 } // unwrapActionReturn(await calculateLedgerAccountBalance({ id: accountId }))
 
-    return <div>
-        <p>Balanse: <b>{displayAmount(balance.total)}</b> Kluengende muent</p>
+    return <div className={styles.LedgerAccountBalance}>
+        <p>Balanse: <b>{displayAmount(balance.amount)}</b> Kluengende muent</p>
         {showFees && <p><i>Avgifter: {displayAmount(balance.fees)} Kluengende muent</i></p>}
     </div>
 }
