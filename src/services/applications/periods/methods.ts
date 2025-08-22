@@ -73,7 +73,7 @@ export namespace ApplicationPeriodMethods {
                 // that reordering priorities is handled correctly.
                 await Promise.all(
                     period.committeesParticipating
-                        .map(c => c.committeeId)
+                        .map(committee => committee.committeeId)
                         .filter(id => !(data.participatingCommitteeIds ?? []).includes(id))
                         .map(async id => {
                             const removeApplications = await prisma.application.findMany({

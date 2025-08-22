@@ -1,7 +1,6 @@
 'use server'
 import NotificationSettings from './notificationSettings'
-import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
-import { readSubscriptionsAction } from '@/actions/notifications/subscription/read'
+import { readNotificationChannelsAction, readNotificationSubscriptionsAction } from '@/actions/notifications'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import type { PropTypes } from '@/app/users/[username]/page'
 
@@ -11,7 +10,9 @@ export default async function Notififcations({ params }: PropTypes) {
 
     const [channels, subscriptions] = await Promise.all([
         readNotificationChannelsAction(),
-        readSubscriptionsAction(),
+        readNotificationSubscriptionsAction({
+            userId: profile.user.id
+        }),
     ])
 
     if (!channels.success || !subscriptions.success) {

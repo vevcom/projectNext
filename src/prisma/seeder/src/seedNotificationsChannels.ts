@@ -1,3 +1,4 @@
+import { NotificationConfig } from '@/services/notifications/config'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { NotificationMethod, PrismaClient } from '@prisma/client'
 
@@ -10,18 +11,6 @@ type ChannelInfo = {
     alias?: string
 }
 
-const allMethodsOn = {
-    email: true,
-    emailWeekly: true,
-    push: true,
-} as const
-
-const allMethodsOff = {
-    email: false,
-    emailWeekly: false,
-    push: false,
-} as const
-
 export default async function seedNotificationChannels(prisma: PrismaClient) {
     const specialKeys = new Set(Object.keys(SpecialNotificationChannel) as SpecialNotificationChannel[])
 
@@ -30,55 +19,46 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'ROOT',
             name: 'Alle varslinger',
             description: 'Denne kanalen styrer alle varslinger',
-            defaultMethods: allMethodsOn,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_EVENT',
             name: 'Nytt arrangement',
             description: 'Varslinger om nye arrangementer',
             defaultMethods: {
-                email: true,
-                emailWeekly: false,
-                push: true,
+                email: false,
+                emailWeekly: true,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
-            },
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_NEWS_ARTICLE',
             name: 'Ny nyhetsartikkel',
             description: 'Varslinger om nye artikler',
-            defaultMethods: allMethodsOff,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
-            },
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'NEW_OMEGAQUOTE',
             name: 'Ny omegaquote',
             description: 'Varslinger om en ny omega quote',
-            defaultMethods: allMethodsOff,
-            availableMethods: allMethodsOn,
+            defaultMethods: NotificationConfig.allMethodsOff,
+            availableMethods: NotificationConfig.allMethodsOn,
         },
         {
             special: 'EVENT_WAITINGLIST_PROMOTION',
@@ -87,13 +67,25 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
             availableMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
+        },
+        {
+            special: 'CABIN_BOOKING_CONFIRMATION',
+            name: 'Bekreftelse på heuttebooking',
+            description: 'Få en mail som bekreftelse på at du har booka heutta',
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            availableMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            alias: 'heuttebooking'
         },
         {
             name: 'Informasjon fra HS',
@@ -101,20 +93,18 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'hs',
         },
         {
             name: 'Merch',
             description: 'Her kommer det varslinger om Omega Merch fra Blaest-Com',
             defaultMethods: {
-                email: false,
-                emailWeekly: true,
-                push: false,
+                email: true,
+                emailWeekly: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'bleast',
         },
         {
@@ -123,9 +113,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'vevcom',
         },
         {
@@ -134,9 +123,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: false,
             },
-            availableMethods: allMethodsOn,
+            availableMethods: NotificationConfig.allMethodsOn,
             alias: 'contactor',
         },
         {
@@ -146,28 +134,31 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             defaultMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
             availableMethods: {
                 email: true,
                 emailWeekly: false,
-                push: true,
             },
         },
         {
             name: 'Diverse',
             description: 'Her kommer informasjon som ellers ikke passer inn i kategoriene',
-            defaultMethods: allMethodsOn,
-            availableMethods: allMethodsOn,
+            defaultMethods: {
+                email: true,
+                emailWeekly: false,
+            },
+            availableMethods: NotificationConfig.allMethodsOn,
         },
     ]
 
-    channels.forEach(c => {
-        if (c.special) {
-            if (!specialKeys.has(c.special)) {
-                throw new Error(`The seeding data is not valid. The special key: ${c.special} is duplicate or not valid.`)
+    channels.forEach(channel => {
+        if (channel.special) {
+            if (!specialKeys.has(channel.special)) {
+                throw new Error(
+                    `The seeding data is not valid. The special key: ${channel.special} is duplicate or not valid.`
+                )
             }
-            specialKeys.delete(c.special)
+            specialKeys.delete(channel.special)
         }
     })
 
@@ -177,7 +168,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
 
     const DEFAULT_NOTIFCIATION_ALIAS = 'noreply@omega.ntnu.no'
 
-    const rChan = channels.find(c => c.special === 'ROOT')
+    const rChan = channels.find(channel => channel.special === 'ROOT')
 
     if (!rChan) {
         throw new Error('No ROOT channel found')
@@ -185,12 +176,12 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
 
     const seedSpecialChannels = new Set<SpecialNotificationChannel>()
     const specialEnums = Object.keys(SpecialNotificationChannel)
-    for (const c of channels) {
-        if (c.special) {
-            if (!specialEnums.includes(c.special)) {
-                throw new Error(`Invalid special channel type ${c.special}`)
+    for (const channel of channels) {
+        if (channel.special) {
+            if (!specialEnums.includes(channel.special)) {
+                throw new Error(`Invalid special channel type ${channel.special}`)
             }
-            seedSpecialChannels.add(c.special)
+            seedSpecialChannels.add(channel.special)
         }
     }
 
@@ -233,27 +224,30 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             ${rootMailAlias}
         );`
 
-    await Promise.all(channels.filter(c => c.special !== 'ROOT').map(c => prisma.notificationChannel.create({
-        data: {
-            name: c.name,
-            description: c.description,
-            availableMethods: {
-                create: c.availableMethods,
-            },
-            defaultMethods: {
-                create: c.defaultMethods,
-            },
-            special: c.special,
-            parent: {
-                connect: {
-                    special: 'ROOT',
-                }
-            },
-            mailAlias: {
-                connect: {
-                    address: c.alias ? `${c.alias}@omega.ntnu.no` : DEFAULT_NOTIFCIATION_ALIAS,
+    await Promise.all(channels
+        .filter(channel => channel.special !== 'ROOT')
+        .map(channel => prisma.notificationChannel.create({
+            data: {
+                name: channel.name,
+                description: channel.description,
+                availableMethods: {
+                    create: channel.availableMethods,
+                },
+                defaultMethods: {
+                    create: channel.defaultMethods,
+                },
+                special: channel.special,
+                parent: {
+                    connect: {
+                        special: 'ROOT',
+                    }
+                },
+                mailAlias: {
+                    connect: {
+                        address: channel.alias ? `${channel.alias}@omega.ntnu.no` : DEFAULT_NOTIFCIATION_ALIAS,
+                    }
                 }
             }
-        }
-    })))
+        }))
+    )
 }

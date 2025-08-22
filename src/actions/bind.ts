@@ -7,7 +7,7 @@
  * @param params - The parameters to bind to the action.
  * @returns - The same action with the parameters bound to it.
  */
-export function bindParams<P, D extends unknown[], R>(action: (p: P, ...d: D) => R, params: P) {
+export function bindParams<P, D extends unknown[], R>(action: (p: P, ...dataArgs: D) => R, params: P) {
     return action.bind(null, params)
 }
 
@@ -20,6 +20,6 @@ export function bindParams<P, D extends unknown[], R>(action: (p: P, ...d: D) =>
  * @param bindData - The data to bind to the action.
  * @returns - The same action with the data bound to it.
  */
-export function bindData<D, R>(action: (d: D) => R, data: D) {
+export function bindData<D, R>(action: (dataValue: D) => R, data: D) {
     return action.bind(null, data)
 }

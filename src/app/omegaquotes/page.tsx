@@ -44,7 +44,7 @@ export default async function OmegaQuotes() {
             >
                 <main>
                     <OmegaquoteList
-                        serverRendered={quotes.map(q => <OmegaquoteQuote key={uuid()} quote={q}/>)}
+                        serverRendered={quotes.map(quote => <OmegaquoteQuote key={uuid()} quote={quote}/>)}
                     />
                 </main>
             </OmegaquotePagingProvider>

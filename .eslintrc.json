@@ -512,8 +512,6 @@
                 "prefer": "type-imports"
             }
         ],
-        // allow use of namespaces
-        "@typescript-eslint/no-namespace": "off",
         //SOME ODD OPTIONS:
         // suggest using the spread operator instead of .apply()
         "prefer-spread": "error",
@@ -524,6 +522,13 @@
         // enforce usage of spacing in template strings
         "template-curly-spacing": "error",
         // disable next js warning for using <img>
-        "@next/next/no-img-element": "off"
+        "@next/next/no-img-element": "off",
+        "id-length": [
+            "error",
+            {
+                "exceptions": [ "i", "j", "k", "a", "b", "x", "y", "e", "_" ],
+                "min": 2
+            }
+        ]
     }
 }

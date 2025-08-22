@@ -68,7 +68,11 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                                 <Checkbox
                                     name="tagIds"
                                     value={tag.id}
-                                    defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false}
+                                    defaultChecked={
+                                        event
+                                            ? event.tags.map(tagItem => tagItem.name).includes(tag.name)
+                                            : false
+                                    }
                                 >
                                     <EventTag eventTag={tag} />
                                 </Checkbox>

@@ -1,6 +1,6 @@
 
 import ChannelSettings from './channelSettings'
-import { readNotificationChannelsAction } from '@/actions/notifications/channel/read'
+import { readNotificationChannelsAction } from '@/actions/notifications'
 import { readMailAliasesAction } from '@/actions/mail/alias/read'
 import { notFound } from 'next/navigation'
 
@@ -22,7 +22,7 @@ export default async function Channels({ params }: PropTypes) {
     }
 
     const currentId = Number((await params).currentId)
-    const selected = channels.data.find(c => c.id === currentId)
+    const selected = channels.data.find(channel => channel.id === currentId)
 
     if (!selected) {
         notFound()

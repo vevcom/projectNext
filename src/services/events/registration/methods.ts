@@ -1,13 +1,16 @@
 import { EventRegistrationAuthers } from './authers'
 import { EventRegistrationConfig } from './config'
+import { EventRegistrationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
+import { NotificationMethods } from '@/services/notifications/methods'
+import { UserConfig } from '@/services/users/config'
+import { sendSystemMail } from '@/services/notifications/email/send'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
-import { EventRegistrationSchemas } from './schemas'
 
 async function preValidateRegistration(
     prisma: Prisma.TransactionClient,
@@ -289,18 +292,108 @@ export namespace EventRegistrationMethods {
         }
     })
 
-    // TODO: Fix authing to make users be able to remove themselfes
-    // TODO: And make sure they cannot sign off after the registration period
-    // TODO: Send notification if someone is prompted from waiting list
     export const destroy = ServiceMethod({
         auther: () => EventRegistrationAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
-        method: async ({ prisma, params }) => await prisma.eventRegistration.delete({
-            where: {
-                id: params.registrationId,
-            },
-        }),
+        method: async ({ prisma, params, session }) => {
+            const isAdmin = session.permissions.includes('EVENT_ADMIN')
+            const registration = await prisma.eventRegistration.findUniqueOrThrow({
+                where: {
+                    id: params.registrationId,
+                },
+                select: {
+                    event: {
+                        include: {
+                            _count: {
+                                select: {
+                                    eventRegistrations: true,
+                                },
+                            },
+                            eventRegistrations: {
+                                select: {
+                                    id: true,
+                                },
+                            }
+                        }
+                    },
+                    userId: true,
+                },
+            })
+
+            if (!isAdmin && (session.user === null || registration.userId !== session.user.id)) {
+                throw new Smorekopp('UNAUTHORIZED', 'Kan ikke avregistrere andre.')
+            }
+
+            if (registration.event.registrationEnd < new Date() && !isAdmin) {
+                throw new Smorekopp(
+                    'BAD PARAMETERS',
+                    'Kan ikke avregistrere etter påmeldingsfristen. Ta kontakt med de som arrangerer.'
+                )
+            }
+
+            await prisma.eventRegistration.delete({
+                where: {
+                    id: params.registrationId,
+                },
+            })
+
+            // FIXME: there is potentially a race contidition,
+            // where a person is added to the waiting list,
+            // after the event was fetched, and before the registration was deleted.
+            // I this a OCC can be a solution, with a version number on the event.
+            if (registration.event._count.eventRegistrations <= registration.event.places ||
+                registration.event.eventRegistrations
+                    .map(reg => reg.id)
+                    .indexOf(params.registrationId) >= registration.event.places
+            ) {
+                return
+            }
+
+            const nextInLine = await prisma.eventRegistration.findFirst({
+                where: {
+                    eventId: registration.event.id,
+                },
+                skip: registration.event.places - 1,
+                orderBy: {
+                    id: 'asc',
+                },
+                include: {
+                    user: {
+                        select: UserConfig.filterSelection,
+                    },
+                    contact: true,
+                }
+            })
+
+            if (!nextInLine) return
+
+            const title = 'Opprykk fra venteliste ved Omegas nettsider'
+            const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
+
+            if (nextInLine.user) {
+                await NotificationMethods.createSpecial.newClient().execute({
+                    params: {
+                        special: 'EVENT_WAITINGLIST_PROMOTION',
+                    },
+                    data: {
+                        title,
+                        message,
+                        userIdList: [nextInLine.user.id],
+                    },
+                    bypassAuth: true,
+                    session,
+                })
+            }
+
+            if (nextInLine.contact && nextInLine.contact.email) {
+                await sendSystemMail(
+                    nextInLine.contact.email,
+                    title,
+                    message
+                )
+            }
+        }
     })
 }

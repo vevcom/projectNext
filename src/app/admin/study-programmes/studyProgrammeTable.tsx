@@ -17,21 +17,21 @@ export default function StudyProgrammeTableBody({
     canEdit: boolean,
 }) {
     return <tbody>
-        {studyprogrammes.map(s =>
+        {studyprogrammes.map(studyProgramme =>
             <tr key={uuid()}>
                 {canEdit && <td className={styles.editButtonWrapper}><PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
                     showButtonClass={styles.editButton}
                     PopUpKey={uuid()}
                 >
-                    <UpdateStudyProgrammeForm studyProgramme={s} />
+                    <UpdateStudyProgrammeForm studyProgramme={studyProgramme} />
                 </PopUp></td>}
-                <th>{s.name}</th>
-                <td>{s.code}</td>
-                <td>{s.insititueCode ?? ''}</td>
-                <td>{s.startYear ?? ''}</td>
-                <td>{s.yearsLength ?? ''}</td>
-                <td>{s.partOfOmega ? 'Ja' : 'Nei'}</td>
+                <th>{studyProgramme.name}</th>
+                <td>{studyProgramme.code}</td>
+                <td>{studyProgramme.insititueCode ?? ''}</td>
+                <td>{studyProgramme.startYear ?? ''}</td>
+                <td>{studyProgramme.yearsLength ?? ''}</td>
+                <td>{studyProgramme.partOfOmega ? 'Ja' : 'Nei'}</td>
             </tr>
         )}
     </tbody>

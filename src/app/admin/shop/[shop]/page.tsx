@@ -33,7 +33,7 @@ export default async function Shop({ params }: PropTypes) {
     const allProducts = unwrapActionReturn(await readProductsAction())
     let unconnectedProducts: Product[] = []
     if (allProducts) {
-        const existingProductIds = new Set(shopData.products.map(p => p.id))
+        const existingProductIds = new Set(shopData.products.map(product => product.id))
         unconnectedProducts = allProducts.filter(product => !existingProductIds.has(product.id))
     }
 

@@ -6,6 +6,7 @@ enum SpecialNotificationChannel {
   NEW_JOBAD
   NEW_OMEGAQUOTE
   EVENT_WAITINGLIST_PROMOTION
+  CABIN_BOOKING_CONFIRMATION
 }
 
 model NotificationChannel {
@@ -32,7 +33,7 @@ model NotificationChannel {
 model NotificationMethod {
   id          Int     @id @default(autoincrement())
   email       Boolean @default(false)
-  push        Boolean @default(false)
+  // push        Boolean @default(false)
   emailWeekly Boolean @default(false)
 
   channelDefault   NotificationChannel[]      @relation(name: "defaultMethods")

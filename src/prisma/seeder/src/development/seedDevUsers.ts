@@ -31,21 +31,21 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     const passwordHash = await hashAndEncryptPassword('password')
 
-    Promise.all(fn.map(async (f, i) => {
-        await Promise.all(ln.map(async (l, j) => {
+    Promise.all(fn.map(async (firstName, i) => {
+        await Promise.all(ln.map(async (lastName, j) => {
             await prisma.user.upsert({
                 where: {
-                    username: `${f}${i}${j}`
+                    username: `${firstName}${i}${j}`
                 },
                 update: {
 
                 },
                 create: {
-                    firstname: f,
-                    lastname: l,
+                    firstname: firstName,
+                    lastname: lastName,
                     email: uuid(),
-                    username: `${f}${i}${j}`,
-                    studentCard: `${f}-${i}-${j}`,
+                    username: `${firstName}${i}${j}`,
+                    studentCard: `${firstName}-${i}-${j}`,
                     credentials: {
                         create: {
                             passwordHash,

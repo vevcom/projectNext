@@ -28,22 +28,24 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
     })
 
     const userStudyProgrammeCodes = new Set(memberships
-        .map(m => m.group.studyProgramme?.code)
-        .filter(s => s) as string[]
+        .map(membership => membership.group.studyProgramme?.code)
+        .filter(studyCode => studyCode) as string[]
     )
 
-    const addStudyProgrammes = studyProgrammes.filter(s => !userStudyProgrammeCodes.has(s.code))
+    const addStudyProgrammes = studyProgrammes.filter(studyProg => !userStudyProgrammeCodes.has(studyProg.code))
 
-    const feideStudyProgrammesCodes = new Set(feideStudyProgrammes.map(f => f.code))
+    const feideStudyProgrammesCodes = new Set(
+        feideStudyProgrammes.map(feideStudyProgram => feideStudyProgram.code)
+    )
 
-    const updateStudyProgrammes = memberships.filter(m =>
-        m.group.studyProgramme?.insititueCode &&
-        feideStudyProgrammesCodes.has(m.group.studyProgramme?.insititueCode)
-    ).filter(m => m.order !== order)
+    const updateStudyProgrammes = memberships.filter(membership =>
+        membership.group.studyProgramme?.insititueCode &&
+        feideStudyProgrammesCodes.has(membership.group.studyProgramme?.insititueCode)
+    ).filter(membership => membership.order !== order)
 
     await prisma.membership.createMany({
-        data: addStudyProgrammes.map(s => ({
-            groupId: s.groupId,
+        data: addStudyProgrammes.map(studyProg => ({
+            groupId: studyProg.groupId,
             order,
             admin: false,
             active: true,
@@ -52,11 +54,11 @@ export async function updateUserStudyProgrammes(userId: number, accessToken: str
     })
 
     await prisma.membership.createMany({
-        data: updateStudyProgrammes.map(m => ({
-            groupId: m.groupId,
+        data: updateStudyProgrammes.map(membership => ({
+            groupId: membership.groupId,
             order,
-            admin: m.admin,
-            active: m.active,
+            admin: membership.admin,
+            active: membership.active,
             userId,
         }))
     })
