@@ -1,14 +1,14 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createQuote } from '@/services/omegaquotes/create'
 import { readQuotesPage } from '@/services/omegaquotes/read'
 import { createOmegaquotesValidation } from '@/services/omegaquotes/validation'
 import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateOmegaguotesTypes } from '@/services/omegaquotes/validation'
 import type { OmegaQuote } from '@prisma/client'
 

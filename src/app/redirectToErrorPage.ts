@@ -1,5 +1,5 @@
 import { errorCodes } from '@/services/error'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { ErrorCode } from '@/services/error'
 
 /**

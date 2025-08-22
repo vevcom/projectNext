@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { createNews } from '@/services/news/create'
 import { destroyNews } from '@/services/news/destroy'
 import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'
@@ -11,7 +11,7 @@ import { NotificationMethods } from '@/services/notifications/methods'
 import type { CreateNewsArticleTypes, UpdateNewsArticleTypes } from '@/services/news/validation'
 import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 export async function createNewsAction(
     rawdata: FormData | CreateNewsArticleTypes['Type']

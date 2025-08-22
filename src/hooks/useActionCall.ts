@@ -1,7 +1,7 @@
 'use client'
-import { createActionError } from '@/actions/error'
+import { createActionError } from '@/services/actionError'
 import { useState, useEffect } from 'react'
-import type { ActionReturn, ActionReturnError } from '@/actions/Types'
+import type { ActionReturn, ActionReturnError } from '@/services/actionTypes'
 
 /**
  * You sometimes want to call a server action that reads from the client. This hook helps with that.

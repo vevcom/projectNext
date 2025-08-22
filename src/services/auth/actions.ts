@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { AuthMethods } from '@/services/auth/methods'
 
 export const verifyResetPasswordTokenAction = action(AuthMethods.verifyResetPasswordToken)

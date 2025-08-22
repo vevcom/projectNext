@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { readMailAliases } from '@/services/mail/alias/read'
 import {
@@ -23,7 +23,7 @@ import {
     createMailingListGroupValidation,
     createMailingListUserValidation } from '@/services/mail/validation'
 import type { MailListTypes } from '@/services/mail/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateAliasMailingListType,
     CreateMailingListExternalType,
     CreateMailingListGroupType,

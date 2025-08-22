@@ -7,7 +7,7 @@ import {
 } from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 import TextInput from '@/components/UI/TextInput'
 import SubmitButton from '@/components/UI/SubmitButton'
 import { useEffect, useState } from 'react'

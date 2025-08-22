@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { CabinBookingMethods } from '@/services/cabin/booking/methods'
 import { CabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
 import { CabinProductMethods } from '@/services/cabin/product/methods'

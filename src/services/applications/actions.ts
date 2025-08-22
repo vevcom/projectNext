@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { ApplicationMethods } from '@/services/applications/methods'
 
 export const createApplicationAction = action(ApplicationMethods.create)

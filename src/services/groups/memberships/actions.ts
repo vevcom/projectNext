@@ -1,13 +1,13 @@
 'use server'
 
-import { createActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'
 import { updateMembership } from '@/services/groups/memberships/update'
 import type { ExpandedMembership } from '@/services/groups/memberships/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 /**
  * WARNING: This action will lead to error if used with group types not in CanEasalyManageMembership

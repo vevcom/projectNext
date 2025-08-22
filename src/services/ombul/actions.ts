@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createOmbul } from '@/services/ombul/create'
 import { destroyOmbul } from '@/services/ombul/destroy'
@@ -9,7 +9,7 @@ import { readLatestOmbul, readOmbul, readOmbuls } from '@/services/ombul/read'
 import { updateOmbul, updateOmbulFile } from '@/services/ombul/update'
 import { createOmbulValidation, updateOmbulFileValidation, updateOmbulValidation } from '@/services/ombul/validation'
 import type { ExpandedOmbul } from '@/services/ombul/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateOmbulTypes, UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/services/ombul/validation'
 import type { Ombul } from '@prisma/client'
 

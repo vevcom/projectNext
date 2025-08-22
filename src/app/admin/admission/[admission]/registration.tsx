@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './registration.module.scss'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 import { createAdmissionTrialAction } from '@/actions/admission/create'
 import Form from '@/components/Form/Form'
 import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'

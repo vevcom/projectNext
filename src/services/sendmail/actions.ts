@@ -1,11 +1,11 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { sendMail as transportSendMail } from '@/services/notifications/email/send'
 import { sendEmailValidation } from '@/services/notifications/email/validation'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 export default async function sendMail(rawdata: FormData): Promise<ActionReturn<void>> {
     const { authorized, status } = await getUser({

@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { GroupMethods } from '@/services/groups/methods'
 import { UserMethods } from '@/services/users/methods'
 

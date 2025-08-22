@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { LockerLocationMethods } from '@/services/lockers/locations/methods'
 import { LockerMethods } from '@/services/lockers/methods'
 import { LockerReservationMethods } from '@/services/lockers/reservations/methods'

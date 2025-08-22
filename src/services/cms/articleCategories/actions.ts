@@ -1,7 +1,7 @@
 'use server'
 
-import { createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { createArticleCategory } from '@/services/cms/articleCategories/create'
 import { destroyArticleCategory } from '@/services/cms/articleCategories/destroy'
 import { readArticleCategories, readArticleCategory } from '@/services/cms/articleCategories/read'
@@ -15,7 +15,7 @@ import type {
     ExpandedArticleCategoryWithCover,
     ExpandedArticleCategory,
 } from '@/cms/articleCategories/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateArticleCategoryTypes, UpdateArticleCategoryTypes } from '@/services/cms/articleCategories/validation'
 
 export async function createArticleCategoryAction(

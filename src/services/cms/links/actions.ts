@@ -1,13 +1,13 @@
 'use server'
 
-import { action } from '@/actions/action'
-import { createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { action } from '@/services/action'
+import { createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { createCmsLink } from '@/services/cms/links/create'
 import { readSpecialCmsLink } from '@/services/cms/links/read'
 import { updateCmsLink } from '@/services/cms/links/update'
 import { createCmsLinkValidation, updateCmsLinkValidation } from '@/services/cms/links/validation'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateCmsLinkTypes, UpdateCmsLinkTypes } from '@/services/cms/links/validation'
 import type { CmsLink } from '@prisma/client'
 

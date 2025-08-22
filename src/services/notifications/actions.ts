@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { NotificationChannelMethods } from '@/services/notifications/channel/methods'
 import { NotificationMethods } from '@/services/notifications/methods'
 import { NotificationSubscriptionMethods } from '@/services/notifications/subscription/methods'

@@ -1,13 +1,13 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createStudyProgramme } from '@/services/groups/studyProgrammes/create'
 import { readStudyProgrammes } from '@/services/groups/studyProgrammes/read'
 import { updateStudyProgramme } from '@/services/groups/studyProgrammes/update'
 import { createStudyProgrammeValidation, updateStudyProgrammeValidation } from '@/services/groups/studyProgrammes/validation'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { StudyProgramme } from '@prisma/client'
 
 export async function createStudyProgrammeAction(rawdata: FormData): Promise<ActionReturn<StudyProgramme>> {

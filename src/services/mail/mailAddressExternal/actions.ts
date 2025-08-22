@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createMailAddressExternal } from '@/services/mail/mailAddressExternal/create'
 import { destroyMailAddressExternal } from '@/services/mail/mailAddressExternal/destroy'
@@ -11,7 +11,7 @@ import {
     readMailAddressExternalValidation,
     updateMailAddressExternalValidation,
 } from '@/services/mail/mailAddressExternal/validation'
-import type { ActionReturn } from '@/actions//Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { MailAddressExternal } from '@prisma/client'
 
 export async function createMailAddressExternalAction(rawdata: FormData):

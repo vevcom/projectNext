@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
@@ -21,7 +21,7 @@ import type { ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn } from '@/services/images/collections/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { ImageCollection } from '@prisma/client'
 
 export async function createImageCollectionAction(

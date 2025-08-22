@@ -9,7 +9,7 @@ import EventRegistrationDetailedPagingProvider, {
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 import { EventRegistrationConfig } from '@/services/events/registration/config'
 import ContactCard from '@/components/User/ContactCard'

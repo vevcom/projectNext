@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createPage } from '@/services/screens/pages/create'
 import { destroyPage } from '@/services/screens/pages/destroy'
@@ -11,7 +11,7 @@ import { updatePageValidation } from '@/services/screens/pages/validation'
 import { createScreenValidation } from '@/services/screens/validation'
 import type { UpdatePageTypes } from '@/services/screens/pages/validation'
 import type { ExpandedScreenPage } from '@/services/screens/pages/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateScreenTypes } from '@/services/screens/validation'
 import type { ScreenPage } from '@prisma/client'
 

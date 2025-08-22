@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 import { Session } from '@/auth/Session'
 import { createScreen } from '@/services/screens/create'
@@ -10,7 +10,7 @@ import { readScreen, readScreens } from '@/services/screens/read'
 import { movePageInScreen, updateScreen } from '@/services/screens/update'
 import { createScreenValidation, updateScreenValidation } from '@/services/screens/validation'
 import type { ScreenPageMoveDirection } from '@/services/screens/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateScreenTypes, UpdateScreenTypes } from '@/services/screens/validation'
 import type { Screen } from '@prisma/client'
 

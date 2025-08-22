@@ -4,7 +4,7 @@ import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 

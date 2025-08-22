@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { createCmsImage } from '@/services/cms/images/create'
 import { readCmsImage, readSpecialCmsImage } from '@/services/cms/images/read'
 import { updateCmsImage, updateCmsImageConfig } from '@/services/cms/images/update'
@@ -9,7 +9,7 @@ import { baseCmsImageValidation } from '@/services/cms/images/validation'
 import { SpecialCmsImage } from '@prisma/client'
 import type { ValidationTypes } from '@/services/Validation'
 import type { ExpandedCmsImage } from '@/services/cms/images/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CmsImage, Image, ImageSize } from '@prisma/client'
 
 export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({

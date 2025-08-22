@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/actions/action'
+import { action } from '@/services/action'
 import { EventRegistrationMethods } from '@/services/events/registration/methods'
 
 export const createEventRegistrationAction = action(EventRegistrationMethods.create)

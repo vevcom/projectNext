@@ -9,7 +9,7 @@ import {
     destroyMailingListUserRelationAction
 } from '@/actions/mail/destroy'
 import { useUser } from '@/auth/useUser'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { MailFlowObject, MailListTypes } from '@/services/mail/Types'
 
 type DestroyFunction = null | ((id: number) => Promise<ActionReturn<null>>)

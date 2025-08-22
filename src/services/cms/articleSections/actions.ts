@@ -1,14 +1,14 @@
 'use server'
 
-import { createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { createArticleSection } from '@/services/cms/articleSections/create'
 import { destroyArticleSection } from '@/services/cms/articleSections/destroy'
 import { readArticleSection } from '@/services/cms/articleSections/read'
 import { addArticleSectionPart, removeArticleSectionPart, updateArticleSection } from '@/services/cms/articleSections/update'
 import { createArticleSectionValidation } from '@/services/cms/articleSections/validation'
 import type { ArticleSectionPart, ExpandedArticleSection } from '@/cms/articleSections/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateArticleSectionTypes } from '@/services/cms/articleSections/validation'
 import type { ArticleSection, Position } from '@prisma/client'
 

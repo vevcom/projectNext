@@ -10,7 +10,7 @@ import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
 import { ImageConfig } from '@/services/images/config'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 type PropTypes = {
     collectionId: number

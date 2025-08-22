@@ -2,10 +2,10 @@
 
 import MailListItem from './mailListItem'
 import styles from './mailList.module.scss'
-import { createActionError } from '@/actions/error'
+import { createActionError } from '@/services/actionError'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'

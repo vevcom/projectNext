@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuid } from 'uuid'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
 
 export default function MailListItem({

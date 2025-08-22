@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createMailAlias } from '@/services/mail/alias/create'
 import { destroyMailAlias } from '@/services/mail/alias/destroy'
@@ -12,7 +12,7 @@ import {
     destoryMailAliasValidation,
     updateMailAliasValidation,
 } from '@/services/mail/alias/validation'
-import type { ActionReturn } from '@/actions//Types'
+import type { ActionReturn } from '@/services/actionTypes'
 import type { MailAlias } from '@prisma/client'
 
 export async function createMailAliasAction(rawdata: FormData):

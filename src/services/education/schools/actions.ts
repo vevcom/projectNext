@@ -1,7 +1,7 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
+import { createActionError, createZodActionError } from '@/services/actionError'
+import { safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createSchoolValidation, updateSchoolValidation } from '@/education/schools/validation'
 import { createSchool } from '@/services/education/schools/create'
@@ -11,7 +11,7 @@ import { updateSchool } from '@/services/education/schools/update'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 export async function createSchoolAction(
     rawdata: FormData | CreateSchoolTypes['Type']

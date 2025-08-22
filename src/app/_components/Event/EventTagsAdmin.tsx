@@ -9,7 +9,7 @@ import ColorInput from '@/UI/ColorInput'
 import { updateEventTagAction } from '@/actions/events/tags/update'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { destroyEventTagAction } from '@/actions/events/tags/destroy'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
 
