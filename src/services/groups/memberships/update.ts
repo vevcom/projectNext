@@ -20,7 +20,6 @@ export async function updateMembership({
     const order = (orderArg && typeof orderArg === 'number') ? orderArg : (
         await GroupMethods.readCurrentGroupOrder({
             bypassAuth: true,
-            session: null,
             params: {
                 id: groupId
             }

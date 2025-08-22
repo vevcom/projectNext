@@ -79,7 +79,6 @@ export namespace ApiKeyMethods {
                 ...apiKey,
                 ...await updateIfExpired({
                     params: apiKey,
-                    session: null,
                     bypassAuth: true,
                 })
             }
@@ -100,7 +99,6 @@ export namespace ApiKeyMethods {
                 ...apiKey,
                 ...await updateIfExpired({
                     params: apiKey,
-                    session: null,
                     bypassAuth: true,
                 })
             })))
@@ -127,7 +125,6 @@ export namespace ApiKeyMethods {
                 ...apiKey,
                 ...await updateIfExpired({
                     params: apiKey,
-                    session: null,
                     bypassAuth: true,
                 }),
             }

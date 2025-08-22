@@ -1,14 +1,17 @@
 'use server'
 
-import type { ActionReturn } from '@/actions//Types'
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { getUser } from '@/auth/getUser'
 import { createMailingList } from '@/services/mail/list/create'
 import { destroyMailingList } from '@/services/mail/list/destroy'
 import { updateMailingList } from '@/services/mail/list/update'
-import { createMailingListValidation, readMailingListValidation, updateMailingListValidation } from '@/services/mail/list/validation'
+import {
+    createMailingListValidation,
+    readMailingListValidation,
+    updateMailingListValidation
+} from '@/services/mail/list/validation'
+import type { ActionReturn } from '@/actions//Types'
 import type { MailingList } from '@prisma/client'
 
 export async function createMailingListAction(rawdata: FormData):

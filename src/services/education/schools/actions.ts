@@ -2,16 +2,16 @@
 
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { getUser } from '@/auth/getUser'
-import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
 import { createSchoolValidation, updateSchoolValidation } from '@/education/schools/validation'
-import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
-import type { ReadPageInput } from '@/lib/paging/Types'
 import { createSchool } from '@/services/education/schools/create'
 import { destroySchool } from '@/services/education/schools/destroy'
 import { readSchool, readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
 import { updateSchool } from '@/services/education/schools/update'
+import type { ReadPageInput } from '@/lib/paging/Types'
+import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
+import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function createSchoolAction(
     rawdata: FormData | CreateSchoolTypes['Type']

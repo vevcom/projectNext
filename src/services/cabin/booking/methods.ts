@@ -185,7 +185,7 @@ export namespace CabinBookingMethods {
                 }
             })
 
-            await NotificationMethods.createSpecial.client(prisma).execute({
+            await NotificationMethods.createSpecial({
                 params: {
                     special: 'CABIN_BOOKING_CONFIRMATION',
                 },
@@ -193,7 +193,6 @@ export namespace CabinBookingMethods {
                     ...mailData,
                     userIdList: [params.userId],
                 },
-                session,
                 bypassAuth: true,
             })
         }

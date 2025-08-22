@@ -2,14 +2,14 @@
 
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
 import { GroupTypesConfig } from '@/services/groups/config'
 import { GroupMethods } from '@/services/groups/methods'
-import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import { PurposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { readVisibilityCollapsed } from '@/services/visibility/read'
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
+import type { ActionReturn } from '@/actions/Types'
 import type { GroupMatrix, VisibilityLevelType } from '@/services/visibility/Types'
 import type { GroupType } from '@prisma/client'
 

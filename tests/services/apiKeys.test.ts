@@ -63,7 +63,6 @@ describe('api keys', () => {
             data: {
                 name: 'Min api nøkkel',
             },
-            session: null,
         })
         expect(createdApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
         expect(await prisma.apiKey.count()).toEqual(0)
@@ -72,7 +71,6 @@ describe('api keys', () => {
             params: {
                 id: 1,
             },
-            session: null,
         })
         expect(readApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
@@ -83,7 +81,6 @@ describe('api keys', () => {
             data: {
                 permissions: ['APIKEY_ADMIN'],
             },
-            session: null,
         })
         expect(updateApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
     })

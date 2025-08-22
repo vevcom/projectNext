@@ -93,7 +93,6 @@ export async function getUser({
     const {
         user = null,
         permissions = await PermissionMethods.readDefaultPermissions({
-            session: null,
             bypassAuth: true,
         }),
         memberships = [],

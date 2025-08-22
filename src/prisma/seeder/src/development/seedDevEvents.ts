@@ -19,7 +19,6 @@ export default async function seedDevEvents(prisma: PrismaClient) {
 
     const bedpres = await EventMethods.create({
         prisma,
-        session: null,
         bypassAuth: true,
         data: {
             name: 'Bedpres med Kongsberg',
@@ -40,7 +39,6 @@ export default async function seedDevEvents(prisma: PrismaClient) {
 
     await EventMethods.create({
         prisma,
-        session: null,
         bypassAuth: true,
         data: {
             name: 'Stresset eksamenslesing',

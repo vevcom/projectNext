@@ -36,7 +36,6 @@ export async function createQuote(
             title: 'Ny Omegaquote♪',
             message: `${results.quote}\n - ${results.author}`,
         },
-        session: null,
         bypassAuth: true,
     })
 

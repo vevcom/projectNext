@@ -24,7 +24,6 @@ export namespace CommitteeMethods {
         method: async ({ prisma, params }) => {
             const defaultImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                session: null,
                 bypassAuth: true
             })
 

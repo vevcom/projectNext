@@ -2,36 +2,36 @@
 
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { getUser } from '@/auth/getUser'
 import { readMailAliases } from '@/services/mail/alias/read'
-import { 
-    createAliasMailingListRelation, 
-    createMailingListExternalRelation, 
-    createMailingListGroupRelation, 
+import {
+    createAliasMailingListRelation,
+    createMailingListExternalRelation,
+    createMailingListGroupRelation,
     createMailingListUserRelation } from '@/services/mail/create'
-import { 
-    destroyAliasMailingListRelation, 
-    destroyMailingListExternalRelation, 
-    destroyMailingListGroupRelation, 
+import {
+    destroyAliasMailingListRelation,
+    destroyMailingListExternalRelation,
+    destroyMailingListGroupRelation,
     destroyMailingListUserRelation } from '@/services/mail/destroy'
 import { readMailingLists } from '@/services/mail/list/read'
 import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
 import { readMailTraversal } from '@/services/mail/read'
-import type { MailListTypes } from '@/services/mail/Types'
-import { 
-    createAliasMailingListValidation, 
-    createMailingListExternalValidation, 
-    createMailingListGroupValidation, 
+import {
+    createAliasMailingListValidation,
+    createMailingListExternalValidation,
+    createMailingListGroupValidation,
     createMailingListUserValidation } from '@/services/mail/validation'
-import type { CreateAliasMailingListType, 
-    CreateMailingListExternalType, 
-    CreateMailingListGroupType, 
+import type { MailListTypes } from '@/services/mail/Types'
+import type { ActionReturn } from '@/actions/Types'
+import type { CreateAliasMailingListType,
+    CreateMailingListExternalType,
+    CreateMailingListGroupType,
     CreateMailingListUserType } from '@/services/mail/validation'
 import type { UserFiltered } from '@/services/users/Types'
-import type { MailAliasMailingList, 
-    MailingListGroup, 
-    MailingListMailAddressExternal, 
+import type { MailAliasMailingList,
+    MailingListGroup,
+    MailingListMailAddressExternal,
     MailingListUser, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
 
 export async function createAliasMailingListRelationAction(formdata: FormData):

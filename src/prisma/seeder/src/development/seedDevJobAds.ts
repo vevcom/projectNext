@@ -58,7 +58,6 @@ export default async function seedDevJobAds(prisma: PrismaClient) {
                 companyId: 1,
             },
             bypassAuth: true,
-            session: null,
         })
 
         await prisma.article.update({

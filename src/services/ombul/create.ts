@@ -52,7 +52,6 @@ export async function createOmbul(
             alt: `cover of ${config.name}`,
             file: cover,
         },
-        session: null
     })
 
     const cmsCoverImage = await createCmsImage({ name: fsLocation }, coverImage)

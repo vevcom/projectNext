@@ -1,10 +1,10 @@
 'use server'
 
 import { createActionError } from '@/actions/error'
-import type { ActionReturn } from '@/actions/Types'
 import { getUser } from '@/auth/getUser'
 import { ServerError } from '@/services/error'
 import { generateOmegaId } from '@/services/omegaid/generate'
+import type { ActionReturn } from '@/actions/Types'
 
 export async function generateOmegaIdAction(): Promise<ActionReturn<string>> {
     const { user, authorized, status } = await getUser({

@@ -72,7 +72,6 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         const {
             user = null,
             permissions = await PermissionMethods.readDefaultPermissions({
-                session: null,
                 bypassAuth: true,
             }),
             memberships = [],
@@ -88,7 +87,6 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
      */
     public static async fromApiKey(keyAndIdEncoded: string | null): Promise<Session<'NO_USER'>> {
         const defaultPermissions = await PermissionMethods.readDefaultPermissions({
-            session: null,
             bypassAuth: true,
         })
         if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
@@ -100,7 +98,6 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
 
         try {
             apiKeyFetch = await ApiKeyMethods.readWithHash({
-                session: null,
                 bypassAuth: true,
                 params: { id }
             })

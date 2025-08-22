@@ -78,7 +78,6 @@ export namespace InterestGroupMethods {
             groupId: (
                 await read({
                     params: { id: params.id },
-                    session: null,
                     bypassAuth: true,
                 })
             ).groupId,

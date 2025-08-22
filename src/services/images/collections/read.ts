@@ -72,7 +72,6 @@ export async function readImageCollectionsPage<const PageSize extends number>(
         params: {
             special: 'DEFAULT_IMAGE_COLLECTION_COVER'
         },
-        session: null //TODO: pass session
     })
 
     const chooseCoverImage = (collection: {

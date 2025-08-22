@@ -27,7 +27,6 @@ export namespace LockerReservationMethods {
             // Verify that user is in group
             if (data.groupId) {
                 const groupUsers = await GroupMethods.readUsersOfGroups({
-                    session: null,
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]

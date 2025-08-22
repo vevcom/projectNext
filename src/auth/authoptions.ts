@@ -129,7 +129,6 @@ export const authOptions: AuthOptions = {
                 case undefined: {
                     const dbUser = await UserMethods.read({
                         params: { id: token.user.id },
-                        session: null,
                         bypassAuth: true,
                     })
 
@@ -167,12 +166,10 @@ export const authOptions: AuthOptions = {
                 provider,
                 user: await UserMethods.read({
                     params: { id: userId },
-                    session: null,
                     bypassAuth: true,
                 }),
                 permissions: await PermissionMethods.readPermissionsOfUser({
                     bypassAuth: true,
-                    session: null,
                     params: {
                         userId,
                     }

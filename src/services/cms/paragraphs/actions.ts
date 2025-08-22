@@ -2,14 +2,21 @@
 
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCmsParagraph, readSpecialCmsParagraph } from '@/services/cms/paragraphs/read'
 import { updateCmsParagraphContents } from '@/services/cms/paragraphs/update'
 import { baseCmsParagraphValidation } from '@/services/cms/paragraphs/validation'
-import type { ValidationTypes } from '@/services/Validation'
 import { SpecialCmsParagraph } from '@prisma/client'
+import type { ValidationTypes } from '@/services/Validation'
+import type { ActionReturn } from '@/actions/Types'
 import type { CmsParagraph } from '@prisma/client'
+
+export const createCmsParagraphActionValidation = baseCmsParagraphValidation.createValidation({
+    keys: ['name'],
+    transformer: data => data
+})
+
+export type CreateCmsParagraphActionTypes = ValidationTypes<typeof createCmsParagraphActionValidation>
 
 export async function createCmsParagraphAction(
     rawData: FormData | CreateCmsParagraphActionTypes['Type']
@@ -52,10 +59,3 @@ export async function updateCmsParagraphAction(id: number, contentMd: string): P
     //TODO: Auth on visibility
     return await safeServerCall(() => updateCmsParagraphContents(id, contentMd))
 }
-
-export const createCmsParagraphActionValidation = baseCmsParagraphValidation.createValidation({
-    keys: ['name'],
-    transformer: data => data
-})
-
-export type CreateCmsParagraphActionTypes = ValidationTypes<typeof createCmsParagraphActionValidation>

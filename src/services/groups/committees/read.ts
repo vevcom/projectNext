@@ -92,7 +92,6 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
 export async function readCommitteeMembers(shortName: string) {
     const defaultImage = await ImageMethods.readSpecial({
         params: { special: 'DEFAULT_PROFILE_IMAGE' },
-        session: null,
         bypassAuth: true
     })
 

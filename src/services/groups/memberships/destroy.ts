@@ -21,7 +21,6 @@ export async function destoryMembershipOfUser({
     }
     const order = orderArg ?? await GroupMethods.readCurrentGroupOrder({
         bypassAuth: true,
-        session: null,
         params: {
             id: groupId
         }
@@ -49,7 +48,6 @@ export async function destroyMembershipOfUsers(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
     const order = orderArg ?? await GroupMethods.readCurrentGroupOrder({
-        session: null,
         bypassAuth: true,
         params: {
             id: groupId,

@@ -43,7 +43,6 @@ afterEach(async () => {
             params: {
                 id: jobAd.id
             },
-            session: null,
             bypassAuth: true,
         })
     ))
@@ -80,7 +79,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 
@@ -92,7 +90,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 
@@ -110,7 +107,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 
@@ -130,7 +126,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 
@@ -156,7 +151,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 
@@ -171,7 +165,6 @@ describe('job ads', () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
         const createRes = await JobadMethods.create({
             data: CREATE_JOB_AD,
-            session: null,
             bypassAuth: true
         })
 

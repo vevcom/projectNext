@@ -107,7 +107,6 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
 
             const user = await UserMethods.readOrNull({
                 params: { id: Number(id) },
-                session: null,
                 bypassAuth: true,
             })
 
@@ -119,7 +118,6 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
             console.log(email)
             const user = await UserMethods.readOrNull({
                 params: { email },
-                session: null,
                 bypassAuth: true,
             })
 

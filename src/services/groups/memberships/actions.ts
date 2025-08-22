@@ -2,12 +2,12 @@
 
 import { createActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
 import { getUser } from '@/auth/getUser'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'
-import type { ExpandedMembership } from '@/services/groups/memberships/Types'
 import { updateMembership } from '@/services/groups/memberships/update'
+import type { ExpandedMembership } from '@/services/groups/memberships/Types'
+import type { ActionReturn } from '@/actions/Types'
 
 /**
  * WARNING: This action will lead to error if used with group types not in CanEasalyManageMembership

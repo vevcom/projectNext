@@ -33,7 +33,6 @@ export namespace AuthMethods {
                 params: {
                     id: userId,
                 },
-                session: null,
                 bypassAuth: true,
             })
 

@@ -2,16 +2,22 @@
 
 import { createActionError, createZodActionError } from '@/actions/error'
 import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
-import type { ExpandedCmsImage } from '@/cms/images/Types'
 import { createCmsImage } from '@/services/cms/images/create'
 import { readCmsImage, readSpecialCmsImage } from '@/services/cms/images/read'
-import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 import { updateCmsImage, updateCmsImageConfig } from '@/services/cms/images/update'
 import { baseCmsImageValidation } from '@/services/cms/images/validation'
-import type { ValidationTypes } from '@/services/Validation'
 import { SpecialCmsImage } from '@prisma/client'
+import type { ValidationTypes } from '@/services/Validation'
+import type { ExpandedCmsImage } from '@/services/cms/images/Types'
+import type { ActionReturn } from '@/actions/Types'
 import type { CmsImage, Image, ImageSize } from '@prisma/client'
+
+export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({
+    keys: ['name'],
+    transformer: data => data,
+})
+
+export type CreateCmsImageActionTypes = ValidationTypes<typeof createCmsImageActionValidation>
 
 export async function createCmsImageAction(
     rawData: FormData | CreateCmsImageActionTypes['Type'],
@@ -71,9 +77,3 @@ export async function updateCmsImageConfigAction(
     //TODO: Auth on visibility (or permission if special)
     return await safeServerCall(() => updateCmsImageConfig(cmsImageId, config))
 }
-
-export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({
-    keys: ['name'],
-    transformer: data => data,
-})
-export type CreateCmsImageActionTypes = ValidationTypes<typeof createCmsImageActionValidation>
