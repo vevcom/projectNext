@@ -5,12 +5,12 @@ import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
-import { updateComanyAction } from '@/actions/career/companies/update'
-import { destroyCompanyAction } from '@/actions/career/companies/destroy'
 import { bindParams } from '@/services/actionBind'
 import { CompanyAuthers } from '@/services/career/companies/authers'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
+import { destroyCompanyAction } from '@/actions/career/companies/destroy'
+import { updateComanyAction } from '@/actions/career/companies/update'
 
 type PropTypes = {
     company: CompanyExpanded,

@@ -1,7 +1,6 @@
 'use server'
 
-import { createZodActionError } from '@/services/actionError'
-import { safeServerCall } from '@/services/actionError'
+import { createZodActionError, safeServerCall } from '@/services/actionError'
 import { createArticle } from '@/services/cms/articles/create'
 import { destroyArticle } from '@/services/cms/articles/destroy'
 import { readArticle } from '@/services/cms/articles/read'

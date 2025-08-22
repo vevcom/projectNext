@@ -1,7 +1,6 @@
 
 import styles from './page.module.scss'
 import EditJobAd from './EditJobAd'
-import { readJobAdAction } from '@/actions/career/jobAds/read'
 import Article from '@/components/Cms/Article/Article'
 import CompanySelectionProvider from '@/contexts/CompanySelection'
 import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
@@ -19,6 +18,7 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
+import { readJobAdAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {
     params: Promise<{

@@ -1,8 +1,8 @@
 'use server'
 import NotificationSettings from './notificationSettings'
-import { readNotificationChannelsAction, readNotificationSubscriptionsAction } from '@/actions/notifications'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import type { PropTypes } from '@/app/users/[username]/page'
+import { readNotificationChannelsAction, readNotificationSubscriptionsAction } from '@/actions/notifications'
 
 export default async function Notififcations({ params }: PropTypes) {
     const { profile } = await getProfileForAdmin(await params, 'notifications')

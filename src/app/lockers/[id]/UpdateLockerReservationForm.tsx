@@ -1,5 +1,4 @@
 'use client'
-import { updateLockerReservationAction } from '@/actions/lockers/reservations'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
@@ -7,6 +6,7 @@ import Checkbox from '@/components/UI/Checkbox'
 import { bindParams } from '@/services/actionBind'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { updateLockerReservationAction } from '@/actions/lockers/reservations'
 
 type PropTypes = {
     reservationId: number,

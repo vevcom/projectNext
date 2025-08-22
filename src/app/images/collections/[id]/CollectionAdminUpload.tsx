@@ -1,7 +1,6 @@
 'use client'
 import styles from './CollectionAdminUpload.module.scss'
 import Dropzone from '@/components/UI/Dropzone'
-import { createImagesAction } from '@/actions/images/create'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
@@ -11,6 +10,7 @@ import { ImageConfig } from '@/services/images/config'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/services/actionTypes'
+import { createImagesAction } from '@/actions/images/create'
 
 type PropTypes = {
     collectionId: number

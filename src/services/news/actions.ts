@@ -1,7 +1,6 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/services/actionError'
-import { safeServerCall } from '@/services/actionError'
+import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { createNews } from '@/services/news/create'
 import { destroyNews } from '@/services/news/destroy'
 import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'

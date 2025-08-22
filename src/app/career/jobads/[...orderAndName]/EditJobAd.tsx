@@ -2,8 +2,6 @@
 import styles from './EditJobAd.module.scss'
 import SelectedCompany from '@/career/jobads/SelectedCompany'
 import Form from '@/components/Form/Form'
-import { updateJobAdAction } from '@/career/jobAds/update'
-import { destroyJobAdAction } from '@/career/jobAds/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
@@ -17,6 +15,8 @@ import { JobAdConfig } from '@/services/career/jobAds/config'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/career/jobAds/Types'
+import { destroyJobAdAction } from '@/career/jobAds/destroy'
+import { updateJobAdAction } from '@/career/jobAds/update'
 
 type PropTypes = {
     jobAd: ExpandedJobAd

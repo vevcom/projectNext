@@ -1,7 +1,6 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/services/actionError'
-import { safeServerCall } from '@/services/actionError'
+import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createStudyProgramme } from '@/services/groups/studyProgrammes/create'
 import { readStudyProgrammes } from '@/services/groups/studyProgrammes/read'

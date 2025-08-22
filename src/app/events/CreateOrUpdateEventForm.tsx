@@ -8,14 +8,14 @@ import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { EventConfig } from '@/services/events/config'
-import { updateEventAction } from '@/actions/events/update'
-import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
 import { bindParams } from '@/services/actionBind'
 import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
+import { createEventAction } from '@/actions/events/create'
+import { updateEventAction } from '@/actions/events/update'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }

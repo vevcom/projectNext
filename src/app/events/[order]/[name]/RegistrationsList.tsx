@@ -10,12 +10,12 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/services/actionBind'
-import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 import { EventRegistrationConfig } from '@/services/events/registration/config'
 import ContactCard from '@/components/User/ContactCard'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { EventFiltered } from '@/services/events/Types'
+import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 
 function DetailedTable({
     event,

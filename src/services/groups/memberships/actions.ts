@@ -1,7 +1,6 @@
 'use server'
 
-import { createActionError } from '@/services/actionError'
-import { safeServerCall } from '@/services/actionError'
+import { createActionError, safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'

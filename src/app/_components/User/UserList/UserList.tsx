@@ -5,7 +5,6 @@ import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
 import useActionCall from '@/hooks/useActionCall'
-import { readGroupsForPageFilteringAction } from '@/actions/users/read'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext, useEffect, useState } from 'react'
@@ -15,6 +14,7 @@ import type { UserPagingReturn } from '@/services/users/Types'
 import type { ChangeEvent, ReactNode } from 'react'
 import type { GroupType } from '@prisma/client'
 import type { ExpandedGroup } from '@/services/groups/Types'
+import { readGroupsForPageFilteringAction } from '@/actions/users/read'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 

@@ -1,8 +1,6 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
-import { readUserProfileAction } from '@/actions/users/read'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
@@ -15,6 +13,8 @@ import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
+import { readUserProfileAction } from '@/actions/users/read'
+import { readSpecialImageAction } from '@/actions/images/read'
 
 export type PropTypes = {
     params: Promise<{

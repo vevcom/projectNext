@@ -1,12 +1,12 @@
 'use client'
 
-import { createStudyProgrammeAction } from '@/actions/groups/studyProgrammes/create'
-import { updateStudyProgrammeAction } from '@/actions/groups/studyProgrammes/update'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'
 import type { StudyProgramme } from '@prisma/client'
+import { updateStudyProgrammeAction } from '@/actions/groups/studyProgrammes/update'
+import { createStudyProgrammeAction } from '@/actions/groups/studyProgrammes/create'
 
 
 export default function UpdateStudyProgrammeForm({

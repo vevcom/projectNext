@@ -2,8 +2,7 @@ import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
 import { ParseError, Smorekopp } from '@/services/error'
 import type { AuthStatus } from '@/auth/getUser'
 import type { SafeParseError } from 'zod'
-import type { ActionReturnError } from './actionTypes'
-import type { ActionReturn } from './actionTypes'
+import type { ActionReturnError, ActionReturn } from './actionTypes'
 
 /**
  * @deprecated With the "new" service method system this should not be called directly.

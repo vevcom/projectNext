@@ -1,6 +1,5 @@
 'use client'
 import styles from './ManualRegistrationForm.module.scss'
-import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/actions/events/registration'
 import Form from '@/components/Form/Form'
 import UserList from '@/components/User/UserList/UserList'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
@@ -10,6 +9,7 @@ import { bindParams } from '@/services/actionBind'
 import { useContext } from 'react'
 import type { EventRegistration } from '@prisma/client'
 import type { ActionReturn } from '@/services/actionTypes'
+import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/actions/events/registration'
 
 function ManualRegistrationFormInner({
     eventId,

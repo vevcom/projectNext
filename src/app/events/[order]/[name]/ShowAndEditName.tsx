@@ -1,8 +1,8 @@
 'use client'
 import styles from './ShowAndEditName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateEventAction } from '@/actions/events/update'
 import type { Event } from '@prisma/client'
+import { updateEventAction } from '@/actions/events/update'
 
 type PropTypes = {
     event: Event

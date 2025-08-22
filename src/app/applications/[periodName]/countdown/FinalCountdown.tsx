@@ -1,7 +1,7 @@
 import styles from './FinalCountdown.module.scss'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 import useInterval from '@/hooks/useInterval'
 import { useEffect, useRef, useState } from 'react'
+import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 
 type PropTypes = {
     periodName: string

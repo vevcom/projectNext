@@ -1,7 +1,6 @@
 'use server'
 
-import { createActionError } from '@/services/actionError'
-import { safeServerCall } from '@/services/actionError'
+import { createActionError, safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
 import { GroupTypesConfig } from '@/services/groups/config'

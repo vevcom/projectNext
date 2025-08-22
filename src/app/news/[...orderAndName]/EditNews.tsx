@@ -1,8 +1,6 @@
 'use client'
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
-import { updateNewsAction } from '@/actions/news/update'
-import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
@@ -10,6 +8,8 @@ import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/Types'
 import type { ReactNode } from 'react'
+import { destroyNewsAction } from '@/actions/news/destroy'
+import { updateNewsAction } from '@/actions/news/update'
 
 type PropTypes = {
     news: ExpandedNewsArticle

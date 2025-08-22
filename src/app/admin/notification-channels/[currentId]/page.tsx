@@ -1,8 +1,8 @@
 
 import ChannelSettings from './channelSettings'
+import { notFound } from 'next/navigation'
 import { readNotificationChannelsAction } from '@/actions/notifications'
 import { readMailAliasesAction } from '@/actions/mail/alias/read'
-import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: Promise<{

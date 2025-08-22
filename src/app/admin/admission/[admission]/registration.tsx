@@ -2,11 +2,11 @@
 
 import styles from './registration.module.scss'
 import { bindParams } from '@/services/actionBind'
-import { createAdmissionTrialAction } from '@/actions/admission/create'
 import Form from '@/components/Form/Form'
 import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
 import TextInput from '@/components/UI/TextInput'
 import type { Admission } from '@prisma/client'
+import { createAdmissionTrialAction } from '@/actions/admission/create'
 
 
 export default function RegisterAdmissiontrial({
