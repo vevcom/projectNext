@@ -1,6 +1,6 @@
-import { createActionError, createZodActionError } from './error'
+import { createActionError, createZodActionError } from './actionError'
 import { ParseError, Smorekopp } from '@/services/error'
-import type { ActionReturn } from './Types'
+import type { ActionReturn } from './actionTypes'
 
 /**
  * A function that calls a server function. If all goes well, it returns a ActionReturn with the data.
