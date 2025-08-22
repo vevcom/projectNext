@@ -1,24 +1,15 @@
 'use server'
 
-import { createActionError, createZodActionError } from '@/actions/error'
-import { safeServerCall } from '@/actions/safeServerCall'
-import type { ActionReturn } from '@/actions/Types'
-import { getUser } from '@/auth/getUser'
-import { dispatchNotification } from '@/services/notifications/create'
-import { createNotificaionValidation } from '@/services/notifications/validation'
-import type { Notification } from '@prisma/client'
+import { action } from '@/actions/action'
+import { NotificationChannelMethods } from '@/services/notifications/channel/methods'
+import { NotificationMethods } from '@/services/notifications/methods'
+import { NotificationSubscriptionMethods } from '@/services/notifications/subscription/methods'
 
-export async function dispatchNotificationAction(formdata: FormData): Promise<ActionReturn<{
-    notification: Notification
-    recipients: number
-}>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['NOTIFICATION_CREATE']],
-    })
-    if (!authorized) return createActionError(status)
+export const createNotificationChannelAction = action(NotificationChannelMethods.create)
+export const updateNotificationChannelAction = action(NotificationChannelMethods.update)
+export const readNotificationChannelsAction = action(NotificationChannelMethods.readMany)
 
-    const parse = createNotificaionValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
+export const createNotificationAction = action(NotificationMethods.create)
 
-    return safeServerCall(() => dispatchNotification(parse.data))
-}
+export const readNotificationSubscriptionsAction = action(NotificationSubscriptionMethods.read)
+export const updateNotificationSubscriptionsAction = action(NotificationSubscriptionMethods.update)

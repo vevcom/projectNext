@@ -28,7 +28,7 @@ export async function createQuote(
         }
     }))
 
-    NotificationMethods.createSpecial.newClient().execute({
+    NotificationMethods.createSpecial({
         params: {
             special: 'NEW_OMEGAQUOTE',
         },

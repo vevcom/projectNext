@@ -71,7 +71,7 @@ export async function createOmbul(
         }
     }))
 
-    NotificationMethods.createSpecial.newClient().execute({
+    NotificationMethods.createSpecial({
         params: {
             special: 'NEW_OMBUL',
         },
@@ -79,7 +79,6 @@ export async function createOmbul(
             title: 'Ny ombul',
             message: `Ny ombul er ute! ${ombul.name}`,
         },
-        session: null,
         bypassAuth: true,
     })
 

@@ -11,7 +11,7 @@ import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/servi
 import { updateNews } from '@/services/news/update'
 import { createNewsArticleValidation, updateNewsArticleValidation } from '@/services/news/validation'
 import type { CreateNewsArticleTypes, UpdateNewsArticleTypes } from '@/services/news/validation'
-import { dispatchSpecialNotification } from '@/services/notifications/create'
+import { NotificationMethods } from '@/services/notifications/methods'
 
 export async function createNewsAction(
     rawdata: FormData | CreateNewsArticleTypes['Type']
@@ -68,11 +68,16 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    dispatchSpecialNotification(
-        'NEW_NEWS_ARTICLE',
-        'Nyhet🗞️: <En tittel her kanskje?>',
-        'Starten av artikkelen her kanskje?'
-    )
+    NotificationMethods.createSpecial({
+        params: {
+            special: 'NEW_NEWS_ARTICLE',
+        },
+        data: {
+            title: 'Ny nyhetsartikkel', // TODO: Add info about the article
+            message: 'En ny nyhetsartikkel er publisert',
+        },
+        bypassAuth: true,
+    })
 
     return createActionError('UNKNOWN ERROR', 'Not implemented')
 }

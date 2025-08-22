@@ -111,14 +111,14 @@ function expandOneLevel(
     //Handle all non standard groupings
     matrix.forEach(row => {
         const groups_ = row.reduce((acc, id) => {
-            const g = findGroupOfId(id, groups)
-            if (g) acc.push(g)
+            const group = findGroupOfId(id, groups)
+            if (group) acc.push(group)
             return acc
         }, [] as ExpandedGroup[])
         const nonStandardRequriment: VisibilityRequiermentForAdmin = {
             name: 'ekstra',
-            groups: groups_.map(g => ({
-                ...g,
+            groups: groups_.map(group => ({
+                ...group,
                 selected: true
             }))
         }

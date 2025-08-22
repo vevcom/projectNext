@@ -372,7 +372,7 @@ export namespace EventRegistrationMethods {
             const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
 
             if (nextInLine.user) {
-                await NotificationMethods.createSpecial.newClient().execute({
+                await NotificationMethods.createSpecial({
                     params: {
                         special: 'EVENT_WAITINGLIST_PROMOTION',
                     },
@@ -382,7 +382,6 @@ export namespace EventRegistrationMethods {
                         userIdList: [nextInLine.user.id],
                     },
                     bypassAuth: true,
-                    session,
                 })
             }
 
