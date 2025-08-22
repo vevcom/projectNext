@@ -1,0 +1,43 @@
+'use server'
+
+import { createActionError, createZodActionError } from '@/actions/error'
+import { safeServerCall } from '@/actions/safeServerCall'
+import type { ActionReturn } from '@/actions/Types'
+import { getUser } from '@/auth/getUser'
+import type { ReadPageInput } from '@/lib/paging/Types'
+import { createQuote } from '@/services/omegaquotes/create'
+import { readQuotesPage } from '@/services/omegaquotes/read'
+import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'
+import { createOmegaquotesValidation } from '@/services/omegaquotes/validation'
+import type { CreateOmegaguotesTypes } from '@/services/omegaquotes/validation'
+import type { OmegaQuote } from '@prisma/client'
+
+export async function createQuoteAction(
+    rawdata: FormData | CreateOmegaguotesTypes['Type']
+): Promise<ActionReturn<OmegaQuote>> {
+    const { user, status, authorized } = await getUser({
+        requiredPermissions: [['OMEGAQUOTES_WRITE']],
+        userRequired: true,
+    })
+    if (!authorized) return createActionError(status)
+
+    const parse = createOmegaquotesValidation.typeValidate(rawdata)
+    if (!parse.success) return createZodActionError(parse)
+    const data = parse.data
+
+    const results = await safeServerCall(() => createQuote(user.id, data))
+
+    return results
+}
+
+export async function readQuotesPageAction<const PageSize extends number>(
+    readPageInput: ReadPageInput<PageSize, OmegaquoteCursor>
+): Promise<ActionReturn<OmegaquoteFiltered[]>> {
+    //TODO:  REFACTOR when new permission system is working
+    const { status, authorized } = await getUser({
+        requiredPermissions: [['OMEGAQUOTES_READ']]
+    })
+    if (!authorized) return createActionError(status)
+
+    return await safeServerCall(() => readQuotesPage(readPageInput))
+}
