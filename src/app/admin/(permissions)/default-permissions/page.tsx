@@ -1,4 +1,4 @@
-import { updateDefaultPermissionsAction, readDefaultPermissionsAction } from '@/actions/permissions/index'
+import { updateDefaultPermissionsAction, readDefaultPermissionsAction } from '@/services/permissions/actions'
 import Form from '@/components/Form/Form'
 import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
 import React from 'react'

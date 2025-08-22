@@ -1,7 +1,7 @@
 'use client'
 import styles from './AddNews.module.scss'
 import Textarea from '@/components/UI/Textarea'
-import { createNewsAction } from '@/actions/news/create'
+import { createNewsAction } from '@/services/news/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { EditModeContext } from '@/contexts/EditMode'

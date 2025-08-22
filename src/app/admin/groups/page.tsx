@@ -1,8 +1,8 @@
 import styles from './page.module.scss'
 import GroupSelector from './GroupSelector'
 import { GroupTypeOrdering } from '@/services/groups/config'
+import { readGroupsStructuredAction } from '@/services/groups/actions'
 import { notFound } from 'next/navigation'
-import { readGroupsStructuredAction } from '@/actions/groups/read'
 
 /**
  * A page that displays memberships in all groups for admins

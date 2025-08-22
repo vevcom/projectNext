@@ -1,5 +1,5 @@
 'use client'
-import { createProductForShopAction, updateProductForShopAction } from '@/actions/shop/product'
+import { createProductForShopAction, updateProductForShopAction } from '@/services/shop/actions'
 import Form from '@/app/_components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import NumberInput from '@/app/_components/UI/NumberInput'

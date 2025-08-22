@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readCommitteeMembersAction } from '@/actions/groups/committees/read'
+import { readCommitteeMembersAction } from '@/services/groups/committees/actions'
 import UserCard from '@/components/User/UserCard'
 import type { PropTypes } from '@/app/committees/[shortName]/page'
 

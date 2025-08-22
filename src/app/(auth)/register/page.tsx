@@ -2,7 +2,7 @@ import RegistrationForm from './RegistrationForm'
 import { getUser } from '@/auth/getUser'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readUserAction } from '@/actions/users/read'
+import { readUserAction } from '@/services/users/actions'
 import { notFound, redirect } from 'next/navigation'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 

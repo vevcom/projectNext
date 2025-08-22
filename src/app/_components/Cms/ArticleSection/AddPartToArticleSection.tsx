@@ -1,6 +1,6 @@
 'use client'
 import styles from './AddPartToArticleSection.module.scss'
-import { addArticleSectionPartAction } from '@/cms/articleSections/update'
+import { addArticleSectionPartAction } from '@/cms/articleSections/actions'
 import AddParts from '@/cms/AddParts'
 import useEditing from '@/hooks/useEditing'
 import { useCallback } from 'react'

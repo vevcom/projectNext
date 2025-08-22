@@ -6,10 +6,10 @@ import NotificationMethodSelector from '@/components/NotificaionMethodSelector/N
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { bindParams } from '@/services/actionBind'
 import { NotificationConfig } from '@/services/notifications/config'
+import { createNotificationChannelAction } from '@/services/notifications/actions'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
-import { createNotificationChannelAction } from '@/actions/notifications'
 
 
 export default function AddNotificationChannel({

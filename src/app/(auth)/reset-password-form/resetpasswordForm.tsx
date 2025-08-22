@@ -1,5 +1,5 @@
 'use client'
-import { resetPasswordAction } from '@/actions/auth/auth'
+import { resetPasswordAction } from '@/services/auth/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 

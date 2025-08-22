@@ -3,14 +3,14 @@
 import MailList from './mailList'
 import styles from './MailFlow.module.scss'
 import { useUser } from '@/auth/useUser'
-import type { ActionReturn } from '@/services/actionTypes'
-import type { MailFlowObject, MailListTypes } from '@/services/mail/Types'
 import {
     destroyAliasMailingListRelationAction,
     destroyMailingListExternalRelationAction,
     destroyMailingListGroupRelationAction,
     destroyMailingListUserRelationAction
-} from '@/actions/mail/destroy'
+} from '@/services/mail/actions'
+import type { ActionReturn } from '@/services/actionTypes'
+import type { MailFlowObject, MailListTypes } from '@/services/mail/Types'
 
 type DestroyFunction = null | ((id: number) => Promise<ActionReturn<null>>)
 

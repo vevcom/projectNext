@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readCompanyPageAction } from '@/actions/career/companies/read'
+import { readCompanyPageAction } from '@/services/career/companies/actions'
 import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
 

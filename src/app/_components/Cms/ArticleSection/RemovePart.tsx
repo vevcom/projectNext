@@ -1,6 +1,6 @@
 'use client'
 import styles from './RemovePart.module.scss'
-import { removeArticleSectionPartAction } from '@/cms/articleSections/update'
+import { removeArticleSectionPartAction } from '@/cms/articleSections/actions'
 import Form from '@/components/Form/Form'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useEditing from '@/hooks/useEditing'

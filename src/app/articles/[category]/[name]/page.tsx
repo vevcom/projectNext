@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import Article from '@/cms/Article/Article'
-import { readArticleAction } from '@/cms/articles/read'
+import { readArticleAction } from '@/cms/articles/actions'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {

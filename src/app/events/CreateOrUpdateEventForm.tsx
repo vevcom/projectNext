@@ -11,11 +11,10 @@ import { EventConfig } from '@/services/events/config'
 import EventTag from '@/components/Event/EventTag'
 import { bindParams } from '@/services/actionBind'
 import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
+import { createEventAction, updateEventAction } from '@/services/events/actions'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
-import { createEventAction } from '@/actions/events/create'
-import { updateEventAction } from '@/actions/events/update'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }

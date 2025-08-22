@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readSchoolsPageAction } from '@/education/schools/read'
+import { readSchoolsPageAction } from '@/education/schools/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { ExpandedSchool, SchoolCursor } from '@/education/schools/Types'
 

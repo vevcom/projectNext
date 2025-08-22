@@ -1,4 +1,4 @@
-import { readCommitteeAction } from '@/actions/groups/committees/read'
+import { readCommitteeAction } from '@/services/groups/committees/actions'
 import { notFound } from 'next/navigation'
 import type { PropTypes } from './page'
 

@@ -2,11 +2,13 @@ import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import Form from '@/app/_components/Form/Form'
-import { destroyLicenseAction } from '@/actions/licenses/destroy'
-import { createLicenseAction } from '@/actions/licenses/create'
+import {
+    destroyLicenseAction,
+    createLicenseAction,
+    updateLicenseAction,
+    readAllLicensesAction
+} from '@/services/licenses/actions'
 import TextInput from '@/UI/TextInput'
-import { updateLicenseAction } from '@/actions/licenses/update'
-import { readAllLicensesAction } from '@/actions/licenses/read'
 import Link from 'next/link'
 
 export default async function Licenses() {

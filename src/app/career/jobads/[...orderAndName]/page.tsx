@@ -8,6 +8,7 @@ import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
 import { Session } from '@/auth/Session'
 import { JobAdConfig } from '@/services/career/jobAds/config'
+import { readJobAdAction } from '@/services/career/jobAds/actions'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -18,7 +19,6 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { readJobAdAction } from '@/actions/career/jobAds/read'
 
 type PropTypes = {
     params: Promise<{

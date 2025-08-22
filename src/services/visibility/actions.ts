@@ -9,32 +9,13 @@ import { PurposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { readVisibilityCollapsed } from '@/services/visibility/read'
 import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { GroupMatrix, VisibilityLevelType } from '@/services/visibility/Types'
+import type {
+    GroupMatrix,
+    VisibilityLevelType,
+    VisibilityRequiermentForAdmin,
+    VisibilityStructuredForAdmin
+} from '@/services/visibility/Types'
 import type { GroupType } from '@prisma/client'
-
-export type VisibilityRequiermentForAdmin = {
-    name: string
-    groups: (ExpandedGroup & {
-        selected: boolean
-    })[]
-}
-
-export type VisibilityStructuredForAdmin = {
-    published: boolean
-    purpose: string
-} & (
-    {
-        type: 'REGULAR'
-        groups: GroupsStructured
-        regular: VisibilityRequiermentForAdmin[]
-        admin: VisibilityRequiermentForAdmin[]
-    } | {
-        type: 'SPECIAL'
-        message: string
-        regular: string
-        admin: string
-    }
-)
 
 export async function readVisibilityForAdminAction(id: number): Promise<ActionReturn<VisibilityStructuredForAdmin>> {
     const [visibilityRes, groupsRes] = await Promise.all([

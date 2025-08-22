@@ -1,6 +1,6 @@
 'use client'
 import styles from './Reprioritize.module.scss'
-import { updateApplicationAction } from '@/actions/applications/update'
+import { updateApplicationAction } from '@/services/applications/actions'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useState } from 'react'

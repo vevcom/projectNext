@@ -9,10 +9,10 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { bindParams } from '@/services/actionBind'
 import { NotificationChannelSchemas } from '@/services/notifications/channel/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
+import { updateNotificationChannelAction } from '@/services/notifications/actions'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { MailAlias } from '@prisma/client'
-import { updateNotificationChannelAction } from '@/actions/notifications'
 
 export default function ChannelSettings({
     currentChannel,

@@ -1,3 +1,4 @@
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import type { Matrix } from '@/utils/checkMatrix'
 import type { Permission, VisibilityPurpose } from '@prisma/client'
 
@@ -28,3 +29,27 @@ export type VisibilityCollapsed = {
     regular: Permission | null,
     admin: Permission | null
 })
+
+export type VisibilityRequiermentForAdmin = {
+    name: string
+    groups: (ExpandedGroup & {
+        selected: boolean
+    })[]
+}
+
+export type VisibilityStructuredForAdmin = {
+    published: boolean
+    purpose: string
+} & (
+    {
+        type: 'REGULAR'
+        groups: GroupsStructured
+        regular: VisibilityRequiermentForAdmin[]
+        admin: VisibilityRequiermentForAdmin[]
+    } | {
+        type: 'SPECIAL'
+        message: string
+        regular: string
+        admin: string
+    }
+)

@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readOldNewsPageAction } from '@/actions/news/read'
+import { readOldNewsPageAction } from '@/services/news/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 

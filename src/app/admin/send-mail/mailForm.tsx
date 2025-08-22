@@ -1,6 +1,6 @@
 'use client'
 import styles from './mailForm.module.scss'
-import sendMail from '@/actions/sendmail/send'
+import sendMail from '@/services/sendmail/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'

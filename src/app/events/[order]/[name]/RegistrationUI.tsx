@@ -5,15 +5,15 @@ import Form from '@/components/Form/Form'
 import { bindParams } from '@/services/actionBind'
 import TextInput from '@/components/UI/TextInput'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import type { EventExpanded } from '@/services/events/Types'
-import type { EventRegistration } from '@prisma/client'
 import {
     createEventRegistrationAction,
     eventRegistrationDestroyAction,
     eventRegistrationUpdateNotesAction
-} from '@/actions/events/registration'
+} from '@/services/events/registration/actions'
+import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import type { EventExpanded } from '@/services/events/Types'
+import type { EventRegistration } from '@prisma/client'
 
 enum RegistrationButtonState {
     NOT_REGISTERED = 'NOT_REGISTERED',

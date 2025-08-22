@@ -4,11 +4,11 @@ import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
+import { updateCmsImageConfigAction } from '@/services/cms/images/actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
-import { updateCmsImageConfigAction } from '@/actions/cms/images/update'
 
 type PropTypes = {
     currentImage: ImageT,

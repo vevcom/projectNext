@@ -9,6 +9,8 @@ import TextInput from '@/components/UI/TextInput'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
+import { updateImageCollectionAction } from '@/services/images/collections/actions'
+import { destroyImageAction, updateImageAction } from '@/services/images/actions'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,9 +18,6 @@ import { useContext } from 'react'
 import Link from 'next/link'
 import type { ImageSizeOptions } from '@/components/Image/Image'
 import type { Image as ImageT } from '@prisma/client'
-import { updateImageCollectionAction } from '@/actions/images/collections/update'
-import { destroyImageAction } from '@/actions/images/destroy'
-import { updateImageAction } from '@/actions/images/update'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',

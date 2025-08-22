@@ -3,8 +3,8 @@ import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import { bindParams } from '@/services/actionBind'
+import { createImageAction } from '@/services/images/actions'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
-import { createImageAction } from '@/actions/images/create'
 
 type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
 type T = Pick<ResponseType & { success: true }, 'data'>['data']

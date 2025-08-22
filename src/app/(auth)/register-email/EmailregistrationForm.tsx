@@ -1,5 +1,5 @@
 'use client'
-import { registerNewEmailAction } from '@/actions/users/update'
+import { registerNewEmailAction } from '@/services/users/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useSearchParams, useRouter } from 'next/navigation'

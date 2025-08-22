@@ -1,4 +1,4 @@
-import { readUserProfileAction } from '@/actions/users/read'
+import { readUserProfileAction } from '@/services/users/actions'
 import { Session } from '@/auth/Session'
 import { UserAuthers } from '@/services/users/authers'
 import { notFound, redirect } from 'next/navigation'

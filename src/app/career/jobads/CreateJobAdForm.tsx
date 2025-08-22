@@ -2,7 +2,7 @@
 import styles from './CreateJobAdForm.module.scss'
 import CompanyChooser from './CompanyChooser'
 import SelectedCompany from './SelectedCompany'
-import { createJobAdAction } from '@/actions/career/jobAds/create'
+import { createJobAdAction } from '@/services/career/jobAds/actions'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'

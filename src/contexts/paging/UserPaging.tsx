@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readUserPageAction } from '@/actions/users/read'
+import { readUserPageAction } from '@/services/users/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { UserDetails, UserPagingReturn, UserCursor } from '@/services/users/Types'
 

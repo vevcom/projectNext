@@ -1,7 +1,7 @@
 import styles from './layout.module.scss'
 import Nav from './Nav'
 import { Session } from '@/auth/Session'
-import { readUserProfileAction } from '@/actions/users/read'
+import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'

@@ -6,10 +6,10 @@ import UserPagingProvider from '@/contexts/paging/UserPaging'
 import UserSelectionProvider, { UserSelectionContext } from '@/contexts/UserSelection'
 import TextInput from '@/components/UI/TextInput'
 import { bindParams } from '@/services/actionBind'
+import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/services/events/registration/actions'
 import { useContext } from 'react'
 import type { EventRegistration } from '@prisma/client'
 import type { ActionReturn } from '@/services/actionTypes'
-import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/actions/events/registration'
 
 function ManualRegistrationFormInner({
     eventId,

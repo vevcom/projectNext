@@ -4,13 +4,13 @@ import EditOverlay from '@/components/Cms/EditOverlay'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import useEditing from '@/hooks/useEditing'
+import { updateCmsParagraphAction } from '@/services/cms/paragraphs/actions'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import 'easymde/dist/easymde.min.css'
 import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
-import { updateCmsParagraphAction } from '@/actions/cms/paragraphs/update'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(

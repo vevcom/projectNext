@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readManyEventRegistrationAction } from '@/actions/events/registration'
+import { readManyEventRegistrationAction } from '@/services/events/registration/actions'
 import type { EventRegistrationExpanded, EventRegistrationFetcherDetails } from '@/services/events/registration/Types'
 import type { PageSizeUsers } from './UserPaging'
 import type { ReadPageInput } from '@/lib/paging/Types'

@@ -7,11 +7,9 @@ import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/services/actionBind'
+import { destroyEventTagAction, updateEventTagAction, createEventTagAction } from '@/services/events/tags/actions'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
-import { destroyEventTagAction } from '@/actions/events/tags/destroy'
-import { updateEventTagAction } from '@/actions/events/tags/update'
-import { createEventTagAction } from '@/actions/events/tags/create'
 
 type PropTypes = {
     eventTags: EventTagT[]

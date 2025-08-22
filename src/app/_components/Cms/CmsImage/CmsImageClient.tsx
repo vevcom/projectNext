@@ -3,10 +3,10 @@ import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import { fallbackImage } from './CmsImage'
 import Image, { SrcImage } from '@/components/Image/Image'
+import { readSpecialImageAction } from '@/services/images/actions'
 import { useState, useEffect } from 'react'
 import type { PropTypes } from './CmsImage'
 import type { Image as ImageT } from '@prisma/client'
-import { readSpecialImageAction } from '@/actions/images/read'
 
 /**
  * WARNING: This component is only meant for the client

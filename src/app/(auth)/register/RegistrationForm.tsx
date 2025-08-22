@@ -1,5 +1,5 @@
 'use client'
-import { registerUser } from '@/actions/users/update'
+import { registerUser } from '@/services/users/actions'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'

@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readSchoolsPageAction } from '@/actions/education/schools/read'
+import { readSchoolsPageAction } from '@/services/education/schools/actions'
 import { getUser } from '@/auth/getUser'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import SchoolPagingProvider from '@/contexts/paging/SchoolPaging'

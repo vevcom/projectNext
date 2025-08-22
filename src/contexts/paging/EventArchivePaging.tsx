@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readArchivedEventsPageAction } from '@/actions/events/read'
+import { readArchivedEventsPageAction } from '@/services/events/actions'
 import type { EventArchiveCursor, EventArchiveDetails, EventExpanded } from '@/services/events/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
 

@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 
-import { readDotWrappersForUserAction } from '@/actions/dots/read'
+import { readDotWrappersForUserAction } from '@/services/dots/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Date from '@/components/Date/Date'

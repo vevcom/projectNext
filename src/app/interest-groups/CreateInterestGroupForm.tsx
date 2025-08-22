@@ -1,6 +1,6 @@
 import styles from './CreateInterestGroupForm.module.scss'
 import Form from '@/components/Form/Form'
-import { createInterestGroupAction } from '@/actions/groups/interestGroups/create'
+import { createInterestGroupAction } from '@/services/groups/interestGroups/actions'
 import TextInput from '@/components/UI/TextInput'
 
 export default function CreateInterestGroupForm() {

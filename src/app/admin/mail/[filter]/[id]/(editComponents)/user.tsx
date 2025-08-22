@@ -2,7 +2,7 @@
 
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
-import { createMailingListUserRelationAction } from '@/actions/mail/create'
+import { createMailingListUserRelationAction } from '@/services/mail/actions'
 import { useUser } from '@/auth/useUser'
 import type { MailFlowObject } from '@/services/mail/Types'
 import type { MailingList } from '@prisma/client'

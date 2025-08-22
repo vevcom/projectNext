@@ -8,13 +8,13 @@ import { UserAuthers } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import { UserConfig } from '@/services/users/config'
 import UserDisplayName from '@/components/User/UserDisplayName'
+import { readUserProfileAction } from '@/services/users/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQrcode } from '@fortawesome/free-solid-svg-icons'
-import { readUserProfileAction } from '@/actions/users/read'
-import { readSpecialImageAction } from '@/actions/images/read'
 
 export type PropTypes = {
     params: Promise<{

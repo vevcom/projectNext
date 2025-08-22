@@ -7,10 +7,10 @@ import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import TextInput from '@/app/_components/UI/TextInput'
 import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
 import { ImageConfig } from '@/services/images/config'
+import { createImagesAction } from '@/services/images/actions'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/services/actionTypes'
-import { createImagesAction } from '@/actions/images/create'
 
 type PropTypes = {
     collectionId: number

@@ -4,19 +4,12 @@ import { createActionError, createZodActionError, safeServerCall } from '@/servi
 import { createCmsImage } from '@/services/cms/images/create'
 import { readCmsImage, readSpecialCmsImage } from '@/services/cms/images/read'
 import { updateCmsImage, updateCmsImageConfig } from '@/services/cms/images/update'
-import { baseCmsImageValidation } from '@/services/cms/images/validation'
+import { createCmsImageActionValidation } from '@/services/cms/images/validation'
 import { SpecialCmsImage } from '@prisma/client'
-import type { ValidationTypes } from '@/services/Validation'
+import type { CreateCmsImageActionTypes } from '@/services/cms/images/validation'
 import type { ExpandedCmsImage } from '@/services/cms/images/Types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CmsImage, Image, ImageSize } from '@prisma/client'
-
-export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({
-    keys: ['name'],
-    transformer: data => data,
-})
-
-export type CreateCmsImageActionTypes = ValidationTypes<typeof createCmsImageActionValidation>
 
 export async function createCmsImageAction(
     rawData: FormData | CreateCmsImageActionTypes['Type'],

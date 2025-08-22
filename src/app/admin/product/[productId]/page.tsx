@@ -3,7 +3,7 @@ import ProductForm from '@/app/admin/product/productForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { displayPrice } from '@/lib/money/convert'
-import { readProductAction } from '@/actions/shop/product'
+import { readProductAction } from '@/services/shop/actions'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 

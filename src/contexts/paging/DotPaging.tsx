@@ -1,7 +1,7 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 
-import { readDotPageAction } from '@/actions/dots/read'
+import { readDotPageAction } from '@/services/dots/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/Types'
 

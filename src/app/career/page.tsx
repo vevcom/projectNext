@@ -5,10 +5,10 @@ import { Session } from '@/auth/Session'
 import Image from '@/components/Image/Image'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/query-params/queryParams'
+import { readSpecialImageAction } from '@/services/images/actions'
+import { readSpecialCmsLinkAction } from '@/services/cms/links/actions'
+import { readSpecialEventTagAction } from '@/services/events/tags/actions'
 import Link from 'next/link'
-import { readSpecialImageAction } from '@/actions/images/read'
-import { readSpecialCmsLinkAction } from '@/actions/cms/links/read'
-import { readSpecialEventTagAction } from '@/actions/events/tags/read'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()

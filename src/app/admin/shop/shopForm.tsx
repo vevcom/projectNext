@@ -1,4 +1,4 @@
-import { createShopAction } from '@/actions/shop/shop'
+import { createShopAction } from '@/services/shop/actions'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 

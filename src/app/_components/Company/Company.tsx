@@ -7,10 +7,9 @@ import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/services/actionBind'
 import { CompanyAuthers } from '@/services/career/companies/authers'
+import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
-import { destroyCompanyAction } from '@/actions/career/companies/destroy'
-import { updateComanyAction } from '@/actions/career/companies/update'
 
 type PropTypes = {
     company: CompanyExpanded,

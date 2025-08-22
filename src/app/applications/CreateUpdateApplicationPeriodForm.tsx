@@ -1,7 +1,6 @@
 'use client'
 import styles from './CreateUpdateApplicationPeriodForm.module.scss'
-import { createApplicationPeriodAction } from '@/actions/applications/periods/create'
-import { updateApplicationPeriodAction } from '@/actions/applications/periods/update'
+import { createApplicationPeriodAction, updateApplicationPeriodAction } from '@/services/applications/periods/actions'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import DateInput from '@/components/UI/DateInput'

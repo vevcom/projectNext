@@ -1,5 +1,5 @@
 'use client'
-import { registerStudentCardInQueueAction } from '@/actions/users/update'
+import { registerStudentCardInQueueAction } from '@/services/users/actions'
 import Form from '@/app/_components/Form/Form'
 import { UserConfig } from '@/services/users/config'
 

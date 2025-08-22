@@ -8,10 +8,9 @@ import {
     createMailingListExternalRelationAction,
     createMailingListGroupRelationAction,
     createMailingListUserRelationAction
-} from '@/actions/mail/create'
+} from '@/services/mail/actions'
 import { useUser } from '@/auth/useUser'
-import { updateMailingListAction } from '@/actions/mail/list/update'
-import { destroyMailingListAction } from '@/actions/mail/list/destory'
+import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@prisma/client'
 import type { MailFlowObject } from '@/services/mail/Types'

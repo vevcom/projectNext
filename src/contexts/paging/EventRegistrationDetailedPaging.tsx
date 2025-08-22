@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { eventRegistrationReadManyDetailedAction } from '@/actions/events/registration'
+import { eventRegistrationReadManyDetailedAction } from '@/services/events/registration/actions'
 import type {
     EventRegistrationDetailedExpanded,
     EventRegistrationFetcherDetails

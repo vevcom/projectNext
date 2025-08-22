@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import EditNews from './EditNews'
 import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
-import { readNewsAction } from '@/actions/news/read'
+import { readNewsAction } from '@/services/news/actions'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { notFound } from 'next/navigation'
 

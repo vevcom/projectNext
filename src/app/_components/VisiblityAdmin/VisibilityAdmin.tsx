@@ -2,7 +2,7 @@
 import styles from './VisibilityAdmin.module.scss'
 import VisibilityLevelAdmin from './VisibilityLevelAdmin'
 import useActionCall from '@/hooks/useActionCall'
-import { readVisibilityForAdminAction } from '@/actions/visibility/read'
+import { readVisibilityForAdminAction } from '@/services/visibility/actions'
 import { useCallback } from 'react'
 
 type PropTypes = {

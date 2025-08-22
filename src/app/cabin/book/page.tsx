@@ -7,7 +7,7 @@ import {
     readCabinProductsActiveAction,
     readPublicPricePeriodsAction,
     readReleasePeriodsAction
-} from '@/actions/cabin'
+} from '@/services/cabin/actions'
 import { displayDate } from '@/lib/dates/displayDate'
 import { Session } from '@/auth/Session'
 import { CabinBookingAuthers } from '@/services/cabin/booking/authers'

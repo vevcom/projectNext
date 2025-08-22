@@ -14,7 +14,7 @@ import {
     createBedBookingUserAttachedAction,
     createCabinBookingNoUserAction,
     createCabinBookingUserAttachedAction
-} from '@/actions/cabin'
+} from '@/services/cabin/actions'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useMemo, useState } from 'react'
 import type { CabinProductConfig } from '@/services/cabin/product/config'

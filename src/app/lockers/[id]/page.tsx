@@ -3,7 +3,7 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readLockerAction } from '@/actions/lockers/lockers'
+import { readLockerAction } from '@/services/lockers/actions'
 import { getUser } from '@/auth/getUser'
 import { checkGroupValidity, GroupMethods, inferGroupName } from '@/services/groups/methods'
 

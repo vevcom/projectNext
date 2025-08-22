@@ -1,6 +1,6 @@
 'use client'
 
-import { createReleasePeriodAction } from '@/actions/cabin'
+import { createReleasePeriodAction } from '@/services/cabin/actions'
 import Form from '@/app/_components/Form/Form'
 import DateInput from '@/app/_components/UI/DateInput'
 

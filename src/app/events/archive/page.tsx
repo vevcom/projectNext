@@ -1,6 +1,6 @@
 import EventArchiveList from './EventArchiveList'
 import TagHeaderItem from '@/app/events/TagHeaderItem'
-import { readEventTagsAction } from '@/actions/events/tags/read'
+import { readEventTagsAction } from '@/services/events/tags/actions'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
 import { QueryParams } from '@/lib/query-params/queryParams'

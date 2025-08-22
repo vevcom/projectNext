@@ -13,12 +13,11 @@ import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/Head
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { bindParams } from '@/services/actionBind'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readEventTagsAction } from '@/services/events/tags/actions'
+import { destroyEventAction, readEventAction } from '@/services/events/actions'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { readEventTagsAction } from '@/actions/events/tags/read'
-import { destroyEventAction } from '@/actions/events/destroy'
-import { readEventAction } from '@/actions/events/read'
 
 type PropTypes = {
     params: Promise<{

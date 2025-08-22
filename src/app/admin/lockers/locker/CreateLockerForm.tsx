@@ -1,5 +1,5 @@
 'use client'
-import { createLockerAction } from '@/actions/lockers/lockers'
+import { createLockerAction } from '@/services/lockers/actions'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import NumberInput from '@/components/UI/NumberInput'

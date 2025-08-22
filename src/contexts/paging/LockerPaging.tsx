@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from '@/contexts/paging/PagingGenerator'
-import { readLockerPageAction } from '@/actions/lockers/lockers'
+import { readLockerPageAction } from '@/services/lockers/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { LockerCursor, LockerWithReservation } from '@/services/lockers/Types'
 

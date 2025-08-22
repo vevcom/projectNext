@@ -12,17 +12,22 @@ import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import CreateUpdateApplicationPeriodForm from '@/app/applications/CreateUpdateApplicationPeriodForm'
-import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    createApplicationAction,
+    updateApplicationAction,
+    destroyApplicationAction,
+    readApplicationsForUserAction
+} from '@/services/applications/actions'
+import { readCommitteesAction } from '@/services/groups/committees/actions'
+import {
+    destroyApplicationPeriodAction,
+    removeAllApplicationTextsAction,
+    readApplicationPeriodAction
+} from '@/services/applications/periods/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
-import { createApplicationAction } from '@/actions/applications/create'
-import { updateApplicationAction } from '@/actions/applications/update'
-import { readCommitteesAction } from '@/actions/groups/committees/read'
-import { destroyApplicationAction } from '@/actions/applications/destroy'
-import { destroyApplicationPeriodAction, removeAllApplicationTextsAction } from '@/actions/applications/periods/destroy'
-import { readApplicationsForUserAction } from '@/actions/applications/read'
-import { readSpecialImageAction } from '@/images/read'
-import { readApplicationPeriodAction } from '@/actions/applications/periods/read'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 
 export type PropTypes = {
     params: Promise<{

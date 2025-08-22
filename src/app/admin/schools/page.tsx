@@ -3,9 +3,8 @@ import { SchoolAdminList } from './SchoolAdminList'
 import Form from '@/components/Form/Form'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { createSchoolAction } from '@/education/schools/create'
+import { createSchoolAction, readSchoolsAction, readStandardSchoolsAction } from '@/education/schools/actions'
 import TextInput from '@/components/UI/TextInput'
-import { readSchoolsAction, readStandardSchoolsAction } from '@/education/schools/read'
 
 export default async function SchoolsAdmin() {
     const standardSchoolsRes = await readStandardSchoolsAction()

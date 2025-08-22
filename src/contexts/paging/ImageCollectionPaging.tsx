@@ -1,6 +1,6 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readImageCollectionsPageAction } from '@/actions/images/collections/read'
+import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/services/images/collections/Types'
 

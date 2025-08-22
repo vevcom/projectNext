@@ -20,3 +20,10 @@ export const createCmsParagraphValidation = baseCmsParagraphValidation.createVal
 })
 
 export type CreateCmsParagraphTypes = ValidationTypes<typeof createCmsParagraphValidation>
+
+export const createCmsParagraphActionValidation = baseCmsParagraphValidation.createValidation({
+    keys: ['name'],
+    transformer: data => data
+})
+
+export type CreateCmsParagraphActionTypes = ValidationTypes<typeof createCmsParagraphActionValidation>

@@ -1,6 +1,6 @@
 'use client'
 import styles from './CreateDotForm.module.scss'
-import { createDotAction } from '@/actions/dots/create'
+import { createDotAction } from '@/services/dots/actions'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'

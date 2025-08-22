@@ -1,7 +1,7 @@
 import OldNewsList from './OldNewsList'
 import NewsCard from '@/app/news/NewsCard'
 import OldNewsPagingProvider from '@/contexts/paging/OldNewsPaging'
-import { readOldNewsPageAction } from '@/actions/news/read'
+import { readOldNewsPageAction } from '@/services/news/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import type { PageSizeOldNews } from '@/contexts/paging/OldNewsPaging'
 

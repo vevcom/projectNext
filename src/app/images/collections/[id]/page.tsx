@@ -4,10 +4,10 @@ import ImageList from '@/components/Image/ImageList/ImageList'
 import ImagePagingProvider from '@/contexts/paging/ImagePaging'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
+import { readImageCollectionAction } from '@/services/images/collections/actions'
+import { readImagesPageAction } from '@/services/images/actions'
 import { notFound } from 'next/navigation'
 import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
-import { readImageCollectionAction } from '@/actions/images/collections/read'
-import { readImagesPageAction } from '@/actions/images/read'
 
 type PropTypes = {
     params: Promise<{
