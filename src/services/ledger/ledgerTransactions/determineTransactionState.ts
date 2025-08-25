@@ -18,11 +18,11 @@ export async function determineTransactionState(transaction: ExpandedLedgerTrans
     // since fees aren't set earlier.
     const rules: LedgerTransactionRule[] = [
         noTerminalState,
-        noFailedPayment,
+        noFailedTransfer,
         amountAndFeesHaveSameSigns,
         validAmountSum,
         sufficientBalances,
-        paymentComplete,
+        transfersComplete,
         noNullFees,
         validFeesSum,
     ]
@@ -35,6 +35,7 @@ export async function determineTransactionState(transaction: ExpandedLedgerTrans
 
     return { state: 'SUCCEEDED' }
 }
+
 /**
  * A transaction in a terminal state (SUCCEEDED, FAILED or CANCELED)
  * can never change state.
@@ -46,11 +47,11 @@ function noTerminalState({ state }: ExpandedLedgerTransaction): LedgerTransactio
 /**
  * If any payment has failed, the entire transaction has failed.
  */
-function noFailedPayment({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function noFailedTransfer({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     const okStates: PaymentState[] = ['PENDING', 'PROCESSING', 'SUCCEEDED']
-    const hasFailedPayment = payment && !okStates.includes(payment.state) 
+    const hasFailedTransfer = payment && !okStates.includes(payment.state)
 
-    if (hasFailedPayment) return { state: 'FAILED', reason: 'Betaling mislyktes.' }
+    if (hasFailedTransfer) return { state: 'FAILED', reason: 'Betaling mislyktes.' }
 }
 
 /**
@@ -58,16 +59,15 @@ function noFailedPayment({ payment }: ExpandedLedgerTransaction): LedgerTransact
  * 
  * Mathematically: `amount > 0 <=> fees > 0` and `amount < 0 <=> fees < 0`.
  */
-function amountAndFeesHaveSameSigns({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function amountAndFeesHaveSameSigns({ ledgerEntries, payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     // Helper function which return true when a and b have same signs or at least
     // one of a and b are falsy.
     const sameSigns = (a?: number | null, b?: number | null) => !a || !b || Math.sign(a) === Math.sign(b)
 
-    const validPayment        = sameSigns(payment?.amount, payment?.fees)
-    const validManualTransfer = sameSigns(manualTransfer?.amount, manualTransfer?.fees)
-    const validLedgerEntries  = ledgerEntries.every(entry => sameSigns(entry.amount, entry.fees))
+    const validEntries = ledgerEntries.every(entry => sameSigns(entry.funds, entry.fees))
+    const validTransfer = !payment || sameSigns(payment.funds, payment.fees)
     
-    if (!validManualTransfer || !validPayment || !validLedgerEntries) return { state: 'FAILED', reason: 'Ugyldige beløp og/eller gebyrer.' }
+    if (!validEntries || !validTransfer) return { state: 'FAILED', reason: 'Ugyldige beløp og/eller gebyrer.' }
 }
 
 
@@ -75,14 +75,13 @@ function amountAndFeesHaveSameSigns({ ledgerEntries, payment, manualTransfer }: 
  * Kirchhoff's first law! The sum of all amounts must be zero.
  * I.e. money must come from somewhere and go to somewhere.
  */
-function validAmountSum({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function validAmountSum({ ledgerEntries, payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     // NOTE: Since the number of entries in a transaction is very low (max two) we can
     // sum the amounts and fees in memory rather than doing a database aggregation.
-    const ledgerEntriesAmountSum = ledgerEntries.reduce((sum, entry) => sum + entry.amount, 0)
-    const paymentAmount          = payment?.amount ?? 0
-    const manualTransferAmount   = manualTransfer?.amount ?? 0
+    const totalLedgerEntryFunds = ledgerEntries.reduce((sum, entry) => sum + entry.funds, 0)
+    const paymentFunds = payment?.funds ?? 0
 
-    if (ledgerEntriesAmountSum !== paymentAmount + manualTransferAmount) return { state: 'FAILED', reason: 'Ugyldig sum av beløp.' }
+    if (totalLedgerEntryFunds !== paymentFunds) return { state: 'FAILED', reason: 'Ugyldig totalbeløp.' }
 }
 
 /** 
@@ -90,7 +89,7 @@ function validAmountSum({ ledgerEntries, payment, manualTransfer }: ExpandedLedg
  * have a positive balance after the transaction succeeds.
  */
 function sufficientBalances({ ledgerEntries }: ExpandedLedgerTransaction, balances: BalanceRecord): LedgerTransactionTransition | undefined {
-    const debitLedgerAccountIds = ledgerEntries.filter(entry => entry.amount < 0).map(entry => entry.ledgerAccountId)
+    const debitLedgerAccountIds = ledgerEntries.filter(entry => entry.funds < 0).map(entry => entry.ledgerAccountId)
     const debitBalances = debitLedgerAccountIds.map(id => balances[id])
     
     if (debitBalances.some(balance => !balance)) {
@@ -105,22 +104,21 @@ function sufficientBalances({ ledgerEntries }: ExpandedLedgerTransaction, balanc
 /**
  * If any payment is pending, the transaction is pending.
  */
-function paymentComplete({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function transfersComplete({ payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     // Since we have checked for failure states above,
-    // we can simply check that the transaction has not succeeded.
-    const hasPendingPayment = payment && payment.state !== 'SUCCEEDED'
+    // we can simply check that the transfer has not succeeded.
+    const hasPendingTransfer = payment && payment.state !== 'SUCCEEDED'
 
-    if (hasPendingPayment) return { state: 'PENDING' }
+    if (hasPendingTransfer) return { state: 'PENDING' }
 }
 
 /**
  * All fees must be non-null.
  */
-function noNullFees({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function noNullFees({ ledgerEntries, payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     const hasNullFees = 
         ledgerEntries.some(entry => entry.fees === null) ||
-        payment && payment.fees === null ||
-        manualTransfer && manualTransfer.fees === null
+        payment?.fees === null
 
     if (hasNullFees) return { state: 'FAILED', reason: 'Manglende gebyrer.' }
 }
@@ -128,12 +126,11 @@ function noNullFees({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTr
 /**
  * Fees must also follow Kirchhoff's first law.
  */
-function validFeesSum({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
+function validFeesSum({ ledgerEntries, payment }: ExpandedLedgerTransaction): LedgerTransactionTransition | undefined {
     // NOTE: Since the number of entries in a transaction is very low (max two) we can
     // sum the amounts and fees in memory rather than doing a database aggregation.
-    const ledgerEntriesFeesSum = ledgerEntries.reduce((sum, entry) => sum + entry.fees!, 0)
-    const paymentFees          = payment?.fees ?? 0
-    const manualTransferFees   = manualTransfer?.fees ?? 0
+    const totalLedgerEntryFees = ledgerEntries.reduce((sum, entry) => sum + entry.fees!, 0)
+    const paymentFees = payment?.fees ?? 0
 
-    if (ledgerEntriesFeesSum !== paymentFees + manualTransferFees) return { state: 'FAILED', reason: 'Ugyldig sum av gebyrer.' }
+    if (totalLedgerEntryFees !== paymentFees) return { state: 'FAILED', reason: 'Ugyldig sum av gebyrer.' }
 }

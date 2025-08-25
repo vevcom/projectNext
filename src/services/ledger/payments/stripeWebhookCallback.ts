@@ -82,28 +82,34 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     }
 
     // Update the db model with the updated values
-    const payment = await prisma.payment.update({
+    const stripePayment = await prisma.stripePayment.update({
         where: {
             paymentIntentId: paymentIntent.id,
-            state: {
-                // Guard against changing final state
-                // This should never happen, but you can never be too careful
-                in: ['PENDING', 'PROCESSING', paymentState]
+            payment: {
+                state: {
+                    // Guard against changing final state
+                    // This should never happen, but you can never be too careful
+                    in: ['PENDING', 'PROCESSING', paymentState]
+                },
             },
         },
         data: {
-            fees: fee,
-            state: paymentState,
+            payment: {
+                update: {
+                    fees: fee,
+                    state: paymentState,
+                },
+            }
         },
         select: {
-            id: true,
+            paymentId: true,
         },
     })
 
     // We only allow one payment attempt per payment intent.
     // If this failed we cancel the payment intent to make sure it cannot be used in the future.
     if (event.type === 'payment_intent.payment_failed') {
-        stripe.paymentIntents.cancel(paymentIntent.id, {}, { idempotencyKey: `project-next-payment-id-${payment.id}` })
+        stripe.paymentIntents.cancel(paymentIntent.id, {}, { idempotencyKey: `project-next-payment-id-${stripePayment.paymentId}` })
     }
 
     return new Response('', { status: 200 })

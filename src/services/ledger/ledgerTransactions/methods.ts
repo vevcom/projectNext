@@ -27,7 +27,6 @@ export namespace LedgerTransactionMethods {
                 include: {
                     ledgerEntries: true,
                     payment: true,
-                    manualTransfer: true,
                 },
             })
 
@@ -60,7 +59,6 @@ export namespace LedgerTransactionMethods {
             include: {
                 ledgerEntries: true,
                 payment: true,
-                manualTransfer: true,
             },
             orderBy: {
                 createdAt: 'desc',
@@ -83,15 +81,14 @@ export namespace LedgerTransactionMethods {
         paramsSchema: z.object({
             purpose: z.nativeEnum(LedgerTransactionPurpose),
             ledgerEntries: z.object({
-                amount: z.number(),
+                funds: z.number(),
                 ledgerAccountId: z.number(),
             }).array(),
             paymentId: z.number().optional(),
-            manualTransferId: z.number().optional(),
         }),
         method: async ({ prisma, session, params }, ) => {
             // Calculate the balance for all accounts which are going to be deducted
-            const debitEntries = params.ledgerEntries.filter(entry => entry.amount < 0)
+            const debitEntries = params.ledgerEntries.filter(entry => entry.funds < 0)
             const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
                 params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
                 session: null,
@@ -100,7 +97,7 @@ export namespace LedgerTransactionMethods {
             // Check that the relevant accounts have enough balance to do the transaction.
             // NOTE: This is check is only to avoid calling the db unnecessarily.
             // The actual validation is handled in the `advance` function.
-            const hasInsufficientBalance = debitEntries.some(entry => (balances[entry.ledgerAccountId]?.amount ?? 0) + entry.amount < 0)
+            const hasInsufficientBalance = debitEntries.some(entry => (balances[entry.ledgerAccountId]?.amount ?? 0) + entry.funds < 0)
             if (hasInsufficientBalance) {
                 throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
             }
@@ -119,8 +116,7 @@ export namespace LedgerTransactionMethods {
                     ledgerEntries: {
                         create: entries,
                     },
-                    paymentId :params.paymentId,
-                    manualTransferId: params.manualTransferId,
+                    paymentId: params.paymentId,
                 },
                 select: {
                     id: true,
@@ -158,10 +154,10 @@ export namespace LedgerTransactionMethods {
                 session,
             })
 
-            const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment, transaction.manualTransfer)
+            const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment)
 
             if (creditFees) {
-                const creditEntries = transaction.ledgerEntries.filter(entry => entry.amount > 0)
+                const creditEntries = transaction.ledgerEntries.filter(entry => entry.funds > 0)
 
                 const ledgerEntryUpdateInput = creditEntries.map(entry => ({
                     where: {

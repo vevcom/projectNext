@@ -3,7 +3,6 @@ import { ServiceMethod } from "@/services/ServiceMethod"
 import { LedgerTransactionMethods } from "../ledgerTransactions/methods"
 import { PaymentMethods } from "../payments/methods"
 import { z } from "zod"
-import { ManualTransferMethods } from "../manualTransfers/methods"
 
 // `LedgerOperations` provides functions to orchestrate account related actions,
 // such as depositing funds or creating payouts. If the ledger is needed for
@@ -23,16 +22,16 @@ export namespace LedgerOperationMethods {
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         opensTransaction: true,
         paramsSchema: z.object({
-            amount: z.number().positive(),
+            funds: z.number().positive(),
             ledgerAccountId: z.number(),
         }),
         method: async ({ prisma, session, params }) => {
             const [payment, transaction] = await prisma.$transaction(async tx => {
-                const payment = await PaymentMethods.create.client(tx).execute({
+                const payment = await PaymentMethods.create({
                     params: {
                         ...params,
-                        description: 'Innskudd',
-                        descriptor: 'Innskudd',
+                        descriptionLong:  'Innskudd',
+                        descriptionShort: 'Innskudd',
                         provider: 'STRIPE',
                     },
                     session,
@@ -71,17 +70,20 @@ export namespace LedgerOperationMethods {
     export const createPayout = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
-            amount: z.number().positive(),
+            funds: z.number().positive(),
             fees: z.number().positive(),
             ledgerAccountId: z.number(),
         }),
         opensTransaction: true,
         method: async ({ prisma, params, session }) => {
             return prisma.$transaction(async tx => {
-                const manualTransfer = await ManualTransferMethods.create.client(tx).execute({
+                const payment = await PaymentMethods.create.client(tx).execute({
                     params: {
-                        amount: -params.amount,
+                        provider: 'MANUAL',
+                        descriptionShort: 'Utbetaling',
+                        funds: -params.funds,
                         fees: -params.fees,
+                        details: {},
                     },
                     session,
                 })
@@ -91,9 +93,9 @@ export namespace LedgerOperationMethods {
                         purpose: 'PAYOUT',
                         ledgerEntries: [{
                             ledgerAccountId: params.ledgerAccountId,
-                            amount: -params.amount,
+                            funds: -params.funds,
                         }],
-                        manualTransferId: manualTransfer.id,
+                        paymentId: payment.id,
                     },
                     session,
                 })

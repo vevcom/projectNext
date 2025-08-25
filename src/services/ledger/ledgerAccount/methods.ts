@@ -113,13 +113,13 @@ export namespace LedgerAccountMethods {
                     OR: [
                         {
                             // If the amount is greater than zero the entry is a credit (i.e. giving money).
-                            amount: { gt: 0 },
+                            funds: { gt: 0 },
                             // The receiver should (logically) only receive the money if the transaction succeeded.
                             ledgerTransaction: { state: 'SUCCEEDED' },
                         },
                         {
                             // If the amount is less than zero the entry is a debit (i.e. taking money).
-                            amount: { lt: 0 },
+                            funds: { lt: 0 },
                             // The amount should be deducted from the source if the transaction succeeded (obviously)
                             // OR when the transaction is pending. This is our way of reserving the funds
                             // until the transaction is complete.
@@ -129,7 +129,7 @@ export namespace LedgerAccountMethods {
                 },
                 // Select what fields we should sum
                 _sum: {
-                    amount: true,
+                    funds: true,
                     fees: true,
                 },
             })
@@ -142,7 +142,7 @@ export namespace LedgerAccountMethods {
                 ...balanceArray.map(balance => [
                     balance.ledgerAccountId, 
                     {
-                        amount: balance._sum.amount ?? 0,
+                        amount: balance._sum.funds ?? 0,
                         fees: balance._sum.fees ?? 0 
                     }
                 ])

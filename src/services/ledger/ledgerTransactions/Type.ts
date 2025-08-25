@@ -4,6 +4,5 @@ export type ExpandedLedgerTransaction = Prisma.LedgerTransactionGetPayload<{
     include: {
         ledgerEntries: true,
         payment: true,
-        manualTransfer: true,
     }
 }>
