@@ -6,6 +6,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Date from '@/components/Date/Date'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCommitteesAction } from '@/actions/groups/committees/read'
+import Link from 'next/link'
 
 export default async function Apllications() {
     const periods = unwrapActionReturn(await readApplicationPeriodsAction())
@@ -21,7 +22,7 @@ export default async function Apllications() {
                 <ol className={styles.periods}>
                     {periods.map((period) => (
                         <li key={period.name}>
-                            <a href={`/applications/${period.name}`}>{period.name}</a>
+                            <Link href={`/applications/${encodeURIComponent(period.name)}`}>{period.name}</Link>
                             <Date date={period.endDate} includeTime />
                         </li>
                     ))}
