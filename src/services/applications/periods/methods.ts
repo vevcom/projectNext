@@ -166,18 +166,10 @@ export namespace ApplicationPeriodMethods {
         paramsSchema: z.object({
             name: z.string()
         }),
-        method: async ({ prisma, params }) => {
-            const period = await prisma.applicationPeriod.findUniqueOrThrow({
-                where: { name: params.name },
-                select: {
-                    id: true
-                },
-            })
-            return await prisma.application.count({
-                where: {
-                    applicationPeriodId: period.id
-                },
-            })
+        method: async ({}) => {
+            const res = await fetch('https://omega.ntnu.no/api/applications/applicants')
+            const data = await res.json()
+            return data
         }
     })
 }
