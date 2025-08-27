@@ -8,7 +8,7 @@ import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     committees: {
-        shortname: string,
+        name: string,
         logo: ImageT
     }[],
     periodName: string
@@ -100,7 +100,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display1].logo}
-                                shortname={committees[currentCommitteeIndexes.display1].shortname}
+                                shortname={committees[currentCommitteeIndexes.display1].name}
                             />
                         )
                     }
@@ -115,7 +115,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display2].logo}
-                                shortname={committees[currentCommitteeIndexes.display2].shortname}
+                                shortname={committees[currentCommitteeIndexes.display2].name}
                             />
                         )
                     }
@@ -130,7 +130,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display3].logo}
-                                shortname={committees[currentCommitteeIndexes.display3].shortname}
+                                shortname={committees[currentCommitteeIndexes.display3].name}
                             />
                         )
                     }
