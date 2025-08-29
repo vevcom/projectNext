@@ -1,7 +1,7 @@
 // import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
 import TransactionList from '@/app/_components/Ledger/TransactionList/TransactionList'
-import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
+import { Session } from '@/auth/Session'
 
 export default async function Transactions() {
     // const transactionPagingContext = useContext(TransactionPagingContext)

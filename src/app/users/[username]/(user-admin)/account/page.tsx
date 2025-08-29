@@ -5,10 +5,11 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
 import Button from '@/components/UI/Button'
 import Link from 'next/link'
-import PayoutModal from './PayoutModal'
-import DepositModal from './DepositModal'
 import Card from './Card'
 import BankCardModal from './BankCardModal'
+import DepositModal from '@/components/Ledger/DepositModal'
+import PayoutModal from '@/components/Ledger/PayoutModal'
+import { calculateLedgerAccountBalanceAction } from '@/services/ledger/ledgerAccount/actions'
 
 export default async function Account() {
     const session = await getUser({
@@ -18,12 +19,20 @@ export default async function Account() {
 
     const account = { id: 1 }; //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
 
+    const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ id }))
+
     return <div>
         <Card>
-            <h2>Konto</h2>
-            <LedgerAccountBalance accountId={account.id} showFees />
-            <DepositModal accountId={account.id} />
-            <PayoutModal accountId={account.id} />
+            <h2>Kontooversikt</h2>
+            <p>Saldo: <strong>69</strong> Kluengende Muente</p>
+            <p><em>Avgifter: <strong>69</strong> Kluengende Muente</em></p>
+            <DepositModal ledgerAccountId={1} />
+            <PayoutModal ledgerAccountId={1} />
+            {/* <h2>Konto</h2> */}
+            {/* <LedgerAccountBalance accountId={account.id} showFees /> */}
+            <br></br>
+            {/* <CheckoutModal title='Sett inn'/> */}
+            {/* <PayoutModal accountId={account.id} /> */}
         </Card>
             {/* <PopUp
                 PopUpKey="DepositForm"

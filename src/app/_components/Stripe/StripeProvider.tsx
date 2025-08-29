@@ -15,8 +15,8 @@ type Props = {
     children?: ReactNode
 }
 
-export default function PaymentProvider({ children, amount }: Props) {
-    return <>{
+export default function StripeProvider({ children, amount }: Props) {
+    return (
         <Elements stripe={stripe} options={{
             mode: 'payment',
             currency: 'nok',
@@ -24,5 +24,5 @@ export default function PaymentProvider({ children, amount }: Props) {
         }}>
             {children}
         </Elements>
-    }</>
+    )
 }

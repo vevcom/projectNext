@@ -1,6 +1,6 @@
 import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/methods'
 import { LedgerTransactionMethods } from '@/services/ledger/ledgerTransactions/methods'
-import { ManualTransferMethods } from '@/services/ledger/manualTransfers/methods'
+import { PaymentMethods } from '@/services/ledger/payments/methods'
 import { UserMethods } from '@/services/users/methods'
 import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
 import { allSettledOrThrow } from 'tests/utils'
@@ -50,10 +50,11 @@ describe('ledger transactions', () => {
     describe('internal transactions', () => {
         beforeEach(async () => {
             await allSettledOrThrow(testAccountIds.map(async accountId => {
-                    const manualTransfer = await ManualTransferMethods.create({
+                    const manualPayment = await PaymentMethods.create({
                         params: {
-                            amount: INITIAL_BALANCE.amount,
+                            funds: INITIAL_BALANCE.amount,
                             fees: INITIAL_BALANCE.fees,
+                            provider: 'MANUAL',
                         },
                     })
 
@@ -62,9 +63,9 @@ describe('ledger transactions', () => {
                             purpose: 'DEPOSIT',
                             ledgerEntries: [{
                                 ledgerAccountId: accountId,
-                                amount: INITIAL_BALANCE.amount,
+                                funds: INITIAL_BALANCE.amount,
                             }],
-                            manualTransferId: manualTransfer.id,
+                            paymentId: manualPayment.id,
                         }
                     })
                 })
@@ -85,7 +86,7 @@ describe('ledger transactions', () => {
         test.each(validLedgerEntries)('valid internal transactions', async (...entries) => {
             const transaction = await LedgerTransactionMethods.create({
                 params: {
-                    ledgerEntries: entries.map((amount, i) => ({ amount, ledgerAccountId: testAccountIds[i] })),
+                    ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
                 },
             })
@@ -119,7 +120,7 @@ describe('ledger transactions', () => {
         test.each(invalidLedgerEntries)('invalid internal transactions', async (...entries) => {
             const transactionPromise = LedgerTransactionMethods.create({
                 params: {
-                    ledgerEntries: entries.map((amount, i) => ({ amount, ledgerAccountId: testAccountIds[i] })),
+                    ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
                 },
             })

@@ -17,7 +17,6 @@ export namespace PaymentMethods {
         paramsSchema: z.intersection(
             z.object({
                 funds: z.number(),
-                fees: z.number().optional(),
                 descriptionLong: z.string().optional(),
                 descriptionShort: z.string().optional(),
                 ledgerAccountId: z.number().optional(),
@@ -31,6 +30,7 @@ export namespace PaymentMethods {
                     provider: z.literal(PaymentProvider.MANUAL),
                     details: z.object({
                         bankAccountNumber: z.string().optional(),
+                        fees: z.number().nonnegative().default(0),
                     }).optional(),
                 }),
             ]),
@@ -43,6 +43,7 @@ export namespace PaymentMethods {
                     ...paymentData,
                     // Manual payments are automatically succeeded
                     state: params.provider === 'MANUAL' ? 'SUCCEEDED' : 'PENDING',
+                    fees: params.provider === 'MANUAL' ? 0 : undefined,
                     stripePayment: params.provider === 'STRIPE' ? {
                         create: params.details,
                     } : undefined,

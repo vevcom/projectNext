@@ -3,6 +3,7 @@ import { ServiceMethod } from "@/services/ServiceMethod"
 import { LedgerTransactionMethods } from "../ledgerTransactions/methods"
 import { PaymentMethods } from "../payments/methods"
 import { z } from "zod"
+import { PaymentProvider } from "@prisma/client"
 
 // `LedgerOperations` provides functions to orchestrate account related actions,
 // such as depositing funds or creating payouts. If the ledger is needed for
@@ -22,37 +23,40 @@ export namespace LedgerOperationMethods {
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         opensTransaction: true,
         paramsSchema: z.object({
-            funds: z.number().positive(),
             ledgerAccountId: z.number(),
+            provider: z.nativeEnum(PaymentProvider),   
+            funds: z.coerce.number().positive(),
         }),
-        method: async ({ prisma, session, params }) => {
-            const [payment, transaction] = await prisma.$transaction(async tx => {
+        method: async ({ prisma, params }) => {
+            const transaction = await prisma.$transaction(async tx => {
                 const payment = await PaymentMethods.create({
                     params: {
-                        ...params,
+                        provider: params.provider,
+                        funds: params.funds,
                         descriptionLong:  'Innskudd',
                         descriptionShort: 'Innskudd',
-                        provider: 'STRIPE',
                     },
-                    session,
                 })
 
-                const transaction = await LedgerTransactionMethods.create.client(tx).execute({
+                const transaction = await LedgerTransactionMethods.create({
                     params: {
                         purpose: 'DEPOSIT',
-                        ledgerEntries: [params],
+                        ledgerEntries: [{
+                            ledgerAccountId: params.ledgerAccountId,
+                            funds: params.funds,
+                        }],
                         paymentId: payment.id,
                     },
-                    session,
                 })
 
-                return [payment, transaction]
+                return transaction
             })
 
-            transaction.payment = await PaymentMethods.initiate.client(prisma).execute({
-                params: { paymentId: payment.id },
-                session,
-            })
+            if (transaction.payment?.state === 'PENDING') {
+                transaction.payment = await PaymentMethods.initiate({
+                    params: { paymentId: transaction.payment.id },
+                })
+            }
 
             return transaction
         }
@@ -70,25 +74,23 @@ export namespace LedgerOperationMethods {
     export const createPayout = ServiceMethod({
         auther: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
-            funds: z.number().positive(),
-            fees: z.number().positive(),
             ledgerAccountId: z.number(),
-        }),
+            funds: z.number().nonnegative().default(0),
+            fees: z.number().nonnegative().default(0),
+        }).refine((data) => data.funds || data.fees, "Både beløp og avgifter kan ikke være 0 samtidig."),
         opensTransaction: true,
-        method: async ({ prisma, params, session }) => {
+        method: async ({ prisma, params }) => {
             return prisma.$transaction(async tx => {
-                const payment = await PaymentMethods.create.client(tx).execute({
+                const payment = await PaymentMethods.create({
                     params: {
                         provider: 'MANUAL',
+                        descriptionLong:  'Utbetaling',
                         descriptionShort: 'Utbetaling',
                         funds: -params.funds,
-                        fees: -params.fees,
-                        details: {},
                     },
-                    session,
                 })
     
-                const transaction = await LedgerTransactionMethods.create.client(tx).execute({
+                const transaction = await LedgerTransactionMethods.create({
                     params: {
                         purpose: 'PAYOUT',
                         ledgerEntries: [{
@@ -97,7 +99,6 @@ export namespace LedgerOperationMethods {
                         }],
                         paymentId: payment.id,
                     },
-                    session,
                 })
     
                 return transaction

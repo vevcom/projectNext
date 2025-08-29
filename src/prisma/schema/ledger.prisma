@@ -186,3 +186,5 @@ model ManualPayment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// TODO: Stripe customer model

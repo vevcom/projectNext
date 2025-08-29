@@ -35,6 +35,11 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 create: {
                     groupType: 'COMMITTEE',
                     order: order.order,
+                    ledgerAccount: {
+                        create: {
+                            type: 'GROUP',
+                        },
+                    },
                 },
             },
             logoImage: {
