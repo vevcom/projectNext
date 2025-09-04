@@ -1,6 +1,6 @@
 @use "@/styles/ohma";
 
-$nav-height: 60px;
+$nav-height: ohma.$nav-height;
 
 .body {
     background-color: ohma.$colors-body-background;
