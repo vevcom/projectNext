@@ -1,6 +1,41 @@
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
+import { convertMdToHtml } from '@/seeder/src/seedCms'
+import { readFile } from 'fs/promises'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
+import type { Prisma, PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { UserMigrator } from './migrateUsers'
+
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
+
+async function readCommitteParagraph(filename: string): Promise<Prisma.CmsParagraphCreateInput> {
+    const filepath = join(directoryName, '..', '..', 'cms_paragraphs', 'committees', filename)
+    try {
+        const content = await readFile(filepath, 'utf-8')
+
+        return {
+            contentMd: content,
+            contentHtml: await convertMdToHtml(content),
+        }
+    } catch (e) {
+        return {}
+    }
+}
+
+async function readCommitteArticle(filename: string): Promise<{ create: Prisma.ArticleSectionCreateInput } | undefined> {
+    const paragraph = await readCommitteParagraph(filename)
+    if (paragraph.contentMd) {
+        return {
+            create: {
+                cmsParagraph: {
+                    create: paragraph,
+                },
+            },
+        }
+    }
+    return undefined
+}
 
 export default async function migrateCommittees(
     pnPrisma: PrismaClientPn,
@@ -24,6 +59,9 @@ export default async function migrateCommittees(
     // })).order
 
     await Promise.all(committees.map(async committee => {
+        const committeeParagraph = await readCommitteParagraph(`${committee.shortname}_p.md`)
+        const committeArticle = await readCommitteArticle(`${committee.shortname}_a.md`)
+
         const newCommittee = await pnPrisma.committee.create({
             data: {
                 name: committee.name,
@@ -35,7 +73,7 @@ export default async function migrateCommittees(
                     }
                 },
                 paragraph: {
-                    create: {}
+                    create: committeeParagraph
                 },
                 applicationParagraph: {
                     create: {
@@ -49,7 +87,8 @@ export default async function migrateCommittees(
                             create: {
                                 name: `${committee.shortname}'s bilde`
                             }
-                        }
+                        },
+                        articleSections: committeArticle
                     }
                 },
                 group: {
@@ -74,7 +113,7 @@ export default async function migrateCommittees(
                     userId: pnUserId,
                     active: true,
                     admin: member.admin,
-                    order: 106,
+                    order: member.order,
                     title: member.position || undefined,
                 }
             })
