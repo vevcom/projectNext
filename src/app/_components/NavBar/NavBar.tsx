@@ -50,8 +50,8 @@ export default async function NavBar({ profile }: PropTypes) {
                     />
                 </li>
                 <li className={styles.rightSide}>
-                    <ReportButton/>
                     <EditModeSwitch />
+                    <ReportButton/>
                     <div className={styles.magicHat}>
                         <SpecialCmsImage
                             special="NAV_LOGIN_BUTTON"
