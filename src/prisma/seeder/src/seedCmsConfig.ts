@@ -331,6 +331,29 @@ export const seedCmsConfig: CmsConfig = {
                     }
                 }
             ]
+        },
+        {
+            name: 'varslingside',
+            category: 'guider',
+            coverImage: {
+                name: 'prikkreglement_cover',
+                imageName: 'ov',
+                imageSize: 'MEDIUM'
+            },
+            articleSections: [
+                {
+                    name: 'varsling_info',
+                    cmsParagraph: {
+                        name: 'varsling_info_paragraph',
+                        file: 'varsling_info/varsling_info.md'
+                    },
+                    cmsImage: {
+                        name: 'søknadsguide_1_image',
+                        imageName: 'kappemann',
+                        imageSize: 'MEDIUM'
+                    }
+                }
+            ]
         }
     ]
 }
