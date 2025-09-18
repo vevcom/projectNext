@@ -5,7 +5,7 @@ $imageHeight: 175px;
 $contentHeight: 50px;
 $height: $imageHeight + $contentHeight;
 
-$background: lighten(ohma.$colors-secondary, 15%);
+$background: color.adjust(ohma.$colors-secondary, $lightness: 15%);
 $textBoxTransparency: 60%;
 $textColor: ohma.$colors-gray-900;
 $textUnderlineColor: ohma.$colors-secondary;
@@ -24,40 +24,45 @@ $textBoxBackgroundColor: ohma.$colors-white;
     isolation: isolate;
     overflow: hidden;
     box-shadow: ohma.$colors-gray-800 0 0 10px;
+
     @include ohma.screenMobile {
         width: 100%;
     }
 
     &:hover {
-        @include ohma.screenMobile {
-            scale: 1;
-        }
         scale: 1.1;
         transition-duration: 0.3s;
 
+        @include ohma.screenMobile {
+            scale: 1;
+        }
+
         > .image {
+            scale: 1.1;
+            transition: scale 0.3s;
+
             @include ohma.screenMobile {
                 scale: 1;
             }
-            scale: 1.1;
-            transition: scale 0.3s;
         }
 
         > .content {
+            background-color: rgba($textBoxBackgroundColor, 0%);
+            box-shadow: ohma.$colors-secondary 0 0 0px;
+            padding-top: 10px;
+
             @include ohma.screenMobile {
                 background-color: rgba($textBoxBackgroundColor, 60%);
                 box-shadow: ohma.$colors-secondary 0 0 40px;
                 padding-top: $padding
             }
-            background-color: rgba($textBoxBackgroundColor, 0%);
-            box-shadow: ohma.$colors-secondary 0 0 0px;
-            padding-top: 10px;
 
             > h2 {
+                opacity: 0%;
+
                 @include ohma.screenMobile {
                     opacity: 100%;
                 }
-                opacity: 0%;
             }
         }
     }

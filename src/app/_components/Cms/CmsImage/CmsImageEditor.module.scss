@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+@use "sass:color";
+
 $collectionSize: calc(14vmin + 70px);
 
 .CmsImageEditor {
@@ -21,8 +23,8 @@ $collectionSize: calc(14vmin + 70px);
     }
     .linkToImages {
         position: absolute;
-        @include ohma.btn(ohma.$colors-primary);
         width: 10em;
+        @include ohma.btn(ohma.$colors-primary);
         @include ohma.screenLg {
             top: -2%;
             right: -2%;
@@ -33,11 +35,11 @@ $collectionSize: calc(14vmin + 70px);
         }
     }
     > .currentCmsImage {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
         @include ohma.screenMobile {
             display: none;
         }
-        grid-column: 1 / 2;
-        grid-row: 1 / 2;
         > .info {
             max-width: 150px;
             overflow: hidden;
@@ -51,15 +53,15 @@ $collectionSize: calc(14vmin + 70px);
     }
     > .selectImage {
         grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        background-color: color.adjust(ohma.$colors-secondary, $lightness: 40%);
+        overflow: scroll;
+        max-width: 100%;
         @include ohma.screenMobile {
             grid-column: 1 / 2;
             margin: 1em 0;
         }
-        grid-row: 1 / 2;
-        background-color: lighten(ohma.$colors-secondary, 40%);
         @include ohma.round;
-        overflow: scroll;
-        max-width: 100%;
         width: 100%;
         > * {
             isolation: isolate;
@@ -68,14 +70,14 @@ $collectionSize: calc(14vmin + 70px);
     > .selectCollection {
         grid-column: 1 / 3;
         grid-row: 2 / 3;
-        background-color: lighten(ohma.$colors-secondary, 50%);
-        @include ohma.round;
+        background-color: color.adjust(ohma.$colors-secondary, $lightness: 50%);
         display: flex;
         max-width: 100%;
         overflow: scroll;
         min-height: calc($collectionSize + 5vmin);
         align-items: center;
         padding: 0;
+        @include ohma.round;
         .collection {
             position: relative;
             margin: 0 .2em;
