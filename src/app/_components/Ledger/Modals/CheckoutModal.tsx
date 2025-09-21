@@ -6,12 +6,12 @@ import Button from '@/components/UI/Button'
 import React, { useState, lazy, Ref, useRef } from 'react'
 import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/Type'
 import type { PaymentProvider } from '@prisma/client'
-import type { StripePaymentRef } from '../Stripe/StripePayment'
-import type { ActionReturn } from '@/actions/Types'
-import { createActionError } from '@/actions/error'
+import type { StripePaymentRef } from '../../Stripe/StripePayment'
+import type { ActionReturn } from '@/services/actionTypes'
+import { createActionError } from '@/services/actionError'
 
-const StripeProvider = lazy(() => import('../Stripe/StripeProvider'))
-const StripePayment = lazy(() => import('../Stripe/StripePayment'))
+const StripeProvider = lazy(() => import('../../Stripe/StripeProvider'))
+const StripePayment = lazy(() => import('../../Stripe/StripePayment'))
 
 const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 

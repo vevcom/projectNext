@@ -1,14 +1,14 @@
 'use client'
 
 import styles from './PayoutModal.module.scss'
-import Form from '../Form/Form'
-import PopUp from '../PopUp/PopUp'
-import NumberInput from '../UI/NumberInput'
-import Button from '../UI/Button'
+import Form from '../../Form/Form'
+import PopUp from '../../PopUp/PopUp'
+import NumberInput from '../../UI/NumberInput'
+import Button from '../../UI/Button'
 import { createPayout } from '@/services/ledger/ledgerOperations/actions'
 import { convertAmount } from '@/lib/currency/convert'
 import { useState } from 'react'
-import { bindParams } from '@/actions/bind'
+import { bindParams } from '@/services/actionBind'
 
 type Props = {
     ledgerAccountId: number,

@@ -5,7 +5,7 @@ import BorderButton from '@/UI/BorderButton'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import UserDisplayName from '@/components/User/UserDisplayName'
-import { faCog, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faMoneyBillWave, faSignOut, faUser, faQrcode } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -55,7 +55,7 @@ export default function UserNavigation({ profile }: PropTypes) {
                     <p>OmegaId</p>
                 </Link>
                 <Link href="/users/me/account">
-                    <FontAwesomeIcon icon={faMoneyBill} />
+                    <FontAwesomeIcon icon={faMoneyBillWave} />
                     <p>Konto</p>
                 </Link>
                 <Link href="/users/me/settings">

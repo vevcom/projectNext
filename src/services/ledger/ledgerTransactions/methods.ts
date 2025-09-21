@@ -63,7 +63,12 @@ export namespace LedgerTransactionMethods {
             },
             include: {
                 ledgerEntries: true,
-                payment: true,
+                payment: {
+                    include: {
+                        stripePayment: true,
+                        manualPayment: true,
+                    },
+                },
             },
             orderBy: {
                 createdAt: 'desc',
