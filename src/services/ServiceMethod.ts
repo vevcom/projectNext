@@ -1,10 +1,11 @@
 import '@pn-server-only'
-import { z } from 'zod'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
+import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'
+import type { z } from 'zod'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
@@ -16,82 +17,104 @@ import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
  * The caveat is that a Prisma.TransactionClient can't be used to open a new transaction
  * so if the service method opens a transaction, the prisma client can only be a PrismaClient.
  */
-export type PrismaPossibleTransaction<
+type PrismaPossibleTransaction<
     OpensTransaction extends boolean
 > = OpensTransaction extends true ? PrismaClient : Prisma.TransactionClient
 
 /**
- * The type used internally by Zod to represent a tuple of schemas.
+ * Utility type that remove all properties of type `never`.
  */
-export type SchemaTuple = [z.ZodTypeAny, ...z.ZodTypeAny[]] | []
+type HideNever<T> = {
+    [K in keyof T as T[K] extends never ? never : K]: T[K]
+}
 
 /**
- * Helper type to infer the input types of a tuple of schemas.
+ * The input type which should will be passed to the service method.
+ * This is what the zod schemas will parse.
  */
-export type InputSchemaTuple<S extends SchemaTuple> = z.input<z.ZodTuple<S>>
+export type ServiceMethodInputUnparsed<
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+> = HideNever<{
+    params: z.input<NonNullable<ParamsSchema>>,
+    data: z.input<NonNullable<DataSchema>>,
+}>
 
 /**
- * Helper type to infer the output types of a tuple of schemas.
+ * The input that is provided to the a service method implementation.
+ * This is the the input after is has been parsed with zod.
  */
-export type OutputSchemaTuple<S extends SchemaTuple> = z.infer<z.ZodTuple<S>>
+export type ServiceMethodInputParsed<
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+> = HideNever<{
+    params: z.infer<NonNullable<ParamsSchema>>,
+    data: z.infer<NonNullable<DataSchema>>,
+}>
 
 /**
- * The input arguments for a service method function.
- * These are the arguments passed by the caller of the service method.
+ * This is the actual input type for the service method function used under the hood
+ * since the input can be from the client we can't guarantee type safety.
  */
-export type ServiceMethodInputArgs<
-    OpensTransaction extends boolean,
-    Schemas extends SchemaTuple,
-> = [...InputSchemaTuple<Schemas>, Partial<ServiceMethodContext<OpensTransaction>>?]
-
-/**
- * The output arguments for a service method function.
- * These are the arguments passed to the author and the method internally.
- */
-export type ServiceMethodOutputArgs<
-    OpensTransaction extends boolean,
-    Schemas extends SchemaTuple,
-> = [...OutputSchemaTuple<Schemas>, ServiceMethodContext<OpensTransaction>]
+export type ServiceMethodInputUnchecked = {
+    params?: unknown,
+    data?: unknown,
+}
 
 /**
  * This is the type for the configuration of a service method.
  * I.e. what is passed to the ServiceMethod function when creating a service method.
  */
-export type ServiceMethodConfig<
+type ServiceMethodConfig<
     DynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
-    Schemas extends SchemaTuple,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
-    schemas?: Schemas,
+    paramsSchema?: ParamsSchema,
+    dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    auther?: (
-        ...args: ServiceMethodOutputArgs<OpensTransaction, Schemas>
-    ) => // Todo: Make prettier type for returntype of dynamic fields
+    authorizer?: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
+        // Todo: Make prettier type for return type of dynamic fields
         | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
         | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
-    method: (
-        ...args: ServiceMethodOutputArgs<OpensTransaction, Schemas>
-    ) => Return | Promise<Return>,
+    method: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
+        Return | Promise<Return>,
 }
 
 /**
- * The return type of the ServiceMethod function.
- * It is a function that takes the data arguments and an optional context argument.
+ * The function signature for a service method.
+ *
+ * The generic `Checked` determines whether to use compile time type checking or not for the argument.
+ *
+ * The default is `CHECKED` which means that the arguments will have to match what the
+ * zod schemas expect to parse.
+ *
+ * Alternatively, `UNCHECKED` can be selected to forgo the TypeScript type checking.
+ * Importantly, this will not skip the runtime validation with zod.
+ * `UNCHECKED` is used when handling untyped input, e.g. from an HTTP request.
  */
-export type ServiceMethodType<
+export type ServiceMethod<
     OpensTransaction extends boolean,
     Return,
-    Schemas extends SchemaTuple,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
 > = {
-    (...args: ServiceMethodInputArgs<OpensTransaction, Schemas>): Promise<Return>,
-    schemas?: Schemas,
+    <Checked extends 'CHECKED' | 'UNCHECKED' = 'CHECKED'>(
+    args: (
+            Checked extends 'CHECKED'
+                ? ServiceMethodInputUnparsed<ParamsSchema, DataSchema>
+                : ServiceMethodInputUnchecked
+        ) & Partial<ServiceMethodContext<OpensTransaction>>
+    ): Promise<Return>
+    paramsSchema?: ParamsSchema,
+    dataSchema?: DataSchema,
 }
-
 /**
  * In addition to custom data arguments, every service method receives a context object.
  */
-export type ServiceMethodContext<OpensTransaction extends boolean = boolean> = {
+type ServiceMethodContext<OpensTransaction extends boolean = boolean> = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
     bypassAuth: boolean,
@@ -99,29 +122,29 @@ export type ServiceMethodContext<OpensTransaction extends boolean = boolean> = {
 
 /**
  * Async local storage is used to store the context of the current service method call.
- * All service methods called within the context of another service method will 
+ * All service methods called within the context of another service method will
  * inherit the context of the parent service method, unless explicitly overridden.
- * 
+ *
  * Read more about async local storage here: https://nodejs.org/api/async_context.html
  */
 const asyncLocalStorage = new AsyncLocalStorage<ServiceMethodContext>()
 
 /**
  * Runs a callback with a specific service method context.
- * 
+ *
  * @param contextOverride Partial context to override the current context with.
  * @param callback The callback to run with the context.
  * @returns The return value of the callback.
  */
 function withContext<T>(contextOverride: Partial<ServiceMethodContext>, callback: (context: ServiceMethodContext) => T): T {
-    const localContext = asyncLocalStorage.getStore();
+    const localContext = asyncLocalStorage.getStore()
 
     const context: ServiceMethodContext = {
-        prisma:     contextOverride.prisma     ?? localContext?.prisma     ?? globalPrisma,
-        session:    contextOverride.session    ?? localContext?.session    ?? Session.empty(),
+        prisma: contextOverride.prisma ?? localContext?.prisma ?? globalPrisma,
+        session: contextOverride.session ?? localContext?.session ?? Session.empty(),
         bypassAuth: contextOverride.bypassAuth ?? localContext?.bypassAuth ?? false,
-    };
-    
+    }
+
     return asyncLocalStorage.run(context, () => callback(context))
 }
 
@@ -129,42 +152,30 @@ function withContext<T>(contextOverride: Partial<ServiceMethodContext>, callback
  * Wrapper for creating service methods. It handles validation, authorization, and errors for you.
  *
  * @param config - The configuration for the service method.
- * @param config.auther - A function which returns the auther that will be used to authorize the user.
+ * @param config.authorizer - A function which returns the authorizer that will be used to authorize the user.
+ * @param config.paramsSchema - The zod schemas that will be used to validate the parameters which are passed.
+ * @param config.dataSchema - The zod schemas that will be used to validate the data which is passed.
  * @param config.method - The method that will be called when the service method is executed.
- * @param config.schemas - An array of zod schemas that will be used to validate the arguments that are passed to the service method.
- * @param [config.opensTransaction=false] - Whether or not the service method opens a transaction. Determines the type of prisma client that is passed to the service method.
+ * @param [config.opensTransaction=false] - Determines the type of prisma client that is passed to the service method.
  */
-export function ServiceMethod<
+export function serviceMethod<
     DynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
-    Schemas extends SchemaTuple = [],
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
-    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, Schemas>,
-): ServiceMethodType<OpensTransaction, Return, Schemas> {
-    // Create a tuple schema from the array of schemas.
-    // This allows us to parse all the data arguments at once.
-    const schema = z.tuple(config.schemas ?? [] as Schemas)
-    const expectedDataArgCount = config.schemas?.length ?? 0
-    
-    // Parses the data arguments using the provided schemas.
-    const parseData = (data: unknown[]) => {
-        // We expect as many data arguments as there are schemas.
-        if (data.length !== expectedDataArgCount) {
-            throw new Smorekopp(
-                'BAD DATA',
-                `Service method expected ${expectedDataArgCount} data arguments, but got ${data.length}.`,
-            )
-        }
-
-        // Do the actual parsing.
-        const parsedData = schema.safeParse(data)
-        if (!parsedData.success) {
-            throw new ParseError(parsedData)
-        }
-        return parsedData.data
+    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataSchema>,
+): ServiceMethod<OpensTransaction, Return, ParamsSchema, DataSchema> {
+    // Guard to check if params and data are only present if there are corresponding schemas.
+    const expectedInputsIsPresent = (
+        input: ServiceMethodInputUnchecked
+    ): input is ServiceMethodInputParsed<ParamsSchema, DataSchema> => {
+        const paramsMatch = (input.params !== undefined) === (config.paramsSchema !== undefined)
+        const dataMatches = (input.data !== undefined) === (config.dataSchema !== undefined)
+        return paramsMatch && dataMatches
     }
-    
+
     // Guard to check if the prisma client can be used for this service method.
     const isAppropriateClient = (
         prisma: PrismaClient | Prisma.TransactionClient
@@ -172,22 +183,53 @@ export function ServiceMethod<
         !config.opensTransaction || '$transaction' in prisma
 
     // Wraps the execution of the method with parsing, authorization, and context handling.
-    async function execute(...args: ServiceMethodInputArgs<OpensTransaction, Schemas>) {
-        // First, split the arguments into data and context.
-        // There should always be at as many arguments as there are schemas.
-        const dataArgs = args.slice(0, expectedDataArgCount)
-        // There may also be one additional argument for overriding the context.
-        // NOTE: TypeScript thinks this is "{}" for some reason, but this works so it's fine I guess?
-        const contextArg = args[expectedDataArgCount] ?? {}
+    const execute = async (
+        { params, data, ...context }: ServiceMethodInputUnchecked & Partial<ServiceMethodContext<OpensTransaction>>
+    ) => {
+        const input = { params, data }
 
-        // Second, parse the data arguments.
-        // This function will throw if the data is invalid.
-        const parsedData = parseData(dataArgs)
+        // First, parse the provided params and data.
+        if (input.params) {
+            if (!config.paramsSchema) {
+                throw new Smorekopp(
+                    'BAD PARAMETERS',
+                    'Service method received params, but has no params schema.',
+                )
+            }
+            const paramsParse = config.paramsSchema.safeParse(input.params)
+            if (!paramsParse.success) {
+                throw new Smorekopp(
+                    'BAD PARAMETERS',
+                    'Invalid params passed to service method.',
+                )
+            }
+            input.params = paramsParse.data
+        }
 
-        // Third, get the context (which includes the prisma client, the session and the bypassAuth flag).
+        // Then, validate data (if any).
+        if (input.data) {
+            if (!config.dataSchema) {
+                throw new Smorekopp(
+                    'BAD DATA',
+                    'Service method received data, but has no dataValidation or dataSchema.',
+                )
+            }
+            const parse = zfd.formData(config.dataSchema).safeParse(input.data)
+            if (!parse.success) {
+                console.log(parse.error)
+                throw new ParseError(parse)
+            }
+            input.data = parse.data
+        }
+
+        if (!expectedInputsIsPresent(input)) {
+            throw new Smorekopp('SERVER ERROR', 'Service method received invalid input.')
+        }
+
+        // Then, get the context (which includes the prisma client, the session and the bypassAuth flag).
         // If a context override is provided, use it. Otherwise, use the context from the async local storage.
         // If there is no context in the async local storage, use global defaults.
-        return withContext(contextArg, async context => {
+        return withContext(context, async ({ prisma, bypassAuth, session }) => {
             if (!isAppropriateClient(prisma)) {
                 throw new Smorekopp(
                     'SERVER ERROR',
@@ -196,30 +238,30 @@ export function ServiceMethod<
             }
 
             // Then, authorize user.
-            // This has to be done after the validation because the auther might use the data to authorize the user.
-            if (!context.bypassAuth) {
-                if (!config.auther) {
+            // This has to be done after the validation because the authorizer might use the data to authorize the user.
+            if (!bypassAuth) {
+                if (!config.authorizer) {
                     throw new Smorekopp(
                         'UNAUTHENTICATED',
-                        'This service method is not externally by users.'
+                        'This service method is not externally callable.'
                     )
                 }
 
-                const auther = await config.auther(...parsedData, context)
-                const authRes = auther.auth(context.session)
+                const authorizer = await config.authorizer({ ...input, prisma, bypassAuth, session })
+                const authResult = authorizer.auth(session)
 
-                if (!authRes.authorized) {
-                    throw new Smorekopp(authRes.status, authRes.getErrorMessage)
+                if (!authResult.authorized) {
+                    throw new Smorekopp(authResult.status, authResult.getErrorMessage)
                 }
             }
 
             // Finally, call the method.
-            return prismaErrorWrapper(() => config.method(...parsedData, context))
+            return prismaErrorWrapper(() => config.method({ ...input, prisma, bypassAuth, session }))
         })
     }
 
-    // Attach the schemas to the execute function for introspection purposes
-    execute.schemas = config.schemas
+    execute.paramsSchema = config.paramsSchema
+    execute.dataSchema = config.dataSchema
 
     return execute
 }
