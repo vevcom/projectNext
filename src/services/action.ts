@@ -3,6 +3,7 @@ import { safeServerCall } from './actionError'
 import type { ActionReturn } from './actionTypes'
 import type { ServiceMethod } from '@/services/serviceMethod'
 import type { z } from 'zod'
+import { Session } from '@/auth/Session'
 
 export function action<Return>(
     serviceMethod: ServiceMethod<boolean, Return, undefined, undefined>
@@ -41,6 +42,8 @@ export function action<
     // has arguments witch match the underlying service method. This makes programming easier as Intellisense can
     // help and errors are caught at compile time.
     const actionUnsafe = async (params?: unknown, data?: unknown) => {
+        const session = await Session.fromNextAuth()
+
         // Treat empty form data as undefined. This is required because the form component will always send
         // a FormData instance, even if no data is being sent.
         if (data instanceof FormData && data.entries().next().done) {
@@ -50,6 +53,7 @@ export function action<
         return safeServerCall(() => serviceMethod<'UNCHECKED'>({
             params,
             data,
+            session,
         }))
     }
 
