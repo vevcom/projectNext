@@ -1,7 +1,7 @@
 /**
  * Waits for all promises to settle and returns their results.
  * Throws an error if any promise rejects, with `cause` containing all rejection reasons.
- * 
+ *
  * This is useful for ensuring that all asynchronous operations complete before proceeding.
  * Specifically, in cases where multiple database operations are ongoing even if one fails.
  *

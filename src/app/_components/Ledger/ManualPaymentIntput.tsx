@@ -1,5 +1,5 @@
-import Checkbox from "@/components/UI/Checkbox";
-import TextInput from "@/components/UI/TextInput";
+import Checkbox from '@/components/UI/Checkbox'
+import TextInput from '@/components/UI/TextInput'
 
 type Props = {
      bankAccountNumber?: string,

@@ -1,5 +1,5 @@
-import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import React, { useImperativeHandle } from "react";
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import React, { useImperativeHandle } from 'react'
 
 export type StripePaymentRef = {
     submit: () => Promise<string | undefined>;
@@ -16,10 +16,10 @@ export default function StripePayment({ ref }: Props) {
 
     useImperativeHandle(ref, () => ({
         submit: async () => {
-            if (!stripe || !elements) return "Stripe er ikke initalisert enda."
+            if (!stripe || !elements) return 'Stripe er ikke initalisert enda.'
 
             const { error } = await elements.submit()
-        
+
             if (error) return error.message || 'En feil oppsto når betalingen skulle sendes inn.'
         },
         confirm: async (clientSecret: string) => {

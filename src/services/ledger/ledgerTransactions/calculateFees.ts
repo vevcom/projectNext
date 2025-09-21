@@ -1,24 +1,23 @@
-import { BalanceRecord } from "@/services/ledger/ledgerAccount/Types"
+import type { BalanceRecord } from '@/services/ledger/ledgerAccount/Types'
 
-/** 
+/**
  * Calculates fees proportional to the ratio between `entryAmount` and `totalAmount`.
- * 
+ *
  * **Example:** Say an account has amount = 100 Kl.M. and fees = 20 Kl.M.
  * Deducting 25 Kl.M. is 25% of the total amount, so the fees deducted
  * should also be 25% of the total fees, i.e., 5 Kl.M.
  */
 export function feesFormula(entryAmount: number, totalAmount: number, totalFees: number) {
-    if (entryAmount === 0 || totalAmount === 0) return 0;
+    if (entryAmount === 0 || totalAmount === 0) return 0
 
-    let fees = Math.trunc(totalFees * entryAmount / totalAmount);
+    const fees = Math.trunc(totalFees * entryAmount / totalAmount)
 
-    // Clamp fees to have same sign as amount 
+    // Clamp fees to have same sign as amount
     // and never exceed total fees.
     if (entryAmount > 0) {
-        return Math.min(Math.max(fees, 0), totalFees);
-    } else {
-        return Math.min(Math.max(fees, -totalFees), 0);
+        return Math.min(Math.max(fees, 0), totalFees)
     }
+    return Math.min(Math.max(fees, -totalFees), 0)
 }
 
 /**
@@ -28,7 +27,7 @@ export function feesFormula(entryAmount: number, totalAmount: number, totalFees:
 export function calculateDebitFees(ledgerEntries: { funds: number, ledgerAccountId: number }[], balances: BalanceRecord) {
     const debitLedgerEntries = ledgerEntries.filter(entry => entry.funds < 0)
 
-    return Object.fromEntries(debitLedgerEntries.map(entry => { 
+    return Object.fromEntries(debitLedgerEntries.map(entry => {
         const balance = balances[entry.ledgerAccountId]
 
         if (!balance) throw Error(`Balance for ledger account nr. ${entry.ledgerAccountId} not provided.`)
@@ -63,12 +62,12 @@ export function calculateCreditFees(
         ...debitLedgerEntries.map(entry => -(entry.fees ?? 0)),
         payment?.fees,
     )
-    
+
     return Object.fromEntries(creditLedgerEntries.map(entry => {
         const fees = feesFormula(entry.funds, totalFunds, totalFees)
 
         // Subtract the from the totals to ensure
-        // that the sum of all fees ends up exactly 
+        // that the sum of all fees ends up exactly
         // equal to `totalFees`.
         totalFunds -= entry.funds
         totalFees -= fees

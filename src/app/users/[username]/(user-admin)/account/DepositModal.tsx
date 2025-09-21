@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import Form from "@/app/_components/Form/Form";
-import PopUp from "@/app/_components/PopUp/PopUp";
-import Button from "@/app/_components/UI/Button";
-import Checkbox from "@/app/_components/UI/Checkbox";
-import NumberInput from "@/app/_components/UI/NumberInput";
-import TextInput from "@/app/_components/UI/TextInput";
-import { currencySymbol } from "@/lib/currency/config";
-import { displayAmount } from "@/lib/currency/convert";
+import Form from '@/app/_components/Form/Form'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
+import Checkbox from '@/app/_components/UI/Checkbox'
+import NumberInput from '@/app/_components/UI/NumberInput'
+import TextInput from '@/app/_components/UI/TextInput'
+import { currencySymbol } from '@/lib/currency/config'
+import { displayAmount } from '@/lib/currency/convert'
 
 type PropTypes = {
     accountId: number,
@@ -22,7 +22,7 @@ export default function DepositModal({ accountId }: PropTypes) {
             customShowButton={(open) => <Button onClick={open}>{`Sett inn ${currencySymbol}`}</Button>}
         >
             <h3>Sett inn {currencySymbol}</h3>
-            {/* <Form 
+            {/* <Form
                 submitText={`Sett inn ${currencySymbol}`}
                 refreshOnSuccess={true}
                 action={async () => ({ success: true, data: { accountId } })}

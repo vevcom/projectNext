@@ -6,7 +6,7 @@ export function convertAmount(amount: string | number): number {
     if (typeof amount === 'string') {
         amount = amount.replace(',', '.')
     }
-    
+
     return Math.round(Number(amount) * 100)
 }
 

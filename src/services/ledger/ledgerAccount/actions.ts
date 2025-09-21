@@ -1,6 +1,6 @@
-"use server"
+'use server'
 
-import { action } from "@/actions/action"
-import { LedgerAccountMethods } from "./methods"
+import { LedgerAccountMethods } from './methods'
+import { action } from '@/services/action'
 
 export const calculateLedgerAccountBalanceAction = action(LedgerAccountMethods.calculateBalance)

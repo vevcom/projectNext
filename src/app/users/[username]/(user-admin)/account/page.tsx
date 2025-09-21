@@ -1,15 +1,15 @@
 // import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
+import Card from './Card'
+import BankCardModal from './BankCardModal'
 import LedgerAccountBalance from '@/app/_components/Ledger/LedgerAccountBalance'
 import TextInput from '@/app/_components/UI/TextInput'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
 import Button from '@/components/UI/Button'
-import Link from 'next/link'
-import Card from './Card'
-import BankCardModal from './BankCardModal'
 import DepositModal from '@/components/Ledger/DepositModal'
 import PayoutModal from '@/components/Ledger/PayoutModal'
 import { calculateLedgerAccountBalanceAction } from '@/services/ledger/ledgerAccount/actions'
+import Link from 'next/link'
 
 export default async function Account() {
     const session = await getUser({
@@ -17,7 +17,7 @@ export default async function Account() {
         shouldRedirect: true,
     }) // TODO: Replace
 
-    const account = { id: 1 }; //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
+    const account = { id: 1 } //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
 
     const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ id }))
 
@@ -34,7 +34,7 @@ export default async function Account() {
             {/* <CheckoutModal title='Sett inn'/> */}
             {/* <PayoutModal accountId={account.id} /> */}
         </Card>
-            {/* <PopUp
+        {/* <PopUp
                 PopUpKey="DepositForm"
                 customShowButton={(open) => <Button onClick={open}>Sett inn muenter</Button>}
             >
@@ -68,7 +68,7 @@ export default async function Account() {
             <h2>Betalingsalternativer</h2>
             <h3>Bankkort</h3>
             <p>
-                Du kan lagre kortinformasjonen din for senere betalinger. 
+                Du kan lagre kortinformasjonen din for senere betalinger.
                 Kortinformasjonen lagres kun hos betalingsleverandøren vår Stripe, ikke på våre tjenere.
             </p>
             <BankCardModal userId={session.user.id} />

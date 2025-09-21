@@ -1,9 +1,9 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing"
-import { stripe } from "@/lib/stripe"
-import { ServerError } from "@/services/error"
-import { ServiceMethod } from "@/services/ServiceMethod"
-import { PaymentProvider } from "@prisma/client"
-import { z } from "zod"
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { stripe } from '@/lib/stripe'
+import { ServerError } from '@/services/error'
+import { serviceMethod } from '@/services/serviceMethod'
+import { PaymentProvider } from '@prisma/client'
+import { z } from 'zod'
 
 
 export namespace PaymentMethods {
@@ -12,8 +12,8 @@ export namespace PaymentMethods {
      * Important: This method does not call external APIs to enable it to be used in transactions.
      * Call `initiate` to actually begin collecting the payment.
      */
-    export const create = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const create = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.intersection(
             z.object({
                 funds: z.number(),
@@ -61,15 +61,15 @@ export namespace PaymentMethods {
 
     /**
      * Calls the external API to begin collecting the payment.
-     * 
+     *
      * @warning Do not call this method for manual payments! It will fail.
      */
-    export const initiate = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const initiate = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             paymentId: z.number(),
         }),
-        // This method does not actually open a transaction. However, it cannot be used 
+        // This method does not actually open a transaction. However, it cannot be used
         // inside a transaction as it does external API calls which cannot be reversed.
         opensTransaction: true,
         method: async ({ prisma, params }) => {

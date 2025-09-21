@@ -1,24 +1,23 @@
 'use client'
-import React, { lazy, Ref, useRef } from "react"
-import styles from "./CheckoutModal.module.scss"
-import { PaymentProvider } from "@prisma/client"
-import Form from "@/components/Form/Form"
-import { ActionReturn } from "@/actions/Types"
-import { useState } from "react"
-import PopUp from "@/components/PopUp/PopUp"
-import { ExpandedLedgerTransaction } from "@/services/ledger/ledgerTransactions/Type"
-import Button from "@/components/UI/Button"
-import { StripePaymentRef } from "../Stripe/StripePayment"
-import { createActionError } from "@/actions/error"
+import styles from './CheckoutModal.module.scss'
+import Form from '@/components/Form/Form'
+import PopUp from '@/components/PopUp/PopUp'
+import Button from '@/components/UI/Button'
+import React, { useState, lazy, Ref, useRef } from 'react'
+import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/Type'
+import type { PaymentProvider } from '@prisma/client'
+import type { StripePaymentRef } from '../Stripe/StripePayment'
+import type { ActionReturn } from '@/actions/Types'
+import { createActionError } from '@/actions/error'
 
-const StripeProvider = lazy(() => import("../Stripe/StripeProvider"))
-const StripePayment = lazy(() => import("../Stripe/StripePayment"))
+const StripeProvider = lazy(() => import('../Stripe/StripeProvider'))
+const StripePayment = lazy(() => import('../Stripe/StripePayment'))
 
-const defaultPaymentProvider: PaymentProvider = "STRIPE"
+const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 
 const paymentProviderNames: Record<PaymentProvider, string> = {
-    STRIPE: "Stripe",
-    MANUAL: "Manuell Betaling",
+    STRIPE: 'Stripe',
+    MANUAL: 'Manuell Betaling',
 }
 
 type Props = {
@@ -32,19 +31,19 @@ type Props = {
     targetLedgerAccountId?: number,
     children?: React.ReactNode,
 }
- 
-export default function CheckoutModal({ 
+
+export default function CheckoutModal({
     callback,
-    title = "Betal", 
-    showSummary = true, 
-    totalFunds = 100, 
-    availableFunds = 50, 
-    manualFees = 0, 
+    title = 'Betal',
+    showSummary = true,
+    totalFunds = 100,
+    availableFunds = 50,
+    manualFees = 0,
     sourceLedgerAccountId,
     targetLedgerAccountId,
 }: Props) {
     // const stripe = useStripe()
-    
+
     const [paymentProvider, setPaymentProvider] = useState<PaymentProvider>(defaultPaymentProvider)
     const [useFunds, setUseFunds] = useState<boolean>(availableFunds > 0)
 
@@ -54,9 +53,9 @@ export default function CheckoutModal({
     const fundsToPay = Math.max(0, totalFunds - fundsToTransfer)
 
     const handleSubmit = async (): Promise<ActionReturn<void, false>> => {
-        if (paymentProvider === "STRIPE") {
+        if (paymentProvider === 'STRIPE') {
             const result = await stripePaymentRef?.current?.submit()
-        
+
             if (!result) {
                 return createActionError('BAD DATA', 'Stripe er ikke initalisert enda.')
             }
@@ -82,13 +81,13 @@ export default function CheckoutModal({
                 funds: fundsToPay,
             },
         })
-        
+
         if (!result.success) return result
 
         const transaction = result.data
 
         if (transaction.payment?.state === 'PENDING') {
-            if (paymentProvider !== "STRIPE" || !transaction.payment?.stripePayment) {
+            if (paymentProvider !== 'STRIPE' || !transaction.payment?.stripePayment) {
                 return createActionError('BAD DATA', 'Ugyldig betalingsdata fra server.')
             }
 
@@ -100,34 +99,34 @@ export default function CheckoutModal({
     }
 
     return (
-        <PopUp 
-            PopUpKey={title} 
-            showButtonContent={title} 
+        <PopUp
+            PopUpKey={title}
+            showButtonContent={title}
             customShowButton={(open) => <Button onClick={open} color="primary">{title}</Button>}
         >
             <div className={styles.checkoutFormContainer}>
                 <Form action={handleSubmit} submitText={title}>
                     <label>
-                        <input 
-                            type="checkbox" 
-                            name="useFunds" 
-                            defaultChecked={useFunds} 
-                            disabled={availableFunds <= 0} 
+                        <input
+                            type="checkbox"
+                            name="useFunds"
+                            defaultChecked={useFunds}
+                            disabled={availableFunds <= 0}
                             onChange={(events) => setUseFunds(events.target.checked)}
                         />
                         Bruk saldo
                     </label>
-                    
+
                     <fieldset disabled={fundsToPay <= 0}>
                         <legend>Betal med...</legend>
 
                         {Object.entries(paymentProviderNames).map(([provider, name]) => (
                             <label key={provider}>
-                                <input 
-                                    type="radio" 
-                                    name="paymentProvider" 
-                                    value={provider} 
-                                    defaultChecked={provider===defaultPaymentProvider} 
+                                <input
+                                    type="radio"
+                                    name="paymentProvider"
+                                    value={provider}
+                                    defaultChecked={provider === defaultPaymentProvider}
                                     onChange={() => setPaymentProvider(provider as PaymentProvider)}
                                 />
                                 {name}
@@ -141,7 +140,7 @@ export default function CheckoutModal({
                                 <StripeProvider amount={fundsToPay}>
                                     <StripePayment ref={stripePaymentRef}/>
                                 </StripeProvider>
-                            ) || 
+                            ) ||
                             paymentProvider === 'MANUAL' && (
                                 <blockquote>
                                     With great power comes great responsibility.
@@ -150,7 +149,7 @@ export default function CheckoutModal({
                             )
                         )}
                     </div>
-                        {/* {amountToPay > 0 ? (
+                    {/* {amountToPay > 0 ? (
                         // paymentProvider === "STRIPE" && <p>Du vil bli omdirigert til Stripe for å fullføre betalingen.</p> ||
                         // paymentProvider === "MANUAL" && <p>Du vil motta instruksjoner for manuell betaling via e-post etter at du har sendt inn skjemaet.</p>
                         // ) : (
@@ -177,7 +176,7 @@ export default function CheckoutModal({
     )
 }
 
-  {/* <table>
+{/* <table>
     <tbody>
     <tr>
         <td>Tilgjengelig Saldo</td>
@@ -212,11 +211,11 @@ export default function CheckoutModal({
 //             <legend>Betal med...</legend>
 //             {paymentProviders.map(({ provider, name }) => (
 //                 <label key={provider}>
-//                     <input 
-//                         type="radio" 
-//                         name="paymentProvider" 
-//                         value={provider} 
-//                         defaultChecked={provider==="STRIPE"} 
+//                     <input
+//                         type="radio"
+//                         name="paymentProvider"
+//                         value={provider}
+//                         defaultChecked={provider==="STRIPE"}
 //                         onChange={() => setSelectedProvider(provider)}
 //                     />
 //                     {name}
@@ -224,7 +223,7 @@ export default function CheckoutModal({
 //             ))}
 //         </fieldset>
 
-//         {paymentProviders.map(({ provider, component }, i) => 
+//         {paymentProviders.map(({ provider, component }, i) =>
 //             provider === selectedProvider && <div key={i}>{component}</div>
 //         )}
 //     </div>

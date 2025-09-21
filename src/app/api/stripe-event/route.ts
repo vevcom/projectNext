@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const event = stripe.webhooks.constructEvent(body, stripeSignature, process.env.STRIPE_WEBHOOK_SECRET)
-    
+
     // Check if the event is one of the expected types
     if (event.type !== 'charge.succeeded' && event.type !== 'charge.updated') {
         logger.warn(`Unhandled Stripe event received: ${event.type}`)
@@ -28,8 +28,7 @@ export async function POST(req: Request) {
     }
 
     try {
-        await DepositMethods.confirmStripe.newClient().execute({ 
-            session: null, 
+        await DepositMethods.confirmStripe({
             params: {
                 balanceTransactionId: event.data.object.balance_transaction,
                 paymentIntentId: event.data.object.payment_intent,

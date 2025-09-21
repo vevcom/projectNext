@@ -1,23 +1,21 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { Session } from "@/auth/Session";
-import { Context, ServiceMethod } from "@/services/ServiceMethod";
-import { describe, test, expect } from "@jest/globals";
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { Session } from '@/auth/Session'
+import { serviceMethod } from '@/services/serviceMethod'
+import { prisma as globalPrisma } from '@/prisma/client'
+import { describe, test, expect } from '@jest/globals'
+import type { ServiceMethodContext } from '@/services/serviceMethod'
 
-const returnContextInfo = ServiceMethod({
-    auther: () => RequireNothing.staticFields({}).dynamicFields({}),
-    method: async ({ prisma, session }) => {
-        return {
-            inTransaction: "$transaction" in prisma,
-            apiKeyId: session.apiKeyId,
-        }
-    }
+const returnContextInfo = serviceMethod({
+    authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+    method: async ({ prisma, session }) => ({
+        inTransaction: '$transaction' in prisma,
+        apiKeyId: session.apiKeyId,
+    })
 })
 
-const callReturnContextInfo = ServiceMethod({
-    auther: () => RequireNothing.staticFields({}).dynamicFields({}),
-    method: async () => {
-        return returnContextInfo({})
-    }
+const callReturnContextInfo = serviceMethod({
+    authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+    method: async () => returnContextInfo({})
 })
 
 describe('context', () => {
@@ -28,16 +26,16 @@ describe('context', () => {
         permissions: [],
     })
     const emptySession = Session.empty()
-    
-    const contexts: Context[] = [
-        { session: emptySession, prisma },
-        { session: apiKeySession, prisma },
-        { session: null, prisma },
+
+    const contexts: ServiceMethodContext[] = [
+        { session: emptySession, prisma: globalPrisma, bypassAuth: false },
+        { session: apiKeySession, prisma: globalPrisma, bypassAuth: false },
+        { session: emptySession, prisma: globalPrisma, bypassAuth: true },
     ]
-    
+
     test.each(contexts)('should work', async (context) => {
         const expected = {
-            inTransaction: "$transaction" in context.prisma,
+            inTransaction: '$transaction' in context.prisma,
             apiKeyId: context.session?.apiKeyId,
         }
 

@@ -26,7 +26,7 @@ export default function TransactionList({ accountId }: Props) {
             <tbody>
                 <tr>
                     <td>01.01.1970</td>
-                    <td align='right'>0 Kluengende Meunt</td>
+                    <td align="right">0 Kluengende Meunt</td>
                     <td>Innskudd</td>
                     <td>-</td>
                     <td>Ingen</td>

@@ -1,9 +1,9 @@
 import { LedgerAccountSchemas } from './schemas'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { ServiceMethod } from '@/services/ServiceMethod'
 import { ServerError } from '@/services/error'
+import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
-import { BalanceRecord } from './Types'
+import type { BalanceRecord } from './Types'
 
 export namespace LedgerAccountMethods {
     /**
@@ -16,8 +16,8 @@ export namespace LedgerAccountMethods {
      *
      * @returns The created account.
      */
-    export const create = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const create = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         dataSchema: LedgerAccountSchemas.create,
         method: async ({ prisma, data }) => {
             const type = data.userId === undefined ? 'GROUP' : 'USER'
@@ -53,8 +53,8 @@ export namespace LedgerAccountMethods {
      *
      * @returns The account details.
      */
-    export const read = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const read = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.union([
             z.object({
                 userId: z.number(),
@@ -75,7 +75,7 @@ export namespace LedgerAccountMethods {
 
             if (account) return account
 
-            return create.client(prisma).execute({ session, data: params })
+            return create({ session, data: params })
         },
     })
 
@@ -83,14 +83,14 @@ export namespace LedgerAccountMethods {
      * Calculates the balance and fees of a ledger account. Optionally takes a transaction ID to calculate the balance up until that transaction.
      *
      * @warning Non-existent accounts will be treated as having a balance of zero.
-     * 
+     *
      * @param params.ids The IDs of the accounts to calculate the balance for.
      * @param params.atTransactionId Optional transaction ID to calculate the balance up until that transaction.
      *
      * @returns The balances of the ledger accounts.
      */
-    export const calculateBalances = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const calculateBalances = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             ids: z.number().array(),
             atTransactionId: z.number().optional(),
@@ -140,10 +140,10 @@ export namespace LedgerAccountMethods {
             const balanceRecord = Object.fromEntries([
                 ...params.ids.map(id => [id, { amount: 0, fees: 0 }]),
                 ...balanceArray.map(balance => [
-                    balance.ledgerAccountId, 
+                    balance.ledgerAccountId,
                     {
                         amount: balance._sum.funds ?? 0,
-                        fees: balance._sum.fees ?? 0 
+                        fees: balance._sum.fees ?? 0
                     }
                 ])
             ])
@@ -154,22 +154,22 @@ export namespace LedgerAccountMethods {
 
     /**
      * Calcultates the balance of a single account. Under the hood it simply uses `calculateBalances`.
-     * 
+     *
      * @warning In case a ledger account with the provided id doesn't exist a balance of zero will be returned!
-     * 
+     *
      * @param params.id The ID of the account to calculate the balance for.
      * @param params.atTransactionId Optional transaction ID to calculate the balance up until that transaction.
      *
      * @returns The balances of the ledger accounts.
      */
-    export const calculateBalance = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+    export const calculateBalance = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             id: z.number(),
             atTransactionId: z.number().optional(),
         }),
         method: async ({ prisma, session, params }) => {
-            const balances = await calculateBalances.client(prisma).execute({
+            const balances = await calculateBalances({
                 params: {
                     ids: [params.id],
                     atTransactionId: params.atTransactionId,

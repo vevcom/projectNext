@@ -18,7 +18,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
     }
     const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
     return (
-        <PageWrapper title={`Brukerinnstillinger`}>
+        <PageWrapper title={'Brukerinnstillinger'}>
             <Link href={`/users/${username}`} className={styles.toProfile}>
                 Til Profilsiden
             </Link>

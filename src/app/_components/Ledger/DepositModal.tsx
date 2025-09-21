@@ -1,28 +1,28 @@
 'use client'
 
-import styles from "./DepositModal.module.scss"
-import { lazy, useRef, useState } from "react";
-import Form from "../Form/Form";
-import PopUp from "../PopUp/PopUp";
-import NumberInput from "../UI/NumberInput";
-import { createDepositAction } from "@/services/ledger/ledgerOperations/actions";
-import { createActionError } from "@/actions/error";
-import type { StripePaymentRef } from "../Stripe/StripePayment";
-import { PaymentProvider } from "@prisma/client";
-import Button from "../UI/Button";
-import { ExpandedPayment } from "@/services/ledger/payments/Types";
-import { convertAmount, displayAmount } from "@/lib/currency/convert";
+import styles from './DepositModal.module.scss'
+import Form from '../Form/Form'
+import PopUp from '../PopUp/PopUp'
+import NumberInput from '../UI/NumberInput'
+import Button from '../UI/Button'
+import { createDepositAction } from '@/services/ledger/ledgerOperations/actions'
+import { convertAmount, displayAmount } from '@/lib/currency/convert'
+import { lazy, useRef, useState } from 'react'
+import type { PaymentProvider } from '@prisma/client'
+import type { ExpandedPayment } from '@/services/ledger/payments/Types'
+import type { StripePaymentRef } from '../Stripe/StripePayment'
+import { createActionError } from '@/actions/error'
 
 // Avoid loading the Stripe components until they are needed
-const StripePayment = lazy(() => import("../Stripe/StripePayment"));
-const StripeProvider = lazy(() => import("../Stripe/StripeProvider"));
+const StripePayment = lazy(() => import('../Stripe/StripePayment'))
+const StripeProvider = lazy(() => import('../Stripe/StripeProvider'))
 
 const minFunds = 50_00
 
-const defaultPaymentProvider: PaymentProvider = "STRIPE"
+const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 const paymentProviderNames: Record<PaymentProvider, string> = {
-    STRIPE: "Stripe",
-    MANUAL: "Manuell Betaling",
+    STRIPE: 'Stripe',
+    MANUAL: 'Manuell Betaling',
 }
 
 type Props = {
@@ -33,11 +33,11 @@ export default function DepositModal({ ledgerAccountId }: Props) {
     const [funds, setFunds] = useState(minFunds)
     const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>(defaultPaymentProvider)
 
-    const stripePaymentRef = useRef<StripePaymentRef>(null);
+    const stripePaymentRef = useRef<StripePaymentRef>(null)
 
     const confirmPayment = async (payment: ExpandedPayment) => {
         // Stripe payments are the only payments that need confirmation
-        if (payment.provider !== "STRIPE") return 'Ukjent betalingsleverandør.'
+        if (payment.provider !== 'STRIPE') return 'Ukjent betalingsleverandør.'
 
         // The client secret key should be set after creation
         const clientSecret = payment.stripePayment?.clientSecret
@@ -58,7 +58,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
             const submitError = await stripePaymentRef.current.submit()
             if (submitError) return createActionError('UNKNOWN ERROR', submitError)
         }
-        
+
         // Call the server action to create the deposit
         const createResult = await createDepositAction({ ledgerAccountId, funds, provider: selectedProvider })
         if (!createResult.success) return createResult
@@ -67,7 +67,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
         const transaction = createResult.data
         const payment = transaction.payment
         if (!payment) return createActionError('UNKNOWN ERROR', 'Noe gikk galt ved opprettelse av betalingen.')
-        
+
         // Confirm the payment if its needed
         if (payment.state === 'PENDING') {
             const confirmError = await confirmPayment(payment)
@@ -77,27 +77,27 @@ export default function DepositModal({ ledgerAccountId }: Props) {
         return { success: true } as const
     }
 
-    return <PopUp PopUpKey={"depositModal"} customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}>
+    return <PopUp PopUpKey={'depositModal'} customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}>
         <div className={styles.checkoutFormContainer}>
             <Form action={handleSubmit} submitText="Sett inn">
-                <NumberInput 
+                <NumberInput
                     label="Beløp"
                     name="funds"
                     step={1}
-                    min={minFunds/100} 
+                    min={minFunds / 100}
                     defaultValue={funds / 100}
                     onChange={e => setFunds(convertAmount(e.target.value))}
                 />
-                
+
                 <fieldset>
                     <legend>Betal med...</legend>
 
                     {Object.entries(paymentProviderNames).map(([provider, name]) => (
                         <label key={provider}>
-                            <input 
+                            <input
                                 type="radio"
                                 name="provider"
-                                value={provider} 
+                                value={provider}
                                 checked={selectedProvider === provider}
                                 onChange={() => setSelectedProvider(provider as PaymentProvider)}
                             />
@@ -106,16 +106,16 @@ export default function DepositModal({ ledgerAccountId }: Props) {
                     ))}
                 </fieldset>
 
-                {selectedProvider === "STRIPE" && (
+                {selectedProvider === 'STRIPE' && (
                     <StripeProvider amount={funds} >
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
                 )}
 
-                {selectedProvider === "MANUAL" && (
+                {selectedProvider === 'MANUAL' && (
                     <div>
                         <p>Etter innsending vil du motta instruksjoner for manuell betaling.</p>
-                    </div>    
+                    </div>
                 )}
             </Form>
         </div>

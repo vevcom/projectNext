@@ -2,24 +2,25 @@ import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/methods'
 import { LedgerTransactionMethods } from '@/services/ledger/ledgerTransactions/methods'
 import { PaymentMethods } from '@/services/ledger/payments/methods'
 import { UserMethods } from '@/services/users/methods'
-import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
 import { allSettledOrThrow } from 'tests/utils'
+import { prisma } from '@/prisma/client'
+import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
 
 const TEST_ACCOUNT_COUNT = 3
 const INITIAL_BALANCE = { amount: 100_00, fees: 10_00 }
 
 describe('ledger transactions', () => {
-    let testAccountIds: number[] = []
+    const testAccountIds: number[] = []
 
     // Set up ledger accounts
     beforeAll(async () => {
         // TODO: Create utility to create test accounts
         await allSettledOrThrow(Array.from({ length: TEST_ACCOUNT_COUNT }).map(async (_, i) => {
             const username = `testuser${i + 1}`
-            
+
             const testUser = await UserMethods.create({
                 data: {
-                    email: username + '@example.com',
+                    email: `${username}@example.com`,
                     firstname: 'Test',
                     lastname: 'User',
                     username,
@@ -42,7 +43,7 @@ describe('ledger transactions', () => {
         await prisma.ledgerEntry.deleteMany({})
         await prisma.ledgerTransaction.deleteMany({})
     })
-    
+
     describe('external transactions', () => {
 
     })
@@ -50,25 +51,27 @@ describe('ledger transactions', () => {
     describe('internal transactions', () => {
         beforeEach(async () => {
             await allSettledOrThrow(testAccountIds.map(async accountId => {
-                    const manualPayment = await PaymentMethods.create({
-                        params: {
-                            funds: INITIAL_BALANCE.amount,
+                const manualPayment = await PaymentMethods.create({
+                    params: {
+                        funds: INITIAL_BALANCE.amount,
+                        provider: 'MANUAL',
+                        details: {
                             fees: INITIAL_BALANCE.fees,
-                            provider: 'MANUAL',
                         },
-                    })
-
-                    await LedgerTransactionMethods.create({
-                        params: {
-                            purpose: 'DEPOSIT',
-                            ledgerEntries: [{
-                                ledgerAccountId: accountId,
-                                funds: INITIAL_BALANCE.amount,
-                            }],
-                            paymentId: manualPayment.id,
-                        }
-                    })
+                    },
                 })
+
+                await LedgerTransactionMethods.create({
+                    params: {
+                        purpose: 'DEPOSIT',
+                        ledgerEntries: [{
+                            ledgerAccountId: accountId,
+                            funds: INITIAL_BALANCE.amount,
+                        }],
+                        paymentId: manualPayment.id,
+                    }
+                })
+            })
             )
         })
 

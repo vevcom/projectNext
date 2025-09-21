@@ -1,5 +1,5 @@
-import { PaymentProvider } from "@prisma/client";
-import { z } from "zod";
+import { PaymentProvider } from '@prisma/client'
+import { z } from 'zod'
 
 export namespace LedgerOperationSchemas {
     export const createDepositSchema = z.object({

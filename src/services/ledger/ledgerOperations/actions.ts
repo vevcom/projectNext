@@ -1,7 +1,7 @@
 'use server'
 
-import { action } from "@/actions/action";
-import { LedgerOperationMethods } from "./methods";
+import { LedgerOperationMethods } from './methods'
+import { action } from '@/services/action'
 
 export const createDepositAction = action(LedgerOperationMethods.createDeposit)
 export const createPayout = action(LedgerOperationMethods.createPayout)

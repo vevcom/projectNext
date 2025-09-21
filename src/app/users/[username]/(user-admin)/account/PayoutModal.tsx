@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import Form from "@/app/_components/Form/Form";
-import PopUp from "@/app/_components/PopUp/PopUp";
-import Button from "@/app/_components/UI/Button";
-import Checkbox from "@/app/_components/UI/Checkbox";
-import NumberInput from "@/app/_components/UI/NumberInput";
-import TextInput from "@/app/_components/UI/TextInput";
-import { currencySymbol } from "@/lib/currency/config";
-import { displayAmount } from "@/lib/currency/convert";
+import Form from '@/app/_components/Form/Form'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
+import Checkbox from '@/app/_components/UI/Checkbox'
+import NumberInput from '@/app/_components/UI/NumberInput'
+import TextInput from '@/app/_components/UI/TextInput'
+import { currencySymbol } from '@/lib/currency/config'
+import { displayAmount } from '@/lib/currency/convert'
 
 type PropTypes = {
     accountId: number,
@@ -24,7 +24,7 @@ export default function PayoutModal({ accountId, paymentAmount, accountNumber }:
             <h3>Registrer utbetaling</h3>
             {paymentAmount && <p>Utestående beløp: <b>{displayAmount(paymentAmount)}</b> {currencySymbol}</p>}
             <p>Oppgitt kontonummer for utbetaling: {accountNumber ? <b>{accountNumber}</b> : <i>Ingen</i>}</p>
-            <Form 
+            <Form
                 submitText="Registrer utbetaling"
                 refreshOnSuccess={true}
                 action={async () => ({ success: true, data: { accountId } })}

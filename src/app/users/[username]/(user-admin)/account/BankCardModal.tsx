@@ -1,15 +1,14 @@
-"use client"
+'use client'
 
-import PopUp from "@/app/_components/PopUp/PopUp";
-import Button from "@/app/_components/UI/Button";
-import { CardElement } from "@stripe/react-stripe-js";
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
+import { CardElement } from '@stripe/react-stripe-js'
 
 type PropTypes = {
     userId: number,
 }
 
-export default function BankCardModal({userId }: PropTypes) {
-    
+export default function BankCardModal({ userId }: PropTypes) {
     return (
         <PopUp
             PopUpKey="BankAccountModal"

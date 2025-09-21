@@ -1,21 +1,21 @@
-"use client"
+'use client'
 
-import { createUserAction } from "@/actions/users/create"
-import PopUp from "@/app/_components/PopUp/PopUp"
-import Button from "@/app/_components/UI/Button"
-import Form from "@/components/Form/Form"
-import { PaymentProvider } from "@prisma/client"
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
+import Form from '@/components/Form/Form'
+import type { PaymentProvider } from '@prisma/client'
+import { createUserAction } from '@/actions/users/create'
 
 type PropTypes = {
     title: string,
     children?: React.ReactNode,
 }
 
-const defaultPaymentProvider: PaymentProvider = "STRIPE"
+const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 
 const paymentProviders: Record<PaymentProvider, string> = {
-    STRIPE: "Stripe",
-    MANUAL: "Manuell betaling",
+    STRIPE: 'Stripe',
+    MANUAL: 'Manuell betaling',
 }
 
 export default function CheckoutModal({ title, children }: PropTypes) {
@@ -34,7 +34,7 @@ export default function CheckoutModal({ title, children }: PropTypes) {
 
                     {Object.entries(paymentProviders).map(([provider, name]) => (
                         <label key={provider}>
-                            <input type="radio" name="paymentProvider" value={provider} defaultChecked={provider===defaultPaymentProvider} />
+                            <input type="radio" name="paymentProvider" value={provider} defaultChecked={provider === defaultPaymentProvider} />
                             {name}
                         </label>
                     ))}

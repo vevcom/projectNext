@@ -1,6 +1,5 @@
-import { describe, test, expect, jest, beforeEach, beforeAll } from '@jest/globals'
 
-// TODO: 
+// TODO:
 // jest.mock('@/lib/stripe', () => ({
 //     stripe: {
 //         paymentIntent: {
@@ -12,10 +11,11 @@ import { describe, test, expect, jest, beforeEach, beforeAll } from '@jest/globa
 
 import { Smorekopp } from '@/services/error'
 import { PaymentMethods } from '@/services/ledger/payments/methods'
-import prisma from '@/prisma'
-import { PaymentProvider } from '@prisma/client'
 import { stripeWebhookCallback } from '@/services/ledger/payments/stripeWebhookCallback'
-import Stripe from 'stripe'
+import { prisma } from '@/prisma/client'
+import { PaymentProvider } from '@prisma/client'
+import { describe, test, expect, beforeEach, beforeAll } from '@jest/globals'
+import type Stripe from 'stripe'
 
 const TEST_PAYMENT_DEFAULTS = {
     ledgerAccountId: 0,
@@ -38,20 +38,18 @@ describe.skip('payments', () => {
     })
 
     test.each([PaymentProvider.MANUAL, PaymentProvider.STRIPE])('payment flow', async (provider) => {
-        let payment = await PaymentMethods.create.newClient().execute({
+        let payment = await PaymentMethods.create({
             params: {
                 ...TEST_PAYMENT_DEFAULTS,
                 provider,
             },
-            session: null,
         })
 
         if (payment.state === 'PENDING') {
-            payment = await PaymentMethods.initiate.newClient().execute({
+            payment = await PaymentMethods.initiate({
                 params: {
                     paymentId: payment.id,
                 },
-                session: null,
             })
 
             stripeWebhookCallback({
@@ -75,7 +73,7 @@ describe.skip('payments', () => {
     })
 
     test('initiate manual payment', async () => {
-        const payment = await PaymentMethods.create.newClient().execute({
+        const payment = await PaymentMethods.create({
             params: {
                 ledgerAccountId: 0,
                 amount: 100, // 1 kr
@@ -83,10 +81,9 @@ describe.skip('payments', () => {
                 description: 'Test betaling',
                 descriptor: 'Test betaling',
             },
-            session: null,
         })
 
-        expect(PaymentMethods.initiate.newClient().execute({ params: { paymentId: payment.id }, session: null }))
+        expect(PaymentMethods.initiate({ params: { paymentId: payment.id } }))
             .rejects.toThrow(new Smorekopp('BAD DATA'))
     })
 })
