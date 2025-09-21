@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { AdmissionSchemas } from './schemas'
 import { AdmissionAuthers } from './authers'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { UserConfig } from '@/services/users/config'
 import { Admission } from '@prisma/client'
@@ -9,8 +9,8 @@ import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
 export namespace AdmissionMethods {
-    export const readTrial = ServiceMethod({
-        auther: () => AdmissionAuthers.readTrial.dynamicFields({}),
+    export const readTrial = serviceMethod({
+        authorizer: () => AdmissionAuthers.readTrial.dynamicFields({}),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -20,8 +20,8 @@ export namespace AdmissionMethods {
             }
         })
     })
-    export const createTrial = ServiceMethod({
-        auther: () => AdmissionAuthers.createTrial.dynamicFields({}),
+    export const createTrial = serviceMethod({
+        authorizer: () => AdmissionAuthers.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),
         }),

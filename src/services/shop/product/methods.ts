@@ -1,14 +1,14 @@
 import { ProductAuthers } from './authers'
 import { ProductSchemas } from './schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExtendedProduct } from './Types'
 
 export namespace ProductMethods {
-    export const create = ServiceMethod({
-        auther: () => ProductAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => ProductAuthers.create.dynamicFields({}),
         dataSchema: ProductSchemas.create,
         method: async ({ prisma, data }) => prisma.product.create({
             data: {
@@ -19,8 +19,8 @@ export namespace ProductMethods {
         })
     })
 
-    export const createForShop = ServiceMethod({
-        auther: () => ProductAuthers.create.dynamicFields({}),
+    export const createForShop = serviceMethod({
+        authorizer: () => ProductAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),
@@ -44,8 +44,8 @@ export namespace ProductMethods {
         })
     })
 
-    export const createShopConnection = ServiceMethod({
-        auther: () => ProductAuthers.createShopConnection.dynamicFields({}),
+    export const createShopConnection = serviceMethod({
+        authorizer: () => ProductAuthers.createShopConnection.dynamicFields({}),
         dataSchema: ProductSchemas.createShopConnection,
         method: async ({ prisma, data }) => prisma.shopProduct.create({
             data: {
@@ -64,13 +64,13 @@ export namespace ProductMethods {
         })
     })
 
-    export const readMany = ServiceMethod({
-        auther: () => ProductAuthers.read.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => ProductAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.product.findMany()
     })
 
-    export const read = ServiceMethod({
-        auther: () => ProductAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => ProductAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             productId: z.number(),
         }),
@@ -88,8 +88,8 @@ export namespace ProductMethods {
         })
     })
 
-    export const readByBarCode = ServiceMethod({
-        auther: () => ProductAuthers.read.dynamicFields({}),
+    export const readByBarCode = serviceMethod({
+        authorizer: () => ProductAuthers.read.dynamicFields({}),
         dataSchema: ProductSchemas.readByBarCode,
         method: async ({ prisma, data }): Promise<ExtendedProduct | null> => {
             if (!data.barcode) {
@@ -130,8 +130,8 @@ export namespace ProductMethods {
         }
     })
 
-    export const update = ServiceMethod({
-        auther: () => ProductAuthers.update.dynamicFields({}),
+    export const update = serviceMethod({
+        authorizer: () => ProductAuthers.update.dynamicFields({}),
         dataSchema: ProductSchemas.update,
         method: async ({ prisma, data }) => prisma.product.update({
             where: {
@@ -145,8 +145,8 @@ export namespace ProductMethods {
         })
     })
 
-    export const updateForShop = ServiceMethod({
-        auther: () => ProductAuthers.update.dynamicFields({}),
+    export const updateForShop = serviceMethod({
+        authorizer: () => ProductAuthers.update.dynamicFields({}),
         dataSchema: ProductSchemas.updateForShop,
         paramsSchema: z.object({
             shopId: z.number(),

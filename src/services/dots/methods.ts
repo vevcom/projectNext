@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { DotConfig } from './config'
 import { DotAuthers } from './authers'
 import { DotSchemas } from './schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
@@ -12,8 +12,8 @@ import { z } from 'zod'
  * @param userId - The user id to read dots for
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
-const readForUser = ServiceMethod({
-    auther: ({ params }) => DotAuthers.readForUser.dynamicFields({ userId: params.userId }),
+const readForUser = serviceMethod({
+    authorizer: ({ params }) => DotAuthers.readForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
@@ -33,9 +33,9 @@ const readForUser = ServiceMethod({
     })
 })
 
-const create = ServiceMethod({
+const create = serviceMethod({
     dataSchema: DotSchemas.create,
-    auther: ({ data }) => DotAuthers.create.dynamicFields({ userId: data.userId }),
+    authorizer: ({ data }) => DotAuthers.create.dynamicFields({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),
     }),
@@ -70,8 +70,8 @@ const create = ServiceMethod({
     }
 })
 
-const readWrappersForUser = ServiceMethod({
-    auther: ({ params }) => DotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
+const readWrappersForUser = serviceMethod({
+    authorizer: ({ params }) => DotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
@@ -94,8 +94,8 @@ const readWrappersForUser = ServiceMethod({
     }
 })
 
-const readPage = ServiceMethod({
-    auther: () => DotAuthers.readPage.dynamicFields({}),
+const readPage = serviceMethod({
+    authorizer: () => DotAuthers.readPage.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
         z.object({

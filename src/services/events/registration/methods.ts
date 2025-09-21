@@ -1,7 +1,7 @@
 import { EventRegistrationAuthers } from './authers'
 import { EventRegistrationConfig } from './config'
 import { EventRegistrationSchemas } from './schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
@@ -125,12 +125,12 @@ async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
 
 export namespace EventRegistrationMethods {
 
-    export const create = ServiceMethod({
+    export const create = serviceMethod({
         paramsSchema: z.object({
             userId: z.number().min(0),
             eventId: z.number().min(0),
         }),
-        auther: ({ params }) => EventRegistrationAuthers.create.dynamicFields({
+        authorizer: ({ params }) => EventRegistrationAuthers.create.dynamicFields({
             userId: params.userId,
         }),
         opensTransaction: true,
@@ -162,8 +162,8 @@ export namespace EventRegistrationMethods {
         },
     })
 
-    export const createGuest = ServiceMethod({
-        auther: () => EventRegistrationAuthers.createGuest.dynamicFields({}),
+    export const createGuest = serviceMethod({
+        authorizer: () => EventRegistrationAuthers.createGuest.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number(),
         }),
@@ -196,8 +196,8 @@ export namespace EventRegistrationMethods {
         },
     })
 
-    export const readMany = ServiceMethod({
-        auther: () => EventRegistrationAuthers.readMany.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => EventRegistrationAuthers.readMany.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
             skip: z.number().optional(),
@@ -230,8 +230,8 @@ export namespace EventRegistrationMethods {
         },
     })
 
-    export const readManyDetailed = ServiceMethod({
-        auther: () => EventRegistrationAuthers.readManyDetailed.dynamicFields({}),
+    export const readManyDetailed = serviceMethod({
+        authorizer: () => EventRegistrationAuthers.readManyDetailed.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
             skip: z.number().optional(),
@@ -255,8 +255,8 @@ export namespace EventRegistrationMethods {
         }
     })
 
-    export const updateNotes = ServiceMethod({
-        auther: () => EventRegistrationAuthers.updateRegistrationNotes.dynamicFields({}),
+    export const updateNotes = serviceMethod({
+        authorizer: () => EventRegistrationAuthers.updateRegistrationNotes.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
@@ -291,8 +291,8 @@ export namespace EventRegistrationMethods {
         }
     })
 
-    export const destroy = ServiceMethod({
-        auther: () => EventRegistrationAuthers.destroy.dynamicFields({}),
+    export const destroy = serviceMethod({
+        authorizer: () => EventRegistrationAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),

@@ -2,15 +2,15 @@ import '@pn-server-only'
 import { PurchaseAuthers } from './authers'
 import { PurchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { UserMethods } from '@/services/users/methods'
 import { UserConfig } from '@/services/users/config'
 import { PermissionMethods } from '@/services/permissions/methods'
 import { PurchaseMethod } from '@prisma/client'
 
 export namespace PurchaseMethods {
-    export const createByStudentCard = ServiceMethod({
-        auther: async ({ data }) => {
+    export const createByStudentCard = serviceMethod({
+        authorizer: async ({ data }) => {
             let user
             try {
                 user = await UserMethods.read({

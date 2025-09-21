@@ -2,21 +2,21 @@ import '@pn-server-only'
 import { Session } from '@/auth/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { ServiceMethodExecuteArgs, ServiceMethodType } from '@/services/ServiceMethod'
+import type { ServiceMethod } from '@/services/serviceMethod'
 import type { SessionNoUser } from '@/auth/Session'
 import type { z } from 'zod'
 
 type APIHandler<
     RawParams,
     Return,
-    ParamsSchema extends z.ZodTypeAny | undefined,
-    DataSchema extends z.ZodTypeAny | undefined,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
 > = {
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>,
+    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>,
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {
-    params: (rawparams: RawParams) => z.input<NonNullable<ParamsSchema>>,
+    params: (rawParams: RawParams) => z.input<NonNullable<ParamsSchema>>,
 })
 
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
@@ -58,11 +58,11 @@ export function apiHandler<
                 }
             }
 
-            return serviceMethod({
+            return serviceMethod<'UNCHECKED'>({
                 params: params ? params(await rawParams) : undefined,
                 data,
                 session,
-            } as unknown as ServiceMethodExecuteArgs<ParamsSchema, DataSchema, boolean>)
+            })
         })
 }
 

@@ -5,7 +5,7 @@ import { ApiKeySchemas } from './schemas'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
 import { encodeApiKey } from './apiKeyEncoder'
 import { ServerError } from '@/services/error'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import logger from '@/lib/logger'
 import { z } from 'zod'
 import crypto from 'crypto'
@@ -16,8 +16,8 @@ export namespace ApiKeyMethods {
      * Updates the active status of an api key if it has expired, i.e. if the expiresAt date is in the past.
      * This method is used when reading api keys to ensure that the active status is correct.
      */
-    const updateIfExpired = ServiceMethod({
-        auther: () => ApiKeyAuthers.updateIfExpired.dynamicFields({}),
+    const updateIfExpired = serviceMethod({
+        authorizer: () => ApiKeyAuthers.updateIfExpired.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
             expiresAt: z.date().nullable(),
@@ -41,8 +41,8 @@ export namespace ApiKeyMethods {
             }
         }
     })
-    export const create = ServiceMethod({
-        auther: () => ApiKeyAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => ApiKeyAuthers.create.dynamicFields({}),
         dataSchema: ApiKeySchemas.create,
         method: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
             const NODE_ENV = process.env.NODE_ENV
@@ -62,8 +62,8 @@ export namespace ApiKeyMethods {
             return { ...apiKey, key: encodeApiKey({ key, id: apiKey.id }) }
         }
     })
-    export const read = ServiceMethod({
-        auther: () => ApiKeyAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => ApiKeyAuthers.read.dynamicFields({}),
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ name: z.string() })]),
         method: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
             const apiKey = await prisma.apiKey.findUnique({
@@ -84,8 +84,8 @@ export namespace ApiKeyMethods {
             }
         }
     })
-    export const readMany = ServiceMethod({
-        auther: () => ApiKeyAuthers.readMany.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => ApiKeyAuthers.readMany.dynamicFields({}),
         method: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
             const apiKeys = await prisma.apiKey.findMany({
                 select: ApiKeyConfig.filterSelection,
@@ -104,8 +104,8 @@ export namespace ApiKeyMethods {
             })))
         }
     })
-    export const readWithHash = ServiceMethod({
-        auther: () => ApiKeyAuthers.readWithHash.dynamicFields({}),
+    export const readWithHash = serviceMethod({
+        authorizer: () => ApiKeyAuthers.readWithHash.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -130,8 +130,8 @@ export namespace ApiKeyMethods {
             }
         }
     })
-    export const update = ServiceMethod({
-        auther: () => ApiKeyAuthers.update.dynamicFields({}),
+    export const update = serviceMethod({
+        authorizer: () => ApiKeyAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -148,8 +148,8 @@ export namespace ApiKeyMethods {
             return { name }
         },
     })
-    export const destroy = ServiceMethod({
-        auther: () => ApiKeyAuthers.destroy.dynamicFields({}),
+    export const destroy = serviceMethod({
+        authorizer: () => ApiKeyAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

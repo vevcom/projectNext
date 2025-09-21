@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { lockerReservationIncluder } from './reservations/config'
 import { LockerAuthers } from './authers'
 import { LockersSchemas } from './schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -40,8 +40,8 @@ export namespace LockerMethods {
      *
      * @returns The newly created locker object.
      */
-    export const create = ServiceMethod({
-        auther: () => LockerAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => LockerAuthers.create.dynamicFields({}),
         dataSchema: LockersSchemas.create,
         method: async ({ prisma, data }) => {
             console.log(data)
@@ -59,8 +59,8 @@ export namespace LockerMethods {
      *
      * @returns The locker object.
      */
-    export const read = ServiceMethod({
-        auther: () => LockerAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => LockerAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -85,8 +85,8 @@ export namespace LockerMethods {
      *
      * @returns A list of locker objects.
      */
-    export const readPage = ServiceMethod({
-        auther: () => LockerAuthers.readPage.dynamicFields({}),
+    export const readPage = serviceMethod({
+        authorizer: () => LockerAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({

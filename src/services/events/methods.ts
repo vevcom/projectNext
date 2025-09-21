@@ -7,7 +7,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { NotificationMethods } from '@/services/notifications/methods'
@@ -17,9 +17,9 @@ import { z } from 'zod'
 import type { EventExpanded } from './Types'
 
 export namespace EventMethods {
-    export const create = ServiceMethod({
+    export const create = serviceMethod({
         dataSchema: EventSchemas.create,
-        auther: () => EventAuthers.create.dynamicFields({}),
+        authorizer: () => EventAuthers.create.dynamicFields({}),
         method: async ({ prisma, data, session }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
@@ -79,7 +79,7 @@ export namespace EventMethods {
                 }))
             })
 
-            await NotificationMethods.createSpecial.client(prisma).execute({
+            await NotificationMethods.createSpecial({
                 params: {
                     special: 'NEW_EVENT',
                 },
@@ -87,18 +87,17 @@ export namespace EventMethods {
                     title: `Hva der hender: ${event.name}`,
                     message: `${event.name}, 🕓 ${displayDate(event.eventStart, false)},📍 ${event.location}`,
                 },
-                session,
                 bypassAuth: true,
             })
             return event
         }
     })
-    export const read = ServiceMethod({
+    export const read = serviceMethod({
         paramsSchema: z.object({
             order: z.number(),
             name: z.string(),
         }),
-        auther: () => EventAuthers.read.dynamicFields({}),
+        authorizer: () => EventAuthers.read.dynamicFields({}),
         method: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
@@ -156,11 +155,11 @@ export namespace EventMethods {
             }
         }
     })
-    export const readManyCurrent = ServiceMethod({
+    export const readManyCurrent = serviceMethod({
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
         }),
-        auther: () => EventAuthers.readManyCurrent.dynamicFields({}),
+        authorizer: () => EventAuthers.readManyCurrent.dynamicFields({}),
         method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 select: {
@@ -191,7 +190,7 @@ export namespace EventMethods {
             }))
         }
     })
-    export const readManyArchivedPage = ServiceMethod({
+    export const readManyArchivedPage = serviceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -202,7 +201,7 @@ export namespace EventMethods {
                 tags: z.array(z.string()).nullable(),
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-        auther: () => EventAuthers.readManyArchivedPage.dynamicFields({}),
+        authorizer: () => EventAuthers.readManyArchivedPage.dynamicFields({}),
         method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
@@ -238,12 +237,12 @@ export namespace EventMethods {
             }))
         }
     })
-    export const update = ServiceMethod({
+    export const update = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: EventSchemas.update,
-        auther: () => EventAuthers.update.dynamicFields({}),
+        authorizer: () => EventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: { id: params.id }
@@ -289,11 +288,11 @@ export namespace EventMethods {
             return eventUpdate
         }
     })
-    export const destroy = ServiceMethod({
+    export const destroy = serviceMethod({
         paramsSchema: z.object({
             id: z.number()
         }),
-        auther: () => EventAuthers.destroy.dynamicFields({}),
+        authorizer: () => EventAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             await prisma.event.delete({
                 where: {

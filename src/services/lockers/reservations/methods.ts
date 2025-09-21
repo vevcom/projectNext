@@ -2,7 +2,7 @@
 import '@pn-server-only'
 import { LockerReservationAuthers } from './authers'
 import { LockerReservationSchemas } from './schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { Smorekopp } from '@/services/error'
 import { GroupMethods } from '@/services/groups/methods'
 import { z } from 'zod'
@@ -16,8 +16,8 @@ export namespace LockerReservationMethods {
      *
      * @returns The newly created reservation object.
      */
-    export const create = ServiceMethod({
-        auther: () => LockerReservationAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => LockerReservationAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             lockerId: z.number(),
         }),
@@ -63,8 +63,8 @@ export namespace LockerReservationMethods {
      *
      * @returns The updated reservation object.
      */
-    export const read = ServiceMethod({
-        auther: () => LockerReservationAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => LockerReservationAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -83,8 +83,8 @@ export namespace LockerReservationMethods {
      *
      * @returns The updated reservation object.
      */
-    export const update = ServiceMethod({
-        auther: () => LockerReservationAuthers.update.dynamicFields({}),
+    export const update = serviceMethod({
+        authorizer: () => LockerReservationAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

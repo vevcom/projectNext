@@ -6,7 +6,7 @@ import { ImageSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
@@ -21,8 +21,8 @@ export namespace ImageMethods {
      * All images are saved as avif (except the original).
      * @param collectionId - The id of the collection to add the image to
      */
-    export const create = ServiceMethod({
-        auther: () => ImageAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => ImageAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             collectionId: z.number(),
         }),
@@ -70,8 +70,8 @@ export namespace ImageMethods {
      * Creates many images from files.
      * The method will resize the images to the correct sizes and save them to the store.
      */
-    export const createMany = ServiceMethod({
-        auther: () => ImageAuthers.createMany.dynamicFields({}),
+    export const createMany = serviceMethod({
+        authorizer: () => ImageAuthers.createMany.dynamicFields({}),
         paramsSchema: z.object({
             useFileName: z.boolean(),
             collectionId: z.number(),
@@ -101,8 +101,8 @@ export namespace ImageMethods {
      * @param name - the name of the image
      * @param config - the config for the image (special)
      */
-    const createSourceless = ServiceMethod({
-        auther: () => ImageAuthers.createSourcelessImage.dynamicFields({}),
+    const createSourceless = serviceMethod({
+        authorizer: () => ImageAuthers.createSourcelessImage.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string(),
             special: z.nativeEnum(SpecialImage),
@@ -136,8 +136,8 @@ export namespace ImageMethods {
     /**
      * Reads an image by id.
      */
-    export const read = ServiceMethod({
-        auther: () => ImageAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => ImageAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -156,8 +156,8 @@ export namespace ImageMethods {
     /**
      * Reads a page of images in a collection by collectionId.
      */
-    export const readPage = ServiceMethod({
-        auther: () => ImageAuthers.readPage.dynamicFields({}),
+    export const readPage = serviceMethod({
+        authorizer: () => ImageAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -182,8 +182,8 @@ export namespace ImageMethods {
      * Reads a special image by name (special atr.).
      * In the case that the special image does not exist (bad state) a "bad" image will be created.
      */
-    export const readSpecial = ServiceMethod({
-        auther: () => ImageAuthers.readSpecial.dynamicFields({}),
+    export const readSpecial = serviceMethod({
+        authorizer: () => ImageAuthers.readSpecial.dynamicFields({}),
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialImage)
         }),
@@ -206,8 +206,8 @@ export namespace ImageMethods {
     /**
      * Update a image by id and data. Also can give the image a new license by data.licenseId.
      */
-    export const update = ServiceMethod({
-        auther: () => ImageAuthers.update.dynamicFields({}),
+    export const update = serviceMethod({
+        authorizer: () => ImageAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -228,8 +228,8 @@ export namespace ImageMethods {
         }
     })
 
-    export const destroy = ServiceMethod({
-        auther: () => ImageAuthers.destroy.dynamicFields({}),
+    export const destroy = serviceMethod({
+        authorizer: () => ImageAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

@@ -4,28 +4,28 @@ import { EvantTagConfig } from './config'
 import { EventTagSchemas } from './schemas'
 import { EventAuthers } from '@/services/events/authers'
 import logger from '@/lib/logger'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
 import { SpecialEventTags } from '@prisma/client'
 import { z } from 'zod'
 
 export namespace EventTagMethods {
-    export const read = ServiceMethod({
+    export const read = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: () => EventTagAuthers.read.dynamicFields({}),
+        authorizer: () => EventTagAuthers.read.dynamicFields({}),
         method: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
             where: {
                 id
             }
         })
     })
-    export const readSpecial = ServiceMethod({
+    export const readSpecial = serviceMethod({
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialEventTags),
         }),
-        auther: () => EventTagAuthers.readSpecial.dynamicFields({}),
+        authorizer: () => EventTagAuthers.readSpecial.dynamicFields({}),
         method: async ({ prisma, params: { special } }) => {
             const tag = await prisma.eventTag.findUnique({
                 where: {
@@ -44,13 +44,13 @@ export namespace EventTagMethods {
             return tag
         }
     })
-    export const readAll = ServiceMethod({
-        auther: () => EventTagAuthers.readAll.dynamicFields({}),
+    export const readAll = serviceMethod({
+        authorizer: () => EventTagAuthers.readAll.dynamicFields({}),
         method: async ({ prisma }) => await prisma.eventTag.findMany()
     })
-    export const create = ServiceMethod({
+    export const create = serviceMethod({
         dataSchema: EventTagSchemas.create,
-        auther: () => EventTagAuthers.create.dynamicFields({}),
+        authorizer: () => EventTagAuthers.create.dynamicFields({}),
         method: async ({ prisma, data: { color, ...data } }) => {
             const colorR = parseInt(color.slice(1, 3), 16)
             const colorG = parseInt(color.slice(3, 5), 16)
@@ -65,12 +65,12 @@ export namespace EventTagMethods {
             })
         }
     })
-    export const update = ServiceMethod({
+    export const update = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: EventTagSchemas.update,
-        auther: () => EventAuthers.update.dynamicFields({}),
+        authorizer: () => EventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params: { id }, data: { color, ...data } }) => {
             const colorR = color ? parseInt(color.slice(1, 3), 16) : undefined
             const colorG = color ? parseInt(color.slice(3, 5), 16) : undefined
@@ -88,11 +88,11 @@ export namespace EventTagMethods {
             })
         }
     })
-    export const destroy = ServiceMethod({
+    export const destroy = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: () => EventAuthers.destroy.dynamicFields({}),
+        authorizer: () => EventAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const tag = await prisma.eventTag.findUniqueOrThrow({
                 where: { id: params.id }

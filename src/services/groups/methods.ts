@@ -3,7 +3,7 @@ import { groupsExpandedIncluder, GroupTypesConfig, OmegaMembershipLevelConfig, r
 import { GroupAuthers } from './authers'
 import { UserConfig } from '@/services/users/config'
 import { ServerError } from '@/services/error'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import logger from '@/lib/logger'
@@ -189,13 +189,13 @@ export function checkGroupValidity<
 
 export namespace GroupMethods {
 
-    export const readGroups = ServiceMethod({
-        auther: () => GroupAuthers.read.dynamicFields({}),
+    export const readGroups = serviceMethod({
+        authorizer: () => GroupAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => prisma.group.findMany()
     })
 
-    export const readCurrentGroupOrder = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readCurrentGroupOrder = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -209,8 +209,8 @@ export namespace GroupMethods {
         })).order
     })
 
-    export const readCurrentGroupOrders = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readCurrentGroupOrders = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().array(),
         }),
@@ -227,8 +227,8 @@ export namespace GroupMethods {
         })
     })
 
-    export const readGroup = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readGroup = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -239,8 +239,8 @@ export namespace GroupMethods {
         })
     })
 
-    export const readGroupExpanded = ServiceMethod({
-        auther: () => GroupAuthers.read.dynamicFields({}),
+    export const readGroupExpanded = serviceMethod({
+        authorizer: () => GroupAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -255,8 +255,8 @@ export namespace GroupMethods {
         }
     })
 
-    export const readGroupsExpanded = ServiceMethod({
-        auther: () => GroupAuthers.read.dynamicFields({}),
+    export const readGroupsExpanded = serviceMethod({
+        authorizer: () => GroupAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => {
             const groups = (await prisma.group.findMany({
                 include: groupsExpandedIncluder,
@@ -266,8 +266,8 @@ export namespace GroupMethods {
         }
     })
 
-    export const readGroupsStructured = ServiceMethod({
-        auther: () => GroupAuthers.read.dynamicFields({}),
+    export const readGroupsStructured = serviceMethod({
+        authorizer: () => GroupAuthers.read.dynamicFields({}),
         method: async () => {
             const groupsStructured: GroupsStructured = {
                 CLASS: {
@@ -306,8 +306,8 @@ export namespace GroupMethods {
         }
     })
 
-    export const readUsersOfGroups = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readUsersOfGroups = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             groups: z.array(z.object({
                 groupId: z.number(),
@@ -333,8 +333,8 @@ export namespace GroupMethods {
         }
     })
 
-    export const readGroupsOfUser = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readGroupsOfUser = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
         }),

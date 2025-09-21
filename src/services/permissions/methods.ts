@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { PermissionAuthers } from './auther'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/config'
@@ -11,14 +11,14 @@ import { z } from 'zod'
 
 export namespace PermissionMethods {
 
-    export const readDefaultPermissions = ServiceMethod({
-        auther: () => PermissionAuthers.readDefaultPermissions.dynamicFields({}),
+    export const readDefaultPermissions = serviceMethod({
+        authorizer: () => PermissionAuthers.readDefaultPermissions.dynamicFields({}),
         method: async ({ prisma }) =>
             (await prisma.defaultPermission.findMany()).map(perm => perm.permission)
     })
 
-    export const readPermissionsOfUser = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readPermissionsOfUser = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -50,8 +50,8 @@ export namespace PermissionMethods {
         }
     })
 
-    export const readPermissionsOfGroup = ServiceMethod({
-        auther: () => PermissionAuthers.readGroupPermissions.dynamicFields({}),
+    export const readPermissionsOfGroup = serviceMethod({
+        authorizer: () => PermissionAuthers.readGroupPermissions.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number()
         }),
@@ -62,8 +62,8 @@ export namespace PermissionMethods {
         })).map(permission => permission.permission)
     })
 
-    export const readPermissionMatrix = ServiceMethod({
-        auther: () => PermissionAuthers.readPermissionMatrix.dynamicFields({}),
+    export const readPermissionMatrix = serviceMethod({
+        authorizer: () => PermissionAuthers.readPermissionMatrix.dynamicFields({}),
         method: async ({ prisma }) => {
             const groupsPermission = await prisma.group.findMany({
                 include: {
@@ -80,8 +80,8 @@ export namespace PermissionMethods {
         }
     })
 
-    export const updateDefaultPermissions = ServiceMethod({
-        auther: () => PermissionAuthers.updateDefaultPermissions.dynamicFields({}),
+    export const updateDefaultPermissions = serviceMethod({
+        authorizer: () => PermissionAuthers.updateDefaultPermissions.dynamicFields({}),
         dataSchema: z.object({
             permissions: z.nativeEnum(Permission).array(),
         }),
@@ -108,8 +108,8 @@ export namespace PermissionMethods {
         }
     })
 
-    export const updateGroupPermission = ServiceMethod({
-        auther: () => PermissionAuthers.updateGroupPermission.dynamicFields({}),
+    export const updateGroupPermission = serviceMethod({
+        authorizer: () => PermissionAuthers.updateGroupPermission.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number(),
             permission: z.nativeEnum(Permission),

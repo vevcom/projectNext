@@ -1,7 +1,7 @@
 import { AuthAuthers } from './authers'
 import { AuthSchemas } from './schemas'
 import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
 import { UserMethods } from '@/services/users/methods'
 import { UserConfig } from '@/services/users/config'
@@ -11,11 +11,11 @@ import { z } from 'zod'
 
 export namespace AuthMethods {
 
-    export const verifyEmail = ServiceMethod({
+    export const verifyEmail = serviceMethod({
         paramsSchema: z.object({
             token: z.string(),
         }),
-        auther: ({ params }) => AuthAuthers.verifyEmail.dynamicFields(params),
+        authorizer: ({ params }) => AuthAuthers.verifyEmail.dynamicFields(params),
         method: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -53,11 +53,11 @@ export namespace AuthMethods {
         }
     })
 
-    export const verifyResetPasswordToken = ServiceMethod({
+    export const verifyResetPasswordToken = serviceMethod({
         paramsSchema: z.object({
             token: z.string()
         }),
-        auther: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
+        authorizer: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
         method: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -85,12 +85,12 @@ export namespace AuthMethods {
         }
     })
 
-    export const resetPassword = ServiceMethod({
+    export const resetPassword = serviceMethod({
         paramsSchema: z.object({
             token: z.string()
         }),
         dataSchema: UserSchemas.updatePassword,
-        auther: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
+        authorizer: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
         method: async ({ params, data }) => {
             const userId = await verifyResetPasswordToken({ params })
 
@@ -104,9 +104,9 @@ export namespace AuthMethods {
         }
     })
 
-    export const sendResetPasswordEmail = ServiceMethod({
+    export const sendResetPasswordEmail = serviceMethod({
         dataSchema: AuthSchemas.sendResetPasswordEmail,
-        auther: () => AuthAuthers.sendResetPasswordEmail.dynamicFields({}),
+        authorizer: () => AuthAuthers.sendResetPasswordEmail.dynamicFields({}),
         method: async ({ data }) => {
             console.log(data)
             try {

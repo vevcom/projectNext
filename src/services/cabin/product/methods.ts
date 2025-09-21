@@ -1,7 +1,7 @@
 import { CabinProductAuthers } from './authers'
 import { CabinProductSchemas } from './schemas'
 import { CabinProductConfig } from './config'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import 'server-only'
 import { ServerError } from '@/services/error'
 import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
@@ -10,16 +10,16 @@ import { z } from 'zod'
 
 export namespace CabinProductMethods {
 
-    export const create = ServiceMethod({
-        auther: () => CabinProductAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => CabinProductAuthers.create.dynamicFields({}),
         dataSchema: CabinProductSchemas.createProduct,
         method: ({ prisma, data }) => prisma.cabinProduct.create({
             data,
         })
     })
 
-    export const createPrice = ServiceMethod({
-        auther: () => CabinProductAuthers.createPrice.dynamicFields({}),
+    export const createPrice = serviceMethod({
+        authorizer: () => CabinProductAuthers.createPrice.dynamicFields({}),
         paramsSchema: z.object({
             cabinProductId: z.number(),
         }),
@@ -52,15 +52,15 @@ export namespace CabinProductMethods {
         }
     })
 
-    export const readMany = ServiceMethod({
-        auther: () => CabinProductAuthers.read.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
         method: ({ prisma }) => prisma.cabinProduct.findMany({
             include: CabinProductConfig.includer,
         }),
     })
 
-    export const readActive = ServiceMethod({
-        auther: () => CabinProductAuthers.read.dynamicFields({}),
+    export const readActive = serviceMethod({
+        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => {
             const pricePeriods = await CabinPricePeriodMethods.readPublicPeriods({ bypassAuth: true })
 
@@ -79,8 +79,8 @@ export namespace CabinProductMethods {
         },
     })
 
-    export const read = ServiceMethod({
-        auther: () => CabinProductAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

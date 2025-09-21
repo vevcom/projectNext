@@ -21,7 +21,7 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
     const [visibilityRes, groupsRes] = await Promise.all([
         safeServerCall(() => readVisibilityCollapsed(id)),
         // TODO: Fix Authing here. The bypass should be false
-        safeServerCall(() => GroupMethods.readGroupsStructured({ session: null, bypassAuth: true }))
+        safeServerCall(() => GroupMethods.readGroupsStructured({ bypassAuth: true }))
     ])
     if (!visibilityRes.success || !groupsRes.success) return createActionError('UNKNOWN ERROR', 'noe gikk galt')
 

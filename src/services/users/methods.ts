@@ -9,7 +9,7 @@ import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershi
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { UserSchemas } from '@/services/users/schemas'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ImageMethods } from '@/services/images/methods'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
@@ -26,9 +26,9 @@ export namespace UserMethods {
      * This Method creates an user by invitation, and sends the invitation email.
      * WARNING: This should not be used to create users registered by Feide.
      */
-    export const create = ServiceMethod({
+    export const create = serviceMethod({
         dataSchema: UserSchemas.create,
-        auther: () => UserAuthers.create.dynamicFields({}),
+        authorizer: () => UserAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
             const omegaOrder = await readCurrentOmegaOrder()
@@ -56,14 +56,14 @@ export namespace UserMethods {
         }
     })
 
-    export const read = ServiceMethod({
+    export const read = serviceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
             id: z.coerce.number().optional(),
             email: z.string().optional(),
             studentCard: z.string().optional(),
         }),
-        auther: ({ params }) => UserAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => UserAuthers.read.dynamicFields(params),
         method: async ({ prisma, params }) => await prisma.user.findUniqueOrThrow({
             where: {
                 id: params.id,
@@ -73,14 +73,14 @@ export namespace UserMethods {
         })
     })
 
-    export const readOrNull = ServiceMethod({
+    export const readOrNull = serviceMethod({
         paramsSchema: z.object({
             username: z.string().optional(),
             id: z.coerce.number().optional(),
             email: z.string().optional(),
             studentCard: z.string().optional(),
         }),
-        auther: ({ params }) => UserAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => UserAuthers.read.dynamicFields(params),
         method: async ({ prisma, params }) => await prisma.user.findUnique({
             where: {
                 id: params.id, // This is a bit wierd, but now ts is satisfied.
@@ -90,11 +90,11 @@ export namespace UserMethods {
         })
     })
 
-    export const readProfile = ServiceMethod({
+    export const readProfile = serviceMethod({
         paramsSchema: z.object({
             username: z.string(),
         }),
-        auther: ({ params }) => UserAuthers.readProfile.dynamicFields({ username: params.username }),
+        authorizer: ({ params }) => UserAuthers.readProfile.dynamicFields({ username: params.username }),
         method: async ({ prisma, params }) => {
             const defaultProfileImage = await ImageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
@@ -123,7 +123,7 @@ export namespace UserMethods {
         }
     })
 
-    export const readPage = ServiceMethod({
+    export const readPage = serviceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -141,7 +141,7 @@ export namespace UserMethods {
                 }).nullable().optional()
             })
         ),
-        auther: () => UserAuthers.readPage.dynamicFields({}),
+        authorizer: () => UserAuthers.readPage.dynamicFields({}),
         method: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
             const words = details.partOfName.split(' ')
@@ -250,8 +250,8 @@ export namespace UserMethods {
         }
     })
 
-    export const connectStudentCard = ServiceMethod({
-        auther: () => UserAuthers.connectStudentCard.dynamicFields({}),
+    export const connectStudentCard = serviceMethod({
+        authorizer: () => UserAuthers.connectStudentCard.dynamicFields({}),
         dataSchema: UserSchemas.connectStudentCard,
         opensTransaction: true,
         method: async ({ prisma, data }) => {
@@ -296,11 +296,11 @@ export namespace UserMethods {
         }
     })
 
-    export const registerStudentCardInQueue = ServiceMethod({
+    export const registerStudentCardInQueue = serviceMethod({
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        auther: ({ params }) => UserAuthers.registerStudentCardInQueue.dynamicFields(params),
+        authorizer: ({ params }) => UserAuthers.registerStudentCardInQueue.dynamicFields(params),
         method: async (args) => {
             const expiry = (new Date()).getTime() + UserConfig.studentCardRegistrationExpiry * 60 * 1000
             await args.prisma.registerStudentCardQueue.upsert({
@@ -322,10 +322,10 @@ export namespace UserMethods {
         }
     })
 
-    export const update = ServiceMethod({
+    export const update = serviceMethod({
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: UserSchemas.update,
-        auther: () => UserAuthers.update.dynamicFields({}),
+        authorizer: () => UserAuthers.update.dynamicFields({}),
         method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
             where: params,
             data
@@ -333,12 +333,12 @@ export namespace UserMethods {
     })
 
 
-    export const updatePassword = ServiceMethod({
+    export const updatePassword = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: UserSchemas.updatePassword,
-        auther: ({ params }) => UserAuthers.updatePassword.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => UserAuthers.updatePassword.dynamicFields({ userId: params.id }),
         method: async ({ prisma, data, params }) => {
             const passwordHash = await hashAndEncryptPassword(data.password)
 
@@ -355,11 +355,11 @@ export namespace UserMethods {
         }
     })
 
-    export const registerNewEmail = ServiceMethod({
+    export const registerNewEmail = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: ({ params }) => UserAuthers.registerNewEmail.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => UserAuthers.registerNewEmail.dynamicFields({ userId: params.id }),
         dataSchema: UserSchemas.registerNewEmail,
         method: async ({ prisma, params, data }) => {
             const storedUser = await prisma.user.findUniqueOrThrow({
@@ -419,14 +419,14 @@ export namespace UserMethods {
      * @param rawdata - Registration data.
      * @returns null
      */
-    export const register = ServiceMethod({
+    export const register = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: UserSchemas.register,
-        auther: ({ params }) => UserAuthers.register.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => UserAuthers.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
-        method: async ({ prisma, data, params, session }) => {
+        method: async ({ prisma, data, params }) => {
             const { sex, password, mobile, allergies } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
@@ -498,11 +498,10 @@ export namespace UserMethods {
             ])
 
             try {
-                await NotificationSubscriptionMethods.createDefault.client(prisma).execute({
+                await NotificationSubscriptionMethods.createDefault({
                     params: {
                         userId: params.id,
                     },
-                    session,
                     bypassAuth: true,
                 })
             } catch (error) {
@@ -525,8 +524,8 @@ export namespace UserMethods {
             return results[0]
         }
     })
-    export const readUserWithBalance = ServiceMethod({
-        auther: ({ params }) => UserAuthers.read.dynamicFields({
+    export const readUserWithBalance = serviceMethod({
+        authorizer: ({ params }) => UserAuthers.read.dynamicFields({
             username: params.username || '',
         }),
         paramsSchema: z.object({
@@ -554,11 +553,11 @@ export namespace UserMethods {
     /**
      * This function deletes a user from the database.
      */
-    export const destroy = ServiceMethod({
+    export const destroy = serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        auther: () => UserAuthers.destroy.dynamicFields({}),
+        authorizer: () => UserAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             await prisma.user.delete({
                 where: {

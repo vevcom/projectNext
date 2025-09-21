@@ -5,22 +5,22 @@ import { NotificationChannelConfig } from '@/services/notifications/channel/conf
 import { NotificationConfig } from '@/services/notifications/config'
 import { NotificationChannelSchemas } from '@/services/notifications/channel/schemas'
 import { NotificationChannelMethods } from '@/services/notifications/channel/methods'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import type { PrismaPossibleTransaction } from '@/services/ServiceMethod'
+import type { Prisma } from '@prisma/client'
 import type { Subscription } from './Types'
 import type { NotificationMethodGeneral } from '@/services/notifications/Types'
 
 
 export namespace NotificationSubscriptionMethods {
 
-    export const read = ServiceMethod({
+    export const read = serviceMethod({
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        auther: ({ params }) => NotificationSubscriptionAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => NotificationSubscriptionAuthers.read.dynamicFields(params),
         method: async ({ prisma, params }) => await prisma.notificationSubscription.findMany({
             where: {
                 userId: params.userId,
@@ -29,14 +29,14 @@ export namespace NotificationSubscriptionMethods {
         }),
     })
 
-    export const createDefault = ServiceMethod({
-        auther: ServerOnly,
+    export const createDefault = serviceMethod({
+        authorizer: ServerOnly,
         paramsSchema: z.object({
             userId: z.number(),
         }),
         opensTransaction: true,
         method: async ({ prisma, params, session }) => {
-            const channels = await NotificationChannelMethods.readDefault.client(prisma).execute({
+            const channels = await NotificationChannelMethods.readDefault({
                 session,
                 bypassAuth: true,
             })
@@ -66,7 +66,7 @@ export namespace NotificationSubscriptionMethods {
 
     // eslint-disable-next-line
     async function createTransactionPart(
-        prisma: PrismaPossibleTransaction<false>,
+        prisma: Prisma.TransactionClient,
         userId: number,
         channelId: number,
         methods: NotificationMethodGeneral
@@ -159,8 +159,8 @@ export namespace NotificationSubscriptionMethods {
         })
     }
 
-    export const update = ServiceMethod({
-        auther: ({ params }) => NotificationSubscriptionAuthers.update.dynamicFields(params),
+    export const update = serviceMethod({
+        authorizer: ({ params }) => NotificationSubscriptionAuthers.update.dynamicFields(params),
         paramsSchema: z.object({
             userId: z.number(),
         }),

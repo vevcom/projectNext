@@ -3,7 +3,7 @@ import { NotificationChannelAuthers } from './authers'
 import { NotificationChannelSchemas } from './schemas'
 import { NotificationChannelConfig } from './config'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/config'
 import { NotificationConfig } from '@/services/notifications/config'
 import { ServerError } from '@/services/error'
@@ -13,8 +13,8 @@ import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/s
 
 export namespace NotificationChannelMethods {
 
-    export const create = ServiceMethod({
-        auther: () => NotificationChannelAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => NotificationChannelAuthers.create.dynamicFields({}),
         dataSchema: NotificationChannelSchemas.create,
         opensTransaction: true,
         paramsSchema: z.object({
@@ -101,15 +101,15 @@ export namespace NotificationChannelMethods {
         }
     })
 
-    export const readMany = ServiceMethod({
-        auther: () => NotificationChannelAuthers.read.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => NotificationChannelAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.notificationChannel.findMany({
             include: NotificationChannelConfig.includer,
         })
     })
 
-    export const readDefault = ServiceMethod({
-        auther: () => NotificationChannelAuthers.read.dynamicFields({}),
+    export const readDefault = serviceMethod({
+        authorizer: () => NotificationChannelAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.notificationChannel.findMany({
             where: {
                 defaultMethods: {
@@ -122,8 +122,8 @@ export namespace NotificationChannelMethods {
         })
     })
 
-    export const update = ServiceMethod({
-        auther: () => NotificationChannelAuthers.update.dynamicFields({}),
+    export const update = serviceMethod({
+        authorizer: () => NotificationChannelAuthers.update.dynamicFields({}),
         dataSchema: NotificationChannelSchemas.update,
         paramsSchema: z.object({
             id: z.number(),
@@ -131,7 +131,7 @@ export namespace NotificationChannelMethods {
             defaultMethods: NotificationSchemas.notificationMethodFields,
         }),
         opensTransaction: true,
-        method: async ({ prisma, data, params, session }) => {
+        method: async ({ prisma, data, params }) => {
             if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
@@ -153,8 +153,7 @@ export namespace NotificationChannelMethods {
 
             // Not allowed to change the parent of ROOT
             if (channel.special !== 'ROOT') {
-                const allChannels = await readMany.client(prisma).execute({
-                    session,
+                const allChannels = await readMany({
                     bypassAuth: true,
                 })
 
@@ -216,8 +215,8 @@ export namespace NotificationChannelMethods {
     })
 
     // It doesn't seem that this function is used yet. -Theodor
-    export const destroy = ServiceMethod({
-        auther: () => NotificationChannelAuthers.destroy.dynamicFields({}),
+    export const destroy = serviceMethod({
+        authorizer: () => NotificationChannelAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

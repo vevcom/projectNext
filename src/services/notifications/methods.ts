@@ -4,7 +4,7 @@ import { NotificationConfig } from './config'
 import { NotificationChannelConfig } from './channel/config'
 import { dispatchEmailNotifications } from './email/dispatch'
 import { NotificationAuthers } from './authers'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { UserConfig } from '@/services/users/config'
 import { z } from 'zod'
@@ -36,8 +36,8 @@ export namespace NotificationMethods {
      * @param data - The detailed data for dispatching the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    export const create = ServiceMethod({
-        auther: () => NotificationAuthers.create.dynamicFields({}),
+    export const create = serviceMethod({
+        authorizer: () => NotificationAuthers.create.dynamicFields({}),
         dataSchema: NotificationSchemas.create,
         method: async ({ prisma, data }) => {
             // This prevent notifications from beeing sent during seeding
@@ -119,8 +119,8 @@ export namespace NotificationMethods {
      * @param message - The message content of the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    export const createSpecial = ServiceMethod({
-        auther: ServerOnly,
+    export const createSpecial = serviceMethod({
+        authorizer: ServerOnly,
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialNotificationChannel),
         }),
@@ -132,7 +132,7 @@ export namespace NotificationMethods {
                 }
             })
 
-            return await create.client(prisma).execute({
+            return await create({
                 session,
                 bypassAuth: true,
                 data: {

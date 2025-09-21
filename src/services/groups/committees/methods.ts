@@ -2,21 +2,21 @@ import { CommitteeAuthers } from './authers'
 import { CommitteeConfig } from './config'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ImageMethods } from '@/services/images/methods'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { z } from 'zod'
 
 export namespace CommitteeMethods {
 
-    export const readCommittees = ServiceMethod({
-        auther: () => CommitteeAuthers.read.dynamicFields({}),
+    export const readCommittees = serviceMethod({
+        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => prisma.committee.findMany({
             include: CommitteeConfig.committeeLogoIncluder,
         })
     })
 
-    export const readCommittee = ServiceMethod({
-        auther: () => CommitteeAuthers.read.dynamicFields({}),
+    export const readCommittee = serviceMethod({
+        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
         paramsSchema: z.union([
             z.object({ id: z.number() }),
             z.object({ shortName: z.string() })
@@ -49,8 +49,8 @@ export namespace CommitteeMethods {
         }
     })
 
-    export const readCommitteArticle = ServiceMethod({
-        auther: () => CommitteeAuthers.read.dynamicFields({}),
+    export const readCommitteArticle = serviceMethod({
+        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -64,8 +64,8 @@ export namespace CommitteeMethods {
         })).committeeArticle
     })
 
-    export const readCommitteesFromGroupIds = ServiceMethod({
-        auther: ServerOnlyAuther,
+    export const readCommitteesFromGroupIds = serviceMethod({
+        authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().int().array()
         }),
@@ -79,8 +79,8 @@ export namespace CommitteeMethods {
         })
     })
 
-    export const readCommitteeParagraph = ServiceMethod({
-        auther: () => CommitteeAuthers.read.dynamicFields({}),
+    export const readCommitteeParagraph = serviceMethod({
+        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -92,8 +92,8 @@ export namespace CommitteeMethods {
         })).paragraph
     })
 
-    export const readCommitteeMembers = ServiceMethod({
-        auther: () => CommitteeAuthers.read.dynamicFields({}),
+    export const readCommitteeMembers = serviceMethod({
+        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
             active: z.boolean().optional(),

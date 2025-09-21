@@ -1,26 +1,26 @@
 import { ShopAuthers } from './authers'
 import { ShopSchemas } from './schema'
-import { ServiceMethod } from '@/services/ServiceMethod'
+import { serviceMethod } from '@/services/serviceMethod'
 import '@pn-server-only'
 import { z } from 'zod'
 import type { ExtendedShop } from './Types'
 
 export namespace ShopMethods {
-    export const create = ServiceMethod({
+    export const create = serviceMethod({
         dataSchema: ShopSchemas.create,
-        auther: () => ShopAuthers.create.dynamicFields({}),
+        authorizer: () => ShopAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => prisma.shop.create({
             data
         })
     })
 
-    export const readMany = ServiceMethod({
-        auther: () => ShopAuthers.read.dynamicFields({}),
+    export const readMany = serviceMethod({
+        authorizer: () => ShopAuthers.read.dynamicFields({}),
         method: ({ prisma }) => prisma.shop.findMany(),
     })
 
-    export const read = ServiceMethod({
-        auther: () => ShopAuthers.read.dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => ShopAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),
