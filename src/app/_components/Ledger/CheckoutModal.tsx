@@ -1,25 +1,26 @@
-"use client"
+'use client'
 
-import PopUp from "@/app/_components/PopUp/PopUp";
-import Button from "@/app/_components/UI/Button";
-import { PaymentProvider } from "@prisma/client";
-import { ReactNode, useEffect, useState } from "react";
-import Form from "../Form/Form";
-import { Action } from "@/actions/Types";
-import { CardElement, PaymentElement } from "@stripe/react-stripe-js";
-import StripePaymentProvider from "../Stripe/StripePaymentProvider";
+import Form from '../Form/Form'
+import StripePaymentProvider from '../Stripe/StripePaymentProvider'
+import PopUp from '@/app/_components/PopUp/PopUp'
+import Button from '@/app/_components/UI/Button'
+import { useEffect, useState } from 'react'
+import { CardElement, PaymentElement } from '@stripe/react-stripe-js'
+import type { PaymentProvider } from '@prisma/client'
+import type { ReactNode } from 'react'
+import type { Action } from '@/actions/Types'
 
-const paymentProviders: PaymentProvider[] = ['STRIPE', 'VIPPS', 'MANUAL'];
+const paymentProviders: PaymentProvider[] = ['STRIPE', 'VIPPS', 'MANUAL']
 
 const paymentProviderNames: Record<PaymentProvider, string> = {
-    STRIPE: "Stripe",
-    VIPPS: "Vipps",
-    MANUAL: "Administratormakt",
+    STRIPE: 'Stripe',
+    VIPPS: 'Vipps',
+    MANUAL: 'Administratormakt',
 }
 
 type PropTypes = {
     children?: ReactNode,
-    popUpKey: string, 
+    popUpKey: string,
     buttonText: string;
     amount: number,
     callback: Action<FormData>,
@@ -41,15 +42,15 @@ export function CheckoutModal({
     paymentAccepted,
 }: PropTypes) {
     if (!balanceAccepted && !paymentAccepted) {
-        throw new Error("At least one payment option must be accepted.")
+        throw new Error('At least one payment option must be accepted.')
     }
 
-    const accountBalance = 1000; // TODO: Get account balance
-    const balancePossible = Boolean(balanceAccepted) && accountBalance > 0;
+    const accountBalance = 1000 // TODO: Get account balance
+    const balancePossible = Boolean(balanceAccepted) && accountBalance > 0
 
     const [useBalance, setUseBalance] = useState<boolean>(balancePossible)
     const [selectedPaymentProvider, setPaymentProvider] = useState<PaymentProvider | undefined>(paymentAccepted ? paymentProviders[0] : undefined)
-    const [paymentNeeded, setPaymentNeeded] = useState<boolean>(true) 
+    const [paymentNeeded, setPaymentNeeded] = useState<boolean>(true)
 
     useEffect(() => {
         setPaymentNeeded(amount > accountBalance || !useBalance)
@@ -71,7 +72,7 @@ export function CheckoutModal({
                     <legend>Betal med...</legend>
 
                     {paymentProviders.map(paymentProvider => <label key={paymentProvider}>
-                        <input 
+                        <input
                             type="radio"
                             name="paymentProvider"
                             value={paymentProvider}
@@ -83,17 +84,17 @@ export function CheckoutModal({
                 </fieldset>}
 
                 {paymentNeeded ? <div>
-                    {selectedPaymentProvider === "STRIPE" && <div>
+                    {selectedPaymentProvider === 'STRIPE' && <div>
                         <StripePaymentProvider amount={500}>
                             <CardElement />
                         </StripePaymentProvider>
                     </div>}
-                    
-                    {selectedPaymentProvider === "VIPPS" && <div>
+
+                    {selectedPaymentProvider === 'VIPPS' && <div>
                         <p>Vipps er ikke helt ferdig enda...</p>
                     </div>}
-                    
-                    {selectedPaymentProvider === "MANUAL" && <div>
+
+                    {selectedPaymentProvider === 'MANUAL' && <div>
                         <p>DU BRUKER ADMINISTRATOR MAKT!</p>
                         <p>With Great power comes great responsibility. -En viss onkel</p>
                     </div>}

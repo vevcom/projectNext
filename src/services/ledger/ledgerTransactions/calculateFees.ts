@@ -1,16 +1,16 @@
-import { ManualTransfer, Payment } from "@prisma/client"
-import { BalanceRecord } from "@/services/ledger/ledgerAccount/Types"
+import type { BalanceRecord } from '@/services/ledger/ledgerAccount/Types'
+import type { ManualTransfer, Payment } from '@prisma/client'
 
-/** 
+/**
  * Calculates fees proportional to the ratio between `entryAmount` and `totalAmount`.
- * 
+ *
  * **Example:** Say an account has amount = 100 Kl.M. and fees = 20 Kl.M.
  * Deducting 25 Kl.M. is 25% of the total amount, so the fees deducted
  * should also be 25% of the total fees, i.e., 5 Kl.M.
  */
 export function feesFormula(entryAmount: number, totalAmount: number, totalFees: number) {
     let fees = Math.floor(totalFees * entryAmount / totalAmount)
-    
+
     // Guard against NaN
     fees ||= 0
     // Ensure fees are never positive
@@ -30,7 +30,7 @@ export function feesFormula(entryAmount: number, totalAmount: number, totalFees:
 export function calculateDebitFees(ledgerEntries: { amount: number, ledgerAccountId: number }[], balances: BalanceRecord) {
     const debitLedgerEntries = ledgerEntries.filter(entry => entry.amount < 0)
 
-    return Object.fromEntries(debitLedgerEntries.map(entry => { 
+    return Object.fromEntries(debitLedgerEntries.map(entry => {
         const balance = balances[entry.ledgerAccountId]
 
         if (!balance) throw Error(`Balance for ledger account nr. ${entry.ledgerAccountId} not provided.`)
@@ -51,7 +51,7 @@ export function calculateCreditFees(
     // If payment is attached but fees are null,
     // return null until it completes.
     if (payment && payment.fees === null) return null
-    
+
     const creditLedgerEntries = ledgerEntries.filter(entry => entry.amount > 0)
     const debitLedgerEntries = ledgerEntries.filter(entry => entry.amount < 0)
 
@@ -69,12 +69,12 @@ export function calculateCreditFees(
         payment?.fees,
         manualTransfer?.fees,
     )
-    
+
     return Object.fromEntries(creditLedgerEntries.map(entry => {
         const fees = feesFormula(entry.amount, totalAmount, totalFees)
 
         // Subtract the from the totals to ensure
-        // that the sum of all fees ends up exactly 
+        // that the sum of all fees ends up exactly
         // equal to `totalFees`.
         totalAmount -= entry.amount
         totalFees -= fees

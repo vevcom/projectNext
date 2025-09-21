@@ -1,5 +1,5 @@
 import { zpn } from '@/lib/fields/zpn'
-import { convertPrice } from '@/lib/money/convert'
+import { convertAmount } from '@/lib/currency/convert'
 import { BookingType } from '@prisma/client'
 import { z } from 'zod'
 
@@ -10,7 +10,7 @@ export namespace CabinProductSchemas {
         amount: z.coerce.number().int().min(0),
         name: z.string().min(2),
         description: z.string().min(0).max(20),
-        price: z.coerce.number().min(0).transform((val) => convertPrice(val)),
+        price: z.coerce.number().min(0).transform((val) => convertAmount(val)),
         validFrom: z.coerce.date(),
         cronInterval: zpn.simpleCronExpression(),
         memberShare: z.coerce.number().min(0).max(100),

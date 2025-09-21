@@ -1,21 +1,21 @@
+import { calculateCreditFees, calculateDebitFees } from './calculateFees'
+import { determineTransactionState } from './determineTransactionState'
+import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/methods'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
-import { ServiceMethod } from '@/services/ServiceMethod'
-import { LedgerTransactionPurpose } from '@prisma/client'
-import type { Prisma } from '@prisma/client'
-import { z } from 'zod'
-import { LedgerAccountMethods } from '../ledgerAccount/methods'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
-import { calculateCreditFees, calculateDebitFees } from './calculateFees'
-import { determineTransactionState } from './determineTransactionState'
+import { LedgerTransactionPurpose } from '@prisma/client'
+import { z } from 'zod'
+import type { Prisma } from '@prisma/client'
 
 export namespace LedgerTransactionMethods {
     /**
      * Reads a single transaction including its ledger entries, payment and manual transfer (if any).
      */
-    export const read = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}),
+    export const read = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -38,8 +38,8 @@ export namespace LedgerTransactionMethods {
     /**
      * Read several ledger transactions including its ledger entries, payment and manual transfer (if any).
      */
-    export const readPage = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}),
+    export const readPage = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -71,94 +71,22 @@ export namespace LedgerTransactionMethods {
     })
 
     /**
-     * Create a new transaction on the ledger with the given entries and optionally 
-     * link to the provided payment and/or manual transfer.
-     * 
-     * The fees transferred are automatically calculated.
-     * 
-     * The lifecycle of the transaction is automatically handled by the system.
-     */
-    export const create = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO,
-        paramsSchema: z.object({
-            purpose: z.nativeEnum(LedgerTransactionPurpose),
-            ledgerEntries: z.object({
-                amount: z.number(),
-                ledgerAccountId: z.number(),
-            }).array(),
-            paymentId: z.number().optional(),
-            manualTransferId: z.number().optional(),
-        }),
-        method: async ({ prisma, session, params }, ) => {
-            // Calculate the balance for all accounts which are going to be deducted
-            const debitEntries = params.ledgerEntries.filter(entry => entry.amount < 0)
-            const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
-                params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
-                session: null,
-            })
-
-            // Check that the relevant accounts have enough balance to do the transaction.
-            // NOTE: This is check is only to avoid calling the db unnecessarily.
-            // The actual validation is handled in the `advance` function.
-            const hasInsufficientBalance = debitEntries.some(entry => entry.amount > balances[entry.ledgerAccountId].amount)
-            if (hasInsufficientBalance) {
-                throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
-            }
-
-            // Calculate and set fees for the debit entries 
-            const fees = calculateDebitFees(params.ledgerEntries, balances)
-            const entries = params.ledgerEntries.map(entry => ({ 
-                ...entry, 
-                fees: fees[entry.ledgerAccountId] ?? null
-            }))
-
-            const { id } = await prisma.ledgerTransaction.create({
-                data: {
-                    purpose: params.purpose,
-                    status: 'PENDING',
-                    ledgerEntries: {
-                        create: entries,
-                    },
-                    paymentId :params.paymentId,
-                    manualTransferId: params.manualTransferId,
-                },
-                select: {
-                    id: true,
-                },
-            })
-        
-            const transaction = await advance.client(prisma).execute({
-                params: {
-                    id,
-                },
-                session,
-            })
-
-            if (transaction.status === 'FAILED') {
-                // TODO: Better error message.
-                throw new ServerError('BAD PARAMETERS', 'Ugyldig transaksjon.')
-            }
-
-            return transaction
-        } 
-    })
-
-    /**
      * Tries to advance the transactions state to a terminal state.
      * Also, updates the fees if possible.
      */
-    export const advance = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}),
+    export const advance = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ session, prisma, params}) => {
-            const transaction = await read.client(prisma).execute({
-                params: { id: params.id },
-                session,
-            })
+        method: async ({ prisma, params }) => {
+            const transaction = await read({ params })
 
-            const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment, transaction.manualTransfer)
+            const creditFees = calculateCreditFees(
+                transaction.ledgerEntries,
+                transaction.payment,
+                transaction.manualTransfer
+            )
 
             if (creditFees) {
                 const creditEntries = transaction.ledgerEntries.filter(entry => entry.amount > 0)
@@ -184,17 +112,16 @@ export namespace LedgerTransactionMethods {
                     select: {},
                 })
 
-                transaction.ledgerEntries.forEach(
-                    entry => entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
-                )
+                transaction.ledgerEntries.forEach(entry => {
+                    entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
+                })
             }
 
-            const balances = await LedgerAccountMethods.calculateBalances.client(prisma).execute({
+            const balances = await LedgerAccountMethods.calculateBalances({
                 params: {
                     ids: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
                     atTransactionId: transaction.id,
                 },
-                session: null,
             })
 
             const transactionStatus = await determineTransactionState(transaction, balances)
@@ -211,11 +138,79 @@ export namespace LedgerTransactionMethods {
                     // TODO: Add message detailing why a transaction failed if it did.
                 },
             })
-            
-            return read.client(prisma).execute({
-                params: { id: params.id },
-                session,
+
+            return read({ params })
+        }
+    })
+
+    /**
+     * Create a new transaction on the ledger with the given entries and optionally
+     * link to the provided payment and/or manual transfer.
+     *
+     * The fees transferred are automatically calculated.
+     *
+     * The lifecycle of the transaction is automatically handled by the system.
+     */
+    export const create = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO,
+        paramsSchema: z.object({
+            purpose: z.nativeEnum(LedgerTransactionPurpose),
+            ledgerEntries: z.object({
+                amount: z.number(),
+                ledgerAccountId: z.number(),
+            }).array(),
+            paymentId: z.number().optional(),
+            manualTransferId: z.number().optional(),
+        }),
+        method: async ({ prisma, params },) => {
+            // Calculate the balance for all accounts which are going to be deducted
+            const debitEntries = params.ledgerEntries.filter(entry => entry.amount < 0)
+            const balances = await LedgerAccountMethods.calculateBalances({
+                params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
             })
+
+            // Check that the relevant accounts have enough balance to do the transaction.
+            // NOTE: This is check is only to avoid calling the db unnecessarily.
+            // The actual validation is handled in the `advance` function.
+            const hasInsufficientBalance = debitEntries.some(entry => entry.amount > balances[entry.ledgerAccountId].amount)
+            if (hasInsufficientBalance) {
+                throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
+            }
+
+            // Calculate and set fees for the debit entries
+            const fees = calculateDebitFees(params.ledgerEntries, balances)
+            const entries = params.ledgerEntries.map(entry => ({
+                ...entry,
+                fees: fees[entry.ledgerAccountId] ?? null
+            }))
+
+            const { id } = await prisma.ledgerTransaction.create({
+                data: {
+                    purpose: params.purpose,
+                    status: 'PENDING',
+                    ledgerEntries: {
+                        create: entries,
+                    },
+                    paymentId: params.paymentId,
+                    manualTransferId: params.manualTransferId,
+                },
+                select: {
+                    id: true,
+                },
+            })
+
+            const transaction = await advance({
+                params: {
+                    id,
+                },
+            })
+
+            if (transaction.status === 'FAILED') {
+                // TODO: Better error message.
+                throw new ServerError('BAD PARAMETERS', 'Ugyldig transaksjon.')
+            }
+
+            return transaction
         }
     })
 }

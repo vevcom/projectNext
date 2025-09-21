@@ -1,6 +1,6 @@
 import SimpleTable from '@/app/_components/Table/SimpleTable'
-import { displayPrice } from '@/lib/money/convert'
 import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from '@/services/cabin/booking/cabinPriceCalculator'
+import { displayAmount } from '@/lib/currency/convert'
 import type { CabinPriceCalculatorReturnType } from '@/services/cabin/booking/cabinPriceCalculator'
 import type { PricePeriod } from '@prisma/client'
 import type { CabinProductConfig } from '@/services/cabin/product/config'
@@ -49,9 +49,9 @@ export default function CabinPriceCalculator({
         const displayName = priceRow.product.name + (description ? ` (${description})` : '')
         tableBody.push([
             displayName,
-            displayPrice(priceRow.productPrice.price),
+            displayAmount(priceRow.productPrice.price),
             priceRow.amount.toString(),
-            displayPrice(priceRow.amount * priceRow.productPrice.price)
+            displayAmount(priceRow.amount * priceRow.productPrice.price)
         ])
     }
 
@@ -60,6 +60,6 @@ export default function CabinPriceCalculator({
             header={['Produkt', 'Pris per natt', 'Antall', 'Total Pris']}
             body={tableBody}
         />
-        <p>Total pris {displayPrice(totalPrice)}</p>
+        <p>Total pris {displayAmount(totalPrice)}</p>
     </div>
 }

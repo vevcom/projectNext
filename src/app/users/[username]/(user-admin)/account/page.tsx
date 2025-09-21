@@ -1,13 +1,13 @@
-import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
+import PayoutModal from './PayoutModal'
+import DepositModal from './DepositModal'
+import EventPaymentModal from './EventPaymentModal'
 import LedgerAccountBalance from '@/app/_components/Ledger/LedgerAccountBalance'
 import TextInput from '@/app/_components/UI/TextInput'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/getUser'
 import Button from '@/components/UI/Button'
 import Link from 'next/link'
-import PayoutModal from './PayoutModal'
-import DepositModal from './DepositModal'
-import EventPaymentModal from './EventPaymentModal'
+import { readLedgerAccount } from '@/actions/ledger/ledgerAccount'
 
 export default async function Account() {
     const session = await getUser({
@@ -23,7 +23,7 @@ export default async function Account() {
         <DepositModal/>
         <PayoutModal accountId={account.id} />
         <EventPaymentModal />
-            {/* <PopUp
+        {/* <PopUp
                 PopUpKey="DepositForm"
                 customShowButton={(open) => <Button onClick={open}>Sett inn muenter</Button>}
             >

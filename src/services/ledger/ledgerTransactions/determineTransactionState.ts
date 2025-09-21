@@ -1,11 +1,14 @@
-import { LedgerTransactionStatus, PaymentStatus } from "@prisma/client"
-import { ExpandedLedgerTransaction } from "./Type"
-import { BalanceRecord } from "@/services/ledger/ledgerAccount/Types"
+import type { ExpandedLedgerTransaction } from './Type'
+import type { BalanceRecord } from '@/services/ledger/ledgerAccount/Types'
+import type { LedgerTransactionStatus, PaymentStatus } from '@prisma/client'
 
 /**
  * Determines the state of a given transaction.
  */
-export async function determineTransactionState(transaction: ExpandedLedgerTransaction, balances: BalanceRecord): Promise<LedgerTransactionStatus> {
+export async function determineTransactionState(
+    transaction: ExpandedLedgerTransaction,
+    balances: BalanceRecord
+): Promise<LedgerTransactionStatus> {
     // NOTE: The order of the rules are important!
     // Fee checks must run only after payment completes
     // since fees aren't set earlier.
@@ -22,7 +25,7 @@ export async function determineTransactionState(transaction: ExpandedLedgerTrans
 
     for (const rule of rules) {
         const state = await rule(transaction, balances)
-        
+
         if (state) return state
     }
 
@@ -34,6 +37,8 @@ export async function determineTransactionState(transaction: ExpandedLedgerTrans
  */
 function noTerminalState({ status }: ExpandedLedgerTransaction) {
     if (status !== 'PENDING') return status
+
+    return null
 }
 
 /**
@@ -41,14 +46,16 @@ function noTerminalState({ status }: ExpandedLedgerTransaction) {
  */
 function noFailedPayment({ payment }: ExpandedLedgerTransaction) {
     const okStates: PaymentStatus[] = ['PENDING', 'PROCESSING', 'SUCCEEDED']
-    const hasFailedPayment = payment && !okStates.includes(payment.status) 
+    const hasFailedPayment = payment && !okStates.includes(payment.status)
 
     if (hasFailedPayment) return 'FAILED'
+
+    return null
 }
 
 /**
  * Check that ledger entries, payment and manual transfer have correct signs.
- * 
+ *
  * Mathematically: `amount > 0 <=> fees > 0` and `amount < 0 <=> fees < 0`.
  */
 function amountAndFeesHaveSameSigns({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction) {
@@ -56,11 +63,13 @@ function amountAndFeesHaveSameSigns({ ledgerEntries, payment, manualTransfer }: 
     // one of a and b are falsy.
     const sameSigns = (a?: number | null, b?: number | null) => !a || !b || Math.sign(a) === Math.sign(b)
 
-    const validPayment        = sameSigns(payment?.amount, payment?.fees)
+    const validPayment = sameSigns(payment?.amount, payment?.fees)
     const validManualTransfer = sameSigns(manualTransfer?.amount, manualTransfer?.fees)
-    const validLedgerEntries  = ledgerEntries.every(entry => sameSigns(entry.amount, entry.fees))
-    
+    const validLedgerEntries = ledgerEntries.every(entry => sameSigns(entry.amount, entry.fees))
+
     if (!validManualTransfer || !validPayment || !validLedgerEntries) return 'FAILED'
+
+    return null
 }
 
 
@@ -72,27 +81,31 @@ function validAmountSum({ ledgerEntries, payment, manualTransfer }: ExpandedLedg
     // NOTE: Since the number of entries in a transaction is very low (max two) we can
     // sum the amounts and fees in memory rather than doing a database aggregation.
     const ledgerEntriesAmountSum = ledgerEntries.reduce((sum, entry) => sum + entry.amount, 0)
-    const paymentAmount          = payment?.amount ?? 0
-    const manualTransferAmount   = manualTransfer?.amount ?? 0
+    const paymentAmount = payment?.amount ?? 0
+    const manualTransferAmount = manualTransfer?.amount ?? 0
 
     if (ledgerEntriesAmountSum !== paymentAmount + manualTransferAmount) return 'FAILED'
+
+    return null
 }
 
-/** 
+/**
  * If an entry is debit (amount < 0), its referenced account must
  * have a positive balance after the transaction succeeds.
  */
 async function sufficientBalances({ ledgerEntries }: ExpandedLedgerTransaction, balances: BalanceRecord) {
     const debitLedgerAccountIds = ledgerEntries.filter(entry => entry.amount < 0).map(entry => entry.ledgerAccountId)
     const debitBalances = debitLedgerAccountIds.map(id => balances[id])
-    
+
     if (debitBalances.some(balance => !balance)) {
-        throw new Error("Missing balance in balance record.")
+        throw new Error('Missing balance in balance record.')
     }
 
     const hasNegativeBalance = debitBalances.some(balance => balance.amount < 0 || balance.fees < 0)
 
     if (hasNegativeBalance) return 'FAILED'
+
+    return null
 }
 
 /**
@@ -104,18 +117,22 @@ function paymentComplete({ payment }: ExpandedLedgerTransaction) {
     const hasPendingPayment = payment && payment.status !== 'SUCCEEDED'
 
     if (hasPendingPayment) return 'PENDING'
+
+    return null
 }
 
 /**
  * All fees must be non-null.
  */
 function noNullFees({ ledgerEntries, payment, manualTransfer }: ExpandedLedgerTransaction) {
-    const hasNullFees = 
+    const hasNullFees =
         ledgerEntries.some(entry => entry.fees === null) ||
         payment && payment.fees === null ||
         manualTransfer && manualTransfer.fees === null
 
     if (hasNullFees) return 'FAILED'
+
+    return null
 }
 
 /**
@@ -125,8 +142,10 @@ function validFeesSum({ ledgerEntries, payment, manualTransfer }: ExpandedLedger
     // NOTE: Since the number of entries in a transaction is very low (max two) we can
     // sum the amounts and fees in memory rather than doing a database aggregation.
     const ledgerEntriesFeesSum = ledgerEntries.reduce((sum, entry) => sum + entry.fees!, 0)
-    const paymentFees          = payment?.fees ?? 0
-    const manualTransferFees   = manualTransfer?.fees ?? 0
+    const paymentFees = payment?.fees ?? 0
+    const manualTransferFees = manualTransfer?.fees ?? 0
 
     if (ledgerEntriesFeesSum !== paymentFees + manualTransferFees) return 'FAILED'
+
+    return null
 }

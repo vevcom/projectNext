@@ -1,10 +1,10 @@
-import { RequireNothing } from "@/auth/auther/RequireNothing";
-import { ServiceMethod } from "@/services/ServiceMethod";
+import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 
 export namespace ManualTransferMethods {
-    export const create = ServiceMethod({
-        auther: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Fix
+    export const create = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Fix
         paramsSchema: z.object({
             amount: z.number().int(),
             fees: z.number().int(),

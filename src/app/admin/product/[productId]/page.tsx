@@ -3,9 +3,9 @@ import ProductForm from '@/app/admin/product/productForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { displayAmount } from '@/lib/currency/convert'
+import { readProductAction } from '@/services/shop/actions'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
-import { readProductAction } from '@/services/shop/actions'
 
 type PropTypes = {
     params: Promise<{

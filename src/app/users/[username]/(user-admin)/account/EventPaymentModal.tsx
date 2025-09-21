@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { CheckoutModal } from "@/app/_components/Ledger/CheckoutModal";
-import { currencySymbol } from "@/lib/currency/config";
+import { CheckoutModal } from '@/app/_components/Ledger/CheckoutModal'
+import { currencySymbol } from '@/lib/currency/config'
 
 export default function EventPaymentModal() {
     return <CheckoutModal
@@ -14,5 +14,5 @@ export default function EventPaymentModal() {
         <h3>Arrangementsbetaling</h3>
         <p>Phaestum Immatricularis XXX</p>
         <p><b>Total: 123 {currencySymbol}</b></p>
-    </CheckoutModal>    
+    </CheckoutModal>
 }

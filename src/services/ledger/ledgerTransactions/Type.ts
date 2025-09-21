@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from '@prisma/client'
 
 export type ExpandedLedgerTransaction = Prisma.LedgerTransactionGetPayload<{
     include: {
