@@ -1,5 +1,5 @@
-import Card from "@/components/UI/Card";
-import Link from "next/link";
+import Card from '@/components/UI/Card'
+import Link from 'next/link'
 
 type Props = {
     transactionsHref?: string,

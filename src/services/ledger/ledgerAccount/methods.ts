@@ -4,6 +4,7 @@ import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 import type { BalanceRecord } from './Types'
+import { stripe } from '@/lib/stripe'
 
 export namespace LedgerAccountMethods {
     /**

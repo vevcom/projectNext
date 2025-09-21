@@ -1,6 +1,6 @@
-import Card from "@/components/UI/Card";
-import BankCardModal from "../Modals/BankCardModal";
-import Link from "next/link";
+import BankCardModal from '@/components/Ledger/Modals/BankCardModal'
+import Card from '@/components/UI/Card'
+import Link from 'next/link'
 
 type Props = {
     userId: number,

@@ -2,7 +2,8 @@
 
 import PopUp from '@/app/_components/PopUp/PopUp'
 import Button from '@/app/_components/UI/Button'
-import { CardElement } from '@stripe/react-stripe-js'
+import StripePayment from '@/components/Stripe/StripePayment'
+import StripeProvider from '@/components/Stripe/StripeProvider'
 
 type PropTypes = {
     userId: number,
@@ -16,7 +17,9 @@ export default function BankCardModal({ userId }: PropTypes) {
         >
             <h3>Legg til bankkort</h3>
             <p>TODO</p>
-            {/* <CardElement  /> */}
-        </PopUp>
+            <StripeProvider mode='setup'>
+                <StripePayment />
+            </StripeProvider>
+    </PopUp>
     )
 }

@@ -3,12 +3,12 @@ import styles from './CheckoutModal.module.scss'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import Button from '@/components/UI/Button'
+import { createActionError } from '@/services/actionError'
 import React, { useState, lazy, Ref, useRef } from 'react'
 import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/Type'
 import type { PaymentProvider } from '@prisma/client'
 import type { StripePaymentRef } from '../../Stripe/StripePayment'
 import type { ActionReturn } from '@/services/actionTypes'
-import { createActionError } from '@/services/actionError'
 
 const StripeProvider = lazy(() => import('../../Stripe/StripeProvider'))
 const StripePayment = lazy(() => import('../../Stripe/StripePayment'))

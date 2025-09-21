@@ -1,9 +1,9 @@
 'use client'
 
 import styles from './LedgerTransactionList.module.scss'
-import EndlessScroll from "@/components/PagingWrappers/EndlessScroll"
-import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from "@/contexts/paging/LedgerTranasctionPaging"
-import LedgerTransactionRow from "./LedgerTransactionRow"
+import LedgerTransactionRow from './LedgerTransactionRow'
+import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTranasctionPaging'
 
 type Props = {
     accountId: number,

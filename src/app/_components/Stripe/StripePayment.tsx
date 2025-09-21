@@ -3,11 +3,12 @@ import React, { useImperativeHandle } from 'react'
 
 export type StripePaymentRef = {
     submit: () => Promise<string | undefined>;
-    confirm: (clientSecret: string) => Promise<string | undefined>;
+    confirmPayment: (clientSecret: string) => Promise<string | undefined>;
+    confirmSetup: (clientSecret: string) => Promise<string | undefined>;
 }
 
 type Props = {
-    ref: React.Ref<StripePaymentRef>,
+    ref?: React.Ref<StripePaymentRef>,
 }
 
 export default function StripePayment({ ref }: Props) {
@@ -22,7 +23,7 @@ export default function StripePayment({ ref }: Props) {
 
             if (error) return error.message || 'En feil oppsto når betalingen skulle sendes inn.'
         },
-        confirm: async (clientSecret: string) => {
+        confirmPayment: async (clientSecret: string) => {
             if (!stripe || !elements) return 'Stripe ikke initialisert enda.'
 
             const { error } = await stripe.confirmPayment({
@@ -34,6 +35,19 @@ export default function StripePayment({ ref }: Props) {
             })
 
             if (error) return error.message || 'En feil oppsto når betalingen skulle bekreftes.'
+        },
+        confirmSetup: async (clientSecret: string) => {
+            if (!stripe || !elements) return 'Stripe ikke initialisert enda.'
+
+            const { error } = await stripe.confirmSetup({
+                clientSecret,
+                elements,
+                confirmParams: {
+                    return_url: window.location.href,
+                },
+            })
+            
+            if (error) return error.message || 'En feil oppsto ved lagring av informasjon.'
         }
     }))
 

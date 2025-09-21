@@ -154,12 +154,12 @@ model Payment {
 }
 
 model StripePayment {
+  payment   Payment @relation(fields: [paymentId], references: [id])
+  paymentId Int     @id
+
   paymentIntentId String? @unique
   // The key the fronted uses to confirm the payment intent
   clientSecret    String? @unique
-
-  payment   Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int     @unique
 
   // Which ledger entries have used this payment
   // Useful in case payment goes through,
@@ -175,16 +175,14 @@ model StripePayment {
 // Example: Say PhaestCom has earned 50'000.00 funds and 1000.00 fees.  
 // Then, the actual bank transfer should equate to 49'000.00.
 model ManualPayment {
+  payment   Payment @relation(fields: [paymentId], references: [id])
+  paymentId Int     @id
+
   // The bank account number where the money was sent to/from. 
   // This is only for our own bookkeeping. When sending funds out
   // of the system it has to be transferred manually by an admin!
   bankAccountNumber String?
 
-  payment   Payment @relation(fields: [paymentId], references: [id])
-  paymentId Int     @unique
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// TODO: Stripe customer model

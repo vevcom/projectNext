@@ -5,41 +5,49 @@ enum SEX {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  username          String              @unique
-  email             String              @unique
-  firstname         String              @default("[Fjernet]")
-  lastname          String              @default("[Fjernet]")
-  bio               String              @default("")
-  archived          Boolean             @default(false)
-  acceptedTerms     DateTime?
-  sex               SEX?
-  allergies         String?
-  mobile            String?
-  emailVerified     DateTime?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt // is also updated manually
-  image             Image?              @relation(fields: [imageId], references: [id])
-  imageId           Int?
-  studentCard       String?             @unique
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  firstname     String    @default("[Fjernet]")
+  lastname      String    @default("[Fjernet]")
+  bio           String    @default("")
+  archived      Boolean   @default(false)
+  acceptedTerms DateTime?
+  sex           SEX?
+  allergies     String?
+  mobile        String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt // is also updated manually
+  image         Image?    @relation(fields: [imageId], references: [id])
+  imageId       Int?
+  studentCard   String?   @unique
+
+  credentials  Credentials?
+  feideAccount FeideAccount?
+
+  memberships Membership[]
+
   LockerReservation LockerReservation[]
   omegaQuote        OmegaQuote[]
-  memberships       Membership[]
-  credentials       Credentials?
-  feideAccount      FeideAccount?
-  ledgerAccount     LedgerAccount?
+
+  ledgerAccount  LedgerAccount?
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
-  admissionTrials           AdmissionTrial[]           @relation(name: "user")
-  registeredAdmissionTrial  AdmissionTrial[]           @relation(name: "registeredBy")
-  Application               Application[]
-  EventRegistration         EventRegistration[]
 
-  dots                     DotWrapper[]               @relation(name: "dot_user")
-  dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
+  admissionTrials          AdmissionTrial[] @relation(name: "user")
+  registeredAdmissionTrial AdmissionTrial[] @relation(name: "registeredBy")
+
+  Application Application[]
+
+  EventRegistration EventRegistration[]
+  Event             Event[]
+
+  dots        DotWrapper[] @relation(name: "dot_user")
+  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+
   registerStudentCardQueue RegisterStudentCardQueue[]
-  Event                    Event[]
 
   cabinBooking Booking[] @relation()
 
