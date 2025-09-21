@@ -3,7 +3,7 @@ import { membershipFilterSelection } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { ExpandedMembership, MembershipFiltered, MembershipSelectorType } from './Types'
 
 export async function readMembershipsOfGroup(id: number): Promise<ExpandedMembership[]> {

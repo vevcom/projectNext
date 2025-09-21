@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import { GroupMethods } from '@/services/groups/methods'
 import type { ExpandedMembership } from './Types'

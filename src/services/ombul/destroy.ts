@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { destroyFile } from '@/services/store/destroyFile'
 import type { ExpandedOmbul } from '@/services/ombul/Types'
 

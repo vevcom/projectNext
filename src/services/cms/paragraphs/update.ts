@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { unified } from 'unified'

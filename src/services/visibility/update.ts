@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { VisibilityLevelMatrices } from './Types'
 
 export async function updateVisibility(id: number, data: VisibilityLevelMatrices): Promise<void> {

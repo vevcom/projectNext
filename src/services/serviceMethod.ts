@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
-import { default as globalPrisma } from '@/prisma'
+import { prisma as globalPrisma } from '@/prisma/client'
 import { Session } from '@/auth/Session'
 import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'

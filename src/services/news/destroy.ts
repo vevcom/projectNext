@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { destroyArticle } from '@/services/cms/articles/destroy'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { SimpleNewsArticle } from '@/services/news/Types'
 
 /**

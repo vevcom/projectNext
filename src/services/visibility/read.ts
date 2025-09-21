@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { SpecialVisibilityConfig } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
 import type { VisibilityCollapsed } from './Types'
 

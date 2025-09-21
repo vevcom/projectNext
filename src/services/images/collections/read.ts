@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'

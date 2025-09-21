@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { createCmsParagraphValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateCmsParagraphTypes } from './validation'
 import type { CmsParagraph } from '@prisma/client'

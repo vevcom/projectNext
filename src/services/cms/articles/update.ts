@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { updateArticleValidation } from './validation'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { addArticleSectionPart } from '@/services/cms/articleSections/update'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'

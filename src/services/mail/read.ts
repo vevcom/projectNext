@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { UserConfig } from '@/services/users/config'
 import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './Types'
 

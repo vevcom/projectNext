@@ -2,7 +2,7 @@ import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequireServerOnly } from '@/auth/auther/ServerOnly'
 import { Session } from '@/auth/Session'
 import { serviceMethod } from '@/services/serviceMethod'
-import { default as globalPrisma } from '@/prisma'
+import { prisma as globalPrisma } from '@/prisma/client'
 import { describe, expect, test } from '@jest/globals'
 import { z } from 'zod'
 

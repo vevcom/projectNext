@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { createCmsImageValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateCmsImageTypes } from './validation'
 import type { Image } from '@prisma/client'

@@ -1,5 +1,5 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { ExpandedManualGroup } from './Types'
 
 export async function readManualGroups(): Promise<ExpandedManualGroup[]> {

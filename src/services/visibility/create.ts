@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { updateVisibility } from './update'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { Visibility, VisibilityPurpose } from '@prisma/client'
 import type { VisibilityLevelMatrices } from './Types'
 

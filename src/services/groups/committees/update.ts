@@ -1,5 +1,5 @@
 import { updateCommitteeValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ImageMethods } from '@/services/images/methods'
 import type { ExpandedCommittee } from './Types'

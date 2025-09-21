@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticleSection } from '@/cms/articleSections/Types'

@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { omegaQuoteFilterSelection } from './CofigVars'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { ReadPageInput } from '@/lib/paging/Types'
 import type { OmegaquoteCursor, OmegaquoteFiltered } from '@/services/omegaquotes/Types'
 

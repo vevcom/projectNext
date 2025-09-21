@@ -1,4 +1,4 @@
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedCommittee } from './Types'
 

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { createOmegaquotesValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { NotificationMethods } from '@/services/notifications/methods'
 import type { CreateOmegaguotesTypes } from './validation'
 import type { OmegaQuote } from '@prisma/client'
