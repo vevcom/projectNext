@@ -18,6 +18,6 @@ export default async function Account() {
     return <div>
         <LedgerAccountOverview ledgerAccountId={account.id} showPayoutButton showDepositButton showDeactivateButton />
         <LedgerAccountPaymentMethods userId={session.user.id} />
-        <LedgerAccountTransactionSummary ledgerAccountId={account.id} />
+        <LedgerAccountTransactionSummary ledgerAccountId={account.id} transactionsHref="account/transactions" />
     </div>
 }

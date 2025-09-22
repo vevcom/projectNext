@@ -68,7 +68,11 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         <>
             {renderedPageData}
             <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName}`}>
-                <i style={{ opacity: showButton ? 0 : 1 }}>Ingen flere å laste inn</i>
+                <i style={{ opacity: showButton ? 0 : 1 }}>{ 
+                    context.state.data.length == 0
+                        ? "Ingen data å laste inn"
+                        : "Ingen flere å laste inn"
+                }</i>
                 <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMore}>Last inn flere</Button>
             </span>
         </>

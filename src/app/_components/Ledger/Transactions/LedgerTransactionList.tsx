@@ -3,21 +3,20 @@
 import LedgerTransactionRow from './LedgerTransactionRow'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTransactionPaging'
-import { readLedgerAccountPageAction } from '@/services/ledger/ledgerAccount/actions'
 
 type Props = {
     accountId: number,
-    // TODO: showFees?: boolean,
+    showFees?: boolean,
 }
 
-export default function TransactionList({ accountId }: Props) {
+export default function TransactionList({ accountId, showFees }: Props) {
     return <LedgerTransactionPagingProvider startPage={{ page: 0, pageSize: 10 }} details={{ accountId }} serverRenderedData={[]}>
         <EndlessScroll
             pagingContext={LedgerTransactionPagingContext}
             renderer={
-                transaction => <LedgerTransactionRow key={transaction.id} transaction={transaction}/>
+                transaction => <LedgerTransactionRow key={transaction.id} transaction={transaction} showFees={showFees} />
             }
         />
-        <p>Her var det tomt! Hva med å ta seg en tur innom Kiogeskapet?</p>
+        {/* TODO: Add message "Her var det tomt! Hva med å ta seg en tur innom Kiogeskapet?" when no transaksjons exist. */}
     </LedgerTransactionPagingProvider>
 }

@@ -1,23 +1,24 @@
 'use client'
 
 import styles from './DepositModal.module.scss'
-import Form from '../../Form/Form'
-import PopUp from '../../PopUp/PopUp'
-import NumberInput from '../../UI/NumberInput'
-import Button from '../../UI/Button'
+import Form from '@/components/Form/Form'
+import PopUp from '@/components/PopUp/PopUp'
+import NumberInput from '@/components/UI/NumberInput'
+import Button from '@/components/UI/Button'
 import { createDepositAction } from '@/services/ledger/ledgerOperations/actions'
-import { convertAmount, displayAmount } from '@/lib/currency/convert'
+import { convertAmount } from '@/lib/currency/convert'
 import { createActionError } from '@/services/actionError'
 import { lazy, useRef, useState } from 'react'
 import type { PaymentProvider } from '@prisma/client'
 import type { ExpandedPayment } from '@/services/ledger/payments/Types'
-import type { StripePaymentRef } from '../../Stripe/StripePayment'
+import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
+import { MINIMUM_PAYMENT_AMOUNT } from '@/services/ledger/payments/config'
+import Checkbox from '@/components/UI/Checkbox'
+import TextInput from '@/components/UI/TextInput'
 
 // Avoid loading the Stripe components until they are needed
-const StripePayment = lazy(() => import('../../Stripe/StripePayment'))
-const StripeProvider = lazy(() => import('../../Stripe/StripeProvider'))
-
-const minFunds = 50_00
+const StripePayment = lazy(() => import('@/components/Stripe/StripePayment'))
+const StripeProvider = lazy(() => import('@/components/Stripe/StripeProvider'))
 
 const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 const paymentProviderNames: Record<PaymentProvider, string> = {
@@ -30,7 +31,8 @@ type Props = {
 }
 
 export default function DepositModal({ ledgerAccountId }: Props) {
-    const [funds, setFunds] = useState(minFunds)
+    const [funds, setFunds] = useState(MINIMUM_PAYMENT_AMOUNT)
+    const [manualFees, setManualFees] = useState(0)
     const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>(defaultPaymentProvider)
 
     const stripePaymentRef = useRef<StripePaymentRef>(null)
@@ -52,7 +54,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
         if (confirmError) return confirmError
     }
 
-    const handleSubmit = async (data: FormData) => {
+    const handleSubmit = async (_: FormData) => {
         // If the stripe payment ref is set, validate the input
         if (stripePaymentRef.current) {
             const submitError = await stripePaymentRef.current.submit()
@@ -79,14 +81,16 @@ export default function DepositModal({ ledgerAccountId }: Props) {
 
     return <PopUp PopUpKey={'depositModal'} customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}>
         <div className={styles.checkoutFormContainer}>
+            <h2>Nytt innskudd</h2>
             <Form action={handleSubmit} submitText="Sett inn">
                 <NumberInput
                     label="Beløp"
                     name="funds"
                     step={1}
-                    min={minFunds / 100}
+                    min={0}
                     defaultValue={funds / 100}
                     onChange={e => setFunds(convertAmount(e.target.value))}
+                    required
                 />
 
                 <fieldset>
@@ -114,7 +118,17 @@ export default function DepositModal({ ledgerAccountId }: Props) {
 
                 {selectedProvider === 'MANUAL' && (
                     <div>
-                        <p>Etter innsending vil du motta instruksjoner for manuell betaling.</p>
+                        <Checkbox name="iUseThisWithCare" required>Jeg bruker dette med ohmu.</Checkbox>
+                        <NumberInput
+                            label="Påførte gebyrer"
+                            name="manualFees"
+                            step={1}
+                            min={0}
+                            defaultValue={0}
+                            onChange={e => setManualFees(convertAmount(e.target.value))}
+                            required
+                        />
+                        <TextInput label="Kommentar" name="note"></TextInput>
                     </div>
                 )}
             </Form>
