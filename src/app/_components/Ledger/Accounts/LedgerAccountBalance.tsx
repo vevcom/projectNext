@@ -15,12 +15,12 @@ export default async function LedgerAccountBalance({ ledgerAccountId: accountId,
         <div className={styles.amountRow}>
             <div>Saldo</div>
             <div className={styles.total}>{displayAmount(balance.amount)}</div>
-            <div className={styles.currencySymbol}>Kluengende Muente</div>
+            <div className={styles.currencySymbol}>Muenter</div>
         </div>
         {showFees && <div className={styles.feesRow}>
             <div>Avgifter</div>
             <div className={styles.total}>{displayAmount(balance.fees)}</div>
-            <div className={styles.currencySymbol}>Kluengende Muente</div>
+            <div className={styles.currencySymbol}>Muenter</div>
         </div>}
     </div>
 }

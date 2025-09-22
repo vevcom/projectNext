@@ -1,3 +1,5 @@
-export default async function LedgerAccountList() {
-    return 'Yo'
+import LedgerAccountList from "@/components/Ledger/Accounts/LedgerAccountList";
+
+export default async function LedgerAccounts() {
+    return <LedgerAccountList />
 }

@@ -48,7 +48,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
         if (!current) return 'Noe gikk galt ved innhenting av Stripe.'
 
         // Call the stripe payment ref to confirm the payment
-        const confirmError = await current.confirm(clientSecret)
+        const confirmError = await current.confirmPayment(clientSecret)
         if (confirmError) return confirmError
     }
 
@@ -107,7 +107,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
                 </fieldset>
 
                 {selectedProvider === 'STRIPE' && (
-                    <StripeProvider amount={funds} >
+                    <StripeProvider mode="payment" amount={funds} >
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
                 )}

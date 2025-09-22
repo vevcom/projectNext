@@ -18,6 +18,7 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
+    'studentCard',
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])

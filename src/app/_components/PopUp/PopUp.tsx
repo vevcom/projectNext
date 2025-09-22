@@ -4,7 +4,7 @@ import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faX } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/contexts/PopUp'
@@ -56,7 +56,7 @@ export default function PopUp({
                 <div className={styles.main} ref={ref}>
                     <div className={styles.overflow}>
                         <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-                            <FontAwesomeIcon icon={faX} />
+                            <FontAwesomeIcon icon={faXmark} />
                         </button>
                         <div className={styles.content}>
                             { children }

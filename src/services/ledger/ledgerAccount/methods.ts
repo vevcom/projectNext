@@ -5,6 +5,9 @@ import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 import type { BalanceRecord } from './Types'
 import { stripe } from '@/lib/stripe'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { LedgerAccountType } from '@prisma/client'
 
 export namespace LedgerAccountMethods {
     /**
@@ -78,6 +81,32 @@ export namespace LedgerAccountMethods {
 
             return create({ session, data: params })
         },
+    })
+
+    export const readPage = serviceMethod({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        paramsSchema: readPageInputSchemaObject(
+            z.number(),
+            z.object({
+                id: z.number(),
+            }),
+            z.object({
+                accountType: z.nativeEnum(LedgerAccountType).optional(),
+            }),
+        ),
+        method: async ({ params: { paging }, prisma }) => {
+            // TODO: Add balance to each account
+            return await prisma.ledgerAccount.findMany({
+                where: {
+                    type: paging.details.accountType,
+                },
+                orderBy: [
+                    { createdAt: 'desc' },
+                    { id: 'desc' },  
+                ],
+                ...cursorPageingSelection(paging.page),
+            })
+        }
     })
 
     /**
@@ -169,13 +198,12 @@ export namespace LedgerAccountMethods {
             id: z.number(),
             atTransactionId: z.number().optional(),
         }),
-        method: async ({ prisma, session, params }) => {
+        method: async ({ params }) => {
             const balances = await calculateBalances({
                 params: {
                     ids: [params.id],
                     atTransactionId: params.atTransactionId,
                 },
-                session,
             })
 
             return balances[params.id]

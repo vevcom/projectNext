@@ -2,7 +2,7 @@
 
 .LedgerAccountBalance {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr auto;
     grid-auto-flow: row;
     grid-auto-columns: max-content;
     column-gap: 2*ohma.$gap;
@@ -29,13 +29,4 @@
 .total {
     text-align: right;
     // width: 100%; // ensures it stretches to the container
-}
-
-.currencySymbol {
-    display: none;
-
-
-    // @include ohma.screenMobile {
-    //     display: none;
-    // }
 }

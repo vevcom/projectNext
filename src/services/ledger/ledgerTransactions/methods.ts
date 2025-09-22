@@ -70,10 +70,10 @@ export namespace LedgerTransactionMethods {
                     },
                 },
             },
-            orderBy: {
-                createdAt: 'desc',
-                id: 'desc',
-            },
+            orderBy: [
+                { createdAt: 'desc' },
+                { id: 'desc'},
+            ],
             ...cursorPageingSelection(params.paging.page)
         })
     })

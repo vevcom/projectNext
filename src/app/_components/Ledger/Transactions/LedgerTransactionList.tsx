@@ -1,9 +1,9 @@
 'use client'
 
-import styles from './LedgerTransactionList.module.scss'
 import LedgerTransactionRow from './LedgerTransactionRow'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTranasctionPaging'
+import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTransactionPaging'
+import { readLedgerAccountPageAction } from '@/services/ledger/ledgerAccount/actions'
 
 type Props = {
     accountId: number,
@@ -18,5 +18,6 @@ export default function TransactionList({ accountId }: Props) {
                 transaction => <LedgerTransactionRow key={transaction.id} transaction={transaction}/>
             }
         />
+        <p>Her var det tomt! Hva med å ta seg en tur innom Kiogeskapet?</p>
     </LedgerTransactionPagingProvider>
 }

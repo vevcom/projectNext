@@ -17,7 +17,10 @@ export const LedgerTransactionPagingContext = generatePagingContext<
 const LedgerTransactionPagingProvider = generatePagingProvider({
     Context: LedgerTransactionPagingContext,
     fetcher: (paging) => readLedgerTransactionPageAction({ paging }),
-    getCursorAfterFetch: data => ({ id: data[data.length - 1].id }),
+    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
 })
+
+// TODO: The "getCursorAfterFetch" function always just accesses the last element of the array,
+// can't just the last eleement be passed in directly?
 
 export default LedgerTransactionPagingProvider

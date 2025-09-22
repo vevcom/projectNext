@@ -1,0 +1,11 @@
+@use "@/styles/ohma";
+
+.ledgerAccountOverviewButtons {
+    margin-top: 3*ohma.$gap;
+    display: flex;
+    flex-direction: row;
+
+    .rightAligned {
+        margin-left: auto;
+    }
+}

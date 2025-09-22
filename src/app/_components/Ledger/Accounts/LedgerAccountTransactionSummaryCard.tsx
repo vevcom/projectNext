@@ -1,13 +1,15 @@
 import Card from '@/components/UI/Card'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type Props = {
+    ledgerAccountId: number,
     transactionsHref?: string,
 }
 
 export default function LedgerAccountTransactionSummary({ transactionsHref }: Props) {
-    return <Card>
-        <h2>Transaksjoner</h2>
+    return <Card heading="Transaksjoner">
         <table>
             <tbody>
                 <tr>
@@ -18,6 +20,6 @@ export default function LedgerAccountTransactionSummary({ transactionsHref }: Pr
                 </tr>
             </tbody>
         </table>
-        { transactionsHref && <Link href={transactionsHref}>Se alle transaksjoner -&gt;</Link> }
+        { transactionsHref && <Link href={transactionsHref}>Se alle transaksjoner <FontAwesomeIcon icon={faArrowRight} /></Link> }
     </Card>
 }

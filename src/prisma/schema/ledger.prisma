@@ -20,6 +20,7 @@ model LedgerAccount {
   group               Group?            @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   groupId             Int?              @unique
   type                LedgerAccountType
+  name                String? // Optional display name for the account, only used for group accounts
   payoutAccountNumber String? // For display only, only used for group accounts
 
   ledgerEntries LedgerEntry[]
