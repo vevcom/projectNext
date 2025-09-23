@@ -12,7 +12,7 @@ type PropTypes = {
 export default function NewsPublishControls({ news }: PropTypes) {
     const { refresh } = useRouter()
     const isPublished = news.visibility.published
-    
+
     return (
         <div className={styles.NewsPublishControls}>
             <div className={styles.status}>
@@ -21,7 +21,7 @@ export default function NewsPublishControls({ news }: PropTypes) {
                     {isPublished ? 'Publisert' : 'Utkast'}
                 </span>
             </div>
-            
+
             <div className={styles.controls}>
                 <Form
                     action={publishNewsAction.bind(null, news.id, !isPublished)}
@@ -34,7 +34,7 @@ export default function NewsPublishControls({ news }: PropTypes) {
                     successCallback={() => refresh()}
                 >
                 </Form>
-                
+
                 <Form
                     action={updateVisibilityAction.bind(null, news.id, !isPublished)}
                     submitText={isPublished ? 'Gjør til utkast' : 'Publiser uten varsling'}

@@ -6,11 +6,11 @@ import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
-import NewsPublishControls from '@/components/NewsPublishControls/NewsPublishControls'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/Types'
 import type { ReactNode } from 'react'
+import NewsPublishControls from '@/components/NewsPublishControls/NewsPublishControls'
 
 type PropTypes = {
     news: ExpandedNewsArticle

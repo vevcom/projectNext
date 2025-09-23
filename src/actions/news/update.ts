@@ -28,10 +28,10 @@ export async function publishNewsAction(
     return await safeServerCall(async () => {
         // Get the news article to access its visibility
         const news = await readNews(id)
-        
+
         // Update the visibility published status
         await updateVisibilityPublished(news.visibilityId, shouldPublish)
-        
+
         // If publishing (not unpublishing), send notification
         if (shouldPublish) {
             NotificationMethods.createSpecial.newClient().execute({
@@ -46,7 +46,7 @@ export async function publishNewsAction(
                 bypassAuth: true,
             })
         }
-        
+
         return { articleName: news.articleName }
     })
 }
@@ -55,10 +55,10 @@ export async function updateVisibilityAction(id: number, published: boolean): Pr
     return await safeServerCall(async () => {
         // Get the news article to access its visibility
         const news = await readNews(id)
-        
+
         // Update the visibility published status
         await updateVisibilityPublished(news.visibilityId, published)
-        
+
         return { published }
     })
 }

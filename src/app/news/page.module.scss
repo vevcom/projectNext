@@ -6,7 +6,7 @@
 
 .head {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     gap: 1em;
 }
 
@@ -14,4 +14,11 @@
     @include ohma.borderBtn(ohma.$colors-primary);
     display: block;
     margin: 0 ohma.$gap;
+}
+
+.adminBtn {
+    @include ohma.borderBtn(ohma.$colors-secondary);
+    display: block;
+    margin: 0 ohma.$gap;
+    font-size: 0.9rem;
 }

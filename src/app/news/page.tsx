@@ -1,19 +1,33 @@
 import styles from './page.module.scss'
 import AddNews from './AddNews'
 import CurrentNews from './CurrentNews'
+import CurrentNewsWithDrafts from './CurrentNewsWithDrafts'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Link from 'next/link'
 
-export default async function NewsArtilces() {
+type Props = {
+    searchParams: {
+        admin?: string
+    }
+}
+
+export default async function NewsArtilces({ searchParams }: Props) {
     //TODO: add can create news permission
     const canCreateNews = true //temp
+    const showAdmin = searchParams.admin === 'true'
 
     return (
         <PageWrapper title="Nyheter"
             headerItem={
                 <div className={styles.head}>
                     <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
+                    <Link
+                        className={styles.adminBtn}
+                        href={showAdmin ? '/news' : '/news?admin=true'}
+                    >
+                        {showAdmin ? 'Vanlig visning' : 'Admin visning'}
+                    </Link>
                     {
                         canCreateNews && (
                             <AddHeaderItemPopUp PopUpKey="createNewsPop">
@@ -25,7 +39,11 @@ export default async function NewsArtilces() {
             }
         >
             <main className={styles.wrapper}>
-                <CurrentNews />
+                {showAdmin ? (
+                    <CurrentNewsWithDrafts />
+                ) : (
+                    <CurrentNews />
+                )}
             </main>
         </PageWrapper>
     )

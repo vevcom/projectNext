@@ -1,5 +1,5 @@
-import ImageCard from '@/components/ImageCard/ImageCard'
 import styles from './NewsCard.module.scss'
+import ImageCard from '@/components/ImageCard/ImageCard'
 import type { SimpleNewsArticle } from '@/services/news/Types'
 
 type PropTypes = {
@@ -9,7 +9,7 @@ type PropTypes = {
 
 export default function NewsCard({ news, showDraftStatus = false }: PropTypes) {
     const isPublished = news.visibility.published
-    
+
     return (
         <div className={styles.NewsCardWrapper}>
             {showDraftStatus && !isPublished && (
