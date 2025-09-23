@@ -2,8 +2,6 @@ import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
-import { RequireNothing } from '@/auth/auther/RequireServer'
-import { RequirePermission } from '@/auth/auther/RequirePermission'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { SessionMaybeUser } from '@/auth/Session'
@@ -76,17 +74,11 @@ export type SubServiceMethodConfig<
     Return,
     OpensTransaction extends boolean = false,
 > = {
-    paramsSchema?: (ParamsSchemaImplementationFields extends undefined ?
-            (implementationFields: ParamsSchemaImplementationFields) => ParamsSchema :
-            () => ParamsSchema),
-    dataSchema?: (DataSchemaImplementationFields extends undefined ?
-        (implementationFields: DataSchemaImplementationFields) => DataSchema :
-        () => DataSchema),
+    paramsSchema?: ((implementationFields: ParamsSchemaImplementationFields) => ParamsSchema) | undefined,
+    dataSchema?: (implementationFields: DataSchemaImplementationFields) => DataSchema | undefined,
     opensTransaction?: OpensTransaction,
-    method: (MethodImplementationParams extends undefined ?
-        () => ServiceMethodMethod<OpensTransaction, ParamsSchema, DataSchema, Return> :
-        (implementationParams: MethodImplementationParams) =>
-            ServiceMethodMethod<OpensTransaction, ParamsSchema, DataSchema, Return>)
+    method: (implementationParams: MethodImplementationParams) =>
+        ServiceMethodMethod<OpensTransaction, ParamsSchema, DataSchema, Return>
 }
 
 export type AutherGetter<
@@ -113,13 +105,11 @@ export type ServiceMethodImplementationConfig<
 > = {
     implementationParamsSchema: ImplementationParamsSchema,
     auther: AutherGetter<AutherDynamicFields, ParamsSchema, DataSchema, ImplementationParamsSchema>,
-} & (ParamsSchemaImplementationFields extends undefined ? { paramsSchemaImplementationFields?: undefined } : {
     paramsSchemaImplementationFields: ParamsSchemaImplementationFields
-}) & (DataSchemaImplementationFields extends undefined ? { dataSchemaImplementationFields?: undefined } : {
     dataSchemaImplementationFields: DataSchemaImplementationFields
-}) & (MethodImplementationFields extends undefined ? { methodImplementationFields?: undefined } : {
     methodImplementationFields: MethodImplementationFields
-})
+}
+
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -132,14 +122,51 @@ export type PrismaPossibleTransaction<
     OpensTransaction extends boolean
 > = OpensTransaction extends true ? PrismaClient : Prisma.TransactionClient
 
-export function SubServiceMethod<
+/**
+ * This is the return type of the ServiceMethod function. It contains a client function that can be used
+ * to pass a specific prisma client to the service method, and a newClient function that can be used to
+ * pass the global prisma client to the service method.
+ *
+ * TypeScript is smart enough to infer the behaviour of the return functons without the need to excplitly
+ * type the return type of the ServiceMethod function, but it is done so for the sake of clarity.
+ */
+export type ServiceMethodType<
+    OpensTransaction extends boolean,
+    Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.AnyZodObject | undefined
+> = {
+    /**
+     * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
+     * @note
+     * @param client
+     */
+    client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
+        execute: (args: ServiceMethodExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>) => Promise<Return>,
+        executeUnsafe: (args: ServiceMethodExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>) => Promise<Return>,
+    },
+    /**
+     * Use the global prisma client for the service method.
+     */
+    newClient: () => (
+        ReturnType<
+            ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>['client']
+        >
+    ),
+    paramsSchema?: ParamsSchema,
+    dataSchema?: DataSchema,
+    implementationParamsSchema?: ImplementationParamsSchema,
+}
+
+export function SubServiceMethod<
     Return,
-    ParamsSchemaImplementationFields extends object | undefined,
-    DataSchemaImplementationFields extends object | undefined,
-    MethodImplementationParams extends object | undefined,
     OpensTransaction extends boolean = false,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+    ParamsSchemaImplementationFields extends object | undefined = undefined,
+    DataSchemaImplementationFields extends object | undefined = undefined,
+    MethodImplementationParams extends object | undefined = undefined,
 >(
     serviceMethodConfig: SubServiceMethodConfig<
         ParamsSchema,
@@ -165,7 +192,7 @@ export function SubServiceMethod<
                 MethodImplementationParams,
                 AutherDynamicFields
                 >
-        ) => {
+        ) : ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
             const expectedArgsArePresent = (
                 args: ServiceMethodExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
             ): args is ServiceMethodExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> => {
@@ -179,8 +206,6 @@ export function SubServiceMethod<
             }
 
             const client = (prisma: PrismaPossibleTransaction<OpensTransaction>) => {
-                const method = implementationArgs.methodImplementationFields ? ( implementationArgs.methodImplementationFields )
-
                 const executeUnsafe = async (
                     args: ServiceMethodExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
                 ) => {
@@ -207,11 +232,12 @@ export function SubServiceMethod<
 
                         args.params = paramsParse.data
                     }
-
+                    console.log('args', args)
+                    console.log('serviceMethodConfig', serviceMethodConfig)
                     if (args.data) {
                         if (!serviceMethodConfig.dataSchema) {
                             throw new Smorekopp(
-                                'BAD PARAMETERS', 'Service method recieved data, but has no data schema.'
+                                'BAD PARAMETERS', 'Service method recieved data, but has no data schema. 1'
                             )
                         }
                         const dataSchema = serviceMethodConfig.dataSchema(
@@ -219,7 +245,7 @@ export function SubServiceMethod<
                         )
                         if (!dataSchema) {
                             throw new Smorekopp(
-                                'BAD PARAMETERS', 'Service method recieved data, but has no data schema.'
+                                'BAD PARAMETERS', 'Service method recieved data, but has no data schema. 2'
                             )
                         }
                         const dataParse = zfd.formData(dataSchema).safeParse(args.data)
@@ -263,7 +289,7 @@ export function SubServiceMethod<
                         }
                     }
 
-                    return prismaErrorWrapper(() => method({
+                    return prismaErrorWrapper(() => serviceMethodConfig.method(implementationArgs.methodImplementationFields)({
                         ...args,
                         prisma,
                         session: args.session ?? Session.empty()
@@ -294,12 +320,12 @@ export function SubServiceMethod<
 }
 
 export function ServiceMethod<
-    ParamsSchema extends z.ZodTypeAny | undefined,
-    DataSchema extends z.ZodTypeAny | undefined,
     AutherDynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
->(config: {
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+>({ paramsSchema, dataSchema, opensTransaction, auther, method }: {
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
@@ -307,75 +333,23 @@ export function ServiceMethod<
     method: ServiceMethodMethod<OpensTransaction, ParamsSchema, DataSchema, Return>
 }) {
     return SubServiceMethod<
+        Return,
+        OpensTransaction,
         ParamsSchema,
         DataSchema,
-        Return,
         undefined,
         undefined,
-        undefined,
-        OpensTransaction
+        undefined
     >({
-        opensTransaction: config.opensTransaction,
-        method: () => config.method,
+        opensTransaction: opensTransaction,
+        method: () => method,
+        paramsSchema: paramsSchema !== undefined ? () => paramsSchema : undefined,
+        dataSchema: dataSchema !== undefined ? () => dataSchema : undefined,
     }).implement({
-        auther: config.auther,
+        auther: auther,
         implementationParamsSchema: undefined,
         dataSchemaImplementationFields: undefined,
         paramsSchemaImplementationFields: undefined,
         methodImplementationFields: undefined,
     })
 }
-
-ServiceMethod({
-    paramsSchema: z.object({
-        id: z.string().uuid()
-    }),
-    dataSchema: z.object({
-        success: z.boolean()
-    }),
-    method: ({ params, data }) => {
-        console.log(params)
-        console.log(data)
-    },
-    auther: () => RequireNothing.staticFields({}).dynamicFields({})
-})
-
-SubServiceMethod({
-    dataSchema: ({ maxLength }: { maxLength: number }) => z.object({
-        id: z.number(),
-        name: z.string().max(maxLength)
-    }),
-    paramsSchema: () => z.object({
-        id: z.number()
-    }),
-    method: ({ someCrazyImplementationParam }: { someCrazyImplementationParam: string }) => ({ params, data, prisma }) => {
-        console.log(params)
-        console.log(data)
-        console.log(someCrazyImplementationParam)
-        prisma.cmsParagraph.update({
-            where: {
-                id: params.id
-            },
-            data: {
-                name: data.name,
-                id: data.id
-            }
-        })
-    }
-}).implement({
-    auther: async ({ implementationParams, params }) => {
-        // Do logic using utils to check implementationParams.id owns params.id
-        // READ WITH ALL CONNECTIONS TO CMS USING READ SERVICE ON implementationParams.idOfServiceUsingSubService (async)
-        // USE util to check belonging (sync)
-        console.log(implementationParams.idOfServiceUsingSubService)
-        console.log(params.id)
-        // Use apropriate auther for service
-        return RequirePermission.staticFields({ permission: 'COMMITTEE_READ' }).dynamicFields({})
-    },
-    implementationParamsSchema: z.object({
-        idOfServiceUsingSubService: z.number()
-    }),
-    dataSchemaImplementationFields: { maxLength: 100 },
-    paramsSchemaImplementationFields: undefined,
-    methodImplementationFields: { someCrazyImplementationParam: 'someValue' },
-})
