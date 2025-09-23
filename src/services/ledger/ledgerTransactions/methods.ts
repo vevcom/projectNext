@@ -72,7 +72,7 @@ export namespace LedgerTransactionMethods {
             },
             orderBy: [
                 { createdAt: 'desc' },
-                { id: 'desc'},
+                { id: 'desc' },
             ],
             ...cursorPageingSelection(params.paging.page)
         })
@@ -177,7 +177,9 @@ export namespace LedgerTransactionMethods {
             // Check that the relevant accounts have enough balance to do the transaction.
             // NOTE: This is check is only to avoid calling the db unnecessarily.
             // The actual validation is handled in the `advance` function.
-            const hasInsufficientBalance = debitEntries.some(entry => (balances[entry.ledgerAccountId]?.amount ?? 0) + entry.funds < 0)
+            const hasInsufficientBalance = debitEntries.some(
+                entry => (balances[entry.ledgerAccountId]?.amount ?? 0) + entry.funds < 0
+            )
             if (hasInsufficientBalance) {
                 throw new ServerError('BAD PARAMETERS', 'Konto har for lav balanse for å utføre transaksjonen.')
             }

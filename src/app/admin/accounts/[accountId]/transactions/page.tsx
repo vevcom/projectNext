@@ -1,5 +1,5 @@
-import TransactionList from "@/components/Ledger/Transactions/LedgerTransactionList";
-import { notFound } from "next/navigation";
+import TransactionList from '@/components/Ledger/Transactions/LedgerTransactionList'
+import { notFound } from 'next/navigation'
 
 type Props = {
     params: Promise<{

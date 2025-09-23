@@ -1,9 +1,8 @@
 'use client'
 
-import { LedgerAccount } from '@prisma/client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readLedgerAccountPageAction } from '@/services/ledger/ledgerAccount/actions'
-import { LedgerAccountType } from '@prisma/client'
+import type { LedgerAccount, LedgerAccountType } from '@prisma/client'
 
 // TODO: These paging functions always come in pairs, can we gave one function which generates both?
 

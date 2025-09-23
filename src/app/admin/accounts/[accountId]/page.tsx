@@ -1,6 +1,6 @@
-import LedgerAccountOverview from "@/components/Ledger/Accounts/LedgerAccountOverviewCard"
-import LedgerAccountTransactionSummary from "@/components/Ledger/Accounts/LedgerAccountTransactionSummaryCard"
-import { notFound } from "next/navigation"
+import LedgerAccountOverview from '@/components/Ledger/Accounts/LedgerAccountOverviewCard'
+import LedgerAccountTransactionSummary from '@/components/Ledger/Accounts/LedgerAccountTransactionSummaryCard'
+import { notFound } from 'next/navigation'
 
 type Props = {
     params: Promise<{

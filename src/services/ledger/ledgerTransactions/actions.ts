@@ -1,4 +1,4 @@
-"use server"
+'use server'
 
 import { LedgerTransactionMethods } from './methods'
 import { action } from '@/services/action'

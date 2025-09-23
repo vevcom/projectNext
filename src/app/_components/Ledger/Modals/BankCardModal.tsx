@@ -17,8 +17,8 @@ export default function BankCardModal({ userId }: PropTypes) {
             customShowButton={(open) => <Button onClick={open}>Legg til bankkort</Button>}
         >
             <h3>Legg til bankkort</h3>
-            <div className={styles.bankCardFormContainer}> 
-                <StripeProvider mode='setup'>
+            <div className={styles.bankCardFormContainer}>
+                <StripeProvider mode="setup">
                     <StripePayment />
                 </StripeProvider>
             </div>

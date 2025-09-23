@@ -8,13 +8,13 @@ import Button from '@/components/UI/Button'
 import { createDepositAction } from '@/services/ledger/ledgerOperations/actions'
 import { convertAmount } from '@/lib/currency/convert'
 import { createActionError } from '@/services/actionError'
+import { MINIMUM_PAYMENT_AMOUNT } from '@/services/ledger/payments/config'
+import Checkbox from '@/components/UI/Checkbox'
+import TextInput from '@/components/UI/TextInput'
 import { lazy, useRef, useState } from 'react'
 import type { PaymentProvider } from '@prisma/client'
 import type { ExpandedPayment } from '@/services/ledger/payments/Types'
 import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
-import { MINIMUM_PAYMENT_AMOUNT } from '@/services/ledger/payments/config'
-import Checkbox from '@/components/UI/Checkbox'
-import TextInput from '@/components/UI/TextInput'
 
 // Avoid loading the Stripe components until they are needed
 const StripePayment = lazy(() => import('@/components/Stripe/StripePayment'))

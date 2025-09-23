@@ -15,8 +15,8 @@ type Props = {
 
 export default function LedgerAccountOverview({
     showFees,
-    ledgerAccountId, 
-    showPayoutButton, 
+    ledgerAccountId,
+    showPayoutButton,
     showDepositButton,
     showDeactivateButton,
 }: Props) {
@@ -25,7 +25,7 @@ export default function LedgerAccountOverview({
         <div className={styles.ledgerAccountOverviewButtons}>
             { showDepositButton && <DepositModal ledgerAccountId={ledgerAccountId} /> }
             { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccountId} /> }
-            { showDeactivateButton && <Button color='red' className={styles.rightAligned}>Deaktiver</Button> }
+            { showDeactivateButton && <Button color="red" className={styles.rightAligned}>Deaktiver</Button> }
         </div>
     </Card>
 }

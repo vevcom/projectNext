@@ -1,6 +1,6 @@
-import { stripe } from "@/lib/stripe"
-import { serviceMethod } from "@/services/serviceMethod"
-import { z } from "zod"
+import { stripe } from '@/lib/stripe'
+import { serviceMethod } from '@/services/serviceMethod'
+import { z } from 'zod'
 
 // We have no reason to store Stripe customer ids in the database
 // so this service only interfaces with the stripe API.
@@ -28,7 +28,7 @@ export namespace StripeCustomerMethods {
             userId: z.number(),
         }),
         method: async ({ params }) => {
-            
+
         }
     })
 }

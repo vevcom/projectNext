@@ -46,7 +46,7 @@ export default function StripePayment({ ref }: Props) {
                     return_url: window.location.href,
                 },
             })
-            
+
             if (error) return error.message || 'En feil oppsto ved lagring av informasjon.'
         }
     }))

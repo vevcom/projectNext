@@ -1,4 +1,3 @@
-import { PaymentProvider } from '@prisma/client'
 import { z } from 'zod'
 
 export namespace LedgerOperationSchemas {

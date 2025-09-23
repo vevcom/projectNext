@@ -2,12 +2,12 @@ import { LedgerAccountSchemas } from './schemas'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
-import { z } from 'zod'
-import type { BalanceRecord } from './Types'
 import { stripe } from '@/lib/stripe'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { z } from 'zod'
 import { LedgerAccountType } from '@prisma/client'
+import type { BalanceRecord } from './Types'
 
 export namespace LedgerAccountMethods {
     /**
@@ -94,19 +94,19 @@ export namespace LedgerAccountMethods {
                 accountType: z.nativeEnum(LedgerAccountType).optional(),
             }),
         ),
-        method: async ({ params: { paging }, prisma }) => {
+        method: async ({ params: { paging }, prisma }) =>
             // TODO: Add balance to each account
-            return await prisma.ledgerAccount.findMany({
+            await prisma.ledgerAccount.findMany({
                 where: {
                     type: paging.details.accountType,
                 },
                 orderBy: [
                     { createdAt: 'desc' },
-                    { id: 'desc' },  
+                    { id: 'desc' },
                 ],
                 ...cursorPageingSelection(paging.page),
             })
-        }
+
     })
 
     /**

@@ -10,7 +10,7 @@ export default async function Account() {
         userRequired: true,
         shouldRedirect: true,
     }) // TODO: Replace with whatever we agree should be the standard for getting user
-    
+
     const account = { id: 1 } //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
 
     const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ id: account.id }))
