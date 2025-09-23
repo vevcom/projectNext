@@ -1,3 +1,21 @@
+// Join table between groups and their ledger accounts
+model GroupLedgerAccount {
+  id            Int           @id @default(autoincrement())
+  // TODO: Finnish this
+
+  // group         Group         @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // groupId       Int
+  // ledgerAccount LedgerAccount @relation(fields: [ledgerAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  // ledgerAccountId Int
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Index on IDs for faster look up
+  // @@index([groupId])
+  // @@index([ledgerAccountId])
+}
+
 // In theory the type of a ledger accounts could be inferred from its relations,
 // but to simplify logic an enum is used. In addition this also
 // makes the ledger account type known even after the relation is lost.

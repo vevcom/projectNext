@@ -28,9 +28,10 @@ const paymentProviderNames: Record<PaymentProvider, string> = {
 
 type Props = {
     ledgerAccountId: number,
+    customerSessionClientSecret?: string,
 }
 
-export default function DepositModal({ ledgerAccountId }: Props) {
+export default function DepositModal({ ledgerAccountId, customerSessionClientSecret }: Props) {
     const [funds, setFunds] = useState(MINIMUM_PAYMENT_AMOUNT)
     const [manualFees, setManualFees] = useState(0)
     const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>(defaultPaymentProvider)
@@ -111,7 +112,7 @@ export default function DepositModal({ ledgerAccountId }: Props) {
                 </fieldset>
 
                 {selectedProvider === 'STRIPE' && (
-                    <StripeProvider mode="payment" amount={funds} >
+                    <StripeProvider mode="payment" amount={funds} customerSessionClientSecret={customerSessionClientSecret} >
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
                 )}

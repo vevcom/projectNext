@@ -4,13 +4,23 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readUserAction } from '@/services/users/actions'
 import BooleanIndicator from '@/components/UI/BooleanIndicator'
 import Link from 'next/link'
+import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
 
 type Props = {
     userId: number,
 }
 
+const getCustomerSessionClientSecret = async (userId: number) => {
+    const customerSessionResult = await createStripeCustomerSessionAction({ userId})
+    if (customerSessionResult.success) {
+        return customerSessionResult.data.customerSessionClientSecret
+    }
+    return undefined
+}
+
 export default async function LedgerAccountPaymentMethods({ userId }: Props) {
     const user = unwrapActionReturn(await readUserAction({ id: userId }))
+    const customerSessionClientSecret = await getCustomerSessionClientSecret(userId)
 
     const hasBankCard = false // TODO: Actually check with Stripe
     const hasStudentCard = user.studentCard !== null
@@ -21,7 +31,7 @@ export default async function LedgerAccountPaymentMethods({ userId }: Props) {
             Du kan lagre kortinformasjonen din for senere betalinger.
             Kortinformasjonen lagres kun hos betalingsleverandøren vår, Stripe, og ikke på våre tjenere.
         </p>
-        <BankCardModal userId={userId} />
+        <BankCardModal customerSessionClientSecret={customerSessionClientSecret} />
         <h3>NTNU-kort <BooleanIndicator value={hasStudentCard} /></h3>
         <p>Kortnummer: <strong>{hasStudentCard ? user.studentCard : 'ikke registrert'}</strong></p>
         <p>For å benytte Kiogeskabet på Lophtet må et NTNU-kort være registrert.</p>

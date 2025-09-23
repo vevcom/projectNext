@@ -7,10 +7,10 @@ import StripePayment from '@/components/Stripe/StripePayment'
 import StripeProvider from '@/components/Stripe/StripeProvider'
 
 type PropTypes = {
-    userId: number,
+    customerSessionClientSecret?: string,
 }
 
-export default function BankCardModal({ userId }: PropTypes) {
+export default function BankCardModal({ customerSessionClientSecret }: PropTypes) {
     return (
         <PopUp
             PopUpKey="BankAccountModal"
@@ -18,7 +18,7 @@ export default function BankCardModal({ userId }: PropTypes) {
         >
             <h3>Legg til bankkort</h3>
             <div className={styles.bankCardFormContainer}>
-                <StripeProvider mode="setup">
+                <StripeProvider mode="setup" customerSessionClientSecret={customerSessionClientSecret}>
                     <StripePayment />
                 </StripeProvider>
             </div>
