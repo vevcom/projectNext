@@ -1,11 +1,12 @@
 'use client'
 import styles from './EditNews.module.scss'
-import Form from '@/components/Form/Form'
+import Form from '@/app/_components/Form/Form'
 import { updateNewsAction } from '@/actions/news/update'
 import { destroyNewsAction } from '@/actions/news/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
+import NewsPublishControls from '@/components/NewsPublishControls/NewsPublishControls'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/Types'
@@ -76,7 +77,7 @@ export default function EditNews({ news, children }: PropTypes) {
             </div>
 
             <div className={styles.publish}>
-
+                <NewsPublishControls news={news} />
             </div>
         </div>
     )

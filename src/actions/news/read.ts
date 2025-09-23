@@ -1,6 +1,6 @@
 'use server'
 import { safeServerCall } from '@/actions/safeServerCall'
-import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'
+import { readNews, readNewsCurrent, readOldNewsPage, readNewsCurrentIncludingDrafts } from '@/services/news/read'
 import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 import type { ActionReturn } from '@/actions/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
@@ -15,6 +15,11 @@ export async function readOldNewsPageAction<const PageSize extends number>(
 export async function readNewsCurrentAction(): Promise<ActionReturn<SimpleNewsArticle[]>> {
     //TODO: only read news with right visibility
     return await safeServerCall(() => readNewsCurrent())
+}
+
+export async function readNewsCurrentIncludingDraftsAction(): Promise<ActionReturn<SimpleNewsArticle[]>> {
+    //TODO: auth check for CMS_ADMIN permission
+    return await safeServerCall(() => readNewsCurrentIncludingDrafts())
 }
 
 export async function readNewsAction(idOrName: number | {

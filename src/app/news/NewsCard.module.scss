@@ -1,0 +1,17 @@
+.NewsCardWrapper {
+    position: relative;
+    
+    .draftBadge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background-color: #ffc107;
+        color: #212529;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+}

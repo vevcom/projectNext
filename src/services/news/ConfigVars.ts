@@ -1,4 +1,4 @@
-import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
 import type { Prisma } from '@prisma/client'
 
 export const defaultNewsArticleOldCutoff = 7 // by default a newsarticle is considered old after 7 days
@@ -6,7 +6,8 @@ export const defaultNewsArticleOldCutoff = 7 // by default a newsarticle is cons
 export const newsArticleRealtionsIncluder = {
     article: {
         include: articleRealtionsIncluder
-    }
+    },
+    visibility: true
 } as const satisfies Prisma.NewsArticleInclude
 
 export const simpleNewsArticleRealtionsIncluder = {
@@ -18,5 +19,6 @@ export const simpleNewsArticleRealtionsIncluder = {
                 }
             }
         }
-    }
+    },
+    visibility: true
 } as const satisfies Prisma.NewsArticleInclude

@@ -140,6 +140,8 @@ model NewsArticle {
   articleName    String
   omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order], onDelete: Restrict)
   orderPublished Int
+  visibility     Visibility @relation(fields: [visibilityId], references: [id])
+  visibilityId   Int        @unique
 
   @@unique([articleId, articleName])
   @@unique([articleName, orderPublished])

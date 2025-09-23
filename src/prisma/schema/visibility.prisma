@@ -16,6 +16,7 @@ enum SpecialVisibilityPurpose {
 model Visibility {
   id              Int                       @id @default(autoincrement())
   imageCollection ImageCollection?
+  newsArticle     NewsArticle?
   published       Boolean                   @default(false)
   purpose         VisibilityPurpose
   specialPurpose  SpecialVisibilityPurpose? @unique

@@ -14,6 +14,9 @@ export async function readOldNewsPage<const PageSize extends number>(
         where: {
             endDateTime: {
                 lt: new Date(),
+            },
+            visibility: {
+                published: true
             }
         },
         ...cursorPageingSelection(page),
@@ -31,6 +34,29 @@ export async function readOldNewsPage<const PageSize extends number>(
 }
 
 export async function readNewsCurrent(): Promise<SimpleNewsArticle[]> {
+    const news = await prismaCall(() => prisma.newsArticle.findMany({
+        where: {
+            endDateTime: {
+                gte: new Date(),
+            },
+            visibility: {
+                published: true
+            }
+        },
+        orderBy: {
+            article: {
+                createdAt: 'desc',
+            },
+        },
+        include: simpleNewsArticleRealtionsIncluder,
+    }))
+    return news.map(newsItem => ({
+        ...newsItem,
+        coverImage: newsItem.article.coverImage.image
+    }))
+}
+
+export async function readNewsCurrentIncludingDrafts(): Promise<SimpleNewsArticle[]> {
     const news = await prismaCall(() => prisma.newsArticle.findMany({
         where: {
             endDateTime: {
