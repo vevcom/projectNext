@@ -57,12 +57,12 @@ $collectionSize: calc(14vmin + 70px);
         background-color: color.adjust(ohma.$colors-secondary, $lightness: 40%);
         overflow: scroll;
         max-width: 100%;
+        width: 100%;
+        @include ohma.round;
         @include ohma.screenMobile {
             grid-column: 1 / 2;
             margin: 1em 0;
         }
-        @include ohma.round;
-        width: 100%;
         > * {
             isolation: isolate;
         }

@@ -51,14 +51,14 @@
     border: none;
     transition: .5s background;
     &:hover {
-        background-color: color.adjust($color, $lightness: -40%);
+        background-color: color.adjust($color, $lightness: -10%);
         cursor: pointer;
     }
     @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white, $hoverColor: color.adjust($color, $lightness: -40%)) { 
+@mixin borderBtn($color: colors.$white, $hoverColor: color.adjust($color, $lightness: 40%)) { 
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
