@@ -18,7 +18,7 @@ async function readCommitteParagraph(filename: string): Promise<Prisma.CmsParagr
             contentMd: content,
             contentHtml: await convertMdToHtml(content),
         }
-    } catch (e) {
+    } catch {
         return {}
     }
 }
