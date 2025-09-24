@@ -1,26 +1,47 @@
 import '@pn-server-only'
 import { safeServerCall } from './actionError'
 import type { ActionReturn } from './actionTypes'
-import type { ServiceMethod } from '@/services/serviceMethod'
+import type { ServiceMethod, ServiceMethodInputUnchecked } from '@/services/serviceMethod'
 import type { z } from 'zod'
 import { Session } from '@/auth/Session'
 
-export function action<Return>(
-    serviceMethod: ServiceMethod<boolean, Return, undefined, undefined>
-): () => Promise<ActionReturn<Return>>
+type ActionInputUnchecked = (
+    {
+        data?: unknown,
+        params?: unknown,
+    } | FormData
+)[]
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, undefined>
-): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
+export type ActionInputChecked<
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+> = (
+    ParamsSchema extends undefined
+        ? DataSchema extends undefined
+            ? []
+            : [{ data: z.input<NonNullable<DataSchema>> } | FormData]
+        : DataSchema extends undefined
+            ? [{ params: z.input<NonNullable<ParamsSchema>> }]
+            : (
+                [{ params: z.input<NonNullable<ParamsSchema>>, data: z.input<NonNullable<DataSchema>> }] |
+                [{ params: z.input<NonNullable<ParamsSchema>> }, { data: z.input<NonNullable<DataSchema>> } | FormData]
+            )
+)
 
-export function action<Return, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, undefined, DataSchema>
-): (data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
+export type ActionOnlyParams<Return, ParamsSchema extends z.ZodTypeAny> = (
+    input: { params: z.input<ParamsSchema> }
+) => Promise<ActionReturn<Return>>
 
-// This function is overloaded to allow for different combinations of parameters and data.
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>
-): (params: z.input<ParamsSchema>, data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
+export type ActionOnlyData<Return, DataSchema extends z.ZodTypeAny> = (
+    input: { data: z.input<DataSchema> } | FormData
+) => Promise<ActionReturn<Return>>
+
+
+export type Action<
+    Return,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+> = (...input: ActionInputChecked<ParamsSchema, DataSchema>) => Promise<ActionReturn<Return>>
 
 /**
  * Turn a service method into suitable function for an action.
@@ -34,34 +55,35 @@ export function action<
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
     serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>
-) {
-    // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
-    // The action and service method will validate the parameter and data before it is used.
-    //
-    // For convenience this function is given a return type that is more specific. The return type is a function that
-    // has arguments witch match the underlying service method. This makes programming easier as Intellisense can
-    // help and errors are caught at compile time.
-    const actionUnsafe = async (params?: unknown, data?: unknown) => {
+): Action<Return, ParamsSchema, DataSchema> {
+    return async (...args: ActionInputUnchecked) => {
         const session = await Session.fromNextAuth()
+
+        // Merge all arguments into a single input object.
+        // Treat FormData as "{ data: FormData }".
+        const serviceMethodInput = args.reduce<ServiceMethodInputUnchecked>((acc, arg) => {
+            if (arg instanceof FormData) {
+                acc.data = arg
+            } else if (typeof arg === 'object' && arg !== null) {
+                if ('data' in arg) {
+                    acc.data = arg.data
+                }
+                if ('params' in arg) {
+                    acc.params = arg.params
+                }
+            }
+            return acc
+        }, {})
 
         // Treat empty form data as undefined. This is required because the form component will always send
         // a FormData instance, even if no data is being sent.
-        if (data instanceof FormData && data.entries().next().done) {
-            data = undefined
+        if (serviceMethodInput.data instanceof FormData && serviceMethodInput.data.entries().next().done) {
+            serviceMethodInput.data = undefined
         }
 
         return safeServerCall(() => serviceMethod<'UNCHECKED'>({
-            params,
-            data,
+            ...serviceMethodInput,
             session,
         }))
     }
-
-    // If the service method has a params schema, we require the params to be passed to the action.
-    if (serviceMethod.paramsSchema) {
-        return actionUnsafe
-    }
-
-    // Otherwise we return a function that takes no params, only data.
-    return actionUnsafe.bind(null, undefined)
 }
