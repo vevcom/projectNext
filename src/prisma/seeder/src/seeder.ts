@@ -58,8 +58,8 @@ export default async function seed(
     if (!seedDevData || shouldMigrate) return
     if (enableLogging) console.log('seeding dev data....')
     await seedDevImages(prisma)
-    await seedDevUsers(prisma)
     await seedDevGroups(prisma)
+    await seedDevUsers(prisma)
     await seedDevPermissions(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)
