@@ -1,0 +1,10 @@
+
+.wrapper {
+  margin: auto;
+  padding: 1rem;
+  
+  > div {
+    max-width: 20rem;
+    width: calc(100vw - 2rem);
+  }
+}

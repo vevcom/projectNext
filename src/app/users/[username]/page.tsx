@@ -3,8 +3,6 @@ import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
-import OmegaId from '@/components/OmegaId/identification/OmegaId'
-import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
 import { UserAuthers } from '@/services/users/authers'
 import ProfilePicture from '@/components/User/ProfilePicture'
@@ -13,8 +11,6 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 
 export type PropTypes = {
     params: Promise<{
@@ -32,7 +28,7 @@ export default async function User({ params }: PropTypes) {
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
-    // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
+    // TODO: REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
     const committees = await readCommitteesFromGroupIds(groupIds)
 
@@ -53,8 +49,6 @@ export default async function User({ params }: PropTypes) {
         { username: profile.user.username }
     ).auth(session)
 
-    const showOmegaId = session.user?.username === (await params).username
-
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
@@ -65,17 +59,6 @@ export default async function User({ params }: PropTypes) {
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName user={profile.user} /></h1>
-                            {showOmegaId && <PopUp
-                                showButtonClass={styles.omegaIdOpen}
-                                showButtonContent={
-                                    <FontAwesomeIcon icon={faQrcode} />
-                                }
-                                PopUpKey={'omegaId'}
-                            >
-                                <div className={styles.omegaId}>
-                                    <OmegaId />
-                                </div>
-                            </PopUp>}
                         </div>
                         {
                             studyProgramme && (
