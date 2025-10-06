@@ -11,33 +11,80 @@ export function action<Return>(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, undefined, undefined>
 ): () => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, undefined>
-): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
-
-export function action<Return, DataSchema extends z.ZodTypeAny | undefined>(
-    serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, undefined>
-): (data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
-
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny | undefined>(
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, undefined>
-): (params: z.input<ParamsSchema>, data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
-
-export function action<Return, ImplementationParamsSchema extends z.AnyZodObject | undefined>(
+export function action<
+    Return,
+    ImplementationParamsSchema extends z.AnyZodObject
+>(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, undefined, ImplementationParamsSchema>
-): (implementationParams: z.input<NonNullable<ImplementationParamsSchema>>) => Promise<ActionReturn<Return>>
+): (
+    implementationParams: { implementationParams?: z.input<NonNullable<ImplementationParamsSchema>> },
+) => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny, ImplementationParamsSchema extends z.AnyZodObject | undefined>(
+export function action<
+    Return,
+    ParamsSchema extends z.AnyZodObject
+>(
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, undefined>
+): (
+    params: { params?: z.input<NonNullable<ParamsSchema>> },
+) => Promise<ActionReturn<Return>>
+
+export function action<
+    Return,
+    DataSchema extends z.AnyZodObject
+>(
+    serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, undefined>
+): (
+    data: { data?: z.input<NonNullable<DataSchema>> } | (FormData & { [key: string]: unknown })
+) => Promise<ActionReturn<Return>>
+
+export function action<
+    Return,
+    ParamsSchema extends z.AnyZodObject,
+    ImplementationParamsSchema extends z.AnyZodObject
+>(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, ImplementationParamsSchema>
-): (implementationParams: z.input<NonNullable<ImplementationParamsSchema>>, params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
+): (
+    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
+    params: { params?: z.input<ParamsSchema> },
+) => Promise<ActionReturn<Return>>
 
-export function action<Return, DataSchema extends z.ZodTypeAny | undefined, ImplementationParamsSchema extends z.AnyZodObject | undefined>(
+export function action<
+    Return,
+    ParamsSchema extends z.AnyZodObject,
+    DataSchema extends z.AnyZodObject
+>(
+    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, undefined>
+): (
+    params: { params?: z.input<ParamsSchema> },
+    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+) => Promise<ActionReturn<Return>>
+
+export function action<
+    Return,
+    ImplementationParamsSchema extends z.AnyZodObject,
+    DataSchema extends z.AnyZodObject
+>(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, ImplementationParamsSchema>
-): (implementationParams: z.input<NonNullable<ImplementationParamsSchema>>, data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
+): (
+    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
+    params: { params?: unknown },
+    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+) => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny | undefined, ImplementationParamsSchema extends z.AnyZodObject | undefined>(
+export function action<
+    Return,
+    ImplementationParamsSchema extends z.AnyZodObject,
+    ParamsSchema extends z.AnyZodObject,
+    DataSchema extends z.AnyZodObject
+>(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): (implementationParams: z.input<NonNullable<ImplementationParamsSchema>>, params: z.input<ParamsSchema>, data: z.input<NonNullable<DataSchema>> | FormData) => Promise<ActionReturn<Return>>
+): (
+    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
+    params: { params?: z.input<ParamsSchema> },
+    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+) => Promise<ActionReturn<Return>>
+
 
 /**
  * Turn a service method into suitable function for an action.
@@ -59,27 +106,33 @@ export function action<
     // For convinience this function is given a return type that is more specific. The return type is a function that
     // has arguments witch match the underlying service method. This makes programming easier as intellisesne can
     // help and errors are caught at compile time.
-    const actionUnsafe = async (implementationParams?: unknown, params?: unknown, data?: unknown) => {
+    const actionUnsafe = async (
+        implementationParams: { implementationParams?: unknown },
+        params: { params?: unknown },
+        data: { data?: unknown } | (FormData & { [key: string]: unknown })
+    ) => {
         const session = await Session.fromNextAuth()
 
-        // Treat empty form data as undefined. This is required because the form component will always send
-        // a FormData instance, even if no data is being sent.
-        if (data instanceof FormData && data.entries().next().done) {
-            data = undefined
-        }
-
-        return safeServerCall(() => serviceMethod.newClient().executeUnsafe({ session, params, data, implementationParams }))
+        return safeServerCall(
+            () => serviceMethod.newClient().executeUnsafe({
+                session,
+                params: params?.params,
+                // Treat empty form data as undefined. This is required because the form component will always send
+                // a FormData instance, even if no data is being sent.
+                data: data instanceof FormData && !data.entries().next().done ? data : data?.data,
+                implementationParams: implementationParams?.implementationParams
+            })
+        )
     }
 
-    // If the service method has a params schema, we require the params to be passed to the action.
-    if (serviceMethod.paramsSchema && serviceMethod.implementationParamsSchema) {
+    if (serviceMethod.implementationParamsSchema) {
         return actionUnsafe
     }
 
-    if (serviceMethod.paramsSchema && !serviceMethod.implementationParamsSchema) {
-        return actionUnsafe.bind(null, undefined)
+    if (serviceMethod.paramsSchema) {
+        const x = actionUnsafe.bind(null, { implementationParams: undefined })
+        return x
     }
 
-    // Otherwise we return a function that takes no params, only data.
-    return actionUnsafe.bind(null, undefined, undefined)
+    return actionUnsafe.bind(null, { implementationParams: undefined }, { params: undefined })
 }

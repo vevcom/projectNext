@@ -1,9 +1,10 @@
+import '@pn-server-only'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { default as globalPrisma } from '@/prisma'
 import { Session } from '@/auth/Session'
-import { z } from 'zod'
 import { zfd } from 'zod-form-data'
+import type { z } from 'zod'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
@@ -133,9 +134,9 @@ export type PrismaPossibleTransaction<
 export type ServiceMethodType<
     OpensTransaction extends boolean,
     Return,
-    ParamsSchema extends z.ZodTypeAny | undefined,
-    DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.AnyZodObject | undefined
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+    ImplementationParamsSchema extends z.AnyZodObject | undefined = undefined
 > = {
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
@@ -143,8 +144,12 @@ export type ServiceMethodType<
      * @param client
      */
     client: (client: PrismaPossibleTransaction<OpensTransaction>) => {
-        execute: (args: ServiceMethodExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>) => Promise<Return>,
-        executeUnsafe: (args: ServiceMethodExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>) => Promise<Return>,
+        execute: (
+            args: ServiceMethodExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
+        ) => Promise<Return>,
+        executeUnsafe: (
+            args: ServiceMethodExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
+        ) => Promise<Return>,
     },
     /**
      * Use the global prisma client for the service method.
@@ -232,8 +237,6 @@ export function SubServiceMethod<
 
                         args.params = paramsParse.data
                     }
-                    console.log('args', args)
-                    console.log('serviceMethodConfig', serviceMethodConfig)
                     if (args.data) {
                         if (!serviceMethodConfig.dataSchema) {
                             throw new Smorekopp(
@@ -289,7 +292,9 @@ export function SubServiceMethod<
                         }
                     }
 
-                    return prismaErrorWrapper(() => serviceMethodConfig.method(implementationArgs.methodImplementationFields)({
+                    return prismaErrorWrapper(() => serviceMethodConfig.method(
+                        implementationArgs.methodImplementationFields
+                    )({
                         ...args,
                         prisma,
                         session: args.session ?? Session.empty()
@@ -341,12 +346,12 @@ export function ServiceMethod<
         undefined,
         undefined
     >({
-        opensTransaction: opensTransaction,
+        opensTransaction,
         method: () => method,
         paramsSchema: paramsSchema !== undefined ? () => paramsSchema : undefined,
         dataSchema: dataSchema !== undefined ? () => dataSchema : undefined,
     }).implement({
-        auther: auther,
+        auther,
         implementationParamsSchema: undefined,
         dataSchemaImplementationFields: undefined,
         paramsSchemaImplementationFields: undefined,
