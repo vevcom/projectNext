@@ -31,11 +31,15 @@ export type PropTypes = {
 }
 
 export default async function ApplicationPeriod({ params }: PropTypes) {
-    const period = unwrapActionReturn(await readApplicationPeriodAction({ name: (await params).periodName }))
-    const defaultCommitteeLogo = unwrapActionReturn(await readSpecialImageAction({ special: 'DAFAULT_COMMITTEE_LOGO' }))
     const userId = (await Session.fromNextAuth()).user?.id
+    const period = unwrapActionReturn(
+        await readApplicationPeriodAction({ params: { name: (await params).periodName } })
+    )
+    const defaultCommitteeLogo = unwrapActionReturn(
+        await readSpecialImageAction({ params: { special: 'DAFAULT_COMMITTEE_LOGO' } })
+    )
     const applications = userId ? unwrapActionReturn(
-        await readApplicationsForUserAction({ userId, periodId: period.id })
+        await readApplicationsForUserAction({ params: { userId, periodId: period.id } })
     ) : []
     const committees = unwrapActionReturn(await readCommitteesAction())
 
@@ -90,7 +94,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                     &quot; SLETTET TEKST &quot;.
                 </p>
                 <Form
-                    action={removeAllApplicationTextsAction.bind(null, { name: period.name })}
+                    action={removeAllApplicationTextsAction.bind(null, { params: { name: period.name } })}
                     confirmation={{
                         confirm: true,
                         text: `
@@ -108,7 +112,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                     men det er anbefalt å heller fjerne alle søknadstekster istedenfor å slette søknadsperioden.
                 </p>
                 <Form
-                    action={destroyApplicationPeriodAction.bind(null, { name: period.name })}
+                    action={destroyApplicationPeriodAction.bind(null, { params: { name: period.name } })}
                     confirmation={{
                         confirm: true,
                         text: `
@@ -170,9 +174,13 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                                         refreshOnSuccess
                                                         action={part.priority === null ?
                                                             createApplicationAction.bind(
-                                                                null, { userId, commiteeParticipationId: part.id }
+                                                                null, {
+                                                                    params: { userId, commiteeParticipationId: part.id }
+                                                                }
                                                             ) : updateApplicationAction.bind(
-                                                                null, { userId, commiteeParticipationId: part.id }
+                                                                null, {
+                                                                    params: { userId, commiteeParticipationId: part.id }
+                                                                }
                                                             )
                                                         }
                                                         submitText={part.priority === null ? 'Send søknad' : 'Endre søknad'}
@@ -192,8 +200,10 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                                                     `committee-${part.committee.shortName}-apply`
                                                                 }
                                                                 action={destroyApplicationAction.bind(null, {
-                                                                    userId,
-                                                                    commiteeParticipationId: part.id
+                                                                    params: {
+                                                                        userId,
+                                                                        commiteeParticipationId: part.id
+                                                                    }
                                                                 })}
                                                                 confirmation={{
                                                                     confirm: true,

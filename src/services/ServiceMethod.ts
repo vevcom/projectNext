@@ -336,7 +336,7 @@ export function ServiceMethod<
     opensTransaction?: OpensTransaction,
     auther: AutherGetter<AutherDynamicFields, ParamsSchema, DataSchema, undefined>,
     method: ServiceMethodMethod<OpensTransaction, ParamsSchema, DataSchema, Return>
-}) {
+}): ServiceMethodType<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
     return SubServiceMethod<
         Return,
         OpensTransaction,

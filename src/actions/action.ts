@@ -35,7 +35,7 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, undefined>
 ): (
-    data: { data?: z.input<NonNullable<DataSchema>> } | (FormData & { [key: string]: unknown })
+    data: { data?: z.input<NonNullable<DataSchema>> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -57,7 +57,7 @@ export function action<
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, undefined>
 ): (
     params: { params?: z.input<ParamsSchema> },
-    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+    data: { data?: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -69,7 +69,7 @@ export function action<
 ): (
     implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
     params: { params?: unknown },
-    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+    data: { data?: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -82,7 +82,7 @@ export function action<
 ): (
     implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
     params: { params?: z.input<ParamsSchema> },
-    data: { data?: z.input<DataSchema> } | (FormData & { [key: string]: unknown })
+    data: { data?: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 
@@ -109,17 +109,28 @@ export function action<
     const actionUnsafe = async (
         implementationParams: { implementationParams?: unknown },
         params: { params?: unknown },
-        data: { data?: unknown } | (FormData & { [key: string]: unknown })
+        data: { data?: unknown } | FormData
     ) => {
         const session = await Session.fromNextAuth()
+
+        let processedData: unknown
+        if (data instanceof FormData) {
+            // Treat empty form data as undefined. This is required because the form component will always send
+            // a FormData instance, even if no data is being sent.
+            if (data.entries().next().done) {
+                processedData = undefined
+            } else {
+                processedData = data
+            }
+        } else {
+            processedData = data?.data ?? undefined
+        }
 
         return safeServerCall(
             () => serviceMethod.newClient().executeUnsafe({
                 session,
                 params: params?.params,
-                // Treat empty form data as undefined. This is required because the form component will always send
-                // a FormData instance, even if no data is being sent.
-                data: data instanceof FormData && !data.entries().next().done ? data : data?.data,
+                data: processedData,
                 implementationParams: implementationParams?.implementationParams
             })
         )
@@ -130,8 +141,7 @@ export function action<
     }
 
     if (serviceMethod.paramsSchema) {
-        const x = actionUnsafe.bind(null, { implementationParams: undefined })
-        return x
+        return actionUnsafe.bind(null, { implementationParams: undefined })
     }
 
     return actionUnsafe.bind(null, { implementationParams: undefined }, { params: undefined })
