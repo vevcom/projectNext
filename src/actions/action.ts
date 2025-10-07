@@ -13,7 +13,7 @@ export function action<Return>(
 
 export function action<
     Return,
-    ImplementationParamsSchema extends z.AnyZodObject
+    ImplementationParamsSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, undefined, ImplementationParamsSchema>
 ): (
@@ -22,7 +22,7 @@ export function action<
 
 export function action<
     Return,
-    ParamsSchema extends z.AnyZodObject
+    ParamsSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, undefined>
 ): (
@@ -31,7 +31,7 @@ export function action<
 
 export function action<
     Return,
-    DataSchema extends z.AnyZodObject
+    DataSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, undefined>
 ): (
@@ -40,8 +40,8 @@ export function action<
 
 export function action<
     Return,
-    ParamsSchema extends z.AnyZodObject,
-    ImplementationParamsSchema extends z.AnyZodObject
+    ParamsSchema extends z.ZodTypeAny,
+    ImplementationParamsSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, ImplementationParamsSchema>
 ): (
@@ -51,8 +51,8 @@ export function action<
 
 export function action<
     Return,
-    ParamsSchema extends z.AnyZodObject,
-    DataSchema extends z.AnyZodObject
+    ParamsSchema extends z.ZodTypeAny,
+    DataSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, undefined>
 ): (
@@ -62,8 +62,8 @@ export function action<
 
 export function action<
     Return,
-    ImplementationParamsSchema extends z.AnyZodObject,
-    DataSchema extends z.AnyZodObject
+    ImplementationParamsSchema extends z.ZodTypeAny,
+    DataSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, ImplementationParamsSchema>
 ): (
@@ -74,9 +74,9 @@ export function action<
 
 export function action<
     Return,
-    ImplementationParamsSchema extends z.AnyZodObject,
-    ParamsSchema extends z.AnyZodObject,
-    DataSchema extends z.AnyZodObject
+    ImplementationParamsSchema extends z.ZodTypeAny,
+    ParamsSchema extends z.ZodTypeAny,
+    DataSchema extends z.ZodTypeAny
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ): (
@@ -96,7 +96,7 @@ export function action<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
-    ImplementationParamsSchema extends z.AnyZodObject | undefined = undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) {

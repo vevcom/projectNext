@@ -19,7 +19,7 @@ export type ParamsObject<ParamsSchema extends z.ZodTypeAny | undefined, InferedO
         ? object
         : { params: InferedOrInput<ParamsSchema, InferedOfInput> }
 export type ImplementationParamsObject<
-    ImplementationParamsSchema extends z.AnyZodObject | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
     InferedOfInput extends 'INFERED' | 'INPUT'
 > =
     ImplementationParamsSchema extends undefined
@@ -37,7 +37,7 @@ export type ServiceMethodExecuteArgs<
     Unsafe extends 'UNSAFE' | 'SAFE',
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.AnyZodObject | undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = {
     session: SessionMaybeUser | null,
     bypassAuth?: boolean,
@@ -86,7 +86,7 @@ export type AutherGetter<
     AutherDynamicFields extends object,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.AnyZodObject | undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
     paramsData: ParamsObject<ParamsSchema, 'INFERED'> &
         ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'> &
@@ -96,7 +96,7 @@ export type AutherGetter<
     | Promise<ReturnType<AutherStaticFieldsBound<AutherDynamicFields>['dynamicFields']>>
 
 export type ServiceMethodImplementationConfig<
-    ImplementationParamsSchema extends z.AnyZodObject | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
     ParamsSchemaImplementationFields extends object | undefined,
@@ -136,7 +136,7 @@ export type ServiceMethodType<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
-    ImplementationParamsSchema extends z.AnyZodObject | undefined = undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined
 > = {
     /**
      * Pass a specific prisma client to the service method. Usefull when using the service method inside a transaction.
@@ -185,7 +185,7 @@ export function SubServiceMethod<
 ) {
     return {
         implement: <
-            ImplementationParamsSchema extends z.AnyZodObject | undefined,
+            ImplementationParamsSchema extends z.ZodTypeAny | undefined,
             AutherDynamicFields extends object
         >(
             implementationArgs: ServiceMethodImplementationConfig<

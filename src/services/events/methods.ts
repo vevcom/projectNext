@@ -275,6 +275,7 @@ export namespace EventMethods {
             return eventUpdate
         }
     })
+
     export const destroy = ServiceMethod({
         paramsSchema: z.object({
             id: z.number()
