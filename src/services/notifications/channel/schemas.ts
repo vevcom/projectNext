@@ -1,5 +1,5 @@
-import { INFINITE_LOOP_PREVENTION_MAX_ITERATIONS } from './config'
-import { notificationMethodsArray } from '@/services/notifications/config'
+import { INFINITE_LOOP_PREVENTION_MAX_ITERATIONS } from './constants'
+import { notificationMethodsArray } from '@/services/notifications/constants'
 import { SpecialNotificationChannel } from '@prisma/client'
 import { z } from 'zod'
 import type {

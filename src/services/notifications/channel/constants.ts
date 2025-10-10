@@ -1,4 +1,4 @@
-import { allNotificationMethodsOn } from '@/services/notifications/config'
+import { allNotificationMethodsOn } from '@/services/notifications/constants'
 
 export const availableNotificationMethodIncluder = {
     availableMethods: {

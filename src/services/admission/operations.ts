@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { admissionSchemas } from './schemas'
 import { admissionAuthers } from './authers'
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { Admission } from '@prisma/client'

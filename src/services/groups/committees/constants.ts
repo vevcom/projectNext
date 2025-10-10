@@ -1,4 +1,4 @@
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import type { Prisma } from '@prisma/client'
 
 export const committeeLogoIncluder = {

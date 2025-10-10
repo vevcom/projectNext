@@ -1,4 +1,4 @@
-import type { eventFilterSelection } from './config'
+import type { eventFilterSelection } from './constants'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { EventTag, Prisma } from '@prisma/client'
 

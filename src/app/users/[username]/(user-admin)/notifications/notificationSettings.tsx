@@ -6,7 +6,7 @@ import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifica
 import SubmitButton from '@/components/UI/SubmitButton'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { updateNotificationSubscriptionsAction } from '@/services/notifications/actions'
-import { notificationMethodsArray, notificationMethodsDisplayMap } from '@/services/notifications/config'
+import { notificationMethodsArray, notificationMethodsDisplayMap } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'

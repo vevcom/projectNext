@@ -1,16 +1,16 @@
 import '@pn-server-only'
 import { notificationChannelAuthers } from './authers'
 import { notificationChannelSchemas, validateMethods, validateNewParent } from './schemas'
-import { availableNotificationMethodIncluder } from './config'
+import { availableNotificationMethodIncluder } from './constants'
 import {
     allNotificationMethodsOff,
     allNotificationMethodsOn,
     notificationMethodsArray,
-} from '@/services/notifications/config'
+} from '@/services/notifications/constants'
 import { notificationMethodSchema } from '@/services/notifications/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { defineOperation } from '@/services/serviceOperation'
-import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/config'
+import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/constants'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'

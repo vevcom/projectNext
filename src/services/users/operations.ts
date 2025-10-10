@@ -6,7 +6,7 @@ import {
     standardMembershipSelection,
     studentCardRegistrationExpiry,
     userFilterSelection
-} from './config'
+} from './constants'
 import { imageOperations } from '@/services/images/operations'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'

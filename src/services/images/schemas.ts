@@ -1,4 +1,4 @@
-import { allowedExtensions, maxImageCountInOneBatch, maxImageFileSize } from './config'
+import { allowedExtensions, maxImageCountInOneBatch, maxImageFileSize } from './constants'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 

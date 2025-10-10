@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import PermissionCheckbox from './PermissionCheckbox'
 import { readPermissionMatrixAction } from '@/services/permissions/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { permissionConfig } from '@/services/permissions/config'
+import { permissionConfig } from '@/services/permissions/constants'
 import type { Permission } from '@prisma/client'
 
 export default async function PermissionGroups() {

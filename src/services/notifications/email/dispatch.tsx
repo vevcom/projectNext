@@ -1,5 +1,5 @@
 import { sendBulkMail } from './send'
-import { DEFAULT_NOTIFICATION_ALIAS } from './config'
+import { DEFAULT_NOTIFICATION_ALIAS } from './constants'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
 import { repalceSpecialSymbols } from '@/services/notifications/operations'

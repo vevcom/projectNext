@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { lockerReservationIncluder } from './reservations/config'
+import { lockerReservationIncluder } from './reservations/constants'
 import { lockersSchemas } from './schemas'
 import { lockerAuthers } from './authers'
 import { defineOperation } from '@/services/serviceOperation'

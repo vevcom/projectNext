@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { applicationPeriodAuthers } from './authers'
 import { applicationPeriodSchemas } from './schemas'
-import { committeesParticipatingincluder } from './config'
+import { committeesParticipatingincluder } from './constants'
 import { applicationOperations } from '@/services/applications/operations'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'

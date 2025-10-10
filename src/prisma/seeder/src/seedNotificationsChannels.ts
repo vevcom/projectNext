@@ -1,4 +1,4 @@
-import { allNotificationMethodsOn } from '@/services/notifications/config'
+import { allNotificationMethodsOn } from '@/services/notifications/constants'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { NotificationMethod, PrismaClient } from '@prisma/client'
 

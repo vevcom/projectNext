@@ -2,7 +2,7 @@ import 'server-only'
 
 import { cabinProductAuthers } from './authers'
 import { cabinProductSchemas } from './schemas'
-import { cabinProductPriceIncluder } from './config'
+import { cabinProductPriceIncluder } from './constants'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'

@@ -6,7 +6,7 @@ import NotificationMethodSelector from '@/components/NotificaionMethodSelector/N
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { bindParams } from '@/services/actionBind'
 import { createNotificationChannelAction } from '@/services/notifications/actions'
-import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/config'
+import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'

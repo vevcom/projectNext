@@ -1,5 +1,5 @@
 import { committeeAuthers } from './authers'
-import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './config'
+import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { imageOperations } from '@/services/images/operations'

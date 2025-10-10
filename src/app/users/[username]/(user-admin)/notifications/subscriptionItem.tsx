@@ -2,7 +2,7 @@
 
 import styles from './subscriptionItem.module.scss'
 import NotificationMethodCheckboxes from '@/components/NotificaionMethodSelector/NotificationMethodCheckboxes'
-import { allNotificationMethodsOn } from '@/services/notifications/config'
+import { allNotificationMethodsOn } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
 import type { NotificationMethodGeneral } from '@/services/notifications/Types'

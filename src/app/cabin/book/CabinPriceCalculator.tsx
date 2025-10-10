@@ -1,7 +1,7 @@
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { displayPrice } from '@/lib/money/convert'
 import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from '@/services/cabin/booking/cabinPriceCalculator'
-import type { CabinProductExtended } from '@/services/cabin/product/config'
+import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { CabinPriceCalculatorReturnType } from '@/services/cabin/booking/cabinPriceCalculator'
 import type { PricePeriod } from '@prisma/client'
 

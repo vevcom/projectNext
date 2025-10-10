@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import type { Booking } from '@prisma/client'
 
 export const cabinBookingFieldsToExpose = ['start', 'end', 'type'] as const satisfies (keyof Booking)[]

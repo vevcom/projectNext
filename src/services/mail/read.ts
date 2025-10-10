@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'

@@ -1,4 +1,4 @@
-import type { permissionCategories } from './config'
+import type { permissionCategories } from './constants'
 
 export type PermissionCategory = typeof permissionCategories[number]
 export type PermissionInfo = {

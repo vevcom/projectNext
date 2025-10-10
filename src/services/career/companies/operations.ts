@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { companyAuthers } from './authers'
-import { logoIncluder } from './config'
+import { logoIncluder } from './constants'
 import { companySchemas } from './schemas'
 import { createCmsImage } from '@/services/cms/images/create'
 import { defineOperation } from '@/services/serviceOperation'

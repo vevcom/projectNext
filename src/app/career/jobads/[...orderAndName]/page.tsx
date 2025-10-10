@@ -8,7 +8,7 @@ import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
 import { Session } from '@/auth/Session'
 import { readJobAdAction } from '@/services/career/jobAds/actions'
-import { jobAdType } from '@/services/career/jobAds/config'
+import { jobAdType } from '@/services/career/jobAds/constants'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {

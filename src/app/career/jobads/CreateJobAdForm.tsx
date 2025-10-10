@@ -6,7 +6,7 @@ import { createJobAdAction } from '@/services/career/jobAds/actions'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
-import { jobAdOptions } from '@/services/career/jobAds/config'
+import { jobAdOptions } from '@/services/career/jobAds/constants'
 import DateInput from '@/components/UI/DateInput'
 import { v4 as uuid } from 'uuid'
 

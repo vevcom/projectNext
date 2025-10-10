@@ -5,7 +5,7 @@ import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { userOperations } from '@/services/users/operations'
 import { permissionOperations } from '@/services/permissions/operations'
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import { PurchaseMethod } from '@prisma/client'
 
 export const purchaseOperations = {

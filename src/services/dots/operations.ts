@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { dotAuthers } from './authers'
 import { dotSchemas } from './schemas'
-import { dotBaseDuration, dotsIncluder } from './config'
+import { dotBaseDuration, dotsIncluder } from './constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'

@@ -1,4 +1,4 @@
-import type { userFieldsToExpose } from './config'
+import type { userFieldsToExpose } from './constants'
 import type { MembershipFiltered } from '@/services/groups/memberships/Types'
 import type { OmegaMembershipLevel, User, Image, Permission } from '@prisma/client'
 

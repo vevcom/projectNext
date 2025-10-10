@@ -1,7 +1,7 @@
 'use server'
 
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { admissionDisplayNames, allAdmissions } from '@/services/admission/config'
+import { admissionDisplayNames, allAdmissions } from '@/services/admission/constants'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 

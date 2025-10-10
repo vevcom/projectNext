@@ -1,4 +1,4 @@
-import type { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRATION_READER_TYPE } from './config'
+import type { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRATION_READER_TYPE } from './constants'
 import type { Image, Prisma } from '@prisma/client'
 
 // This type will just make sure that the image is not null

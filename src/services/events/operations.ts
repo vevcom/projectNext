@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { eventAuthers } from './authers'
 import { eventSchemas } from './schemas'
-import { eventFilterSelection } from './config'
+import { eventFilterSelection } from './constants'
 import { notificationOperations } from '@/services/notifications/operations'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'

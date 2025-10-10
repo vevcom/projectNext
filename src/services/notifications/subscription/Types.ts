@@ -1,4 +1,4 @@
-import type { notificationMethodIncluder } from './config'
+import type { notificationMethodIncluder } from './constants'
 import type { Prisma } from '@prisma/client'
 
 

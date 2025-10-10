@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { eventTagAuthers } from './authers'
-import { specialEventTags } from './config'
+import { specialEventTags } from './constants'
 import { eventTagSchemas } from './schemas'
 import { eventAuthers } from '@/services/events/authers'
 import logger from '@/lib/logger'

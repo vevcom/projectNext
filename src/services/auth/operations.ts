@@ -1,6 +1,6 @@
 import { authAuthers } from './authers'
 import { authSchemas } from './schemas'
-import { userFilterSelection } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/constants'
 import { userSchemas } from '@/services/users/schemas'
 import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
 import { defineOperation } from '@/services/serviceOperation'

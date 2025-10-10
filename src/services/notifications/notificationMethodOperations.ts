@@ -1,4 +1,4 @@
-import { allNotificationMethodsOff, allNotificationMethodsOn, notificationMethodsArray } from './config'
+import { allNotificationMethodsOff, allNotificationMethodsOn, notificationMethodsArray } from './constants'
 import type { NotificationMethodGeneral } from './Types'
 
 export function newAllMethodsOff() {

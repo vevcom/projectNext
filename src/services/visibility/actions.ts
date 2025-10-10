@@ -3,7 +3,7 @@
 import { createActionError, safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
-import { groupTypesConfig } from '@/services/groups/config'
+import { groupTypesConfig } from '@/services/groups/constants'
 import { groupOperations } from '@/services/groups/operations'
 import { purposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { readVisibilityCollapsed } from '@/services/visibility/read'

@@ -1,7 +1,7 @@
 'use client'
 import { registerStudentCardInQueueAction } from '@/services/users/actions'
 import Form from '@/app/_components/Form/Form'
-import { studentCardRegistrationExpiry } from '@/services/users/config'
+import { studentCardRegistrationExpiry } from '@/services/users/constants'
 
 
 export default function RegisterStudentCardButton({
