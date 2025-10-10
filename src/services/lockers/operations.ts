@@ -32,7 +32,7 @@ export async function updateLockerReservationIfExpired(prisma: Prisma.Transactio
         locker.LockerReservation = []
     }
 }
-export const lockerMethods = {
+export const lockerOperations = {
     /**
      * Creates a new locker.
      *

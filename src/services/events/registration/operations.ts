@@ -3,8 +3,8 @@ import { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRA
 import { eventRegistrationAuthers } from './authers'
 import { eventRegistrationSchemas } from './schemas'
 import { Smorekopp } from '@/services/error'
-import { imageMethods } from '@/services/images/methods'
-import { notificationMethods } from '@/services/notifications/methods'
+import { imageOperations } from '@/services/images/operations'
+import { notificationOperations } from '@/services/notifications/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { userFilterSelection } from '@/services/users/config'
 import { defineOperation } from '@/services/serviceOperation'
@@ -123,7 +123,7 @@ async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
     }
 }
 
-export const eventRegistrationMethods = {
+export const eventRegistrationOperations = {
 
     create: defineOperation({
         paramsSchema: z.object({
@@ -205,7 +205,7 @@ export const eventRegistrationMethods = {
             type: z.nativeEnum(REGISTRATION_READER_TYPE).optional(),
         }),
         operation: async ({ prisma, params }): Promise<EventRegistrationExpanded[]> => {
-            const defaultImage = await imageMethods.readSpecial({
+            const defaultImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
 
@@ -372,7 +372,7 @@ export const eventRegistrationMethods = {
             const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
 
             if (nextInLine.user) {
-                await notificationMethods.createSpecial({
+                await notificationOperations.createSpecial({
                     params: {
                         special: 'EVENT_WAITINGLIST_PROMOTION',
                     },

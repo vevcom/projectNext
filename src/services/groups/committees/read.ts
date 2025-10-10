@@ -2,7 +2,7 @@ import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
-import { imageMethods } from '@/services/images/methods'
+import { imageOperations } from '@/services/images/operations'
 import { userFilterSelection } from '@/services/users/config'
 import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { CmsParagraph } from '@prisma/client'
@@ -90,7 +90,7 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
 
 // TODO: Create ServiceMethod
 export async function readCommitteeMembers(shortName: string) {
-    const defaultImage = await imageMethods.readSpecial({
+    const defaultImage = await imageOperations.readSpecial({
         params: { special: 'DEFAULT_PROFILE_IMAGE' },
         bypassAuth: true
     })

@@ -1,9 +1,9 @@
 import { apiHandler } from '@/api/apiHandler'
-import { userMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 
 export const GET = apiHandler({
     params: (rawparams: { studentCard: string }) => ({
         studentCard: rawparams.studentCard,
     }),
-    serviceMethod: userMethods.readUserWithBalance,
+    serviceMethod: userOperations.readUserWithBalance,
 })

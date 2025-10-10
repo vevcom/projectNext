@@ -2,11 +2,11 @@ import { committeeAuthers } from './authers'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './config'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
-import { imageMethods } from '@/services/images/methods'
+import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
-export const committeeMethods = {
+export const committeeOperations = {
 
     readCommittees: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
@@ -22,7 +22,7 @@ export const committeeMethods = {
             z.object({ shortName: z.string() })
         ]),
         operation: async ({ prisma, params }) => {
-            const defaultImage = await imageMethods.readSpecial({
+            const defaultImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 bypassAuth: true
             })
@@ -99,7 +99,7 @@ export const committeeMethods = {
             active: z.boolean().optional(),
         }),
         operation: async ({ prisma, params }) => {
-            const defaultImage = await imageMethods.readSpecial({
+            const defaultImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
 

@@ -4,12 +4,12 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/config'
-import { checkGroupValidity, inferGroupName } from '@/services/groups/methods'
+import { checkGroupValidity, inferGroupName } from '@/services/groups/operations'
 import { Permission } from '@prisma/client'
 import { z } from 'zod'
 
 
-export const permissionMethods = {
+export const permissionOperations = {
     readDefaultPermissions: defineOperation({
         authorizer: () => permissionAuthers.readDefaultPermissions.dynamicFields({}),
         operation: async ({ prisma }) =>
@@ -23,7 +23,7 @@ export const permissionMethods = {
         }),
         operation: async ({ prisma, params }) => {
             const [defaultPermissions, groupPermissions] = await Promise.all([
-                permissionMethods.readDefaultPermissions({}),
+                permissionOperations.readDefaultPermissions({}),
                 prisma.membership.findMany({
                     where: {
                         userId: params.userId,

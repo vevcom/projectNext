@@ -1,4 +1,4 @@
-import { eventMethods } from '@/services/events/methods'
+import { eventOperations } from '@/services/events/operations'
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevEvents(prisma: PrismaClient) {
@@ -17,7 +17,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    const bedpres = await eventMethods.create({
+    const bedpres = await eventOperations.create({
         prisma,
         bypassAuth: true,
         data: {
@@ -37,7 +37,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    await eventMethods.create({
+    await eventOperations.create({
         prisma,
         bypassAuth: true,
         data: {

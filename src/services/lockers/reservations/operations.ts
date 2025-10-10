@@ -4,10 +4,10 @@ import { lockerReservationAuthers } from './authers'
 import { lockerReservationSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { Smorekopp } from '@/services/error'
-import { groupMethods } from '@/services/groups/methods'
+import { groupOperations } from '@/services/groups/operations'
 import { z } from 'zod'
 
-export const lockerReservationMethods = {
+export const lockerReservationOperations = {
     /**
      * Creates a new locker reservation for a given user and locker.
      *
@@ -26,7 +26,7 @@ export const lockerReservationMethods = {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await groupMethods.readUsersOfGroups({
+                const groupUsers = await groupOperations.readUsersOfGroups({
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]
@@ -107,7 +107,7 @@ export const lockerReservationMethods = {
 
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await groupMethods.readUsersOfGroups({
+                const groupUsers = await groupOperations.readUsersOfGroups({
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]

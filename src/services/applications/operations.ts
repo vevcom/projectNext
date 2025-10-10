@@ -5,7 +5,7 @@ import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
-export const applicationMethods = {
+export const applicationOperations = {
     readForUser: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),

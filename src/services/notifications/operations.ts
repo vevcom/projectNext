@@ -28,7 +28,7 @@ export function repalceSpecialSymbols(text: string, user: UserFiltered) {
         .replaceAll('%N', `${user.firstname} ${user.lastname}`)
 }
 
-export const notificationMethods = {
+export const notificationOperations = {
     /**
      * Creates a notification with the specified data.
      *
@@ -130,7 +130,7 @@ export const notificationMethods = {
                 }
             })
 
-            return await notificationMethods.create({
+            return await notificationOperations.create({
                 session,
                 bypassAuth: true,
                 data: {

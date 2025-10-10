@@ -15,7 +15,7 @@ import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 
-export const notificationChannelMethods = {
+export const notificationChannelOperations = {
     create: defineOperation({
         authorizer: () => notificationChannelAuthers.create.dynamicFields({}),
         dataSchema: notificationChannelSchemas.create,
@@ -156,7 +156,7 @@ export const notificationChannelMethods = {
 
             // Not allowed to change the parent of ROOT
             if (channel.special !== 'ROOT') {
-                const allChannels = await notificationChannelMethods.readMany({
+                const allChannels = await notificationChannelOperations.readMany({
                     bypassAuth: true,
                 })
 

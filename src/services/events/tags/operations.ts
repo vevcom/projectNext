@@ -9,7 +9,7 @@ import { ServerError } from '@/services/error'
 import { SpecialEventTags } from '@prisma/client'
 import { z } from 'zod'
 
-export const eventTagMethods = {
+export const eventTagOperations = {
     read: defineOperation({
         paramsSchema: z.object({
             id: z.number(),

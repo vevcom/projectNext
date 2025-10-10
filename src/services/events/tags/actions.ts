@@ -1,14 +1,14 @@
 'use server'
 
 import { action } from '@/services/action'
-import { eventTagMethods } from '@/services/events/tags/methods'
+import { eventTagOperations } from '@/services/events/tags/operations'
 
-export const createEventTagAction = action(eventTagMethods.create)
+export const createEventTagAction = action(eventTagOperations.create)
 
-export const destroyEventTagAction = action(eventTagMethods.destroy)
+export const destroyEventTagAction = action(eventTagOperations.destroy)
 
-export const readEventTagsAction = action(eventTagMethods.readAll)
-export const readSpecialEventTagAction = action(eventTagMethods.readSpecial)
-export const readEventTagAction = action(eventTagMethods.read)
+export const readEventTagsAction = action(eventTagOperations.readAll)
+export const readSpecialEventTagAction = action(eventTagOperations.readSpecial)
+export const readEventTagAction = action(eventTagOperations.read)
 
-export const updateEventTagAction = action(eventTagMethods.update)
+export const updateEventTagAction = action(eventTagOperations.update)

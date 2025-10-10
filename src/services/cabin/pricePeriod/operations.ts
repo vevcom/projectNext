@@ -2,16 +2,16 @@ import 'server-only'
 import { cabinPricePeriodAuthers } from './authers'
 import { cabinPricePeriodSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
-import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
-export const cabinPricePeriodMethods = {
+export const cabinPricePeriodOperations = {
     create: defineOperation({
         authorizer: () => cabinPricePeriodAuthers.create.dynamicFields({}),
         dataSchema: cabinPricePeriodSchemas.createPricePeriod,
         operation: async ({ prisma, data }) => {
-            const currentReleaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const currentReleaseDate = await cabinReleasePeriodOperations.getCurrentReleasePeriod({ bypassAuth: true })
 
             if (currentReleaseDate && currentReleaseDate.releaseUntil >= data.validFrom) {
                 throw new ServerError(
@@ -64,7 +64,7 @@ export const cabinPricePeriodMethods = {
             id: z.number(),
         }),
         operation: async ({ prisma, params }) => {
-            const currentReleasePeriod = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const currentReleasePeriod = await cabinReleasePeriodOperations.getCurrentReleasePeriod({ bypassAuth: true })
 
             const pricePeriod = await prisma.pricePeriod.findUniqueOrThrow({
                 where: params,
@@ -88,7 +88,7 @@ export const cabinPricePeriodMethods = {
     readPublicPeriods: defineOperation({
         authorizer: () => cabinPricePeriodAuthers.readPublicPeriods.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const releaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const releaseDate = await cabinReleasePeriodOperations.getCurrentReleasePeriod({ bypassAuth: true })
 
             const [currentPeriod, futurePeriods] = await Promise.all([
                 prisma.pricePeriod.findFirstOrThrow({
@@ -121,7 +121,7 @@ export const cabinPricePeriodMethods = {
     readUnreleasedPeriods: defineOperation({
         authorizer: () => cabinPricePeriodAuthers.read.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const releaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const releaseDate = await cabinReleasePeriodOperations.getCurrentReleasePeriod({ bypassAuth: true })
             return prisma.pricePeriod.findMany({
                 where: {
                     validFrom: {

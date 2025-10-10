@@ -5,7 +5,7 @@ import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
-export const licenseMethods = {
+export const licenseOperations = {
     create: defineOperation({
         authorizer: () => licenseAuthers.create.dynamicFields({}),
         dataSchema: licenseSchemas.create,

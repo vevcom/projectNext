@@ -1,7 +1,7 @@
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import { jobAdMethods } from '@/services/career/jobAds/methods'
+import { jobAdOperations } from '@/services/career/jobAds/operations'
 import { afterEach, beforeAll, describe, expect, test } from '@jest/globals'
 
 // NOTE: This is file contains a lot of boiler plate which should be refactored to be more reusable.
@@ -39,7 +39,7 @@ afterEach(async () => {
     const jobAds = await prisma.jobAd.findMany()
 
     await Promise.all(jobAds.map(jobAd =>
-        jobAdMethods.destroy({
+        jobAdOperations.destroy({
             params: {
                 id: jobAd.id
             },
@@ -50,7 +50,7 @@ afterEach(async () => {
 
 describe('job ads', () => {
     test('create with unauthenticated user', async () => {
-        expect(jobAdMethods.create({
+        expect(jobAdOperations.create({
             data: CREATE_JOB_AD,
             session: Session.empty()
         })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
@@ -69,7 +69,7 @@ describe('job ads', () => {
             user: null,
         })
 
-        await jobAdMethods.create({ data: CREATE_JOB_AD, session })
+        await jobAdOperations.create({ data: CREATE_JOB_AD, session })
 
         const res = await prisma.jobAd.findFirst({})
         expect(res).toMatchObject(CREATE_JOB_AD)
@@ -77,18 +77,18 @@ describe('job ads', () => {
 
     test('(create and then) read with unauthenticated user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
 
-        expect(jobAdMethods.read({ params: { idOrName: createRes.id }, session: Session.empty() }))
+        expect(jobAdOperations.read({ params: { idOrName: createRes.id }, session: Session.empty() }))
             .rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
     })
 
     test('(create and then) read with authorized user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
@@ -99,18 +99,18 @@ describe('job ads', () => {
             user: null,
         })
 
-        const readRes = await jobAdMethods.read({ params: { idOrName: createRes.id }, session })
+        const readRes = await jobAdOperations.read({ params: { idOrName: createRes.id }, session })
         expect(readRes).toMatchObject(CREATE_JOB_AD)
     })
 
     test('update with unauthenticated user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
 
-        expect(jobAdMethods.update({
+        expect(jobAdOperations.update({
             params: {
                 id: createRes.id,
             },
@@ -124,7 +124,7 @@ describe('job ads', () => {
 
     test('update with authorized user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
@@ -135,7 +135,7 @@ describe('job ads', () => {
             user: null,
         })
 
-        await jobAdMethods.update({
+        await jobAdOperations.update({
             params: {
                 id: createRes.id,
             },
@@ -149,12 +149,12 @@ describe('job ads', () => {
 
     test('destroy with unauthenticated user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
 
-        expect(jobAdMethods.destroy({ params: { id: createRes.id }, session: Session.empty() }))
+        expect(jobAdOperations.destroy({ params: { id: createRes.id }, session: Session.empty() }))
             .rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
         const count = await prisma.jobAd.count()
@@ -163,7 +163,7 @@ describe('job ads', () => {
 
     test('destroy with authorized user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
-        const createRes = await jobAdMethods.create({
+        const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
@@ -174,7 +174,7 @@ describe('job ads', () => {
             user: null,
         })
 
-        await jobAdMethods.destroy({ params: { id: createRes.id }, session })
+        await jobAdOperations.destroy({ params: { id: createRes.id }, session })
 
         const count = await prisma.jobAd.count()
         expect(count).toBe(0)

@@ -5,11 +5,11 @@ import { userSchemas } from '@/services/users/schemas'
 import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { userMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
 import { z } from 'zod'
 
-export const authMethods = {
+export const authOperations = {
 
     verifyEmail: defineOperation({
         paramsSchema: z.object({
@@ -29,7 +29,7 @@ export const authMethods = {
 
             const iat = new Date(payload.iat * 1000)
 
-            const user = await userMethods.read({
+            const user = await userOperations.read({
                 params: {
                     id: userId,
                 },
@@ -92,9 +92,9 @@ export const authMethods = {
         dataSchema: userSchemas.updatePassword,
         authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
         operation: async ({ params, data }) => {
-            const userId = await authMethods.verifyResetPasswordToken({ params })
+            const userId = await authOperations.verifyResetPasswordToken({ params })
 
-            userMethods.updatePassword({
+            userOperations.updatePassword({
                 params: {
                     id: userId,
                 },
@@ -110,7 +110,7 @@ export const authMethods = {
         operation: async ({ data }) => {
             console.log(data)
             try {
-                const user = await userMethods.read({
+                const user = await userOperations.read({
                     params: {
                         email: data.email,
                     },

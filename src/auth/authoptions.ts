@@ -6,8 +6,8 @@ import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
 import { prisma } from '@/prisma/client'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
-import { userMethods } from '@/services/users/methods'
-import { permissionMethods } from '@/services/permissions/methods'
+import { userOperations } from '@/services/users/operations'
+import { permissionOperations } from '@/services/permissions/operations'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
@@ -127,7 +127,7 @@ export const authOptions: AuthOptions = {
                 }
                 // Trigger is undefined for subsequent calls
                 case undefined: {
-                    const dbUser = await userMethods.read({
+                    const dbUser = await userOperations.read({
                         params: { id: token.user.id },
                         bypassAuth: true,
                     })
@@ -164,11 +164,11 @@ export const authOptions: AuthOptions = {
 
             return {
                 provider,
-                user: await userMethods.read({
+                user: await userOperations.read({
                     params: { id: userId },
                     bypassAuth: true,
                 }),
-                permissions: await permissionMethods.readPermissionsOfUser({
+                permissions: await permissionOperations.readPermissionsOfUser({
                     bypassAuth: true,
                     params: {
                         userId,

@@ -8,7 +8,7 @@ import { Admission } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
-export const admissionMethods = {
+export const admissionOperations = {
     readTrial: defineOperation({
         authorizer: () => admissionAuthers.readTrial.dynamicFields({}),
         paramsSchema: z.object({
@@ -49,7 +49,7 @@ export const admissionMethods = {
             })
 
             // check if user has taken all admissions
-            const userTrials = await admissionMethods.readTrial({
+            const userTrials = await admissionOperations.readTrial({
                 params: {
                     userId: data.userId
                 },

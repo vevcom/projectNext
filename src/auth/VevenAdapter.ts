@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
-import { userMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 import { userFilterSelection } from '@/services/users/config'
 import type { UserFiltered } from '@/services/users/Types'
 import type { PrismaClient } from '@prisma/client'
@@ -105,7 +105,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUser(id) {
             console.log('get id')
 
-            const user = await userMethods.readOrNull({
+            const user = await userOperations.readOrNull({
                 params: { id: Number(id) },
                 bypassAuth: true,
             })
@@ -116,7 +116,7 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
         async getUserByEmail(email) {
             console.log('get email')
             console.log(email)
-            const user = await userMethods.readOrNull({
+            const user = await userOperations.readOrNull({
                 params: { email },
                 bypassAuth: true,
             })

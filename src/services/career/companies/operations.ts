@@ -9,7 +9,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
-export const companyMethods = {
+export const companyOperations = {
     create: defineOperation({
         dataSchema: companySchemas.create,
         authorizer: () => companyAuthers.create.dynamicFields({}),

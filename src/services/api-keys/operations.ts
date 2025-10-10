@@ -43,7 +43,7 @@ const updateIfExpired = defineOperation({
     }
 })
 
-export const apiKeyMethods = {
+export const apiKeyOperations = {
     create: defineOperation({
         authorizer: () => apiKeyAuthers.create.dynamicFields({}),
         dataSchema: apiKeySchemas.create,

@@ -3,17 +3,17 @@ import { purchaseAuthers } from './authers'
 import { purchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { userMethods } from '@/services/users/methods'
-import { permissionMethods } from '@/services/permissions/methods'
+import { userOperations } from '@/services/users/operations'
+import { permissionOperations } from '@/services/permissions/operations'
 import { userFilterSelection } from '@/services/users/config'
 import { PurchaseMethod } from '@prisma/client'
 
-export const purchaseMethods = {
+export const purchaseOperations = {
     createByStudentCard: defineOperation({
         authorizer: async ({ data }) => {
             let user
             try {
-                user = await userMethods.read({
+                user = await userOperations.read({
                     params: {
                         studentCard: data.studentCard,
                     },
@@ -26,7 +26,7 @@ export const purchaseMethods = {
                 throw e
             }
 
-            const permissions = await permissionMethods.readPermissionsOfUser({
+            const permissions = await permissionOperations.readPermissionsOfUser({
                 bypassAuth: true,
                 params: {
                     userId: user.id,

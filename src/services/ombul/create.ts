@@ -5,8 +5,8 @@ import { readSpecialImageCollection } from '@/services/images/collections/read'
 import { createCmsImage } from '@/services/cms/images/create'
 import { prisma } from '@/prisma/client'
 import { createFile } from '@/services/store/createFile'
-import { imageMethods } from '@/services/images/methods'
-import { notificationMethods } from '@/services/notifications/methods'
+import { imageOperations } from '@/services/images/operations'
+import { notificationOperations } from '@/services/notifications/operations'
 import type { CreateOmbulTypes } from './validation'
 import type { Ombul } from '@prisma/client'
 
@@ -43,7 +43,7 @@ export async function createOmbul(
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
 
-    const coverImage = await imageMethods.create({
+    const coverImage = await imageOperations.create({
         params: {
             collectionId: ombulCoverCollection.id,
         },
@@ -70,7 +70,7 @@ export async function createOmbul(
         }
     }))
 
-    notificationMethods.createSpecial({
+    notificationOperations.createSpecial({
         params: {
             special: 'NEW_OMBUL',
         },

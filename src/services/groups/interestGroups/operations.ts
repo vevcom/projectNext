@@ -7,7 +7,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 import type { ExpandedInterestGroup } from './Types'
 
-export const interestGroupMethods = {
+export const interestGroupOperations = {
     create: defineOperation({
         dataSchema: interestGroupSchemas.create,
         authorizer: () => interestGroupAuthers.create.dynamicFields({}),

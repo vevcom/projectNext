@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { apiHandler } from '@/api/apiHandler'
-import { userMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 
 export const POST = apiHandler({
-    serviceMethod: userMethods.create
+    serviceMethod: userOperations.create
 })

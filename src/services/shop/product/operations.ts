@@ -6,7 +6,7 @@ import type { ExtendedProduct } from './Types'
 import { productAuthers } from './authers'
 import { productSchemas } from './schemas'
 
-export const productMethods = {
+export const productOperations = {
     create: defineOperation({
         authorizer: () => productAuthers.create.dynamicFields({}),
         dataSchema: productSchemas.create,

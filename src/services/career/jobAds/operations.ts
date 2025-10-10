@@ -14,7 +14,7 @@ import { z } from 'zod'
 import { JobType } from '@prisma/client'
 import type { ExpandedJobAd, SimpleJobAd } from './Types'
 
-export const jobAdMethods = {
+export const jobAdOperations = {
     create: defineOperation({
         dataSchema: jobAdSchemas.create,
         authorizer: () => jobAdAuthers.create.dynamicFields({}),

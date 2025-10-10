@@ -3,13 +3,13 @@ import 'server-only'
 import { cabinProductAuthers } from './authers'
 import { cabinProductSchemas } from './schemas'
 import { cabinProductPriceIncluder } from './config'
-import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { cabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
+import { cabinPricePeriodOperations } from '@/services/cabin/pricePeriod/operations'
 import { z } from 'zod'
 
-export const cabinProductMethods = {
+export const cabinProductOperations = {
 
     create: defineOperation({
         authorizer: () => cabinProductAuthers.create.dynamicFields({}),
@@ -32,7 +32,7 @@ export const cabinProductMethods = {
                         id: data.pricePeriodId,
                     }
                 }),
-                cabinReleasePeriodMethods.getCurrentReleasePeriod({
+                cabinReleasePeriodOperations.getCurrentReleasePeriod({
                     bypassAuth: true,
                     session
                 })
@@ -63,7 +63,7 @@ export const cabinProductMethods = {
     readActive: defineOperation({
         authorizer: () => cabinProductAuthers.read.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const pricePeriods = await cabinPricePeriodMethods.readPublicPeriods({ bypassAuth: true })
+            const pricePeriods = await cabinPricePeriodOperations.readPublicPeriods({ bypassAuth: true })
 
             return await prisma.cabinProduct.findMany({
                 where: {

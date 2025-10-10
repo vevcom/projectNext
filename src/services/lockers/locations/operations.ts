@@ -2,7 +2,7 @@ import { lockerLocationAuthers } from './authers'
 import { lockersSchemas } from '@/services/lockers/schemas'
 import { defineOperation } from '@/services/serviceOperation'
 
-export const lockerLocationMethods = {
+export const lockerLocationOperations = {
     /**
      * Creates a new locker location.
      *

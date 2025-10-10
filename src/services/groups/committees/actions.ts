@@ -4,7 +4,7 @@ import { action } from '@/services/action'
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createCommittee } from '@/services/groups/committees/create'
-import { committeeMethods } from '@/services/groups/committees/methods'
+import { committeeOperations } from '@/services/groups/committees/operations'
 import { updateCommittee } from '@/services/groups/committees/update'
 import { createCommitteeValidation, updateCommitteeValidation } from '@/services/groups/committees/validation'
 import type { ExpandedCommittee } from '@/services/groups/committees/Types'
@@ -27,11 +27,11 @@ export async function createCommitteeAction(
     return await safeServerCall(() => createCommittee(parse.data))
 }
 
-export const readCommitteesAction = action(committeeMethods.readCommittees)
-export const readCommitteeAction = action(committeeMethods.readCommittee)
-export const readCommitteeArticleAction = action(committeeMethods.readCommitteArticle)
-export const readCommitteeParagraphAction = action(committeeMethods.readCommitteeParagraph)
-export const readCommitteeMembersAction = action(committeeMethods.readCommitteeMembers)
+export const readCommitteesAction = action(committeeOperations.readCommittees)
+export const readCommitteeAction = action(committeeOperations.readCommittee)
+export const readCommitteeArticleAction = action(committeeOperations.readCommitteArticle)
+export const readCommitteeParagraphAction = action(committeeOperations.readCommitteeParagraph)
+export const readCommitteeMembersAction = action(committeeOperations.readCommitteeMembers)
 
 export async function updateCommitteeAction(
     id: number,

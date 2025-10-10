@@ -4,7 +4,7 @@ import { subscriptionSchemas } from './schemas'
 import { validateMethods } from '@/services/notifications/channel/schemas'
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/config'
 import { availableNotificationMethodIncluder } from '@/services/notifications/channel/config'
-import { notificationChannelMethods } from '@/services/notifications/channel/methods'
+import { notificationChannelOperations } from '@/services/notifications/channel/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { ServerError } from '@/services/error'
@@ -108,7 +108,7 @@ async function createTransactionPart(
     })
 }
 
-export const notificationSubscriptionMethods = {
+export const notificationSubscriptionOperations = {
     read: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),
@@ -129,7 +129,7 @@ export const notificationSubscriptionMethods = {
         }),
         opensTransaction: true,
         operation: async ({ prisma, params, session }) => {
-            const channels = await notificationChannelMethods.readDefault({
+            const channels = await notificationChannelOperations.readDefault({
                 session,
                 bypassAuth: true,
             })

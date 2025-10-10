@@ -5,7 +5,7 @@ import type { ExtendedShop } from './Types'
 import { shopSchemas } from './schema'
 import { shopAuthers } from './authers'
 
-export const shopMethods = {
+export const shopOperations = {
     create: defineOperation({
         dataSchema: shopSchemas.create,
         authorizer: () => shopAuthers.create.dynamicFields({}),

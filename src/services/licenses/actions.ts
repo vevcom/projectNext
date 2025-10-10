@@ -1,12 +1,12 @@
 'use server'
 
 import { action } from '@/services/action'
-import { licenseMethods } from '@/services/licenses/methods'
+import { licenseOperations } from '@/services/licenses/operations'
 
-export const createLicenseAction = action(licenseMethods.create)
+export const createLicenseAction = action(licenseOperations.create)
 
-export const destroyLicenseAction = action(licenseMethods.destroy)
+export const destroyLicenseAction = action(licenseOperations.destroy)
 
-export const readAllLicensesAction = action(licenseMethods.readAll)
+export const readAllLicensesAction = action(licenseOperations.readAll)
 
-export const updateLicenseAction = action(licenseMethods.update)
+export const updateLicenseAction = action(licenseOperations.update)

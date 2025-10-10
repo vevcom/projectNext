@@ -1,12 +1,12 @@
 'use server'
 
 import { action } from '@/services/action'
-import { companyMethods } from '@/services/career/companies/methods'
+import { companyOperations } from '@/services/career/companies/operations'
 
-export const createCompanyAction = action(companyMethods.create)
+export const createCompanyAction = action(companyOperations.create)
 
-export const destroyCompanyAction = action(companyMethods.destroy)
+export const destroyCompanyAction = action(companyOperations.destroy)
 
-export const readCompanyPageAction = action(companyMethods.readPage)
+export const readCompanyPageAction = action(companyOperations.readPage)
 
-export const updateComanyAction = action(companyMethods.update)
+export const updateComanyAction = action(companyOperations.update)

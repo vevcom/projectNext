@@ -3,14 +3,14 @@ import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from './c
 import { cabinBookingSchemas } from './schemas'
 import { cabinBookingAuthers } from './authers'
 import { cabinBookingFilerSelection, cabinBookingIncluder } from './config'
-import { cabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
+import { cabinPricePeriodOperations } from '@/services/cabin/pricePeriod/operations'
 import { cabinProductPriceIncluder } from '@/services/cabin/product/config'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ServerError } from '@/services/error'
-import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
-import { notificationMethods } from '@/services/notifications/methods'
+import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
 import { BookingType } from '@prisma/client'
 import type { CabinProductExtended } from '@/services/cabin/product/config'
@@ -58,7 +58,7 @@ const create = defineOperation({
     operation: async ({ prisma, params, data }) => {
         // TODO: Prevent Race conditions
 
-        const latestReleaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({
+        const latestReleaseDate = await cabinReleasePeriodOperations.getCurrentReleasePeriod({
             bypassAuth: true,
         })
 
@@ -122,7 +122,7 @@ const create = defineOperation({
             throw new ServerError('BAD PARAMETERS', 'Sengebookinger må inneholde minst ett produkt.')
         }
 
-        const pricePeriods = await cabinPricePeriodMethods.readMany({ bypassAuth: true })
+        const pricePeriods = await cabinPricePeriodOperations.readMany({ bypassAuth: true })
 
         const priceObjects = calculateCabinBookingPrice({
             pricePeriods,
@@ -184,7 +184,7 @@ const createBookingWithUser = defineOperation({
             }
         })
 
-        await notificationMethods.createSpecial({
+        await notificationOperations.createSpecial({
             params: {
                 special: 'CABIN_BOOKING_CONFIRMATION',
             },
@@ -239,7 +239,7 @@ const createBookingNoUser = defineOperation({
     }
 })
 
-export const cabinBookingMethods = {
+export const cabinBookingOperations = {
     createCabinBookingUserAttached: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),

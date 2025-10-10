@@ -2,12 +2,12 @@ import '@pn-server-only'
 import { applicationPeriodAuthers } from './authers'
 import { applicationPeriodSchemas } from './schemas'
 import { committeesParticipatingincluder } from './config'
-import { applicationMethods } from '@/services/applications/methods'
+import { applicationOperations } from '@/services/applications/operations'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
-export const applicationPeriodMethods = {
+export const applicationPeriodOperations = {
     readAll: defineOperation({
         authorizer: () => applicationPeriodAuthers.readAll.dynamicFields({}),
         operation: async ({ prisma }) => prisma.applicationPeriod.findMany()
@@ -69,7 +69,7 @@ export const applicationPeriodMethods = {
 
             if (data.participatingCommitteeIds) {
                 // Remove applications to committees that are no longer participating
-                // This must be done through the applicationMethods.destroy method to ensure
+                // This must be done through the applicationOperations.destroy method to ensure
                 // that reordering priorities is handled correctly.
                 await Promise.all(
                     period.committeesParticipating
@@ -90,7 +90,7 @@ export const applicationPeriodMethods = {
                             })
                             await Promise.all(
                                 removeApplications.map(async application =>
-                                    await applicationMethods.destroy({
+                                    await applicationOperations.destroy({
                                         params: {
                                             userId: application.userId,
                                             commiteeParticipationId: application.applicationPeriodCommiteeId
@@ -128,7 +128,7 @@ export const applicationPeriodMethods = {
         }),
         authorizer: () => applicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
         operation: async ({ prisma, params, session }) => {
-            const period = await applicationPeriodMethods.read({
+            const period = await applicationPeriodOperations.read({
                 params: { name: params.name },
                 session
             })

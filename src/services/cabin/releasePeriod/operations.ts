@@ -5,7 +5,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
-export const cabinReleasePeriodMethods = {
+export const cabinReleasePeriodOperations = {
 
     create: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.createReleasePeriodAuther.dynamicFields({}),

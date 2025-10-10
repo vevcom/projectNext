@@ -1,7 +1,7 @@
 import { Session } from '@/auth/Session'
 import { Smorekopp } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import { ApiKeyMethods } from '@/services/api-keys/methods'
+import { apiKeyOperations } from '@/services/api-keys/operations'
 import { afterEach, describe, expect, test } from '@jest/globals'
 
 afterEach(async () => {
@@ -16,7 +16,7 @@ describe('api keys', () => {
             user: null,
         })
 
-        const createdApiKey = await ApiKeyMethods.create({
+        const createdApiKey = await apiKeyOperations.create({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -28,7 +28,7 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        const readApiKeyResult = await ApiKeyMethods.read({
+        const readApiKeyResult = await apiKeyOperations.read({
             params: createdApiKey,
             session,
         })
@@ -38,7 +38,7 @@ describe('api keys', () => {
             permissions: [],
         })
 
-        await ApiKeyMethods.update({
+        await apiKeyOperations.update({
             params: createdApiKey,
             data: {
                 permissions: ['APIKEY_ADMIN'],
@@ -59,7 +59,7 @@ describe('api keys', () => {
     // so there should probably be a system in place to run the same test
     // with different session objects.
     test('create, read and update api key with unauthenticated user', async () => {
-        const createdApiKeyPromise = ApiKeyMethods.create({
+        const createdApiKeyPromise = apiKeyOperations.create({
             data: {
                 name: 'Min api nøkkel',
             },
@@ -67,14 +67,14 @@ describe('api keys', () => {
         expect(createdApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
         expect(await prisma.apiKey.count()).toEqual(0)
 
-        const readApiKeyPromise = ApiKeyMethods.read({
+        const readApiKeyPromise = apiKeyOperations.read({
             params: {
                 id: 1,
             },
         })
         expect(readApiKeyPromise).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
-        const updateApiKeyPromise = ApiKeyMethods.update({
+        const updateApiKeyPromise = apiKeyOperations.update({
             params: {
                 id: 1,
             },

@@ -187,7 +187,7 @@ export function checkGroupValidity<
     }
 }
 
-export const groupMethods = {
+export const groupOperations = {
     readGroups: defineOperation({
         authorizer: () => groupAuthers.read.dynamicFields({}),
         operation: async ({ prisma }) => prisma.group.findMany()
@@ -295,7 +295,7 @@ export const groupMethods = {
                 },
             } satisfies GroupsStructured
 
-            const groupExpanded = await groupMethods.readGroupsExpanded({ bypassAuth: true })
+            const groupExpanded = await groupOperations.readGroupsExpanded({ bypassAuth: true })
 
             groupExpanded.forEach(group => {
                 groupsStructured[group.groupType].groups.push(group)

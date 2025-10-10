@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { eventAuthers } from './authers'
 import { eventSchemas } from './schemas'
 import { eventFilterSelection } from './config'
-import { notificationMethods } from '@/services/notifications/methods'
+import { notificationOperations } from '@/services/notifications/operations'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
@@ -16,7 +16,7 @@ import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import type { EventExpanded } from './Types'
 
-export const eventMethods = {
+export const eventOperations = {
     create: defineOperation({
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuthers.create.dynamicFields({}),
@@ -79,7 +79,7 @@ export const eventMethods = {
                 }))
             })
 
-            await notificationMethods.createSpecial({
+            await notificationOperations.createSpecial({
                 params: {
                     special: 'NEW_EVENT',
                 },

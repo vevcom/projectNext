@@ -68,7 +68,7 @@ const createSourceless = defineOperation({
     }
 })
 
-export const imageMethods = {
+export const imageOperations = {
     /**
      * Creates an image.
      * The method will resize the image to the correct sizes and save it to the store.
@@ -140,7 +140,7 @@ export const imageMethods = {
             for (const file of data.files) {
                 console.log('file', file)
                 const name = useFileName ? file.name.split('.')[0] : undefined
-                await imageMethods.create({
+                await imageOperations.create({
                     params: { collectionId },
                     data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
                 })

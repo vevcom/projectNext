@@ -1,19 +1,19 @@
 'use server'
 
 import { action } from '@/services/action'
-import { productMethods } from '@/services/shop/product/methods'
-import { shopMethods } from '@/services/shop/shop/methods'
+import { productOperations } from '@/services/shop/product/operations'
+import { shopOperations } from '@/services/shop/shop/operations'
 
-export const readProductsAction = action(productMethods.readMany)
-export const readProductAction = action(productMethods.read)
-export const createProductAction = action(productMethods.create)
-export const updateProductAction = action(productMethods.update)
+export const readProductsAction = action(productOperations.readMany)
+export const readProductAction = action(productOperations.read)
+export const createProductAction = action(productOperations.create)
+export const updateProductAction = action(productOperations.update)
 
-export const createProductForShopAction = action(productMethods.createForShop)
-export const updateProductForShopAction = action(productMethods.updateForShop)
+export const createProductForShopAction = action(productOperations.createForShop)
+export const updateProductForShopAction = action(productOperations.updateForShop)
 
-export const createShopProductConnectionAction = action(productMethods.createShopConnection)
+export const createShopProductConnectionAction = action(productOperations.createShopConnection)
 
-export const readShopsAction = action(shopMethods.readMany)
-export const readShopAction = action(shopMethods.read)
-export const createShopAction = action(shopMethods.create)
+export const readShopsAction = action(shopOperations.readMany)
+export const readShopAction = action(shopOperations.read)
+export const createShopAction = action(shopOperations.create)

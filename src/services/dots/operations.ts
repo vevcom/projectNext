@@ -130,7 +130,7 @@ const readPage = defineOperation({
     }))
 })
 
-export const dotMethods = {
+export const dotOperations = {
     create,
     readForUser,
     readWrappersForUser,

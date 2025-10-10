@@ -5,7 +5,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import { groupMethods } from '@/services/groups/methods'
+import { groupOperations } from '@/services/groups/operations'
 import type { ExpandedMembership } from './Types'
 
 export async function createMembershipForUser(
@@ -18,7 +18,7 @@ export async function createMembershipForUser(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
 
-    const order = orderArg ?? await groupMethods.readCurrentGroupOrder({
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,
@@ -64,7 +64,7 @@ export async function createMembershipsForGroup(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await groupMethods.readCurrentGroupOrder({
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,
@@ -111,7 +111,7 @@ export async function createMembershipsForUser(
     if (!await canEasilyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const ordersMap = await groupMethods.readCurrentGroupOrders({
+    const ordersMap = await groupOperations.readCurrentGroupOrders({
         bypassAuth: true,
         params: {
             ids: data.map(group => group.groupId)

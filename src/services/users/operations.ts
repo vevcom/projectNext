@@ -7,8 +7,8 @@ import {
     studentCardRegistrationExpiry,
     userFilterSelection
 } from './config'
-import { imageMethods } from '@/services/images/methods'
-import { notificationSubscriptionMethods } from '@/services/notifications/subscription/methods'
+import { imageOperations } from '@/services/images/operations'
+import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/mailAddressExternal/ConfigVars'
 import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verifyEmail'
@@ -22,11 +22,11 @@ import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/password'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { permissionMethods } from '@/services/permissions/methods'
+import { permissionOperations } from '@/services/permissions/operations'
 import { z } from 'zod'
 import type { UserPagingReturn } from './Types'
 
-export const userMethods = {
+export const userOperations = {
     /**
      * This Method creates an user by invitation, and sends the invitation email.
      * WARNING: This should not be used to create users registered by Feide.
@@ -101,7 +101,7 @@ export const userMethods = {
         }),
         authorizer: ({ params }) => userAuthers.readProfile.dynamicFields({ username: params.username }),
         operation: async ({ prisma, params }) => {
-            const defaultProfileImage = await imageMethods.readSpecial({
+            const defaultProfileImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
             const user = await prisma.user.findUniqueOrThrow({
@@ -117,7 +117,7 @@ export const userMethods = {
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
-            const permissions = await permissionMethods.readPermissionsOfUser({
+            const permissions = await permissionOperations.readPermissionsOfUser({
                 bypassAuth: true,
                 params: {
                     userId: user.id
@@ -503,7 +503,7 @@ export const userMethods = {
             ])
 
             try {
-                await notificationSubscriptionMethods.createDefault({
+                await notificationSubscriptionOperations.createDefault({
                     params: {
                         userId: params.id,
                     },

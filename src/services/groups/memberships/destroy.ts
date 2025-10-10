@@ -4,7 +4,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import { groupMethods } from '@/services/groups/methods'
+import { groupOperations } from '@/services/groups/operations'
 import type { ExpandedMembership } from './Types'
 
 export async function destoryMembershipOfUser({
@@ -19,7 +19,7 @@ export async function destoryMembershipOfUser({
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await groupMethods.readCurrentGroupOrder({
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId
@@ -47,7 +47,7 @@ export async function destroyMembershipOfUsers(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await groupMethods.readCurrentGroupOrder({
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,
