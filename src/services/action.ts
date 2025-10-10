@@ -2,24 +2,24 @@ import '@pn-server-only'
 import { safeServerCall } from './actionError'
 import { Session } from '@/auth/Session'
 import type { ActionReturn } from './actionTypes'
-import type { ServiceMethod } from '@/services/serviceMethod'
+import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
 
 export function action<Return>(
-    serviceMethod: ServiceMethod<boolean, Return, undefined, undefined>
+    serviceMethod: ServiceOperation<boolean, Return, undefined, undefined>
 ): () => Promise<ActionReturn<Return>>
 
 export function action<Return, ParamsSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, undefined>
+    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, undefined>
 ): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
 
 export function action<Return, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, undefined, DataSchema>
+    serviceMethod: ServiceOperation<boolean, Return, undefined, DataSchema>
 ): (data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
 // This function is overloaded to allow for different combinations of parameters and data.
 export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>
+    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
 ): (params: z.input<ParamsSchema>, data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
 /**
@@ -33,7 +33,7 @@ export function action<
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>
+    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
 ) {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service method will validate the parameter and data before it is used.

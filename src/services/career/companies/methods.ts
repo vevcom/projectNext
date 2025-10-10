@@ -1,19 +1,19 @@
 import '@pn-server-only'
 import { companyAuthers } from './authers'
-import { companySchemas } from './schemas'
 import { logoIncluder } from './config'
+import { companySchemas } from './schemas'
 import { createCmsImage } from '@/services/cms/images/create'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
 export const companyMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         dataSchema: companySchemas.create,
         authorizer: () => companyAuthers.create.dynamicFields({}),
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             //TODO: tranaction when createCmsImage is service method.
             const logo = await createCmsImage({ name: uuid() })
             return await prisma.company.create({
@@ -24,7 +24,7 @@ export const companyMethods = {
             })
         }
     }),
-    readPage: serviceMethod({
+    readPage: defineOperation({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -35,7 +35,7 @@ export const companyMethods = {
             }),
         ),
         authorizer: () => companyAuthers.readPage.dynamicFields({}),
-        method: async ({ prisma, params }) => await prisma.company.findMany({
+        operation: async ({ prisma, params }) => await prisma.company.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
                 name: {
@@ -46,25 +46,25 @@ export const companyMethods = {
             include: logoIncluder,
         })
     }),
-    update: serviceMethod({
+    update: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: companySchemas.update,
         authorizer: () => companyAuthers.update.dynamicFields({}),
-        method: async ({ prisma, params: { id }, data }) => {
+        operation: async ({ prisma, params: { id }, data }) => {
             await prisma.company.update({
                 where: { id },
                 data,
             })
         },
     }),
-    destroy: serviceMethod({
+    destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number()
         }),
         authorizer: () => companyAuthers.destroy.dynamicFields({}),
-        method: async ({ prisma, params: { id } }) => {
+        operation: async ({ prisma, params: { id } }) => {
             await prisma.company.delete({
                 where: {
                     id

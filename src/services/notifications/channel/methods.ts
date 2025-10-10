@@ -9,14 +9,14 @@ import {
 } from '@/services/notifications/config'
 import { notificationMethodSchema } from '@/services/notifications/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/config'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 
 export const notificationChannelMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => notificationChannelAuthers.create.dynamicFields({}),
         dataSchema: notificationChannelSchemas.create,
         opensTransaction: true,
@@ -24,7 +24,7 @@ export const notificationChannelMethods = {
             availableMethods: notificationMethodSchema,
             defaultMethods: notificationMethodSchema,
         }),
-        method: async ({ prisma, data, params }): Promise<ExpandedNotificationChannel> => {
+        operation: async ({ prisma, data, params }): Promise<ExpandedNotificationChannel> => {
             if (!validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
@@ -104,16 +104,16 @@ export const notificationChannelMethods = {
         }
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => await prisma.notificationChannel.findMany({
+        operation: async ({ prisma }) => await prisma.notificationChannel.findMany({
             include: availableNotificationMethodIncluder,
         })
     }),
 
-    readDefault: serviceMethod({
+    readDefault: defineOperation({
         authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => await prisma.notificationChannel.findMany({
+        operation: async ({ prisma }) => await prisma.notificationChannel.findMany({
             where: {
                 defaultMethods: {
                     OR: notificationMethodsArray.map(method => ({
@@ -125,7 +125,7 @@ export const notificationChannelMethods = {
         })
     }),
 
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => notificationChannelAuthers.update.dynamicFields({}),
         dataSchema: notificationChannelSchemas.update,
         paramsSchema: z.object({
@@ -134,7 +134,7 @@ export const notificationChannelMethods = {
             defaultMethods: notificationMethodSchema,
         }),
         opensTransaction: true,
-        method: async ({ prisma, data, params }) => {
+        operation: async ({ prisma, data, params }) => {
             if (!validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
@@ -218,13 +218,13 @@ export const notificationChannelMethods = {
     }),
 
     // It doesn't seem that this function is used yet. -Theodor
-    destroy: serviceMethod({
+    destroy: defineOperation({
         authorizer: () => notificationChannelAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         opensTransaction: true,
-        method: async ({ prisma, params }) => prisma.$transaction(async (tx) => {
+        operation: async ({ prisma, params }) => prisma.$transaction(async (tx) => {
             // NOTE: this should maybe be just a archive not a delete
 
             const results = await tx.notificationChannel.delete({

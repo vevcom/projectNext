@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { permissionAuthers } from './auther'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/config'
@@ -10,18 +10,18 @@ import { z } from 'zod'
 
 
 export const permissionMethods = {
-    readDefaultPermissions: serviceMethod({
+    readDefaultPermissions: defineOperation({
         authorizer: () => permissionAuthers.readDefaultPermissions.dynamicFields({}),
-        method: async ({ prisma }) =>
+        operation: async ({ prisma }) =>
             (await prisma.defaultPermission.findMany()).map(perm => perm.permission)
     }),
 
-    readPermissionsOfUser: serviceMethod({
+    readPermissionsOfUser: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const [defaultPermissions, groupPermissions] = await Promise.all([
                 permissionMethods.readDefaultPermissions({}),
                 prisma.membership.findMany({
@@ -49,21 +49,21 @@ export const permissionMethods = {
         }
     }),
 
-    readPermissionsOfGroup: serviceMethod({
+    readPermissionsOfGroup: defineOperation({
         authorizer: () => permissionAuthers.readGroupPermissions.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number()
         }),
-        method: async ({ prisma, params }) => (await prisma.groupPermission.findMany({
+        operation: async ({ prisma, params }) => (await prisma.groupPermission.findMany({
             where: {
                 groupId: params.groupId
             }
         })).map(permission => permission.permission)
     }),
 
-    readPermissionMatrix: serviceMethod({
+    readPermissionMatrix: defineOperation({
         authorizer: () => permissionAuthers.readPermissionMatrix.dynamicFields({}),
-        method: async ({ prisma }) => {
+        operation: async ({ prisma }) => {
             const groupsPermission = await prisma.group.findMany({
                 include: {
                     ...groupsWithRelationsIncluder,
@@ -79,12 +79,12 @@ export const permissionMethods = {
         }
     }),
 
-    updateDefaultPermissions: serviceMethod({
+    updateDefaultPermissions: defineOperation({
         authorizer: () => permissionAuthers.updateDefaultPermissions.dynamicFields({}),
         dataSchema: z.object({
             permissions: z.nativeEnum(Permission).array(),
         }),
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             await prisma.defaultPermission.deleteMany({
                 where: {
                     permission: {
@@ -107,7 +107,7 @@ export const permissionMethods = {
         }
     }),
 
-    updateGroupPermission: serviceMethod({
+    updateGroupPermission: defineOperation({
         authorizer: () => permissionAuthers.updateGroupPermission.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number(),
@@ -116,7 +116,7 @@ export const permissionMethods = {
         dataSchema: z.object({
             value: z.boolean()
         }),
-        method: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) => {
             if (data.value) {
                 await prisma.groupPermission.create({
                     data: {

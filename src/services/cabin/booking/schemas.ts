@@ -1,5 +1,5 @@
 import { dateLessThan, dateLessThanOrEqualTo } from '@/lib/dates/comparison'
-import { zpn } from '@/lib/fields/zpn'
+import { Zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 
 const baseSchema = z.object({
@@ -12,7 +12,7 @@ const baseSchema = z.object({
     lastname: z.string().min(2),
     email: z.string().email(),
     mobile: z.string().regex(/^\+?\d{4,20}$/, { message: 'Skriv kun tall, uten mellomrom.' }),
-    acceptedTerms: zpn.checkboxOrBoolean({
+    acceptedTerms: Zpn.checkboxOrBoolean({
         label: '',
         message: 'Du må godta vilkårene for å bruk siden.'
     })

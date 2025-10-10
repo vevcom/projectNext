@@ -1,16 +1,16 @@
 import 'server-only'
 import { cabinReleasePeriodAuthers } from './authers'
 import { cabinReleasePeriodSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
 export const cabinReleasePeriodMethods = {
 
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.createReleasePeriodAuther.dynamicFields({}),
         dataSchema: cabinReleasePeriodSchemas.createReleasePeriod,
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             const latestReleasePeriod = await prisma.releasePeriod.findFirst({
                 orderBy: {
                     releaseTime: 'desc',
@@ -31,12 +31,12 @@ export const cabinReleasePeriodMethods = {
         }
     }),
 
-    destroy: serviceMethod({
+    destroy: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.deleteReleasePeriodAuther.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const releasePeriod = await prisma.releasePeriod.findUniqueOrThrow({
                 where: params,
             })
@@ -51,18 +51,18 @@ export const cabinReleasePeriodMethods = {
         }
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
-        method: async ({ prisma }) => prisma.releasePeriod.findMany({
+        operation: async ({ prisma }) => prisma.releasePeriod.findMany({
             orderBy: {
                 releaseUntil: 'desc',
             }
         })
     }),
 
-    getCurrentReleasePeriod: serviceMethod({
+    getCurrentReleasePeriod: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
-        method: async ({ prisma }) => prisma.releasePeriod.findFirst({
+        operation: async ({ prisma }) => prisma.releasePeriod.findFirst({
             where: {
                 releaseTime: {
                     lte: new Date(),
@@ -75,10 +75,10 @@ export const cabinReleasePeriodMethods = {
         })
     }),
 
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => cabinReleasePeriodAuthers.updateReleasePeriodAuther.dynamicFields({}),
         dataSchema: cabinReleasePeriodSchemas.updateReleasePeriod,
-        method: async ({ prisma, data }) => prisma.releasePeriod.update({
+        operation: async ({ prisma, data }) => prisma.releasePeriod.update({
             where: {
                 id: data.id, // TODO: Figure out why id is in data and not a param
             },

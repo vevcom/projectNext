@@ -1,12 +1,12 @@
-import { zpn } from '@/lib/fields/zpn'
+import { Zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 import { Permission } from '@prisma/client'
 
 const baseSchema = z.object({
     name: z.string().min(10, 'minimum lengde 10').max(100, 'maksimum lengde 100'),
     expiresAt: z.coerce.date().optional(),
-    active: zpn.checkboxOrBoolean({ label: 'Aktiv' }),
-    permissions: zpn.enumListCheckboxFriendly({ label: 'Tillatelser', enum: Permission })
+    active: Zpn.checkboxOrBoolean({ label: 'Aktiv' }),
+    permissions: Zpn.enumListCheckboxFriendly({ label: 'Tillatelser', enum: Permission })
 })
 
 export const apiKeySchemas = {

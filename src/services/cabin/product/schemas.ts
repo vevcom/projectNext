@@ -1,4 +1,4 @@
-import { zpn } from '@/lib/fields/zpn'
+import { Zpn } from '@/lib/fields/zpn'
 import { convertPrice } from '@/lib/money/convert'
 import { BookingType } from '@prisma/client'
 import { z } from 'zod'
@@ -10,7 +10,7 @@ const baseSchema = z.object({
     description: z.string().min(0).max(20),
     price: z.coerce.number().min(0).transform((val) => convertPrice(val)),
     validFrom: z.coerce.date(),
-    cronInterval: zpn.simpleCronExpression(),
+    cronInterval: Zpn.simpleCronExpression(),
     memberShare: z.coerce.number().min(0).max(100),
     pricePeriodId: z.coerce.number(),
 })

@@ -1,14 +1,14 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequireServerOnly } from '@/auth/auther/ServerOnly'
 import { Session } from '@/auth/Session'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { prisma as globalPrisma } from '@/prisma/client'
 import { describe, expect, test } from '@jest/globals'
 import { z } from 'zod'
 
 describe('service method', () => {
     describe('simple', () => {
-        const addPositiveOnly = serviceMethod({
+        const addPositiveOnly = defineOperation({
             authorizer: ({ data: { a, b } }) => {
                 if (a < 0 || b < 0) {
                     return RequireServerOnly.staticFields({}).dynamicFields({})
@@ -20,7 +20,7 @@ describe('service method', () => {
                 a: z.number(),
                 b: z.number(),
             }),
-            method: ({ data: { a, b } }) => a + b,
+            operation: ({ data: { a, b } }) => a + b,
         })
 
         test('method result', async () => {
@@ -58,15 +58,15 @@ describe('service method', () => {
 
     describe('nested', () => {
         // Simple service method that just returns its own context
-        const inner = serviceMethod({
+        const inner = defineOperation({
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
-            method: async (context) => context,
+            operation: async (context) => context,
         })
 
         // Outer service method that calls the inner one and returns its context
-        const outer = serviceMethod({
+        const outer = defineOperation({
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
-            method: async () => await inner({}),
+            operation: async () => await inner({}),
         })
 
         test('nested context global defaults', async () => {

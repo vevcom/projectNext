@@ -5,7 +5,7 @@ import { validateMethods } from '@/services/notifications/channel/schemas'
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/config'
 import { availableNotificationMethodIncluder } from '@/services/notifications/channel/config'
 import { notificationChannelMethods } from '@/services/notifications/channel/methods'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
@@ -109,12 +109,12 @@ async function createTransactionPart(
 }
 
 export const notificationSubscriptionMethods = {
-    read: serviceMethod({
+    read: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),
         }),
         authorizer: ({ params }) => notificationSubscriptionAuthers.read.dynamicFields(params),
-        method: async ({ prisma, params }) => await prisma.notificationSubscription.findMany({
+        operation: async ({ prisma, params }) => await prisma.notificationSubscription.findMany({
             where: {
                 userId: params.userId,
             },
@@ -122,13 +122,13 @@ export const notificationSubscriptionMethods = {
         }),
     }),
 
-    createDefault: serviceMethod({
+    createDefault: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
             userId: z.number(),
         }),
         opensTransaction: true,
-        method: async ({ prisma, params, session }) => {
+        operation: async ({ prisma, params, session }) => {
             const channels = await notificationChannelMethods.readDefault({
                 session,
                 bypassAuth: true,
@@ -157,13 +157,13 @@ export const notificationSubscriptionMethods = {
     }),
 
 
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: ({ params }) => notificationSubscriptionAuthers.update.dynamicFields(params),
         paramsSchema: z.object({
             userId: z.number(),
         }),
         dataSchema: subscriptionSchemas.update,
-        method: async ({ prisma, params, data }): Promise<Subscription[]> => {
+        operation: async ({ prisma, params, data }): Promise<Subscription[]> => {
             // Prepare updates and validate the data with the data in the database
             const transactionParts = (await Promise.all(
                 data.subscriptions.map(subscription =>

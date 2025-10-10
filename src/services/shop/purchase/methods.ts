@@ -2,14 +2,14 @@ import '@pn-server-only'
 import { purchaseAuthers } from './authers'
 import { purchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { userMethods } from '@/services/users/methods'
 import { permissionMethods } from '@/services/permissions/methods'
 import { userFilterSelection } from '@/services/users/config'
 import { PurchaseMethod } from '@prisma/client'
 
 export const purchaseMethods = {
-    createByStudentCard: serviceMethod({
+    createByStudentCard: defineOperation({
         authorizer: async ({ data }) => {
             let user
             try {
@@ -38,7 +38,7 @@ export const purchaseMethods = {
             })
         },
         dataSchema: purchaseSchemas.createFromStudentCard,
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             if (data.products.length === 0) {
                 throw new ServerError('BAD PARAMETERS', 'The list of products to buy cannot be empty')
             }

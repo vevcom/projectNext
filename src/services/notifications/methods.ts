@@ -5,7 +5,7 @@ import { notificationSchemas } from './schemas'
 import { allNotificationMethodsOn, notificationMethodsArray } from './config'
 import { availableNotificationMethodIncluder } from './channel/config'
 import { userFilterSelection } from '@/services/users/config'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
@@ -35,10 +35,10 @@ export const notificationMethods = {
      * @param data - The detailed data for dispatching the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => notificationAuthers.create.dynamicFields({}),
         dataSchema: notificationSchemas.create,
-        method: async ({ prisma, data }): Promise<NotificationResult> => {
+        operation: async ({ prisma, data }): Promise<NotificationResult> => {
             // This prevent notifications from beeing sent during seeding
             if (process.env.IGNORE_SERVER_ONLY) {
                 return {
@@ -117,13 +117,13 @@ export const notificationMethods = {
      * @param message - The message content of the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    createSpecial: serviceMethod({
+    createSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialNotificationChannel),
         }),
         dataSchema: notificationSchemas.createSpecial,
-        method: async ({ prisma, params, data, session }): Promise<NotificationResult> => {
+        operation: async ({ prisma, params, data, session }): Promise<NotificationResult> => {
             const channel = await prisma.notificationChannel.findUniqueOrThrow({
                 where: {
                     special: params.special,

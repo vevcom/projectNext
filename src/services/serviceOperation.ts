@@ -11,11 +11,11 @@ import type { SessionMaybeUser } from '@/auth/Session'
 import type { AutherResult } from '@/auth/auther/Auther'
 
 /**
- * This is the type for the prisma client that is passed to the service method.
- * It can't simply be PrismaClient because it can be usefull to use a service method
+ * This is the type for the prisma client that is passed to the service operation.
+ * It can't simply be PrismaClient because it can be usefull to use a service operation
  * inside a transaction. In that case, the prisma client is a Prisma.TransactionClient.
  * The caveat is that a Prisma.TransactionClient can't be used to open a new transaction
- * so if the service method opens a transaction, the prisma client can only be a PrismaClient.
+ * so if the service operation opens a transaction, the prisma client can only be a PrismaClient.
  */
 type PrismaPossibleTransaction<
     OpensTransaction extends boolean
@@ -29,10 +29,10 @@ type HideNever<T> = {
 }
 
 /**
- * The input type which should will be passed to the service method.
+ * The input type which should will be passed to the service operation.
  * This is what the zod schemas will parse.
  */
-export type ServiceMethodInputUnparsed<
+export type ServiceOperationInputUnparsed<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = HideNever<{
@@ -41,10 +41,10 @@ export type ServiceMethodInputUnparsed<
 }>
 
 /**
- * The input that is provided to the a service method implementation.
+ * The input that is provided to the a service operation implementation.
  * This is the the input after is has been parsed with zod.
  */
-export type ServiceMethodInputParsed<
+export type ServiceOperationInputParsed<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
 > = HideNever<{
@@ -53,19 +53,19 @@ export type ServiceMethodInputParsed<
 }>
 
 /**
- * This is the actual input type for the service method function used under the hood
+ * This is the actual input type for the service operation function used under the hood
  * since the input can be from the client we can't guarantee type safety.
  */
-export type ServiceMethodInputUnchecked = {
+export type ServiceOperationInputUnchecked = {
     params?: unknown,
     data?: unknown,
 }
 
 /**
- * This is the type for the configuration of a service method.
- * I.e. what is passed to the ServiceMethod function when creating a service method.
+ * This is the type for the configuration of a service operation.
+ * I.e. what is passed to the ServiceOperation function when creating a service operation.
  */
-type ServiceMethodConfig<
+type ServiceOperationConfig<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
@@ -74,14 +74,14 @@ type ServiceMethodConfig<
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    authorizer?: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
+    authorizer?: (args: ServiceOperationInputParsed<ParamsSchema, DataSchema> & ServiceOperationContext<OpensTransaction>) =>
         AutherResult| Promise<AutherResult>,
-    method: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
+    operation: (args: ServiceOperationInputParsed<ParamsSchema, DataSchema> & ServiceOperationContext<OpensTransaction>) =>
         Return | Promise<Return>,
 }
 
 /**
- * The function signature for a service method.
+ * The function signature for a service operation.
  *
  * The generic `Checked` determines whether to use compile time type checking or not for the argument.
  *
@@ -92,7 +92,7 @@ type ServiceMethodConfig<
  * Importantly, this will not skip the runtime validation with zod.
  * `UNCHECKED` is used when handling untyped input, e.g. from an HTTP request.
  */
-export type ServiceMethod<
+export type ServiceOperation<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
@@ -101,42 +101,45 @@ export type ServiceMethod<
     <Checked extends 'CHECKED' | 'UNCHECKED' = 'CHECKED'>(
     args: (
             Checked extends 'CHECKED'
-                ? ServiceMethodInputUnparsed<ParamsSchema, DataSchema>
-                : ServiceMethodInputUnchecked
-        ) & Partial<ServiceMethodContext<OpensTransaction>>
+                ? ServiceOperationInputUnparsed<ParamsSchema, DataSchema>
+                : ServiceOperationInputUnchecked
+        ) & Partial<ServiceOperationContext<OpensTransaction>>
     ): Promise<Return>
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
 }
 /**
- * In addition to custom data arguments, every service method receives a context object.
+ * In addition to custom data arguments, every service operation receives a context object.
  */
-type ServiceMethodContext<OpensTransaction extends boolean = boolean> = {
+type ServiceOperationContext<OpensTransaction extends boolean = boolean> = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
     bypassAuth: boolean,
 }
 
 /**
- * Async local storage is used to store the context of the current service method call.
- * All service methods called within the context of another service method will
- * inherit the context of the parent service method, unless explicitly overridden.
+ * Async local storage is used to store the context of the current service operation call.
+ * All service operations called within the context of another service operation will
+ * inherit the context of the parent service operation, unless explicitly overridden.
  *
  * Read more about async local storage here: https://nodejs.org/api/async_context.html
  */
-const asyncLocalStorage = new AsyncLocalStorage<ServiceMethodContext>()
+const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
 
 /**
- * Runs a callback with a specific service method context.
+ * Runs a callback with a specific service operation context.
  *
  * @param contextOverride Partial context to override the current context with.
  * @param callback The callback to run with the context.
  * @returns The return value of the callback.
  */
-function withContext<T>(contextOverride: Partial<ServiceMethodContext>, callback: (context: ServiceMethodContext) => T): T {
+function withContext<T>(
+    contextOverride: Partial<ServiceOperationContext>,
+    callback: (context: ServiceOperationContext) => T,
+): T {
     const localContext = asyncLocalStorage.getStore()
 
-    const context: ServiceMethodContext = {
+    const context: ServiceOperationContext = {
         prisma: contextOverride.prisma ?? localContext?.prisma ?? globalPrisma,
         session: contextOverride.session ?? localContext?.session ?? Session.empty(),
         bypassAuth: contextOverride.bypassAuth ?? localContext?.bypassAuth ?? false,
@@ -146,41 +149,41 @@ function withContext<T>(contextOverride: Partial<ServiceMethodContext>, callback
 }
 
 /**
- * Wrapper for creating service methods. It handles validation, authorization, and errors for you.
+ * Wrapper for creating service operations. It handles validation, authorization, and errors for you.
  *
- * @param config - The configuration for the service method.
+ * @param config - The configuration for the service operation.
  * @param config.authorizer - A function which returns the authorizer that will be used to authorize the user.
  * @param config.paramsSchema - The zod schemas that will be used to validate the parameters which are passed.
  * @param config.dataSchema - The zod schemas that will be used to validate the data which is passed.
- * @param config.method - The method that will be called when the service method is executed.
- * @param [config.opensTransaction=false] - Determines the type of prisma client that is passed to the service method.
+ * @param config.operation - The operation that will be called when the service operation is executed.
+ * @param [config.opensTransaction=false] - Determines the type of prisma client that is passed to the service operation.
  */
-export function serviceMethod<
+export function defineOperation<
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
-    config: ServiceMethodConfig<OpensTransaction, Return, ParamsSchema, DataSchema>,
-): ServiceMethod<OpensTransaction, Return, ParamsSchema, DataSchema> {
+    config: ServiceOperationConfig<OpensTransaction, Return, ParamsSchema, DataSchema>,
+): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema> {
     // Guard to check if params and data are only present if there are corresponding schemas.
     const expectedInputsIsPresent = (
-        input: ServiceMethodInputUnchecked
-    ): input is ServiceMethodInputParsed<ParamsSchema, DataSchema> => {
+        input: ServiceOperationInputUnchecked
+    ): input is ServiceOperationInputParsed<ParamsSchema, DataSchema> => {
         const paramsMatch = (input.params !== undefined) === (config.paramsSchema !== undefined)
         const dataMatches = (input.data !== undefined) === (config.dataSchema !== undefined)
         return paramsMatch && dataMatches
     }
 
-    // Guard to check if the prisma client can be used for this service method.
+    // Guard to check if the prisma client can be used for this service operation.
     const isAppropriateClient = (
         prisma: PrismaClient | Prisma.TransactionClient
     ): prisma is PrismaPossibleTransaction<OpensTransaction> =>
         !config.opensTransaction || '$transaction' in prisma
 
-    // Wraps the execution of the method with parsing, authorization, and context handling.
+    // Wraps the execution of the operation with parsing, authorization, and context handling.
     const execute = async (
-        { params, data, ...context }: ServiceMethodInputUnchecked & Partial<ServiceMethodContext<OpensTransaction>>
+        { params, data, ...context }: ServiceOperationInputUnchecked & Partial<ServiceOperationContext<OpensTransaction>>
     ) => {
         const input = { params, data }
 
@@ -189,14 +192,14 @@ export function serviceMethod<
             if (!config.paramsSchema) {
                 throw new Smorekopp(
                     'BAD PARAMETERS',
-                    'Service method received params, but has no params schema.',
+                    'Service operation received params, but has no params schema.',
                 )
             }
             const paramsParse = config.paramsSchema.safeParse(input.params)
             if (!paramsParse.success) {
                 throw new Smorekopp(
                     'BAD PARAMETERS',
-                    'Invalid params passed to service method.',
+                    'Invalid params passed to service operation.',
                 )
             }
             input.params = paramsParse.data
@@ -207,7 +210,7 @@ export function serviceMethod<
             if (!config.dataSchema) {
                 throw new Smorekopp(
                     'BAD DATA',
-                    'Service method received data, but has no dataValidation or dataSchema.',
+                    'Service operation received data, but has no dataValidation or dataSchema.',
                 )
             }
             const parse = zfd.formData(config.dataSchema).safeParse(input.data)
@@ -219,7 +222,7 @@ export function serviceMethod<
         }
 
         if (!expectedInputsIsPresent(input)) {
-            throw new Smorekopp('SERVER ERROR', 'Service method received invalid input.')
+            throw new Smorekopp('SERVER ERROR', 'Service operation received invalid input.')
         }
 
         // Then, get the context (which includes the prisma client, the session and the bypassAuth flag).
@@ -229,7 +232,7 @@ export function serviceMethod<
             if (!isAppropriateClient(prisma)) {
                 throw new Smorekopp(
                     'SERVER ERROR',
-                    'Service method that opens a transaction cannot be called from within a transaction.',
+                    'Service operation that opens a transaction cannot be called from within a transaction.',
                 )
             }
 
@@ -239,7 +242,7 @@ export function serviceMethod<
                 if (!config.authorizer) {
                     throw new Smorekopp(
                         'UNAUTHENTICATED',
-                        'This service method is not externally callable.'
+                        'This service operation is not externally callable.'
                     )
                 }
 
@@ -251,8 +254,8 @@ export function serviceMethod<
                 }
             }
 
-            // Finally, call the method.
-            return prismaErrorWrapper(() => config.method({ ...input, prisma, bypassAuth, session }))
+            // Finally, call the operation.
+            return prismaErrorWrapper(() => config.operation({ ...input, prisma, bypassAuth, session }))
         })
     }
 

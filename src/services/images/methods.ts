@@ -3,10 +3,10 @@ import { readSpecialImageCollection } from './collections/read'
 import { imageAuthers } from './authers'
 import { imageSchemas } from './schemas'
 import { allowedExtensions, avifConvertionOptions, imageSizes } from './config'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
-import { serviceMethod } from '@/services/serviceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
@@ -36,13 +36,13 @@ async function createOneInStore(file: File, allowedExt: string[], size: number) 
  * @param name - the name of the image
  * @param config - the config for the image (special)
  */
-const createSourceless = serviceMethod({
+const createSourceless = defineOperation({
     authorizer: () => imageAuthers.createSourcelessImage.dynamicFields({}),
     paramsSchema: z.object({
         name: z.string(),
         special: z.nativeEnum(SpecialImage),
     }),
-    method: async ({ prisma, params: { name, special } }) => {
+    operation: async ({ prisma, params: { name, special } }) => {
         const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
         logger.warn(`
             creating a bad image, Something has caused the server to lose a neccesary image. 
@@ -76,13 +76,13 @@ export const imageMethods = {
      * All images are saved as avif (except the original).
      * @param collectionId - The id of the collection to add the image to
      */
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => imageAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             collectionId: z.number(),
         }),
         dataSchema: imageSchemas.create,
-        method: async ({ prisma, params: { collectionId }, data }) => {
+        operation: async ({ prisma, params: { collectionId }, data }) => {
             const { file, ...meta } = data
             const buffer = Buffer.from(await file.arrayBuffer())
             const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
@@ -125,14 +125,14 @@ export const imageMethods = {
      * Creates many images from files.
      * The method will resize the images to the correct sizes and save them to the store.
      */
-    createMany: serviceMethod({
+    createMany: defineOperation({
         authorizer: () => imageAuthers.createMany.dynamicFields({}),
         paramsSchema: z.object({
             useFileName: z.boolean(),
             collectionId: z.number(),
         }),
         dataSchema: imageSchemas.createMany,
-        method: async ({
+        operation: async ({
             params: { useFileName, collectionId },
             data,
         }) => {
@@ -151,12 +151,12 @@ export const imageMethods = {
     /**
      * Reads an image by id.
      */
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => imageAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params: { id } }) => {
+        operation: async ({ prisma, params: { id } }) => {
             const image = await prisma.image.findUnique({
                 where: {
                     id,
@@ -171,7 +171,7 @@ export const imageMethods = {
     /**
      * Reads a page of images in a collection by collectionId.
      */
-    readPage: serviceMethod({
+    readPage: defineOperation({
         authorizer: () => imageAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -182,7 +182,7 @@ export const imageMethods = {
                 collectionId: z.number(),
             }),
         ),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const { collectionId } = params.paging.details
             return await prisma.image.findMany({
                 where: {
@@ -197,12 +197,12 @@ export const imageMethods = {
      * Reads a special image by name (special atr.).
      * In the case that the special image does not exist (bad state) a "bad" image will be created.
      */
-    readSpecial: serviceMethod({
+    readSpecial: defineOperation({
         authorizer: () => imageAuthers.readSpecial.dynamicFields({}),
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialImage)
         }),
-        method: async ({ prisma, params: { special }, session }) => {
+        operation: async ({ prisma, params: { special }, session }) => {
             const image = await prisma.image.findUnique({
                 where: {
                     special,
@@ -221,13 +221,13 @@ export const imageMethods = {
     /**
      * Update a image by id and data. Also can give the image a new license by data.licenseId.
      */
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => imageAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: imageSchemas.update,
-        method: async ({ prisma, params: { id }, data: { licenseId, ...data } }) => {
+        operation: async ({ prisma, params: { id }, data: { licenseId, ...data } }) => {
             console.log('lic', licenseId)
             return await prisma.image.update({
                 where: {
@@ -243,12 +243,12 @@ export const imageMethods = {
         }
     }),
 
-    destroy: serviceMethod({
+    destroy: defineOperation({
         authorizer: () => imageAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params: { id } }) => {
+        operation: async ({ prisma, params: { id } }) => {
             const image = await prisma.image.findUnique({
                 where: {
                     id,

@@ -2,31 +2,31 @@ import '@pn-server-only'
 import { admissionSchemas } from './schemas'
 import { admissionAuthers } from './authers'
 import { userFilterSelection } from '@/services/users/config'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { Admission } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
 export const admissionMethods = {
-    readTrial: serviceMethod({
+    readTrial: defineOperation({
         authorizer: () => admissionAuthers.readTrial.dynamicFields({}),
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ prisma, params: { userId } }) => await prisma.admissionTrial.findMany({
+        operation: async ({ prisma, params: { userId } }) => await prisma.admissionTrial.findMany({
             where: {
                 userId,
             }
         })
     }),
-    createTrial: serviceMethod({
+    createTrial: defineOperation({
         authorizer: () => admissionAuthers.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),
         }),
         dataSchema: admissionSchemas.createTrial,
-        method: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
+        operation: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
             const results = await prisma.admissionTrial.create({
                 data: {
                     user: {

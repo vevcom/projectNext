@@ -2,27 +2,27 @@ import '@pn-server-only'
 import { licenseSchemas } from './schemas'
 import { licenseAuthers } from './authers'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
 export const licenseMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => licenseAuthers.create.dynamicFields({}),
         dataSchema: licenseSchemas.create,
-        method: async ({ prisma, data }) => await prisma.license.create({
+        operation: async ({ prisma, data }) => await prisma.license.create({
             data,
         }),
     }),
-    readAll: serviceMethod({
+    readAll: defineOperation({
         authorizer: () => licenseAuthers.destroy.dynamicFields({}),
-        method: async ({ prisma }) => await prisma.license.findMany()
+        operation: async ({ prisma }) => await prisma.license.findMany()
     }),
-    destroy: serviceMethod({
+    destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         authorizer: () => licenseAuthers.destroy.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const { name: licenseName } = await prisma.license.findUniqueOrThrow({
                 where: { id: params.id },
                 select: { name: true }
@@ -44,13 +44,13 @@ export const licenseMethods = {
             await prisma.license.delete({ where: { id: params.id } })
         }
     }),
-    update: serviceMethod({
+    update: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: licenseSchemas.update,
         authorizer: () => licenseAuthers.update.dynamicFields({}),
-        method: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) => {
             await prisma.license.update({
                 where: {
                     id: params.id

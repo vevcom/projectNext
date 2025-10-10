@@ -3,7 +3,7 @@ import { groupsExpandedIncluder, groupTypesConfig, OmegaMembershipLevelConfig, r
 import { groupAuthers } from './authers'
 import { userFilterSelection } from '@/services/users/config'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import logger from '@/lib/logger'
@@ -188,17 +188,17 @@ export function checkGroupValidity<
 }
 
 export const groupMethods = {
-    readGroups: serviceMethod({
+    readGroups: defineOperation({
         authorizer: () => groupAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => prisma.group.findMany()
+        operation: async ({ prisma }) => prisma.group.findMany()
     }),
 
-    readCurrentGroupOrder: serviceMethod({
+    readCurrentGroupOrder: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => (await prisma.group.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => (await prisma.group.findUniqueOrThrow({
             where: {
                 id: params.id,
             },
@@ -208,12 +208,12 @@ export const groupMethods = {
         })).order
     }),
 
-    readCurrentGroupOrders: serviceMethod({
+    readCurrentGroupOrders: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().array(),
         }),
-        method: async ({ prisma, params }) => prisma.group.findMany({
+        operation: async ({ prisma, params }) => prisma.group.findMany({
             where: {
                 id: {
                     in: params.ids,
@@ -226,24 +226,24 @@ export const groupMethods = {
         })
     }),
 
-    readGroup: serviceMethod({
+    readGroup: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => prisma.group.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => prisma.group.findUniqueOrThrow({
             where: {
                 id: params.id,
             },
         })
     }),
 
-    readGroupExpanded: serviceMethod({
+    readGroupExpanded: defineOperation({
         authorizer: () => groupAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const group = await prisma.group.findFirstOrThrow({
                 where: {
                     id: params.id,
@@ -254,9 +254,9 @@ export const groupMethods = {
         }
     }),
 
-    readGroupsExpanded: serviceMethod({
+    readGroupsExpanded: defineOperation({
         authorizer: () => groupAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => {
+        operation: async ({ prisma }) => {
             const groups = (await prisma.group.findMany({
                 include: groupsExpandedIncluder,
             })).map(checkGroupValidity).map(grp => ({ ...grp, membershipsToInferFirstOrder: grp.memberships }))
@@ -265,9 +265,9 @@ export const groupMethods = {
         }
     }),
 
-    readGroupsStructured: serviceMethod({
+    readGroupsStructured: defineOperation({
         authorizer: () => groupAuthers.read.dynamicFields({}),
-        method: async () => {
+        operation: async () => {
             const groupsStructured: GroupsStructured = {
                 CLASS: {
                     ...groupTypesConfig.CLASS,
@@ -305,7 +305,7 @@ export const groupMethods = {
         }
     }),
 
-    readUsersOfGroups: serviceMethod({
+    readUsersOfGroups: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             groups: z.array(z.object({
@@ -313,7 +313,7 @@ export const groupMethods = {
                 admin: z.boolean(),
             })),
         }),
-        method: async ({ prisma, params }): Promise<UserFiltered[]> => {
+        operation: async ({ prisma, params }): Promise<UserFiltered[]> => {
             const memberships = await prisma.membership.findMany({
                 where: {
                     OR: params.groups.map(({ admin, groupId }) => ({
@@ -332,12 +332,12 @@ export const groupMethods = {
         }
     }),
 
-    readGroupsOfUser: serviceMethod({
+    readGroupsOfUser: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const memberships = await prisma.membership.findMany({
                 where: {
                     userId: params.userId,

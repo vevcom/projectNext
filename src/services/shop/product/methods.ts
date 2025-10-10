@@ -1,4 +1,4 @@
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
@@ -7,10 +7,10 @@ import { productAuthers } from './authers'
 import { productSchemas } from './schemas'
 
 export const productMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => productAuthers.create.dynamicFields({}),
         dataSchema: productSchemas.create,
-        method: async ({ prisma, data }) => prisma.product.create({
+        operation: async ({ prisma, data }) => prisma.product.create({
             data: {
                 ...data,
                 barcode: convertBarcode(data.barcode),
@@ -19,13 +19,13 @@ export const productMethods = {
         })
     }),
 
-    createForShop: serviceMethod({
+    createForShop: defineOperation({
         authorizer: () => productAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),
         dataSchema: productSchemas.createForShop,
-        method: async ({ prisma, params, data }) => prisma.product.create({
+        operation: async ({ prisma, params, data }) => prisma.product.create({
             data: {
                 name: data.name.toUpperCase(),
                 description: data.description,
@@ -44,10 +44,10 @@ export const productMethods = {
         })
     }),
 
-    createShopConnection: serviceMethod({
+    createShopConnection: defineOperation({
         authorizer: () => productAuthers.createShopConnection.dynamicFields({}),
         dataSchema: productSchemas.createShopConnection,
-        method: async ({ prisma, data }) => prisma.shopProduct.create({
+        operation: async ({ prisma, data }) => prisma.shopProduct.create({
             data: {
                 shop: {
                     connect: {
@@ -64,17 +64,17 @@ export const productMethods = {
         })
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => productAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => await prisma.product.findMany()
+        operation: async ({ prisma }) => await prisma.product.findMany()
     }),
 
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => productAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             productId: z.number(),
         }),
-        method: async ({ prisma, params }) => await prisma.product.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => await prisma.product.findUniqueOrThrow({
             where: {
                 id: params.productId
             },
@@ -88,10 +88,10 @@ export const productMethods = {
         })
     }),
 
-    readByBarCode: serviceMethod({
+    readByBarCode: defineOperation({
         authorizer: () => productAuthers.read.dynamicFields({}),
         dataSchema: productSchemas.readByBarCode,
-        method: async ({ prisma, data }): Promise<ExtendedProduct | null> => {
+        operation: async ({ prisma, data }): Promise<ExtendedProduct | null> => {
             if (!data.barcode) {
                 throw new ServerError('BAD PARAMETERS', 'Barcode is required.')
             }
@@ -130,10 +130,10 @@ export const productMethods = {
         }
     }),
 
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => productAuthers.update.dynamicFields({}),
         dataSchema: productSchemas.update,
-        method: async ({ prisma, data }) => prisma.product.update({
+        operation: async ({ prisma, data }) => prisma.product.update({
             where: {
                 id: data.productId,
             },
@@ -145,14 +145,14 @@ export const productMethods = {
         })
     }),
 
-    updateForShop: serviceMethod({
+    updateForShop: defineOperation({
         authorizer: () => productAuthers.update.dynamicFields({}),
         dataSchema: productSchemas.updateForShop,
         paramsSchema: z.object({
             shopId: z.number(),
             productId: z.number(),
         }),
-        method: async ({ prisma, params, data }) => prisma.product.update({
+        operation: async ({ prisma, params, data }) => prisma.product.update({
             where: {
                 id: params.productId,
             },

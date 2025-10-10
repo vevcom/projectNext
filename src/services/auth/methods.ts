@@ -3,7 +3,7 @@ import { authSchemas } from './schemas'
 import { userFilterSelection } from '@/services/users/config'
 import { userSchemas } from '@/services/users/schemas'
 import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { userMethods } from '@/services/users/methods'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
@@ -11,12 +11,12 @@ import { z } from 'zod'
 
 export const authMethods = {
 
-    verifyEmail: serviceMethod({
+    verifyEmail: defineOperation({
         paramsSchema: z.object({
             token: z.string(),
         }),
         authorizer: ({ params }) => authAuthers.verifyEmail.dynamicFields(params),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
 
@@ -53,12 +53,12 @@ export const authMethods = {
         }
     }),
 
-    verifyResetPasswordToken: serviceMethod({
+    verifyResetPasswordToken: defineOperation({
         paramsSchema: z.object({
             token: z.string()
         }),
         authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
 
@@ -85,13 +85,13 @@ export const authMethods = {
         }
     }),
 
-    resetPassword: serviceMethod({
+    resetPassword: defineOperation({
         paramsSchema: z.object({
             token: z.string()
         }),
         dataSchema: userSchemas.updatePassword,
         authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
-        method: async ({ params, data }) => {
+        operation: async ({ params, data }) => {
             const userId = await authMethods.verifyResetPasswordToken({ params })
 
             userMethods.updatePassword({
@@ -104,10 +104,10 @@ export const authMethods = {
         }
     }),
 
-    sendResetPasswordEmail: serviceMethod({
+    sendResetPasswordEmail: defineOperation({
         dataSchema: authSchemas.sendResetPasswordEmail,
         authorizer: () => authAuthers.sendResetPasswordEmail.dynamicFields({}),
-        method: async ({ data }) => {
+        operation: async ({ data }) => {
             console.log(data)
             try {
                 const user = await userMethods.read({

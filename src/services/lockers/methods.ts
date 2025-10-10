@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { lockerReservationIncluder } from './reservations/config'
-import { lockerAuthers } from './authers'
 import { lockersSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
+import { lockerAuthers } from './authers'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -40,10 +40,10 @@ export const lockerMethods = {
      *
      * @returns The newly created locker object.
      */
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => lockerAuthers.create.dynamicFields({}),
         dataSchema: lockersSchemas.create,
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             console.log(data)
             return await prisma.locker.create({
                 data,
@@ -58,12 +58,12 @@ export const lockerMethods = {
      *
      * @returns The locker object.
      */
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => lockerAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params: { id } }) => {
+        operation: async ({ prisma, params: { id } }) => {
             const locker = await prisma.locker.findUniqueOrThrow({
                 where: {
                     id,
@@ -84,7 +84,7 @@ export const lockerMethods = {
      *
      * @returns A list of locker objects.
      */
-    readPage: serviceMethod({
+    readPage: defineOperation({
         authorizer: () => lockerAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -93,7 +93,7 @@ export const lockerMethods = {
             }),
             z.any(),
         ),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const lockers = await prisma.locker.findMany({
                 ...cursorPageingSelection(params.paging.page),
                 orderBy: {

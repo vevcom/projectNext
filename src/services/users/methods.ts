@@ -15,7 +15,7 @@ import { sendVerifyEmail } from '@/services/notifications/email/systemMail/verif
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { sendUserInvitationEmail } from '@/services/notifications/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
@@ -31,10 +31,10 @@ export const userMethods = {
      * This Method creates an user by invitation, and sends the invitation email.
      * WARNING: This should not be used to create users registered by Feide.
      */
-    create: serviceMethod({
+    create: defineOperation({
         dataSchema: userSchemas.create,
         authorizer: () => userAuthers.create.dynamicFields({}),
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
             const omegaOrder = await readCurrentOmegaOrder()
 
@@ -61,7 +61,7 @@ export const userMethods = {
         }
     }),
 
-    read: serviceMethod({
+    read: defineOperation({
         paramsSchema: z.object({
             username: z.string().optional(),
             id: z.coerce.number().optional(),
@@ -69,7 +69,7 @@ export const userMethods = {
             studentCard: z.string().optional(),
         }),
         authorizer: ({ params }) => userAuthers.read.dynamicFields(params),
-        method: async ({ prisma, params }) => await prisma.user.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => await prisma.user.findUniqueOrThrow({
             where: {
                 id: params.id,
                 ...params
@@ -78,7 +78,7 @@ export const userMethods = {
         })
     }),
 
-    readOrNull: serviceMethod({
+    readOrNull: defineOperation({
         paramsSchema: z.object({
             username: z.string().optional(),
             id: z.coerce.number().optional(),
@@ -86,7 +86,7 @@ export const userMethods = {
             studentCard: z.string().optional(),
         }),
         authorizer: ({ params }) => userAuthers.read.dynamicFields(params),
-        method: async ({ prisma, params }) => await prisma.user.findUnique({
+        operation: async ({ prisma, params }) => await prisma.user.findUnique({
             where: {
                 id: params.id, // This is a bit wierd, but now ts is satisfied.
                 ...params
@@ -95,12 +95,12 @@ export const userMethods = {
         })
     }),
 
-    readProfile: serviceMethod({
+    readProfile: defineOperation({
         paramsSchema: z.object({
             username: z.string(),
         }),
         authorizer: ({ params }) => userAuthers.readProfile.dynamicFields({ username: params.username }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const defaultProfileImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
@@ -128,7 +128,7 @@ export const userMethods = {
         }
     }),
 
-    readPage: serviceMethod({
+    readPage: defineOperation({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -147,7 +147,7 @@ export const userMethods = {
             })
         ),
         authorizer: () => userAuthers.readPage.dynamicFields({}),
-        method: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
+        operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
             const words = details.partOfName.split(' ')
 
@@ -255,11 +255,11 @@ export const userMethods = {
         }
     }),
 
-    connectStudentCard: serviceMethod({
+    connectStudentCard: defineOperation({
         authorizer: () => userAuthers.connectStudentCard.dynamicFields({}),
         dataSchema: userSchemas.connectStudentCard,
         opensTransaction: true,
-        method: async ({ prisma, data }) => {
+        operation: async ({ prisma, data }) => {
             const currentQueue = await prisma.registerStudentCardQueue.findMany({
                 where: {
                     expiry: {
@@ -301,12 +301,12 @@ export const userMethods = {
         }
     }),
 
-    registerStudentCardInQueue: serviceMethod({
+    registerStudentCardInQueue: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),
         }),
         authorizer: ({ params }) => userAuthers.registerStudentCardInQueue.dynamicFields(params),
-        method: async (args) => {
+        operation: async (args) => {
             const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
             await args.prisma.registerStudentCardQueue.upsert({
                 where: {
@@ -327,24 +327,24 @@ export const userMethods = {
         }
     }),
 
-    update: serviceMethod({
+    update: defineOperation({
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: userSchemas.update,
         authorizer: () => userAuthers.update.dynamicFields({}),
-        method: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
+        operation: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
             where: params,
             data
         })
     }),
 
 
-    updatePassword: serviceMethod({
+    updatePassword: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: userSchemas.updatePassword,
         authorizer: ({ params }) => userAuthers.updatePassword.dynamicFields({ userId: params.id }),
-        method: async ({ prisma, data, params }) => {
+        operation: async ({ prisma, data, params }) => {
             const passwordHash = await hashAndEncryptPassword(data.password)
 
             await prisma.credentials.update({
@@ -360,13 +360,13 @@ export const userMethods = {
         }
     }),
 
-    registerNewEmail: serviceMethod({
+    registerNewEmail: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         authorizer: ({ params }) => userAuthers.registerNewEmail.dynamicFields({ userId: params.id }),
         dataSchema: userSchemas.registerNewEmail,
-        method: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) => {
             const storedUser = await prisma.user.findUniqueOrThrow({
                 where: {
                     id: params.id,
@@ -424,14 +424,14 @@ export const userMethods = {
      * @param rawdata - Registration data.
      * @returns null
      */
-    register: serviceMethod({
+    register: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: userSchemas.register,
         authorizer: ({ params }) => userAuthers.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
-        method: async ({ prisma, data, params }) => {
+        operation: async ({ prisma, data, params }) => {
             const { sex, password, mobile, allergies } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
@@ -530,7 +530,7 @@ export const userMethods = {
         }
     }),
 
-    readUserWithBalance: serviceMethod({
+    readUserWithBalance: defineOperation({
         authorizer: ({ params }) => userAuthers.read.dynamicFields({
             username: params.username || '',
         }),
@@ -540,7 +540,7 @@ export const userMethods = {
             email: z.string().optional(),
             studentCard: z.string().optional(),
         }),
-        method: async ({ prisma: prisma_, params }) => {
+        operation: async ({ prisma: prisma_, params }) => {
             const user = await prisma_.user.findFirstOrThrow({
                 where: params,
                 include: {
@@ -559,12 +559,12 @@ export const userMethods = {
     /**
      * This function deletes a user from the database.
      */
-    destroy: serviceMethod({
+    destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         authorizer: () => userAuthers.destroy.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             await prisma.user.delete({
                 where: {
                     id: params.id,

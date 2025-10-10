@@ -2,12 +2,12 @@ import '@pn-server-only'
 import { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRATION_READER_TYPE } from './config'
 import { eventRegistrationAuthers } from './authers'
 import { eventRegistrationSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
 import { Smorekopp } from '@/services/error'
 import { imageMethods } from '@/services/images/methods'
 import { notificationMethods } from '@/services/notifications/methods'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { userFilterSelection } from '@/services/users/config'
+import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
@@ -125,7 +125,7 @@ async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
 
 export const eventRegistrationMethods = {
 
-    create: serviceMethod({
+    create: defineOperation({
         paramsSchema: z.object({
             userId: z.number().min(0),
             eventId: z.number().min(0),
@@ -134,7 +134,7 @@ export const eventRegistrationMethods = {
             userId: params.userId,
         }),
         opensTransaction: true,
-        method: async ({ prisma, params, session }) => {
+        operation: async ({ prisma, params, session }) => {
             const isAdmin = session.permissions.includes('EVENT_ADMIN')
             await preValidateRegistration(prisma, params.eventId, isAdmin)
 
@@ -162,14 +162,14 @@ export const eventRegistrationMethods = {
         },
     }),
 
-    createGuest: serviceMethod({
+    createGuest: defineOperation({
         authorizer: () => eventRegistrationAuthers.createGuest.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number(),
         }),
         dataSchema: eventRegistrationSchemas.createGuest,
         opensTransaction: true,
-        method: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) => {
             await preValidateRegistration(prisma, params.eventId, true)
             const result = await prisma.eventRegistration.create({
                 data: {
@@ -196,7 +196,7 @@ export const eventRegistrationMethods = {
         },
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => eventRegistrationAuthers.readMany.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
@@ -204,7 +204,7 @@ export const eventRegistrationMethods = {
             take: z.number().optional(),
             type: z.nativeEnum(REGISTRATION_READER_TYPE).optional(),
         }),
-        method: async ({ prisma, params }): Promise<EventRegistrationExpanded[]> => {
+        operation: async ({ prisma, params }): Promise<EventRegistrationExpanded[]> => {
             const defaultImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
@@ -230,7 +230,7 @@ export const eventRegistrationMethods = {
         },
     }),
 
-    readManyDetailed: serviceMethod({
+    readManyDetailed: defineOperation({
         authorizer: () => eventRegistrationAuthers.readManyDetailed.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
@@ -238,7 +238,7 @@ export const eventRegistrationMethods = {
             take: z.number().optional(),
             type: z.nativeEnum(REGISTRATION_READER_TYPE).optional(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const skiptake = await calculateTakeSkip(prisma, params)
             if (skiptake.take === 0) return []
 
@@ -255,13 +255,13 @@ export const eventRegistrationMethods = {
         }
     }),
 
-    updateNotes: serviceMethod({
+    updateNotes: defineOperation({
         authorizer: () => eventRegistrationAuthers.updateRegistrationNotes.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
         dataSchema: eventRegistrationSchemas.updateNotes,
-        method: async ({ prisma, params, data, session }) => {
+        operation: async ({ prisma, params, data, session }) => {
             const registration = await prisma.eventRegistration.findUnique({
                 where: {
                     id: params.registrationId,
@@ -291,12 +291,12 @@ export const eventRegistrationMethods = {
         }
     }),
 
-    destroy: serviceMethod({
+    destroy: defineOperation({
         authorizer: () => eventRegistrationAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
-        method: async ({ prisma, params, session }) => {
+        operation: async ({ prisma, params, session }) => {
             const isAdmin = session.permissions.includes('EVENT_ADMIN')
             const registration = await prisma.eventRegistration.findUniqueOrThrow({
                 where: {

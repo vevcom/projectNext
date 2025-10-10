@@ -5,7 +5,7 @@ import { apiKeyHashAndEncrypt } from './hashEncryptKey'
 import { encodeApiKey } from './apiKeyEncoder'
 import { apiFilterSelection, apiKeyLength } from './config'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { z } from 'zod'
 import crypto from 'crypto'
@@ -17,14 +17,14 @@ import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './Types'
  *
  * Note: This operaiton is only used internally.
  */
-const updateIfExpired = serviceMethod({
+const updateIfExpired = defineOperation({
     authorizer: () => apiKeyAuthers.updateIfExpired.dynamicFields({}),
     paramsSchema: z.object({
         id: z.number(),
         expiresAt: z.date().nullable(),
         active: z.boolean(),
     }),
-    method: async ({ prisma, params: apiKey }) => {
+    operation: async ({ prisma, params: apiKey }) => {
         if (!apiKey) {
             throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
         }
@@ -44,10 +44,10 @@ const updateIfExpired = serviceMethod({
 })
 
 export const apiKeyMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => apiKeyAuthers.create.dynamicFields({}),
         dataSchema: apiKeySchemas.create,
-        method: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
+        operation: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
             const NODE_ENV = process.env.NODE_ENV
             const prepend = NODE_ENV === 'production' ? 'prod' : 'dev'
 
@@ -65,10 +65,10 @@ export const apiKeyMethods = {
             return { ...apiKey, key: encodeApiKey({ key, id: apiKey.id }) }
         }
     }),
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => apiKeyAuthers.read.dynamicFields({}),
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ name: z.string() })]),
-        method: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
+        operation: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
             const apiKey = await prisma.apiKey.findUnique({
                 where: {
                     id: 'id' in params ? params.id : undefined,
@@ -87,9 +87,9 @@ export const apiKeyMethods = {
             }
         }
     }),
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => apiKeyAuthers.readMany.dynamicFields({}),
-        method: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
+        operation: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
             const apiKeys = await prisma.apiKey.findMany({
                 select: apiFilterSelection,
                 orderBy: [
@@ -107,12 +107,12 @@ export const apiKeyMethods = {
             })))
         }
     }),
-    readWithHash: serviceMethod({
+    readWithHash: defineOperation({
         authorizer: () => apiKeyAuthers.readWithHash.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const apiKey = await prisma.apiKey.findUniqueOrThrow({
                 where: { id: params.id },
                 select: {
@@ -133,13 +133,13 @@ export const apiKeyMethods = {
             }
         }
     }),
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => apiKeyAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: apiKeySchemas.update,
-        method: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) => {
             if (data.active && data.expiresAt && data.expiresAt < new Date()) {
                 throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
             }
@@ -151,13 +151,13 @@ export const apiKeyMethods = {
             return { name }
         },
     }),
-    destroy: serviceMethod({
+    destroy: defineOperation({
         authorizer: () => apiKeyAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         opensTransaction: true,
-        method: async ({ prisma, params }): Promise<void> => {
+        operation: async ({ prisma, params }): Promise<void> => {
             await prisma.$transaction(async (tx) => {
                 const apiKey = await tx.apiKey.findUniqueOrThrow({
                     where: { id: params.id },

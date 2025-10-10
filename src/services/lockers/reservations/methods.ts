@@ -2,7 +2,7 @@
 import '@pn-server-only'
 import { lockerReservationAuthers } from './authers'
 import { lockerReservationSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { Smorekopp } from '@/services/error'
 import { groupMethods } from '@/services/groups/methods'
 import { z } from 'zod'
@@ -16,13 +16,13 @@ export const lockerReservationMethods = {
      *
      * @returns The newly created reservation object.
      */
-    create: serviceMethod({
+    create: defineOperation({
         authorizer: () => lockerReservationAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             lockerId: z.number(),
         }),
         dataSchema: lockerReservationSchemas.create,
-        method: async ({ prisma, session, data, params }) => {
+        operation: async ({ prisma, session, data, params }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
@@ -63,12 +63,12 @@ export const lockerReservationMethods = {
      *
      * @returns The updated reservation object.
      */
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => lockerReservationAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: ({ prisma, params: { id } }) => prisma.lockerReservation.findUniqueOrThrow({
+        operation: ({ prisma, params: { id } }) => prisma.lockerReservation.findUniqueOrThrow({
             where: {
                 id,
             },
@@ -83,13 +83,13 @@ export const lockerReservationMethods = {
      *
      * @returns The updated reservation object.
      */
-    update: serviceMethod({
+    update: defineOperation({
         authorizer: () => lockerReservationAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: lockerReservationSchemas.update,
-        method: async ({ prisma, session, data, params: { id } }) => {
+        operation: async ({ prisma, session, data, params: { id } }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that the user updating is the creator of the reservation
             const reservation = await prisma.lockerReservation.findUniqueOrThrow({

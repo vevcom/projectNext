@@ -5,7 +5,7 @@ import { cabinBookingAuthers } from './authers'
 import { cabinBookingFilerSelection, cabinBookingIncluder } from './config'
 import { cabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
 import { cabinProductPriceIncluder } from '@/services/cabin/product/config'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { ServerError } from '@/services/error'
 import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
@@ -21,13 +21,13 @@ const mailData = {
 Dette skal være en bookingbekreftelse, så det bør nok komme noe nyttig info her snart.`,
 }
 
-const cabinAvailable = serviceMethod({
+const cabinAvailable = defineOperation({
     paramsSchema: z.object({
         start: z.date(),
         end: z.date()
     }),
     authorizer: ServerOnlyAuther,
-    method: async ({ prisma, params }) => {
+    operation: async ({ prisma, params }) => {
         const results = await prisma.booking.findMany({
             where: {
                 start: {
@@ -48,14 +48,14 @@ const bookingProductParams = z.array(z.object({
 }))
 
 
-const create = serviceMethod({
+const create = defineOperation({
     paramsSchema: z.object({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
     authorizer: ServerOnlyAuther,
     dataSchema: cabinBookingSchemas.createBookingUserAttached,
-    method: async ({ prisma, params, data }) => {
+    operation: async ({ prisma, params, data }) => {
         // TODO: Prevent Race conditions
 
         const latestReleaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({
@@ -156,7 +156,7 @@ const create = serviceMethod({
     }
 })
 
-const createBookingWithUser = serviceMethod({
+const createBookingWithUser = defineOperation({
     paramsSchema: z.object({
         userId: z.number(),
         bookingType: z.nativeEnum(BookingType),
@@ -164,7 +164,7 @@ const createBookingWithUser = serviceMethod({
     }),
     authorizer: ServerOnlyAuther,
     dataSchema: cabinBookingSchemas.createBookingUserAttached,
-    method: async ({ prisma, params, data }) => {
+    operation: async ({ prisma, params, data }) => {
         const result = await create({
             params,
             data,
@@ -197,14 +197,14 @@ const createBookingWithUser = serviceMethod({
     }
 })
 
-const createBookingNoUser = serviceMethod({
+const createBookingNoUser = defineOperation({
     paramsSchema: z.object({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
     authorizer: ServerOnlyAuther,
     dataSchema: cabinBookingSchemas.createBookingNoUser,
-    method: async ({ prisma, params, data }) => {
+    operation: async ({ prisma, params, data }) => {
         const result = await create({
             params,
             data: {
@@ -240,7 +240,7 @@ const createBookingNoUser = serviceMethod({
 })
 
 export const cabinBookingMethods = {
-    createCabinBookingUserAttached: serviceMethod({
+    createCabinBookingUserAttached: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),
             bookingProducts: bookingProductParams,
@@ -249,7 +249,7 @@ export const cabinBookingMethods = {
             userId: params.userId,
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
-        method: async ({ params, data }) =>
+        operation: async ({ params, data }) =>
             createBookingWithUser({
                 params: {
                     userId: params.userId,
@@ -261,7 +261,7 @@ export const cabinBookingMethods = {
             })
     }),
 
-    createBedBookingUserAttached: serviceMethod({
+    createBedBookingUserAttached: defineOperation({
         paramsSchema: z.object({
             userId: z.number(),
             bookingProducts: bookingProductParams,
@@ -270,7 +270,7 @@ export const cabinBookingMethods = {
             userId: params.userId,
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
-        method: async ({ params, data }) =>
+        operation: async ({ params, data }) =>
             createBookingWithUser({
                 params: {
                     userId: params.userId,
@@ -282,13 +282,13 @@ export const cabinBookingMethods = {
             })
     }),
 
-    createCabinBookingNoUser: serviceMethod({
+    createCabinBookingNoUser: defineOperation({
         paramsSchema: z.object({
             bookingProducts: bookingProductParams,
         }),
         authorizer: () => cabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
-        method: async ({ params, data }) => createBookingNoUser({
+        operation: async ({ params, data }) => createBookingNoUser({
             params: {
                 bookingType: BookingType.CABIN,
                 bookingProducts: params.bookingProducts,
@@ -298,13 +298,13 @@ export const cabinBookingMethods = {
         })
     }),
 
-    createBedBookingNoUser: serviceMethod({
+    createBedBookingNoUser: defineOperation({
         paramsSchema: z.object({
             bookingProducts: bookingProductParams,
         }),
         authorizer: () => cabinBookingAuthers.createBedBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
-        method: async ({ params, data }) => createBookingNoUser({
+        operation: async ({ params, data }) => createBookingNoUser({
             params: {
                 bookingType: BookingType.BED,
                 bookingProducts: params.bookingProducts,
@@ -314,9 +314,9 @@ export const cabinBookingMethods = {
         })
     }),
 
-    readAvailability: serviceMethod({
+    readAvailability: defineOperation({
         authorizer: () => cabinBookingAuthers.readAvailability.dynamicFields({}),
-        method: async ({ prisma }) => {
+        operation: async ({ prisma }) => {
             const results = await prisma.booking.findMany({
                 select: cabinBookingFilerSelection,
                 orderBy: {
@@ -342,9 +342,9 @@ export const cabinBookingMethods = {
         }
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => cabinBookingAuthers.readMany.dynamicFields({}),
-        method: ({ prisma }) => prisma.booking.findMany({
+        operation: ({ prisma }) => prisma.booking.findMany({
             orderBy: {
                 start: 'asc',
             },
@@ -352,12 +352,12 @@ export const cabinBookingMethods = {
         }), // TODO: Pager
     }),
 
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => cabinBookingAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: ({ prisma, params }) => prisma.booking.findUniqueOrThrow({
+        operation: ({ prisma, params }) => prisma.booking.findUniqueOrThrow({
             where: params,
             include: cabinBookingIncluder,
         })

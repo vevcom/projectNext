@@ -1,4 +1,4 @@
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import '@pn-server-only'
 import { z } from 'zod'
 import type { ExtendedShop } from './Types'
@@ -6,25 +6,25 @@ import { shopSchemas } from './schema'
 import { shopAuthers } from './authers'
 
 export const shopMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         dataSchema: shopSchemas.create,
         authorizer: () => shopAuthers.create.dynamicFields({}),
-        method: async ({ prisma, data }) => prisma.shop.create({
+        operation: async ({ prisma, data }) => prisma.shop.create({
             data
         })
     }),
 
-    readMany: serviceMethod({
+    readMany: defineOperation({
         authorizer: () => shopAuthers.read.dynamicFields({}),
-        method: ({ prisma }) => prisma.shop.findMany(),
+        operation: ({ prisma }) => prisma.shop.findMany(),
     }),
 
-    read: serviceMethod({
+    read: defineOperation({
         authorizer: () => shopAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),
-        method: async ({ prisma, params }): Promise<ExtendedShop | null> => {
+        operation: async ({ prisma, params }): Promise<ExtendedShop | null> => {
             const results = await prisma.shop.findFirst({
                 where: {
                     id: params.shopId

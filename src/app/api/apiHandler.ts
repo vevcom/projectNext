@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { Session } from '@/auth/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import type { ServiceOperation } from '@/services/serviceOperation'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { ServiceMethod } from '@/services/serviceMethod'
 import type { SessionNoUser } from '@/auth/Session'
 import type { z } from 'zod'
 
@@ -12,7 +12,7 @@ type APIHandler<
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 > = {
-    serviceMethod: ServiceMethod<boolean, Return, ParamsSchema, DataSchema>,
+    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>,
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {

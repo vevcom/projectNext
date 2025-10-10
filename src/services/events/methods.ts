@@ -8,7 +8,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
@@ -17,10 +17,10 @@ import { z } from 'zod'
 import type { EventExpanded } from './Types'
 
 export const eventMethods = {
-    create: serviceMethod({
+    create: defineOperation({
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuthers.create.dynamicFields({}),
-        method: async ({ prisma, data, session }) => {
+        operation: async ({ prisma, data, session }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
 
@@ -92,13 +92,13 @@ export const eventMethods = {
             return event
         }
     }),
-    read: serviceMethod({
+    read: defineOperation({
         paramsSchema: z.object({
             order: z.number(),
             name: z.string(),
         }),
         authorizer: () => eventAuthers.read.dynamicFields({}),
-        method: async ({ prisma, params, session }) => {
+        operation: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
                     order_name: {
@@ -155,12 +155,12 @@ export const eventMethods = {
             }
         }
     }),
-    readManyCurrent: serviceMethod({
+    readManyCurrent: defineOperation({
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
         }),
         authorizer: () => eventAuthers.readManyCurrent.dynamicFields({}),
-        method: async ({ prisma, params }): Promise<EventExpanded[]> => {
+        operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 select: {
                     ...eventFilterSelection,
@@ -190,7 +190,7 @@ export const eventMethods = {
             }))
         }
     }),
-    readManyArchivedPage: serviceMethod({
+    readManyArchivedPage: defineOperation({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -202,7 +202,7 @@ export const eventMethods = {
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
         authorizer: () => eventAuthers.readManyArchivedPage.dynamicFields({}),
-        method: async ({ prisma, params }): Promise<EventExpanded[]> => {
+        operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
                 where: {
@@ -237,13 +237,13 @@ export const eventMethods = {
             }))
         }
     }),
-    update: serviceMethod({
+    update: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
         dataSchema: eventSchemas.update,
         authorizer: () => eventAuthers.update.dynamicFields({}),
-        method: async ({ prisma, params, data: { tagIds, ...data } }) => {
+        operation: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: { id: params.id }
             })
@@ -288,12 +288,12 @@ export const eventMethods = {
             return eventUpdate
         }
     }),
-    destroy: serviceMethod({
+    destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number()
         }),
         authorizer: () => eventAuthers.destroy.dynamicFields({}),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             await prisma.event.delete({
                 where: {
                     id: params.id

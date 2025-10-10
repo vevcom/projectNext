@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { dotAuthers } from './authers'
 import { dotSchemas } from './schemas'
 import { dotBaseDuration, dotsIncluder } from './config'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
@@ -12,13 +12,13 @@ import { z } from 'zod'
  * @param userId - The user id to read dots for
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
-const readForUser = serviceMethod({
+const readForUser = defineOperation({
     authorizer: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
     }),
-    method: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
+    operation: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
         where: {
             wrapper: {
                 userId,
@@ -33,14 +33,14 @@ const readForUser = serviceMethod({
     })
 })
 
-const create = serviceMethod({
+const create = defineOperation({
     dataSchema: dotSchemas.create,
     authorizer: ({ data }) => dotAuthers.create.dynamicFields({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),
     }),
     opensTransaction: true,
-    method: async ({ prisma, params, data: { value, ...data } }) => {
+    operation: async ({ prisma, params, data: { value, ...data } }) => {
         const activeDots = await readForUser({
             params: { userId: data.userId, onlyActive: true }
         })
@@ -70,12 +70,12 @@ const create = serviceMethod({
     }
 })
 
-const readWrappersForUser = serviceMethod({
+const readWrappersForUser = defineOperation({
     authorizer: ({ params }) => dotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
-    method: async ({ prisma, params: { userId } }) => {
+    operation: async ({ prisma, params: { userId } }) => {
         const wrappers = await prisma.dotWrapper.findMany({
             where: {
                 userId
@@ -94,7 +94,7 @@ const readWrappersForUser = serviceMethod({
     }
 })
 
-const readPage = serviceMethod({
+const readPage = defineOperation({
     authorizer: () => dotAuthers.readPage.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
@@ -106,7 +106,7 @@ const readPage = serviceMethod({
             onlyActive: z.boolean(),
         }),
     ),
-    method: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
+    operation: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
         ...cursorPageingSelection(params.paging.page),
         where: {
             userId: params.paging.details.userId ?? undefined,

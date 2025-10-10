@@ -1,12 +1,12 @@
-import { zpn } from '@/lib/fields/zpn'
+import { Zpn } from '@/lib/fields/zpn'
 import { z } from 'zod'
 
 const fields = z.object({
     name: z.string().trim().min(2, { message: 'Navnet må være minst 2 tegn.' }),
-    startDate: zpn.date({ label: 'Start' }),
-    endDate: zpn.date({ label: 'Siste frist for søknader' }),
-    endPriorityDate: zpn.date({ label: 'Siste frist for prioritering' }),
-    participatingCommitteeIds: zpn.numberListCheckboxFriendly({ label: 'Deltakende komiteer' })
+    startDate: Zpn.date({ label: 'Start' }),
+    endDate: Zpn.date({ label: 'Siste frist for søknader' }),
+    endPriorityDate: Zpn.date({ label: 'Siste frist for prioritering' }),
+    participatingCommitteeIds: Zpn.numberListCheckboxFriendly({ label: 'Deltakende komiteer' })
 })
 
 const refineDates = {

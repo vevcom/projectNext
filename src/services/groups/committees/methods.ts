@@ -1,27 +1,27 @@
 import { committeeAuthers } from './authers'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './config'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
-import { serviceMethod } from '@/services/serviceMethod'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { imageMethods } from '@/services/images/methods'
+import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
 export const committeeMethods = {
 
-    readCommittees: serviceMethod({
+    readCommittees: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
-        method: async ({ prisma }) => prisma.committee.findMany({
+        operation: async ({ prisma }) => prisma.committee.findMany({
             include: committeeLogoIncluder,
         })
     }),
 
-    readCommittee: serviceMethod({
+    readCommittee: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.union([
             z.object({ id: z.number() }),
             z.object({ shortName: z.string() })
         ]),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const defaultImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 bypassAuth: true
@@ -49,12 +49,12 @@ export const committeeMethods = {
         }
     }),
 
-    readCommitteArticle: serviceMethod({
+    readCommitteArticle: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
-        method: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
             where: params,
             select: {
                 committeeArticle: {
@@ -64,12 +64,12 @@ export const committeeMethods = {
         })).committeeArticle
     }),
 
-    readCommitteesFromGroupIds: serviceMethod({
+    readCommitteesFromGroupIds: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().int().array()
         }),
-        method: async ({ prisma, params }) => await prisma.committee.findMany({
+        operation: async ({ prisma, params }) => await prisma.committee.findMany({
             where: {
                 groupId: {
                     in: params.ids
@@ -79,12 +79,12 @@ export const committeeMethods = {
         })
     }),
 
-    readCommitteeParagraph: serviceMethod({
+    readCommitteeParagraph: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
-        method: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
             where: params,
             select: {
                 paragraph: true,
@@ -92,13 +92,13 @@ export const committeeMethods = {
         })).paragraph
     }),
 
-    readCommitteeMembers: serviceMethod({
+    readCommitteeMembers: defineOperation({
         authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
             active: z.boolean().optional(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const defaultImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
