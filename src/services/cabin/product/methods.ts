@@ -1,29 +1,30 @@
-import { CabinProductAuthers } from './authers'
-import { CabinProductSchemas } from './schemas'
-import { CabinProductConfig } from './config'
-import { serviceMethod } from '@/services/serviceMethod'
 import 'server-only'
+
+import { cabinProductAuthers } from './authers'
+import { cabinProductSchemas } from './schemas'
+import { cabinProductPriceIncluder } from './config'
+import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
-import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
-import { CabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
+import { cabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
 import { z } from 'zod'
 
-export namespace CabinProductMethods {
+export const cabinProductMethods = {
 
-    export const create = serviceMethod({
-        authorizer: () => CabinProductAuthers.create.dynamicFields({}),
-        dataSchema: CabinProductSchemas.createProduct,
+    create: serviceMethod({
+        authorizer: () => cabinProductAuthers.create.dynamicFields({}),
+        dataSchema: cabinProductSchemas.createProduct,
         method: ({ prisma, data }) => prisma.cabinProduct.create({
             data,
         })
-    })
+    }),
 
-    export const createPrice = serviceMethod({
-        authorizer: () => CabinProductAuthers.createPrice.dynamicFields({}),
+    createPrice: serviceMethod({
+        authorizer: () => cabinProductAuthers.createPrice.dynamicFields({}),
         paramsSchema: z.object({
             cabinProductId: z.number(),
         }),
-        dataSchema: CabinProductSchemas.createProductPrice,
+        dataSchema: cabinProductSchemas.createProductPrice,
         method: async ({ prisma, params, data, session }) => {
             const [pricePeriod, releasePeriod] = await Promise.all([
                 prisma.pricePeriod.findUniqueOrThrow({
@@ -31,7 +32,7 @@ export namespace CabinProductMethods {
                         id: data.pricePeriodId,
                     }
                 }),
-                CabinReleasePeriodMethods.getCurrentReleasePeriod({
+                cabinReleasePeriodMethods.getCurrentReleasePeriod({
                     bypassAuth: true,
                     session
                 })
@@ -50,19 +51,19 @@ export namespace CabinProductMethods {
 
             return result
         }
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
         method: ({ prisma }) => prisma.cabinProduct.findMany({
-            include: CabinProductConfig.includer,
+            include: cabinProductPriceIncluder,
         }),
-    })
+    }),
 
-    export const readActive = serviceMethod({
-        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
+    readActive: serviceMethod({
+        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => {
-            const pricePeriods = await CabinPricePeriodMethods.readPublicPeriods({ bypassAuth: true })
+            const pricePeriods = await cabinPricePeriodMethods.readPublicPeriods({ bypassAuth: true })
 
             return await prisma.cabinProduct.findMany({
                 where: {
@@ -74,19 +75,19 @@ export namespace CabinProductMethods {
                         }
                     }
                 },
-                include: CabinProductConfig.includer,
+                include: cabinProductPriceIncluder,
             })
         },
-    })
+    }),
 
-    export const read = serviceMethod({
-        authorizer: () => CabinProductAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         method: ({ prisma, params }) => prisma.cabinProduct.findUniqueOrThrow({
             where: params,
-            include: CabinProductConfig.includer
+            include: cabinProductPriceIncluder,
         })
-    })
+    }),
 }

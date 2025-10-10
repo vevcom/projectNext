@@ -1,16 +1,16 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
 
-export namespace CabinProductAuthers {
-    export const read = RequirePermission.staticFields({
+export const cabinProductAuthers = {
+    read: RequirePermission.staticFields({
         permission: 'CABIN_CALENDAR_READ'
-    })
+    }),
 
-    export const create = RequirePermission.staticFields({
+    create: RequirePermission.staticFields({
         permission: 'CABIN_PRODUCTS_ADMIN'
-    })
+    }),
 
-    export const createPrice = RequirePermission.staticFields({
+    createPrice: RequirePermission.staticFields({
         permission: 'CABIN_PRODUCTS_ADMIN'
-    })
+    }),
 }
 

@@ -1,21 +1,21 @@
-import { AuthAuthers } from './authers'
-import { AuthSchemas } from './schemas'
+import { authAuthers } from './authers'
+import { authSchemas } from './schemas'
+import { userFilterSelection } from '@/services/users/config'
+import { userSchemas } from '@/services/users/schemas'
 import { sendResetPasswordMail } from '@/services/notifications/email/systemMail/resetPassword'
 import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
-import { UserMethods } from '@/services/users/methods'
-import { UserConfig } from '@/services/users/config'
+import { userMethods } from '@/services/users/methods'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
-import { UserSchemas } from '@/services/users/schemas'
 import { z } from 'zod'
 
-export namespace AuthMethods {
+export const authMethods = {
 
-    export const verifyEmail = serviceMethod({
+    verifyEmail: serviceMethod({
         paramsSchema: z.object({
             token: z.string(),
         }),
-        authorizer: ({ params }) => AuthAuthers.verifyEmail.dynamicFields(params),
+        authorizer: ({ params }) => authAuthers.verifyEmail.dynamicFields(params),
         method: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -29,7 +29,7 @@ export namespace AuthMethods {
 
             const iat = new Date(payload.iat * 1000)
 
-            const user = await UserMethods.read({
+            const user = await userMethods.read({
                 params: {
                     id: userId,
                 },
@@ -48,16 +48,16 @@ export namespace AuthMethods {
                     emailVerified: new Date(),
                     email,
                 },
-                select: UserConfig.filterSelection
+                select: userFilterSelection,
             })
         }
-    })
+    }),
 
-    export const verifyResetPasswordToken = serviceMethod({
+    verifyResetPasswordToken: serviceMethod({
         paramsSchema: z.object({
             token: z.string()
         }),
-        authorizer: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
+        authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
         method: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -83,18 +83,18 @@ export namespace AuthMethods {
 
             return userId
         }
-    })
+    }),
 
-    export const resetPassword = serviceMethod({
+    resetPassword: serviceMethod({
         paramsSchema: z.object({
             token: z.string()
         }),
-        dataSchema: UserSchemas.updatePassword,
-        authorizer: ({ params }) => AuthAuthers.resetPassword.dynamicFields(params),
+        dataSchema: userSchemas.updatePassword,
+        authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
         method: async ({ params, data }) => {
-            const userId = await verifyResetPasswordToken({ params })
+            const userId = await authMethods.verifyResetPasswordToken({ params })
 
-            UserMethods.updatePassword({
+            userMethods.updatePassword({
                 params: {
                     id: userId,
                 },
@@ -102,15 +102,15 @@ export namespace AuthMethods {
                 bypassAuth: true,
             })
         }
-    })
+    }),
 
-    export const sendResetPasswordEmail = serviceMethod({
-        dataSchema: AuthSchemas.sendResetPasswordEmail,
-        authorizer: () => AuthAuthers.sendResetPasswordEmail.dynamicFields({}),
+    sendResetPasswordEmail: serviceMethod({
+        dataSchema: authSchemas.sendResetPasswordEmail,
+        authorizer: () => authAuthers.sendResetPasswordEmail.dynamicFields({}),
         method: async ({ data }) => {
             console.log(data)
             try {
-                const user = await UserMethods.read({
+                const user = await userMethods.read({
                     params: {
                         email: data.email,
                     },
@@ -125,5 +125,5 @@ export namespace AuthMethods {
 
             return data.email
         }
-    })
+    }),
 }

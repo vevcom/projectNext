@@ -4,7 +4,7 @@ import type { GroupTypeInfo } from './Types'
 /**
  * A object that describes the different group types in a friendly way
  */
-export const GroupTypesConfig = {
+export const groupTypesConfig = {
     OMEGA_MEMBERSHIP_GROUP: {
         name: 'Medlemsgruppe',
         namePlural: 'Medlemsgrupper',

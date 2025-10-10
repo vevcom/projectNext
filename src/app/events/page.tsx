@@ -6,7 +6,7 @@ import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/services/events/tags/actions'
-import { EventTagAuthers } from '@/services/events/tags/authers'
+import { eventTagAuthers } from '@/services/events/tags/authers'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { Session } from '@/auth/Session'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
@@ -35,9 +35,9 @@ export default async function Events({
 
     const session = await Session.fromNextAuth()
 
-    const canUpdate = EventTagAuthers.update.dynamicFields({}).auth(session)
-    const canCreate = EventTagAuthers.create.dynamicFields({}).auth(session)
-    const canDestroy = EventTagAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = eventTagAuthers.update.dynamicFields({}).auth(session)
+    const canCreate = eventTagAuthers.create.dynamicFields({}).auth(session)
+    const canDestroy = eventTagAuthers.destroy.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[

@@ -7,9 +7,9 @@ import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { bindParams } from '@/services/actionBind'
-import { NotificationChannelSchemas } from '@/services/notifications/channel/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { updateNotificationChannelAction } from '@/services/notifications/actions'
+import { findValidParents } from '@/services/notifications/channel/schemas'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
 import type { MailAlias } from '@prisma/client'
@@ -25,7 +25,7 @@ export default function ChannelSettings({
 }) {
     const [currentChannelState, setCurrentChannel] = useState(currentChannel)
 
-    const selectOptions = NotificationChannelSchemas.findValidParents(currentChannel.id, channels)
+    const selectOptions = findValidParents(currentChannel.id, channels)
 
     return <PageWrapper
         title={currentChannelState.name}

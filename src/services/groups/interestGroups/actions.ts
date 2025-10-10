@@ -1,12 +1,12 @@
 'use server'
 
 import { action } from '@/services/action'
-import { InterestGroupMethods } from '@/services/groups/interestGroups/methods'
+import { interestGroupMethods } from '@/services/groups/interestGroups/methods'
 
-export const createInterestGroupAction = action(InterestGroupMethods.create)
+export const createInterestGroupAction = action(interestGroupMethods.create)
 
-export const destroyInterestGroupAction = action(InterestGroupMethods.destroy)
+export const destroyInterestGroupAction = action(interestGroupMethods.destroy)
 
-export const readInterestGroupsAction = action(InterestGroupMethods.readMany)
+export const readInterestGroupsAction = action(interestGroupMethods.readMany)
 
-export const updateInterestGroupAction = action(InterestGroupMethods.update)
+export const updateInterestGroupAction = action(interestGroupMethods.update)

@@ -1,12 +1,12 @@
-import { NotificationConfig } from './config'
+import { allNotificationMethodsOff, allNotificationMethodsOn, notificationMethodsArray } from './config'
 import type { NotificationMethodGeneral } from './Types'
 
 export function newAllMethodsOff() {
-    return { ...NotificationConfig.allMethodsOff }
+    return { ...allNotificationMethodsOff }
 }
 
 export function newAllMethodsOn() {
-    return { ...NotificationConfig.allMethodsOn }
+    return { ...allNotificationMethodsOn }
 }
 
 export function booleanOperationOnMethods(
@@ -16,7 +16,7 @@ export function booleanOperationOnMethods(
 ): NotificationMethodGeneral {
     const ret = Object.assign({}, lhs)
 
-    for (const key of NotificationConfig.methods) {
+    for (const key of notificationMethodsArray) {
         switch (operation) {
             case 'AND':
                 ret[key] &&= rhs[key]

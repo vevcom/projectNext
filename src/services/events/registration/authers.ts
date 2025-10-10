@@ -3,13 +3,13 @@ import { RequirePermissionAndUser } from '@/auth/auther/RequirePermissionAndUser
 import { RequireUser } from '@/auth/auther/RequireUser'
 import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
 
-export namespace EventRegistrationAuthers {
+export const eventRegistrationAuthers = {
     // TODO: Fix authing
-    export const create = RequireUserIdOrPermission.staticFields({ permission: 'EVENT_REGISTRATION_CREATE' })
-    export const createGuest = RequirePermission.staticFields({ permission: 'EVENT_ADMIN' })
-    export const readMany = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' })
-    export const readManyDetailed = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' })
-    export const destroy = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_DESROY' })
+    create: RequireUserIdOrPermission.staticFields({ permission: 'EVENT_REGISTRATION_CREATE' }),
+    createGuest: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
+    readMany: RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' }),
+    readManyDetailed: RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' }),
+    destroy: RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_DESROY' }),
 
-    export const updateRegistrationNotes = RequireUser.staticFields({}) // TODO: bypass permission
+    updateRegistrationNotes: RequireUser.staticFields({}), // TODO: bypass permission
 }

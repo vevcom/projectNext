@@ -1,4 +1,4 @@
-import { JobadMethods } from '@/services/career/jobAds/methods'
+import { jobAdMethods } from '@/services/career/jobAds/methods'
 import type { JobType, PrismaClient } from '@prisma/client'
 
 
@@ -51,7 +51,7 @@ export default async function seedDevJobAds(prisma: PrismaClient) {
     ]
 
     for (const jobAd of jobAdData) {
-        const restult = await JobadMethods.create({
+        const restult = await jobAdMethods.create({
             prisma,
             data: {
                 ...jobAd,

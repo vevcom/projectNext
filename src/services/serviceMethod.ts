@@ -8,7 +8,7 @@ import { AsyncLocalStorage } from 'async_hooks'
 import type { z } from 'zod'
 import type { Prisma, PrismaClient } from '@prisma/client'
 import type { SessionMaybeUser } from '@/auth/Session'
-import type { AutherStaticFieldsBound } from '@/auth/auther/Auther'
+import type { AutherResult } from '@/auth/auther/Auther'
 
 /**
  * This is the type for the prisma client that is passed to the service method.
@@ -66,7 +66,6 @@ export type ServiceMethodInputUnchecked = {
  * I.e. what is passed to the ServiceMethod function when creating a service method.
  */
 type ServiceMethodConfig<
-    DynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined,
@@ -76,9 +75,7 @@ type ServiceMethodConfig<
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
     authorizer?: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
-        // Todo: Make prettier type for return type of dynamic fields
-        | ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>
-        | Promise<ReturnType<AutherStaticFieldsBound<DynamicFields>['dynamicFields']>>,
+        AutherResult| Promise<AutherResult>,
     method: (args: ServiceMethodInputParsed<ParamsSchema, DataSchema> & ServiceMethodContext<OpensTransaction>) =>
         Return | Promise<Return>,
 }
@@ -159,13 +156,12 @@ function withContext<T>(contextOverride: Partial<ServiceMethodContext>, callback
  * @param [config.opensTransaction=false] - Determines the type of prisma client that is passed to the service method.
  */
 export function serviceMethod<
-    DynamicFields extends object,
     OpensTransaction extends boolean,
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
-    config: ServiceMethodConfig<DynamicFields, OpensTransaction, Return, ParamsSchema, DataSchema>,
+    config: ServiceMethodConfig<OpensTransaction, Return, ParamsSchema, DataSchema>,
 ): ServiceMethod<OpensTransaction, Return, ParamsSchema, DataSchema> {
     // Guard to check if params and data are only present if there are corresponding schemas.
     const expectedInputsIsPresent = (

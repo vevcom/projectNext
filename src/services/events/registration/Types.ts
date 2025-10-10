@@ -1,18 +1,18 @@
-import type { EventRegistrationConfig } from './config'
+import type { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRATION_READER_TYPE } from './config'
 import type { Image, Prisma } from '@prisma/client'
 
 // This type will just make sure that the image is not null
 export type EventRegistrationExpanded = Prisma.EventRegistrationGetPayload<{
-    select: typeof EventRegistrationConfig.selection
+    select: typeof eventRegistrationSelection
 }> & {
     image: Image
 }
 
 export type EventRegistrationDetailedExpanded = Prisma.EventRegistrationGetPayload<{
-    include: typeof EventRegistrationConfig.includerDetailed
+    include: typeof eventRegistrationIncluderDetailed,
 }>
 
 export type EventRegistrationFetcherDetails = {
     eventId: number,
-    type?: EventRegistrationConfig.REGISTRATION_READER_TYPE,
+    type?: REGISTRATION_READER_TYPE,
 }

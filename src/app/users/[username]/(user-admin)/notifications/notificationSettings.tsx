@@ -6,7 +6,7 @@ import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifica
 import SubmitButton from '@/components/UI/SubmitButton'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
 import { updateNotificationSubscriptionsAction } from '@/services/notifications/actions'
-import { NotificationConfig } from '@/services/notifications/config'
+import { notificationMethodsArray, notificationMethodsDisplayMap } from '@/services/notifications/config'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'
@@ -225,12 +225,12 @@ export default function NotificationSettings({
             <thead className={styles.tableHead}>
                 <tr>
                     <th>Kanal</th>
-                    {NotificationConfig.methods.map(method =>
+                    {notificationMethodsArray.map(method =>
                         <th
                             key={uuid()}
                             className={styles.notificationMethodsTH}
                         >
-                            <span>{NotificationConfig.methodsDisplayMap[method]}</span>
+                            <span>{notificationMethodsDisplayMap[method]}</span>
                         </th>
                     )}
                 </tr>

@@ -2,13 +2,13 @@ import styles from './page.module.scss'
 import PermissionCheckbox from './PermissionCheckbox'
 import { readPermissionMatrixAction } from '@/services/permissions/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { PermissionConfig } from '@/services/permissions/config'
+import { permissionConfig } from '@/services/permissions/config'
 import type { Permission } from '@prisma/client'
 
 export default async function PermissionGroups() {
     const permissionMatrix = unwrapActionReturn(await readPermissionMatrixAction())
 
-    const permissionList = Object.keys(PermissionConfig)
+    const permissionList = Object.keys(permissionConfig)
 
     return <div className={styles.wrapper}>
         <table className={styles.table}>
@@ -19,9 +19,9 @@ export default async function PermissionGroups() {
                         <th
                             key={i}
                             className={styles.permissionTH}
-                            title={PermissionConfig[permission as Permission].description}
+                            title={permissionConfig[permission as Permission].description}
                         >
-                            <span>{PermissionConfig[permission as Permission].name}</span>
+                            <span>{permissionConfig[permission as Permission].name}</span>
                         </th>
                     )}
                 </tr>

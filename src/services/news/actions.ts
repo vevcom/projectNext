@@ -6,7 +6,7 @@ import { destroyNews } from '@/services/news/destroy'
 import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'
 import { updateNews } from '@/services/news/update'
 import { createNewsArticleValidation, updateNewsArticleValidation } from '@/services/news/validation'
-import { NotificationMethods } from '@/services/notifications/methods'
+import { notificationMethods } from '@/services/notifications/methods'
 import type { CreateNewsArticleTypes, UpdateNewsArticleTypes } from '@/services/news/validation'
 import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
 import type { ReadPageInput } from '@/lib/paging/Types'
@@ -67,7 +67,7 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    NotificationMethods.createSpecial({
+    notificationMethods.createSpecial({
         params: {
             special: 'NEW_NEWS_ARTICLE',
         },

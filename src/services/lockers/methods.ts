@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { lockerReservationIncluder } from './reservations/config'
-import { LockerAuthers } from './authers'
-import { LockersSchemas } from './schemas'
+import { lockerAuthers } from './authers'
+import { lockersSchemas } from './schemas'
 import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -32,7 +32,7 @@ export async function updateLockerReservationIfExpired(prisma: Prisma.Transactio
         locker.LockerReservation = []
     }
 }
-export namespace LockerMethods {
+export const lockerMethods = {
     /**
      * Creates a new locker.
      *
@@ -40,17 +40,16 @@ export namespace LockerMethods {
      *
      * @returns The newly created locker object.
      */
-    export const create = serviceMethod({
-        authorizer: () => LockerAuthers.create.dynamicFields({}),
-        dataSchema: LockersSchemas.create,
+    create: serviceMethod({
+        authorizer: () => lockerAuthers.create.dynamicFields({}),
+        dataSchema: lockersSchemas.create,
         method: async ({ prisma, data }) => {
             console.log(data)
             return await prisma.locker.create({
                 data,
             })
         }
-
-    })
+    }),
 
     /**
      * Reads a locker. Expired locker reservations are updated when reading.
@@ -59,8 +58,8 @@ export namespace LockerMethods {
      *
      * @returns The locker object.
      */
-    export const read = serviceMethod({
-        authorizer: () => LockerAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => lockerAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -76,7 +75,7 @@ export namespace LockerMethods {
 
             return locker
         }
-    })
+    }),
 
     /**
      * Reads a page of lockers. Expired locker reservations are updated when reading.
@@ -85,8 +84,8 @@ export namespace LockerMethods {
      *
      * @returns A list of locker objects.
      */
-    export const readPage = serviceMethod({
-        authorizer: () => LockerAuthers.readPage.dynamicFields({}),
+    readPage: serviceMethod({
+        authorizer: () => lockerAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -107,5 +106,5 @@ export namespace LockerMethods {
 
             return lockers
         }
-    })
+    }),
 }

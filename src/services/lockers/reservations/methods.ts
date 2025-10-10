@@ -1,13 +1,13 @@
 
 import '@pn-server-only'
-import { LockerReservationAuthers } from './authers'
-import { LockerReservationSchemas } from './schemas'
+import { lockerReservationAuthers } from './authers'
+import { lockerReservationSchemas } from './schemas'
 import { serviceMethod } from '@/services/serviceMethod'
 import { Smorekopp } from '@/services/error'
-import { GroupMethods } from '@/services/groups/methods'
+import { groupMethods } from '@/services/groups/methods'
 import { z } from 'zod'
 
-export namespace LockerReservationMethods {
+export const lockerReservationMethods = {
     /**
      * Creates a new locker reservation for a given user and locker.
      *
@@ -16,17 +16,17 @@ export namespace LockerReservationMethods {
      *
      * @returns The newly created reservation object.
      */
-    export const create = serviceMethod({
-        authorizer: () => LockerReservationAuthers.create.dynamicFields({}),
+    create: serviceMethod({
+        authorizer: () => lockerReservationAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             lockerId: z.number(),
         }),
-        dataSchema: LockerReservationSchemas.create,
+        dataSchema: lockerReservationSchemas.create,
         method: async ({ prisma, session, data, params }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await GroupMethods.readUsersOfGroups({
+                const groupUsers = await groupMethods.readUsersOfGroups({
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]
@@ -53,7 +53,7 @@ export namespace LockerReservationMethods {
                 }
             })
         },
-    })
+    }),
 
     /**
      * Updates an existing locker reservation.
@@ -63,8 +63,8 @@ export namespace LockerReservationMethods {
      *
      * @returns The updated reservation object.
      */
-    export const read = serviceMethod({
-        authorizer: () => LockerReservationAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => lockerReservationAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -73,7 +73,7 @@ export namespace LockerReservationMethods {
                 id,
             },
         })
-    })
+    }),
 
     /**
      * Updates an existing locker reservation.
@@ -83,12 +83,12 @@ export namespace LockerReservationMethods {
      *
      * @returns The updated reservation object.
      */
-    export const update = serviceMethod({
-        authorizer: () => LockerReservationAuthers.update.dynamicFields({}),
+    update: serviceMethod({
+        authorizer: () => lockerReservationAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: LockerReservationSchemas.update,
+        dataSchema: lockerReservationSchemas.update,
         method: async ({ prisma, session, data, params: { id } }) => {
             // TODO: Use authers for authing in stead of this
             // Verify that the user updating is the creator of the reservation
@@ -107,7 +107,7 @@ export namespace LockerReservationMethods {
 
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await GroupMethods.readUsersOfGroups({
+                const groupUsers = await groupMethods.readUsersOfGroups({
                     bypassAuth: true,
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]
@@ -131,6 +131,6 @@ export namespace LockerReservationMethods {
                 }
             })
         },
-    })
+    }),
 }
 

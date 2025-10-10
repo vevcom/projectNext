@@ -1,8 +1,8 @@
-import { LockerLocationAuthers } from './authers'
-import { LockersSchemas } from '@/services/lockers/schemas'
+import { lockerLocationAuthers } from './authers'
+import { lockersSchemas } from '@/services/lockers/schemas'
 import { serviceMethod } from '@/services/serviceMethod'
 
-export namespace LockerLocationMethods {
+export const lockerLocationMethods = {
     /**
      * Creates a new locker location.
      *
@@ -10,24 +10,24 @@ export namespace LockerLocationMethods {
      *
      * @returns The newly created locker location object.
      */
-    export const create = serviceMethod({
-        authorizer: () => LockerLocationAuthers.create.dynamicFields({}),
-        dataSchema: LockersSchemas.createLocation,
+    create: serviceMethod({
+        authorizer: () => lockerLocationAuthers.create.dynamicFields({}),
+        dataSchema: lockersSchemas.createLocation,
         method: async ({ prisma, data }) => prisma.lockerLocation.create({
             data: {
                 building: data.building,
                 floor: data.floor
             }
         })
-    })
+    }),
 
     /**
      * Reads all locker locations.
      *
      * @returns All locker location objects.
      */
-    export const readAll = serviceMethod({
-        authorizer: () => LockerLocationAuthers.readAll.dynamicFields({}),
+    readAll: serviceMethod({
+        authorizer: () => lockerLocationAuthers.readAll.dynamicFields({}),
         method: async ({ prisma }) => prisma.lockerLocation.findMany()
-    })
+    }),
 }

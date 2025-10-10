@@ -1,15 +1,15 @@
 'use server'
 
 import { action } from '@/services/action'
-import { NotificationChannelMethods } from '@/services/notifications/channel/methods'
-import { NotificationMethods } from '@/services/notifications/methods'
-import { NotificationSubscriptionMethods } from '@/services/notifications/subscription/methods'
+import { notificationChannelMethods } from '@/services/notifications/channel/methods'
+import { notificationMethods } from '@/services/notifications/methods'
+import { notificationSubscriptionMethods } from '@/services/notifications/subscription/methods'
 
-export const createNotificationChannelAction = action(NotificationChannelMethods.create)
-export const updateNotificationChannelAction = action(NotificationChannelMethods.update)
-export const readNotificationChannelsAction = action(NotificationChannelMethods.readMany)
+export const createNotificationChannelAction = action(notificationChannelMethods.create)
+export const updateNotificationChannelAction = action(notificationChannelMethods.update)
+export const readNotificationChannelsAction = action(notificationChannelMethods.readMany)
 
-export const createNotificationAction = action(NotificationMethods.create)
+export const createNotificationAction = action(notificationMethods.create)
 
-export const readNotificationSubscriptionsAction = action(NotificationSubscriptionMethods.read)
-export const updateNotificationSubscriptionsAction = action(NotificationSubscriptionMethods.update)
+export const readNotificationSubscriptionsAction = action(notificationSubscriptionMethods.read)
+export const updateNotificationSubscriptionsAction = action(notificationSubscriptionMethods.update)

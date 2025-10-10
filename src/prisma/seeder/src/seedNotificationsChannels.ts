@@ -1,4 +1,4 @@
-import { NotificationConfig } from '@/services/notifications/config'
+import { allNotificationMethodsOn } from '@/services/notifications/config'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { NotificationMethod, PrismaClient } from '@prisma/client'
 
@@ -19,8 +19,8 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'ROOT',
             name: 'Alle varslinger',
             description: 'Denne kanalen styrer alle varslinger',
-            defaultMethods: NotificationConfig.allMethodsOn,
-            availableMethods: NotificationConfig.allMethodsOn,
+            defaultMethods: allNotificationMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_EVENT',
@@ -30,35 +30,35 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: false,
                 emailWeekly: true,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: NotificationConfig.allMethodsOff,
-            availableMethods: NotificationConfig.allMethodsOn,
+            defaultMethods: allNotificationMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_NEWS_ARTICLE',
             name: 'Ny nyhetsartikkel',
             description: 'Varslinger om nye artikler',
-            defaultMethods: NotificationConfig.allMethodsOff,
-            availableMethods: NotificationConfig.allMethodsOn,
+            defaultMethods: allNotificationMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: NotificationConfig.allMethodsOff,
-            availableMethods: NotificationConfig.allMethodsOn,
+            defaultMethods: allNotificationMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_OMEGAQUOTE',
             name: 'Ny omegaquote',
             description: 'Varslinger om en ny omega quote',
-            defaultMethods: NotificationConfig.allMethodsOff,
-            availableMethods: NotificationConfig.allMethodsOn,
+            defaultMethods: allNotificationMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'EVENT_WAITINGLIST_PROMOTION',
@@ -94,7 +94,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: true,
                 emailWeekly: false,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
             alias: 'hs',
         },
         {
@@ -104,7 +104,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: true,
                 emailWeekly: false,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
             alias: 'bleast',
         },
         {
@@ -114,7 +114,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: true,
                 emailWeekly: false,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
             alias: 'vevcom',
         },
         {
@@ -124,7 +124,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: true,
                 emailWeekly: false,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
             alias: 'contactor',
         },
         {
@@ -147,7 +147,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
                 email: true,
                 emailWeekly: false,
             },
-            availableMethods: NotificationConfig.allMethodsOn,
+            availableMethods: allNotificationMethodsOn,
         },
     ]
 

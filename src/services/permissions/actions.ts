@@ -1,10 +1,10 @@
 'use server'
 
 import { action } from '@/services/action'
-import { PermissionMethods } from '@/services/permissions/methods'
+import { permissionMethods } from '@/services/permissions/methods'
 
-export const readPermissionOfGroupAction = action(PermissionMethods.readPermissionsOfGroup)
-export const readPermissionMatrixAction = action(PermissionMethods.readPermissionMatrix)
-export const readDefaultPermissionsAction = action(PermissionMethods.readDefaultPermissions)
-export const updateDefaultPermissionsAction = action(PermissionMethods.updateDefaultPermissions)
-export const updateGroupPermissionAction = action(PermissionMethods.updateGroupPermission)
+export const readPermissionOfGroupAction = action(permissionMethods.readPermissionsOfGroup)
+export const readPermissionMatrixAction = action(permissionMethods.readPermissionMatrix)
+export const readDefaultPermissionsAction = action(permissionMethods.readDefaultPermissions)
+export const updateDefaultPermissionsAction = action(permissionMethods.updateDefaultPermissions)
+export const updateGroupPermissionAction = action(permissionMethods.updateGroupPermission)

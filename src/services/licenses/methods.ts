@@ -1,27 +1,27 @@
 import '@pn-server-only'
-import { LicenseSchemas } from './schemas'
-import { LicenseAuthers } from './authers'
+import { licenseSchemas } from './schemas'
+import { licenseAuthers } from './authers'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 
-export namespace LicenseMethods {
-    export const create = serviceMethod({
-        authorizer: () => LicenseAuthers.create.dynamicFields({}),
-        dataSchema: LicenseSchemas.create,
+export const licenseMethods = {
+    create: serviceMethod({
+        authorizer: () => licenseAuthers.create.dynamicFields({}),
+        dataSchema: licenseSchemas.create,
         method: async ({ prisma, data }) => await prisma.license.create({
             data,
         }),
-    })
-    export const readAll = serviceMethod({
-        authorizer: () => LicenseAuthers.destroy.dynamicFields({}),
+    }),
+    readAll: serviceMethod({
+        authorizer: () => licenseAuthers.destroy.dynamicFields({}),
         method: async ({ prisma }) => await prisma.license.findMany()
-    })
-    export const destroy = serviceMethod({
+    }),
+    destroy: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => LicenseAuthers.destroy.dynamicFields({}),
+        authorizer: () => licenseAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             const { name: licenseName } = await prisma.license.findUniqueOrThrow({
                 where: { id: params.id },
@@ -43,13 +43,13 @@ export namespace LicenseMethods {
 
             await prisma.license.delete({ where: { id: params.id } })
         }
-    })
-    export const update = serviceMethod({
+    }),
+    update: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: LicenseSchemas.update,
-        authorizer: () => LicenseAuthers.update.dynamicFields({}),
+        dataSchema: licenseSchemas.update,
+        authorizer: () => licenseAuthers.update.dynamicFields({}),
         method: async ({ prisma, params, data }) => {
             await prisma.license.update({
                 where: {
@@ -58,5 +58,5 @@ export namespace LicenseMethods {
                 data
             })
         }
-    })
+    }),
 }

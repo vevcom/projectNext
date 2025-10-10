@@ -1,16 +1,16 @@
 import '@pn-server-only'
-import { InterestGroupAuthers } from './authers'
-import { InterestGroupSchemas } from './schemas'
+import { interestGroupAuthers } from './authers'
+import { interestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { serviceMethod } from '@/services/serviceMethod'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
 import { z } from 'zod'
 import type { ExpandedInterestGroup } from './Types'
 
-export namespace InterestGroupMethods {
-    export const create = serviceMethod({
-        dataSchema: InterestGroupSchemas.create,
-        authorizer: () => InterestGroupAuthers.create.dynamicFields({}),
+export const interestGroupMethods = {
+    create: serviceMethod({
+        dataSchema: interestGroupSchemas.create,
+        authorizer: () => interestGroupAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => {
             const { order } = await readCurrentOmegaOrder()
 
@@ -33,10 +33,10 @@ export namespace InterestGroupMethods {
                 }
             })
         }
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => InterestGroupAuthers.readMany.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => interestGroupAuthers.readMany.dynamicFields({}),
         method: async ({ prisma }): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
             include: {
                 articleSection: {
@@ -48,14 +48,14 @@ export namespace InterestGroupMethods {
                 { id: 'asc' },
             ]
         })
-    })
+    }),
 
-    export const read = serviceMethod({
+    read: serviceMethod({
         paramsSchema: z.object({
             id: z.number().optional(),
             shortName: z.string().optional(),
         }),
-        authorizer: () => InterestGroupAuthers.read.dynamicFields({}),
+        authorizer: () => interestGroupAuthers.read.dynamicFields({}),
         method: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
             where: {
                 id,
@@ -67,32 +67,34 @@ export namespace InterestGroupMethods {
                 },
             }
         })
-    })
+    }),
 
-    export const update = serviceMethod({
+    update: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: InterestGroupSchemas.update,
-        authorizer: async ({ params }) => InterestGroupAuthers.update.dynamicFields({
-            groupId: (
-                await read({
-                    params: { id: params.id },
-                    bypassAuth: true,
-                })
-            ).groupId,
-        }),
+        dataSchema: interestGroupSchemas.update,
+        authorizer: async ({ prisma, params }) => {
+            const { groupId } = await prisma.interestGroup.findUniqueOrThrow({
+                where: { id: params.id },
+                select: { groupId: true },
+            })
+
+            return interestGroupAuthers.update.dynamicFields({
+                groupId,
+            })
+        },
         method: async ({ prisma, params: { id }, data }) => prisma.interestGroup.update({
             where: { id },
             data,
         }),
-    })
+    }),
 
-    export const destroy = serviceMethod({
+    destroy: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => InterestGroupAuthers.destroy.dynamicFields({}),
+        authorizer: () => interestGroupAuthers.destroy.dynamicFields({}),
         opensTransaction: true,
         method: async ({ prisma, params: { id } }) => {
             await prisma.$transaction(async tx => {
@@ -104,5 +106,5 @@ export namespace InterestGroupMethods {
                 })
             })
         }
-    })
+    }),
 }

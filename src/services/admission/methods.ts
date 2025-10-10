@@ -1,16 +1,16 @@
 import '@pn-server-only'
-import { AdmissionSchemas } from './schemas'
-import { AdmissionAuthers } from './authers'
+import { admissionSchemas } from './schemas'
+import { admissionAuthers } from './authers'
+import { userFilterSelection } from '@/services/users/config'
 import { serviceMethod } from '@/services/serviceMethod'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
-import { UserConfig } from '@/services/users/config'
 import { Admission } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './Types'
 
-export namespace AdmissionMethods {
-    export const readTrial = serviceMethod({
-        authorizer: () => AdmissionAuthers.readTrial.dynamicFields({}),
+export const admissionMethods = {
+    readTrial: serviceMethod({
+        authorizer: () => admissionAuthers.readTrial.dynamicFields({}),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -19,13 +19,13 @@ export namespace AdmissionMethods {
                 userId,
             }
         })
-    })
-    export const createTrial = serviceMethod({
-        authorizer: () => AdmissionAuthers.createTrial.dynamicFields({}),
+    }),
+    createTrial: serviceMethod({
+        authorizer: () => admissionAuthers.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),
         }),
-        dataSchema: AdmissionSchemas.createTrial,
+        dataSchema: admissionSchemas.createTrial,
         method: async ({ prisma, session, params, data }): Promise<ExpandedAdmissionTrail> => {
             const results = await prisma.admissionTrial.create({
                 data: {
@@ -43,13 +43,13 @@ export namespace AdmissionMethods {
                 },
                 include: {
                     user: {
-                        select: UserConfig.filterSelection
+                        select: userFilterSelection,
                     }
                 }
             })
 
             // check if user has taken all admissions
-            const userTrials = await readTrial({
+            const userTrials = await admissionMethods.readTrial({
                 params: {
                     userId: data.userId
                 },
@@ -61,5 +61,5 @@ export namespace AdmissionMethods {
 
             return results
         }
-    })
+    }),
 }

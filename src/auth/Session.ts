@@ -1,9 +1,9 @@
 import { authOptions } from './authoptions'
-import { ApiKeyMethods } from '@/services/api-keys/methods'
+import { apiKeyMethods } from '@/services/api-keys/methods'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'
 import { ServerError } from '@/services/error'
-import { PermissionMethods } from '@/services/permissions/methods'
+import { permissionMethods } from '@/services/permissions/methods'
 import { getServerSession as getSessionNextAuth } from 'next-auth'
 import type { Permission } from '@prisma/client'
 import type { UserFiltered } from '@/services/users/Types'
@@ -71,7 +71,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
     public static async fromNextAuth(): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
         const {
             user = null,
-            permissions = await PermissionMethods.readDefaultPermissions({
+            permissions = await permissionMethods.readDefaultPermissions({
                 bypassAuth: true,
             }),
             memberships = [],
@@ -86,7 +86,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
      * If the key is null, the session will be cratedwith only default permissios
      */
     public static async fromApiKey(keyAndIdEncoded: string | null): Promise<Session<'NO_USER'>> {
-        const defaultPermissions = await PermissionMethods.readDefaultPermissions({
+        const defaultPermissions = await permissionMethods.readDefaultPermissions({
             bypassAuth: true,
         })
         if (!keyAndIdEncoded) return new Session<'NO_USER'>({ user: null, permissions: defaultPermissions, memberships: [] })
@@ -97,7 +97,7 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
         let apiKeyFetch
 
         try {
-            apiKeyFetch = await ApiKeyMethods.readWithHash({
+            apiKeyFetch = await apiKeyMethods.readWithHash({
                 bypassAuth: true,
                 params: { id }
             })

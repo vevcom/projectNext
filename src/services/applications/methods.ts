@@ -1,32 +1,32 @@
 import '@pn-server-only'
-import { ApplicationAuthers } from './authers'
-import { ApplicationSchemas } from './schemas'
+import { applicationAuthers } from './authers'
+import { applicationSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 
-export namespace ApplicationMethods {
-    export const readForUser = serviceMethod({
+export const applicationMethods = {
+    readForUser: serviceMethod({
         paramsSchema: z.object({
             userId: z.number(),
             periodId: z.number()
         }),
-        authorizer: ({ params }) => ApplicationAuthers.readForUser.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuthers.readForUser.dynamicFields({ userId: params.userId }),
         method: async ({ prisma, params }) => prisma.application.findMany({
             where: {
                 userId: params.userId,
                 applicationPeriodId: params.periodId
             }
         })
-    })
+    }),
 
-    export const create = serviceMethod({
-        dataSchema: ApplicationSchemas.create,
+    create: serviceMethod({
+        dataSchema: applicationSchemas.create,
         paramsSchema: z.object({
             userId: z.number(),
             commiteeParticipationId: z.number()
         }),
-        authorizer: ({ params }) => ApplicationAuthers.create.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuthers.create.dynamicFields({ userId: params.userId }),
         method: async ({ prisma, data, params }) => {
             const commiteeParticipation = await prisma.committeeParticipationInApplicationPeriod.findUniqueOrThrow({
                 where: {
@@ -76,16 +76,16 @@ export namespace ApplicationMethods {
                 }
             })
         },
-    })
+    }),
 
-    export const update = serviceMethod({
-        dataSchema: ApplicationSchemas.update,
+    update: serviceMethod({
+        dataSchema: applicationSchemas.update,
         paramsSchema: z.object({
             userId: z.number(),
             commiteeParticipationId: z.number()
         }),
         opensTransaction: true,
-        authorizer: ({ params }) => ApplicationAuthers.update.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuthers.update.dynamicFields({ userId: params.userId }),
         method: async ({ prisma, data, params }) => {
             const application = await prisma.application.findUniqueOrThrow({
                 where: {
@@ -192,14 +192,14 @@ export namespace ApplicationMethods {
                 })
             })
         },
-    })
+    }),
 
-    export const destroy = serviceMethod({
+    destroy: serviceMethod({
         paramsSchema: z.object({
             userId: z.number(),
             commiteeParticipationId: z.number()
         }),
-        authorizer: ({ params }) => ApplicationAuthers.destroy.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuthers.destroy.dynamicFields({ userId: params.userId }),
         opensTransaction: true,
         method: async ({ prisma, params }) => {
             prisma.$transaction(async (tx) => {
@@ -245,5 +245,5 @@ export namespace ApplicationMethods {
                 })
             })
         }
-    })
+    }),
 }

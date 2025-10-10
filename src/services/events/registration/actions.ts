@@ -1,11 +1,11 @@
 'use server'
 
 import { action } from '@/services/action'
-import { EventRegistrationMethods } from '@/services/events/registration/methods'
+import { eventRegistrationMethods } from '@/services/events/registration/methods'
 
-export const createEventRegistrationAction = action(EventRegistrationMethods.create)
-export const createGuestEventRegistrationAction = action(EventRegistrationMethods.createGuest)
-export const readManyEventRegistrationAction = action(EventRegistrationMethods.readMany)
-export const eventRegistrationReadManyDetailedAction = action(EventRegistrationMethods.readManyDetailed)
-export const eventRegistrationUpdateNotesAction = action(EventRegistrationMethods.updateNotes)
-export const eventRegistrationDestroyAction = action(EventRegistrationMethods.destroy)
+export const createEventRegistrationAction = action(eventRegistrationMethods.create)
+export const createGuestEventRegistrationAction = action(eventRegistrationMethods.createGuest)
+export const readManyEventRegistrationAction = action(eventRegistrationMethods.readMany)
+export const eventRegistrationReadManyDetailedAction = action(eventRegistrationMethods.readManyDetailed)
+export const eventRegistrationUpdateNotesAction = action(eventRegistrationMethods.updateNotes)
+export const eventRegistrationDestroyAction = action(eventRegistrationMethods.destroy)

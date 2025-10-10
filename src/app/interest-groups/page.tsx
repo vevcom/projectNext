@@ -4,7 +4,7 @@ import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { Session } from '@/auth/Session'
-import { InterestGroupAuthers } from '@/services/groups/interestGroups/authers'
+import { interestGroupAuthers } from '@/services/groups/interestGroups/authers'
 import { readInterestGroupsAction } from '@/services/groups/interestGroups/actions'
 
 export default async function InterestGroups() {
@@ -13,7 +13,7 @@ export default async function InterestGroups() {
     if (!interestGroupsRes.success) return <div>Failed to load interest groups</div> //TODO: Change to unwrap
     const interestGroups = interestGroupsRes.data
 
-    const canCreate = InterestGroupAuthers.create.dynamicFields({}).auth(session)
+    const canCreate = interestGroupAuthers.create.dynamicFields({}).auth(session)
 
     return (
         <PageWrapper title="Interessegrupper" headerItem={

@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { PermissionAuthers } from './auther'
+import { permissionAuthers } from './auther'
 import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
@@ -9,22 +9,21 @@ import { Permission } from '@prisma/client'
 import { z } from 'zod'
 
 
-export namespace PermissionMethods {
-
-    export const readDefaultPermissions = serviceMethod({
-        authorizer: () => PermissionAuthers.readDefaultPermissions.dynamicFields({}),
+export const permissionMethods = {
+    readDefaultPermissions: serviceMethod({
+        authorizer: () => permissionAuthers.readDefaultPermissions.dynamicFields({}),
         method: async ({ prisma }) =>
             (await prisma.defaultPermission.findMany()).map(perm => perm.permission)
-    })
+    }),
 
-    export const readPermissionsOfUser = serviceMethod({
+    readPermissionsOfUser: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
         }),
         method: async ({ prisma, params }) => {
             const [defaultPermissions, groupPermissions] = await Promise.all([
-                readDefaultPermissions({}),
+                permissionMethods.readDefaultPermissions({}),
                 prisma.membership.findMany({
                     where: {
                         userId: params.userId,
@@ -44,14 +43,14 @@ export namespace PermissionMethods {
             const groupPermsFlatten = groupPermissions.map(group =>
                 group.group.permissions.map(permission => permission.permission)
             ).flat()
-            const ret = defaultPermissions.concat(groupPermsFlatten)
+            const ret: Permission[] = defaultPermissions.concat(groupPermsFlatten)
 
             return ret.filter((permission, i) => ret.indexOf(permission) === i)
         }
-    })
+    }),
 
-    export const readPermissionsOfGroup = serviceMethod({
-        authorizer: () => PermissionAuthers.readGroupPermissions.dynamicFields({}),
+    readPermissionsOfGroup: serviceMethod({
+        authorizer: () => permissionAuthers.readGroupPermissions.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number()
         }),
@@ -60,10 +59,10 @@ export namespace PermissionMethods {
                 groupId: params.groupId
             }
         })).map(permission => permission.permission)
-    })
+    }),
 
-    export const readPermissionMatrix = serviceMethod({
-        authorizer: () => PermissionAuthers.readPermissionMatrix.dynamicFields({}),
+    readPermissionMatrix: serviceMethod({
+        authorizer: () => permissionAuthers.readPermissionMatrix.dynamicFields({}),
         method: async ({ prisma }) => {
             const groupsPermission = await prisma.group.findMany({
                 include: {
@@ -78,10 +77,10 @@ export namespace PermissionMethods {
                 permissions: group.permissions.map(permission => permission.permission)
             }))
         }
-    })
+    }),
 
-    export const updateDefaultPermissions = serviceMethod({
-        authorizer: () => PermissionAuthers.updateDefaultPermissions.dynamicFields({}),
+    updateDefaultPermissions: serviceMethod({
+        authorizer: () => permissionAuthers.updateDefaultPermissions.dynamicFields({}),
         dataSchema: z.object({
             permissions: z.nativeEnum(Permission).array(),
         }),
@@ -106,10 +105,10 @@ export namespace PermissionMethods {
 
             return data.permissions
         }
-    })
+    }),
 
-    export const updateGroupPermission = serviceMethod({
-        authorizer: () => PermissionAuthers.updateGroupPermission.dynamicFields({}),
+    updateGroupPermission: serviceMethod({
+        authorizer: () => permissionAuthers.updateGroupPermission.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number(),
             permission: z.nativeEnum(Permission),
@@ -157,5 +156,5 @@ export namespace PermissionMethods {
 
             return data.value
         }
-    })
+    }),
 }

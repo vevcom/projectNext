@@ -6,7 +6,7 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/services/actionBind'
-import { CompanyAuthers } from '@/services/career/companies/authers'
+import { companyAuthers } from '@/services/career/companies/authers'
 import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 import type { SessionMaybeUser } from '@/auth/Session'
@@ -38,8 +38,8 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = CompanyAuthers.update.dynamicFields({}).auth(session)
-    const canDestroy = CompanyAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = companyAuthers.update.dynamicFields({}).auth(session)
+    const canDestroy = companyAuthers.destroy.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             {asClient ?

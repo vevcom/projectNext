@@ -4,7 +4,7 @@ import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
-import { UserConfig } from '@/services/users/config'
+import { sexConfig } from '@/services/users/config'
 import { SEX, type User } from '@prisma/client'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
@@ -23,7 +23,7 @@ export default function RegistrationForm({
 
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
-        label: UserConfig.sexConfig[sex].label
+        label: sexConfig[sex].label
     }))
 
     return <Form

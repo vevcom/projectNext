@@ -1,12 +1,12 @@
 'use server'
 
+import { applicationMethods } from './methods'
 import { action } from '@/services/action'
-import { ApplicationMethods } from '@/services/applications/methods'
 
-export const createApplicationAction = action(ApplicationMethods.create)
+export const createApplicationAction = action(applicationMethods.create)
 
-export const destroyApplicationAction = action(ApplicationMethods.destroy)
+export const destroyApplicationAction = action(applicationMethods.destroy)
 
-export const readApplicationsForUserAction = action(ApplicationMethods.readForUser)
+export const readApplicationsForUserAction = action(applicationMethods.readForUser)
 
-export const updateApplicationAction = action(ApplicationMethods.update)
+export const updateApplicationAction = action(applicationMethods.update)

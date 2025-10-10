@@ -1,45 +1,44 @@
 import '@pn-server-only'
-import { NotificationSchemas } from './schemas'
-import { NotificationConfig } from './config'
-import { NotificationChannelConfig } from './channel/config'
 import { dispatchEmailNotifications } from './email/dispatch'
-import { NotificationAuthers } from './authers'
+import { notificationAuthers } from './authers'
+import { notificationSchemas } from './schemas'
+import { allNotificationMethodsOn, notificationMethodsArray } from './config'
+import { availableNotificationMethodIncluder } from './channel/config'
+import { userFilterSelection } from '@/services/users/config'
 import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
-import { UserConfig } from '@/services/users/config'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
-import type { ExpandedNotificationChannel } from './Types'
+import type { ExpandedNotificationChannel, NotificationResult } from './Types'
 import type { UserFiltered } from '@/services/users/Types'
 
-export namespace NotificationMethods {
+const dispathMethod = {
+    email: dispatchEmailNotifications,
+    emailWeekly: async () => { },
+} satisfies Record<
+    typeof notificationMethodsArray[number],
+    ((channel: ExpandedNotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<void>)
+>
 
-    const dispathMethod = {
-        email: dispatchEmailNotifications,
-        emailWeekly: async () => { },
-    } satisfies Record<
-        typeof NotificationConfig.methods[number],
-        ((channel: ExpandedNotificationChannel, notification: Notification, users: UserFiltered[]) => Promise<void>)
-    >
+export function repalceSpecialSymbols(text: string, user: UserFiltered) {
+    return text
+        .replaceAll('%u', user.username)
+        .replaceAll('%n', user.firstname)
+        .replaceAll('%N', `${user.firstname} ${user.lastname}`)
+}
 
-    export function repalceSpecialSymbols(text: string, user: UserFiltered) {
-        return text
-            .replaceAll('%u', user.username)
-            .replaceAll('%n', user.firstname)
-            .replaceAll('%N', `${user.firstname} ${user.lastname}`)
-    }
-
+export const notificationMethods = {
     /**
      * Creates a notification with the specified data.
      *
      * @param data - The detailed data for dispatching the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    export const create = serviceMethod({
-        authorizer: () => NotificationAuthers.create.dynamicFields({}),
-        dataSchema: NotificationSchemas.create,
-        method: async ({ prisma, data }) => {
+    create: serviceMethod({
+        authorizer: () => notificationAuthers.create.dynamicFields({}),
+        dataSchema: notificationSchemas.create,
+        method: async ({ prisma, data }): Promise<NotificationResult> => {
             // This prevent notifications from beeing sent during seeding
             if (process.env.IGNORE_SERVER_ONLY) {
                 return {
@@ -65,14 +64,14 @@ export namespace NotificationMethods {
                     id: data.channelId,
                 },
                 include: {
-                    ...NotificationChannelConfig.includer,
+                    ...availableNotificationMethodIncluder,
                     subscriptions: {
                         select: {
                             methods: {
-                                select: NotificationConfig.allMethodsOn,
+                                select: allNotificationMethodsOn,
                             },
                             user: {
-                                select: UserConfig.filterSelection,
+                                select: userFilterSelection,
                             },
                         },
                     },
@@ -88,7 +87,7 @@ export namespace NotificationMethods {
 
             // TODO: Filter the users by visibility
 
-            NotificationConfig.methods.forEach(method => {
+            notificationMethodsArray.forEach(method => {
                 if (!results.availableMethods[method]) {
                     return
                 }
@@ -108,8 +107,7 @@ export namespace NotificationMethods {
                 recipients: results.subscriptions.length
             }
         }
-    })
-
+    }),
 
     /**
      * Createses a notification to a special notification channel.
@@ -119,20 +117,20 @@ export namespace NotificationMethods {
      * @param message - The message content of the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    export const createSpecial = serviceMethod({
+    createSpecial: serviceMethod({
         authorizer: ServerOnly,
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialNotificationChannel),
         }),
-        dataSchema: NotificationSchemas.createSpecial,
-        method: async ({ prisma, params, data, session }) => {
+        dataSchema: notificationSchemas.createSpecial,
+        method: async ({ prisma, params, data, session }): Promise<NotificationResult> => {
             const channel = await prisma.notificationChannel.findUniqueOrThrow({
                 where: {
                     special: params.special,
                 }
             })
 
-            return await create({
+            return await notificationMethods.create({
                 session,
                 bypassAuth: true,
                 data: {
@@ -143,5 +141,5 @@ export namespace NotificationMethods {
                 }
             })
         }
-    })
+    }),
 }

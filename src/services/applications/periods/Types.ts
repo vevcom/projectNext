@@ -1,4 +1,4 @@
-import type { ApplicationPeriodConfig } from './config'
+import type { committeesParticipatingincluder } from './config'
 import type { Image, Prisma } from '@prisma/client'
 
 export type CountdownInfo = {
@@ -10,5 +10,5 @@ export type CountdownInfo = {
 }
 
 export type ExpandedApplicationPeriod = Prisma.ApplicationPeriodGetPayload<{
-    include: typeof ApplicationPeriodConfig.includer
+    include: typeof committeesParticipatingincluder
 }>

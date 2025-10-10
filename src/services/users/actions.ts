@@ -1,22 +1,22 @@
 'use server'
 
 import { action } from '@/services/action'
-import { GroupMethods } from '@/services/groups/methods'
-import { UserMethods } from '@/services/users/methods'
+import { groupMethods } from '@/services/groups/methods'
+import { userMethods } from '@/services/users/methods'
 
 /**
  * A action that creates a user by the given data. It will also hash the password
  * @param rawdata - The user to create
  * @returns - The created user
  */
-export const createUserAction = action(UserMethods.create)
+export const createUserAction = action(userMethods.create)
 
 /**
  * Action to destroy a user by the given id
  * @param id - The id of the user to destroy
  * @returns
  */
-export const destroyUserAction = action(UserMethods.destroy)
+export const destroyUserAction = action(userMethods.destroy)
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -24,7 +24,7 @@ export const destroyUserAction = action(UserMethods.destroy)
  * name and groups
  * @returns
  */
-export const readUserPageAction = action(UserMethods.readPage)
+export const readUserPageAction = action(userMethods.readPage)
 
 /**
  * Action meant to read the profile of a user.
@@ -32,13 +32,13 @@ export const readUserPageAction = action(UserMethods.readPage)
  * @param username - The username of the user to read
  * @returns - The profile of the user
  */
-export const readUserProfileAction = action(UserMethods.readProfile)
+export const readUserProfileAction = action(userMethods.readProfile)
 
-export const readUserAction = action(UserMethods.read)
+export const readUserAction = action(userMethods.read)
 
-export const readGroupsForPageFilteringAction = action(GroupMethods.readGroupsExpanded)
+export const readGroupsForPageFilteringAction = action(groupMethods.readGroupsExpanded)
 
-export const updateUserAction = action(UserMethods.update)
-export const registerNewEmailAction = action(UserMethods.registerNewEmail)
-export const registerUser = action(UserMethods.register)
-export const registerStudentCardInQueueAction = action(UserMethods.registerStudentCardInQueue)
+export const updateUserAction = action(userMethods.update)
+export const registerNewEmailAction = action(userMethods.registerNewEmail)
+export const registerUser = action(userMethods.register)
+export const registerStudentCardInQueueAction = action(userMethods.registerStudentCardInQueue)

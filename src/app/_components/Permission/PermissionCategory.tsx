@@ -1,6 +1,6 @@
 import Permission from './Permission'
 import styles from './PermissionCategory.module.scss'
-import { PermissionConfig } from '@/services/permissions/config'
+import { permissionConfig } from '@/services/permissions/config'
 import { Permission as PermissionEnum } from '@prisma/client'
 import type { PermissionCategory } from '@/services/permissions/Types'
 import type { ReactNode } from 'react'
@@ -17,7 +17,7 @@ export type PropTypes = {
  */
 export default function PermissionCategory({ category, renderBesidePermission }: PropTypes) {
     const permissionsInCategory = Object.values(PermissionEnum).filter(permission =>
-        PermissionConfig[permission].category === category
+        permissionConfig[permission].category === category
     )
 
     return (

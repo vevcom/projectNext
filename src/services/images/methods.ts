@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { readSpecialImageCollection } from './collections/read'
-import { ImageConfig } from './config'
-import { ImageAuthers } from './authers'
-import { ImageSchemas } from './schemas'
+import { imageAuthers } from './authers'
+import { imageSchemas } from './schemas'
+import { allowedExtensions, avifConvertionOptions, imageSizes } from './config'
 import { ServerError } from '@/services/error'
 import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
@@ -13,7 +13,62 @@ import sharp from 'sharp'
 import { SpecialImage } from '@prisma/client'
 import { z } from 'zod'
 
-export namespace ImageMethods {
+/**
+ * Creates one image from a file.
+ * @param file - The file to create the image from
+ * @param allowedExt - The allowed extensions for the file
+ * @param size - The size to resize the image to
+ * @returns
+ */
+async function createOneInStore(file: File, allowedExt: string[], size: number) {
+    const ret = await createFile(file, 'images', allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
+        fit: sharp.fit.inside,
+        withoutEnlargement: true
+    }).toBuffer())
+    return ret
+}
+
+/**
+ * WARNING: This function should only be used in extreme cases, Therefore it is not exported.
+ * Creates bad image this should really only happen in worst case scenario
+ * where the server has lost a image and needs to be replaced with a bad image.
+ * A bad image is an image that has no correct fsLocation attributes.
+ * @param name - the name of the image
+ * @param config - the config for the image (special)
+ */
+const createSourceless = serviceMethod({
+    authorizer: () => imageAuthers.createSourcelessImage.dynamicFields({}),
+    paramsSchema: z.object({
+        name: z.string(),
+        special: z.nativeEnum(SpecialImage),
+    }),
+    method: async ({ prisma, params: { name, special } }) => {
+        const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
+        logger.warn(`
+            creating a bad image, Something has caused the server to lose a neccesary image. 
+            It was replaced with an image model with no correct fsLocation atrributes.
+        `)
+        return await prisma.image.create({
+            data: {
+                name,
+                special,
+                fsLocationOriginal: 'not_found',
+                fsLocationMediumSize: 'not_found',
+                fsLocationSmallSize: 'not_found',
+                fsLocationLargeSize: 'not_found',
+                extOriginal: 'jpg',
+                alt: 'not found',
+                collection: {
+                    connect: {
+                        id: standardCollection.id
+                    }
+                }
+            },
+        })
+    }
+})
+
+export const imageMethods = {
     /**
      * Creates an image.
      * The method will resize the image to the correct sizes and save it to the store.
@@ -21,23 +76,23 @@ export namespace ImageMethods {
      * All images are saved as avif (except the original).
      * @param collectionId - The id of the collection to add the image to
      */
-    export const create = serviceMethod({
-        authorizer: () => ImageAuthers.create.dynamicFields({}),
+    create: serviceMethod({
+        authorizer: () => imageAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             collectionId: z.number(),
         }),
-        dataSchema: ImageSchemas.create,
+        dataSchema: imageSchemas.create,
         method: async ({ prisma, params: { collectionId }, data }) => {
             const { file, ...meta } = data
             const buffer = Buffer.from(await file.arrayBuffer())
-            const avifBuffer = await sharp(buffer).toFormat('avif').avif(ImageConfig.avifConvertionOptions).toBuffer()
+            const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
             const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' })
 
             const uploadPromises = [
-                createOneInStore(avifFile, ['avif'], ImageConfig.sizes.small),
-                createOneInStore(avifFile, ['avif'], ImageConfig.sizes.medium),
-                createOneInStore(avifFile, ['avif'], ImageConfig.sizes.large),
-                createFile(file, 'images', [...ImageConfig.allowedExtUpload]),
+                createOneInStore(avifFile, ['avif'], imageSizes.small),
+                createOneInStore(avifFile, ['avif'], imageSizes.medium),
+                createOneInStore(avifFile, ['avif'], imageSizes.large),
+                createFile(file, 'images', [...allowedExtensions]),
             ]
 
             const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
@@ -65,18 +120,18 @@ export namespace ImageMethods {
                 }
             })
         }
-    })
+    }),
     /**
      * Creates many images from files.
      * The method will resize the images to the correct sizes and save them to the store.
      */
-    export const createMany = serviceMethod({
-        authorizer: () => ImageAuthers.createMany.dynamicFields({}),
+    createMany: serviceMethod({
+        authorizer: () => imageAuthers.createMany.dynamicFields({}),
         paramsSchema: z.object({
             useFileName: z.boolean(),
             collectionId: z.number(),
         }),
-        dataSchema: ImageSchemas.createMany,
+        dataSchema: imageSchemas.createMany,
         method: async ({
             params: { useFileName, collectionId },
             data,
@@ -85,59 +140,19 @@ export namespace ImageMethods {
             for (const file of data.files) {
                 console.log('file', file)
                 const name = useFileName ? file.name.split('.')[0] : undefined
-                await create({
+                await imageMethods.create({
                     params: { collectionId },
                     data: { file, name, alt: file.name.split('.')[0], licenseId: data.licenseId, credit: data.credit },
                 })
             }
         }
-    })
-
-    /**
-     * WARNING: This function should only be used in extreme cases, Therefore it is not exported.
-     * Creates bad image this should really only happen in worst case scenario
-     * where the server has lost a image and needs to be replaced with a bad image.
-     * A bad image is an image that has no correct fsLocation attributes.
-     * @param name - the name of the image
-     * @param config - the config for the image (special)
-     */
-    const createSourceless = serviceMethod({
-        authorizer: () => ImageAuthers.createSourcelessImage.dynamicFields({}),
-        paramsSchema: z.object({
-            name: z.string(),
-            special: z.nativeEnum(SpecialImage),
-        }),
-        method: async ({ prisma, params: { name, special } }) => {
-            const standardCollection = await readSpecialImageCollection('STANDARDIMAGES')
-            logger.warn(`
-                creating a bad image, Something has caused the server to lose a neccesary image. 
-                It was replaced with an image model with no correct fsLocation atrributes.
-            `)
-            return await prisma.image.create({
-                data: {
-                    name,
-                    special,
-                    fsLocationOriginal: 'not_found',
-                    fsLocationMediumSize: 'not_found',
-                    fsLocationSmallSize: 'not_found',
-                    fsLocationLargeSize: 'not_found',
-                    extOriginal: 'jpg',
-                    alt: 'not found',
-                    collection: {
-                        connect: {
-                            id: standardCollection.id
-                        }
-                    }
-                },
-            })
-        }
-    })
+    }),
 
     /**
      * Reads an image by id.
      */
-    export const read = serviceMethod({
-        authorizer: () => ImageAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => imageAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -151,13 +166,13 @@ export namespace ImageMethods {
             if (!image) throw new ServerError('NOT FOUND', 'Image not found')
             return image
         }
-    })
+    }),
 
     /**
      * Reads a page of images in a collection by collectionId.
      */
-    export const readPage = serviceMethod({
-        authorizer: () => ImageAuthers.readPage.dynamicFields({}),
+    readPage: serviceMethod({
+        authorizer: () => imageAuthers.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -176,14 +191,14 @@ export namespace ImageMethods {
                 ...cursorPageingSelection(params.paging.page)
             })
         }
-    })
+    }),
 
     /**
      * Reads a special image by name (special atr.).
      * In the case that the special image does not exist (bad state) a "bad" image will be created.
      */
-    export const readSpecial = serviceMethod({
-        authorizer: () => ImageAuthers.readSpecial.dynamicFields({}),
+    readSpecial: serviceMethod({
+        authorizer: () => imageAuthers.readSpecial.dynamicFields({}),
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialImage)
         }),
@@ -201,17 +216,17 @@ export namespace ImageMethods {
             }
             return image
         }
-    })
+    }),
 
     /**
      * Update a image by id and data. Also can give the image a new license by data.licenseId.
      */
-    export const update = serviceMethod({
-        authorizer: () => ImageAuthers.update.dynamicFields({}),
+    update: serviceMethod({
+        authorizer: () => imageAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: ImageSchemas.update,
+        dataSchema: imageSchemas.update,
         method: async ({ prisma, params: { id }, data: { licenseId, ...data } }) => {
             console.log('lic', licenseId)
             return await prisma.image.update({
@@ -226,10 +241,10 @@ export namespace ImageMethods {
                 }
             })
         }
-    })
+    }),
 
-    export const destroy = serviceMethod({
-        authorizer: () => ImageAuthers.destroy.dynamicFields({}),
+    destroy: serviceMethod({
+        authorizer: () => imageAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -250,20 +265,5 @@ export namespace ImageMethods {
                 },
             })
         }
-    })
-
-    /**
-     * Creates one image from a file.
-     * @param file - The file to create the image from
-     * @param allowedExt - The allowed extensions for the file
-     * @param size - The size to resize the image to
-     * @returns
-     */
-    export async function createOneInStore(file: File, allowedExt: string[], size: number) {
-        const ret = await createFile(file, 'images', allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
-            fit: sharp.fit.inside,
-            withoutEnlargement: true
-        }).toBuffer())
-        return ret
-    }
+    }),
 }

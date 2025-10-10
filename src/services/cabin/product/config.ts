@@ -1,21 +1,17 @@
 import type { Prisma } from '@prisma/client'
 
-
-export namespace CabinProductConfig {
-
-    export const includer = {
-        CabinProductPrice: {
-            include: {
-                PricePeriod: true
-            }
+export const cabinProductPriceIncluder = {
+    CabinProductPrice: {
+        include: {
+            PricePeriod: true
         }
-    } as const
+    }
+} as const
 
-    export type CabinProductExtended = Prisma.CabinProductGetPayload<{
-        include: typeof includer
-    }>
+export type CabinProductExtended = Prisma.CabinProductGetPayload<{
+    include: typeof cabinProductPriceIncluder
+}>
 
-    export type CabinProductPriceExtended = Prisma.CabinProductPriceGetPayload<{
-        include: typeof includer.CabinProductPrice.include
-    }>
-}
+export type CabinProductPriceExtended = Prisma.CabinProductPriceGetPayload<{
+    include: typeof cabinProductPriceIncluder.CabinProductPrice.include
+}>

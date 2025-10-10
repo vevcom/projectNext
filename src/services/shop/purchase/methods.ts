@@ -1,19 +1,19 @@
 import '@pn-server-only'
-import { PurchaseAuthers } from './authers'
-import { PurchaseSchemas } from './schemas'
+import { purchaseAuthers } from './authers'
+import { purchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
-import { UserMethods } from '@/services/users/methods'
-import { UserConfig } from '@/services/users/config'
-import { PermissionMethods } from '@/services/permissions/methods'
+import { userMethods } from '@/services/users/methods'
+import { permissionMethods } from '@/services/permissions/methods'
+import { userFilterSelection } from '@/services/users/config'
 import { PurchaseMethod } from '@prisma/client'
 
-export namespace PurchaseMethods {
-    export const createByStudentCard = serviceMethod({
+export const purchaseMethods = {
+    createByStudentCard: serviceMethod({
         authorizer: async ({ data }) => {
             let user
             try {
-                user = await UserMethods.read({
+                user = await userMethods.read({
                     params: {
                         studentCard: data.studentCard,
                     },
@@ -26,18 +26,18 @@ export namespace PurchaseMethods {
                 throw e
             }
 
-            const permissions = await PermissionMethods.readPermissionsOfUser({
+            const permissions = await permissionMethods.readPermissionsOfUser({
                 bypassAuth: true,
                 params: {
                     userId: user.id,
                 },
             })
 
-            return PurchaseAuthers.createByStudentCard.dynamicFields({
+            return purchaseAuthers.createByStudentCard.dynamicFields({
                 permissions,
             })
         },
-        dataSchema: PurchaseSchemas.createFromStudentCard,
+        dataSchema: purchaseSchemas.createFromStudentCard,
         method: async ({ prisma, data }) => {
             if (data.products.length === 0) {
                 throw new ServerError('BAD PARAMETERS', 'The list of products to buy cannot be empty')
@@ -47,7 +47,7 @@ export namespace PurchaseMethods {
                 where: {
                     studentCard: data.studentCard,
                 },
-                select: UserConfig.filterSelection
+                select: userFilterSelection,
             })
 
             // Find the price of the different products
@@ -104,5 +104,4 @@ export namespace PurchaseMethods {
             }
         }
     })
-
 }

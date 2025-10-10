@@ -1,29 +1,26 @@
-import { UserConfig } from '@/services/users/config'
+import { userFilterSelection } from '@/services/users/config'
 import type { Prisma } from '@prisma/client'
 
-export namespace EventRegistrationConfig {
-
-    export const selection = {
-        user: {
-            select: {
-                ...UserConfig.filterSelection,
-                image: true,
-            },
+export const eventRegistrationSelection = {
+    user: {
+        select: {
+            ...userFilterSelection,
+            image: true,
         },
-        contact: {
-            select: {
-                name: true,
-            },
-        }
-    } satisfies Prisma.EventRegistrationSelect
-
-    export const includerDetailed = {
-        ...selection,
-        contact: true,
-    } satisfies Prisma.EventRegistrationInclude
-
-    export enum REGISTRATION_READER_TYPE {
-        REGISTRATIONS = 'REGISTRATIONS',
-        WAITING_LIST = 'WAITING_LIST',
+    },
+    contact: {
+        select: {
+            name: true,
+        },
     }
+} satisfies Prisma.EventRegistrationSelect
+
+export const eventRegistrationIncluderDetailed = {
+    ...eventRegistrationSelection,
+    contact: true,
+} satisfies Prisma.EventRegistrationInclude
+
+export enum REGISTRATION_READER_TYPE {
+    REGISTRATIONS = 'REGISTRATIONS',
+    WAITING_LIST = 'WAITING_LIST',
 }

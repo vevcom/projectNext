@@ -1,8 +1,8 @@
 import '@pn-server-only'
+import { userFilterSelection } from '@/services/users/config'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import { UserConfig } from '@/services/users/config'
 import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './Types'
 
 
@@ -89,7 +89,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                                                 // TODO: only find valid memberships
                                                 include: {
                                                     user: {
-                                                        select: UserConfig.filterSelection,
+                                                        select: userFilterSelection,
                                                     }
                                                 }
                                             }
@@ -100,7 +100,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                             users: {
                                 include: {
                                     user: {
-                                        select: UserConfig.filterSelection,
+                                        select: userFilterSelection,
                                     },
                                 },
                             },
@@ -220,7 +220,7 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
                                 },*/
                                 include: {
                                     user: {
-                                        select: UserConfig.filterSelection,
+                                        select: userFilterSelection,
                                     }
                                 }
                             }
@@ -231,7 +231,7 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
             users: {
                 include: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: userFilterSelection,
                     },
                 },
             },
@@ -355,7 +355,7 @@ async function readGroupTraversal(id: number): Promise<MailFlowObject> {
             memberships: {
                 include: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: userFilterSelection,
                     }
                 }
             },

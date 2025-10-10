@@ -1,24 +1,24 @@
 'use server'
 
 import { action } from '@/services/action'
-import { ImageMethods } from '@/services/images/methods'
+import { imageMethods } from '@/services/images/methods'
 
-export const createImageAction = action(ImageMethods.create)
-export const createImagesAction = action(ImageMethods.createMany)
+export const createImageAction = action(imageMethods.create)
+export const createImagesAction = action(imageMethods.createMany)
 
-export const destroyImageAction = action(ImageMethods.destroy)
+export const destroyImageAction = action(imageMethods.destroy)
 
 /**
  * Read one image.
 */
-export const readImageAction = action(ImageMethods.read)
+export const readImageAction = action(imageMethods.read)
 /**
  * Read one page of images.
  */
-export const readImagesPageAction = action(ImageMethods.readPage)
+export const readImagesPageAction = action(imageMethods.readPage)
 /**
  * Read one special image.
  */
-export const readSpecialImageAction = action(ImageMethods.readSpecial)
+export const readSpecialImageAction = action(imageMethods.readSpecial)
 
-export const updateImageAction = action(ImageMethods.update)
+export const updateImageAction = action(imageMethods.update)

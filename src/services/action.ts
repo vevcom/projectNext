@@ -1,9 +1,9 @@
 import '@pn-server-only'
 import { safeServerCall } from './actionError'
+import { Session } from '@/auth/Session'
 import type { ActionReturn } from './actionTypes'
 import type { ServiceMethod } from '@/services/serviceMethod'
 import type { z } from 'zod'
-import { Session } from '@/auth/Session'
 
 export function action<Return>(
     serviceMethod: ServiceMethod<boolean, Return, undefined, undefined>

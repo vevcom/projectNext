@@ -1,28 +1,31 @@
 import '@pn-server-only'
-import { NotificationChannelAuthers } from './authers'
-import { NotificationChannelSchemas } from './schemas'
-import { NotificationChannelConfig } from './config'
+import { notificationChannelAuthers } from './authers'
+import { notificationChannelSchemas, validateMethods, validateNewParent } from './schemas'
+import { availableNotificationMethodIncluder } from './config'
+import {
+    allNotificationMethodsOff,
+    allNotificationMethodsOn,
+    notificationMethodsArray,
+} from '@/services/notifications/config'
+import { notificationMethodSchema } from '@/services/notifications/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { serviceMethod } from '@/services/serviceMethod'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/config'
-import { NotificationConfig } from '@/services/notifications/config'
 import { ServerError } from '@/services/error'
-import { NotificationSchemas } from '@/services/notifications/schemas'
 import { z } from 'zod'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
 
-export namespace NotificationChannelMethods {
-
-    export const create = serviceMethod({
-        authorizer: () => NotificationChannelAuthers.create.dynamicFields({}),
-        dataSchema: NotificationChannelSchemas.create,
+export const notificationChannelMethods = {
+    create: serviceMethod({
+        authorizer: () => notificationChannelAuthers.create.dynamicFields({}),
+        dataSchema: notificationChannelSchemas.create,
         opensTransaction: true,
         paramsSchema: z.object({
-            availableMethods: NotificationSchemas.notificationMethodFields,
-            defaultMethods: NotificationSchemas.notificationMethodFields,
+            availableMethods: notificationMethodSchema,
+            defaultMethods: notificationMethodSchema,
         }),
         method: async ({ prisma, data, params }): Promise<ExpandedNotificationChannel> => {
-            if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
+            if (!validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
 
@@ -47,10 +50,10 @@ export namespace NotificationChannelMethods {
                         }
                     }
                 },
-                include: NotificationChannelConfig.includer,
+                include: availableNotificationMethodIncluder,
             })
 
-            if (NotificationChannelSchemas.validateMethods(NotificationConfig.allMethodsOff, params.defaultMethods)) {
+            if (validateMethods(allNotificationMethodsOff, params.defaultMethods)) {
                 return channel
             }
 
@@ -61,7 +64,7 @@ export namespace NotificationChannelMethods {
                     },
                     include: {
                         methods: {
-                            select: NotificationConfig.allMethodsOn,
+                            select: allNotificationMethodsOn,
                         }
                     }
                 })
@@ -72,8 +75,8 @@ export namespace NotificationChannelMethods {
                         subscriptionMethods: booleanOperationOnMethods(subscription.methods, channel.defaultMethods, 'AND')
                     }))
                     .filter(sub =>
-                        !NotificationChannelSchemas.validateMethods(
-                            NotificationConfig.allMethodsOff,
+                        !validateMethods(
+                            allNotificationMethodsOff,
                             sub.subscriptionMethods
                         )
                     )
@@ -99,40 +102,40 @@ export namespace NotificationChannelMethods {
 
             return channel
         }
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => NotificationChannelAuthers.read.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.notificationChannel.findMany({
-            include: NotificationChannelConfig.includer,
+            include: availableNotificationMethodIncluder,
         })
-    })
+    }),
 
-    export const readDefault = serviceMethod({
-        authorizer: () => NotificationChannelAuthers.read.dynamicFields({}),
+    readDefault: serviceMethod({
+        authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.notificationChannel.findMany({
             where: {
                 defaultMethods: {
-                    OR: NotificationConfig.methods.map(method => ({
+                    OR: notificationMethodsArray.map(method => ({
                         [method]: true
                     }))
                 }
             },
-            include: NotificationChannelConfig.includer,
+            include: availableNotificationMethodIncluder,
         })
-    })
+    }),
 
-    export const update = serviceMethod({
-        authorizer: () => NotificationChannelAuthers.update.dynamicFields({}),
-        dataSchema: NotificationChannelSchemas.update,
+    update: serviceMethod({
+        authorizer: () => notificationChannelAuthers.update.dynamicFields({}),
+        dataSchema: notificationChannelSchemas.update,
         paramsSchema: z.object({
             id: z.number(),
-            availableMethods: NotificationSchemas.notificationMethodFields,
-            defaultMethods: NotificationSchemas.notificationMethodFields,
+            availableMethods: notificationMethodSchema,
+            defaultMethods: notificationMethodSchema,
         }),
         opensTransaction: true,
         method: async ({ prisma, data, params }) => {
-            if (!NotificationChannelSchemas.validateMethods(params.availableMethods, params.defaultMethods)) {
+            if (!validateMethods(params.availableMethods, params.defaultMethods)) {
                 throw new ServerError('BAD PARAMETERS', 'Default methods cannot exceed available methods.')
             }
 
@@ -153,11 +156,11 @@ export namespace NotificationChannelMethods {
 
             // Not allowed to change the parent of ROOT
             if (channel.special !== 'ROOT') {
-                const allChannels = await readMany({
+                const allChannels = await notificationChannelMethods.readMany({
                     bypassAuth: true,
                 })
 
-                if (!NotificationChannelSchemas.validateNewParent(params.id, data.parentId, allChannels)) {
+                if (!validateNewParent(params.id, data.parentId, allChannels)) {
                     throw new ServerError('BAD PARAMETERS', 'Cannot set parentId in a loop')
                 }
 
@@ -165,8 +168,8 @@ export namespace NotificationChannelMethods {
             }
 
             function methodsAreEqual(lhs: NotificationMethodGeneral, rhs: NotificationMethodGeneral) {
-                for (let i = 0; i < NotificationConfig.methods.length; i++) {
-                    if (lhs[NotificationConfig.methods[i]] !== rhs[NotificationConfig.methods[i]]) {
+                for (let i = 0; i < notificationMethodsArray.length; i++) {
+                    if (lhs[notificationMethodsArray[i]] !== rhs[notificationMethodsArray[i]]) {
                         return false
                     }
                 }
@@ -208,15 +211,15 @@ export namespace NotificationChannelMethods {
                             }
                         }
                     },
-                    include: NotificationChannelConfig.includer,
+                    include: availableNotificationMethodIncluder,
                 })
             })
         }
-    })
+    }),
 
     // It doesn't seem that this function is used yet. -Theodor
-    export const destroy = serviceMethod({
-        authorizer: () => NotificationChannelAuthers.destroy.dynamicFields({}),
+    destroy: serviceMethod({
+        authorizer: () => notificationChannelAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -228,7 +231,7 @@ export namespace NotificationChannelMethods {
                 where: {
                     id: params.id,
                 },
-                include: NotificationChannelConfig.includer,
+                include: availableNotificationMethodIncluder,
             })
 
             await tx.notificationMethod.deleteMany({
@@ -242,6 +245,5 @@ export namespace NotificationChannelMethods {
 
             return results
         })
-    })
-
+    }),
 }

@@ -1,13 +1,13 @@
 'use server'
 
 import { action } from '@/services/action'
-import { ApiKeyMethods } from '@/services/api-keys/methods'
+import { apiKeyMethods } from '@/services/api-keys/methods'
 
-export const createApiKeyAction = action(ApiKeyMethods.create)
+export const createApiKeyAction = action(apiKeyMethods.create)
 
-export const destroyApiKeyAction = action(ApiKeyMethods.destroy)
+export const destroyApiKeyAction = action(apiKeyMethods.destroy)
 
-export const readApiKeysAction = action(ApiKeyMethods.readMany)
-export const readApiKeyAction = action(ApiKeyMethods.read)
+export const readApiKeysAction = action(apiKeyMethods.readMany)
+export const readApiKeyAction = action(apiKeyMethods.read)
 
-export const updateApiKeyAction = action(ApiKeyMethods.update)
+export const updateApiKeyAction = action(apiKeyMethods.update)

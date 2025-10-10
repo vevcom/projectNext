@@ -1,32 +1,32 @@
 'use server'
 
+import { cabinReleasePeriodMethods } from './releasePeriod/methods'
+import { cabinPricePeriodMethods } from './pricePeriod/methods'
+import { cabinBookingMethods } from './booking/methods'
+import { cabinProductMethods } from './product/methods'
 import { action } from '@/services/action'
-import { CabinBookingMethods } from '@/services/cabin/booking/methods'
-import { CabinPricePeriodMethods } from '@/services/cabin/pricePeriod/methods'
-import { CabinProductMethods } from '@/services/cabin/product/methods'
-import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
 
-export const createReleasePeriodAction = action(CabinReleasePeriodMethods.create)
-export const readReleasePeriodsAction = action(CabinReleasePeriodMethods.readMany)
-export const updateReleasePeriodAction = action(CabinReleasePeriodMethods.update)
-export const destroyReleasePeriodAction = action(CabinReleasePeriodMethods.destroy)
+export const createReleasePeriodAction = action(cabinReleasePeriodMethods.create)
+export const readReleasePeriodsAction = action(cabinReleasePeriodMethods.readMany)
+export const updateReleasePeriodAction = action(cabinReleasePeriodMethods.update)
+export const destroyReleasePeriodAction = action(cabinReleasePeriodMethods.destroy)
 
-export const createPricePeriodAction = action(CabinPricePeriodMethods.create)
-export const destoryPricePeriodAction = action(CabinPricePeriodMethods.destroy)
-export const readPricePeriodsAction = action(CabinPricePeriodMethods.readMany)
-export const readPublicPricePeriodsAction = action(CabinPricePeriodMethods.readPublicPeriods)
-export const readUnreleasedPricePeriodsAction = action(CabinPricePeriodMethods.readUnreleasedPeriods)
+export const createPricePeriodAction = action(cabinPricePeriodMethods.create)
+export const destoryPricePeriodAction = action(cabinPricePeriodMethods.destroy)
+export const readPricePeriodsAction = action(cabinPricePeriodMethods.readMany)
+export const readPublicPricePeriodsAction = action(cabinPricePeriodMethods.readPublicPeriods)
+export const readUnreleasedPricePeriodsAction = action(cabinPricePeriodMethods.readUnreleasedPeriods)
 
-export const createCabinBookingUserAttachedAction = action(CabinBookingMethods.createCabinBookingUserAttached)
-export const createBedBookingUserAttachedAction = action(CabinBookingMethods.createBedBookingUserAttached)
-export const createCabinBookingNoUserAction = action(CabinBookingMethods.createCabinBookingNoUser)
-export const createBedBookingNoUserAction = action(CabinBookingMethods.createBedBookingNoUser)
-export const readCabinAvailabilityAction = action(CabinBookingMethods.readAvailability)
-export const readCabinBookingsAction = action(CabinBookingMethods.readMany)
-export const readCabinBookingAction = action(CabinBookingMethods.read)
+export const createCabinBookingUserAttachedAction = action(cabinBookingMethods.createCabinBookingUserAttached)
+export const createBedBookingUserAttachedAction = action(cabinBookingMethods.createBedBookingUserAttached)
+export const createCabinBookingNoUserAction = action(cabinBookingMethods.createCabinBookingNoUser)
+export const createBedBookingNoUserAction = action(cabinBookingMethods.createBedBookingNoUser)
+export const readCabinAvailabilityAction = action(cabinBookingMethods.readAvailability)
+export const readCabinBookingsAction = action(cabinBookingMethods.readMany)
+export const readCabinBookingAction = action(cabinBookingMethods.read)
 
-export const readCabinProductsAction = action(CabinProductMethods.readMany)
-export const readCabinProductsActiveAction = action(CabinProductMethods.readActive)
-export const readCabinProductAction = action(CabinProductMethods.read)
-export const createCabinProductAction = action(CabinProductMethods.create)
-export const createCabinProductPriceAction = action(CabinProductMethods.createPrice)
+export const readCabinProductsAction = action(cabinProductMethods.readMany)
+export const readCabinProductsActiveAction = action(cabinProductMethods.readActive)
+export const readCabinProductAction = action(cabinProductMethods.read)
+export const createCabinProductAction = action(cabinProductMethods.create)
+export const createCabinProductPriceAction = action(cabinProductMethods.createPrice)

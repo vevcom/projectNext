@@ -1,16 +1,16 @@
 'use server'
 
 import { action } from '@/services/action'
-import { LockerLocationMethods } from '@/services/lockers/locations/methods'
-import { LockerMethods } from '@/services/lockers/methods'
-import { LockerReservationMethods } from '@/services/lockers/reservations/methods'
+import { lockerLocationMethods } from '@/services/lockers/locations/methods'
+import { lockerMethods } from '@/services/lockers/methods'
+import { lockerReservationMethods } from '@/services/lockers/reservations/methods'
 
-export const createLockerLocationAction = action(LockerLocationMethods.create)
-export const readAllLockerLocationsAction = action(LockerLocationMethods.readAll)
+export const createLockerLocationAction = action(lockerLocationMethods.create)
+export const readAllLockerLocationsAction = action(lockerLocationMethods.readAll)
 
-export const createLockerAction = action(LockerMethods.create)
-export const readLockerAction = action(LockerMethods.read)
-export const readLockerPageAction = action(LockerMethods.readPage)
+export const createLockerAction = action(lockerMethods.create)
+export const readLockerAction = action(lockerMethods.read)
+export const readLockerPageAction = action(lockerMethods.readPage)
 
-export const updateLockerReservationAction = action(LockerReservationMethods.update)
-export const createLockerReservationAction = action(LockerReservationMethods.create)
+export const updateLockerReservationAction = action(lockerReservationMethods.update)
+export const createLockerReservationAction = action(lockerReservationMethods.create)

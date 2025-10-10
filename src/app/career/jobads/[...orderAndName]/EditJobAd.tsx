@@ -11,8 +11,8 @@ import Slider from '@/app/_components/UI/Slider'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
 import { bindParams } from '@/services/actionBind'
-import { JobAdConfig } from '@/services/career/jobAds/config'
 import { destroyJobAdAction, updateJobAdAction } from '@/career/jobAds/actions'
+import { jobAdOptions } from '@/services/career/jobAds/config'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/career/jobAds/Types'
@@ -60,7 +60,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     />
                     <SelectedCompany />
                     <SelectString
-                        options={JobAdConfig.options}
+                        options={jobAdOptions}
                         label="Type"
                         name="type"
                         key={uuid()}

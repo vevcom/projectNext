@@ -1,35 +1,35 @@
-import { CommitteeAuthers } from './authers'
-import { CommitteeConfig } from './config'
+import { committeeAuthers } from './authers'
+import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './config'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
-import { ImageMethods } from '@/services/images/methods'
 import { serviceMethod } from '@/services/serviceMethod'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { imageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 
-export namespace CommitteeMethods {
+export const committeeMethods = {
 
-    export const readCommittees = serviceMethod({
-        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
+    readCommittees: serviceMethod({
+        authorizer: () => committeeAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => prisma.committee.findMany({
-            include: CommitteeConfig.committeeLogoIncluder,
+            include: committeeLogoIncluder,
         })
-    })
+    }),
 
-    export const readCommittee = serviceMethod({
-        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
+    readCommittee: serviceMethod({
+        authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.union([
             z.object({ id: z.number() }),
             z.object({ shortName: z.string() })
         ]),
         method: async ({ prisma, params }) => {
-            const defaultImage = await ImageMethods.readSpecial({
+            const defaultImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
                 bypassAuth: true
             })
 
             const result = await prisma.committee.findUniqueOrThrow({
                 where: params,
-                include: CommitteeConfig.committeeExpandedIncluder
+                include: committeeExpandedIncluder,
             })
 
             return {
@@ -47,10 +47,10 @@ export namespace CommitteeMethods {
                 }
             }
         }
-    })
+    }),
 
-    export const readCommitteArticle = serviceMethod({
-        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
+    readCommitteArticle: serviceMethod({
+        authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -62,9 +62,9 @@ export namespace CommitteeMethods {
                 }
             }
         })).committeeArticle
-    })
+    }),
 
-    export const readCommitteesFromGroupIds = serviceMethod({
+    readCommitteesFromGroupIds: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().int().array()
@@ -75,12 +75,12 @@ export namespace CommitteeMethods {
                     in: params.ids
                 }
             },
-            include: CommitteeConfig.committeeLogoIncluder,
+            include: committeeLogoIncluder,
         })
-    })
+    }),
 
-    export const readCommitteeParagraph = serviceMethod({
-        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
+    readCommitteeParagraph: serviceMethod({
+        authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -90,16 +90,16 @@ export namespace CommitteeMethods {
                 paragraph: true,
             }
         })).paragraph
-    })
+    }),
 
-    export const readCommitteeMembers = serviceMethod({
-        authorizer: () => CommitteeAuthers.read.dynamicFields({}),
+    readCommitteeMembers: serviceMethod({
+        authorizer: () => committeeAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
             active: z.boolean().optional(),
         }),
         method: async ({ prisma, params }) => {
-            const defaultImage = await ImageMethods.readSpecial({
+            const defaultImage = await imageMethods.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
 
@@ -112,7 +112,7 @@ export namespace CommitteeMethods {
                     group: {
                         select: {
                             memberships: {
-                                include: CommitteeConfig.membershipIncluder,
+                                include: membershipIncluder,
                                 where: {
                                     active: params.active
                                 }
@@ -131,5 +131,5 @@ export namespace CommitteeMethods {
                 }
             }))
         }
-    })
+    }),
 }

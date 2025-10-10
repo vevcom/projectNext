@@ -3,15 +3,19 @@ import type { SessionMaybeUser, SessionUser } from '@/auth/Session'
 
 export type UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
 
+export type AutherResult<
+    UserRequieredOut extends UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED',
+> = {
+    auth: (session: SessionMaybeUser) => UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED'
+    ? (AuthResult<'HAS_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
+    : (AuthResult<'HAS_USER' | 'NO_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
+}
+
 export type AutherStaticFieldsBound<
     DynamicFields extends object,
     UserRequieredOut extends UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED',
 > = {
-    dynamicFields: (dynamicFields: DynamicFields) => {
-        auth: (session: SessionMaybeUser) => UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED'
-        ? (AuthResult<'HAS_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
-        : (AuthResult<'HAS_USER' | 'NO_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
-    }
+    dynamicFields: (dynamicFields: DynamicFields) => AutherResult<UserRequieredOut>,
 }
 
 export type Auther<

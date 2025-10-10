@@ -1,18 +1,17 @@
-import { CabinPricePeriodAuthers } from './authers'
-import { CabinPricePeriodSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
 import 'server-only'
-import { CabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
+import { cabinPricePeriodAuthers } from './authers'
+import { cabinPricePeriodSchemas } from './schemas'
+import { serviceMethod } from '@/services/serviceMethod'
+import { cabinReleasePeriodMethods } from '@/services/cabin/releasePeriod/methods'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
-export namespace CabinPricePeriodMethods {
-
-    export const create = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.create.dynamicFields({}),
-        dataSchema: CabinPricePeriodSchemas.createPricePeriod,
+export const cabinPricePeriodMethods = {
+    create: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.create.dynamicFields({}),
+        dataSchema: cabinPricePeriodSchemas.createPricePeriod,
         method: async ({ prisma, data }) => {
-            const currentReleaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const currentReleaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
 
             if (currentReleaseDate && currentReleaseDate.releaseUntil >= data.validFrom) {
                 throw new ServerError(
@@ -57,15 +56,15 @@ export namespace CabinPricePeriodMethods {
 
             return result
         }
-    })
+    }),
 
-    export const destroy = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.destroy.dynamicFields({}),
+    destroy: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         method: async ({ prisma, params }) => {
-            const currentReleasePeriod = await CabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const currentReleasePeriod = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
 
             const pricePeriod = await prisma.pricePeriod.findUniqueOrThrow({
                 where: params,
@@ -79,17 +78,17 @@ export namespace CabinPricePeriodMethods {
                 where: params,
             })
         }
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.read.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => prisma.pricePeriod.findMany()
-    })
+    }),
 
-    export const readPublicPeriods = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.readPublicPeriods.dynamicFields({}),
+    readPublicPeriods: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.readPublicPeriods.dynamicFields({}),
         method: async ({ prisma }) => {
-            const releaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const releaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
 
             const [currentPeriod, futurePeriods] = await Promise.all([
                 prisma.pricePeriod.findFirstOrThrow({
@@ -117,12 +116,12 @@ export namespace CabinPricePeriodMethods {
 
             return [currentPeriod, ...futurePeriods]
         }
-    })
+    }),
 
-    export const readUnreleasedPeriods = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.read.dynamicFields({}),
+    readUnreleasedPeriods: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => {
-            const releaseDate = await CabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
+            const releaseDate = await cabinReleasePeriodMethods.getCurrentReleasePeriod({ bypassAuth: true })
             return prisma.pricePeriod.findMany({
                 where: {
                     validFrom: {
@@ -131,11 +130,11 @@ export namespace CabinPricePeriodMethods {
                 }
             })
         }
-    })
+    }),
 
-    export const update = serviceMethod({
-        authorizer: () => CabinPricePeriodAuthers.update.dynamicFields({}),
-        dataSchema: CabinPricePeriodSchemas.updatePricePeriod,
+    update: serviceMethod({
+        authorizer: () => cabinPricePeriodAuthers.update.dynamicFields({}),
+        dataSchema: cabinPricePeriodSchemas.updatePricePeriod,
         paramsSchema: z.object({
             pricePeriodId: z.number(),
         }),
@@ -145,5 +144,5 @@ export namespace CabinPricePeriodMethods {
             },
             data,
         })
-    })
+    }),
 }

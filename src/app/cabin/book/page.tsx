@@ -10,7 +10,7 @@ import {
 } from '@/services/cabin/actions'
 import { displayDate } from '@/lib/dates/displayDate'
 import { Session } from '@/auth/Session'
-import { CabinBookingAuthers } from '@/services/cabin/booking/authers'
+import { cabinBookingAuthers } from '@/services/cabin/booking/authers'
 import type { ReleasePeriod } from '@prisma/client'
 
 function findCurrentReleasePeriod(releasePeriods: ReleasePeriod[]) {
@@ -41,8 +41,8 @@ export default async function CabinBooking() {
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
     const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
     const session = await Session.fromNextAuth()
-    const canBookCabin = CabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}).auth(session)
-    const canBookBed = CabinBookingAuthers.createBedBookingNoUser.dynamicFields({}).auth(session)
+    const canBookCabin = cabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}).auth(session)
+    const canBookBed = cabinBookingAuthers.createBedBookingNoUser.dynamicFields({}).auth(session)
 
     return <PageWrapper
         title="Heutte Booking"

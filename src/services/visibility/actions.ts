@@ -3,9 +3,9 @@
 import { createActionError, safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/getUser'
-import { GroupTypesConfig } from '@/services/groups/config'
-import { GroupMethods } from '@/services/groups/methods'
-import { PurposeTextsConfig } from '@/services/visibility/ConfigVars'
+import { groupTypesConfig } from '@/services/groups/config'
+import { groupMethods } from '@/services/groups/methods'
+import { purposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { readVisibilityCollapsed } from '@/services/visibility/read'
 import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
 import type { ActionReturn } from '@/services/actionTypes'
@@ -21,13 +21,13 @@ export async function readVisibilityForAdminAction(id: number): Promise<ActionRe
     const [visibilityRes, groupsRes] = await Promise.all([
         safeServerCall(() => readVisibilityCollapsed(id)),
         // TODO: Fix Authing here. The bypass should be false
-        safeServerCall(() => GroupMethods.readGroupsStructured({ bypassAuth: true }))
+        safeServerCall(() => groupMethods.readGroupsStructured({ bypassAuth: true }))
     ])
     if (!visibilityRes.success || !groupsRes.success) return createActionError('UNKNOWN ERROR', 'noe gikk galt')
 
     const visibility = visibilityRes.data
     const groups = groupsRes.data
-    const purpose = PurposeTextsConfig[visibility.purpose]
+    const purpose = purposeTextsConfig[visibility.purpose]
 
     if (!checkVisibility(await getUser(), visibility, 'ADMIN')) {
         return createActionError('UNAUTHORIZED', 'You do not have permission to admin this collection')
@@ -69,7 +69,7 @@ function expandOneLevel(
     standardGroupings.forEach(groupType => {
         if (!groups[groupType]) return
         const standardRequriment: VisibilityRequiermentForAdmin = {
-            name: GroupTypesConfig[groupType].name,
+            name: groupTypesConfig[groupType].name,
             groups: groups[groupType].groups.map(group => ({
                 ...group,
                 selected: false

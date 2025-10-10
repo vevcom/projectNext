@@ -1,7 +1,7 @@
 import '@pn-server-only'
-import { CompanySchemas } from './schemas'
-import { CompanyAuthers } from './authers'
-import { CompanyConfig } from './config'
+import { companyAuthers } from './authers'
+import { companySchemas } from './schemas'
+import { logoIncluder } from './config'
 import { createCmsImage } from '@/services/cms/images/create'
 import { serviceMethod } from '@/services/serviceMethod'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -9,10 +9,10 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
-export namespace CompanyMethods {
-    export const create = serviceMethod({
-        dataSchema: CompanySchemas.create,
-        authorizer: () => CompanyAuthers.create.dynamicFields({}),
+export const companyMethods = {
+    create: serviceMethod({
+        dataSchema: companySchemas.create,
+        authorizer: () => companyAuthers.create.dynamicFields({}),
         method: async ({ prisma, data }) => {
             //TODO: tranaction when createCmsImage is service method.
             const logo = await createCmsImage({ name: uuid() })
@@ -23,8 +23,8 @@ export namespace CompanyMethods {
                 }
             })
         }
-    })
-    export const readPage = serviceMethod({
+    }),
+    readPage: serviceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -34,7 +34,7 @@ export namespace CompanyMethods {
                 name: z.string().optional(),
             }),
         ),
-        authorizer: () => CompanyAuthers.readPage.dynamicFields({}),
+        authorizer: () => companyAuthers.readPage.dynamicFields({}),
         method: async ({ prisma, params }) => await prisma.company.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
@@ -43,27 +43,27 @@ export namespace CompanyMethods {
                     mode: 'insensitive'
                 }
             },
-            include: CompanyConfig.relationIncluder
+            include: logoIncluder,
         })
-    })
-    export const update = serviceMethod({
+    }),
+    update: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: CompanySchemas.update,
-        authorizer: () => CompanyAuthers.update.dynamicFields({}),
+        dataSchema: companySchemas.update,
+        authorizer: () => companyAuthers.update.dynamicFields({}),
         method: async ({ prisma, params: { id }, data }) => {
             await prisma.company.update({
                 where: { id },
                 data,
             })
         },
-    })
-    export const destroy = serviceMethod({
+    }),
+    destroy: serviceMethod({
         paramsSchema: z.object({
             id: z.number()
         }),
-        authorizer: () => CompanyAuthers.destroy.dynamicFields({}),
+        authorizer: () => companyAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params: { id } }) => {
             await prisma.company.delete({
                 where: {
@@ -71,5 +71,5 @@ export namespace CompanyMethods {
                 }
             })
         }
-    })
+    }),
 }

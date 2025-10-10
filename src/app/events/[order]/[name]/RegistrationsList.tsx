@@ -10,9 +10,9 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
 import { bindParams } from '@/services/actionBind'
-import { EventRegistrationConfig } from '@/services/events/registration/config'
 import ContactCard from '@/components/User/ContactCard'
 import { eventRegistrationDestroyAction } from '@/services/events/registration/actions'
+import { REGISTRATION_READER_TYPE } from '@/services/events/registration/config'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { EventFiltered } from '@/services/events/Types'
@@ -22,7 +22,7 @@ function DetailedTable({
     type,
 }: {
     event: EventFiltered,
-    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+    type: REGISTRATION_READER_TYPE,
 }) {
     return <EventRegistrationDetailedPagingProvider
         serverRenderedData={[]}
@@ -83,7 +83,7 @@ function DefaultList({
     type,
 }: {
     event: EventFiltered,
-    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+    type: REGISTRATION_READER_TYPE
 }) {
     return <EventRegistrationPagingProvider
         serverRenderedData={[]}
@@ -131,20 +131,20 @@ export default function RegistrationsList({
         />}
         {detailedView ? <DetailedTable
             event={event}
-            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+            type={REGISTRATION_READER_TYPE.REGISTRATIONS}
         /> : <DefaultList
             event={event}
-            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+            type={REGISTRATION_READER_TYPE.REGISTRATIONS}
         />}
 
         {event.waitingList && <>
             <h4>Venteliste</h4>
             {detailedView ? <DetailedTable
                 event={event}
-                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+                type={REGISTRATION_READER_TYPE.WAITING_LIST}
             /> : <DefaultList
                 event={event}
-                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+                type={REGISTRATION_READER_TYPE.WAITING_LIST}
             />}
         </>}
     </>

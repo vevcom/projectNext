@@ -2,8 +2,8 @@ import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
-import { UserConfig } from '@/services/users/config'
-import { ImageMethods } from '@/services/images/methods'
+import { imageMethods } from '@/services/images/methods'
+import { userFilterSelection } from '@/services/users/config'
 import type { ExpandedArticle } from '@/services/cms/articles/Types'
 import type { CmsParagraph } from '@prisma/client'
 import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
@@ -90,7 +90,7 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
 
 // TODO: Create ServiceMethod
 export async function readCommitteeMembers(shortName: string) {
-    const defaultImage = await ImageMethods.readSpecial({
+    const defaultImage = await imageMethods.readSpecial({
         params: { special: 'DEFAULT_PROFILE_IMAGE' },
         bypassAuth: true
     })
@@ -104,7 +104,7 @@ export async function readCommitteeMembers(shortName: string) {
                         include: {
                             user: {
                                 select: {
-                                    ...UserConfig.filterSelection,
+                                    ...userFilterSelection,
                                     image: true
                                 }
                             }

@@ -1,5 +1,5 @@
 import { dateMatchCron } from '@/lib/dates/cron'
-import type { CabinProductConfig } from '@/services/cabin/product/config'
+import type { CabinProductExtended, CabinProductPriceExtended } from '@/services/cabin/product/config'
 import type { CabinProduct, CabinProductPrice, PricePeriod } from '@prisma/client'
 
 function getDateArray(start: Date, end: Date) {
@@ -25,7 +25,7 @@ function matchPriceForDay({
     day: Date,
     memberShare: number,
     pricePeriods: PricePeriod[],
-    prices: CabinProductConfig.CabinProductPriceExtended[]
+    prices: CabinProductPriceExtended[]
 }) {
     const currentPricePeriod = pricePeriods.findLast(period => period.validFrom <= day)
     if (!currentPricePeriod) {
@@ -76,7 +76,7 @@ function findPricesForProduct({
     numberOfMembers: number,
     numberOfNonMembers: number,
     pricePeriods: PricePeriod[],
-    product: CabinProductConfig.CabinProductExtended
+    product: CabinProductExtended
 }): CabinPriceCalculatorReturnType[] {
     const dateArray = getDateArray(startDate, endDate)
     let memberShare = Math.ceil(numberOfMembers / (numberOfMembers + numberOfNonMembers) * 100)
@@ -117,7 +117,7 @@ export function calculateCabinBookingPrice({
     numberOfNonMembers,
 }: {
     pricePeriods: PricePeriod[],
-    products: CabinProductConfig.CabinProductExtended[],
+    products: CabinProductExtended[],
     productAmounts: number[],
     startDate: Date,
     endDate: Date,

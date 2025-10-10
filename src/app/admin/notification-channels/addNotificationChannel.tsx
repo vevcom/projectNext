@@ -5,8 +5,8 @@ import { SelectNumber } from '@/components/UI/Select'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { bindParams } from '@/services/actionBind'
-import { NotificationConfig } from '@/services/notifications/config'
 import { createNotificationChannelAction } from '@/services/notifications/actions'
+import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/config'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
@@ -19,16 +19,16 @@ export default function AddNotificationChannel({
 }) {
     const { push } = useRouter()
 
-    const [availableMethods, setAvailableMethods] = useState<NotificationMethodGeneral>(NotificationConfig.allMethodsOn)
-    const [defaultMethods, setDefaultMethods] = useState<NotificationMethodGeneral>(NotificationConfig.allMethodsOff)
+    const [availableMethods, setAvailableMethods] = useState<NotificationMethodGeneral>(allNotificationMethodsOn)
+    const [defaultMethods, setDefaultMethods] = useState<NotificationMethodGeneral>(allNotificationMethodsOn)
     const [selectedParentId, setSelectedParentId] = useState(channels.find(channel => channel.special === 'ROOT')?.id)
     const [editableMethods, setEditableMethods] = useState(
-        channels.find(channel => channel.id === selectedParentId)?.availableMethods ?? NotificationConfig.allMethodsOn
+        channels.find(channel => channel.id === selectedParentId)?.availableMethods ?? allNotificationMethodsOn
     )
 
     function handleNewParent(id: number) {
         setSelectedParentId(id)
-        setEditableMethods(channels.find(channel => channel.id === id)?.availableMethods ?? NotificationConfig.allMethodsOn)
+        setEditableMethods(channels.find(channel => channel.id === id)?.availableMethods ?? allNotificationMethodsOff)
     }
 
     return <Form

@@ -5,7 +5,7 @@ import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
 import { getUser } from '@/auth/getUser'
-import { checkGroupValidity, GroupMethods, inferGroupName } from '@/services/groups/methods'
+import { checkGroupValidity, groupMethods, inferGroupName } from '@/services/groups/methods'
 
 
 type PropTypes = {
@@ -33,7 +33,7 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
-    const groups = await GroupMethods.readGroupsOfUser({
+    const groups = await groupMethods.readGroupsOfUser({
         bypassAuth: true,
         params: {
             userId: user.id,

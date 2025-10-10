@@ -20,7 +20,7 @@ export const permissionCategories = [
     'applications',
 ] as const satisfies string[]
 
-export const PermissionConfig = {
+export const permissionConfig = {
     OMEGAQUOTES_READ: {
         name: 'Les OmegaQuotes',
         description: 'kan lese OmegaQuotes',

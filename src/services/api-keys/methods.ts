@@ -1,9 +1,9 @@
 import '@pn-server-only'
-import { ApiKeyAuthers } from './authers'
-import { ApiKeyConfig } from './config'
-import { ApiKeySchemas } from './schemas'
+import { apiKeyAuthers } from './authers'
+import { apiKeySchemas } from './schemas'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
 import { encodeApiKey } from './apiKeyEncoder'
+import { apiFilterSelection, apiKeyLength } from './config'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import logger from '@/lib/logger'
@@ -11,44 +11,47 @@ import { z } from 'zod'
 import crypto from 'crypto'
 import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './Types'
 
-export namespace ApiKeyMethods {
-    /**
-     * Updates the active status of an api key if it has expired, i.e. if the expiresAt date is in the past.
-     * This method is used when reading api keys to ensure that the active status is correct.
-     */
-    const updateIfExpired = serviceMethod({
-        authorizer: () => ApiKeyAuthers.updateIfExpired.dynamicFields({}),
-        paramsSchema: z.object({
-            id: z.number(),
-            expiresAt: z.date().nullable(),
-            active: z.boolean(),
-        }),
-        method: async ({ prisma, params: apiKey }) => {
-            if (!apiKey) {
-                throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
-            }
-
-            if (!apiKey.expiresAt || apiKey.expiresAt > new Date()) return { active: apiKey.active }
-            logger.info('Deactivating expired api key', { id: apiKey.id })
-
-            const updated = await prisma.apiKey.update({
-                where: { id: apiKey.id },
-                data: { active: false },
-                select: { active: true },
-            })
-            return {
-                active: updated.active,
-            }
+/**
+ * Updates the active status of an api key if it has expired, i.e. if the expiresAt date is in the past.
+ * This method is used when reading api keys to ensure that the active status is correct.
+ *
+ * Note: This operaiton is only used internally.
+ */
+const updateIfExpired = serviceMethod({
+    authorizer: () => apiKeyAuthers.updateIfExpired.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number(),
+        expiresAt: z.date().nullable(),
+        active: z.boolean(),
+    }),
+    method: async ({ prisma, params: apiKey }) => {
+        if (!apiKey) {
+            throw new ServerError('NOT FOUND', 'Nøkkelen finnes ikke')
         }
-    })
-    export const create = serviceMethod({
-        authorizer: () => ApiKeyAuthers.create.dynamicFields({}),
-        dataSchema: ApiKeySchemas.create,
+
+        if (!apiKey.expiresAt || apiKey.expiresAt > new Date()) return { active: apiKey.active }
+        logger.info('Deactivating expired api key', { id: apiKey.id })
+
+        const updated = await prisma.apiKey.update({
+            where: { id: apiKey.id },
+            data: { active: false },
+            select: { active: true },
+        })
+        return {
+            active: updated.active,
+        }
+    }
+})
+
+export const apiKeyMethods = {
+    create: serviceMethod({
+        authorizer: () => apiKeyAuthers.create.dynamicFields({}),
+        dataSchema: apiKeySchemas.create,
         method: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
             const NODE_ENV = process.env.NODE_ENV
             const prepend = NODE_ENV === 'production' ? 'prod' : 'dev'
 
-            const key = prepend + crypto.randomBytes(ApiKeyConfig.keyLength - prepend.length).toString('hex')
+            const key = prepend + crypto.randomBytes(apiKeyLength - prepend.length).toString('hex')
             const keyHashEncrypted = await apiKeyHashAndEncrypt(key)
 
             const apiKey = await prisma.apiKey.create({
@@ -57,13 +60,13 @@ export namespace ApiKeyMethods {
                     name: data.name,
                     active: true,
                 },
-                select: ApiKeyConfig.filterSelection
+                select: apiFilterSelection,
             })
             return { ...apiKey, key: encodeApiKey({ key, id: apiKey.id }) }
         }
-    })
-    export const read = serviceMethod({
-        authorizer: () => ApiKeyAuthers.read.dynamicFields({}),
+    }),
+    read: serviceMethod({
+        authorizer: () => apiKeyAuthers.read.dynamicFields({}),
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ name: z.string() })]),
         method: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
             const apiKey = await prisma.apiKey.findUnique({
@@ -71,7 +74,7 @@ export namespace ApiKeyMethods {
                     id: 'id' in params ? params.id : undefined,
                     name: 'name' in params ? params.name : undefined,
                 },
-                select: ApiKeyConfig.filterSelection
+                select: apiFilterSelection,
             })
 
             if (!apiKey) throw new ServerError('BAD PARAMETERS', 'Api key does not exist')
@@ -83,12 +86,12 @@ export namespace ApiKeyMethods {
                 })
             }
         }
-    })
-    export const readMany = serviceMethod({
-        authorizer: () => ApiKeyAuthers.readMany.dynamicFields({}),
+    }),
+    readMany: serviceMethod({
+        authorizer: () => apiKeyAuthers.readMany.dynamicFields({}),
         method: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
             const apiKeys = await prisma.apiKey.findMany({
-                select: ApiKeyConfig.filterSelection,
+                select: apiFilterSelection,
                 orderBy: [
                     { active: 'desc' },
                     { name: 'asc' }
@@ -103,9 +106,9 @@ export namespace ApiKeyMethods {
                 })
             })))
         }
-    })
-    export const readWithHash = serviceMethod({
-        authorizer: () => ApiKeyAuthers.readWithHash.dynamicFields({}),
+    }),
+    readWithHash: serviceMethod({
+        authorizer: () => apiKeyAuthers.readWithHash.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -129,13 +132,13 @@ export namespace ApiKeyMethods {
                 }),
             }
         }
-    })
-    export const update = serviceMethod({
-        authorizer: () => ApiKeyAuthers.update.dynamicFields({}),
+    }),
+    update: serviceMethod({
+        authorizer: () => apiKeyAuthers.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: ApiKeySchemas.update,
+        dataSchema: apiKeySchemas.update,
         method: async ({ prisma, params, data }) => {
             if (data.active && data.expiresAt && data.expiresAt < new Date()) {
                 throw new ServerError('BAD PARAMETERS', 'Hvis du vil aktivere en nøkkel, kan den ikke ha utløpt')
@@ -147,9 +150,9 @@ export namespace ApiKeyMethods {
             })
             return { name }
         },
-    })
-    export const destroy = serviceMethod({
-        authorizer: () => ApiKeyAuthers.destroy.dynamicFields({}),
+    }),
+    destroy: serviceMethod({
+        authorizer: () => apiKeyAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -170,5 +173,5 @@ export namespace ApiKeyMethods {
                 })
             })
         }
-    })
+    }),
 }

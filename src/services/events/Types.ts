@@ -1,10 +1,10 @@
-import type { EventConfig } from './config'
+import type { eventFilterSelection } from './config'
 import type { ExpandedCmsImage } from '@/cms/images/Types'
 import type { EventTag, Prisma } from '@prisma/client'
 
 
 export type EventFiltered = Prisma.EventGetPayload<{
-    select: typeof EventConfig.filterSeletion
+    select: typeof eventFilterSelection
 }> & {
     numOfRegistrations: number,
     numOnWaitingList: number,

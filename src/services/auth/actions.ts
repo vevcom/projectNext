@@ -1,9 +1,9 @@
 'use server'
 
 import { action } from '@/services/action'
-import { AuthMethods } from '@/services/auth/methods'
+import { authMethods } from '@/services/auth/methods'
 
-export const verifyResetPasswordTokenAction = action(AuthMethods.verifyResetPasswordToken)
-export const resetPasswordAction = action(AuthMethods.resetPassword)
-export const sendResetPasswordEmailAction = action(AuthMethods.sendResetPasswordEmail)
-export const verifyEmailAction = action(AuthMethods.verifyEmail)
+export const verifyResetPasswordTokenAction = action(authMethods.verifyResetPasswordToken)
+export const resetPasswordAction = action(authMethods.resetPassword)
+export const sendResetPasswordEmailAction = action(authMethods.sendResetPasswordEmail)
+export const verifyEmailAction = action(authMethods.verifyEmail)

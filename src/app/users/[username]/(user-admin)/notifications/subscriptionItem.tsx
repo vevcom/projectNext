@@ -2,7 +2,7 @@
 
 import styles from './subscriptionItem.module.scss'
 import NotificationMethodCheckboxes from '@/components/NotificaionMethodSelector/NotificationMethodCheckboxes'
-import { NotificationConfig } from '@/services/notifications/config'
+import { allNotificationMethodsOn } from '@/services/notifications/config'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
 import type { NotificationMethodGeneral } from '@/services/notifications/Types'
@@ -19,7 +19,7 @@ export default function SubscriptionItem({
     onChange?: (branchId: number, method: NotificationMethodGeneral) => void
 }) {
     const checkboxes = NotificationMethodCheckboxes({
-        methods: branch.subscription?.methods ?? NotificationConfig.allMethodsOff,
+        methods: branch.subscription?.methods ?? allNotificationMethodsOn,
         editable: branch.availableMethods,
         onChange: (method: NotificationMethodGeneral) => {
             if (!onChange) {

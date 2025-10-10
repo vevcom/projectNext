@@ -1,15 +1,15 @@
-import { CabinReleasePeriodAuthers } from './authers'
-import { CabinReleasePeriodSchemas } from './schemas'
-import { serviceMethod } from '@/services/serviceMethod'
 import 'server-only'
+import { cabinReleasePeriodAuthers } from './authers'
+import { cabinReleasePeriodSchemas } from './schemas'
+import { serviceMethod } from '@/services/serviceMethod'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
-export namespace CabinReleasePeriodMethods {
+export const cabinReleasePeriodMethods = {
 
-    export const create = serviceMethod({
-        authorizer: () => CabinReleasePeriodAuthers.createReleasePeriodAuther.dynamicFields({}),
-        dataSchema: CabinReleasePeriodSchemas.createReleasePeriod,
+    create: serviceMethod({
+        authorizer: () => cabinReleasePeriodAuthers.createReleasePeriodAuther.dynamicFields({}),
+        dataSchema: cabinReleasePeriodSchemas.createReleasePeriod,
         method: async ({ prisma, data }) => {
             const latestReleasePeriod = await prisma.releasePeriod.findFirst({
                 orderBy: {
@@ -29,10 +29,10 @@ export namespace CabinReleasePeriodMethods {
                 data,
             })
         }
-    })
+    }),
 
-    export const destroy = serviceMethod({
-        authorizer: () => CabinReleasePeriodAuthers.deleteReleasePeriodAuther.dynamicFields({}),
+    destroy: serviceMethod({
+        authorizer: () => cabinReleasePeriodAuthers.deleteReleasePeriodAuther.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -49,19 +49,19 @@ export namespace CabinReleasePeriodMethods {
                 where: params,
             })
         }
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => CabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => cabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
         method: async ({ prisma }) => prisma.releasePeriod.findMany({
             orderBy: {
                 releaseUntil: 'desc',
             }
         })
-    })
+    }),
 
-    export const getCurrentReleasePeriod = serviceMethod({
-        authorizer: () => CabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
+    getCurrentReleasePeriod: serviceMethod({
+        authorizer: () => cabinReleasePeriodAuthers.readReleasePeriodAuther.dynamicFields({}),
         method: async ({ prisma }) => prisma.releasePeriod.findFirst({
             where: {
                 releaseTime: {
@@ -73,11 +73,11 @@ export namespace CabinReleasePeriodMethods {
             },
             take: 1
         })
-    })
+    }),
 
-    export const update = serviceMethod({
-        authorizer: () => CabinReleasePeriodAuthers.updateReleasePeriodAuther.dynamicFields({}),
-        dataSchema: CabinReleasePeriodSchemas.updateReleasePeriod,
+    update: serviceMethod({
+        authorizer: () => cabinReleasePeriodAuthers.updateReleasePeriodAuther.dynamicFields({}),
+        dataSchema: cabinReleasePeriodSchemas.updateReleasePeriod,
         method: async ({ prisma, data }) => prisma.releasePeriod.update({
             where: {
                 id: data.id, // TODO: Figure out why id is in data and not a param
@@ -87,5 +87,5 @@ export namespace CabinReleasePeriodMethods {
                 releaseTime: data.releaseTime,
             },
         })
-    })
+    }),
 }

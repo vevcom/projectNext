@@ -6,8 +6,8 @@ import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import TextInput from '@/app/_components/UI/TextInput'
 import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
-import { ImageConfig } from '@/services/images/config'
 import { createImagesAction } from '@/services/images/actions'
+import { maxImageCountInOneBatch } from '@/services/images/config'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/services/actionTypes'
@@ -24,7 +24,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
     const handleBatchedUpload = useCallback(async (data: FormData) => {
         // split files into batches of maxNumberOfImagesInOneBatch
         const batches = files.reduce((acc, file, index) => {
-            if (index % ImageConfig.maxNumberInOneBatch === 0) {
+            if (index % maxImageCountInOneBatch === 0) {
                 acc.push([])
             }
             acc[acc.length - 1].push(file)

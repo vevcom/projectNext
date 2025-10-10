@@ -1,15 +1,15 @@
-import { ProductAuthers } from './authers'
-import { ProductSchemas } from './schemas'
 import { serviceMethod } from '@/services/serviceMethod'
 import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExtendedProduct } from './Types'
+import { productAuthers } from './authers'
+import { productSchemas } from './schemas'
 
-export namespace ProductMethods {
-    export const create = serviceMethod({
-        authorizer: () => ProductAuthers.create.dynamicFields({}),
-        dataSchema: ProductSchemas.create,
+export const productMethods = {
+    create: serviceMethod({
+        authorizer: () => productAuthers.create.dynamicFields({}),
+        dataSchema: productSchemas.create,
         method: async ({ prisma, data }) => prisma.product.create({
             data: {
                 ...data,
@@ -17,14 +17,14 @@ export namespace ProductMethods {
                 name: data.name.toUpperCase()
             }
         })
-    })
+    }),
 
-    export const createForShop = serviceMethod({
-        authorizer: () => ProductAuthers.create.dynamicFields({}),
+    createForShop: serviceMethod({
+        authorizer: () => productAuthers.create.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),
-        dataSchema: ProductSchemas.createForShop,
+        dataSchema: productSchemas.createForShop,
         method: async ({ prisma, params, data }) => prisma.product.create({
             data: {
                 name: data.name.toUpperCase(),
@@ -42,11 +42,11 @@ export namespace ProductMethods {
                 },
             },
         })
-    })
+    }),
 
-    export const createShopConnection = serviceMethod({
-        authorizer: () => ProductAuthers.createShopConnection.dynamicFields({}),
-        dataSchema: ProductSchemas.createShopConnection,
+    createShopConnection: serviceMethod({
+        authorizer: () => productAuthers.createShopConnection.dynamicFields({}),
+        dataSchema: productSchemas.createShopConnection,
         method: async ({ prisma, data }) => prisma.shopProduct.create({
             data: {
                 shop: {
@@ -62,15 +62,15 @@ export namespace ProductMethods {
                 price: data.price,
             }
         })
-    })
+    }),
 
-    export const readMany = serviceMethod({
-        authorizer: () => ProductAuthers.read.dynamicFields({}),
+    readMany: serviceMethod({
+        authorizer: () => productAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => await prisma.product.findMany()
-    })
+    }),
 
-    export const read = serviceMethod({
-        authorizer: () => ProductAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => productAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             productId: z.number(),
         }),
@@ -86,11 +86,11 @@ export namespace ProductMethods {
                 }
             }
         })
-    })
+    }),
 
-    export const readByBarCode = serviceMethod({
-        authorizer: () => ProductAuthers.read.dynamicFields({}),
-        dataSchema: ProductSchemas.readByBarCode,
+    readByBarCode: serviceMethod({
+        authorizer: () => productAuthers.read.dynamicFields({}),
+        dataSchema: productSchemas.readByBarCode,
         method: async ({ prisma, data }): Promise<ExtendedProduct | null> => {
             if (!data.barcode) {
                 throw new ServerError('BAD PARAMETERS', 'Barcode is required.')
@@ -128,11 +128,11 @@ export namespace ProductMethods {
 
             return ret
         }
-    })
+    }),
 
-    export const update = serviceMethod({
-        authorizer: () => ProductAuthers.update.dynamicFields({}),
-        dataSchema: ProductSchemas.update,
+    update: serviceMethod({
+        authorizer: () => productAuthers.update.dynamicFields({}),
+        dataSchema: productSchemas.update,
         method: async ({ prisma, data }) => prisma.product.update({
             where: {
                 id: data.productId,
@@ -143,11 +143,11 @@ export namespace ProductMethods {
                 barcode: convertBarcode(data.barcode),
             },
         })
-    })
+    }),
 
-    export const updateForShop = serviceMethod({
-        authorizer: () => ProductAuthers.update.dynamicFields({}),
-        dataSchema: ProductSchemas.updateForShop,
+    updateForShop: serviceMethod({
+        authorizer: () => productAuthers.update.dynamicFields({}),
+        dataSchema: productSchemas.updateForShop,
         paramsSchema: z.object({
             shopId: z.number(),
             productId: z.number(),
@@ -176,7 +176,7 @@ export namespace ProductMethods {
                 },
             },
         })
-    })
+    }),
 }
 
 export function convertBarcode(barcode?: string | number) {

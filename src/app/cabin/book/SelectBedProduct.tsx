@@ -1,5 +1,5 @@
 import NumberInput from '@/app/_components/UI/NumberInput'
-import type { CabinProductConfig } from '@/services/cabin/product/config'
+import type { CabinProductExtended } from '@/services/cabin/product/config'
 
 
 export default function SelectBedProducts({
@@ -7,7 +7,7 @@ export default function SelectBedProducts({
     onChange,
     amounts,
 }: {
-    bedProducts: CabinProductConfig.CabinProductExtended[],
+    bedProducts: CabinProductExtended[],
     onChange: (product: number[]) => void
     amounts: number[],
 }) {

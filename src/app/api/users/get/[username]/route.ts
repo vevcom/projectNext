@@ -1,12 +1,12 @@
 import { apiHandler } from '@/api/apiHandler'
-import { UserMethods } from '@/services/users/methods'
+import { userMethods } from '@/services/users/methods'
 
 export const GET = apiHandler({
-    serviceMethod: UserMethods.readProfile,
+    serviceMethod: userMethods.readProfile,
     params: (rawparams: {username: string}) => ({ username: rawparams.username })
 })
 
 export const PATCH = apiHandler({
-    serviceMethod: UserMethods.update,
+    serviceMethod: userMethods.update,
     params: (rawparams: { username: string }) => ({ username: rawparams.username })
 })

@@ -1,32 +1,32 @@
 import '@pn-server-only'
-import { ApplicationPeriodAuthers } from './authers'
-import { ApplicationPeriodSchemas } from './schemas'
-import { ApplicationPeriodConfig } from './config'
-import { serviceMethod } from '@/services/serviceMethod'
-import { ApplicationMethods } from '@/services/applications/methods'
+import { applicationPeriodAuthers } from './authers'
+import { applicationPeriodSchemas } from './schemas'
+import { committeesParticipatingincluder } from './config'
+import { applicationMethods } from '@/services/applications/methods'
 import { ServerError } from '@/services/error'
+import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'
 
-export namespace ApplicationPeriodMethods {
-    export const readAll = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.readAll.dynamicFields({}),
+export const applicationPeriodMethods = {
+    readAll: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.readAll.dynamicFields({}),
         method: async ({ prisma }) => prisma.applicationPeriod.findMany()
-    })
+    }),
 
-    export const read = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.read.dynamicFields({}),
+    read: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),
         method: async ({ prisma, params }) => prisma.applicationPeriod.findUniqueOrThrow({
             where: { name: params.name },
-            include: ApplicationPeriodConfig.includer
+            include: committeesParticipatingincluder,
         })
-    })
+    }),
 
-    export const create = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.create.dynamicFields({}),
-        dataSchema: ApplicationPeriodSchemas.create,
+    create: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.create.dynamicFields({}),
+        dataSchema: applicationPeriodSchemas.create,
         method: async ({ prisma, data }) => {
             await prisma.applicationPeriod.create({
                 data: {
@@ -41,11 +41,11 @@ export namespace ApplicationPeriodMethods {
             })
             return { name: data.name }
         }
-    })
+    }),
 
-    export const update = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.update.dynamicFields({}),
-        dataSchema: ApplicationPeriodSchemas.update,
+    update: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.update.dynamicFields({}),
+        dataSchema: applicationPeriodSchemas.update,
         paramsSchema: z.object({
             name: z.string()
         }),
@@ -69,7 +69,7 @@ export namespace ApplicationPeriodMethods {
 
             if (data.participatingCommitteeIds) {
                 // Remove applications to committees that are no longer participating
-                // This must be done through the ApplicationMethods.destroy method to ensure
+                // This must be done through the applicationMethods.destroy method to ensure
                 // that reordering priorities is handled correctly.
                 await Promise.all(
                     period.committeesParticipating
@@ -90,7 +90,7 @@ export namespace ApplicationPeriodMethods {
                             })
                             await Promise.all(
                                 removeApplications.map(async application =>
-                                    await ApplicationMethods.destroy({
+                                    await applicationMethods.destroy({
                                         params: {
                                             userId: application.userId,
                                             commiteeParticipationId: application.applicationPeriodCommiteeId
@@ -120,15 +120,15 @@ export namespace ApplicationPeriodMethods {
 
             return { name: period.name }
         }
-    })
+    }),
 
-    export const removeAllApplicationTexts = serviceMethod({
+    removeAllApplicationTexts: serviceMethod({
         paramsSchema: z.object({
             name: z.string()
         }),
-        authorizer: () => ApplicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
+        authorizer: () => applicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
         method: async ({ prisma, params, session }) => {
-            const period = await read({
+            const period = await applicationPeriodMethods.read({
                 params: { name: params.name },
                 session
             })
@@ -146,10 +146,10 @@ export namespace ApplicationPeriodMethods {
                 }
             })
         }
-    })
+    }),
 
-    export const destroy = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.destroy.dynamicFields({}),
+    destroy: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.destroy.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),
@@ -158,10 +158,10 @@ export namespace ApplicationPeriodMethods {
                 where: { name: params.name }
             })
         }
-    })
+    }),
 
-    export const readNumberOfApplications = serviceMethod({
-        authorizer: () => ApplicationPeriodAuthers.readNumberOfApplications.dynamicFields({}),
+    readNumberOfApplications: serviceMethod({
+        authorizer: () => applicationPeriodAuthers.readNumberOfApplications.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),
@@ -178,5 +178,5 @@ export namespace ApplicationPeriodMethods {
                 },
             })
         }
-    })
+    }),
 }

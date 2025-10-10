@@ -1,7 +1,7 @@
 import '@pn-server-only'
-import { groupsExpandedIncluder, GroupTypesConfig, OmegaMembershipLevelConfig, readGroupsOfUserIncluder } from './config'
-import { GroupAuthers } from './authers'
-import { UserConfig } from '@/services/users/config'
+import { groupsExpandedIncluder, groupTypesConfig, OmegaMembershipLevelConfig, readGroupsOfUserIncluder } from './config'
+import { groupAuthers } from './authers'
+import { userFilterSelection } from '@/services/users/config'
 import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
@@ -187,14 +187,13 @@ export function checkGroupValidity<
     }
 }
 
-export namespace GroupMethods {
-
-    export const readGroups = serviceMethod({
-        authorizer: () => GroupAuthers.read.dynamicFields({}),
+export const groupMethods = {
+    readGroups: serviceMethod({
+        authorizer: () => groupAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => prisma.group.findMany()
-    })
+    }),
 
-    export const readCurrentGroupOrder = serviceMethod({
+    readCurrentGroupOrder: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
@@ -207,9 +206,9 @@ export namespace GroupMethods {
                 order: true,
             }
         })).order
-    })
+    }),
 
-    export const readCurrentGroupOrders = serviceMethod({
+    readCurrentGroupOrders: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().array(),
@@ -225,9 +224,9 @@ export namespace GroupMethods {
                 order: true,
             }
         })
-    })
+    }),
 
-    export const readGroup = serviceMethod({
+    readGroup: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             id: z.number(),
@@ -237,10 +236,10 @@ export namespace GroupMethods {
                 id: params.id,
             },
         })
-    })
+    }),
 
-    export const readGroupExpanded = serviceMethod({
-        authorizer: () => GroupAuthers.read.dynamicFields({}),
+    readGroupExpanded: serviceMethod({
+        authorizer: () => groupAuthers.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -253,10 +252,10 @@ export namespace GroupMethods {
             }).then(checkGroupValidity).then(grp => ({ ...grp, membershipsToInferFirstOrder: grp.memberships }))
             return expandGroup(group, prisma)
         }
-    })
+    }),
 
-    export const readGroupsExpanded = serviceMethod({
-        authorizer: () => GroupAuthers.read.dynamicFields({}),
+    readGroupsExpanded: serviceMethod({
+        authorizer: () => groupAuthers.read.dynamicFields({}),
         method: async ({ prisma }) => {
             const groups = (await prisma.group.findMany({
                 include: groupsExpandedIncluder,
@@ -264,39 +263,39 @@ export namespace GroupMethods {
 
             return await Promise.all(groups.map(group => expandGroup(group, prisma)))
         }
-    })
+    }),
 
-    export const readGroupsStructured = serviceMethod({
-        authorizer: () => GroupAuthers.read.dynamicFields({}),
+    readGroupsStructured: serviceMethod({
+        authorizer: () => groupAuthers.read.dynamicFields({}),
         method: async () => {
             const groupsStructured: GroupsStructured = {
                 CLASS: {
-                    ...GroupTypesConfig.CLASS,
+                    ...groupTypesConfig.CLASS,
                     groups: [],
                 },
                 COMMITTEE: {
-                    ...GroupTypesConfig.COMMITTEE,
+                    ...groupTypesConfig.COMMITTEE,
                     groups: [],
                 },
                 INTEREST_GROUP: {
-                    ...GroupTypesConfig.INTEREST_GROUP,
+                    ...groupTypesConfig.INTEREST_GROUP,
                     groups: [],
                 },
                 MANUAL_GROUP: {
-                    ...GroupTypesConfig.MANUAL_GROUP,
+                    ...groupTypesConfig.MANUAL_GROUP,
                     groups: [],
                 },
                 OMEGA_MEMBERSHIP_GROUP: {
-                    ...GroupTypesConfig.OMEGA_MEMBERSHIP_GROUP,
+                    ...groupTypesConfig.OMEGA_MEMBERSHIP_GROUP,
                     groups: [],
                 },
                 STUDY_PROGRAMME: {
-                    ...GroupTypesConfig.STUDY_PROGRAMME,
+                    ...groupTypesConfig.STUDY_PROGRAMME,
                     groups: [],
                 },
             } satisfies GroupsStructured
 
-            const groupExpanded = await readGroupsExpanded({ bypassAuth: true })
+            const groupExpanded = await groupMethods.readGroupsExpanded({ bypassAuth: true })
 
             groupExpanded.forEach(group => {
                 groupsStructured[group.groupType].groups.push(group)
@@ -304,9 +303,9 @@ export namespace GroupMethods {
 
             return groupsStructured
         }
-    })
+    }),
 
-    export const readUsersOfGroups = serviceMethod({
+    readUsersOfGroups: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             groups: z.array(z.object({
@@ -324,16 +323,16 @@ export namespace GroupMethods {
                 },
                 select: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: userFilterSelection,
                     }
                 }
             })
 
             return memberships.map(({ user }) => user)
         }
-    })
+    }),
 
-    export const readGroupsOfUser = serviceMethod({
+    readGroupsOfUser: serviceMethod({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             userId: z.number(),
@@ -354,5 +353,5 @@ export namespace GroupMethods {
 
             return groups
         },
-    })
+    }),
 }

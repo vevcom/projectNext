@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { authOptions } from './authoptions'
 import checkMatrix from '@/utils/checkMatrix'
-import { PermissionMethods } from '@/services/permissions/methods'
+import { permissionMethods } from '@/services/permissions/methods'
 import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/utils/checkMatrix'
@@ -92,7 +92,7 @@ export async function getUser({
 }: GetUserArgsType<boolean, boolean> = {}): Promise<GetUserReturnType<boolean>> {
     const {
         user = null,
-        permissions = await PermissionMethods.readDefaultPermissions({
+        permissions = await permissionMethods.readDefaultPermissions({
             bypassAuth: true,
         }),
         memberships = [],

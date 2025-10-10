@@ -1,7 +1,8 @@
 import '@pn-server-only'
-import { EventSchemas } from './schemas'
-import { EventConfig } from './config'
-import { EventAuthers } from './authers'
+import { eventAuthers } from './authers'
+import { eventSchemas } from './schemas'
+import { eventFilterSelection } from './config'
+import { notificationMethods } from '@/services/notifications/methods'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsImage } from '@/services/cms/images/create'
@@ -10,16 +11,15 @@ import { ServerError } from '@/services/error'
 import { serviceMethod } from '@/services/serviceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { NotificationMethods } from '@/services/notifications/methods'
 import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import type { EventExpanded } from './Types'
 
-export namespace EventMethods {
-    export const create = serviceMethod({
-        dataSchema: EventSchemas.create,
-        authorizer: () => EventAuthers.create.dynamicFields({}),
+export const eventMethods = {
+    create: serviceMethod({
+        dataSchema: eventSchemas.create,
+        authorizer: () => eventAuthers.create.dynamicFields({}),
         method: async ({ prisma, data, session }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
@@ -79,7 +79,7 @@ export namespace EventMethods {
                 }))
             })
 
-            await NotificationMethods.createSpecial({
+            await notificationMethods.createSpecial({
                 params: {
                     special: 'NEW_EVENT',
                 },
@@ -91,13 +91,13 @@ export namespace EventMethods {
             })
             return event
         }
-    })
-    export const read = serviceMethod({
+    }),
+    read: serviceMethod({
         paramsSchema: z.object({
             order: z.number(),
             name: z.string(),
         }),
-        authorizer: () => EventAuthers.read.dynamicFields({}),
+        authorizer: () => eventAuthers.read.dynamicFields({}),
         method: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
@@ -154,16 +154,16 @@ export namespace EventMethods {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }
         }
-    })
-    export const readManyCurrent = serviceMethod({
+    }),
+    readManyCurrent: serviceMethod({
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
         }),
-        authorizer: () => EventAuthers.readManyCurrent.dynamicFields({}),
+        authorizer: () => eventAuthers.readManyCurrent.dynamicFields({}),
         method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 select: {
-                    ...EventConfig.filterSeletion,
+                    ...eventFilterSelection,
                     coverImage: {
                         include: {
                             image: true
@@ -189,8 +189,8 @@ export namespace EventMethods {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
-    })
-    export const readManyArchivedPage = serviceMethod({
+    }),
+    readManyArchivedPage: serviceMethod({
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -201,7 +201,7 @@ export namespace EventMethods {
                 tags: z.array(z.string()).nullable(),
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-        authorizer: () => EventAuthers.readManyArchivedPage.dynamicFields({}),
+        authorizer: () => eventAuthers.readManyArchivedPage.dynamicFields({}),
         method: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
@@ -216,7 +216,7 @@ export namespace EventMethods {
                     eventTagEvents: eventTagSelector(params.paging.details.tags)
                 },
                 select: {
-                    ...EventConfig.filterSeletion,
+                    ...eventFilterSelection,
                     coverImage: {
                         include: {
                             image: true
@@ -236,13 +236,13 @@ export namespace EventMethods {
                 tags: event.eventTagEvents.map(ete => ete.tag)
             }))
         }
-    })
-    export const update = serviceMethod({
+    }),
+    update: serviceMethod({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        dataSchema: EventSchemas.update,
-        authorizer: () => EventAuthers.update.dynamicFields({}),
+        dataSchema: eventSchemas.update,
+        authorizer: () => eventAuthers.update.dynamicFields({}),
         method: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: { id: params.id }
@@ -287,12 +287,12 @@ export namespace EventMethods {
             // TODO: Send email to users that get promoted from waiting list
             return eventUpdate
         }
-    })
-    export const destroy = serviceMethod({
+    }),
+    destroy: serviceMethod({
         paramsSchema: z.object({
             id: z.number()
         }),
-        authorizer: () => EventAuthers.destroy.dynamicFields({}),
+        authorizer: () => eventAuthers.destroy.dynamicFields({}),
         method: async ({ prisma, params }) => {
             await prisma.event.delete({
                 where: {
@@ -300,7 +300,7 @@ export namespace EventMethods {
                 }
             })
         }
-    })
+    }),
 }
 
 function eventTagSelector(tags: string[] | null) {
