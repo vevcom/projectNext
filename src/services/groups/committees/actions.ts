@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/getUser'
 import { createCommittee } from '@/services/groups/committees/create'
@@ -27,11 +27,11 @@ export async function createCommitteeAction(
     return await safeServerCall(() => createCommittee(parse.data))
 }
 
-export const readCommitteesAction = action(committeeOperations.readCommittees)
-export const readCommitteeAction = action(committeeOperations.readCommittee)
-export const readCommitteeArticleAction = action(committeeOperations.readCommitteArticle)
-export const readCommitteeParagraphAction = action(committeeOperations.readCommitteeParagraph)
-export const readCommitteeMembersAction = action(committeeOperations.readCommitteeMembers)
+export const readCommitteesAction = makeAction(committeeOperations.readCommittees)
+export const readCommitteeAction = makeAction(committeeOperations.readCommittee)
+export const readCommitteeArticleAction = makeAction(committeeOperations.readCommitteArticle)
+export const readCommitteeParagraphAction = makeAction(committeeOperations.readCommitteeParagraph)
+export const readCommitteeMembersAction = makeAction(committeeOperations.readCommitteeMembers)
 
 export async function updateCommitteeAction(
     id: number,

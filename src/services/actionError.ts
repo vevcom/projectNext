@@ -2,13 +2,13 @@ import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
 import { ParseError, Smorekopp } from '@/services/error'
 import type { AuthStatus } from '@/auth/getUser'
 import type { SafeParseError } from 'zod'
-import type { ActionReturnError, ActionReturn } from './actionTypes'
+import type { ActionError, ActionReturn } from './actionTypes'
 
 /**
  * @deprecated With the "new" service method system this should not be called directly.
  * The action creation utility should handle this internally.
  */
-export function createActionError(errorCode: ErrorCode | AuthStatus, error?: string | ErrorMessage[]): ActionReturnError {
+export function createActionError(errorCode: ErrorCode | AuthStatus, error?: string | ErrorMessage[]): ActionError {
     if (errorCode === 'AUTHORIZED' || errorCode === 'AUTHORIZED_NO_USER') {
         return {
             success: false,
@@ -29,7 +29,7 @@ export function createActionError(errorCode: ErrorCode | AuthStatus, error?: str
  * @deprecated With the "new" service method system this should not be called directly.
  * The action creation utility should handle this internally.
  */
-export function createZodActionError<T>(parse: SafeParseError<T>): ActionReturnError {
+export function createZodActionError<T>(parse: SafeParseError<T>): ActionError {
     return {
         success: false,
         httpCode: 400,
@@ -50,7 +50,7 @@ export async function safeServerCall<T>(call: () => Promise<T>): Promise<ActionR
         const data = await call()
         return {
             success: true,
-            data
+            data,
         }
     } catch (error) {
         if (error instanceof ParseError) {

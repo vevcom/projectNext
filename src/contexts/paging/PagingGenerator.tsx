@@ -29,8 +29,8 @@ export type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
     serverRenderedData: Data[],
 }
 
-export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean> = {
-    fetcher: (x: ReadPageInput<PageSize, Cursor, FetcherDetails>) => Promise<ActionReturn<Data[], DataGuarantee>>,
+export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
+    fetcher: (x: ReadPageInput<PageSize, Cursor, FetcherDetails>) => Promise<ActionReturn<Data[]>>,
     Context: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
     getCursorAfterFetch: (data: Data[]) => Cursor | null,
 }
@@ -44,11 +44,11 @@ export type GeneratorPropTypes<Data, Cursor, PageSize extends number, FetcherDet
  * no data returned at all. In this case, the cursor will be unchanged.
  * @returns A react component that provides the paging context.
  */
-function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails, DataGuarantee extends boolean>({
+function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails>({
     fetcher,
     Context,
     getCursorAfterFetch,
-}: GeneratorPropTypes<Data, Cursor, PageSize, FetcherDetails, DataGuarantee>
+}: GeneratorPropTypes<Data, Cursor, PageSize, FetcherDetails>
 ) {
     return function PagingProvider(
         { serverRenderedData, startPage, children, details: givenDetails }: PropTypes<Data, Cursor, PageSize, FetcherDetails>

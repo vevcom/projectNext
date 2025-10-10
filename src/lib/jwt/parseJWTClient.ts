@@ -2,7 +2,7 @@
 
 import { readJWTPayload } from './jwtReadUnsecure'
 import { createActionError } from '@/services/actionError'
-import { JWT_ISSUER } from '@/jwt/ConfigVars'
+import { JWT_ISSUER } from '@/lib/jwt/ConfigVars'
 import type { OmegaJWTAudience } from '@/jwt/Types'
 import type { ActionReturn } from '@/services/actionTypes'
 

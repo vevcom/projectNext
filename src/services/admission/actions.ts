@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { admissionOperations } from '@/services/admission/operations'
 
-export const createAdmissionTrialAction = action(admissionOperations.createTrial)
+export const createAdmissionTrialAction = makeAction(admissionOperations.createTrial)

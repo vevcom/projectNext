@@ -1,15 +1,15 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { notificationChannelOperations } from '@/services/notifications/channel/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 
-export const createNotificationChannelAction = action(notificationChannelOperations.create)
-export const updateNotificationChannelAction = action(notificationChannelOperations.update)
-export const readNotificationChannelsAction = action(notificationChannelOperations.readMany)
+export const createNotificationChannelAction = makeAction(notificationChannelOperations.create)
+export const updateNotificationChannelAction = makeAction(notificationChannelOperations.update)
+export const readNotificationChannelsAction = makeAction(notificationChannelOperations.readMany)
 
-export const createNotificationAction = action(notificationOperations.create)
+export const createNotificationAction = makeAction(notificationOperations.create)
 
-export const readNotificationSubscriptionsAction = action(notificationSubscriptionOperations.read)
-export const updateNotificationSubscriptionsAction = action(notificationSubscriptionOperations.update)
+export const readNotificationSubscriptionsAction = makeAction(notificationSubscriptionOperations.read)
+export const updateNotificationSubscriptionsAction = makeAction(notificationSubscriptionOperations.update)

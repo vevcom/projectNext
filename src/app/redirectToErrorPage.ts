@@ -24,14 +24,7 @@ export function redirectToErrorPage(code: ErrorCode, message?: string | undefine
  */
 export function unwrapActionReturn<
     Data,
->(actionReturn: ActionReturn<Data, true>): Data
-export function unwrapActionReturn<
-    Data,
->(actionReturn: ActionReturn<Data, false>): Data | undefined
-export function unwrapActionReturn<
-    Data,
-    const DataGuarantee extends boolean,
->(actionReturn: ActionReturn<Data, DataGuarantee>): Data | undefined {
+>(actionReturn: ActionReturn<Data>): Data {
     if (!actionReturn.success) {
         redirectToErrorPage(actionReturn.errorCode, actionReturn.error?.length ? actionReturn.error[0].message : undefined)
     }

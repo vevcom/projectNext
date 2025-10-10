@@ -1,19 +1,19 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { productOperations } from '@/services/shop/product/operations'
 import { shopOperations } from '@/services/shop/shop/operations'
 
-export const readProductsAction = action(productOperations.readMany)
-export const readProductAction = action(productOperations.read)
-export const createProductAction = action(productOperations.create)
-export const updateProductAction = action(productOperations.update)
+export const readProductsAction = makeAction(productOperations.readMany)
+export const readProductAction = makeAction(productOperations.read)
+export const createProductAction = makeAction(productOperations.create)
+export const updateProductAction = makeAction(productOperations.update)
 
-export const createProductForShopAction = action(productOperations.createForShop)
-export const updateProductForShopAction = action(productOperations.updateForShop)
+export const createProductForShopAction = makeAction(productOperations.createForShop)
+export const updateProductForShopAction = makeAction(productOperations.updateForShop)
 
-export const createShopProductConnectionAction = action(productOperations.createShopConnection)
+export const createShopProductConnectionAction = makeAction(productOperations.createShopConnection)
 
-export const readShopsAction = action(shopOperations.readMany)
-export const readShopAction = action(shopOperations.read)
-export const createShopAction = action(shopOperations.create)
+export const readShopsAction = makeAction(shopOperations.readMany)
+export const readShopAction = makeAction(shopOperations.read)
+export const createShopAction = makeAction(shopOperations.create)

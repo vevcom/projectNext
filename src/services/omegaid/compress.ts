@@ -1,5 +1,5 @@
 import { JWT_ISSUER } from '@/lib/jwt/ConfigVars'
-import type { ActionReturn, ActionReturnError } from '@/services/actionTypes'
+import type { ActionReturn, ActionError } from '@/services/actionTypes'
 import type { OmegaIdJWT } from '@/services/omegaid/Types'
 
 /**
@@ -81,7 +81,7 @@ export function decompressOmegaId(rawdata: string): ActionReturn<string> {
     const headerJSONString = JSON.stringify(header)
     const headerB64String = encodeBase64Url(headerJSONString)
 
-    const errorReturn: ActionReturnError = {
+    const errorReturn: ActionError = {
         success: false,
         errorCode: 'JWT INVALID',
         httpCode: 400,

@@ -1,14 +1,14 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { eventOperations } from '@/services/events/operations'
 
-export const createEventAction = action(eventOperations.create)
+export const createEventAction = makeAction(eventOperations.create)
 
-export const destroyEventAction = action(eventOperations.destroy)
+export const destroyEventAction = makeAction(eventOperations.destroy)
 
-export const readCurrentEventsAction = action(eventOperations.readManyCurrent)
-export const readEventAction = action(eventOperations.read)
-export const readArchivedEventsPageAction = action(eventOperations.readManyArchivedPage)
+export const readCurrentEventsAction = makeAction(eventOperations.readManyCurrent)
+export const readEventAction = makeAction(eventOperations.read)
+export const readArchivedEventsPageAction = makeAction(eventOperations.readManyArchivedPage)
 
-export const updateEventAction = action(eventOperations.update)
+export const updateEventAction = makeAction(eventOperations.update)

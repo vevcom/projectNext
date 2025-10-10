@@ -1,5 +1,5 @@
 import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
-import type { Matrix } from '@/utils/checkMatrix'
+import type { Matrix } from '@/lib/checkMatrix'
 import type { Permission, VisibilityPurpose } from '@prisma/client'
 
 export type GroupMatrix = Matrix<number>

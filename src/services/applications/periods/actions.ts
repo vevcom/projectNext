@@ -1,15 +1,15 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { applicationPeriodOperations } from '@/services/applications/periods/operations'
 
-export const createApplicationPeriodAction = action(applicationPeriodOperations.create)
+export const createApplicationPeriodAction = makeAction(applicationPeriodOperations.create)
 
-export const destroyApplicationPeriodAction = action(applicationPeriodOperations.destroy)
-export const removeAllApplicationTextsAction = action(applicationPeriodOperations.removeAllApplicationTexts)
+export const destroyApplicationPeriodAction = makeAction(applicationPeriodOperations.destroy)
+export const removeAllApplicationTextsAction = makeAction(applicationPeriodOperations.removeAllApplicationTexts)
 
-export const readApplicationPeriodsAction = action(applicationPeriodOperations.readAll)
-export const readApplicationPeriodAction = action(applicationPeriodOperations.read)
-export const readNumberOfApplicationsAction = action(applicationPeriodOperations.readNumberOfApplications)
+export const readApplicationPeriodsAction = makeAction(applicationPeriodOperations.readAll)
+export const readApplicationPeriodAction = makeAction(applicationPeriodOperations.read)
+export const readNumberOfApplicationsAction = makeAction(applicationPeriodOperations.readNumberOfApplications)
 
-export const updateApplicationPeriodAction = action(applicationPeriodOperations.update)
+export const updateApplicationPeriodAction = makeAction(applicationPeriodOperations.update)

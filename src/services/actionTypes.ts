@@ -1,24 +1,28 @@
 import type { ErrorMessage, ErrorCode } from '@/services/error'
 
-export type ActionReturnError = {
+/**
+ * The return type of an action on error.
+ */
+export type ActionError = {
     success: false,
     errorCode: ErrorCode,
     httpCode: number,
     error?: ErrorMessage[],
 }
 
-export type ActionReturn<ReturnType, DataGuarantee extends boolean = true> = (
-    ActionReturnError
-) | {
+/**
+ * The return type of an action on success.
+ */
+export type ActionData<T = undefined> = {
     success: true,
-} & (
-    DataGuarantee extends true ? {
-        data: ReturnType
-    } : {
-        data?: ReturnType
-    }
-)
+    data: T,
+}
 
-export type Action<ReturnType, DataGuarantee extends boolean = true> = (formData: FormData) => (
-    Promise<ActionReturn<ReturnType, DataGuarantee>>
+/**
+ * The return type of an action. Either success with data or error with error info.
+ */
+export type ActionReturn<T = undefined> = ActionData<T> | ActionError
+
+export type Action<T = undefined> = (formData: FormData) => (
+    Promise<ActionReturn<T>>
 )

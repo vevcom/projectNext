@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { createZodActionError, safeServerCall } from '@/services/actionError'
 import { createCmsLink } from '@/services/cms/links/create'
 import { readSpecialCmsLink } from '@/services/cms/links/read'
@@ -21,7 +21,7 @@ export async function createCmsLinkAction(
     return await safeServerCall(() => createCmsLink(data))
 }
 
-export const readSpecialCmsLinkAction = action(readSpecialCmsLink)
+export const readSpecialCmsLinkAction = makeAction(readSpecialCmsLink)
 
 export async function updateCmsLinkAction(
     id: number,

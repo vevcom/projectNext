@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { readJWTPart } from './jwtReadUnsecure'
-import { JWT_ISSUER } from '@/jwt/ConfigVars'
+import { JWT_ISSUER } from '@/lib/jwt/ConfigVars'
 import { ServerError } from '@/services/error'
 import { JsonWebTokenError, TokenExpiredError, sign, verify } from 'jsonwebtoken'
 import type jwt from 'jsonwebtoken'

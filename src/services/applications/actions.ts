@@ -1,12 +1,12 @@
 'use server'
 
 import { applicationOperations } from './operations'
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 
-export const createApplicationAction = action(applicationOperations.create)
+export const createApplicationAction = makeAction(applicationOperations.create)
 
-export const destroyApplicationAction = action(applicationOperations.destroy)
+export const destroyApplicationAction = makeAction(applicationOperations.destroy)
 
-export const readApplicationsForUserAction = action(applicationOperations.readForUser)
+export const readApplicationsForUserAction = makeAction(applicationOperations.readForUser)
 
-export const updateApplicationAction = action(applicationOperations.update)
+export const updateApplicationAction = makeAction(applicationOperations.update)

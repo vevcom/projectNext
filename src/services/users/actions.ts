@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from '@/services/action'
+import { makeAction } from '@/services/serverAction'
 import { groupOperations } from '@/services/groups/operations'
 import { userOperations } from '@/services/users/operations'
 
@@ -9,14 +9,14 @@ import { userOperations } from '@/services/users/operations'
  * @param rawdata - The user to create
  * @returns - The created user
  */
-export const createUserAction = action(userOperations.create)
+export const createUserAction = makeAction(userOperations.create)
 
 /**
  * Action to destroy a user by the given id
  * @param id - The id of the user to destroy
  * @returns
  */
-export const destroyUserAction = action(userOperations.destroy)
+export const destroyUserAction = makeAction(userOperations.destroy)
 
 /**
  * A action to read a page of users with the given details (filtering)
@@ -24,7 +24,7 @@ export const destroyUserAction = action(userOperations.destroy)
  * name and groups
  * @returns
  */
-export const readUserPageAction = action(userOperations.readPage)
+export const readUserPageAction = makeAction(userOperations.readPage)
 
 /**
  * Action meant to read the profile of a user.
@@ -32,13 +32,13 @@ export const readUserPageAction = action(userOperations.readPage)
  * @param username - The username of the user to read
  * @returns - The profile of the user
  */
-export const readUserProfileAction = action(userOperations.readProfile)
+export const readUserProfileAction = makeAction(userOperations.readProfile)
 
-export const readUserAction = action(userOperations.read)
+export const readUserAction = makeAction(userOperations.read)
 
-export const readGroupsForPageFilteringAction = action(groupOperations.readGroupsExpanded)
+export const readGroupsForPageFilteringAction = makeAction(groupOperations.readGroupsExpanded)
 
-export const updateUserAction = action(userOperations.update)
-export const registerNewEmailAction = action(userOperations.registerNewEmail)
-export const registerUser = action(userOperations.register)
-export const registerStudentCardInQueueAction = action(userOperations.registerStudentCardInQueue)
+export const updateUserAction = makeAction(userOperations.update)
+export const registerNewEmailAction = makeAction(userOperations.registerNewEmail)
+export const registerUser = makeAction(userOperations.register)
+export const registerStudentCardInQueueAction = makeAction(userOperations.registerStudentCardInQueue)

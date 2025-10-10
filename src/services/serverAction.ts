@@ -5,20 +5,20 @@ import type { ActionReturn } from './actionTypes'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
 
-export function action<Return>(
+export function makeAction<Return>(
     serviceMethod: ServiceOperation<boolean, Return, undefined, undefined>
 ): () => Promise<ActionReturn<Return>>
 
-export function action<Return, ParamsSchema extends z.ZodTypeAny>(
+export function makeAction<Return, ParamsSchema extends z.ZodTypeAny>(
     serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, undefined>
 ): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
 
-export function action<Return, DataSchema extends z.ZodTypeAny>(
+export function makeAction<Return, DataSchema extends z.ZodTypeAny>(
     serviceMethod: ServiceOperation<boolean, Return, undefined, DataSchema>
 ): (data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
 // This function is overloaded to allow for different combinations of parameters and data.
-export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny>(
+export function makeAction<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny>(
     serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
 ): (params: z.input<ParamsSchema>, data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
@@ -28,7 +28,7 @@ export function action<Return, ParamsSchema extends z.ZodTypeAny, DataSchema ext
  * @param serviceMethod - The service method to create an action for.
  * @returns - A function that takes in data (which may be FormData) and/or/nor parameters and calls the service method.
  */
-export function action<
+export function makeAction<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,

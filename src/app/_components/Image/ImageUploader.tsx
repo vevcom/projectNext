@@ -9,7 +9,7 @@ import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
 type T = Pick<ResponseType & { success: true }, 'data'>['data']
 
-type PropTypes = Omit<FormPropTypes<T, true>, 'action' | 'submitText' | 'title'> & {
+type PropTypes = Omit<FormPropTypes<T>, 'action' | 'submitText' | 'title'> & {
     collectionId: number,
 }
 
