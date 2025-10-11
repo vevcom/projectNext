@@ -1,7 +1,7 @@
 import { defineOperation } from '@/services/serviceOperation'
 import '@pn-server-only'
 import { z } from 'zod'
-import type { ExtendedShop } from './Types'
+import type { ExtendedShop } from './types'
 import { shopSchemas } from './schema'
 import { shopAuth } from './auth'
 

@@ -1,6 +1,6 @@
 
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 
 export const MailListTypeArray = ['alias', 'mailingList', 'group', 'user', 'mailaddressExternal'] as const

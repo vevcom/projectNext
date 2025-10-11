@@ -6,7 +6,7 @@ import UserNavigation from './UserNavigation'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import Link from 'next/link'
-import type { Profile } from '@/services/users/Types'
+import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null

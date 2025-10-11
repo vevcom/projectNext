@@ -7,7 +7,7 @@ import { createCommittee } from '@/services/groups/committees/create'
 import { committeeOperations } from '@/services/groups/committees/operations'
 import { updateCommittee } from '@/services/groups/committees/update'
 import { createCommitteeValidation, updateCommitteeValidation } from '@/services/groups/committees/validation'
-import type { ExpandedCommittee } from '@/services/groups/committees/Types'
+import type { ExpandedCommittee } from '@/services/groups/committees/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateCommitteeTypes, UpdateCommitteeTypes } from '@/services/groups/committees/validation'
 

@@ -7,7 +7,7 @@ import { QueryParams } from '@/lib/query-params/queryParams'
 import { eventTagAuth } from '@/services/events/tags/auth'
 import { Session } from '@/auth/session/Session'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import type { SearchParamsServerSide } from '@/lib/query-params/types'
 
 type PropTypes = SearchParamsServerSide
 

@@ -7,7 +7,7 @@ import DateInput from '@/components/UI/DateInput'
 import useEditing from '@/hooks/useEditing'
 import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
 import { useRouter } from 'next/navigation'
-import type { ExpandedNewsArticle } from '@/services/news/Types'
+import type { ExpandedNewsArticle } from '@/services/news/types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

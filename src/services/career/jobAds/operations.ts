@@ -12,7 +12,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { destroyArticle } from '@/services/cms/articles/destroy'
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
-import type { ExpandedJobAd, SimpleJobAd } from './Types'
+import type { ExpandedJobAd, SimpleJobAd } from './types'
 
 export const jobAdOperations = {
     create: defineOperation({

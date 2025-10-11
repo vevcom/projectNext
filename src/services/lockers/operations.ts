@@ -8,7 +8,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
-import type { LockerWithReservation } from '@/services/lockers/Types'
+import type { LockerWithReservation } from '@/services/lockers/types'
 
 export async function updateLockerReservationIfExpired(prisma: Prisma.TransactionClient, locker: LockerWithReservation) {
     if (!locker.LockerReservation.length) return

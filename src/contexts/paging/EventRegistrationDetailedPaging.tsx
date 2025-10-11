@@ -4,9 +4,9 @@ import { eventRegistrationReadManyDetailedAction } from '@/services/events/regis
 import type {
     EventRegistrationDetailedExpanded,
     EventRegistrationFetcherDetails
-} from '@/services/events/registration/Types'
+} from '@/services/events/registration/types'
 import type { PageSizeUsers } from './UserPaging'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 const fetcher = async (x: ReadPageInput<PageSizeUsers, number, EventRegistrationFetcherDetails>) => {
     const registrations = await eventRegistrationReadManyDetailedAction({

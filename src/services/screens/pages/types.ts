@@ -1,4 +1,4 @@
-import type { ExpandedCmsImage } from '@/services/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { CmsParagraph, ScreenPage } from '@prisma/client'
 
 

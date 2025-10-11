@@ -1,5 +1,5 @@
 import type { Permission } from '@prisma/client'
-import type { PermissionInfo } from './Types'
+import type { PermissionInfo } from './types'
 
 export const permissionCategories = [
     'omega quotes',

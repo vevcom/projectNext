@@ -14,7 +14,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
-import type { EventExpanded } from './Types'
+import type { EventExpanded } from './types'
 
 export const eventOperations = {
     create: defineOperation({

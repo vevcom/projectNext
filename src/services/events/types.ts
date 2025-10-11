@@ -1,5 +1,5 @@
 import type { eventFilterSelection } from './constants'
-import type { ExpandedCmsImage } from '@/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { EventTag, Prisma } from '@prisma/client'
 
 

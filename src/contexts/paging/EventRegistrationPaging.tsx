@@ -1,9 +1,9 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readManyEventRegistrationAction } from '@/services/events/registration/actions'
-import type { EventRegistrationExpanded, EventRegistrationFetcherDetails } from '@/services/events/registration/Types'
+import type { EventRegistrationExpanded, EventRegistrationFetcherDetails } from '@/services/events/registration/types'
 import type { PageSizeUsers } from './UserPaging'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 const fetcher = async (x: ReadPageInput<PageSizeUsers, number, EventRegistrationFetcherDetails>) => {
     const registrations = await readManyEventRegistrationAction({

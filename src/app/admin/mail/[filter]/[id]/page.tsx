@@ -8,10 +8,10 @@ import EditMailAddressExternal from './(editComponents)/mailAddressExternal'
 import EditUser from './(editComponents)/user'
 import EditGroup from './(editComponents)/group'
 import { readMailOptions, readMailFlowAction } from '@/services/mail/actions'
-import { MailListTypeArray } from '@/services/mail/Types'
+import { MailListTypeArray } from '@/services/mail/types'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
-import type { MailListTypes } from '@/services/mail/Types'
+import type { MailListTypes } from '@/services/mail/types'
 
 type PropTypes = {
     params: Promise<{

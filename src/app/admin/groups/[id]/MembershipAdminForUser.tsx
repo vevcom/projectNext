@@ -3,8 +3,8 @@ import styles from './MembershipAdminForUser.module.scss'
 import Form from '@/components/Form/Form'
 import { updateMembershipActiveAction, updateMembershipAdminAcion } from '@/services/groups/memberships/actions'
 import { useRouter } from 'next/navigation'
-import type { UserPagingReturn } from '@/services/users/Types'
-import type { ExpandedGroup } from '@/services/groups/Types'
+import type { UserPagingReturn } from '@/services/users/types'
+import type { ExpandedGroup } from '@/services/groups/types'
 
 type PropTypes = {
     user: UserPagingReturn,

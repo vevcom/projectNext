@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { destroyArticle } from '@/services/cms/articles/destroy'
 import { prisma } from '@/prisma/client'
-import type { SimpleNewsArticle } from '@/services/news/Types'
+import type { SimpleNewsArticle } from '@/services/news/types'
 
 /**
  * Yhis function destroys a newsArticle. It is also responsible for sleaning up the article,

@@ -11,7 +11,7 @@ import { booleanOperationOnMethods } from '@/services/notifications/notification
 import { updateNotificationChannelAction } from '@/services/notifications/actions'
 import { findValidParents } from '@/services/notifications/channel/schemas'
 import { useState } from 'react'
-import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { MailAlias } from '@prisma/client'
 
 export default function ChannelSettings({

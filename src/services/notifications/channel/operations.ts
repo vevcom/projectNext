@@ -13,7 +13,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/constants'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/types'
 
 export const notificationChannelOperations = {
     create: defineOperation({

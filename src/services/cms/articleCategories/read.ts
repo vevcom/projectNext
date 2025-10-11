@@ -7,7 +7,7 @@ import type {
     ExpandedArticleCategory,
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
-} from '@/cms/articleCategories/Types'
+} from '@/cms/articleCategories/types'
 
 /**
  * Reads all article categories, and assaigs each of them a cover based on the cover of first article

@@ -3,7 +3,7 @@ import { userFilterSelection } from '@/services/users/constants'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './Types'
+import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './types'
 
 
 /**

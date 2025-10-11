@@ -9,7 +9,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { z } from 'zod'
 import crypto from 'crypto'
-import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './Types'
+import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './types'
 
 /**
  * Updates the active status of an api key if it has expired, i.e. if the expiresAt date is in the past.

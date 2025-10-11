@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { ArticleSectionPart } from '@/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
 type PropTypes = {
     part: ArticleSectionPart,

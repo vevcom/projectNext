@@ -21,13 +21,13 @@ import {
     createMailingListExternalValidation,
     createMailingListGroupValidation,
     createMailingListUserValidation } from '@/services/mail/validation'
-import type { MailListTypes } from '@/services/mail/Types'
+import type { MailListTypes } from '@/services/mail/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateAliasMailingListType,
     CreateMailingListExternalType,
     CreateMailingListGroupType,
     CreateMailingListUserType } from '@/services/mail/validation'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 import type { MailAliasMailingList,
     MailingListGroup,
     MailingListMailAddressExternal,

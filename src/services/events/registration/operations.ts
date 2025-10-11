@@ -10,7 +10,7 @@ import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
-import type { EventRegistrationExpanded } from './Types'
+import type { EventRegistrationExpanded } from './types'
 
 async function preValidateRegistration(
     prisma: Prisma.TransactionClient,

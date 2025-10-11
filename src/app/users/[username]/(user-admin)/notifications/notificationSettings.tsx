@@ -9,15 +9,15 @@ import { updateNotificationSubscriptionsAction } from '@/services/notifications/
 import { notificationMethodsArray, notificationMethodsDisplayMap } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
-import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
-import type { NotificationBranch } from './Types'
+import type { UserFiltered } from '@/services/users/types'
+import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/types'
+import type { NotificationBranch } from './types'
 import type { ErrorMessage } from '@/services/error'
 import type {
     ExpandedNotificationChannel,
     NotificationMethodGeneral,
     NotificationMethods
-} from '@/services/notifications/Types'
+} from '@/services/notifications/types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(channel => channel.special === 'ROOT')

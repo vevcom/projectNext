@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readCompanyPageAction } from '@/services/career/companies/actions'
-import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 export type PageSizeCompany = 10
 const fetcher = async (x: ReadPageInput<PageSizeCompany, CompanyCursor, CompanyDetails>) => {

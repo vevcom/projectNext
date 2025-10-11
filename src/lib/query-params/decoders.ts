@@ -1,4 +1,4 @@
-import type { SearchParamsServerSide } from './Types'
+import type { SearchParamsServerSide } from './types'
 
 export const stringDecoder = (raw: SearchParamsServerSide['searchParams']) => {
     if (typeof raw !== 'string') {

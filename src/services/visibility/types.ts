@@ -1,4 +1,4 @@
-import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/types'
 import type { Matrix } from '@/lib/checkMatrix'
 import type { Permission, VisibilityPurpose } from '@prisma/client'
 

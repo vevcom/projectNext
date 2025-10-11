@@ -15,7 +15,7 @@ import { eventRegistrationDestroyAction } from '@/services/events/registration/a
 import { REGISTRATION_READER_TYPE } from '@/services/events/registration/constants'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { EventFiltered } from '@/services/events/Types'
+import type { EventFiltered } from '@/services/events/types'
 
 function DetailedTable({
     event,

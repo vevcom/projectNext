@@ -2,7 +2,7 @@
 import Form from '@/components/Form/Form'
 import { updateSchoolAction } from '@/education/schools/actions'
 import TextInput from '@/components/UI/TextInput'
-import type { SchoolFiltered } from '@/education/schools/Types'
+import type { SchoolFiltered } from '@/services/education/schools/types'
 
 type PropTypes = {
     school: SchoolFiltered

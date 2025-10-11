@@ -1,4 +1,4 @@
-import type { ExpandedScreenPage } from './pages/Types'
+import type { ExpandedScreenPage } from './pages/types'
 import type { Screen } from '@prisma/client'
 
 export type ExpandedScreen = Screen & {

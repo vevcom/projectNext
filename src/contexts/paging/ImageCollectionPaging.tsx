@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/services/images/collections/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
+import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/services/images/collections/types'
 
 export type PageSizeImageCollection = 12
 const fetcher = async (x: ReadPageInput<PageSizeImageCollection, ImageCollectionCursor>) => {

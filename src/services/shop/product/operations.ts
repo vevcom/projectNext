@@ -2,7 +2,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import type { ExtendedProduct } from './Types'
+import type { ExtendedProduct } from './types'
 import { productAuth } from './auth'
 import { productSchemas } from './schemas'
 

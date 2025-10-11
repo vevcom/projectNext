@@ -14,8 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import type { VisibilityCollapsed } from '@/services/visibility/Types'
-import type { ExpandedImageCollection } from '@/services/images/collections/Types'
+import type { VisibilityCollapsed } from '@/services/visibility/types'
+import type { ExpandedImageCollection } from '@/services/images/collections/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection

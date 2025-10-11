@@ -5,8 +5,8 @@ import NotificationMethodCheckboxes from '@/components/NotificaionMethodSelector
 import { allNotificationMethodsOn } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
-import type { NotificationMethodGeneral } from '@/services/notifications/Types'
-import type { NotificationBranch } from './Types'
+import type { NotificationMethodGeneral } from '@/services/notifications/types'
+import type { NotificationBranch } from './types'
 
 
 export default function SubscriptionItem({

@@ -11,7 +11,7 @@ import { createCmsLink } from '@/services/cms/links/create'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { ImageSize, ArticleSection, Position, Prisma } from '@prisma/client'
-import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/Types'
+import type { ExpandedArticleSection, ArticleSectionPart } from '@/cms/articleSections/types'
 
 /**
  * This is the function that updates an article section metadata about how the (cms)image is displayed

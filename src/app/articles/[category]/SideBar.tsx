@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
 
 type PropTypes = {
     category: ExpandedArticleCategory

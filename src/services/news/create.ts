@@ -6,7 +6,7 @@ import { prisma } from '@/prisma/client'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
-import type { ExpandedNewsArticle } from './Types'
+import type { ExpandedNewsArticle } from './types'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to

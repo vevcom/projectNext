@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readUserPageAction } from '@/services/users/actions'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { UserDetails, UserPagingReturn, UserCursor } from '@/services/users/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
+import type { UserDetails, UserPagingReturn, UserCursor } from '@/services/users/types'
 
 export type PageSizeUsers = 50;
 const fetcher = async (x: ReadPageInput<PageSizeUsers, UserCursor, UserDetails>) => {

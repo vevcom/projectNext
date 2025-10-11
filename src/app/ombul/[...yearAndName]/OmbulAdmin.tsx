@@ -8,7 +8,7 @@ import FileInput from '@/components/UI/FileInput'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/services/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/types'
 
 type PropTypes = {
     ombul: ExpandedOmbul

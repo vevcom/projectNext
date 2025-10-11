@@ -3,7 +3,7 @@ import { updateVisibility } from './update'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import type { Visibility, VisibilityPurpose } from '@prisma/client'
-import type { VisibilityLevelMatrices } from './Types'
+import type { VisibilityLevelMatrices } from './types'
 
 /**
  * A function to create visibility

@@ -13,7 +13,7 @@ import type {
     ArticleCategoryWithCover,
     ExpandedArticleCategoryWithCover,
     ExpandedArticleCategory,
-} from '@/cms/articleCategories/Types'
+} from '@/cms/articleCategories/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateArticleCategoryTypes, UpdateArticleCategoryTypes } from '@/services/cms/articleCategories/validation'
 

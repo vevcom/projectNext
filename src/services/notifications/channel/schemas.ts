@@ -6,7 +6,7 @@ import type {
     ExpandedNotificationChannel,
     NotificationMethodGeneral,
     NotificationMethodTypes
-} from '@/services/notifications/Types'
+} from '@/services/notifications/types'
 
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(

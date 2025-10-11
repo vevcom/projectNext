@@ -10,8 +10,8 @@ import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
-import type { Subscription } from './Types'
-import type { NotificationMethodGeneral } from '@/services/notifications/Types'
+import type { Subscription } from './types'
+import type { NotificationMethodGeneral } from '@/services/notifications/types'
 
 // eslint-disable-next-line
 async function createTransactionPart(

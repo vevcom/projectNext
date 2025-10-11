@@ -3,7 +3,7 @@ import { updateArticleCategoryValidation } from './validation'
 import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { UpdateArticleCategoryTypes } from './validation'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
 
 export async function updateArticleCategory(
     id: number,

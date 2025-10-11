@@ -5,7 +5,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
-import type { ExpandedInterestGroup } from './Types'
+import type { ExpandedInterestGroup } from './types'
 
 export const interestGroupOperations = {
     create: defineOperation({

@@ -6,7 +6,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Permission } from '@prisma/client'
 import type { Matrix } from '@/lib/checkMatrix'
-import type { VisibilityCollapsed, VisibilityLevelType } from '@/services/visibility/Types'
+import type { VisibilityCollapsed, VisibilityLevelType } from '@/services/visibility/types'
 
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.

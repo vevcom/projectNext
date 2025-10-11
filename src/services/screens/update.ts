@@ -3,7 +3,7 @@ import { readScreen } from './read'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
-import type { ScreenPageMoveDirection } from './Types'
+import type { ScreenPageMoveDirection } from './types'
 import type { UpdateScreenTypes } from './validation'
 import type { Screen } from '@prisma/client'
 

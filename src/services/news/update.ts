@@ -3,7 +3,7 @@ import { updateNewsArticleValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import type { UpdateNewsArticleTypes } from './validation'
-import type { SimpleNewsArticle } from '@/services/news/Types'
+import type { SimpleNewsArticle } from '@/services/news/types'
 
 export async function updateNews(
     id: number,

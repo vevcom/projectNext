@@ -7,9 +7,9 @@ import { createSchool } from '@/services/education/schools/create'
 import { destroySchool } from '@/services/education/schools/destroy'
 import { readSchool, readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
 import { updateSchool } from '@/services/education/schools/update'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
 import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
-import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/education/schools/Types'
+import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/services/education/schools/types'
 import type { ActionReturn } from '@/services/actionTypes'
 
 export async function createSchoolAction(

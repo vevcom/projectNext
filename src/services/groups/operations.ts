@@ -23,8 +23,8 @@ import type {
     GroupWithDumbRelations,
     GroupWithRelations,
     GroupWithRelationsNameInferencer
-} from './Types'
-import type { UserFiltered } from '@/services/users/Types'
+} from './types'
+import type { UserFiltered } from '@/services/users/types'
 
 async function expandGroup(group: GroupWithRelationsNameInferencer & {
     membershipsToInferFirstOrder: { order: number }[]

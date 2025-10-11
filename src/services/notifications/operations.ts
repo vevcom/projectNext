@@ -10,8 +10,8 @@ import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
-import type { ExpandedNotificationChannel, NotificationResult } from './Types'
-import type { UserFiltered } from '@/services/users/Types'
+import type { ExpandedNotificationChannel, NotificationResult } from './types'
+import type { UserFiltered } from '@/services/users/types'
 
 const dispathMethod = {
     email: dispatchEmailNotifications,

@@ -6,8 +6,8 @@ import { ServerError } from '@/services/error'
 import { permissionOperations } from '@/services/permissions/operations'
 import { getServerSession as getSessionNextAuth } from 'next-auth'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
-import type { MembershipFiltered } from '@/services/groups/memberships/Types'
+import type { UserFiltered } from '@/services/users/types'
+import type { MembershipFiltered } from '@/services/groups/memberships/types'
 
 export type UserGuaranteeOption = 'HAS_USER' | 'NO_USER'
 

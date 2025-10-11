@@ -6,9 +6,9 @@ import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 import type { Matrix } from '@/lib/checkMatrix'
-import type { MembershipFiltered } from '@/services/groups/memberships/Types'
+import type { MembershipFiltered } from '@/services/groups/memberships/types'
 
 // SessionProvider needs to be exported from a 'use client' file so that it can
 // be used in a server side file.

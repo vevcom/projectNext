@@ -8,7 +8,7 @@ import { createArticleAction } from '@/services/cms/articles/actions'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
 
 type PropTypes = {
     category: ExpandedArticleCategory

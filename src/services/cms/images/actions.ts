@@ -7,7 +7,7 @@ import { updateCmsImage, updateCmsImageConfig } from '@/services/cms/images/upda
 import { createCmsImageActionValidation } from '@/services/cms/images/validation'
 import { SpecialCmsImage } from '@prisma/client'
 import type { CreateCmsImageActionTypes } from '@/services/cms/images/validation'
-import type { ExpandedCmsImage } from '@/services/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CmsImage, Image, ImageSize } from '@prisma/client'
 

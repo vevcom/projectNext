@@ -7,7 +7,7 @@ import { createAliasMailingListRelationAction } from '@/services/mail/actions'
 import { useUser } from '@/auth/session/useUser'
 import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/alias/actions'
 import { useRouter } from 'next/navigation'
-import type { MailFlowObject } from '@/services/mail/Types'
+import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@prisma/client'
 
 

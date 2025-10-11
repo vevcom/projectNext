@@ -1,4 +1,4 @@
-import type { ExpandedCmsImage } from '@/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { SchoolFieldsToExpose } from './ConfigVars'
 import type { CmsLink, CmsParagraph, School } from '@prisma/client'
 

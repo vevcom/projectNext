@@ -12,7 +12,7 @@ import {
 } from '@/services/events/registration/actions'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import type { EventExpanded } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/types'
 import type { EventRegistration } from '@prisma/client'
 
 enum RegistrationButtonState {

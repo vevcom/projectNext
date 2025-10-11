@@ -5,7 +5,7 @@ import { getUser } from '@/auth/session/getUser'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'
 import { updateMembership } from '@/services/groups/memberships/update'
-import type { ExpandedMembership } from '@/services/groups/memberships/Types'
+import type { ExpandedMembership } from '@/services/groups/memberships/types'
 import type { ActionReturn } from '@/services/actionTypes'
 
 /**

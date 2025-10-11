@@ -1,4 +1,4 @@
-import type { NotificationMethodGeneral } from './Types'
+import type { NotificationMethodGeneral } from './types'
 
 export const notificationMethodsDisplayMap = {
     email: 'E-post',

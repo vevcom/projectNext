@@ -6,7 +6,7 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
 import type { SessionMaybeUser } from '@/auth/session/Session'
-import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
+import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/types'
 
 type PropTypes = {
     interestGroup: ExpandedInterestGroup

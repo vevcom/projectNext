@@ -2,7 +2,7 @@ import { updateCommitteeValidation } from './validation'
 import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { imageOperations } from '@/services/images/operations'
-import type { ExpandedCommittee } from './Types'
+import type { ExpandedCommittee } from './types'
 import type { UpdateCommitteeTypes } from './validation'
 
 export async function updateCommittee(

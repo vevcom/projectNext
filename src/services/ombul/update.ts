@@ -6,7 +6,7 @@ import { prisma } from '@/prisma/client'
 import { createFile } from '@/services/store/createFile'
 import { destroyFile } from '@/services/store/destroyFile'
 import type { UpdateOmbulFileTypes, UpdateOmbulTypes } from './validation'
-import type { ExpandedOmbul } from './Types'
+import type { ExpandedOmbul } from './types'
 
 /**
  * A function Update an ombul

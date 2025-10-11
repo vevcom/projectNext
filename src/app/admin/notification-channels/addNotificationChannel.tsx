@@ -9,7 +9,7 @@ import { createNotificationChannelAction } from '@/services/notifications/action
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/types'
 
 
 export default function AddNotificationChannel({

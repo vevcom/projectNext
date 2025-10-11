@@ -6,10 +6,10 @@ import { destroyArticle } from '@/services/cms/articles/destroy'
 import { readArticle } from '@/services/cms/articles/read'
 import { addSectionToArticle, moveSectionOrder, updateArticle } from '@/services/cms/articles/update'
 import { createArticleValidation, updateArticleValidation } from '@/services/cms/articles/validation'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { ExpandedArticle } from '@/cms/articles/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateArticleTypes, UpdateArticleTypes } from '@/services/cms/articles/validation'
-import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { Article, ArticleSection } from '@prisma/client'
 
 export async function createArticleAction(

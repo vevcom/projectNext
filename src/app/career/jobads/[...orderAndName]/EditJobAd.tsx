@@ -15,7 +15,7 @@ import { destroyJobAdAction, updateJobAdAction } from '@/career/jobAds/actions'
 import { jobAdOptions } from '@/services/career/jobAds/constants'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
-import type { ExpandedJobAd } from '@/career/jobAds/Types'
+import type { ExpandedJobAd } from '@/services/career/jobAds/types'
 
 type PropTypes = {
     jobAd: ExpandedJobAd

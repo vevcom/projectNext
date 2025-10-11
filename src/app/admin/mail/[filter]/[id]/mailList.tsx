@@ -6,9 +6,9 @@ import { createActionError } from '@/services/actionError'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
+import type { MailListTypes, ViaArrayType } from '@/services/mail/types'
 import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 const typeDisplayName: Record<MailListTypes, string> = {
     alias: 'Alias',

@@ -1,6 +1,6 @@
-import { JWT_ISSUER } from '@/lib/jwt/ConfigVars'
+import { JWT_ISSUER } from '@/lib/jwt/constants'
 import type { ActionReturn, ActionError } from '@/services/actionTypes'
-import type { OmegaIdJWT } from '@/services/omegaid/Types'
+import type { OmegaIdJWT } from '@/services/omegaid/types'
 
 /**
  * This file handles compression and decompression of omegaID

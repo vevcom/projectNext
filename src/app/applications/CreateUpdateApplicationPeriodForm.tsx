@@ -5,8 +5,8 @@ import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import DateInput from '@/components/UI/DateInput'
 import TextInput from '@/components/UI/TextInput'
-import type { ExpandedApplicationPeriod } from '@/services/applications/periods/Types'
-import type { ExpandedCommittee } from '@/services/groups/committees/Types'
+import type { ExpandedApplicationPeriod } from '@/services/applications/periods/types'
+import type { ExpandedCommittee } from '@/services/groups/committees/types'
 
 type PropTypes = {
     committees: ExpandedCommittee[]

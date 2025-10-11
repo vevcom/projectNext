@@ -6,7 +6,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { imageOperations } from '@/services/images/operations'
 import { GroupType } from '@prisma/client'
-import type { ExpandedCommittee } from './Types'
+import type { ExpandedCommittee } from './types'
 import type { CreateCommitteeTypes } from './validation'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {

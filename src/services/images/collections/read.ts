@@ -12,9 +12,9 @@ import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn
-} from '@/services/images/collections/Types'
+} from '@/services/images/collections/types'
 import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 
 /**

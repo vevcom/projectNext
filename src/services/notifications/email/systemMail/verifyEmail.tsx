@@ -4,7 +4,7 @@ import { VerifyEmailTemplate } from '@/services/notifications/email/templates/ve
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { generateJWT } from '@/jwt/jwt'
 import { userSchemas } from '@/services/users/schemas'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Fix this with new validation
 export async function sendVerifyEmail(user: UserFiltered, email: string) {

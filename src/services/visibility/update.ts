@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
-import type { VisibilityLevelMatrices } from './Types'
+import type { VisibilityLevelMatrices } from './types'
 
 export async function updateVisibility(id: number, data: VisibilityLevelMatrices): Promise<void> {
     //TODO chack that the admin is a subset of the regular

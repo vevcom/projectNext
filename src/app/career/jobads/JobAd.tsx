@@ -1,7 +1,7 @@
 import styles from './JobAd.module.scss'
 import ImageCard from '@/components/ImageCard/ImageCard'
 import { jobAdType } from '@/services/career/jobAds/constants'
-import type { SimpleJobAd } from '@/services/career/jobAds/Types'
+import type { SimpleJobAd } from '@/services/career/jobAds/types'
 
 type PropTypes = {
     jobAd: SimpleJobAd

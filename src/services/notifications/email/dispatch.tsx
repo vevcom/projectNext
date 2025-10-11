@@ -6,9 +6,9 @@ import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import { render } from '@react-email/render'
-import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { Notification } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 
 export async function dispatchEmailNotifications(
@@ -63,5 +63,7 @@ export async function dispatchEmailNotifications(
 }
 
 async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
+    // TODO: Would it be possible to do React.createElement here?
+    // It feels cursed to write TSX in backend code.
     return render(<DefaultEmailTemplate user={user} text={text} />)
 }

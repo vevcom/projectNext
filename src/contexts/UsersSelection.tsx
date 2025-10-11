@@ -2,7 +2,7 @@
 
 import { createContext, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 type PropTypes = {
     children: ReactNode

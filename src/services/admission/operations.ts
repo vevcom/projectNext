@@ -6,7 +6,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
 import { Admission } from '@prisma/client'
 import { z } from 'zod'
-import type { ExpandedAdmissionTrail } from './Types'
+import type { ExpandedAdmissionTrail } from './types'
 
 export const admissionOperations = {
     readTrial: defineOperation({

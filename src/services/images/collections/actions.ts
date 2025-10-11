@@ -15,11 +15,11 @@ import { createImageCollectionValidation, updateImageCollectionValidation } from
 import { includeVisibility } from '@/services/visibility/read'
 import { SpecialCollection } from '@prisma/client'
 import type { CreateImageCollectionTypes, UpdateImageCollectionTypes } from '@/services/images/collections/validation'
-import type { VisibilityCollapsed } from '@/services/visibility/Types'
+import type { VisibilityCollapsed } from '@/services/visibility/types'
 import type { ExpandedImageCollection,
     ImageCollectionCursor,
-    ImageCollectionPageReturn } from '@/services/images/collections/Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+    ImageCollectionPageReturn } from '@/services/images/collections/types'
+import type { ReadPageInput } from '@/lib/paging/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { ImageCollection } from '@prisma/client'
 

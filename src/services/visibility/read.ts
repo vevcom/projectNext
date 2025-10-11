@@ -4,7 +4,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import type { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
-import type { VisibilityCollapsed } from './Types'
+import type { VisibilityCollapsed } from './types'
 
 const levelSelector = {
     select: {

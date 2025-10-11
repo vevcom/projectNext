@@ -2,7 +2,7 @@ import { updateStudyProgrammeValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import type { UpdateStudyProgrammeTypes } from './validation'
-import type { ExpandedStudyProgramme } from './Types'
+import type { ExpandedStudyProgramme } from './types'
 
 export async function updateStudyProgramme(
     data: UpdateStudyProgrammeTypes['Detailed']

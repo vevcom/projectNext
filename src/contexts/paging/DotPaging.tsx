@@ -2,8 +2,8 @@
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 
 import { readDotPageAction } from '@/services/dots/actions'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
+import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/types'
 
 export type PageSizeDots = 30
 const fetcher = async (x: ReadPageInput<PageSizeDots, DotCursor, DotDetails>) => {

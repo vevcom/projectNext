@@ -6,8 +6,8 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import type { Matrix } from '@/lib/checkMatrix'
 import type { Permission } from '@prisma/client'
-import type { MembershipFiltered } from '@/services/groups/memberships/Types'
-import type { UserFiltered } from '@/services/users/Types'
+import type { MembershipFiltered } from '@/services/groups/memberships/types'
+import type { UserFiltered } from '@/services/users/types'
 
 type GetUserArgsType<ShouldRedirect extends boolean = false, UserRequired extends boolean = false> = {
     requiredPermissions?: Matrix<Permission>,

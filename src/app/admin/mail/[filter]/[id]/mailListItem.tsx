@@ -1,13 +1,13 @@
 'use client'
 import styles from './mailListItem.module.scss'
-import { MailListTypeArray } from '@/services/mail/Types'
+import { MailListTypeArray } from '@/services/mail/types'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuid } from 'uuid'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailListTypes, ViaArrayType } from '@/services/mail/Types'
+import type { MailListTypes, ViaArrayType } from '@/services/mail/types'
 
 export default function MailListItem({
     type,

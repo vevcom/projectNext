@@ -3,7 +3,7 @@ import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { SpecialCmsImage } from '@prisma/client'
-import type { ExpandedCmsImage } from '@/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 
 /**
  * Read a cms image including the image associated with it

@@ -11,10 +11,10 @@ import { readGroupsForPageFilteringAction } from '@/services/users/actions'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import type { UserPagingReturn } from '@/services/users/Types'
+import type { UserPagingReturn } from '@/services/users/types'
 import type { ChangeEvent, ReactNode } from 'react'
 import type { GroupType } from '@prisma/client'
-import type { ExpandedGroup } from '@/services/groups/Types'
+import type { ExpandedGroup } from '@/services/groups/types'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
 

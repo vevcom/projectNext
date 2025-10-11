@@ -1,5 +1,5 @@
 import type { GroupType, OmegaMembershipLevel, Prisma } from '@prisma/client'
-import type { GroupTypeInfo } from './Types'
+import type { GroupTypeInfo } from './types'
 
 /**
  * A object that describes the different group types in a friendly way

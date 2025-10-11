@@ -9,7 +9,7 @@ import { prisma } from '@/prisma/client'
 import { createCmsLink } from '@/services/cms/links/create'
 import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
-import type { SchoolFiltered } from './Types'
+import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {

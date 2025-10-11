@@ -7,7 +7,7 @@ import TextInput from '@/components/UI/TextInput'
 import { EditModeContext } from '@/contexts/EditMode'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
-import type { ExpandedNewsArticle } from '@/services/news/Types'
+import type { ExpandedNewsArticle } from '@/services/news/types'
 
 export default function AddNews() {
     const { push } = useRouter()

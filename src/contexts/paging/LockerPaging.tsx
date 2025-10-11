@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from '@/contexts/paging/PagingGenerator'
 import { readLockerPageAction } from '@/services/lockers/actions'
-import type { ReadPageInput } from '@/lib/paging/Types'
-import type { LockerCursor, LockerWithReservation } from '@/services/lockers/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
+import type { LockerCursor, LockerWithReservation } from '@/services/lockers/types'
 
 export type PageSizeLocker = 20
 const fetcher = async (paging: ReadPageInput<PageSizeLocker, LockerCursor>) => await readLockerPageAction({ paging })

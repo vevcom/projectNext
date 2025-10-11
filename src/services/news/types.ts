@@ -1,4 +1,4 @@
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { ExpandedArticle } from '@/cms/articles/types'
 import type { NewsArticle, Image } from '@prisma/client'
 
 export type ExpandedNewsArticle = NewsArticle & {

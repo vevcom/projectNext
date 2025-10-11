@@ -8,8 +8,8 @@ import { updateNews } from '@/services/news/update'
 import { createNewsArticleValidation, updateNewsArticleValidation } from '@/services/news/validation'
 import { notificationOperations } from '@/services/notifications/operations'
 import type { CreateNewsArticleTypes, UpdateNewsArticleTypes } from '@/services/news/validation'
-import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/types'
+import type { ReadPageInput } from '@/lib/paging/types'
 import type { ActionReturn } from '@/services/actionTypes'
 
 export async function createNewsAction(

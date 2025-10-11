@@ -1,7 +1,7 @@
 import styles from './VisibilityLevelAdmin.module.scss'
 import Form from '@/components/Form/Form'
 import { updateVisibilityAction } from '@/services/visibility/actions'
-import type { VisibilityLevelType, VisibilityRequiermentForAdmin } from '@/services/visibility/Types'
+import type { VisibilityLevelType, VisibilityRequiermentForAdmin } from '@/services/visibility/types'
 
 type PropTypes = {
     data: VisibilityRequiermentForAdmin[]

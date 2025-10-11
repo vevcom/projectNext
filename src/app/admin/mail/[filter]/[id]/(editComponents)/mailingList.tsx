@@ -13,7 +13,7 @@ import { useUser } from '@/auth/session/useUser'
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@prisma/client'
-import type { MailFlowObject } from '@/services/mail/Types'
+import type { MailFlowObject } from '@/services/mail/types'
 
 
 export default function EditMailingList({

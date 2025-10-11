@@ -11,7 +11,7 @@ import {
 } from '@/services/mail/mailAddressExternal/actions'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@prisma/client'
-import type { MailFlowObject } from '@/services/mail/Types'
+import type { MailFlowObject } from '@/services/mail/types'
 
 
 export default function EditMailAddressExternal({

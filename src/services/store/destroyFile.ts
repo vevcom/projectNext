@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
-import type { StoreLocations } from './StoreLocations'
+import type { StoreLocations } from './types'
 
 function isErrorWithCode(error: unknown): error is { code: string } {
     return typeof error === 'object' && error !== null && 'code' in error

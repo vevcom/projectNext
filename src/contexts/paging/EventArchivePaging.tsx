@@ -1,8 +1,8 @@
 'use client'
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readArchivedEventsPageAction } from '@/services/events/actions'
-import type { EventArchiveCursor, EventArchiveDetails, EventExpanded } from '@/services/events/Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { EventArchiveCursor, EventArchiveDetails, EventExpanded } from '@/services/events/types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 export type PageSizeEventArchive = 12
 const fetcher = async (x: ReadPageInput<PageSizeEventArchive, EventArchiveCursor, EventArchiveDetails>) => {

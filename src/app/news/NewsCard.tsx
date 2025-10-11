@@ -1,5 +1,5 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
-import type { SimpleNewsArticle } from '@/services/news/Types'
+import type { SimpleNewsArticle } from '@/services/news/types'
 
 type PropTypes = {
     news: SimpleNewsArticle

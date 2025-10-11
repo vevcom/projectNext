@@ -18,7 +18,7 @@ import {
 import { getZodDateString } from '@/lib/dates/formatting'
 import { useMemo, useState } from 'react'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
-import type { BookingFiltered } from '@/services/cabin/booking/Types'
+import type { BookingFiltered } from '@/services/cabin/booking/types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType, PricePeriod } from '@prisma/client'
 

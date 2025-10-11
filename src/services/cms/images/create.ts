@@ -4,7 +4,7 @@ import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateCmsImageTypes } from './validation'
 import type { Image } from '@prisma/client'
-import type { ExpandedCmsImage } from './Types'
+import type { ExpandedCmsImage } from './types'
 
 /**
  * A function to create a cmsImage

@@ -4,7 +4,7 @@ import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
 import { userOperations } from '@/services/users/operations'
 import { userFilterSelection } from '@/services/users/constants'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 import type { PrismaClient } from '@prisma/client'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 

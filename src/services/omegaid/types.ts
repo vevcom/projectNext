@@ -1,4 +1,4 @@
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 export type OmegaId = Pick<UserFiltered, 'id'>
 

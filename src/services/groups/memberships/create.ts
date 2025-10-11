@@ -6,7 +6,7 @@ import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import { groupOperations } from '@/services/groups/operations'
-import type { ExpandedMembership } from './Types'
+import type { ExpandedMembership } from './types'
 
 export async function createMembershipForUser(
     groupId: number,

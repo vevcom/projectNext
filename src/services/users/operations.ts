@@ -24,7 +24,7 @@ import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { permissionOperations } from '@/services/permissions/operations'
 import { z } from 'zod'
-import type { UserPagingReturn } from './Types'
+import type { UserPagingReturn } from './types'
 
 export const userOperations = {
     /**

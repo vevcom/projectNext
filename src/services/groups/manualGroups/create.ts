@@ -1,7 +1,7 @@
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import type { ExpandedManualGroup } from './Types'
+import type { ExpandedManualGroup } from './types'
 
 type CreateManualGroupArgs = {
     name: string,

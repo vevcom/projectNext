@@ -7,14 +7,14 @@ import { groupTypesConfig } from '@/services/groups/constants'
 import { groupOperations } from '@/services/groups/operations'
 import { purposeTextsConfig } from '@/services/visibility/ConfigVars'
 import { readVisibilityCollapsed } from '@/services/visibility/read'
-import type { ExpandedGroup, GroupsStructured } from '@/services/groups/Types'
+import type { ExpandedGroup, GroupsStructured } from '@/services/groups/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type {
     GroupMatrix,
     VisibilityLevelType,
     VisibilityRequiermentForAdmin,
     VisibilityStructuredForAdmin
-} from '@/services/visibility/Types'
+} from '@/services/visibility/types'
 import type { GroupType } from '@prisma/client'
 
 export async function readVisibilityForAdminAction(id: number): Promise<ActionReturn<VisibilityStructuredForAdmin>> {

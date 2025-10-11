@@ -3,7 +3,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
 import { invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import { groupOperations } from '@/services/groups/operations'
-import type { ExpandedMembership } from './Types'
+import type { ExpandedMembership } from './types'
 
 export async function updateMembership({
     groupId,

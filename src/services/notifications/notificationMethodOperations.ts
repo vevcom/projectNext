@@ -1,5 +1,5 @@
 import { allNotificationMethodsOff, allNotificationMethodsOn, notificationMethodsArray } from './constants'
-import type { NotificationMethodGeneral } from './Types'
+import type { NotificationMethodGeneral } from './types'
 
 export function newAllMethodsOff() {
     return { ...allNotificationMethodsOff }

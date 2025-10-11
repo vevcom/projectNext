@@ -6,7 +6,7 @@ import UserPagingProvider from '@/contexts/paging/UserPaging'
 import PopUpProvider from '@/contexts/PopUp'
 import DotPagingProvider from '@/contexts/paging/DotPaging'
 import { QueryParams } from '@/lib/query-params/queryParams'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import type { SearchParamsServerSide } from '@/lib/query-params/types'
 
 type PropTypes = SearchParamsServerSide
 
