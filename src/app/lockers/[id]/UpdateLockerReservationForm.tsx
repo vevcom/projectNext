@@ -4,7 +4,7 @@ import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
-import { bindParams } from '@/actions/bind'
+import { configureAction } from '@/actions/configureAction'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -30,7 +30,7 @@ export default function UpdateLockerReservationForm({ reservationId, groupsFormD
             successCallback={refresh}
             title="Oppdater skapreservasjon"
             submitText="Oppdater"
-            action={bindParams(updateLockerReservationAction, { id: reservationId })}
+            action={configureAction(updateLockerReservationAction, { params: { id: reservationId } })}
         >
             <SelectString
                 label="Reserver for"

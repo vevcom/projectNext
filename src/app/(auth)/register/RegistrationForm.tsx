@@ -1,4 +1,5 @@
 'use client'
+import { configureAction } from '@/actions/configureAction'
 import { registerUser } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
@@ -29,7 +30,7 @@ export default function RegistrationForm({
     return <Form
         title="Ekstra brukerinformasjon"
         submitText="Fullfør registrering"
-        action={registerUser.bind(null, { id: userData.id })}
+        action={configureAction(registerUser, { params: { id: userData.id } })}
         successCallback={() => signIn('credentials', {
             username: userData.username,
             password: lastPassword,

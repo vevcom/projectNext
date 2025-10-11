@@ -6,7 +6,7 @@ import type { ReadPageInput } from '@/lib/paging/Types'
 
 export type PageSizeEventArchive = 12
 const fetcher = async (x: ReadPageInput<PageSizeEventArchive, EventArchiveCursor, EventArchiveDetails>) => {
-    const ret = await readArchivedEventsPageAction({ paging: x })
+    const ret = await readArchivedEventsPageAction({ params: { paging: x } })
     return ret
 }
 

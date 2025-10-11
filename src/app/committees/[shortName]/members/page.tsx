@@ -7,7 +7,9 @@ import type { PropTypes } from '@/app/committees/[shortName]/page'
 export default async function CommiteeMembers({ params }: PropTypes) {
     const shortName = (await params).shortName
     const members = unwrapActionReturn(await readCommitteeMembersAction({
-        shortName,
+        params: {
+            shortName,
+        }
     }))
 
     const membersGroupedByOrder = members.reduce((acc, member) => {

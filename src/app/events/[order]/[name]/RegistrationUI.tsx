@@ -7,9 +7,9 @@ import {
 } from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bind'
 import TextInput from '@/components/UI/TextInput'
 import SubmitButton from '@/components/UI/SubmitButton'
+import { configureAction } from '@/actions/configureAction'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { EventExpanded } from '@/services/events/Types'
@@ -95,7 +95,7 @@ export default function RegistrationUI({
 
         if (registrationState) {
             const result = await eventRegistrationDestroyAction({
-                registrationId: registrationState.id,
+                params: { registrationId: registrationState.id },
             })
             if (result.success) {
                 setBtnState(getInitialBtnState(false, undefined))
@@ -110,8 +110,10 @@ export default function RegistrationUI({
             }
         } else {
             const result = await createEventRegistrationAction({
-                userId: session.data.user.id,
-                eventId: event.id,
+                params: {
+                    userId: session.data.user.id,
+                    eventId: event.id,
+                }
             })
 
             if (result.success) {
@@ -181,7 +183,10 @@ export default function RegistrationUI({
         </SubmitButton>
 
         {registrationState && event.registrationEnd > new Date() && <Form
-            action={bindParams(eventRegistrationUpdateNotesAction, { registrationId: registrationState.id })}
+            action={configureAction(
+                eventRegistrationUpdateNotesAction,
+                { params: { registrationId: registrationState.id } }
+            )}
             submitText="Oppdater notat"
         >
             <TextInput name="note" label="Notat" defaultValue={registrationState.note || ''} />

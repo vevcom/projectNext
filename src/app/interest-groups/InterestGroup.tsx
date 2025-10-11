@@ -34,7 +34,9 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}
-                                            action={updateInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
+                                            action={
+                                                updateInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
+                                            }
                                             submitText="Endre"
                                         >
                                             <TextInput
@@ -56,7 +58,9 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                     <Form
                                         refreshOnSuccess
                                         closePopUpOnSuccess={PopUpKey}
-                                        action={destroyInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
+                                        action={
+                                            destroyInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
+                                        }
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{

@@ -25,7 +25,9 @@ export default async function Shop({ params }: PropTypes) {
     if (isNaN(shopId)) notFound()
 
     const shopData = unwrapActionReturn(await readShopAction({
-        shopId,
+        params: {
+            shopId,
+        },
     }))
 
     if (!shopData) notFound()

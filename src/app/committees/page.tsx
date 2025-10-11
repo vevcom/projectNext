@@ -9,7 +9,7 @@ export default async function Committees() {
     const committees = res.data
 
     const strandardCommitteeLogoRes = await readSpecialImageAction.bind(
-        null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+        null, { params: { special: 'DAFAULT_COMMITTEE_LOGO' } }
     )()
     const standardCommitteeLogo = strandardCommitteeLogoRes.success ? strandardCommitteeLogoRes.data : null
 

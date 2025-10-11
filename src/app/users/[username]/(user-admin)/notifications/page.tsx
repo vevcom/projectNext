@@ -11,7 +11,9 @@ export default async function Notififcations({ params }: PropTypes) {
     const [channels, subscriptions] = await Promise.all([
         readNotificationChannelsAction(),
         readNotificationSubscriptionsAction({
-            userId: profile.user.id
+            params: {
+                userId: profile.user.id
+            },
         }),
     ])
 

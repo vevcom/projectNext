@@ -23,9 +23,11 @@ export default async function Collection({ params }: PropTypes) {
     const collection = readCollection.data
 
     const readImages = await readImagesPageAction.bind(null, {
-        paging: {
-            page: { pageSize, page: 0, cursor: null },
-            details: { collectionId: collection.id }
+        params: {
+            paging: {
+                page: { pageSize, page: 0, cursor: null },
+                details: { collectionId: collection.id }
+            }
         }
     })()
     if (!readImages.success) notFound()

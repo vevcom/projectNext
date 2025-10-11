@@ -12,6 +12,7 @@ import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
+import { configureAction } from '@/actions/configureAction'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -216,7 +217,7 @@ export default function ImageDisplay() {
                                 title="Rediger metadata"
                                 successCallback={reload}
                                 submitText="oppdater"
-                                action={updateImageAction.bind(null, { id: image.id })}
+                                action={configureAction(updateImageAction, { params: { id: image.id } })}
                                 closePopUpOnSuccess="EditImage"
                             >
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
@@ -227,7 +228,7 @@ export default function ImageDisplay() {
                             <Form
                                 className={styles.deleteImage}
                                 successCallback={reload}
-                                action={destroyImageAction.bind(null, { id: image.id })}
+                                action={configureAction(destroyImageAction, { params: { id: image.id } })}
                                 submitText="slett"
                                 submitColor="red"
                                 confirmation={{

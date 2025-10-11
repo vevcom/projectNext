@@ -1,8 +1,8 @@
+import '@pn-server-only'
 import { EventRegistrationAuthers } from './authers'
 import { EventRegistrationConfig } from './config'
 import { EventRegistrationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { NotificationMethods } from '@/services/notifications/methods'
@@ -124,7 +124,6 @@ async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
 }
 
 export namespace EventRegistrationMethods {
-
     export const create = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number().min(0),

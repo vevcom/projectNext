@@ -16,9 +16,12 @@ import Link from 'next/link'
 
 export default async function LoggedInLandingPage() {
     const MAX_NUMBER_OF_ELEMENTS = 3
-    const news = unwrapActionReturn(await readNewsCurrentAction()).slice(0, MAX_NUMBER_OF_ELEMENTS)
-    const jobAds = unwrapActionReturn(await readActiveJobAdsAction()).slice(0, MAX_NUMBER_OF_ELEMENTS)
-    const events = unwrapActionReturn(await readCurrentEventsAction({ tags: null })).slice(0, MAX_NUMBER_OF_ELEMENTS)
+    const news = unwrapActionReturn(await readNewsCurrentAction())
+        .slice(0, MAX_NUMBER_OF_ELEMENTS)
+    const jobAds = unwrapActionReturn(await readActiveJobAdsAction())
+        .slice(0, MAX_NUMBER_OF_ELEMENTS)
+    const events = unwrapActionReturn(await readCurrentEventsAction({ params: { tags: null } }))
+        .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
     return (
         <div className={styles.wrapper}>

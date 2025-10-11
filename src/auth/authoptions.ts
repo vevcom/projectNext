@@ -7,10 +7,10 @@ import prisma from '@/prisma'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import { UserMethods } from '@/services/users/methods'
+import { PermissionMethods } from '@/services/permissions/methods'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import { PermissionMethods } from '@/services/permissions/methods'
 
 export const authOptions: AuthOptions = {
     providers: [

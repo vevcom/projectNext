@@ -2,6 +2,7 @@
 import { registerNewEmailAction } from '@/actions/users/update'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
+import { configureAction } from '@/actions/configureAction'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'
@@ -18,13 +19,12 @@ export default function EmailRegistrationForm({
 
     const [feedback, setFeedback] = useState<string | null>(null)
 
-    const actionToCall = registerNewEmailAction.bind(null, { id: user.id })
+    const actionToCall = configureAction(registerNewEmailAction, { params: { id: user.id } })
 
     return <>
         <Form
             title="Sett e-posten din"
             submitText="Verifiser e-post"
-            // action={registerNewEmailAction.bind(null, { id: user.id })}
             action={actionToCall}
             successCallback={(data) => {
                 if (data) {

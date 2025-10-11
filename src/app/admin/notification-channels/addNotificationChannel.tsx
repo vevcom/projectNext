@@ -5,12 +5,11 @@ import { SelectNumber } from '@/components/UI/Select'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { createNotificationChannelAction } from '@/actions/notifications'
-import { bindParams } from '@/actions/bind'
 import { NotificationConfig } from '@/services/notifications/config'
+import { configureAction } from '@/actions/configureAction'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
-
 
 export default function AddNotificationChannel({
     channels
@@ -34,9 +33,11 @@ export default function AddNotificationChannel({
     return <Form
         title="Legg til varslingskanal"
         submitText="Legg til"
-        action={bindParams(createNotificationChannelAction, {
-            availableMethods,
-            defaultMethods,
+        action={configureAction(createNotificationChannelAction, {
+            params: {
+                availableMethods,
+                defaultMethods,
+            }
         })}
         successCallback={(data?: ExpandedNotificationChannel) => {
             if (data) {

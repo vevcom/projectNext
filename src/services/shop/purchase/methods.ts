@@ -5,8 +5,8 @@ import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { UserMethods } from '@/services/users/methods'
 import { UserConfig } from '@/services/users/config'
-import { PurchaseMethod } from '@prisma/client'
 import { PermissionMethods } from '@/services/permissions/methods'
+import { PurchaseMethod } from '@prisma/client'
 
 export namespace PurchaseMethods {
     export const createByStudentCard = ServiceMethod({
