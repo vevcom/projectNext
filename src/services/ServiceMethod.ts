@@ -312,10 +312,10 @@ export function SubServiceMethod<
             return {
                 client,
                 newClient: () => client(globalPrisma),
-                paramsSchema: serviceMethodConfig.paramsSchema && implementationArgs.paramsSchemaImplementationFields ?
+                paramsSchema: serviceMethodConfig.paramsSchema ?
                     serviceMethodConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields) :
                     undefined,
-                dataSchema: serviceMethodConfig.dataSchema && implementationArgs.dataSchemaImplementationFields ?
+                dataSchema: serviceMethodConfig.dataSchema ?
                     serviceMethodConfig.dataSchema(implementationArgs.dataSchemaImplementationFields) :
                     undefined,
                 implementationParamsSchema: implementationArgs.implementationParamsSchema

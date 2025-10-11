@@ -5,6 +5,7 @@ import TextInput from '@/components/UI/TextInput'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'
+import { configureAction } from '@/actions/configureAction'
 
 export default function EmailRegistrationForm({
     user
@@ -18,7 +19,7 @@ export default function EmailRegistrationForm({
 
     const [feedback, setFeedback] = useState<string | null>(null)
 
-    const actionToCall = registerNewEmailAction.bind(null, { id: user.id })
+    const actionToCall = configureAction(registerNewEmailAction, { params: { id: user.id } })
 
     return <>
         <Form

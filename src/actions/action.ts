@@ -127,12 +127,18 @@ export function action<
         }
 
         return safeServerCall(
-            () => serviceMethod.newClient().executeUnsafe({
-                session,
-                params: params?.params,
-                data: processedData,
-                implementationParams: implementationParams?.implementationParams
-            })
+            () => {
+                console.log('Executing service method:', serviceMethod)
+                console.log('With params:', params)
+                console.log('With data:', processedData)
+                console.log('With implementation params:', implementationParams)
+                return serviceMethod.newClient().executeUnsafe({
+                    session,
+                    params: params?.params,
+                    data: processedData,
+                    implementationParams: implementationParams?.implementationParams
+                })
+            }
         )
     }
 
