@@ -3,8 +3,8 @@ import '@pn-server-only'
 import { LockerReservationAuthers } from './authers'
 import { LockerReservationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import { readUsersOfGroups } from '@/services/groups/read'
 import { Smorekopp } from '@/services/error'
+import { GroupMethods } from '@/services/groups/methods'
 import { z } from 'zod'
 
 export namespace LockerReservationMethods {
@@ -26,7 +26,13 @@ export namespace LockerReservationMethods {
             // TODO: Use authers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await readUsersOfGroups([{ groupId: data.groupId, admin: false }])
+                const groupUsers = await GroupMethods.readUsersOfGroups.newClient().execute({
+                    session: null,
+                    bypassAuth: true,
+                    params: {
+                        groups: [{ groupId: data.groupId, admin: false }]
+                    }
+                })
 
                 const userInGroup = groupUsers.some(groupUser => session.user && session.user.id === groupUser.id)
 
@@ -102,7 +108,13 @@ export namespace LockerReservationMethods {
 
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await readUsersOfGroups([{ groupId: data.groupId, admin: false }])
+                const groupUsers = await GroupMethods.readUsersOfGroups.client(prisma).execute({
+                    session,
+                    bypassAuth: true,
+                    params: {
+                        groups: [{ groupId: data.groupId, admin: false }]
+                    }
+                })
 
                 const userInGroup = groupUsers.some(groupUser => session.user && session.user.id === groupUser.id)
 

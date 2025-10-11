@@ -7,6 +7,7 @@ import { createCmsParagraph } from '@/services/cms/paragraphs/create'
 import { ImageMethods } from '@/services/images/methods'
 import type { ExpandedCommittee } from './Types'
 import type { CreateCommitteeTypes } from './validation'
+import { GroupType } from '@prisma/client'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
@@ -19,6 +20,7 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
     const article = await createArticle({})
 
     const paragraph = await createCmsParagraph({ name: `Paragraph for ${name}` })
+    const applicationParagraph = await createCmsParagraph({ name: `Søknadstekst for ${name}` })
 
     const order = (await readCurrentOmegaOrder()).order
 
@@ -43,13 +45,18 @@ export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed'])
             },
             group: {
                 create: {
-                    groupType: 'COMMITTEE',
+                    groupType: GroupType.COMMITTEE,
                     order,
                 }
             },
             committeeArticle: {
                 connect: {
                     id: article.id
+                }
+            },
+            applicationParagraph: {
+                connect: {
+                    id: applicationParagraph.id
                 }
             }
         },

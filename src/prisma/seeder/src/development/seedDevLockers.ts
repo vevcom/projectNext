@@ -2,8 +2,8 @@ import type { PrismaClient } from '@prisma/client'
 
 const buildings = ['G-Blokk', 'Test-Blokk']
 const floors = [1, 2, 3]
-const n = 10
-const m = 10
+const numLockers = 10
+const maxNumber = 10
 
 export default async function seedDevLockers(prisma: PrismaClient) {
     await Promise.all(buildings.map(building => Promise.all(floors.map(floor => prisma.lockerLocation.upsert({
@@ -25,7 +25,7 @@ export default async function seedDevLockers(prisma: PrismaClient) {
 
 
     await Promise.all(buildings.map((building) => Promise.all(floors.map(async (floor) => {
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < numLockers; i++) {
             await prisma.locker.create({
                 data: {
                     building,
@@ -38,7 +38,7 @@ export default async function seedDevLockers(prisma: PrismaClient) {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
 
-    for (let i = 1; i < m; i++) {
+    for (let i = 1; i < maxNumber; i++) {
         await prisma.lockerReservation.create({
             data: {
                 lockerId: i,
@@ -50,8 +50,8 @@ export default async function seedDevLockers(prisma: PrismaClient) {
 
     await prisma.lockerReservation.create({
         data: {
-            lockerId: m,
-            userId: m,
+            lockerId: maxNumber,
+            userId: maxNumber,
             endDate: null
         }
     })

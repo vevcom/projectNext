@@ -42,10 +42,10 @@ export default function EventTagsAdmin({
     const removeFromUrl = (tag: string) => (selectedTags.length === 1 ?
         baseUrl :
         `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-            selectedTags.filter(t => t.name !== tag).map(t => t.name)
+            selectedTags.filter(tagItem => tagItem.name !== tag).map(tagItem => tagItem.name)
         )}`)
     const addToUrl = (tag: string) => `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-        [...selectedTags.map(t => t.name), tag]
+        [...selectedTags.map(tagItem => tagItem.name), tag]
     )}`
     return (
         <div className={styles.EventTagsAdmin}>
@@ -66,9 +66,11 @@ export default function EventTagsAdmin({
                     eventTags.map((tag, index) => (
                         <li key={index} >
                             <Link
-                                className={selectedTags.map(t => t.name).includes(tag.name) ? styles.selected : ''}
+                                className={
+                                    selectedTags.map(tagItem => tagItem.name).includes(tag.name) ? styles.selected : ''
+                                }
                                 href={
-                                    selectedTags.map(t => t.name).includes(tag.name) ?
+                                    selectedTags.map(tagItem => tagItem.name).includes(tag.name) ?
                                         removeFromUrl(tag.name) : addToUrl(tag.name)
                                 }
                             >
@@ -97,9 +99,9 @@ export default function EventTagsAdmin({
                                                     name="color"
                                                     label="Farge"
                                                     defaultValueRGB={{
-                                                        r: tag.colorR,
-                                                        g: tag.colorG,
-                                                        b: tag.colorB
+                                                        red: tag.colorR,
+                                                        green: tag.colorG,
+                                                        blue: tag.colorB
                                                     }}
                                                 />
                                             </Form>

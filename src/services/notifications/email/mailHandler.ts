@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { TRANSPORT_OPTIONS } from './ConfigVars'
+import { TRANSPORT_OPTIONS } from './config'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
@@ -100,12 +100,12 @@ class MailHandler {
 
         const responses = await Promise.all(responsePromises)
 
-        responses.forEach(r => {
-            console.log(`MAIL SENT: ${r.envelope.from} -> (${r.envelope.to.join(' ')})`)
-            console.log(r.response)
+        responses.forEach(response => {
+            console.log(`MAIL SENT: ${response.envelope.from} -> (${response.envelope.to.join(' ')})`)
+            console.log(response.response)
 
             if (!PROD) {
-                console.log(`Preview: ${nodemailer.getTestMessageUrl(r as SMTPTransport.SentMessageInfo)}`)
+                console.log(`Preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
             }
         })
     }
@@ -118,9 +118,9 @@ class MailHandler {
         const testSender = PROD ? null : (await this.getTestAccount()).user
 
         const queue = data
-            .map(d => ({
-                ...d,
-                from: testSender ?? d.from,
+            .map(mailData => ({
+                ...mailData,
+                from: testSender ?? mailData.from,
             }))
 
         this.queue.push(...queue)

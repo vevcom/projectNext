@@ -14,7 +14,7 @@ export const specialCollectionsVisibility = {
     COMMITTEELOGOS: {
         specialVisibility: 'COMMITTEE'
     }
-} satisfies {[T in SpecialCollection]: {
+} satisfies {[CollectionType in SpecialCollection]: {
     specialVisibility: SpecialVisibilityPurpose
 }}
 

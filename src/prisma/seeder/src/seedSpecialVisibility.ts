@@ -17,7 +17,7 @@ const SpecialVisibilityConfig = {
         regularLevel: 'USERS_READ',
         adminLevel: 'USERS_CREATE'
     }
-} satisfies {[T in SpecialVisibilityPurpose]: {
+} satisfies {[VisibilityType in SpecialVisibilityPurpose]: {
     regularLevel: Permission | null,
     adminLevel: Permission | null
 }}

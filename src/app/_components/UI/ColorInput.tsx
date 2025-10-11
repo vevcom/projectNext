@@ -3,20 +3,20 @@ import type { InputHTMLAttributes } from 'react'
 
 export type PropTypes = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     defaultValueRGB?: {
-        r: number,
-        g: number,
-        b: number
+        red: number,
+        green: number,
+        blue: number
     }
     label: string,
 }
 
-const rgbToHex = (r: number, g: number, b: number): string => {
+const rgbToHex = (red: number, green: number, blue: number): string => {
     const toHex = (value: number) => {
         const hex = value.toString(16)
         return hex.length === 1 ? `0${hex}` : hex
     }
 
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
 }
 
 /**
@@ -29,8 +29,8 @@ const rgbToHex = (r: number, g: number, b: number): string => {
  */
 export default function ColorInput({ label, className, defaultValueRGB, ...props }: PropTypes) {
     if (defaultValueRGB) {
-        const { r, g, b } = defaultValueRGB
-        props.defaultValue = rgbToHex(r, g, b)
+        const { red, green, blue } = defaultValueRGB
+        props.defaultValue = rgbToHex(red, green, blue)
     }
     return (
         <div className={`${styles.ColorInput} ${className}`}>

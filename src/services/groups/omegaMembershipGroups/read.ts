@@ -36,7 +36,7 @@ export async function readUserOmegaMembershipLevel(userId: number): Promise<Omeg
         where: {
             userId,
             groupId: {
-                in: omegaMembershipGroups.map(g => g.groupId),
+                in: omegaMembershipGroups.map(group => group.groupId),
             }
         }
     }))

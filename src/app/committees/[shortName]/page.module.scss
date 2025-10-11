@@ -2,4 +2,11 @@
 
 .wrapper {
     min-height: 500px;
+
+    .memberList {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+        gap: calc(1 * ohma.$gap);
+    }
 }

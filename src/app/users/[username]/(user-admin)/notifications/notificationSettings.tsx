@@ -3,11 +3,10 @@
 import SubscriptionItem from './subscriptionItem'
 import styles from './notificationSettings.module.scss'
 import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifications/notificationMethodOperations'
-import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVars'
-import { notificationMethods } from '@/services/notifications/Types'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { updateSubscriptionsAction } from '@/actions/notifications/subscription/update'
 import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
+import { updateNotificationSubscriptionsAction } from '@/actions/notifications'
+import { NotificationConfig } from '@/services/notifications/config'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { UserFiltered } from '@/services/users/Types'
@@ -21,7 +20,7 @@ import type {
 } from '@/services/notifications/Types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
-    const rootChannel = channels.find(c => c.special === 'ROOT')
+    const rootChannel = channels.find(channel => channel.special === 'ROOT')
     if (!rootChannel) {
         throw Error('Ingen ROOT varslings kanal')
     }
@@ -30,7 +29,7 @@ function generateChannelTree(channels: ExpandedNotificationChannel[], subscripti
         return {
             ...channel,
             children: [],
-            subscription: subscriptions.find(s => s.channelId === channel.id)
+            subscription: subscriptions.find(subscription => subscription.channelId === channel.id)
         }
     }
 
@@ -184,7 +183,11 @@ export default function NotificationSettings({
             pending: true
         })
         const data = prepareDataForDelivery(channelTree)
-        const results = await updateSubscriptionsAction(user.id, data)
+        const results = await updateNotificationSubscriptionsAction({
+            userId: user.id
+        }, {
+            subscriptions: data
+        })
 
         if (results.success) {
             setFormState({
@@ -222,12 +225,12 @@ export default function NotificationSettings({
             <thead className={styles.tableHead}>
                 <tr>
                     <th>Kanal</th>
-                    {notificationMethods.map(method =>
+                    {NotificationConfig.methods.map(method =>
                         <th
                             key={uuid()}
                             className={styles.notificationMethodsTH}
                         >
-                            <span>{notificationMethodsDisplayMap[method]}</span>
+                            <span>{NotificationConfig.methodsDisplayMap[method]}</span>
                         </th>
                     )}
                 </tr>

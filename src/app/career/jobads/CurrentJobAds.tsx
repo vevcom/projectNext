@@ -16,7 +16,7 @@ export default async function CurrentJobAds({ not }: PropTypes) {
             new Error('unknown error reading jobad')
     }
 
-    const jobAds = res.data.filter(n => n.id !== not)
+    const jobAds = res.data.filter(jobAd => jobAd.id !== not)
 
     return (
         jobAds.length ? (

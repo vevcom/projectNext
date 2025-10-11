@@ -1,15 +1,16 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
     padding: ohma.$gap;
     position: relative;
     padding: 0;
-    .backButton {
-        position: absolute;
-        top: .5em;
-        left: .5em;
+
+    .content {
+        flex-grow: 1;
+        min-width: 0;
     }
 }
+

@@ -10,6 +10,8 @@ import { ServerError } from '@/services/error'
 import { ServiceMethod } from '@/services/ServiceMethod'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { NotificationMethods } from '@/services/notifications/methods'
+import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import type { EventExpanded } from './Types'
@@ -75,6 +77,18 @@ export namespace EventMethods {
                     eventId: event.id,
                     tagId
                 }))
+            })
+
+            await NotificationMethods.createSpecial.client(prisma).execute({
+                params: {
+                    special: 'NEW_EVENT',
+                },
+                data: {
+                    title: `Hva der hender: ${event.name}`,
+                    message: `${event.name}, 🕓 ${displayDate(event.eventStart, false)},📍 ${event.location}`,
+                },
+                session,
+                bypassAuth: true,
             })
             return event
         }

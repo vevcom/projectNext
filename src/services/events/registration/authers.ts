@@ -9,7 +9,7 @@ export namespace EventRegistrationAuthers {
     export const createGuest = RequirePermission.staticFields({ permission: 'EVENT_ADMIN' })
     export const readMany = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' })
     export const readManyDetailed = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' })
-    export const destroy = RequirePermission.staticFields({ permission: 'EVENT_ADMIN' })
+    export const destroy = RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_DESROY' })
 
     export const updateRegistrationNotes = RequireUser.staticFields({}) // TODO: bypass permission
 }

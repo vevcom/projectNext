@@ -1,6 +1,5 @@
 'use client'
 import styles from './layout.module.scss'
-import BackButton from './BackButton'
 import SlideSidebar from './SlideSidebar'
 import React from 'react'
 import { usePathname } from 'next/navigation'
@@ -16,10 +15,12 @@ export default function AdminLayout({ children }: PropTypes) {
     const currentPath = pathname.split('/').length > 2 ? pathname.split('/')[2] : 'admin'
     return (
         <div className={styles.wrapper}>
-            <SlideSidebar currentPath={currentPath}>
-                {children}
-            </SlideSidebar>
-            <BackButton className={styles.backButton} />
+            <div>
+                <SlideSidebar currentPath={currentPath} />
+            </div>
+            <div className={styles.content}>
+                { children }
+            </div>
         </div>
     )
 }
